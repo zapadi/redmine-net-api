@@ -41,7 +41,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Types\Attachment.cs" />
     <Compile Include="Types\CustomField.cs" />
+    <Compile Include="Types\IssueRelation.cs" />
+    <Compile Include="Types\News.cs" />
+    <Compile Include="Types\Project.cs" />
+    <Compile Include="Types\Query.cs" />
+    <Compile Include="Types\User.cs" />
+    <Compile Include="Types\Version.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
