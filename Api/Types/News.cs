@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Redmine.Net.Api.Types
 {
@@ -14,33 +11,39 @@ namespace Redmine.Net.Api.Types
         public int Id { get; set; }
 
         /// <summary>
-        /// 
+        /// Gets or sets the project.
         /// </summary>
-        public Project Project { get; set; }
+        /// <value>The project.</value>
+        public IdentifiableName Project { get; set; }
 
         /// <summary>
-        /// 
+        /// Gets or sets the author.
         /// </summary>
-        public string Author { get; set; }
+        /// <value>The author.</value>
+        public IdentifiableName Author { get; set; }
 
         /// <summary>
-        /// 
+        /// Gets or sets the title.
         /// </summary>
+        /// <value>The title.</value>
         public string Title { get; set; }
 
         /// <summary>
-        /// 
+        /// Gets or sets the summary.
         /// </summary>
+        /// <value>The summary.</value>
         public string Summary { get; set; }
-        
+
         /// <summary>
-        /// 
+        /// Gets or sets the description.
         /// </summary>
+        /// <value>The description.</value>
         public string Description { get; set; }
 
         /// <summary>
-        /// 
+        /// Gets or sets the created on.
         /// </summary>
+        /// <value>The created on.</value>
         public DateTime CreatedOn { get; set; }
     }
 }
