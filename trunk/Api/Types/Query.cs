@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Redmine.Net.Api.Types
 {
-    public class Project
+    public class Query
     {
         /// <summary>
         /// Gets or sets the id.
@@ -21,21 +21,11 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// 
         /// </summary>
-        public string Identifier { get; set; }
+        public bool IsPublic { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
-        public string Description { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public DateTime CreatedOn { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public DateTime UpdatedOn { get; set; }
+        public int ProjectId { get; set; }
     }
 }
