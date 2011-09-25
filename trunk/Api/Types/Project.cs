@@ -5,19 +5,8 @@ using System.Text;
 
 namespace Redmine.Net.Api.Types
 {
-    public class Project
+    public class Project : IdentifiableName
     {
-        /// <summary>
-        /// Gets or sets the id.
-        /// </summary>
-        /// <value>The id.</value>
-        public int Id { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public string Name { get; set; }
-
         /// <summary>
         /// 
         /// </summary>

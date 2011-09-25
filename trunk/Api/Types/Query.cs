@@ -5,20 +5,9 @@ using System.Text;
 
 namespace Redmine.Net.Api.Types
 {
-    public class Query
+    public class Query : IdentifiableName
     {
-        /// <summary>
-        /// Gets or sets the id.
-        /// </summary>
-        /// <value>The id.</value>
-        public int Id { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
+       /// <summary>
         /// 
         /// </summary>
         public bool IsPublic { get; set; }
