@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<issue>
+  <id>4326</id>
+  <project name="Redmine" id="1"/>
+  <tracker name="Feature" id="2"/>
+  <status name="New" id="1"/>
+  <priority name="Normal" id="4"/>
+  <author name="John Smith" id="10106"/>
+  <category name="Email notifications" id="9"/>
+  <subject>
+    Aggregate Multiple Issue Changes for Email Notifications
+  </subject>
+  <description>
+    This is not to be confused with another useful proposed feature that
+    would do digest emails fordone_ratio notifications.
+  </description>
+  <start_date>2009-12-03</start_date>
+  <due_date></due_date>
+  <done_ratio></done_ratio>
+  <estimated_hours>1</estimated_hours>
+  <custom_fields>
+    <custom_field name="Resolution" id="2">Duplicate</custom_field>
+    <custom_field name="Texte" id="5">Test</custom_field>
+    <custom_field name="Boolean" id="6">1</custom_field>
+    <custom_field name="Date" id="7">2010-01-12</custom_field>
+  </custom_fields>
+  <created_on>Thu Dec 03 15:02:12 +0100 2009</created_on>
+  <updated_on>Sun Jan 03 12:08:41 +0100 2010</updated_on>
+</issue>
