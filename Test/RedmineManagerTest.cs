@@ -1,9 +1,12 @@
 ﻿using System.IO;
 using System.Xml;
+using System.Xml.Serialization;
 using Redmine.Net.Api;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using Redmine.Net.Api.Types;
+using System.Collections.Specialized;
+using System.Collections.Generic;
 
 namespace Test
 {
@@ -78,23 +81,34 @@ namespace Test
           //  Assert.Inconclusive("TODO: Implement code to verify target");
         }
 
-        /// <summary>
-        ///A test for Desirialize
-        ///</summary>
-        public void DesirializeTestHelper<T>()
-            where T : class
-        {
-            PrivateObject param0 = new PrivateObject(new RedmineManager(null, null)); // TODO: Initialize to an appropriate value
-            RedmineManager_Accessor target = new RedmineManager_Accessor(param0); // TODO: Initialize to an appropriate value
-
-            var actual = target.Desirialize<Issue>(File.ReadAllText(@"d:\Work\Redmine-NET-API\issues.xml"));
-        }
-
         [TestMethod()]
         [DeploymentItem("Redmine.Net.Api.dll")]
         public void DesirializeTest()
         {
-            DesirializeTestHelper<GenericParameterHelper>();
+            var sr = new XmlSerializer(typeof (Issue));
+            using (var str = new XmlTextReader("../../../TestFiles/issue.xml"))
+            {
+                var issue = sr.Deserialize(str) as Issue;
+            }
+        }
+
+        /// <summary>
+        ///A test for GetObjectList
+        ///</summary>
+        public void GetObjectListTestHelper<T>()
+            where T : class
+        {
+            string host = "";
+            string apiKey = "";
+            RedmineManager target = new RedmineManager(host, apiKey);
+            NameValueCollection filters = new NameValueCollection { { "status_Id", "*" } };
+            target.GetObjectList<T>(filters);
+        }
+
+        [TestMethod()]
+        public void GetObjectListTest()
+        {
+            GetObjectListTestHelper<GenericParameterHelper>();
         }
     }
 }

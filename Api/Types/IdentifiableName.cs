@@ -6,7 +6,7 @@ using System.Xml.Serialization;
 namespace Redmine.Net.Api.Types
 {
     [Serializable]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+    [XmlTypeAttribute(AnonymousType = true)]
     public class IdentifiableName : IXmlSerializable
     {
         /// <summary>

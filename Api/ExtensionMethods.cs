@@ -31,12 +31,13 @@ namespace Redmine.Net.Api
             return result;
         }
 
-        public static Collection<T> ReadElementContentAsCollection<T>(this XmlReader reader) where T : IXmlSerializable, new()
+        public static List<T> ReadElementContentAsCollection<T>(this XmlReader reader) where T : class
         {
-            var result = new Collection<T>();
+            var result = new List<T>();
 
-            String xml = reader.ReadOuterXml();
-            XmlReader r = new XmlTextReader(new StringReader(xml));
+            var sr = new XmlSerializer(typeof(T));
+            var xml = reader.ReadOuterXml();
+            var r = new XmlTextReader(new StringReader(xml));
             r.ReadStartElement();
             while (!r.EOF)
             {
@@ -46,10 +47,9 @@ namespace Redmine.Net.Api
                     continue;
                 }
 
-                var temp = new T();
-                temp.ReadXml(r);
-                result.Add(temp);
-
+                var temp = sr.Deserialize(r.ReadSubtree()) as T;
+                if (temp != null) result.Add(temp);
+               
             }
             return result;
         }
