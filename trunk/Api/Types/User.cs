@@ -63,6 +63,6 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <value>The custom fields.</value>
         [XmlElement("custom_fields",Type = typeof(CustomField))]
-        public ICollection<CustomField> CustomFields { get; set; }
+        public IList<CustomField> CustomFields { get; set; }
     }
 }

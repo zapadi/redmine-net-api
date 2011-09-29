@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Xml;
 using System.Xml.Schema;
@@ -107,7 +108,7 @@ namespace Redmine.Net.Api.Types
         /// <value>The custom fields.</value>
         [XmlArray("custom_fields")]
         [XmlArrayItem("custom_field")]
-        public Collection<CustomField> CustomFields { get; set; }
+        public IList<CustomField> CustomFields { get; set; }
 
         /// <summary>
         /// Gets or sets the created on.

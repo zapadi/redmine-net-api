@@ -6,7 +6,6 @@ namespace Redmine.Net.Api.Types
 {
     [Serializable]
     [XmlRoot("custom_field")]
-    [XmlTypeAttribute(AnonymousType = true)]
     public class CustomField : IdentifiableName
     {
         /// <summary>
