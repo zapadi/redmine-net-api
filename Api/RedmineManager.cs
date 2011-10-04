@@ -163,7 +163,7 @@ namespace Redmine.Net.Api
         /// </summary>
         /// <param name="parameters">The parameters.</param>
         /// <returns></returns>
-        public WebClient CreateWebClient(NameValueCollection parameters)
+        protected WebClient CreateWebClient(NameValueCollection parameters)
         {
             var webClient = new WebClient();
 
