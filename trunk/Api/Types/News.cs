@@ -5,7 +5,6 @@ namespace Redmine.Net.Api.Types
 {
     [Serializable]
     [XmlRoot("news")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
     public class News
     {
         /// <summary>
@@ -55,6 +54,6 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <value>The created on.</value>
         [XmlElement("created_on")]
-        public DateTime CreatedOn { get; set; }
+        public DateTime? CreatedOn { get; set; }
     }
 }

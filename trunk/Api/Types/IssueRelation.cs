@@ -5,7 +5,6 @@ namespace Redmine.Net.Api.Types
 {
     [Serializable]
     [XmlRoot("relation")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
     public class IssueRelation
     {
         /// <summary>

@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -31,6 +28,16 @@ namespace Redmine.Net.Api
             return result;
         }
 
+        public static int? ReadElementContentAsNullableInt(this XmlReader reader)
+        {
+            var str = reader.ReadElementContentAsString();
+
+            int result;
+            if (String.IsNullOrWhiteSpace(str) || !int.TryParse(str, out result)) return null;
+
+            return result;
+        }
+
         public static List<T> ReadElementContentAsCollection<T>(this XmlReader reader) where T : class
         {
             var result = new List<T>();
@@ -49,7 +56,6 @@ namespace Redmine.Net.Api
 
                 var temp = sr.Deserialize(r.ReadSubtree()) as T;
                 if (temp != null) result.Add(temp);
-               
             }
             return result;
         }
