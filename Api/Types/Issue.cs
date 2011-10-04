@@ -123,6 +123,9 @@ namespace Redmine.Net.Api.Types
         [XmlElement("updated_on")]
         public DateTime? UpdatedOn { get; set; }
 
+        [XmlElement("assigned_to")]
+        public IdentifiableName AssignedTo { get; set; }
+
         public XmlSchema GetSchema()
         {
             return null;
@@ -164,6 +167,10 @@ namespace Redmine.Net.Api.Types
 
                     case "author":
                         Author = new IdentifiableName(reader);
+                        break;
+
+                    case "assigned_to":
+                        AssignedTo = new IdentifiableName(reader);
                         break;
 
                     case "category":
@@ -217,12 +224,20 @@ namespace Redmine.Net.Api.Types
         {
             writer.WriteElementString("subject", Subject);
             writer.WriteElementString("description", Description);
-            writer.WriteElementString("project_id", Project != null ? Project.Id.ToString() : "");
-            writer.WriteElementString("priority_id", Priority != null ? Priority.Id.ToString() : "");
-            writer.WriteElementString("status_id", Status != null ? Status.Id.ToString() : "");
-            writer.WriteElementString("category_id", Category != null ? Category.Id.ToString() : "");
-           // writer.WriteElementString("assigned_to_id", User != null ? Category.Id.ToString() : "");
-            writer.WriteElementString("tracker_id", Tracker != null ? Tracker.Id.ToString() : "");
+            WriteIdIfNotNull(writer, Project, "project_id");
+            WriteIdIfNotNull(writer, Priority, "priority_id");
+            WriteIdIfNotNull(writer, Status, "status_id");
+            WriteIdIfNotNull(writer, Category, "category_id");
+            WriteIdIfNotNull(writer, Tracker, "tracker_id");
+            WriteIdIfNotNull(writer, AssignedTo, "assigned_to_id");
+        }
+
+        private void WriteIdIfNotNull(XmlWriter writer, IdentifiableName ident, String tag)
+        {
+            if (ident != null)
+            {
+                writer.WriteElementString(tag, ident.Id.ToString());
+            }
         }
     }
 }
