@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Net;
 using System.Xml;
 using System.Xml.Serialization;
 using Redmine.Net.Api;
@@ -7,11 +8,10 @@ using System;
 using Redmine.Net.Api.Types;
 using System.Collections.Specialized;
 using System.Collections.Generic;
+using System.Web;
 
 namespace Test
 {
-    
-    
     /// <summary>
     ///This is a test class for RedmineManagerTest and is intended
     ///to contain all RedmineManagerTest Unit Tests
@@ -20,76 +20,68 @@ namespace Test
     public class RedmineManagerTest
     {
         /// <summary>
-        ///Gets or sets the test context which provides
-        ///information about and functionality for the current test run.
+        ///A test for CreateObject
         ///</summary>
-        public TestContext TestContext { get; set; }
-
-        #region Additional test attributes
-        // 
-        //You can use the following additional attributes as you write your tests:
-        //
-        //Use ClassInitialize to run code before running the first test in the class
-        //[ClassInitialize()]
-        //public static void MyClassInitialize(TestContext testContext)
-        //{
-        //}
-        //
-        //Use ClassCleanup to run code after all tests in a class have run
-        //[ClassCleanup()]
-        //public static void MyClassCleanup()
-        //{
-        //}
-        //
-        //Use TestInitialize to run code before running each test
-        //[TestInitialize()]
-        //public void MyTestInitialize()
-        //{
-        //}
-        //
-        //Use TestCleanup to run code after each test has run
-        //[TestCleanup()]
-        //public void MyTestCleanup()
-        //{
-        //}
-        //
-        #endregion
-
-
-        /// <summary>
-        ///A test for RedmineManager Constructor
-        ///</summary>
-        [TestMethod()]
-        public void RedmineManagerConstructorTest()
+        public void CreateObjectTestHelper<T>()
+            where T : class
         {
-            string host = string.Empty; // TODO: Initialize to an appropriate value
-            string apiKey = string.Empty; // TODO: Initialize to an appropriate value
-            var target = new RedmineManager(host, apiKey);
-         //   Assert.Inconclusive("TODO: Implement code to verify target");
-        }
-
-        /// <summary>
-        ///A test for RedmineManager Constructor
-        ///</summary>
-        [TestMethod()]
-        public void RedmineManagerConstructorTest1()
-        {
-            string host = string.Empty; // TODO: Initialize to an appropriate value
-            string login = string.Empty; // TODO: Initialize to an appropriate value
-            string password = string.Empty; // TODO: Initialize to an appropriate value
-            var target = new RedmineManager(host, login, password);
-          //  Assert.Inconclusive("TODO: Implement code to verify target");
+           
+            RedmineManager target = new RedmineManager(host, apiKey); // TODO: Initialize to an appropriate value
+            var obj = new Issue(); // TODO: Initialize to an appropriate value
+            obj.Subject = "test subject issue";
+            obj.Project = new IdentifiableName {Id = 25};
+            obj.Priority = new IdentifiableName {Id = 1};
+            target.CreateObject<Issue>(obj);
+            Assert.Inconclusive("A method that does not return a value cannot be verified.");
         }
 
         [TestMethod()]
-        [DeploymentItem("Redmine.Net.Api.dll")]
-        public void DesirializeTest()
+        public void CreateObjectTest()
         {
-            var sr = new XmlSerializer(typeof (Issue));
-            using (var str = new XmlTextReader("../../../TestFiles/issue.xml"))
-            {
-                var issue = sr.Deserialize(str) as Issue;
-            }
+            CreateObjectTestHelper<GenericParameterHelper>();
+        }
+
+        /// <summary>
+        ///A test for DeleteObject
+        ///</summary>
+        public void DeleteObjectTestHelper<T>()
+            where T : class
+        {
+           
+            RedmineManager target = new RedmineManager(host, apiKey); // TODO: Initialize to an appropriate value
+            string id = string.Empty; // TODO: Initialize to an appropriate value
+            NameValueCollection parameters = null; // TODO: Initialize to an appropriate value
+            target.DeleteObject<Issue>(id, parameters);
+            Assert.Inconclusive("A method that does not return a value cannot be verified.");
+        }
+
+        [TestMethod()]
+        public void DeleteObjectTest()
+        {
+            DeleteObjectTestHelper<GenericParameterHelper>();
+        }
+
+        /// <summary>
+        ///A test for GetObject
+        ///</summary>
+        public void GetObjectTestHelper<T>()
+            where T : class
+        {
+         
+            RedmineManager target = new RedmineManager(host, apiKey); // TODO: Initialize to an appropriate value
+            string id = string.Empty; // TODO: Initialize to an appropriate value
+            NameValueCollection parameters = null; // TODO: Initialize to an appropriate value
+            T expected = null; // TODO: Initialize to an appropriate value
+            T actual;
+            actual = target.GetObject<T>(id, parameters);
+            Assert.AreEqual(expected, actual);
+            Assert.Inconclusive("Verify the correctness of this test method.");
+        }
+
+        [TestMethod()]
+        public void GetObjectTest()
+        {
+            GetObjectTestHelper<GenericParameterHelper>();
         }
 
         /// <summary>
@@ -98,17 +90,43 @@ namespace Test
         public void GetObjectListTestHelper<T>()
             where T : class
         {
-            string host = "";
-            string apiKey = "";
-            RedmineManager target = new RedmineManager(host, apiKey);
-            NameValueCollection filters = new NameValueCollection { { "status_Id", "*" } };
-            target.GetObjectList<T>(filters);
+          
+            RedmineManager target = new RedmineManager(host, apiKey); // TODO: Initialize to an appropriate value
+            NameValueCollection parameters = null; // TODO: Initialize to an appropriate value
+            IList<T> expected = null; // TODO: Initialize to an appropriate value
+            IList<T> actual;
+            actual = target.GetObjectList<T>(parameters);
+            Assert.AreEqual(expected, actual);
+            Assert.Inconclusive("Verify the correctness of this test method.");
         }
 
         [TestMethod()]
         public void GetObjectListTest()
         {
             GetObjectListTestHelper<GenericParameterHelper>();
+        }
+
+        /// <summary>
+        ///A test for UpdateObject
+        ///</summary>
+        public void UpdateObjectTestHelper<T>()
+            where T : class
+        {
+          
+            RedmineManager target = new RedmineManager(host, apiKey); // TODO: Initialize to an appropriate value
+            string id = "90"; // TODO: Initialize to an appropriate value
+            var obj = new Issue(); // TODO: Initialize to an appropriate value
+            obj.Subject = "test subject issue";
+            obj.Project = new IdentifiableName { Id = 25 };
+            obj.Priority = new IdentifiableName { Id = 1 };
+            target.UpdateObject<Issue>(id, obj);
+            Assert.Inconclusive("A method that does not return a value cannot be verified.");
+        }
+
+        [TestMethod()]
+        public void UpdateObjectTest()
+        {
+            UpdateObjectTestHelper<GenericParameterHelper>();
         }
     }
 }
