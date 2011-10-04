@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Api")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Redmine.Api")]
+[assembly: AssemblyDescription("Redmine .NET API library is a FREE third-party C# library that can be used to access the Redmine API")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Microsoft")]
-[assembly: AssemblyProduct("Api")]
-[assembly: AssemblyCopyright("Copyright © Microsoft 2011")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("Redmine.Api")]
+[assembly: AssemblyCopyright(" Copyright 2011 Dorin Huzum, Adrian Popescu")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
