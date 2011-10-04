@@ -6,7 +6,6 @@ using System.Xml.Serialization;
 namespace Redmine.Net.Api.Types
 {
     [Serializable]
-    [XmlTypeAttribute(AnonymousType = true)]
     public class IdentifiableName : IXmlSerializable
     {
         /// <summary>
@@ -24,6 +23,7 @@ namespace Redmine.Net.Api.Types
         {
             ReadXml(reader);
         }
+   
         /// <summary>
         /// Gets or sets the id.
         /// </summary>
@@ -52,7 +52,13 @@ namespace Redmine.Net.Api.Types
 
         public virtual void WriteXml(XmlWriter writer)
         {
-            throw new NotImplementedException();
+            writer.WriteAttributeString("id", Id.ToString());
+            writer.WriteAttributeString("name", Name);
+        }
+
+        public override string ToString()
+        {
+            return Id + ", " + Name;
         }
     }
 }

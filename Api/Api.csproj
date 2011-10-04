@@ -48,9 +48,12 @@
     <Compile Include="Types\IdentifiableName.cs" />
     <Compile Include="Types\Issue.cs" />
     <Compile Include="Types\IssueRelation.cs" />
+    <Compile Include="Types\Membership.cs" />
     <Compile Include="Types\News.cs" />
     <Compile Include="Types\Project.cs" />
     <Compile Include="Types\Query.cs" />
+    <Compile Include="Types\Role.cs" />
+    <Compile Include="Types\TimeEntry.cs" />
     <Compile Include="Types\User.cs" />
     <Compile Include="Types\Version.cs" />
   </ItemGroup>

@@ -4,8 +4,7 @@ using System.Xml.Serialization;
 namespace Redmine.Net.Api.Types
 {
     [Serializable]
-  
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+    [XmlRoot("attachment")]
     public class Attachment
     {
         /// <summary>
@@ -62,6 +61,6 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <value>The created on.</value>
         [XmlElement("created_on")]
-        public DateTime CreatedOn { get; set; }
+        public DateTime? CreatedOn { get; set; }
     }
 }

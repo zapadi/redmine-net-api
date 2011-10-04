@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
@@ -216,7 +215,14 @@ namespace Redmine.Net.Api.Types
 
         public void WriteXml(XmlWriter writer)
         {
-            throw new NotImplementedException();
+            writer.WriteElementString("subject", Subject);
+            writer.WriteElementString("description", Description);
+            writer.WriteElementString("project_id", Project != null ? Project.Id.ToString() : "");
+            writer.WriteElementString("priority_id", Priority != null ? Priority.Id.ToString() : "");
+            writer.WriteElementString("status_id", Status != null ? Status.Id.ToString() : "");
+            writer.WriteElementString("category_id", Category != null ? Category.Id.ToString() : "");
+           // writer.WriteElementString("assigned_to_id", User != null ? Category.Id.ToString() : "");
+            writer.WriteElementString("tracker_id", Tracker != null ? Tracker.Id.ToString() : "");
         }
     }
 }

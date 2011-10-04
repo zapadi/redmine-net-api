@@ -6,7 +6,6 @@ namespace Redmine.Net.Api.Types
 {
     [Serializable]
     [XmlRoot("user")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
     public class User
     {
         /// <summary>
@@ -21,48 +20,53 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <value>The login.</value>
         [XmlElement("login")]
-        public string Login { get; set; }
+        public String Login { get; set; }
 
         /// <summary>
         /// Gets or sets the first name.
         /// </summary>
         /// <value>The first name.</value>
         [XmlElement("firstname")]
-        public string FirstName { get; set; }
+        public String FirstName { get; set; }
 
         /// <summary>
         /// Gets or sets the last name.
         /// </summary>
         /// <value>The last name.</value>
         [XmlElement("lastname")]
-        public string LastName { get; set; }
+        public String LastName { get; set; }
 
         /// <summary>
         /// Gets or sets the email.
         /// </summary>
         /// <value>The email.</value>
         [XmlElement("mail")]
-        public string Email { get; set; }
+        public String Email { get; set; }
 
         /// <summary>
         /// Gets or sets the created on.
         /// </summary>
         /// <value>The created on.</value>
         [XmlElement("created_on")]
-        public DateTime CreatedOn { get; set; }
+        public DateTime? CreatedOn { get; set; }
 
         /// <summary>
         /// Gets or sets the last login on.
         /// </summary>
         /// <value>The last login on.</value>
         [XmlElement("last_login_on")]
-        public DateTime LastLoginOn { get; set; }
+        public DateTime? LastLoginOn { get; set; }
 
         /// <summary>
         /// Gets or sets the custom fields.
         /// </summary>
         /// <value>The custom fields.</value>
-        [XmlElement("custom_fields",Type = typeof(CustomField))]
-        public IList<CustomField> CustomFields { get; set; }
+        [XmlArray("custom_fields")]
+        [XmlArrayItem("custom_field")]
+        public List<CustomField> CustomFields { get; set; }
+
+        [XmlArray("memberships")]
+        [XmlArrayItem("membership")]
+        public List<Membership> Memberships { get; set; }
     }
 }

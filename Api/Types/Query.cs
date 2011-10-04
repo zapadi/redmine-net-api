@@ -6,8 +6,7 @@ namespace Redmine.Net.Api.Types
 {
     [Serializable]
     [XmlRoot("query")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    public class Query : IdentifiableName
+  public class Query : IdentifiableName
     {
         /// <summary>
         /// Gets or sets a value indicating whether this instance is public.

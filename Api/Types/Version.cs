@@ -5,7 +5,6 @@ namespace Redmine.Net.Api.Types
 {
     [Serializable]
     [XmlRoot("version")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
     public class Version : IdentifiableName
     {
         /// <summary>
@@ -34,20 +33,20 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <value>The due date.</value>
         [XmlElement("due_date")]
-        public DateTime DueDate { get; set; }
+        public DateTime? DueDate { get; set; }
 
         /// <summary>
         /// Gets or sets the created on.
         /// </summary>
         /// <value>The created on.</value>
         [XmlElement("created_on")]
-        public DateTime CreatedOn { get; set; }
+        public DateTime? CreatedOn { get; set; }
 
         /// <summary>
         /// Gets or sets the updated on.
         /// </summary>
         /// <value>The updated on.</value>
         [XmlElement("updated_on")]
-        public DateTime UpdatedOn { get; set; }
+        public DateTime? UpdatedOn { get; set; }
     }
 }
