@@ -15,7 +15,6 @@ namespace Redmine.Net.Api
     /// </summary>
     public class RedmineManager
     {
-        private const string KEY = "key";
         private const string REQUESTFORMAT = "{0}/{1}/{2}.xml";
         private const string FORMAT = "{0}/{1}.xml";
         private readonly string host, apiKey;
@@ -37,6 +36,15 @@ namespace Redmine.Net.Api
         /// Initializes a new instance of the <see cref="RedmineManager"/> class.
         /// </summary>
         /// <param name="host">The host.</param>
+        public RedmineManager(string host)
+        {
+            this.host = host;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RedmineManager"/> class.
+        /// </summary>
+        /// <param name="host">The host.</param>
         /// <param name="apiKey">The API key.</param>
         public RedmineManager(string host, string apiKey)
         {
@@ -53,8 +61,6 @@ namespace Redmine.Net.Api
         public RedmineManager(string host, string login, string password)
         {
             this.host = host;
-            //this.login = login;
-            //this.password = password;
             cache = new CredentialCache { { new Uri(host), "Basic", new NetworkCredential(login, password) } };
         }
 
@@ -168,7 +174,7 @@ namespace Redmine.Net.Api
             {
                 webClient.QueryString["key"] = apiKey;
             }
-            else
+            else if (cache != null)
             {
                 webClient.Credentials = cache;
             }
