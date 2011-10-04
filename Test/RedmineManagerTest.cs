@@ -19,6 +19,9 @@ namespace Test
     [TestClass()]
     public class RedmineManagerTest
     {
+        string host = "";
+        string apiKey = "";
+
         /// <summary>
         ///A test for CreateObject
         ///</summary>
@@ -30,9 +33,7 @@ namespace Test
             var obj = new Issue(); // TODO: Initialize to an appropriate value
             obj.Subject = "test subject issue";
             obj.Project = new IdentifiableName {Id = 25};
-            obj.Priority = new IdentifiableName {Id = 1};
             target.CreateObject<Issue>(obj);
-            Assert.Inconclusive("A method that does not return a value cannot be verified.");
         }
 
         [TestMethod()]
@@ -112,21 +113,55 @@ namespace Test
         public void UpdateObjectTestHelper<T>()
             where T : class
         {
-          
-            RedmineManager target = new RedmineManager(host, apiKey); // TODO: Initialize to an appropriate value
-            string id = "90"; // TODO: Initialize to an appropriate value
-            var obj = new Issue(); // TODO: Initialize to an appropriate value
+
+            RedmineManager target = new RedmineManager(host, apiKey);
+            string id = "90"; 
+            var obj = new Issue();
             obj.Subject = "test subject issue";
             obj.Project = new IdentifiableName { Id = 25 };
-            obj.Priority = new IdentifiableName { Id = 1 };
             target.UpdateObject<Issue>(id, obj);
-            Assert.Inconclusive("A method that does not return a value cannot be verified.");
         }
 
         [TestMethod()]
         public void UpdateObjectTest()
         {
             UpdateObjectTestHelper<GenericParameterHelper>();
+        }
+
+        /// <summary>
+        ///A test for RedmineManager Constructor
+        ///</summary>
+        [TestMethod()]
+        public void RedmineManagerConstructorTest()
+        {
+            string host = string.Empty; // TODO: Initialize to an appropriate value
+            string apiKey = string.Empty; // TODO: Initialize to an appropriate value
+            RedmineManager target = new RedmineManager(host, apiKey);
+            Assert.Inconclusive("TODO: Implement code to verify target");
+        }
+
+        /// <summary>
+        ///A test for RedmineManager Constructor
+        ///</summary>
+        [TestMethod()]
+        public void RedmineManagerConstructorTest1()
+        {
+            string host = string.Empty; // TODO: Initialize to an appropriate value
+            string login = string.Empty; // TODO: Initialize to an appropriate value
+            string password = string.Empty; // TODO: Initialize to an appropriate value
+            RedmineManager target = new RedmineManager(host, login, password);
+            Assert.Inconclusive("TODO: Implement code to verify target");
+        }
+
+        /// <summary>
+        ///A test for RedmineManager Constructor
+        ///</summary>
+        [TestMethod()]
+        public void RedmineManagerConstructorTest2()
+        {
+            string host = string.Empty; // TODO: Initialize to an appropriate value
+            RedmineManager target = new RedmineManager(host);
+            Assert.Inconclusive("TODO: Implement code to verify target");
         }
     }
 }
