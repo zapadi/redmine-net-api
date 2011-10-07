@@ -24,7 +24,7 @@ namespace Redmine.Net.Api.Types
 {
     [Serializable]
     [XmlRoot("issue")]
-    public class Issue : IXmlSerializable
+    public class Issue : Identifiable<Issue>, IXmlSerializable, IEquatable<Issue>, ICloneable
     {
         /// <summary>
         /// Gets or sets the id.
@@ -240,20 +240,18 @@ namespace Redmine.Net.Api.Types
         {
             writer.WriteElementString("subject", Subject);
             writer.WriteElementString("description", Description);
-            WriteIdIfNotNull(writer, Project, "project_id");
-            WriteIdIfNotNull(writer, Priority, "priority_id");
-            WriteIdIfNotNull(writer, Status, "status_id");
-            WriteIdIfNotNull(writer, Category, "category_id");
-            WriteIdIfNotNull(writer, Tracker, "tracker_id");
-            WriteIdIfNotNull(writer, AssignedTo, "assigned_to_id");
+            writer.WriteIdIfNotNull(Project, "project_id");
+            writer.WriteIdIfNotNull(Priority, "priority_id");
+            writer.WriteIdIfNotNull(Status, "status_id");
+            writer.WriteIdIfNotNull(Category, "category_id");
+            writer.WriteIdIfNotNull(Tracker, "tracker_id");
+            writer.WriteIdIfNotNull(AssignedTo, "assigned_to_id");
         }
 
-        private void WriteIdIfNotNull(XmlWriter writer, IdentifiableName ident, String tag)
+        public object Clone()
         {
-            if (ident != null)
-            {
-                writer.WriteElementString(tag, ident.Id.ToString());
-            }
+            var issue = new Issue {AssignedTo = AssignedTo,Author = Author, Category = Category, CustomFields = CustomFields, Description = Description, DoneRatio = DoneRatio, DueDate = DueDate, EstimatedHours = EstimatedHours, Priority = Priority, StartDate = StartDate, Status = Status, Subject = Subject, Tracker = Tracker, Project = Project};
+            return issue;
         }
     }
 }

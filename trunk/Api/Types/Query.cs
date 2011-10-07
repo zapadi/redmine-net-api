@@ -36,5 +36,37 @@ namespace Redmine.Net.Api.Types
         /// <value>The project id.</value>
         [XmlElement("project_id")]
         public int ProjectId { get; set; }
+
+        public override void ReadXml(System.Xml.XmlReader reader)
+        {
+            reader.Read();
+            while (!reader.EOF)
+            {
+                if (reader.IsEmptyElement && !reader.HasAttributes)
+                {
+                    reader.Read();
+                    continue;
+                }
+
+                switch (reader.Name)
+                {
+                    case "id": Id = reader.ReadElementContentAsInt(); break;
+
+                    case "name": Name = reader.ReadElementContentAsString(); break;
+
+                    case "is_public": IsPublic = reader.ReadElementContentAsBoolean(); break;
+
+                    case "project_id": ProjectId = reader.ReadElementContentAsInt(); break;
+
+                    default:
+                        reader.Read();
+                        break;
+                }
+            }
+        }
+
+        public override void WriteXml(System.Xml.XmlWriter writer)
+        {
+        }
     }
 }

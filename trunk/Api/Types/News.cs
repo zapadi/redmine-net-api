@@ -15,21 +15,16 @@
 */
 
 using System;
+using System.Xml;
+using System.Xml.Schema;
 using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
     [Serializable]
     [XmlRoot("news")]
-    public class News
+    public class News : Identifiable<News>, IEquatable<News>, IXmlSerializable
     {
-        /// <summary>
-        /// Gets or sets the id.
-        /// </summary>
-        /// <value>The id.</value>
-        [XmlElement("id")]
-        public int Id { get; set; }
-
         /// <summary>
         /// Gets or sets the project.
         /// </summary>
@@ -71,5 +66,45 @@ namespace Redmine.Net.Api.Types
         /// <value>The created on.</value>
         [XmlElement("created_on")]
         public DateTime? CreatedOn { get; set; }
+
+        public XmlSchema GetSchema()
+        {
+            return null;
+        }
+
+        public void ReadXml(XmlReader reader)
+        {
+            reader.Read();
+            while (!reader.EOF)
+            {
+                if (reader.IsEmptyElement && !reader.HasAttributes)
+                {
+                    reader.Read();
+                    continue;
+                }
+
+                switch (reader.Name)
+                {
+                    case "id": Id = reader.ReadElementContentAsInt(); break;
+
+                    case "project": Project = new IdentifiableName(reader); break;
+
+                    case "author": Author = new IdentifiableName(reader); break;
+
+                    case "title": Title = reader.ReadElementContentAsString(); break;
+
+                    case "description": Description = reader.ReadElementContentAsString(); break;
+
+                    case "created_on": CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
+                    default:
+                        reader.Read();
+                        break;
+                }
+            }
+        }
+
+        public void WriteXml(XmlWriter writer)
+        {
+        }
     }
 }

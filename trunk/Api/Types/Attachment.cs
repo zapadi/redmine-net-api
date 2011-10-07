@@ -15,13 +15,15 @@
 */
 
 using System;
+using System.Xml;
+using System.Xml.Schema;
 using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
     [Serializable]
     [XmlRoot("attachment")]
-    public class Attachment
+    public class Attachment : Identifiable<Attachment>, IXmlSerializable, IEquatable<Attachment>
     {
         /// <summary>
         /// Gets or sets the id.
@@ -78,5 +80,49 @@ namespace Redmine.Net.Api.Types
         /// <value>The created on.</value>
         [XmlElement("created_on")]
         public DateTime? CreatedOn { get; set; }
+
+        public XmlSchema GetSchema()
+        {
+            return null;
+        }
+
+        public void ReadXml(XmlReader reader)
+        {
+            reader.Read();
+            while (!reader.EOF)
+            {
+                if (reader.IsEmptyElement && !reader.HasAttributes)
+                {
+                    reader.Read();
+                    continue;
+                }
+
+                switch (reader.Name)
+                {
+                    case "id": Id = reader.ReadElementContentAsInt();
+                        break;
+
+                    case "filename": FileName = reader.ReadElementContentAsString(); break;
+
+                    case "filesize": FileSize = reader.ReadElementContentAsInt(); break;
+
+                    case "content_type": ContentType = reader.ReadElementContentAsString(); break;
+
+                    case "author": Author = new IdentifiableName(reader); break;
+
+                    case "created_on": CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
+
+                    case "description": Description = reader.ReadElementContentAsString(); break;
+
+                    default:
+                        reader.Read();
+                        break;
+                }
+            }
+        }
+
+        public void WriteXml(XmlWriter writer)
+        {
+        }
     }
 }

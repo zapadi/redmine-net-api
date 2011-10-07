@@ -15,14 +15,17 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Xml;
+using System.Xml.Schema;
 using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
     [Serializable]
     [XmlRoot("membership")]
-    public class Membership
+    public class Membership : Identifiable<Membership>, IEquatable<Membership>, IXmlSerializable
     {
         /// <summary>
         /// Gets or sets the project.
@@ -37,6 +40,43 @@ namespace Redmine.Net.Api.Types
         /// <value>The type.</value>
         [XmlArray("roles")]
         [XmlArrayItem("role")]
-        public Collection<Role> Type { get; set; }
+        public List<Role> Roles { get; set; }
+
+        public XmlSchema GetSchema()
+        {
+            return null;
+        }
+
+        public void ReadXml(XmlReader reader)
+        {
+            reader.Read();
+            while (!reader.EOF)
+            {
+                if (reader.IsEmptyElement && !reader.HasAttributes)
+                {
+                    reader.Read();
+                    continue;
+                }
+
+                switch (reader.Name)
+                {
+                    case "id": Id = reader.ReadElementContentAsInt();
+                        break;
+
+                    case "project": Project = new IdentifiableName(reader); break;
+
+                    case "roles":
+                        Roles = reader.ReadElementContentAsCollection<Role>();
+                        break;
+                    default:
+                        reader.Read();
+                        break;
+                }
+            }
+        }
+
+        public void WriteXml(XmlWriter writer)
+        {
+        }
     }
 }

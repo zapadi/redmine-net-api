@@ -15,13 +15,15 @@
 */
 
 using System;
+using System.Xml;
+using System.Xml.Schema;
 using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
     [Serializable]
     [XmlRoot("time_entry")]
-    public class TimeEntry
+    public class TimeEntry : Identifiable<TimeEntry>, ICloneable, IEquatable<TimeEntry>, IXmlSerializable
     {
         /// <summary>
         /// Gets or sets the issue id.
@@ -42,7 +44,7 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <value>The spent on.</value>
         [XmlAttribute("spent_on")]
-        public DateTime SpentOn { get; set; }
+        public DateTime? SpentOn { get; set; }
 
         /// <summary>
         /// Gets or sets the hours.
@@ -64,5 +66,61 @@ namespace Redmine.Net.Api.Types
         /// <value>The comments.</value>
         [XmlAttribute("comments")]
         public String Comments { get; set; }
+
+        public object Clone()
+        {
+            var timeEntry = new TimeEntry {ActivityId = ActivityId, Comments = Comments, Hours = Hours, IssueId = IssueId, ProjectId = ProjectId, SpentOn = SpentOn};
+            return timeEntry;
+        }
+
+        public XmlSchema GetSchema()
+        {
+            return null;
+        }
+
+        public void ReadXml(XmlReader reader)
+        {
+            reader.Read();
+            while (!reader.EOF)
+            {
+                if (reader.IsEmptyElement && !reader.HasAttributes)
+                {
+                    reader.Read();
+                    continue;
+                }
+
+                switch (reader.Name)
+                {
+                    case "id": Id = reader.ReadElementContentAsInt();
+                        break;
+
+                    case "issue_id": IssueId = reader.ReadElementContentAsInt(); break;
+
+                    case "project_id": ProjectId = reader.ReadElementContentAsInt(); break;
+
+                    case "spent_on": SpentOn = reader.ReadElementContentAsNullableDateTime(); break;
+
+                    case "hours": Hours = reader.ReadElementContentAsInt(); break;
+
+                    case "activity_id": ActivityId = reader.ReadElementContentAsInt(); break;
+
+                    case "comments": Comments = reader.ReadElementContentAsString(); break;
+
+                    default:
+                        reader.Read();
+                        break;
+                }
+            }
+        }
+
+        public void WriteXml(XmlWriter writer)
+        {
+            writer.WriteElementString("issue_id", IssueId.ToString());
+            writer.WriteElementString("project_id", ProjectId.ToString());
+            writer.WriteIfNotDefaultOrNull(SpentOn, "spent_on");
+            writer.WriteElementString("hours", Hours.ToString());
+            writer.WriteElementString("activity_id", ActivityId.ToString());
+            writer.WriteElementString("comments", Comments);
+        }
     }
 }

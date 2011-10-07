@@ -22,7 +22,7 @@ using System.Xml.Serialization;
 namespace Redmine.Net.Api.Types
 {
     [Serializable]
-    public class IdentifiableName : IXmlSerializable
+    public class IdentifiableName : Identifiable<IdentifiableName>, IXmlSerializable, IEquatable<IdentifiableName>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="IdentifiableName"/> class.
@@ -40,13 +40,6 @@ namespace Redmine.Net.Api.Types
             ReadXml(reader);
         }
    
-        /// <summary>
-        /// Gets or sets the id.
-        /// </summary>
-        /// <value>The id.</value>
-        [XmlAttribute("id")]
-        public int Id { get; set; }
-
         /// <summary>
         /// Gets or sets the name.
         /// </summary>

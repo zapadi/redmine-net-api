@@ -16,27 +16,29 @@
 
 using System;
 using System.Collections.Generic;
+using System.Xml;
+using System.Xml.Schema;
 using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
     [Serializable]
     [XmlRoot("user")]
-    public class User
+    public class User : Identifiable<User>, IXmlSerializable, IEquatable<User>
     {
-        /// <summary>
-        /// Gets or sets the id.
-        /// </summary>
-        /// <value>The id.</value>
-        [XmlElement("id")]
-        public int Id { get; set; }
-
         /// <summary>
         /// Gets or sets the login.
         /// </summary>
         /// <value>The login.</value>
         [XmlElement("login")]
         public String Login { get; set; }
+
+        /// <summary>
+        /// Gets or sets the password.
+        /// </summary>
+        /// <value>The password.</value>
+        [XmlElement("password")]
+        public string Password { get; set; }
 
         /// <summary>
         /// Gets or sets the first name.
@@ -84,5 +86,61 @@ namespace Redmine.Net.Api.Types
         [XmlArray("memberships")]
         [XmlArrayItem("membership")]
         public List<Membership> Memberships { get; set; }
+
+        public XmlSchema GetSchema()
+        {
+            return null;
+        }
+
+        public void ReadXml(XmlReader reader)
+        {
+            reader.Read();
+            while (!reader.EOF)
+            {
+                if (reader.IsEmptyElement && !reader.HasAttributes)
+                {
+                    reader.Read();
+                    continue;
+                }
+
+                switch (reader.Name)
+                {
+                    case "id": Id = reader.ReadElementContentAsInt(); break;
+
+                    case "login": Login = reader.ReadElementContentAsString(); break;
+
+                    case "firstname": FirstName = reader.ReadElementContentAsString(); break;
+
+                    case "lastname": LastName = reader.ReadElementContentAsString(); break;
+
+                    case "mail": Email = reader.ReadElementContentAsString(); break;
+
+                    case "last_login_on": LastLoginOn = reader.ReadElementContentAsNullableDateTime(); break;
+
+                    case "created_on": CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
+
+                    case "custom_fields":
+                        CustomFields = reader.ReadElementContentAsCollection<CustomField>();
+                        break;
+
+                    case "memberships":
+                        Memberships = reader.ReadElementContentAsCollection<Membership>();
+                        break;
+
+                    default:
+                        reader.Read();
+                        break;
+                }
+            }
+        }
+
+        public void WriteXml(XmlWriter writer)
+        {
+            writer.WriteElementString("login", Login);
+            writer.WriteElementString("firstname", FirstName);
+            writer.WriteElementString("lastname", LastName);
+            writer.WriteElementString("mail", Email);
+            writer.WriteElementString("password", Password);
+        }
     }
 }

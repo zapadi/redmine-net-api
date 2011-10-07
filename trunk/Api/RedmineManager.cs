@@ -132,10 +132,12 @@ namespace Redmine.Net.Api
         {
             if (!urls.ContainsKey(typeof(T))) return;
 
+            var xml = Serialize(obj);
+
+            if (string.IsNullOrEmpty(xml)) return;
+
             using (var wc = CreateWebClient(null))
             {
-                var xml = Serialize(obj);
-
                 string result = wc.UploadString(string.Format(FORMAT, host, urls[typeof(T)]), xml);
             }
         }
@@ -150,10 +152,12 @@ namespace Redmine.Net.Api
         {
             if (!urls.ContainsKey(typeof(T))) return;
 
+            var xml = Serialize(obj);
+
+            if (string.IsNullOrEmpty(xml)) return;
+
             using (var wc = CreateWebClient(null))
             {
-                var xml = Serialize(obj);
-
                 string result = wc.UploadString(string.Format(REQUESTFORMAT, host, urls[typeof(T)], id), "PUT", xml);
             }
         }

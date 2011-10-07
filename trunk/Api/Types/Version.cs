@@ -15,6 +15,7 @@
 */
 
 using System;
+using System.Xml;
 using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Types
@@ -52,6 +53,13 @@ namespace Redmine.Net.Api.Types
         public DateTime? DueDate { get; set; }
 
         /// <summary>
+        /// Gets or sets the sharing.
+        /// </summary>
+        /// <value>The sharing.</value>
+        [XmlElement("sharing")]
+        public String Sharing { get; set; }
+
+        /// <summary>
         /// Gets or sets the created on.
         /// </summary>
         /// <value>The created on.</value>
@@ -64,5 +72,50 @@ namespace Redmine.Net.Api.Types
         /// <value>The updated on.</value>
         [XmlElement("updated_on")]
         public DateTime? UpdatedOn { get; set; }
+
+        public override void ReadXml(XmlReader reader)
+        {
+            reader.Read();
+            while (!reader.EOF)
+            {
+                if (reader.IsEmptyElement && !reader.HasAttributes)
+                {
+                    reader.Read();
+                    continue;
+                }
+
+                switch (reader.Name)
+                {
+                    case "id": Id = reader.ReadElementContentAsInt(); break;
+
+                    case "project": Project = new IdentifiableName(reader); break;
+
+                    case "description": Description = reader.ReadElementContentAsString(); break;
+
+                    case "status": Status = reader.ReadElementContentAsString(); break;
+
+                    case "due_date": DueDate = reader.ReadElementContentAsNullableDateTime(); break;
+
+                    case "sharing": Sharing = reader.ReadElementContentAsString(); break;
+
+                    case "created_on": CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
+
+                    case "updated_on": UpdatedOn = reader.ReadElementContentAsNullableDateTime(); break;
+
+                    default:
+                        reader.Read();
+                        break;
+                }
+            }
+        }
+
+        public override void WriteXml(XmlWriter writer)
+        {
+            writer.WriteElementString("name", Name);
+            writer.WriteElementString("status", Status);
+            writer.WriteElementString("sharing", Sharing);
+            writer.WriteIfNotDefaultOrNull(DueDate, "due_date");
+            writer.WriteElementString("description", Description);
+        }
     }
 }
