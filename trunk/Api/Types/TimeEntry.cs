@@ -122,5 +122,11 @@ namespace Redmine.Net.Api.Types
             writer.WriteElementString("activity_id", ActivityId.ToString());
             writer.WriteElementString("comments", Comments);
         }
+
+        public bool Equals(TimeEntry other)
+        {
+            if (other == null) return false;
+            return (Id == other.Id && IssueId == other.IssueId && ProjectId == other.ProjectId && SpentOn == other.SpentOn && Hours == other.Hours && ActivityId == other.ActivityId && Comments == other.Comments);
+        }
     }
 }

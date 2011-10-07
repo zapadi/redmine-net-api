@@ -106,5 +106,11 @@ namespace Redmine.Net.Api.Types
         public void WriteXml(XmlWriter writer)
         {
         }
+
+        public bool Equals(News other)
+        {
+            if (other == null) return false;
+            return (Id == other.Id && Project == other.Project && Author == other.Author && Title == other.Title && Summary == other.Summary && Description == other.Description && CreatedOn == other.CreatedOn);
+        }
     }
 }

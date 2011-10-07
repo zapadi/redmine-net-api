@@ -41,7 +41,7 @@ namespace Redmine.Net.Api.Types
         public bool Equals(CustomField other)
         {
             if (other == null) return false;
-            return (Id == other.Id);
+            return (Id == other.Id && Name == other.Name && Value == other.Value);
         }
     }
 }

@@ -16,7 +16,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
@@ -77,6 +76,12 @@ namespace Redmine.Net.Api.Types
 
         public void WriteXml(XmlWriter writer)
         {
+        }
+
+        public bool Equals(Membership other)
+        {
+            if (other == null) return false;
+            return (Id == other.Id && Project == other.Project && Roles == other.Roles);
         }
     }
 }

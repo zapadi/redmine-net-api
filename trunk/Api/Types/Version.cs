@@ -22,7 +22,7 @@ namespace Redmine.Net.Api.Types
 {
     [Serializable]
     [XmlRoot("version")]
-    public class Version : IdentifiableName
+    public class Version : IdentifiableName, IEquatable<Version>
     {
         /// <summary>
         /// Gets or sets the project.
@@ -116,6 +116,12 @@ namespace Redmine.Net.Api.Types
             writer.WriteElementString("sharing", Sharing);
             writer.WriteIfNotDefaultOrNull(DueDate, "due_date");
             writer.WriteElementString("description", Description);
+        }
+
+        public bool Equals(Version other)
+        {
+            if (other == null) return false;
+            return (Id == other.Id && Name == other.Name && Project == other.Project && Description == other.Description && Status == other.Status && DueDate == other.DueDate && Sharing == other.Sharing && CreatedOn == other.CreatedOn && UpdatedOn == other.UpdatedOn);
         }
     }
 }

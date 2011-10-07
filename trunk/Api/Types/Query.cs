@@ -15,13 +15,14 @@
 */
 
 using System;
+using System.Xml;
 using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
     [Serializable]
     [XmlRoot("query")]
-  public class Query : IdentifiableName
+    public class Query : IdentifiableName, IEquatable<Query>
     {
         /// <summary>
         /// Gets or sets a value indicating whether this instance is public.
@@ -37,7 +38,7 @@ namespace Redmine.Net.Api.Types
         [XmlElement("project_id")]
         public int ProjectId { get; set; }
 
-        public override void ReadXml(System.Xml.XmlReader reader)
+        public override void ReadXml(XmlReader reader)
         {
             reader.Read();
             while (!reader.EOF)
@@ -65,8 +66,15 @@ namespace Redmine.Net.Api.Types
             }
         }
 
-        public override void WriteXml(System.Xml.XmlWriter writer)
+        public override void WriteXml(XmlWriter writer)
         {
+        }
+
+        public bool Equals(Query other)
+        {
+            if (other == null) return false;
+
+            return (other.Id == Id && other.Name == Name && other.IsPublic == IsPublic && other.ProjectId == ProjectId);
         }
     }
 }
