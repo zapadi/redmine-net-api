@@ -28,12 +28,14 @@ namespace Test
         public void CreateObjectTestHelper<T>()
             where T : class
         {
-           
-            RedmineManager target = new RedmineManager(host, apiKey); // TODO: Initialize to an appropriate value
-            var obj = new Issue(); // TODO: Initialize to an appropriate value
-            obj.Subject = "test subject issue";
-            obj.Project = new IdentifiableName {Id = 25};
-            target.CreateObject<Issue>(obj);
+            RedmineManager target = new RedmineManager(host, apiKey); 
+            var obj = new Project {Identifier = "tzast", Name = "tzast project"};
+
+            var obj1 = new Project {Id = 1, Identifier = "xxx"};
+
+            Assert.AreNotEqual(obj, obj1, "yes");
+
+            target.CreateObject<Project>(obj);
         }
 
         [TestMethod()]
@@ -48,12 +50,11 @@ namespace Test
         public void DeleteObjectTestHelper<T>()
             where T : class
         {
-           
+
             RedmineManager target = new RedmineManager(host, apiKey); // TODO: Initialize to an appropriate value
-            string id = string.Empty; // TODO: Initialize to an appropriate value
+            string id = "27"; // TODO: Initialize to an appropriate value
             NameValueCollection parameters = null; // TODO: Initialize to an appropriate value
-            target.DeleteObject<Issue>(id, parameters);
-            Assert.Inconclusive("A method that does not return a value cannot be verified.");
+            target.DeleteObject<Project>(id, parameters);
         }
 
         [TestMethod()]
@@ -68,15 +69,15 @@ namespace Test
         public void GetObjectTestHelper<T>()
             where T : class
         {
-         
+
             RedmineManager target = new RedmineManager(host, apiKey); // TODO: Initialize to an appropriate value
-            string id = string.Empty; // TODO: Initialize to an appropriate value
+            string id = "27"; // TODO: Initialize to an appropriate value
             NameValueCollection parameters = null; // TODO: Initialize to an appropriate value
             T expected = null; // TODO: Initialize to an appropriate value
-            T actual;
-            actual = target.GetObject<T>(id, parameters);
-            Assert.AreEqual(expected, actual);
-            Assert.Inconclusive("Verify the correctness of this test method.");
+            Project actual;
+            actual = target.GetObject<Project>(id, parameters);
+            //Assert.AreEqual(expected, actual);
+            //Assert.Inconclusive("Verify the correctness of this test method.");
         }
 
         [TestMethod()]
@@ -91,14 +92,12 @@ namespace Test
         public void GetObjectListTestHelper<T>()
             where T : class
         {
-          
+
             RedmineManager target = new RedmineManager(host, apiKey); // TODO: Initialize to an appropriate value
             NameValueCollection parameters = null; // TODO: Initialize to an appropriate value
-            IList<T> expected = null; // TODO: Initialize to an appropriate value
-            IList<T> actual;
-            actual = target.GetObjectList<T>(parameters);
-            Assert.AreEqual(expected, actual);
-            Assert.Inconclusive("Verify the correctness of this test method.");
+
+            var actual = target.GetObjectList<Project>(parameters);
+
         }
 
         [TestMethod()]
@@ -115,7 +114,7 @@ namespace Test
         {
 
             RedmineManager target = new RedmineManager(host, apiKey);
-            string id = "90"; 
+            string id = "90";
             var obj = new Issue();
             obj.Subject = "test subject issue";
             obj.Project = new IdentifiableName { Id = 25 };

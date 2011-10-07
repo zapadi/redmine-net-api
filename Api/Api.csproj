@@ -54,6 +54,7 @@
     <Compile Include="Types\Query.cs" />
     <Compile Include="Types\Role.cs" />
     <Compile Include="Types\TimeEntry.cs" />
+    <Compile Include="Types\Identifiable.cs" />
     <Compile Include="Types\User.cs" />
     <Compile Include="Types\Version.cs" />
   </ItemGroup>

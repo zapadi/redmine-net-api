@@ -22,7 +22,7 @@ namespace Redmine.Net.Api.Types
 {
     [Serializable]
     [XmlRoot("custom_field")]
-    public class CustomField : IdentifiableName
+    public class CustomField : IdentifiableName, IEquatable<CustomField>
     {
         /// <summary>
         /// Gets or sets the value.
@@ -36,6 +36,12 @@ namespace Redmine.Net.Api.Types
             Id = Convert.ToInt32(reader.GetAttribute("id"));
             Name = reader.GetAttribute("name");
             Value = reader.ReadElementContentAsString();
+        }
+
+        public bool Equals(CustomField other)
+        {
+            if (other == null) return false;
+            return (Id == other.Id);
         }
     }
 }

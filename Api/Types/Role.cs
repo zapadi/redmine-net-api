@@ -15,14 +15,23 @@
 */
 
 using System;
+using System.Xml;
 using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
     [Serializable]
     [XmlRoot("role")]
-    public class Role : IdentifiableName
+    public class Role : IdentifiableName, IEquatable<Role>
     {
+        public override void WriteXml(XmlWriter writer)
+        {
+        }
 
+        public bool Equals(Role other)
+        {
+            if (other == null) return false;
+            return (Id == other.Id);
+        }
     }
 }

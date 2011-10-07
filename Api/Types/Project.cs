@@ -105,25 +105,11 @@ namespace Redmine.Net.Api.Types
 
         public override void WriteXml(XmlWriter writer)
         {
-            writer.WriteElementString("id", Id.ToString());
             writer.WriteElementString("name", Name);
             writer.WriteElementString("identifier", Identifier);
+            writer.WriteIdIfNotNull(Parent, "parent_id");
             writer.WriteElementString("description", Description);
             writer.WriteElementString("homepage", HomePage);
-            writer.WriteElementString("parent_id", Parent != null ? Parent.Id.ToString() : "");
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            var project = obj as Project;
-            return project.Identifier.Equals(Identifier) && project.Name.Equals(Name);
-        }
-
-        public override int GetHashCode()
-        {
-            return Name.GetHashCode() ^ Identifier.GetHashCode();
         }
     }
 }

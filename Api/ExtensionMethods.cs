@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
+using Redmine.Net.Api.Types;
 
 namespace Redmine.Net.Api
 {
@@ -74,6 +75,22 @@ namespace Redmine.Net.Api
                 if (temp != null) result.Add(temp);
             }
             return result;
+        }
+
+        public static void WriteIdIfNotNull(this XmlWriter writer, IdentifiableName ident, String tag)
+        {
+            if (ident != null)
+            {
+                writer.WriteElementString(tag, ident.Id.ToString());
+            }
+        }
+
+        public static void WriteIfNotDefaultOrNull<T>(this XmlWriter writer, T? val, String tag) where T: struct
+        {
+            if (val.HasValue)
+            {
+                writer.WriteElementString(tag, val.Value.ToString());
+            }
         }
     }
 }

@@ -15,21 +15,16 @@
 */
 
 using System;
+using System.Xml;
+using System.Xml.Schema;
 using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
     [Serializable]
     [XmlRoot("relation")]
-    public class IssueRelation
+    public class IssueRelation : Identifiable<IssueRelation>, IXmlSerializable, IEquatable<IssueRelation>
     {
-        /// <summary>
-        /// Gets or sets the id.
-        /// </summary>
-        /// <value>The id.</value>
-        [XmlElement("id")]
-        public int Id { get; set; }
-
         /// <summary>
         /// Gets or sets the issue id.
         /// </summary>
@@ -56,6 +51,48 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <value>The delay.</value>
         [XmlElement("delay")]
-        public int Delay { get; set; }
+        public int? Delay { get; set; }
+
+        public XmlSchema GetSchema()
+        {
+            return null;
+        }
+
+        public void ReadXml(XmlReader reader)
+        {
+            reader.Read();
+            while (!reader.EOF)
+            {
+                if (reader.IsEmptyElement && !reader.HasAttributes)
+                {
+                    reader.Read();
+                    continue;
+                }
+
+                switch (reader.Name)
+                {
+                    case "id": Id = reader.ReadElementContentAsInt(); break;
+
+                    case "issue_id": IssueId = reader.ReadElementContentAsInt(); break;
+
+                    case "issue_to_id": IssueToId = reader.ReadElementContentAsInt(); break;
+
+                    case "relation_type": Type = reader.ReadElementContentAsString(); break;
+
+                    case "delay": Delay = reader.ReadElementContentAsNullableInt(); break;
+
+                    default:
+                        reader.Read();
+                        break;
+                }
+            }
+        }
+
+        public void WriteXml(XmlWriter writer)
+        {
+            writer.WriteElementString("issue_to_id", IssueToId.ToString());
+            writer.WriteElementString("relation_type", Type);
+            writer.WriteElementString("delay", Delay.ToString());
+        }
     }
 }
