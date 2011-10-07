@@ -26,13 +26,6 @@ namespace Redmine.Net.Api.Types
     public class Attachment : Identifiable<Attachment>, IXmlSerializable, IEquatable<Attachment>
     {
         /// <summary>
-        /// Gets or sets the id.
-        /// </summary>
-        /// <value>The id.</value>
-        [XmlElement("id")]
-        public int Id { get; set; }
-
-        /// <summary>
         /// Gets or sets the name of the file.
         /// </summary>
         /// <value>The name of the file.</value>
@@ -123,6 +116,12 @@ namespace Redmine.Net.Api.Types
 
         public void WriteXml(XmlWriter writer)
         {
+        }
+
+        public bool Equals(Attachment other)
+        {
+            if (other == null) return false;
+            return (Id == other.Id && FileName == other.FileName && FileSize == other.FileSize && ContentType == other.ContentType && Description == other.Description && ContentUrl == other.ContentUrl && Author == other.Author && CreatedOn == other.CreatedOn);
         }
     }
 }

@@ -94,5 +94,11 @@ namespace Redmine.Net.Api.Types
             writer.WriteElementString("relation_type", Type);
             writer.WriteElementString("delay", Delay.ToString());
         }
+
+        public bool Equals(IssueRelation other)
+        {
+            if (other == null) return false;
+            return (Id == other.Id && IssueId == other.IssueId && IssueToId == other.IssueToId && Type == other.Type && Delay == other.Delay);
+        }
     }
 }

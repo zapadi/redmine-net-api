@@ -27,13 +27,6 @@ namespace Redmine.Net.Api.Types
     public class Issue : Identifiable<Issue>, IXmlSerializable, IEquatable<Issue>, ICloneable
     {
         /// <summary>
-        /// Gets or sets the id.
-        /// </summary>
-        /// <value>The id.</value>
-        [XmlElement("id")]
-        public int Id { get; set; }
-
-        /// <summary>
         /// Gets or sets the project.
         /// </summary>
         /// <value>The project.</value>
@@ -252,6 +245,16 @@ namespace Redmine.Net.Api.Types
         {
             var issue = new Issue {AssignedTo = AssignedTo,Author = Author, Category = Category, CustomFields = CustomFields, Description = Description, DoneRatio = DoneRatio, DueDate = DueDate, EstimatedHours = EstimatedHours, Priority = Priority, StartDate = StartDate, Status = Status, Subject = Subject, Tracker = Tracker, Project = Project};
             return issue;
+        }
+
+        public bool Equals(Issue other)
+        {
+            if (other == null) return false;
+            return (Id == other.Id && Project == other.Project && Tracker == other.Tracker && Status == other.Status && Priority == other.Priority 
+                && Author == other.Author && Category == other.Category && Subject == other.Subject && Description == other.Description && StartDate == other.StartDate
+                && DueDate == other.DueDate && DoneRatio == other.DoneRatio && EstimatedHours == other.EstimatedHours && CustomFields == other.CustomFields 
+                && CreatedOn == other.CreatedOn && UpdatedOn == other.UpdatedOn && AssignedTo == other.AssignedTo
+                );
         }
     }
 }

@@ -22,7 +22,7 @@ namespace Redmine.Net.Api.Types
     /// 
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract class Identifiable<T> where T : Identifiable<T>, IEquatable<T>
+    public abstract class Identifiable<T> where T : Identifiable<T>
     {
         private int? oldHashCode;
 
@@ -32,12 +32,6 @@ namespace Redmine.Net.Api.Types
         /// <value>The id.</value>
         [XmlAttribute("id")]
         public int Id { get; set; }
-
-        public bool Equals(T other)
-        {
-            if (other == null) return false;
-            return (Id == other.Id);
-        }
 
         public override bool Equals(object obj)
         {

@@ -22,7 +22,7 @@ namespace Redmine.Net.Api.Types
 {
     [Serializable]
     [XmlRoot("project")]
-    public class Project : IdentifiableName
+    public class Project : IdentifiableName, IEquatable<Project>
     {
         /// <summary>
         /// Gets or sets the identifier.
@@ -110,6 +110,12 @@ namespace Redmine.Net.Api.Types
             writer.WriteIdIfNotNull(Parent, "parent_id");
             writer.WriteElementString("description", Description);
             writer.WriteElementString("homepage", HomePage);
+        }
+
+        public bool Equals(Project other)
+        {
+            if (other == null) return false;
+            return (Id == other.Id && Identifier == other.Identifier);
         }
     }
 }

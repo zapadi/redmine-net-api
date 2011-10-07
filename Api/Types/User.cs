@@ -142,5 +142,12 @@ namespace Redmine.Net.Api.Types
             writer.WriteElementString("mail", Email);
             writer.WriteElementString("password", Password);
         }
+
+        public bool Equals(User other)
+        {
+            if (other == null) return false;
+            return (Id == other.Id && Login == other.Login && Password == other.Password 
+                && FirstName == other.FirstName && LastName == other.LastName && Email == other.Email && CreatedOn == other.CreatedOn && LastLoginOn == other.LastLoginOn && CustomFields == other.CustomFields && Memberships == other.Memberships);
+        }
     }
 }

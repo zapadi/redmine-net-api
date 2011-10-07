@@ -69,5 +69,11 @@ namespace Redmine.Net.Api.Types
         {
             return Id + ", " + Name;
         }
+
+        public bool Equals(IdentifiableName other)
+        {
+            if (other == null) return false;
+            return (Id == other.Id && Name == other.Name);
+        }
     }
 }
