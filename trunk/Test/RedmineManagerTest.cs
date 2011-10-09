@@ -29,11 +29,7 @@ namespace Test
             where T : class
         {
             RedmineManager target = new RedmineManager(host, apiKey); 
-            var obj = new Project {Identifier = "tzast", Name = "tzast project"};
-
-            var obj1 = new Project {Id = 1, Identifier = "xxx"};
-
-            Assert.AreNotEqual(obj, obj1, "yes");
+            var obj = new Project {Identifier = "test project", Name = "testproject"};
 
             target.CreateObject<Project>(obj);
         }
