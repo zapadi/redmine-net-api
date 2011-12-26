@@ -54,13 +54,13 @@
     <Compile Include="RedmineManagerTest.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Test References\" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Api\Api.csproj">
       <Project>{F99E4720-D2A0-461B-A454-E6169BFA8C38}</Project>
       <Name>Api</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Test References\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

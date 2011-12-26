@@ -231,7 +231,7 @@ namespace Redmine.Net.Api
         /// <typeparam name="T"></typeparam>
         /// <param name="xml">The XML.</param>
         /// <returns></returns>
-        protected static T Deserialize<T>(string xml) where T : class
+        public static T Deserialize<T>(string xml) where T : class
         {
             using (var text = new StringReader(xml))
             {
