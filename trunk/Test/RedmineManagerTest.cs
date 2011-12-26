@@ -79,15 +79,15 @@ namespace Test
         [TestMethod()]
         public void GetObjectTest()
         {
-            //var xml = File.ReadAllText("issues.xml");
+            var xml = File.ReadAllText("issues.xml");
 
-            //using (var text = new StringReader(xml))
-            //{
-            //    using (var xmlReader = new XmlTextReader(text))
-            //    {
-            //     var diverse = RedmineManager.Deserialize<Issue>(xml);
-            //    }
-            //}
+            using (var text = new StringReader(xml))
+            {
+                using (var xmlReader = new XmlTextReader(text))
+                {
+                    var diverse = RedmineManager.Deserialize<Issue>(xml);
+                }
+            }
 
             GetObjectTestHelper<GenericParameterHelper>();
         }
