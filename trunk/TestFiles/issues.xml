@@ -19,7 +19,11 @@
   <done_ratio></done_ratio>
   <estimated_hours>1</estimated_hours>
   <custom_fields>
-    <custom_field name="Resolution" id="2">Duplicate</custom_field>
+    <custom_field name="Resolution" id="2">
+      <!--comment-->
+      <?some pi?>
+      text value of the element.
+    </custom_field>
     <custom_field name="Texte" id="5">Test</custom_field>
     <custom_field name="Boolean" id="6">1</custom_field>
     <custom_field name="Date" id="7">2010-01-12</custom_field>
