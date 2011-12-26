@@ -28,8 +28,8 @@ namespace Test
         public void CreateObjectTestHelper<T>()
             where T : class
         {
-            RedmineManager target = new RedmineManager(host, apiKey); 
-            var obj = new Project {Identifier = "test project", Name = "testproject"};
+            RedmineManager target = new RedmineManager(host, apiKey);
+            var obj = new Project { Identifier = "test project", Name = "testproject" };
 
             target.CreateObject<Project>(obj);
         }
@@ -79,6 +79,16 @@ namespace Test
         [TestMethod()]
         public void GetObjectTest()
         {
+            //var xml = File.ReadAllText("issues.xml");
+
+            //using (var text = new StringReader(xml))
+            //{
+            //    using (var xmlReader = new XmlTextReader(text))
+            //    {
+            //     var diverse = RedmineManager.Deserialize<Issue>(xml);
+            //    }
+            //}
+
             GetObjectTestHelper<GenericParameterHelper>();
         }
 
@@ -88,18 +98,16 @@ namespace Test
         public void GetObjectListTestHelper<T>()
             where T : class
         {
-
             RedmineManager target = new RedmineManager(host, apiKey); // TODO: Initialize to an appropriate value
             NameValueCollection parameters = null; // TODO: Initialize to an appropriate value
 
-            var actual = target.GetObjectList<Project>(parameters);
-
+            var actual = target.GetObjectList<Issue>(parameters);
         }
 
         [TestMethod()]
         public void GetObjectListTest()
         {
-            GetObjectListTestHelper<GenericParameterHelper>();
+            GetObjectListTestHelper<CustomField>();
         }
 
         /// <summary>
