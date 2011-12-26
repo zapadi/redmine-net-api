@@ -35,7 +35,7 @@ namespace Redmine.Net.Api.Types
         {
             Id = Convert.ToInt32(reader.GetAttribute("id"));
             Name = reader.GetAttribute("name");
-            Value = reader.ReadContentAsString();
+            Value = reader.ReadElementContentAs(typeof(string),null) as string;
         }
 
         public bool Equals(CustomField other)
