@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<time_entry>
+  <id>491</id>
+  <project_id>57</project_id>
+  <issue_id>681</issue_id>
+  <user name="MyUser" id="99" />
+  <activity_id>17</activity_id> 
+  <hours>8.0</hours>
+  <comments />
+  <spent_on>2012-01-30</spent_on>
+  <created_on>2012-01-30T18:29:35-05:00</created_on>
+  <updated_on>2012-01-30T18:29:35-05:00</updated_on>
+</time_entry>
