@@ -1,33 +1,39 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
-<issue>
-  <id>4326</id>
-  <project name="Redmine" id="1"/>
-  <tracker name="Feature" id="2"/>
-  <status name="New" id="1"/>
-  <priority name="Normal" id="4"/>
-  <author name="John Smith" id="10106"/>
-  <category name="Email notifications" id="9"/>
-  <subject>
-    Aggregate Multiple Issue Changes for Email Notifications
-  </subject>
-  <description>
-    This is not to be confused with another useful proposed feature that
-    would do digest emails fordone_ratio notifications.
-  </description>
-  <start_date>2009-12-03</start_date>
-  <due_date></due_date>
-  <done_ratio></done_ratio>
-  <estimated_hours>1</estimated_hours>
-  <custom_fields>
-    <custom_field name="Resolution" id="2">
-      <!--comment-->
-      <?some pi?>
-      text value of the element.
-    </custom_field>
-    <custom_field name="Texte" id="5">Test</custom_field>
-    <custom_field name="Boolean" id="6">1</custom_field>
-    <custom_field name="Date" id="7">2010-01-12</custom_field>
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+
+ <issue>
+  <id>689</id>
+  <project name="MyProject" id="57" />
+  <tracker name="Dev" id="6" />
+  <status name="New" id="1" />
+  <priority name="Normal" id="4" />
+  <author name="MyUser" id="47" />
+  <category name="MyCat" id="48" />
+  <subject>MySubject</subject>
+  <description></description>
+  <start_date>2012-01-30</start_date>
+  <due_date />
+  <done_ratio>0</done_ratio>
+  <estimated_hours />
+  <custom_fields type="array">
+  <custom_field name="Attr1" id="10">
+  000000
+  </custom_field>
+  <custom_field name="Attr2" id="11">
+  <value>00-000</value>
+  </custom_field>
+  <custom_field name="Name" id="12">
+  <value>Toto</value>
+  </custom_field>
+  <custom_field name="Checked In" id="13">
+  <value>0</value>
+  </custom_field>
+  <custom_field name="Dev Tested" id="14">
+  <value>0</value>
+  </custom_field>
+  <custom_field name="Code Reviewed" id="15">
+  <value>0</value>
+  </custom_field>
   </custom_fields>
-  <created_on>Thu Dec 03 15:02:12 +0100 2009</created_on>
-  <updated_on>Sun Jan 03 12:08:41 +0100 2010</updated_on>
-</issue>
+  <created_on>2012-01-30T18:40:57-05:00</created_on>
+  <updated_on>2012-01-30T18:40:57-05:00</updated_on>
+  </issue>

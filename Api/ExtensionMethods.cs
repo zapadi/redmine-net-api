@@ -55,6 +55,16 @@ namespace Redmine.Net.Api
             return result;
         }
 
+        public static decimal? ReadElementContentAsNullableDecimal(this XmlReader reader)
+        {
+            var str = reader.ReadElementContentAsString();
+
+            decimal result;
+            if (String.IsNullOrWhiteSpace(str) || !decimal.TryParse(str, out result)) return null;
+
+            return result;
+        }
+
         public static List<T> ReadElementContentAsCollection<T>(this XmlReader reader) where T : class
         {
             var result = new List<T>();

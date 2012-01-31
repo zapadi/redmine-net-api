@@ -29,15 +29,15 @@ namespace Redmine.Net.Api.Types
         /// Gets or sets the issue id.
         /// </summary>
         /// <value>The issue id.</value>
-        [XmlAttribute("issue_id")]
-        public int IssueId { get; set; }
+        [XmlAttribute("issue")]
+        public IdentifiableName Issue { get; set; }
 
         /// <summary>
         /// Gets or sets the project id.
         /// </summary>
         /// <value>The project id.</value>
-        [XmlAttribute("project_id")]
-        public int ProjectId { get; set; }
+        [XmlAttribute("project")]
+        public IdentifiableName Project { get; set; }
 
         /// <summary>
         /// Gets or sets the spent on.
@@ -51,14 +51,17 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <value>The hours.</value>
         [XmlAttribute("hours")]
-        public int Hours { get; set; }
+        public decimal Hours { get; set; }
 
         /// <summary>
         /// Gets or sets the activity id.
         /// </summary>
         /// <value>The activity id.</value>
-        [XmlAttribute("activity_id")]
-        public int ActivityId { get; set; }
+        [XmlAttribute("activity")]
+        public IdentifiableName Activity { get; set; }
+
+        [XmlAttribute("user")]
+        public IdentifiableName User { get; set; }
 
         /// <summary>
         /// Gets or sets the comments.
@@ -69,7 +72,7 @@ namespace Redmine.Net.Api.Types
 
         public object Clone()
         {
-            var timeEntry = new TimeEntry {ActivityId = ActivityId, Comments = Comments, Hours = Hours, IssueId = IssueId, ProjectId = ProjectId, SpentOn = SpentOn};
+            var timeEntry = new TimeEntry { Activity = Activity, Comments = Comments, Hours = Hours, Issue = Issue, Project = Project, SpentOn = SpentOn };
             return timeEntry;
         }
 
@@ -94,15 +97,17 @@ namespace Redmine.Net.Api.Types
                     case "id": Id = reader.ReadElementContentAsInt();
                         break;
 
-                    case "issue_id": IssueId = reader.ReadElementContentAsInt(); break;
+                    case "issue_id": Issue = new IdentifiableName(reader); break;
 
-                    case "project_id": ProjectId = reader.ReadElementContentAsInt(); break;
+                    case "project_id": Project = new IdentifiableName(reader); break;
 
                     case "spent_on": SpentOn = reader.ReadElementContentAsNullableDateTime(); break;
 
-                    case "hours": Hours = reader.ReadElementContentAsInt(); break;
+                    case "user": User = new IdentifiableName(reader); break;
 
-                    case "activity_id": ActivityId = reader.ReadElementContentAsInt(); break;
+                    case "hours": Hours = reader.ReadElementContentAsDecimal(); break;
+
+                    case "activity_id": Activity = new IdentifiableName(reader); break;
 
                     case "comments": Comments = reader.ReadElementContentAsString(); break;
 
@@ -115,18 +120,18 @@ namespace Redmine.Net.Api.Types
 
         public void WriteXml(XmlWriter writer)
         {
-            writer.WriteElementString("issue_id", IssueId.ToString());
-            writer.WriteElementString("project_id", ProjectId.ToString());
+            writer.WriteIdIfNotNull(Issue, "issue_id");
+            writer.WriteIdIfNotNull(Project, "project_id");
             writer.WriteIfNotDefaultOrNull(SpentOn, "spent_on");
             writer.WriteElementString("hours", Hours.ToString());
-            writer.WriteElementString("activity_id", ActivityId.ToString());
+            writer.WriteIdIfNotNull(Activity, "activity_id");
             writer.WriteElementString("comments", Comments);
         }
 
         public bool Equals(TimeEntry other)
         {
             if (other == null) return false;
-            return (Id == other.Id && IssueId == other.IssueId && ProjectId == other.ProjectId && SpentOn == other.SpentOn && Hours == other.Hours && ActivityId == other.ActivityId && Comments == other.Comments);
+            return (Id == other.Id && Issue == other.Issue && Project == other.Project && SpentOn == other.SpentOn && Hours == other.Hours && Activity == other.Activity && Comments == other.Comments);
         }
     }
 }
