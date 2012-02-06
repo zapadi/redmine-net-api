@@ -45,9 +45,13 @@
     <Compile Include="RedmineManager.cs" />
     <Compile Include="Types\Attachment.cs" />
     <Compile Include="Types\CustomField.cs" />
+    <Compile Include="Types\Detail.cs" />
     <Compile Include="Types\IdentifiableName.cs" />
     <Compile Include="Types\Issue.cs" />
+    <Compile Include="Types\IssueCategory.cs" />
     <Compile Include="Types\IssueRelation.cs" />
+    <Compile Include="Types\IssueStatus.cs" />
+    <Compile Include="Types\Journal.cs" />
     <Compile Include="Types\Membership.cs" />
     <Compile Include="Types\News.cs" />
     <Compile Include="Types\Project.cs" />
@@ -55,6 +59,7 @@
     <Compile Include="Types\Role.cs" />
     <Compile Include="Types\TimeEntry.cs" />
     <Compile Include="Types\Identifiable.cs" />
+    <Compile Include="Types\Tracker.cs" />
     <Compile Include="Types\User.cs" />
     <Compile Include="Types\Version.cs" />
   </ItemGroup>

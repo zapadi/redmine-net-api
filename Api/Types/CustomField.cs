@@ -31,17 +31,28 @@ namespace Redmine.Net.Api.Types
         [XmlText]
         public String Value { get; set; }
 
+        [XmlAttribute("multiple")]
+        public bool Multiple { get; set; }
+
         public override void ReadXml(XmlReader reader)
         {
-            Id = Convert.ToInt32(reader.GetAttribute("id"));
+            Id = reader.ReadAttributeAsInt("id");
             Name = reader.GetAttribute("name");
-            Value = reader.ReadElementString();
+            Multiple =reader.ReadAttributeAsBoolean("multiple");
+            if (!Multiple)
+            {
+                Value = reader.ReadElementString();
+            }
+            else
+            {
+                
+            }
         }
 
         public bool Equals(CustomField other)
         {
             if (other == null) return false;
-            return (Id == other.Id && Name == other.Name && Value == other.Value);
+            return (Id == other.Id && Name == other.Name && Multiple == other.Multiple && Value == other.Value);
         }
     }
 }

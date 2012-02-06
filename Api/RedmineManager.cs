@@ -45,7 +45,10 @@ namespace Redmine.Net.Api
                                                                  { typeof(Version), "versions"},
                                                                  { typeof(Attachment),"attachments"},
                                                                  { typeof(IssueRelation), "relations"},
-                                                                 { typeof(TimeEntry),"time_entries"}
+                                                                 { typeof(TimeEntry),"time_entries"},
+                                                                 { typeof(IssueStatus),"issue_statuses"},
+                                                                 { typeof(Tracker),"trackers"},
+                                                                 { typeof(IssueCategory),"issue_categories"}
                                                              };
 
         /// <summary>
@@ -92,6 +95,41 @@ namespace Redmine.Net.Api
 
             using (var wc = CreateWebClient(parameters))
             {
+                var type = typeof(T);
+                string result;
+
+                if (type == typeof(Version) || type == typeof(IssueCategory))
+                {
+                    string projectId = null;
+                    if (parameters != null)
+                        projectId = parameters.Get("project_id");
+                    
+                    result = wc.DownloadString(string.Format("{0}/projects/{1}/{2}.xml", host, projectId, urls[type]));
+                }
+                else
+                {
+                    result = wc.DownloadString(string.Format(FORMAT, host, urls[type]));
+                }
+
+                using (var text = new StringReader(result))
+                {
+                    using (var xmlReader = new XmlTextReader(text))
+                    {
+                        xmlReader.Read();
+                        xmlReader.Read();
+                        return xmlReader.ReadElementContentAsCollection<T>();
+                    }
+                }
+            }
+        }
+
+        public IList<T> GetObjectList<T>(NameValueCollection parameters, out int totalCount) where T : class
+        {
+            totalCount = -1;
+            if (!urls.ContainsKey(typeof(T))) return null;
+
+            using (var wc = CreateWebClient(parameters))
+            {
                 var xml = wc.DownloadString(string.Format(FORMAT, host, urls[typeof(T)]));
                 using (var text = new StringReader(xml))
                 {
@@ -99,6 +137,9 @@ namespace Redmine.Net.Api
                     {
                         xmlReader.Read();
                         xmlReader.Read();
+
+                        totalCount = xmlReader.ReadAttributeAsInt("total_count");
+
                         return xmlReader.ReadElementContentAsCollection<T>();
                     }
                 }
@@ -212,13 +253,13 @@ namespace Redmine.Net.Api
         /// <returns></returns>
         protected static string Serialize<T>(T obj) where T : class
         {
-            var xws = new XmlWriterSettings {OmitXmlDeclaration = true};
+            var xws = new XmlWriterSettings { OmitXmlDeclaration = true };
 
             using (var stringWriter = new StringWriter())
             {
                 using (var xmlWriter = XmlWriter.Create(stringWriter, xws))
                 {
-                    var sr = new XmlSerializer(typeof (T));
+                    var sr = new XmlSerializer(typeof(T));
                     sr.Serialize(xmlWriter, obj);
                     return stringWriter.ToString();
                 }
