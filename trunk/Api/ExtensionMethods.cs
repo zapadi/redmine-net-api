@@ -25,6 +25,38 @@ namespace Redmine.Net.Api
 {
     public static class ExtensionMethods
     {
+        public static int ReadAttributeAsInt(this XmlReader reader, string attributeName)
+        {
+            try
+            {
+                var attribute = reader.GetAttribute(attributeName);
+                int result;
+                if (String.IsNullOrWhiteSpace(attribute) || !Int32.TryParse(attribute, out result)) return default(int);
+
+                return result;
+            }
+            catch
+            {
+                return -1;
+            }
+        }
+
+        public static bool ReadAttributeAsBoolean(this XmlReader reader, string attributeName)
+        {
+            try
+            {
+                var attribute = reader.GetAttribute(attributeName);
+                bool result;
+                if (String.IsNullOrWhiteSpace(attribute) || !Boolean.TryParse(attribute, out result)) return false;
+
+                return result;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public static DateTime? ReadElementContentAsNullableDateTime(this XmlReader reader)
         {
             var str = reader.ReadElementContentAsString();
