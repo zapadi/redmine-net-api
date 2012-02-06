@@ -72,7 +72,7 @@ namespace Redmine.Net.Api.Types
 
         public object Clone()
         {
-            var timeEntry = new TimeEntry { Activity = Activity, Comments = Comments, Hours = Hours, Issue = Issue, Project = Project, SpentOn = SpentOn };
+            var timeEntry = new TimeEntry { Activity = Activity, Comments = Comments, Hours = Hours, Issue = Issue, Project = Project, SpentOn = SpentOn, User = User};
             return timeEntry;
         }
 
@@ -131,7 +131,7 @@ namespace Redmine.Net.Api.Types
         public bool Equals(TimeEntry other)
         {
             if (other == null) return false;
-            return (Id == other.Id && Issue == other.Issue && Project == other.Project && SpentOn == other.SpentOn && Hours == other.Hours && Activity == other.Activity && Comments == other.Comments);
+            return (Id == other.Id && Issue == other.Issue && Project == other.Project && SpentOn == other.SpentOn && Hours == other.Hours && Activity == other.Activity && Comments == other.Comments && User == other.User);
         }
     }
 }
