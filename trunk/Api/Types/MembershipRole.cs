@@ -21,31 +21,28 @@ using System.Xml.Serialization;
 namespace Redmine.Net.Api.Types
 {
     [Serializable]
-    [XmlRoot("custom_field")]
-    public class CustomField : IdentifiableName, IEquatable<CustomField>
+    [XmlRoot("role")]
+    public class MembershipRole : IdentifiableName, IEquatable<MembershipRole>
     {
-        /// <summary>
-        /// Gets or sets the value.
-        /// </summary>
-        /// <value>The value.</value>
-        [XmlText]
-        public String Value { get; set; }
-
-        [XmlAttribute("multiple")]
-        public bool Multiple { get; set; }
+        [XmlAttribute("inherited")]
+        public bool Inherited { get; set; }
 
         public override void ReadXml(XmlReader reader)
         {
-            Id = reader.ReadAttributeAsInt("id");
+            Id = Convert.ToInt32(reader.GetAttribute("id"));
             Name = reader.GetAttribute("name");
-            Multiple = reader.ReadAttributeAsBoolean("multiple");
-            Value = reader.ReadElementString();
+            Inherited = reader.ReadAttributeAsBoolean("inherited");
+            reader.Read();
         }
 
-        public bool Equals(CustomField other)
+        public override void WriteXml(XmlWriter writer)
+        {
+        }
+
+        public bool Equals(MembershipRole other)
         {
             if (other == null) return false;
-            return (Id == other.Id && Name == other.Name && Multiple == other.Multiple && Value == other.Value);
+            return Id == other.Id && Name == other.Name && Inherited == other.Inherited;
         }
     }
 }

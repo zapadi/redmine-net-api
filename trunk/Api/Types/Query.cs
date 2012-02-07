@@ -59,9 +59,7 @@ namespace Redmine.Net.Api.Types
 
                     case "project_id": ProjectId = reader.ReadElementContentAsInt(); break;
 
-                    default:
-                        reader.Read();
-                        break;
+                    default: reader.Read(); break;
                 }
             }
         }

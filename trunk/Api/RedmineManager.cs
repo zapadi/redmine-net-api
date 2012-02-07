@@ -48,7 +48,9 @@ namespace Redmine.Net.Api
                                                                  { typeof(TimeEntry),"time_entries"},
                                                                  { typeof(IssueStatus),"issue_statuses"},
                                                                  { typeof(Tracker),"trackers"},
-                                                                 { typeof(IssueCategory),"issue_categories"}
+                                                                 { typeof(IssueCategory),"issue_categories"},
+                                                                 { typeof(Role),"roles"},
+                                                                 { typeof(ProjectMembership),"memberships"}
                                                              };
 
         /// <summary>
@@ -98,12 +100,12 @@ namespace Redmine.Net.Api
                 var type = typeof(T);
                 string result;
 
-                if (type == typeof(Version) || type == typeof(IssueCategory))
+                if (type == typeof(Version) || type == typeof(IssueCategory) || type == typeof(ProjectMembership))
                 {
                     string projectId = null;
                     if (parameters != null)
                         projectId = parameters.Get("project_id");
-                    
+
                     result = wc.DownloadString(string.Format("{0}/projects/{1}/{2}.xml", host, projectId, urls[type]));
                 }
                 else

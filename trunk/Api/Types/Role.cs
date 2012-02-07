@@ -16,16 +16,61 @@
 
 using System;
 using System.Xml;
+using System.Xml.Schema;
 using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
     [Serializable]
     [XmlRoot("role")]
-    public class Role : IdentifiableName
+    public class Role : IXmlSerializable, IEquatable<Role>
     {
-        public override void WriteXml(XmlWriter writer)
+        [XmlElement("id")]
+        public int Id { get; set; }
+
+        [XmlElement("name")]
+        public string Name { get; set; }
+
+        public XmlSchema GetSchema()
         {
+            return null;
+        }
+
+        public void ReadXml(XmlReader reader)
+        {
+            reader.Read();
+            while (!reader.EOF)
+            {
+                if (reader.IsEmptyElement && !reader.HasAttributes)
+                {
+                    reader.Read();
+                    continue;
+                }
+
+                switch (reader.Name)
+                {
+                    case "id": Id = reader.ReadElementContentAsInt(); break;
+
+                    case "name": Name = reader.ReadElementContentAsString(); break;
+
+                    default: reader.Read(); break;
+                }
+            }
+        }
+
+        public void WriteXml(XmlWriter writer)
+        {
+        }
+
+        public bool Equals(Role other)
+        {
+            if (other == null) return false;
+            return Id == other.Id && Name == other.Name;
+        }
+
+        public override string ToString()
+        {
+            return Id + ", " + Name;
         }
     }
 }

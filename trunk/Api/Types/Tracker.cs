@@ -23,7 +23,7 @@ namespace Redmine.Net.Api.Types
 {
     [Serializable]
     [XmlRoot("tracker")]
-    public class Tracker : IXmlSerializable
+    public class Tracker : IXmlSerializable, IEquatable<Tracker>
     {
         [XmlElement("id")]
         public int Id { get; set; }
@@ -60,6 +60,13 @@ namespace Redmine.Net.Api.Types
                     default: reader.Read(); break;
                 }
             }
+        }
+
+        public bool Equals(Tracker other)
+        {
+            if (other == null) return false;
+
+            return Id == other.Id && Name == other.Name;
         }
     }
 }

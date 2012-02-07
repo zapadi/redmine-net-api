@@ -72,7 +72,7 @@ namespace Redmine.Net.Api.Types
 
         public object Clone()
         {
-            var timeEntry = new TimeEntry { Activity = Activity, Comments = Comments, Hours = Hours, Issue = Issue, Project = Project, SpentOn = SpentOn, User = User};
+            var timeEntry = new TimeEntry { Activity = Activity, Comments = Comments, Hours = Hours, Issue = Issue, Project = Project, SpentOn = SpentOn, User = User };
             return timeEntry;
         }
 

@@ -39,7 +39,7 @@ namespace Redmine.Net.Api.Types
         {
             ReadXml(reader);
         }
-   
+
         /// <summary>
         /// Gets or sets the name.
         /// </summary>

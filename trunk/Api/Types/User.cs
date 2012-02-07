@@ -119,17 +119,11 @@ namespace Redmine.Net.Api.Types
 
                     case "created_on": CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
 
-                    case "custom_fields":
-                        CustomFields = reader.ReadElementContentAsCollection<CustomField>();
-                        break;
+                    case "custom_fields": CustomFields = reader.ReadElementContentAsCollection<CustomField>(); break;
 
-                    case "memberships":
-                        Memberships = reader.ReadElementContentAsCollection<Membership>();
-                        break;
+                    case "memberships": Memberships = reader.ReadElementContentAsCollection<Membership>(); break;
 
-                    default:
-                        reader.Read();
-                        break;
+                    default: reader.Read(); break;
                 }
             }
         }
@@ -146,7 +140,7 @@ namespace Redmine.Net.Api.Types
         public bool Equals(User other)
         {
             if (other == null) return false;
-            return (Id == other.Id && Login == other.Login && Password == other.Password 
+            return (Id == other.Id && Login == other.Login && Password == other.Password
                 && FirstName == other.FirstName && LastName == other.LastName && Email == other.Email && CreatedOn == other.CreatedOn && LastLoginOn == other.LastLoginOn && CustomFields == other.CustomFields && Memberships == other.Memberships);
         }
     }

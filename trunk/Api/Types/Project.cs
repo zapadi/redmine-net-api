@@ -79,8 +79,7 @@ namespace Redmine.Net.Api.Types
 
                 switch (reader.Name)
                 {
-                    case "id": Id = reader.ReadElementContentAsInt();
-                        break;
+                    case "id": Id = reader.ReadElementContentAsInt(); break;
 
                     case "name": Name = reader.ReadElementContentAsString(); break;
 
@@ -96,9 +95,7 @@ namespace Redmine.Net.Api.Types
 
                     case "updated_on": UpdatedOn = reader.ReadElementContentAsNullableDateTime(); break;
 
-                    default:
-                        reader.Read();
-                        break;
+                    default: reader.Read(); break;
                 }
             }
         }
