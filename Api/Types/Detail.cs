@@ -23,7 +23,7 @@ namespace Redmine.Net.Api.Types
 {
     [Serializable]
     [XmlRoot("detail")]
-    public class Detail : IXmlSerializable,IEquatable<Detail>
+    public class Detail : IXmlSerializable, IEquatable<Detail>
     {
         [XmlAttribute("property")]
         public string Property { get; set; }

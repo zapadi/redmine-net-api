@@ -60,7 +60,7 @@ namespace Redmine.Net.Api.Types
                     case "is_default": IsDefault = reader.ReadElementContentAsBoolean(); break;
 
                     case "is_closed": IsClosed = reader.ReadElementContentAsBoolean(); break;
-                   
+
                     default:
                         reader.Read();
                         break;

@@ -22,9 +22,7 @@ using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
-    [Serializable]
-    [XmlRoot("membership")]
-    public class Membership : Identifiable<Membership>, IEquatable<Membership>, IXmlSerializable
+    public class ProjectMembership : Identifiable<ProjectMembership>, IEquatable<ProjectMembership>, IXmlSerializable
     {
         /// <summary>
         /// Gets or sets the project.
@@ -33,6 +31,12 @@ namespace Redmine.Net.Api.Types
         [XmlElement("project")]
         public IdentifiableName Project { get; set; }
 
+        [XmlElement("user")]
+        public IdentifiableName User { get; set; }
+
+        [XmlElement("group")]
+        public IdentifiableName Group { get; set; }
+
         /// <summary>
         /// Gets or sets the type.
         /// </summary>
@@ -40,6 +44,12 @@ namespace Redmine.Net.Api.Types
         [XmlArray("roles")]
         [XmlArrayItem("role")]
         public List<MembershipRole> Roles { get; set; }
+
+        public bool Equals(ProjectMembership other)
+        {
+            if (other == null) return false;
+            return (Id == other.Id && Project == other.Project && Roles == other.Roles && User == other.User && Group == other.Group);
+        }
 
         public XmlSchema GetSchema()
         {
@@ -59,29 +69,24 @@ namespace Redmine.Net.Api.Types
 
                 switch (reader.Name)
                 {
-                    case "id": Id = reader.ReadElementContentAsInt();
-                        break;
+                    case "id": Id = reader.ReadElementContentAsInt(); break;
 
                     case "project": Project = new IdentifiableName(reader); break;
 
-                    case "roles":
-                        Roles = reader.ReadElementContentAsCollection<MembershipRole>();
-                        break;
-                    default:
-                        reader.Read();
-                        break;
+                    case "user": User = new IdentifiableName(reader); break;
+
+                    case "group": Group = new IdentifiableName(reader); break;
+
+                    case "roles": Roles = reader.ReadElementContentAsCollection<MembershipRole>(); break;
+
+                    default: reader.Read(); break;
                 }
             }
         }
 
         public void WriteXml(XmlWriter writer)
         {
-        }
 
-        public bool Equals(Membership other)
-        {
-            if (other == null) return false;
-            return (Id == other.Id && Project == other.Project && Roles == other.Roles);
         }
     }
 }

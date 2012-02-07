@@ -31,17 +31,17 @@ namespace Redmine.Net.Api.Types
 
         [XmlElement("user")]
         public IdentifiableName User { get; set; }
-       
+
         [XmlElement("notes")]
         public string Notes { get; set; }
-        
+
         [XmlElement("created_on")]
         public DateTime? CreatedOn { get; set; }
 
         [XmlArray("details")]
         [XmlArrayItem("detail")]
         public IList<Detail> Details { get; set; }
-        
+
         public XmlSchema GetSchema()
         {
             return null;
@@ -73,11 +73,11 @@ namespace Redmine.Net.Api.Types
                     case "created_on":
                         CreatedOn = reader.ReadElementContentAsNullableDateTime();
                         break;
-                    
+
                     case "details":
                         Details = reader.ReadElementContentAsCollection<Detail>();
                         break;
-                    
+
                     default:
                         reader.Read();
                         break;

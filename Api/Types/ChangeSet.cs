@@ -16,36 +16,34 @@
 
 using System;
 using System.Xml;
+using System.Xml.Schema;
 using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
     [Serializable]
-    [XmlRoot("custom_field")]
-    public class CustomField : IdentifiableName, IEquatable<CustomField>
+    [XmlRoot("changeset")]
+    public class ChangeSet : IXmlSerializable, IEquatable<ChangeSet>
     {
-        /// <summary>
-        /// Gets or sets the value.
-        /// </summary>
-        /// <value>The value.</value>
-        [XmlText]
-        public String Value { get; set; }
-
-        [XmlAttribute("multiple")]
-        public bool Multiple { get; set; }
-
-        public override void ReadXml(XmlReader reader)
+        public XmlSchema GetSchema()
         {
-            Id = reader.ReadAttributeAsInt("id");
-            Name = reader.GetAttribute("name");
-            Multiple = reader.ReadAttributeAsBoolean("multiple");
-            Value = reader.ReadElementString();
+            return null;
         }
 
-        public bool Equals(CustomField other)
+        public void ReadXml(XmlReader reader)
+        {
+            //for the momment
+        }
+
+        public void WriteXml(XmlWriter writer)
+        {
+        }
+
+        public bool Equals(ChangeSet other)
         {
             if (other == null) return false;
-            return (Id == other.Id && Name == other.Name && Multiple == other.Multiple && Value == other.Value);
+            //for the momment
+            return false;
         }
     }
 }

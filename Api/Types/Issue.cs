@@ -138,6 +138,14 @@ namespace Redmine.Net.Api.Types
         [XmlElement("fixed_version")]
         public IdentifiableName FixedVersion { get; set; }
 
+        [XmlArray("journals")]
+        [XmlArrayItem("journal")]
+        public IList<Journal> Journals { get; set; }
+
+        [XmlArray("changesets")]
+        [XmlArrayItem("changeset")]
+        public IList<Journal> Changesets { get; set; } 
+
         public XmlSchema GetSchema()
         {
             return null;
@@ -248,16 +256,16 @@ namespace Redmine.Net.Api.Types
 
         public object Clone()
         {
-            var issue = new Issue {AssignedTo = AssignedTo,Author = Author, Category = Category, CustomFields = CustomFields, Description = Description, DoneRatio = DoneRatio, DueDate = DueDate, EstimatedHours = EstimatedHours, Priority = Priority, StartDate = StartDate, Status = Status, Subject = Subject, Tracker = Tracker, Project = Project, FixedVersion = FixedVersion};
+            var issue = new Issue { AssignedTo = AssignedTo, Author = Author, Category = Category, CustomFields = CustomFields, Description = Description, DoneRatio = DoneRatio, DueDate = DueDate, EstimatedHours = EstimatedHours, Priority = Priority, StartDate = StartDate, Status = Status, Subject = Subject, Tracker = Tracker, Project = Project, FixedVersion = FixedVersion };
             return issue;
         }
 
         public bool Equals(Issue other)
         {
             if (other == null) return false;
-            return (Id == other.Id && Project == other.Project && Tracker == other.Tracker && Status == other.Status && Priority == other.Priority 
+            return (Id == other.Id && Project == other.Project && Tracker == other.Tracker && Status == other.Status && Priority == other.Priority
                 && Author == other.Author && Category == other.Category && Subject == other.Subject && Description == other.Description && StartDate == other.StartDate
-                && DueDate == other.DueDate && DoneRatio == other.DoneRatio && EstimatedHours == other.EstimatedHours && CustomFields == other.CustomFields 
+                && DueDate == other.DueDate && DoneRatio == other.DoneRatio && EstimatedHours == other.EstimatedHours && CustomFields == other.CustomFields
                 && CreatedOn == other.CreatedOn && UpdatedOn == other.UpdatedOn && AssignedTo == other.AssignedTo && FixedVersion == other.FixedVersion
                 );
         }
