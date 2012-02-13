@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
 using System.Net;
+using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 using Redmine.Net.Api.Types;
@@ -243,7 +244,7 @@ namespace Redmine.Net.Api
             }
 
             webClient.Headers.Add("Content-Type", "text/xml; charset=utf-8");
-
+            webClient.Encoding = Encoding.UTF8;
             return webClient;
         }
 
