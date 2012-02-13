@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Redmine.Api")]
-[assembly: AssemblyCopyright(" Copyright 2011 Dorin Huzum, Adrian Popescu")]
+[assembly: AssemblyCopyright("Copyright 2012 Adrian Popescu, Dorin Huzum")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.1.0.2")]
-[assembly: AssemblyFileVersion("0.1.0.2")]
+[assembly: AssemblyVersion("0.1.0.3")]
+[assembly: AssemblyFileVersion("0.1.0.3")]
