@@ -113,8 +113,11 @@ namespace Redmine.Net.Api
                     continue;
                 }
 
-                var temp = sr.Deserialize(r.ReadSubtree()) as T;
+                var subTree = r.ReadSubtree();
+                var temp = sr.Deserialize(subTree) as T;
                 if (temp != null) result.Add(temp);
+
+                if (!subTree.EOF) r.Read();
             }
             return result;
         }
