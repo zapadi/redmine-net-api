@@ -32,7 +32,6 @@ namespace Redmine.Net.Api.Types
             Id = Convert.ToInt32(reader.GetAttribute("id"));
             Name = reader.GetAttribute("name");
             Inherited = reader.ReadAttributeAsBoolean("inherited");
-            reader.Read();
         }
 
         public override void WriteXml(XmlWriter writer)
