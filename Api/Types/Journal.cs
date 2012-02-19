@@ -22,22 +22,55 @@ using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Serializable]
     [XmlRoot("journal")]
     public class Journal : IXmlSerializable, IEquatable<Journal>
     {
+        /// <summary>
+        /// Gets or sets the id.
+        /// </summary>
+        /// <value>
+        /// The id.
+        /// </value>
         [XmlAttribute("id")]
         public int Id { get; set; }
 
+        /// <summary>
+        /// Gets or sets the user.
+        /// </summary>
+        /// <value>
+        /// The user.
+        /// </value>
         [XmlElement("user")]
         public IdentifiableName User { get; set; }
 
+        /// <summary>
+        /// Gets or sets the notes.
+        /// </summary>
+        /// <value>
+        /// The notes.
+        /// </value>
         [XmlElement("notes")]
         public string Notes { get; set; }
 
+        /// <summary>
+        /// Gets or sets the created on.
+        /// </summary>
+        /// <value>
+        /// The created on.
+        /// </value>
         [XmlElement("created_on")]
         public DateTime? CreatedOn { get; set; }
 
+        /// <summary>
+        /// Gets or sets the details.
+        /// </summary>
+        /// <value>
+        /// The details.
+        /// </value>
         [XmlArray("details")]
         [XmlArrayItem("detail")]
         public IList<Detail> Details { get; set; }
@@ -62,25 +95,15 @@ namespace Redmine.Net.Api.Types
 
                 switch (reader.Name)
                 {
-                    case "user":
-                        User = new IdentifiableName(reader);
-                        break;
+                    case "user": User = new IdentifiableName(reader); break;
 
-                    case "notes":
-                        Notes = reader.ReadElementContentAsString();
-                        break;
+                    case "notes": Notes = reader.ReadElementContentAsString(); break;
 
-                    case "created_on":
-                        CreatedOn = reader.ReadElementContentAsNullableDateTime();
-                        break;
+                    case "created_on": CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
 
-                    case "details":
-                        Details = reader.ReadElementContentAsCollection<Detail>();
-                        break;
+                    case "details": Details = reader.ReadElementContentAsCollection<Detail>(); break;
 
-                    default:
-                        reader.Read();
-                        break;
+                    default: reader.Read(); break;
                 }
             }
         }

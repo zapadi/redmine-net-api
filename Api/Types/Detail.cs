@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 Dorin Huzum, Adrian Popescu.
+   Copyright 2012 Adrian Popescu, Dorin Huzum.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -21,19 +21,46 @@ using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Serializable]
     [XmlRoot("detail")]
     public class Detail : IXmlSerializable, IEquatable<Detail>
     {
+        /// <summary>
+        /// Gets or sets the property.
+        /// </summary>
+        /// <value>
+        /// The property.
+        /// </value>
         [XmlAttribute("property")]
         public string Property { get; set; }
 
+        /// <summary>
+        /// Gets or sets the status id.
+        /// </summary>
+        /// <value>
+        /// The status id.
+        /// </value>
         [XmlAttribute("name")]
         public int StatusId { get; set; }
 
+        /// <summary>
+        /// Gets or sets the old value.
+        /// </summary>
+        /// <value>
+        /// The old value.
+        /// </value>
         [XmlElement("old_value")]
         public string OldValue { get; set; }
 
+        /// <summary>
+        /// Gets or sets the new value.
+        /// </summary>
+        /// <value>
+        /// The new value.
+        /// </value>
         [XmlElement("new_value")]
         public string NewValue { get; set; }
 
@@ -59,17 +86,11 @@ namespace Redmine.Net.Api.Types
 
                 switch (reader.Name)
                 {
-                    case "old_value":
-                        OldValue = reader.ReadElementContentAsString();
-                        break;
+                    case "old_value": OldValue = reader.ReadElementContentAsString(); break;
 
-                    case "new_value":
-                        NewValue = reader.ReadElementContentAsString();
-                        break;
+                    case "new_value": NewValue = reader.ReadElementContentAsString(); break;
 
-                    default:
-                        reader.Read();
-                        break;
+                    default: reader.Read(); break;
                 }
             }
         }

@@ -25,6 +25,12 @@ namespace Redmine.Net.Api
 {
     public static class ExtensionMethods
     {
+        /// <summary>
+        /// Reads the attribute as int.
+        /// </summary>
+        /// <param name="reader">The reader.</param>
+        /// <param name="attributeName">Name of the attribute.</param>
+        /// <returns></returns>
         public static int ReadAttributeAsInt(this XmlReader reader, string attributeName)
         {
             try
@@ -41,6 +47,12 @@ namespace Redmine.Net.Api
             }
         }
 
+        /// <summary>
+        /// Reads the attribute as boolean.
+        /// </summary>
+        /// <param name="reader">The reader.</param>
+        /// <param name="attributeName">Name of the attribute.</param>
+        /// <returns></returns>
         public static bool ReadAttributeAsBoolean(this XmlReader reader, string attributeName)
         {
             try
@@ -57,6 +69,11 @@ namespace Redmine.Net.Api
             }
         }
 
+        /// <summary>
+        /// Reads the element content as nullable date time.
+        /// </summary>
+        /// <param name="reader">The reader.</param>
+        /// <returns></returns>
         public static DateTime? ReadElementContentAsNullableDateTime(this XmlReader reader)
         {
             var str = reader.ReadElementContentAsString();
@@ -67,6 +84,11 @@ namespace Redmine.Net.Api
             return result;
         }
 
+        /// <summary>
+        /// Reads the element content as nullable float.
+        /// </summary>
+        /// <param name="reader">The reader.</param>
+        /// <returns></returns>
         public static float? ReadElementContentAsNullableFloat(this XmlReader reader)
         {
             var str = reader.ReadElementContentAsString();
@@ -77,6 +99,11 @@ namespace Redmine.Net.Api
             return result;
         }
 
+        /// <summary>
+        /// Reads the element content as nullable int.
+        /// </summary>
+        /// <param name="reader">The reader.</param>
+        /// <returns></returns>
         public static int? ReadElementContentAsNullableInt(this XmlReader reader)
         {
             var str = reader.ReadElementContentAsString();
@@ -87,6 +114,11 @@ namespace Redmine.Net.Api
             return result;
         }
 
+        /// <summary>
+        /// Reads the element content as nullable decimal.
+        /// </summary>
+        /// <param name="reader">The reader.</param>
+        /// <returns></returns>
         public static decimal? ReadElementContentAsNullableDecimal(this XmlReader reader)
         {
             var str = reader.ReadElementContentAsString();
@@ -97,31 +129,44 @@ namespace Redmine.Net.Api
             return result;
         }
 
+        /// <summary>
+        /// Reads the element content as collection.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="reader">The reader.</param>
+        /// <returns></returns>
         public static List<T> ReadElementContentAsCollection<T>(this XmlReader reader) where T : class
         {
             var result = new List<T>();
-
-            var sr = new XmlSerializer(typeof(T));
+            var serializer = new XmlSerializer(typeof(T));
             var xml = reader.ReadOuterXml();
-            var r = new XmlTextReader(new StringReader(xml));
-            r.ReadStartElement();
-            while (!r.EOF)
+            using (var sr = new StringReader(xml))
             {
-                if (r.NodeType == XmlNodeType.EndElement)
+                var r = new XmlTextReader(sr);
+                r.ReadStartElement();
+                while (!r.EOF)
                 {
-                    r.ReadEndElement();
-                    continue;
+                    if (r.NodeType == XmlNodeType.EndElement)
+                    {
+                        r.ReadEndElement();
+                        continue;
+                    }
+
+                    var subTree = r.ReadSubtree();
+                    var temp = serializer.Deserialize(subTree) as T;
+                    if (temp != null) result.Add(temp);
+                    r.Read();
                 }
-
-                var subTree = r.ReadSubtree();
-                var temp = sr.Deserialize(subTree) as T;
-                if (temp != null) result.Add(temp);
-
-                if (!subTree.EOF) r.Read();
             }
             return result;
         }
 
+        /// <summary>
+        /// Writes the id if not null.
+        /// </summary>
+        /// <param name="writer">The writer.</param>
+        /// <param name="ident">The ident.</param>
+        /// <param name="tag">The tag.</param>
         public static void WriteIdIfNotNull(this XmlWriter writer, IdentifiableName ident, String tag)
         {
             if (ident != null)
@@ -130,6 +175,13 @@ namespace Redmine.Net.Api
             }
         }
 
+        /// <summary>
+        /// Writes if not default or null.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="writer">The writer.</param>
+        /// <param name="val">The val.</param>
+        /// <param name="tag">The tag.</param>
         public static void WriteIfNotDefaultOrNull<T>(this XmlWriter writer, T? val, String tag) where T: struct
         {
             if (val.HasValue)

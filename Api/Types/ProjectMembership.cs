@@ -22,6 +22,11 @@ using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    [Serializable]
+    [XmlRoot("membership")]
     public class ProjectMembership : Identifiable<ProjectMembership>, IEquatable<ProjectMembership>, IXmlSerializable
     {
         /// <summary>
@@ -31,9 +36,21 @@ namespace Redmine.Net.Api.Types
         [XmlElement("project")]
         public IdentifiableName Project { get; set; }
 
+        /// <summary>
+        /// Gets or sets the user.
+        /// </summary>
+        /// <value>
+        /// The user.
+        /// </value>
         [XmlElement("user")]
         public IdentifiableName User { get; set; }
 
+        /// <summary>
+        /// Gets or sets the group.
+        /// </summary>
+        /// <value>
+        /// The group.
+        /// </value>
         [XmlElement("group")]
         public IdentifiableName Group { get; set; }
 

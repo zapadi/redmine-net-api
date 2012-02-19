@@ -15,11 +15,15 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Serializable]
     [XmlRoot("project")]
     public class Project : IdentifiableName, IEquatable<Project>
@@ -66,6 +70,20 @@ namespace Redmine.Net.Api.Types
         [XmlElement("updated_on")]
         public DateTime? UpdatedOn { get; set; }
 
+        /// <summary>
+        /// Gets or sets the trackers.
+        /// </summary>
+        /// <value>
+        /// The trackers.
+        /// </value>
+        [XmlArray("trackers")]
+        [XmlArrayItem("tracker")]
+        public IList<ProjectTracker> Trackers { get; set; }
+
+        /// <summary>
+        /// Generates an object from its XML representation.
+        /// </summary>
+        /// <param name="reader">The <see cref="T:System.Xml.XmlReader"/> stream from which the object is deserialized.</param>
         public override void ReadXml(XmlReader reader)
         {
             reader.Read();
@@ -94,6 +112,8 @@ namespace Redmine.Net.Api.Types
                     case "created_on": CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
 
                     case "updated_on": UpdatedOn = reader.ReadElementContentAsNullableDateTime(); break;
+
+                    case "trackers": Trackers = reader.ReadElementContentAsCollection<ProjectTracker>(); break;
 
                     default: reader.Read(); break;
                 }

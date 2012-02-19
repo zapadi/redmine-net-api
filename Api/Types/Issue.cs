@@ -22,6 +22,9 @@ using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Serializable]
     [XmlRoot("issue")]
     public class Issue : Identifiable<Issue>, IXmlSerializable, IEquatable<Issue>, ICloneable
@@ -132,16 +135,40 @@ namespace Redmine.Net.Api.Types
         [XmlElement("updated_on")]
         public DateTime? UpdatedOn { get; set; }
 
+        /// <summary>
+        /// Gets or sets the assigned to.
+        /// </summary>
+        /// <value>
+        /// The assigned to.
+        /// </value>
         [XmlElement("assigned_to")]
         public IdentifiableName AssignedTo { get; set; }
 
+        /// <summary>
+        /// Gets or sets the fixed version.
+        /// </summary>
+        /// <value>
+        /// The fixed version.
+        /// </value>
         [XmlElement("fixed_version")]
         public IdentifiableName FixedVersion { get; set; }
 
+        /// <summary>
+        /// Gets or sets the journals.
+        /// </summary>
+        /// <value>
+        /// The journals.
+        /// </value>
         [XmlArray("journals")]
         [XmlArrayItem("journal")]
         public IList<Journal> Journals { get; set; }
 
+        /// <summary>
+        /// Gets or sets the changesets.
+        /// </summary>
+        /// <value>
+        /// The changesets.
+        /// </value>
         [XmlArray("changesets")]
         [XmlArrayItem("changeset")]
         public IList<Journal> Changesets { get; set; } 
@@ -165,79 +192,43 @@ namespace Redmine.Net.Api.Types
 
                 switch (reader.Name)
                 {
-                    case "id":
-                        Id = reader.ReadElementContentAsInt();
-                        break;
+                    case "id": Id = reader.ReadElementContentAsInt(); break;
 
-                    case "project":
-                        Project = new IdentifiableName(reader);
-                        break;
+                    case "project": Project = new IdentifiableName(reader); break;
 
-                    case "tracker":
-                        Tracker = new IdentifiableName(reader);
-                        break;
+                    case "tracker": Tracker = new IdentifiableName(reader); break;
 
-                    case "status":
-                        Status = new IdentifiableName(reader);
-                        break;
+                    case "status": Status = new IdentifiableName(reader); break;
 
-                    case "priority":
-                        Priority = new IdentifiableName(reader);
-                        break;
+                    case "priority": Priority = new IdentifiableName(reader); break;
 
-                    case "author":
-                        Author = new IdentifiableName(reader);
-                        break;
+                    case "author": Author = new IdentifiableName(reader); break;
 
-                    case "assigned_to":
-                        AssignedTo = new IdentifiableName(reader);
-                        break;
+                    case "assigned_to": AssignedTo = new IdentifiableName(reader); break;
 
-                    case "category":
-                        Category = new IdentifiableName(reader);
-                        break;
+                    case "category": Category = new IdentifiableName(reader); break;
 
                     case "fixed_version": FixedVersion = new IdentifiableName(reader); break;
 
-                    case "subject":
-                        Subject = reader.ReadElementContentAsString();
-                        break;
+                    case "subject": Subject = reader.ReadElementContentAsString(); break;
 
-                    case "description":
-                        Description = reader.ReadElementContentAsString();
-                        break;
+                    case "description": Description = reader.ReadElementContentAsString(); break;
 
-                    case "start_date":
-                        StartDate = reader.ReadElementContentAsNullableDateTime();
-                        break;
+                    case "start_date": StartDate = reader.ReadElementContentAsNullableDateTime(); break;
 
-                    case "due_date":
-                        DueDate = reader.ReadElementContentAsNullableDateTime();
-                        break;
+                    case "due_date": DueDate = reader.ReadElementContentAsNullableDateTime(); break;
 
-                    case "done_ratio":
-                        DoneRatio = reader.ReadElementContentAsNullableFloat();
-                        break;
+                    case "done_ratio": DoneRatio = reader.ReadElementContentAsNullableFloat(); break;
 
-                    case "estimated_hours":
-                        EstimatedHours = reader.ReadElementContentAsNullableFloat();
-                        break;
+                    case "estimated_hours": EstimatedHours = reader.ReadElementContentAsNullableFloat(); break;
 
-                    case "created_on":
-                        CreatedOn = reader.ReadElementContentAsNullableDateTime();
-                        break;
+                    case "created_on": CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
 
-                    case "updated_on":
-                        UpdatedOn = reader.ReadElementContentAsNullableDateTime();
-                        break;
+                    case "updated_on": UpdatedOn = reader.ReadElementContentAsNullableDateTime(); break;
 
-                    case "custom_fields":
-                        CustomFields = reader.ReadElementContentAsCollection<CustomField>();
-                        break;
+                    case "custom_fields": CustomFields = reader.ReadElementContentAsCollection<CustomField>(); break;
 
-                    default:
-                        reader.Read();
-                        break;
+                    default: reader.Read(); break;
                 }
             }
         }

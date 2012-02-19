@@ -21,6 +21,9 @@ using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Serializable]
     [XmlRoot("news")]
     public class News : Identifiable<News>, IEquatable<News>, IXmlSerializable
@@ -96,9 +99,8 @@ namespace Redmine.Net.Api.Types
                     case "description": Description = reader.ReadElementContentAsString(); break;
 
                     case "created_on": CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
-                    default:
-                        reader.Read();
-                        break;
+                    
+                    default: reader.Read(); break;
                 }
             }
         }

@@ -21,16 +21,37 @@ using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Serializable]
     [XmlRoot("issue_category")]
     public class IssueCategory : Identifiable<IssueCategory>, IEquatable<IssueCategory>, IXmlSerializable
     {
+        /// <summary>
+        /// Gets or sets the project.
+        /// </summary>
+        /// <value>
+        /// The project.
+        /// </value>
         [XmlElement("project ")]
         public IdentifiableName Project { get; set; }
 
+        /// <summary>
+        /// Gets or sets the asign to.
+        /// </summary>
+        /// <value>
+        /// The asign to.
+        /// </value>
         [XmlElement("assigned_to")]
         public IdentifiableName AsignTo { get; set; }
 
+        /// <summary>
+        /// Gets or sets the name.
+        /// </summary>
+        /// <value>
+        /// The name.
+        /// </value>
         [XmlElement("name")]
         public string Name { get; set; }
 
@@ -66,9 +87,7 @@ namespace Redmine.Net.Api.Types
 
                     case "name": Name = reader.ReadElementContentAsString(); break;
 
-                    default:
-                        reader.Read();
-                        break;
+                    default: reader.Read(); break;
                 }
             }
         }

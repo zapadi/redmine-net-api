@@ -21,6 +21,9 @@ using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Serializable]
     [XmlRoot("time_entry")]
     public class TimeEntry : Identifiable<TimeEntry>, ICloneable, IEquatable<TimeEntry>, IXmlSerializable
@@ -60,6 +63,12 @@ namespace Redmine.Net.Api.Types
         [XmlAttribute("activity")]
         public IdentifiableName Activity { get; set; }
 
+        /// <summary>
+        /// Gets or sets the user.
+        /// </summary>
+        /// <value>
+        /// The user.
+        /// </value>
         [XmlAttribute("user")]
         public IdentifiableName User { get; set; }
 
@@ -94,8 +103,7 @@ namespace Redmine.Net.Api.Types
 
                 switch (reader.Name)
                 {
-                    case "id": Id = reader.ReadElementContentAsInt();
-                        break;
+                    case "id": Id = reader.ReadElementContentAsInt(); break;
 
                     case "issue_id": Issue = new IdentifiableName(reader); break;
 
@@ -111,9 +119,7 @@ namespace Redmine.Net.Api.Types
 
                     case "comments": Comments = reader.ReadElementContentAsString(); break;
 
-                    default:
-                        reader.Read();
-                        break;
+                    default: reader.Read(); break;
                 }
             }
         }

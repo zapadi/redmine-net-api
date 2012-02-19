@@ -21,6 +21,9 @@ using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Serializable]
     [XmlRoot("relation")]
     public class IssueRelation : Identifiable<IssueRelation>, IXmlSerializable, IEquatable<IssueRelation>
@@ -81,9 +84,7 @@ namespace Redmine.Net.Api.Types
 
                     case "delay": Delay = reader.ReadElementContentAsNullableInt(); break;
 
-                    default:
-                        reader.Read();
-                        break;
+                    default: reader.Read(); break;
                 }
             }
         }
