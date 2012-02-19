@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 Dorin Huzum, Adrian Popescu.
+   Copyright 2012 Dorin Huzum, Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,13 +20,26 @@ using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Serializable]
     [XmlRoot("role")]
     public class MembershipRole : IdentifiableName, IEquatable<MembershipRole>
     {
+        /// <summary>
+        /// Gets or sets a value indicating whether this <see cref="MembershipRole"/> is inherited.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if inherited; otherwise, <c>false</c>.
+        /// </value>
         [XmlAttribute("inherited")]
         public bool Inherited { get; set; }
 
+        /// <summary>
+        /// Reads the XML.
+        /// </summary>
+        /// <param name="reader">The reader.</param>
         public override void ReadXml(XmlReader reader)
         {
             Id = Convert.ToInt32(reader.GetAttribute("id"));

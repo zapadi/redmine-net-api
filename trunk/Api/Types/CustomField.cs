@@ -20,6 +20,9 @@ using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Serializable]
     [XmlRoot("custom_field")]
     public class CustomField : IdentifiableName, IEquatable<CustomField>

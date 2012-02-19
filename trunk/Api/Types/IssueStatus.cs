@@ -20,6 +20,9 @@ using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Serializable]
     [XmlRoot("issue_status")]
     public class IssueStatus : IdentifiableName, IEquatable<IssueStatus>
@@ -61,9 +64,7 @@ namespace Redmine.Net.Api.Types
 
                     case "is_closed": IsClosed = reader.ReadElementContentAsBoolean(); break;
 
-                    default:
-                        reader.Read();
-                        break;
+                    default: reader.Read(); break;
                 }
             }
         }

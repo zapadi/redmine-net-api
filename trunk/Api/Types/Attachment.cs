@@ -21,6 +21,9 @@ using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Serializable]
     [XmlRoot("attachment")]
     public class Attachment : Identifiable<Attachment>, IXmlSerializable, IEquatable<Attachment>
@@ -92,8 +95,7 @@ namespace Redmine.Net.Api.Types
 
                 switch (reader.Name)
                 {
-                    case "id": Id = reader.ReadElementContentAsInt();
-                        break;
+                    case "id": Id = reader.ReadElementContentAsInt(); break;
 
                     case "filename": FileName = reader.ReadElementContentAsString(); break;
 
@@ -107,9 +109,7 @@ namespace Redmine.Net.Api.Types
 
                     case "description": Description = reader.ReadElementContentAsString(); break;
 
-                    default:
-                        reader.Read();
-                        break;
+                    default: reader.Read(); break;
                 }
             }
         }

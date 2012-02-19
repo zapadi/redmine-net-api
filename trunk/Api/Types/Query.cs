@@ -20,6 +20,9 @@ using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Serializable]
     [XmlRoot("query")]
     public class Query : IdentifiableName, IEquatable<Query>

@@ -20,6 +20,9 @@ using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Serializable]
     [XmlRoot("version")]
     public class Version : IdentifiableName, IEquatable<Version>
@@ -102,9 +105,7 @@ namespace Redmine.Net.Api.Types
 
                     case "updated_on": UpdatedOn = reader.ReadElementContentAsNullableDateTime(); break;
 
-                    default:
-                        reader.Read();
-                        break;
+                    default: reader.Read(); break;
                 }
             }
         }

@@ -22,6 +22,9 @@ using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Serializable]
     [XmlRoot("user")]
     public class User : Identifiable<User>, IXmlSerializable, IEquatable<User>
@@ -83,6 +86,12 @@ namespace Redmine.Net.Api.Types
         [XmlArrayItem("custom_field")]
         public List<CustomField> CustomFields { get; set; }
 
+        /// <summary>
+        /// Gets or sets the memberships.
+        /// </summary>
+        /// <value>
+        /// The memberships.
+        /// </value>
         [XmlArray("memberships")]
         [XmlArrayItem("membership")]
         public List<Membership> Memberships { get; set; }
