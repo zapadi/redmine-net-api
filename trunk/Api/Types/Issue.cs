@@ -171,7 +171,27 @@ namespace Redmine.Net.Api.Types
         /// </value>
         [XmlArray("changesets")]
         [XmlArrayItem("changeset")]
-        public IList<Journal> Changesets { get; set; } 
+        public IList<Journal> Changesets { get; set; }
+
+        /// <summary>
+        /// Gets or sets the attachments.
+        /// </summary>
+        /// <value>
+        /// The attachments.
+        /// </value>
+        [XmlArray("attachments")]
+        [XmlArrayItem("attachment")]
+        public IList<Attachment> Attachments { get; set; }
+
+        /// <summary>
+        /// Gets or sets the issue relations.
+        /// </summary>
+        /// <value>
+        /// The issue relations.
+        /// </value>
+        [XmlArray("relations")]
+        [XmlArrayItem("relation")]
+        public IList<IssueRelation> Relations { get; set; }
 
         public XmlSchema GetSchema()
         {
@@ -228,6 +248,10 @@ namespace Redmine.Net.Api.Types
 
                     case "custom_fields": CustomFields = reader.ReadElementContentAsCollection<CustomField>(); break;
 
+                    case "attachments": Attachments = reader.ReadElementContentAsCollection<Attachment>(); break;
+
+                    case "relations": Relations = reader.ReadElementContentAsCollection<IssueRelation>(); break;
+                    
                     default: reader.Read(); break;
                 }
             }
