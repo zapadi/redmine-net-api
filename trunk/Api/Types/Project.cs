@@ -124,9 +124,12 @@ namespace Redmine.Net.Api.Types
         {
             writer.WriteElementString("name", Name);
             writer.WriteElementString("identifier", Identifier);
-            writer.WriteIdIfNotNull(Parent, "parent_id");
-            writer.WriteElementString("description", Description);
-            writer.WriteElementString("homepage", HomePage);
+            if (Id != 0)
+            {
+                writer.WriteIdIfNotNull(Parent, "parent_id");
+                writer.WriteElementString("description", Description);
+                writer.WriteElementString("homepage", HomePage);
+            }
         }
 
         public bool Equals(Project other)
