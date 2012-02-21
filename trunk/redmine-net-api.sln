@@ -17,8 +17,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestFiles", "TestFiles", "{
 		TestFiles\issues.xml = TestFiles\issues.xml
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApplication1", "ConsoleApplication1\ConsoleApplication1.csproj", "{B3791203-B56A-4009-8880-6ECA3856CA5C}"
-EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = redmine-net-api.vsmdi
@@ -52,16 +50,6 @@ Global
 		{DB746203-07F0-493B-9D31-7274C19449D2}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{DB746203-07F0-493B-9D31-7274C19449D2}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{DB746203-07F0-493B-9D31-7274C19449D2}.Release|x86.ActiveCfg = Release|Any CPU
-		{B3791203-B56A-4009-8880-6ECA3856CA5C}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{B3791203-B56A-4009-8880-6ECA3856CA5C}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{B3791203-B56A-4009-8880-6ECA3856CA5C}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{B3791203-B56A-4009-8880-6ECA3856CA5C}.Debug|x86.ActiveCfg = Debug|x86
-		{B3791203-B56A-4009-8880-6ECA3856CA5C}.Debug|x86.Build.0 = Debug|x86
-		{B3791203-B56A-4009-8880-6ECA3856CA5C}.Release|Any CPU.ActiveCfg = Release|x86
-		{B3791203-B56A-4009-8880-6ECA3856CA5C}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{B3791203-B56A-4009-8880-6ECA3856CA5C}.Release|Mixed Platforms.Build.0 = Release|x86
-		{B3791203-B56A-4009-8880-6ECA3856CA5C}.Release|x86.ActiveCfg = Release|x86
-		{B3791203-B56A-4009-8880-6ECA3856CA5C}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
