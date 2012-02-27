@@ -34,6 +34,7 @@ namespace Redmine.Net.Api
     {
         private const string REQUESTFORMAT = "{0}/{1}/{2}.xml";
         private const string FORMAT = "{0}/{1}.xml";
+        private const string CURRENT_USER_URI = "current";
         private readonly string host, apiKey;
         private readonly CredentialCache cache;
         private readonly Dictionary<Type, String> urls = new Dictionary<Type, string>
@@ -84,6 +85,20 @@ namespace Redmine.Net.Api
         {
             this.host = host;
             cache = new CredentialCache { { new Uri(host), "Basic", new NetworkCredential(login, password) } };
+        }
+
+        /// <summary>
+        /// Returns the user whose credentials are used to access the API.
+        /// </summary>
+        /// <param name="parameters">The parameters.</param>
+        /// <returns></returns>
+        public User GetCurrentUser(NameValueCollection parameters = null)
+        {
+            using (var wc = CreateWebClient(parameters))
+            {
+                var xml = wc.DownloadString(string.Format(REQUESTFORMAT, host, urls[typeof(User)], CURRENT_USER_URI));
+                return Deserialize<User>(xml);
+            }
         }
 
         /// <summary>
