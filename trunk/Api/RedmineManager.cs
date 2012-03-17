@@ -24,6 +24,8 @@ using System.Xml;
 using System.Xml.Serialization;
 using Redmine.Net.Api.Types;
 using Version = Redmine.Net.Api.Types.Version;
+using System.Security.Cryptography.X509Certificates;
+using System.Net.Security;
 
 namespace Redmine.Net.Api
 {
@@ -35,7 +37,7 @@ namespace Redmine.Net.Api
         private const string REQUESTFORMAT = "{0}/{1}/{2}.xml";
         private const string FORMAT = "{0}/{1}.xml";
         private const string CURRENT_USER_URI = "current";
-        private readonly string host, apiKey;
+        private readonly string host, apiKey, basicAuthorization;
         private readonly CredentialCache cache;
         private readonly Dictionary<Type, String> urls = new Dictionary<Type, string>
                                                              {
@@ -59,9 +61,15 @@ namespace Redmine.Net.Api
         /// Initializes a new instance of the <see cref="RedmineManager"/> class.
         /// </summary>
         /// <param name="host">The host.</param>
-        public RedmineManager(string host)
+        /// <param name="verifyServerCert">if set to <c>true</c> [verify server cert].</param>
+        public RedmineManager(string host, bool verifyServerCert = true)
         {
             this.host = host;
+
+            if (!verifyServerCert)
+            {
+                ServicePointManager.ServerCertificateValidationCallback += RemoteCertValidate;
+            }
         }
 
         /// <summary>
@@ -69,9 +77,10 @@ namespace Redmine.Net.Api
         /// </summary>
         /// <param name="host">The host.</param>
         /// <param name="apiKey">The API key.</param>
-        public RedmineManager(string host, string apiKey)
+        /// <param name="verifyServerCert">if set to <c>true</c> [verify server cert].</param>
+        public RedmineManager(string host, string apiKey, bool verifyServerCert = true)
+            : this(host, verifyServerCert)
         {
-            this.host = host;
             this.apiKey = apiKey;
         }
 
@@ -81,10 +90,12 @@ namespace Redmine.Net.Api
         /// <param name="host">The host.</param>
         /// <param name="login">The login.</param>
         /// <param name="password">The password.</param>
-        public RedmineManager(string host, string login, string password)
+        /// <param name="verifyServerCert">if set to <c>true</c> [verify server cert].</param>
+        public RedmineManager(string host, string login, string password, bool verifyServerCert = true)
+            : this(host, verifyServerCert)
         {
-            this.host = host;
             cache = new CredentialCache { { new Uri(host), "Basic", new NetworkCredential(login, password) } };
+            basicAuthorization = "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(login + ":" + password));
         }
 
         /// <summary>
@@ -141,6 +152,13 @@ namespace Redmine.Net.Api
             }
         }
 
+        /// <summary>
+        /// Gets the object list.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="parameters">The parameters.</param>
+        /// <param name="totalCount">The total count.</param>
+        /// <returns></returns>
         public IList<T> GetObjectList<T>(NameValueCollection parameters, out int totalCount) where T : class
         {
             totalCount = -1;
@@ -198,6 +216,29 @@ namespace Redmine.Net.Api
             using (var wc = CreateWebClient(null))
             {
                 string result = wc.UploadString(string.Format(FORMAT, host, urls[typeof(T)]), xml);
+            }
+        }
+
+        /// <summary>
+        /// Upload data on server.
+        /// </summary>
+        /// <param name="data">Data which will be uploaded on server</param>
+        /// <returns>Returns 'Upload' object with inialized 'Token' by server response.</returns>
+        public Upload UploadData(byte[] data)
+        {
+            using (WebClient wc = new WebClient())
+            {
+                wc.UseDefaultCredentials = false;
+
+                wc.Headers.Add("Content-Type", "application/octet-stream");
+                // Workaround - it seems that WebClient doesn't send credentials in each POST request
+                wc.Headers.Add("Authorization", basicAuthorization);
+
+                byte[] response = wc.UploadData(string.Format(FORMAT, host, "uploads"), data);
+
+                string responseString = Encoding.ASCII.GetString(response);
+
+                return Deserialize<Upload>(responseString);
             }
         }
 
@@ -261,6 +302,13 @@ namespace Redmine.Net.Api
             webClient.Headers.Add("Content-Type", "text/xml; charset=utf-8");
             webClient.Encoding = Encoding.UTF8;
             return webClient;
+        }
+
+        //This is to take care of SSL certification validation which are not issued by Trusted Root CA. Recommended for testing  only.
+        protected bool RemoteCertValidate(object sender, X509Certificate cert, X509Chain chain, SslPolicyErrors error)
+        {
+            //Cert Validation Logic
+            return true;
         }
 
         /// <summary>

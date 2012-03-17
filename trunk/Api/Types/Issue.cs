@@ -193,6 +193,16 @@ namespace Redmine.Net.Api.Types
         [XmlArrayItem("relation")]
         public IList<IssueRelation> Relations { get; set; }
 
+        /// <summary>
+        /// Gets or sets the issue relations.
+        /// </summary>
+        /// <value>
+        /// The issue relations.
+        /// </value>
+        [XmlArray("uploads")]
+        [XmlArrayItem("upload")]
+        public IList<Upload> Uploads { get; set; }
+
         public XmlSchema GetSchema()
         {
             return null;
@@ -267,6 +277,18 @@ namespace Redmine.Net.Api.Types
             writer.WriteIdIfNotNull(Category, "category_id");
             writer.WriteIdIfNotNull(Tracker, "tracker_id");
             writer.WriteIdIfNotNull(AssignedTo, "assigned_to_id");
+
+            writer.WriteIfNotDefaultOrNull(DoneRatio, "done_ratio");
+
+            if (Uploads != null)
+            {
+                writer.WriteStartElement("uploads");
+                foreach (Upload u in Uploads)
+                {
+                    new XmlSerializer(u.GetType()).Serialize(writer, u);
+                }
+                writer.WriteEndElement();
+            }
         }
 
         public object Clone()

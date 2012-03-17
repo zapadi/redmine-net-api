@@ -12,13 +12,14 @@
     <AssemblyName>Redmine.Net.Api</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;<DefineConstants Condition=" '$(TargetFrameworkVersion)' == 'v4.0' ">RUNNING_ON_4</DefineConstants></DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -26,13 +27,14 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;<DefineConstants Condition=" '$(TargetFrameworkVersion)' == 'v4.0' ">RUNNING_ON_4</DefineConstants></DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Net" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -64,6 +66,7 @@
     <Compile Include="Types\TimeEntry.cs" />
     <Compile Include="Types\Identifiable.cs" />
     <Compile Include="Types\Tracker.cs" />
+    <Compile Include="Types\Upload.cs" />
     <Compile Include="Types\User.cs" />
     <Compile Include="Types\Version.cs" />
   </ItemGroup>
