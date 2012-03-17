@@ -39,7 +39,7 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <value>The project id.</value>
         [XmlElement("project_id")]
-        public int ProjectId { get; set; }
+        public int? ProjectId { get; set; }
 
         public override void ReadXml(XmlReader reader)
         {
@@ -60,7 +60,7 @@ namespace Redmine.Net.Api.Types
 
                     case "is_public": IsPublic = reader.ReadElementContentAsBoolean(); break;
 
-                    case "project_id": ProjectId = reader.ReadElementContentAsInt(); break;
+                    case "project_id": ProjectId = reader.ReadElementContentAsNullableInt(); break;
 
                     default: reader.Read(); break;
                 }
