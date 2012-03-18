@@ -1,0 +1,295 @@
+Index: Api/Api.csproj
+===================================================================
+--- Api/Api.csproj	(revision 38)
++++ Api/Api.csproj	(working copy)
+@@ -33,6 +33,7 @@
+   <ItemGroup>
+     <Reference Include="System" />
+     <Reference Include="System.Core" />
++    <Reference Include="System.Net" />
+     <Reference Include="System.Xml.Linq" />
+     <Reference Include="System.Data.DataSetExtensions" />
+     <Reference Include="Microsoft.CSharp" />
+@@ -64,6 +65,7 @@
+     <Compile Include="Types\TimeEntry.cs" />
+     <Compile Include="Types\Identifiable.cs" />
+     <Compile Include="Types\Tracker.cs" />
++    <Compile Include="Types\Upload.cs" />
+     <Compile Include="Types\User.cs" />
+     <Compile Include="Types\Version.cs" />
+   </ItemGroup>
+Index: Api/RedmineManager.cs
+===================================================================
+--- Api/RedmineManager.cs	(revision 38)
++++ Api/RedmineManager.cs	(working copy)
+@@ -24,6 +24,8 @@
+ using System.Xml.Serialization;
+ using Redmine.Net.Api.Types;
+ using Version = Redmine.Net.Api.Types.Version;
++using System.Security.Cryptography.X509Certificates;
++using System.Net.Security;
+ 
+ namespace Redmine.Net.Api
+ {
+@@ -35,7 +37,7 @@
+         private const string REQUESTFORMAT = "{0}/{1}/{2}.xml";
+         private const string FORMAT = "{0}/{1}.xml";
+         private const string CURRENT_USER_URI = "current";
+-        private readonly string host, apiKey;
++        private readonly string host, apiKey, basicAuthorization;
+         private readonly CredentialCache cache;
+         private readonly Dictionary<Type, String> urls = new Dictionary<Type, string>
+                                                              {
+@@ -59,9 +61,14 @@
+         /// Initializes a new instance of the <see cref="RedmineManager"/> class.
+         /// </summary>
+         /// <param name="host">The host.</param>
+-        public RedmineManager(string host)
++        public RedmineManager(string host, bool verifyServerCert = true)
+         {
+             this.host = host;
++
++            if (!verifyServerCert)
++            {
++                ServicePointManager.ServerCertificateValidationCallback += new System.Net.Security.RemoteCertificateValidationCallback(RemoteCertValidate);
++            }
+         }
+ 
+         /// <summary>
+@@ -69,9 +76,9 @@
+         /// </summary>
+         /// <param name="host">The host.</param>
+         /// <param name="apiKey">The API key.</param>
+-        public RedmineManager(string host, string apiKey)
++        public RedmineManager(string host, string apiKey, bool verifyServerCert = true)
++            : this(host, verifyServerCert)
+         {
+-            this.host = host;
+             this.apiKey = apiKey;
+         }
+ 
+@@ -81,10 +88,11 @@
+         /// <param name="host">The host.</param>
+         /// <param name="login">The login.</param>
+         /// <param name="password">The password.</param>
+-        public RedmineManager(string host, string login, string password)
++        public RedmineManager(string host, string login, string password, bool verifyServerCert = true)
++            : this(host, verifyServerCert)
+         {
+-            this.host = host;
+             cache = new CredentialCache { { new Uri(host), "Basic", new NetworkCredential(login, password) } };
++            basicAuthorization = "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(login + ":" + password));
+         }
+ 
+         /// <summary>
+@@ -202,6 +210,29 @@
+         }
+ 
+         /// <summary>
++        /// Upload data on server.
++        /// </summary>
++        /// <param name="data">Data which will be uploaded on server</param>
++        /// <returns>Returns 'Upload' object with inialized 'Token' by server response.</returns>
++        public Upload UploadData(byte[] data)
++        {
++            using (WebClient wc = new WebClient())
++            {
++                wc.UseDefaultCredentials = false;
++
++                wc.Headers.Add("Content-Type", "application/octet-stream");
++                // Workaround - it seems that WebClient doesn't send credentials in each POST request
++                wc.Headers.Add("Authorization", basicAuthorization);
++
++                byte[] response = wc.UploadData(string.Format(FORMAT, host, "uploads"), data);
++
++                string responseString = Encoding.ASCII.GetString(response);
++
++                return Deserialize<Upload>(responseString);
++            }
++        }
++
++        /// <summary>
+         /// Updates the object.
+         /// </summary>
+         /// <typeparam name="T"></typeparam>
+@@ -263,6 +294,13 @@
+             return webClient;
+         }
+ 
++        //This is to take care of SSL certification validation which are not issued by Trusted Root CA. Recommended for testing  only.
++        protected bool RemoteCertValidate(object sender, X509Certificate cert, X509Chain chain, SslPolicyErrors error)
++        {
++             //Cert Validation Logic
++             return true;
++        }
++
+         /// <summary>
+         /// Serializes the specified obj.
+         /// </summary>
+Index: Api/Types/Issue.cs
+===================================================================
+--- Api/Types/Issue.cs	(revision 38)
++++ Api/Types/Issue.cs	(working copy)
+@@ -193,6 +193,16 @@
+         [XmlArrayItem("relation")]
+         public IList<IssueRelation> Relations { get; set; }
+ 
++        /// <summary>
++        /// Gets or sets the issue relations.
++        /// </summary>
++        /// <value>
++        /// The issue relations.
++        /// </value>
++        [XmlArray("uploads")]
++        [XmlArrayItem("upload")]
++        public IList<Upload> Uploads { get; set; }
++
+         public XmlSchema GetSchema()
+         {
+             return null;
+@@ -267,6 +277,18 @@
+             writer.WriteIdIfNotNull(Category, "category_id");
+             writer.WriteIdIfNotNull(Tracker, "tracker_id");
+             writer.WriteIdIfNotNull(AssignedTo, "assigned_to_id");
++
++            writer.WriteIfNotDefaultOrNull(DoneRatio, "done_ratio");
++
++            if (Uploads != null)
++            {
++                writer.WriteStartElement("uploads");
++                foreach (Upload u in Uploads)
++                {
++                    new System.Xml.Serialization.XmlSerializer(u.GetType()).Serialize(writer, u);
++                }
++                writer.WriteEndElement();
++            }
+         }
+ 
+         public object Clone()
+Index: Api/Types/Upload.cs
+===================================================================
+--- Api/Types/Upload.cs	(revision 0)
++++ Api/Types/Upload.cs	(working copy)
+@@ -0,0 +1,73 @@
++﻿using System;
++using System.Collections.Generic;
++using System.Linq;
++using System.Text;
++using System.Xml.Serialization;
++using System.IO;
++
++namespace Redmine.Net.Api.Types
++{
++    [Serializable]
++    [XmlRoot("upload")]
++    public class Upload : IEquatable<Upload>
++    {
++        /// <summary>
++        /// Gets or sets the uploaded token.
++        /// </summary>
++        /// <value>The name of the file.</value>
++        [XmlElement("token")]
++        public string Token { get; set; }
++
++        /// <summary>
++        /// Gets or sets the name of the file.
++        /// </summary>
++        /// <value>The name of the file.</value>
++        [XmlElement("filename")]
++        public string FileName { get; set; }
++
++        /// <summary>
++        /// Gets or sets the name of the file.
++        /// </summary>
++        /// <value>The name of the file.</value>
++        [XmlElement("content_type")]
++        public string ContentType { get; set; }
++
++        public System.Xml.Schema.XmlSchema GetSchema()
++        {
++            return null;
++        }
++
++        //public void ReadXml(System.Xml.XmlReader reader)
++        //{
++        //    reader.Read();
++        //    while (!reader.EOF)
++        //    {
++        //        if (reader.IsEmptyElement && !reader.HasAttributes)
++        //        {
++        //            reader.Read();
++        //            continue;
++        //        }
++
++        //        switch (reader.Name)
++        //        {
++        //            case "token": Token = reader.ReadElementContentAsString(); break;
++
++        //            case "filename": FileName = reader.ReadElementContentAsString(); break;
++
++        //            case "content_type": ContentType = reader.ReadElementContentAsString(); break;
++
++        //            default: reader.Read(); break;
++        //        }
++        //    }
++        //}
++
++        //public void WriteXml(System.Xml.XmlWriter writer)
++        //{
++        //}
++
++        public bool Equals(Upload other)
++        {
++            return other != null && Token == other.Token;
++        }
++    }
++}
+Index: Test/RedmineManagerTest.cs
+===================================================================
+--- Test/RedmineManagerTest.cs	(revision 38)
++++ Test/RedmineManagerTest.cs	(working copy)
+@@ -9,6 +9,7 @@
+ using System.Collections.Specialized;
+ using System.Collections.Generic;
+ using System.Web;
++using System.Linq;
+ 
+ namespace Test
+ {
+@@ -23,6 +24,36 @@
+         string apiKey = "";
+ 
+         /// <summary>
++        ///A test for Create issue with attachment.
++        ///</summary>
++        public void CreateIssueWithAttachmentTest()
++        {
++            // TODO: change login and password
++            RedmineManager target = new RedmineManager(host, "login", "password");
++            // Attachment file
++            Upload upload = target.UploadData(File.ReadAllBytes(@"timeentries.xml"));
++
++            upload.FileName = "some-file-name.txt";
++            upload.ContentType = "text/plain";
++
++            // TODO: Change project ID
++            Project project = target.GetObjectList<Project>(null).FirstOrDefault(p => p.Identifier == "ProjectId");
++            // TODO: Change tracker name
++            Tracker tracker = target.GetObjectList<Tracker>(null).FirstOrDefault(pt => pt.Name == "TrackerName");
++
++            Issue issue = new Issue()
++            {
++                Project = new IdentifiableName() { Id = project.Id, Name = project.Name },
++                Tracker = new IdentifiableName() { Id = tracker.Id, Name = tracker.Name },
++                Subject = "Test issue",
++                Description = "... test description",
++                Uploads = new Upload[] { upload }
++            };
++
++            target.CreateObject<Issue>(issue);
++        }
++
++        /// <summary>
+         ///A test for CreateObject
+         ///</summary>
+         public void CreateObjectTestHelper<T>()
