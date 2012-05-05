@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 Dorin Huzum, Adrian Popescu.
+   Copyright 2011 Adrian Popescu, Dorin Huzum.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -202,6 +202,7 @@ namespace Redmine.Net.Api
 
         /// <summary>
         /// Creates the object.
+        /// When trying to create an object with invalid or missing attribute parameters, you will get a 422 Unprocessable Entity response. That means that the object could not be created.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="obj">The obj.</param>
@@ -244,6 +245,7 @@ namespace Redmine.Net.Api
 
         /// <summary>
         /// Updates the object.
+        /// When trying to update an object with invalid or missing attribute parameters, you will get a 422 Unprocessable Entity response. That means that the object could not be updated.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="id">The id.</param>

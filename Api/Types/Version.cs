@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 Dorin Huzum, Adrian Popescu.
+   Copyright 2011 Adrian Popescu, Dorin Huzum.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <value>The status.</value>
         [XmlElement("status")]
-        public String Status { get; set; }
+        public VersionStatus Status { get; set; }
 
         /// <summary>
         /// Gets or sets the due date.
@@ -60,7 +60,7 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <value>The sharing.</value>
         [XmlElement("sharing")]
-        public String Sharing { get; set; }
+        public VersionSharing Sharing { get; set; }
 
         /// <summary>
         /// Gets or sets the created on.
@@ -95,11 +95,11 @@ namespace Redmine.Net.Api.Types
 
                     case "description": Description = reader.ReadElementContentAsString(); break;
 
-                    case "status": Status = reader.ReadElementContentAsString(); break;
+                    case "status": Status = (VersionStatus)Enum.Parse(typeof(VersionStatus), reader.ReadElementContentAsString(), true); break;
 
                     case "due_date": DueDate = reader.ReadElementContentAsNullableDateTime(); break;
 
-                    case "sharing": Sharing = reader.ReadElementContentAsString(); break;
+                    case "sharing": Sharing = (VersionSharing)Enum.Parse(typeof(VersionSharing), reader.ReadElementContentAsString(), true); break;
 
                     case "created_on": CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
 
@@ -113,8 +113,8 @@ namespace Redmine.Net.Api.Types
         public override void WriteXml(XmlWriter writer)
         {
             writer.WriteElementString("name", Name);
-            writer.WriteElementString("status", Status);
-            writer.WriteElementString("sharing", Sharing);
+            writer.WriteElementString("status", Status.ToString());
+            writer.WriteElementString("sharing", Sharing.ToString());
             writer.WriteIfNotDefaultOrNull(DueDate, "due_date");
             writer.WriteElementString("description", Description);
         }
@@ -124,5 +124,21 @@ namespace Redmine.Net.Api.Types
             if (other == null) return false;
             return (Id == other.Id && Name == other.Name && Project == other.Project && Description == other.Description && Status == other.Status && DueDate == other.DueDate && Sharing == other.Sharing && CreatedOn == other.CreatedOn && UpdatedOn == other.UpdatedOn);
         }
+    }
+
+    public enum VersionStatus
+    {
+        open = 1,
+        locked,
+        closed
+    }
+
+    public enum VersionSharing
+    {
+        none = 1,
+        descendants,
+        hierarchy,
+        tree,
+        system
     }
 }

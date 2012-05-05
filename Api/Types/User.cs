@@ -1,6 +1,6 @@
 ﻿/*
-   Copyright 2011 Dorin Huzum, Adrian Popescu.
-
+    Copyright 2011 Adrian Popescu, Dorin Huzum.
+ 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
    You may obtain a copy of the License at
@@ -30,14 +30,14 @@ namespace Redmine.Net.Api.Types
     public class User : Identifiable<User>, IXmlSerializable, IEquatable<User>
     {
         /// <summary>
-        /// Gets or sets the login.
+        /// Gets or sets the user login.
         /// </summary>
         /// <value>The login.</value>
         [XmlElement("login")]
         public String Login { get; set; }
 
         /// <summary>
-        /// Gets or sets the password.
+        /// Gets or sets the user password.
         /// </summary>
         /// <value>The password.</value>
         [XmlElement("password")]

@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 Dorin Huzum, Adrian Popescu.
+   Copyright 2011 Adrian Popescu, Dorin Huzum.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -36,21 +36,21 @@ namespace Redmine.Net.Api.Types
         public int IssueId { get; set; }
 
         /// <summary>
-        /// Gets or sets the issue to id.
+        /// Gets or sets the related issue id.
         /// </summary>
         /// <value>The issue to id.</value>
         [XmlElement("issue_to_id")]
         public int IssueToId { get; set; }
 
         /// <summary>
-        /// Gets or sets the type.
+        /// Gets or sets the type of relation.
         /// </summary>
         /// <value>The type.</value>
         [XmlElement("relation_type")]
-        public String Type { get; set; }
+        public IssueRelationType Type { get; set; }
 
         /// <summary>
-        /// Gets or sets the delay.
+        /// Gets or sets the delay for a "precedes" or "follows" relation.
         /// </summary>
         /// <value>The delay.</value>
         [XmlElement("delay")]
@@ -80,7 +80,7 @@ namespace Redmine.Net.Api.Types
 
                     case "issue_to_id": IssueToId = reader.ReadElementContentAsInt(); break;
 
-                    case "relation_type": Type = reader.ReadElementContentAsString(); break;
+                    case "relation_type": Type = (IssueRelationType)Enum.Parse(typeof(IssueRelationType), reader.ReadElementContentAsString(), true); break;
 
                     case "delay": Delay = reader.ReadElementContentAsNullableInt(); break;
 
@@ -92,8 +92,9 @@ namespace Redmine.Net.Api.Types
         public void WriteXml(XmlWriter writer)
         {
             writer.WriteElementString("issue_to_id", IssueToId.ToString());
-            writer.WriteElementString("relation_type", Type);
-            writer.WriteElementString("delay", Delay.ToString());
+            writer.WriteElementString("relation_type", Type.ToString());
+            if(Type == IssueRelationType.precedes || Type == IssueRelationType.follows)
+                writer.WriteElementString("delay", Delay.ToString());
         }
 
         public bool Equals(IssueRelation other)
@@ -101,5 +102,16 @@ namespace Redmine.Net.Api.Types
             if (other == null) return false;
             return (Id == other.Id && IssueId == other.IssueId && IssueToId == other.IssueToId && Type == other.Type && Delay == other.Delay);
         }
+    }
+
+    public enum IssueRelationType
+    {
+        relates = 1,
+        duplicates,
+        duplicated,
+        blocks,
+        blocked,
+        precedes,
+        follows
     }
 }

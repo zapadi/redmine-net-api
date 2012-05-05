@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 Dorin Huzum, Adrian Popescu.
+   Copyright 2011 Adrian Popescu, Dorin Huzum.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ namespace Redmine.Net.Api.Types
         public IdentifiableName Tracker { get; set; }
 
         /// <summary>
-        /// Gets or sets the status.
+        /// Gets or sets the status.Possible values: open, closed, * to get open and closed issues, status id
         /// </summary>
         /// <value>The status.</value>
         [XmlElement("status")]
@@ -136,13 +136,22 @@ namespace Redmine.Net.Api.Types
         public DateTime? UpdatedOn { get; set; }
 
         /// <summary>
-        /// Gets or sets the assigned to.
+        /// Gets or sets the ID of the user to assign the issue to (currently no mechanism to assign by name).
         /// </summary>
         /// <value>
         /// The assigned to.
         /// </value>
         [XmlElement("assigned_to")]
         public IdentifiableName AssignedTo { get; set; }
+
+        ///// <summary>
+        ///// Gets or sets the parent issue id.
+        ///// </summary>
+        ///// <value>
+        ///// The parent issue id.
+        ///// </value>
+        //[XmlElement("parent_issue_id")]
+        //public int ParentIssueId { get; set; }
 
         /// <summary>
         /// Gets or sets the fixed version.
@@ -194,10 +203,10 @@ namespace Redmine.Net.Api.Types
         public IList<IssueRelation> Relations { get; set; }
 
         /// <summary>
-        /// Gets or sets the issue relations.
+        /// Gets or sets the attachments.
         /// </summary>
         /// <value>
-        /// The issue relations.
+        /// The attachment.
         /// </value>
         [XmlArray("uploads")]
         [XmlArrayItem("upload")]
@@ -283,7 +292,7 @@ namespace Redmine.Net.Api.Types
             if (Uploads != null)
             {
                 writer.WriteStartElement("uploads");
-                foreach (Upload u in Uploads)
+                foreach (var u in Uploads)
                 {
                     new XmlSerializer(u.GetType()).Serialize(writer, u);
                 }
