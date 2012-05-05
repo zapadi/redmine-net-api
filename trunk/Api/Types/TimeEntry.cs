@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 Dorin Huzum, Adrian Popescu.
+   Copyright 2011 Adrian Popescu, Dorin Huzum.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -29,35 +29,35 @@ namespace Redmine.Net.Api.Types
     public class TimeEntry : Identifiable<TimeEntry>, ICloneable, IEquatable<TimeEntry>, IXmlSerializable
     {
         /// <summary>
-        /// Gets or sets the issue id.
+        /// Gets or sets the issue id to log time on.
         /// </summary>
         /// <value>The issue id.</value>
         [XmlAttribute("issue")]
         public IdentifiableName Issue { get; set; }
 
         /// <summary>
-        /// Gets or sets the project id.
+        /// Gets or sets the project id to log time on.
         /// </summary>
         /// <value>The project id.</value>
         [XmlAttribute("project")]
         public IdentifiableName Project { get; set; }
 
         /// <summary>
-        /// Gets or sets the spent on.
+        /// Gets or sets the date the time was spent (default to the current date).
         /// </summary>
         /// <value>The spent on.</value>
         [XmlAttribute("spent_on")]
         public DateTime? SpentOn { get; set; }
 
         /// <summary>
-        /// Gets or sets the hours.
+        /// Gets or sets the number of spent hours.
         /// </summary>
         /// <value>The hours.</value>
         [XmlAttribute("hours")]
         public decimal Hours { get; set; }
 
         /// <summary>
-        /// Gets or sets the activity id.
+        /// Gets or sets the activity id of the time activity. This parameter is required unless a default activity is defined in Redmine..
         /// </summary>
         /// <value>The activity id.</value>
         [XmlAttribute("activity")]
@@ -73,7 +73,7 @@ namespace Redmine.Net.Api.Types
         public IdentifiableName User { get; set; }
 
         /// <summary>
-        /// Gets or sets the comments.
+        /// Gets or sets the short description for the entry (255 characters max).
         /// </summary>
         /// <value>The comments.</value>
         [XmlAttribute("comments")]
@@ -128,7 +128,8 @@ namespace Redmine.Net.Api.Types
         {
             writer.WriteIdIfNotNull(Issue, "issue_id");
             writer.WriteIdIfNotNull(Project, "project_id");
-            writer.WriteIfNotDefaultOrNull(SpentOn, "spent_on");
+            if (!SpentOn.HasValue) SpentOn = DateTime.Now;
+            writer.WriteElementString("spent_on", SpentOn.Value.ToString());
             writer.WriteElementString("hours", Hours.ToString());
             writer.WriteIdIfNotNull(Activity, "activity_id");
             writer.WriteElementString("comments", Comments);

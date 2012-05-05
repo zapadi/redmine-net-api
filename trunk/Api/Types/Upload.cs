@@ -4,6 +4,10 @@ using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
+    /// <summary>
+    /// Support for adding attachments through the REST API is added in Redmine 1.4.0.
+    /// Maximum allowed file size (1024000)
+    /// </summary>
     [Serializable]
     [XmlRoot("upload")]
     public class Upload : IEquatable<Upload>
