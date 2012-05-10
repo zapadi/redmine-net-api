@@ -270,6 +270,8 @@ namespace Redmine.Net.Api.Types
                     case "attachments": Attachments = reader.ReadElementContentAsCollection<Attachment>(); break;
 
                     case "relations": Relations = reader.ReadElementContentAsCollection<IssueRelation>(); break;
+
+                    case "journals": Journals = reader.ReadElementContentAsCollection<Journal>(); break;
                     
                     default: reader.Read(); break;
                 }
