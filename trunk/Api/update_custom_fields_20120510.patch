@@ -1,0 +1,48 @@
+Index: Api/Types/CustomField.cs
+===================================================================
+--- Api/Types/CustomField.cs	(revision 43)
++++ Api/Types/CustomField.cs	(working copy)
+@@ -32,7 +32,7 @@
+         /// </summary>
+         /// <value>The value.</value>
+         [XmlText]
+-        public String Value { get; set; }
++        public string Value { get; set; }
+ 
+         [XmlAttribute("multiple")]
+         public bool Multiple { get; set; }
+@@ -45,6 +45,12 @@
+             Value = reader.ReadElementString();
+         }
+ 
++        public override void WriteXml(XmlWriter writer)
++        {
++            writer.WriteAttributeString("id", Id.ToString());
++            writer.WriteElementString("value", Value);
++        }
++
+         public bool Equals(CustomField other)
+         {
+             if (other == null) return false;
+Index: Api/Types/Issue.cs
+===================================================================
+--- Api/Types/Issue.cs	(revision 43)
++++ Api/Types/Issue.cs	(working copy)
+@@ -300,6 +300,17 @@
+                 }
+                 writer.WriteEndElement();
+             }
++
++            if (CustomFields != null)
++            {
++                writer.WriteStartElement("custom_fields");
++                writer.WriteAttributeString("type", "array");
++                foreach (var cf in CustomFields)
++                {
++                    new XmlSerializer(cf.GetType()).Serialize(writer, cf);
++                }
++                writer.WriteEndElement();
++            }
+         }
+ 
+         public object Clone()

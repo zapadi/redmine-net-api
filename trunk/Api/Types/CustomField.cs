@@ -32,7 +32,7 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <value>The value.</value>
         [XmlText]
-        public String Value { get; set; }
+        public string Value { get; set; }
 
         [XmlAttribute("multiple")]
         public bool Multiple { get; set; }
@@ -43,6 +43,12 @@ namespace Redmine.Net.Api.Types
             Name = reader.GetAttribute("name");
             Multiple = reader.ReadAttributeAsBoolean("multiple");
             Value = reader.ReadElementString();
+        }
+
+        public override void WriteXml(XmlWriter writer)
+        {
+            writer.WriteAttributeString("id", Id.ToString());
+            writer.WriteElementString("value", Value);
         }
 
         public bool Equals(CustomField other)
