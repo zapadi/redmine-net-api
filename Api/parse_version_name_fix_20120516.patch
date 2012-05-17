@@ -1,0 +1,13 @@
+Index: Api/Types/Version.cs
+===================================================================
+--- Api/Types/Version.cs	(revision 44)
++++ Api/Types/Version.cs	(working copy)
+@@ -91,6 +91,8 @@
+                 {
+                     case "id": Id = reader.ReadElementContentAsInt(); break;
+ 
++                    case "name": Name = reader.ReadElementContentAsString(); break;
++
+                     case "project": Project = new IdentifiableName(reader); break;
+ 
+                     case "description": Description = reader.ReadElementContentAsString(); break;
