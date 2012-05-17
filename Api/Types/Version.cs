@@ -91,6 +91,8 @@ namespace Redmine.Net.Api.Types
                 {
                     case "id": Id = reader.ReadElementContentAsInt(); break;
 
+                    case "name": Name = reader.ReadElementContentAsString(); break;
+
                     case "project": Project = new IdentifiableName(reader); break;
 
                     case "description": Description = reader.ReadElementContentAsString(); break;
