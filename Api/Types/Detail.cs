@@ -44,7 +44,7 @@ namespace Redmine.Net.Api.Types
         /// The status id.
         /// </value>
         [XmlAttribute("name")]
-        public int StatusId { get; set; }
+        public string StatusId { get; set; }
 
         /// <summary>
         /// Gets or sets the old value.
@@ -72,7 +72,7 @@ namespace Redmine.Net.Api.Types
         public void ReadXml(XmlReader reader)
         {
             Property = reader.GetAttribute("property");
-            StatusId = reader.ReadAttributeAsInt("status_id");
+            StatusId = reader.GetAttribute("status_id");
 
             reader.Read();
 
