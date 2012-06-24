@@ -115,7 +115,7 @@ namespace Redmine.Net.Api.Types
         public bool Equals(Journal other)
         {
             if (other == null) return false;
-            return Id == other.Id && User == other.User && Notes == other.Notes && CreatedOn == other.CreatedOn;
+            return Id == other.Id && User == other.User && Notes == other.Notes && CreatedOn == other.CreatedOn && Details == other.Details;
         }
     }
 }
