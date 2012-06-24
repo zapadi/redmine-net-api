@@ -1,0 +1,25 @@
+Index: Api/Types/Issue.cs
+===================================================================
+--- Api/Types/Issue.cs	(revision 49)
++++ Api/Types/Issue.cs	(working copy)
+@@ -112,7 +112,7 @@
+         /// <value>The estimated hours.</value>
+         [XmlElement("estimated_hours", IsNullable = true)]
+         public float? EstimatedHours { get; set; }
+-
++        
+         /// <summary>
+         /// Gets or sets the custom fields.
+         /// </summary>
+@@ -288,6 +288,11 @@
+             writer.WriteIdIfNotNull(Category, "category_id");
+             writer.WriteIdIfNotNull(Tracker, "tracker_id");
+             writer.WriteIdIfNotNull(AssignedTo, "assigned_to_id");
++            writer.WriteIfNotDefaultOrNull(EstimatedHours, "estimated_hours");
++            if(StartDate!=null)
++                writer.WriteElementString("start_date", StartDate.Value.Year.ToString() + "-" + StartDate.Value.Month.ToString() + "-" + StartDate.Value.Day.ToString());
++            if (DueDate != null)
++                writer.WriteElementString("due_date", DueDate.Value.Year.ToString() + "-" + DueDate.Value.Month.ToString() + "-" + DueDate.Value.Day.ToString());
+ 
+             writer.WriteIfNotDefaultOrNull(DoneRatio, "done_ratio");
+ 

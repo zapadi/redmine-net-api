@@ -49,6 +49,8 @@
     <Compile Include="Types\ChangeSet.cs" />
     <Compile Include="Types\CustomField.cs" />
     <Compile Include="Types\Detail.cs" />
+    <Compile Include="Types\Error.cs" />
+    <Compile Include="Types\Group.cs" />
     <Compile Include="Types\IdentifiableName.cs" />
     <Compile Include="Types\Issue.cs" />
     <Compile Include="Types\IssueCategory.cs" />
@@ -68,6 +70,7 @@
     <Compile Include="Types\Tracker.cs" />
     <Compile Include="Types\Upload.cs" />
     <Compile Include="Types\User.cs" />
+    <Compile Include="Types\UserGroup.cs" />
     <Compile Include="Types\Version.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

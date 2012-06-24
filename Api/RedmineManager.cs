@@ -54,7 +54,8 @@ namespace Redmine.Net.Api
                                                                  { typeof(Tracker),"trackers"},
                                                                  { typeof(IssueCategory),"issue_categories"},
                                                                  { typeof(Role),"roles"},
-                                                                 { typeof(ProjectMembership),"memberships"}
+                                                                 { typeof(ProjectMembership),"memberships"},
+                                                                 { typeof(Group),"groups"}
                                                              };
 
         /// <summary>
@@ -109,6 +110,32 @@ namespace Redmine.Net.Api
             {
                 var xml = wc.DownloadString(string.Format(REQUESTFORMAT, host, urls[typeof(User)], CURRENT_USER_URI));
                 return Deserialize<User>(xml);
+            }
+        }
+
+        /// <summary>
+        /// Adds an existing user to a group.
+        /// </summary>
+        /// <param name="groupId">The group id.</param>
+        /// <param name="userId">The user id.</param>
+        public void AddUserToGroup(int groupId, int userId)
+        {
+            using (var wc = CreateWebClient(null))
+            {
+                wc.UploadString(string.Format(REQUESTFORMAT, host, urls[typeof(Group)], groupId + "/users"), "POST", "<user_id>" + userId.ToString() + "</user_id>");
+            }
+        }
+
+        /// <summary>
+        /// Removes a user from a group.
+        /// </summary>
+        /// <param name="groupId">The group id.</param>
+        /// <param name="userId">The user id.</param>
+        public void DeleteUserFromGroup(int groupId, int userId)
+        {
+            using (var wc = CreateWebClient(null))
+            {
+                wc.UploadString(string.Format(REQUESTFORMAT, host, urls[typeof(Group)], groupId + "/users/" + userId), "DELETE", string.Empty);
             }
         }
 
