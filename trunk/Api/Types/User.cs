@@ -65,6 +65,15 @@ namespace Redmine.Net.Api.Types
         public String Email { get; set; }
 
         /// <summary>
+        /// Gets or sets the authentication mode id.
+        /// </summary>
+        /// <value>
+        /// The authentication mode id.
+        /// </value>
+        [XmlElement("auth_source_id")]
+        public Int32 AuthenticationModeId { get; set; }
+
+        /// <summary>
         /// Gets or sets the created on.
         /// </summary>
         /// <value>The created on.</value>
@@ -96,6 +105,16 @@ namespace Redmine.Net.Api.Types
         [XmlArrayItem("membership")]
         public List<Membership> Memberships { get; set; }
 
+        /// <summary>
+        /// Gets or sets the user's groups.
+        /// </summary>
+        /// <value>
+        /// The groups.
+        /// </value>
+        [XmlArray("groups")]
+        [XmlArrayItem("group")]
+        public List<UserGroup> Groups { get; set; } 
+
         public XmlSchema GetSchema()
         {
             return null;
@@ -124,6 +143,8 @@ namespace Redmine.Net.Api.Types
 
                     case "mail": Email = reader.ReadElementContentAsString(); break;
 
+                    case "auth_source_id": AuthenticationModeId = reader.ReadElementContentAsInt(); break;
+
                     case "last_login_on": LastLoginOn = reader.ReadElementContentAsNullableDateTime(); break;
 
                     case "created_on": CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
@@ -131,6 +152,8 @@ namespace Redmine.Net.Api.Types
                     case "custom_fields": CustomFields = reader.ReadElementContentAsCollection<CustomField>(); break;
 
                     case "memberships": Memberships = reader.ReadElementContentAsCollection<Membership>(); break;
+
+                    case "groups": Groups = reader.ReadElementContentAsCollection<UserGroup>(); break;
 
                     default: reader.Read(); break;
                 }
@@ -144,13 +167,14 @@ namespace Redmine.Net.Api.Types
             writer.WriteElementString("lastname", LastName);
             writer.WriteElementString("mail", Email);
             writer.WriteElementString("password", Password);
+            writer.WriteElementString("auth_source_id", AuthenticationModeId.ToString());
         }
 
         public bool Equals(User other)
         {
             if (other == null) return false;
             return (Id == other.Id && Login == other.Login && Password == other.Password
-                && FirstName == other.FirstName && LastName == other.LastName && Email == other.Email && CreatedOn == other.CreatedOn && LastLoginOn == other.LastLoginOn && CustomFields == other.CustomFields && Memberships == other.Memberships);
+                && FirstName == other.FirstName && LastName == other.LastName && Email == other.Email && CreatedOn == other.CreatedOn && LastLoginOn == other.LastLoginOn && CustomFields == other.CustomFields && Memberships == other.Memberships && Groups == other.Groups);
         }
     }
 }

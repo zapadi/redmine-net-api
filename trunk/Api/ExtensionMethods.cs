@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
@@ -189,7 +190,7 @@ namespace Redmine.Net.Api
         {
             if (ident != null)
             {
-                writer.WriteElementString(tag, ident.Id.ToString());
+                writer.WriteElementString(tag, ident.Id.ToString(CultureInfo.InvariantCulture));
             }
         }
 
