@@ -171,6 +171,7 @@ namespace Redmine.Net.Api
                 {
                     using (var xmlReader = new XmlTextReader(text))
                     {
+                        xmlReader.WhitespaceHandling = WhitespaceHandling.None;
                         xmlReader.Read();
                         xmlReader.Read();
                         return xmlReader.ReadElementContentAsCollection<T>();
@@ -198,6 +199,7 @@ namespace Redmine.Net.Api
                 {
                     using (var xmlReader = new XmlTextReader(text))
                     {
+                        xmlReader.WhitespaceHandling = WhitespaceHandling.None;
                         xmlReader.Read();
                         xmlReader.Read();
 
