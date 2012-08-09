@@ -15,6 +15,7 @@
 */
 
 using System;
+using System.Diagnostics;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -42,7 +43,22 @@ namespace Redmine.Net.Api.Types
             Id = reader.ReadAttributeAsInt("id");
             Name = reader.GetAttribute("name");
             Multiple = reader.ReadAttributeAsBoolean("multiple");
-            Value = reader.ReadElementString();
+
+            try
+            {
+                Value = Multiple ? reader.ReadElementContentAsString() : reader.ReadElementString();
+            }
+            catch (Exception ex)
+            {
+                try
+                {
+                    Value = reader.ReadElementContentAsString();
+                }
+                catch (Exception ex2)
+                {
+                    Trace.WriteLine("Redmine.NET: Could not load custom field value.", "ERROR");
+                }
+            }
         }
 
         public override void WriteXml(XmlWriter writer)
