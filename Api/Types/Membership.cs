@@ -25,7 +25,6 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// 
     /// </summary>
-    [Serializable]
     [XmlRoot("membership")]
     public class Membership : Identifiable<Membership>, IEquatable<Membership>, IXmlSerializable
     {

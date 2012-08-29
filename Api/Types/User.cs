@@ -23,9 +23,8 @@ using System.Xml.Serialization;
 namespace Redmine.Net.Api.Types
 {
     /// <summary>
-    /// 
+    /// Availability 1.1
     /// </summary>
-    [Serializable]
     [XmlRoot("user")]
     public class User : Identifiable<User>, IXmlSerializable, IEquatable<User>
     {

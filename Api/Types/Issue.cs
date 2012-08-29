@@ -24,9 +24,11 @@ using System.Xml.Serialization;
 namespace Redmine.Net.Api.Types
 {
     /// <summary>
-    /// 
+    /// Available as of 1.1 :
+    ///include: fetch associated data (optional). 
+    ///Possible values: children, attachments, relations, changesets and journals. To fetch multiple associations use comma (e.g ?include=relations,journals). 
+    /// See Issue journals for more information.
     /// </summary>
-    [Serializable]
     [XmlRoot("issue")]
     public class Issue : Identifiable<Issue>, IXmlSerializable, IEquatable<Issue>, ICloneable
     {
@@ -113,7 +115,7 @@ namespace Redmine.Net.Api.Types
         /// <value>The estimated hours.</value>
         [XmlElement("estimated_hours", IsNullable = true)]
         public float? EstimatedHours { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the custom fields.
         /// </summary>
@@ -273,7 +275,7 @@ namespace Redmine.Net.Api.Types
                     case "relations": Relations = reader.ReadElementContentAsCollection<IssueRelation>(); break;
 
                     case "journals": Journals = reader.ReadElementContentAsCollection<Journal>(); break;
-                    
+
                     default: reader.Read(); break;
                 }
             }
@@ -291,10 +293,10 @@ namespace Redmine.Net.Api.Types
             writer.WriteIdIfNotNull(AssignedTo, "assigned_to_id");
             writer.WriteElementString("parent_issue_id", ParentIssueId.ToString());
             writer.WriteIfNotDefaultOrNull(EstimatedHours, "estimated_hours");
-            if(StartDate!=null)
+            if (StartDate != null)
                 writer.WriteElementString("start_date", StartDate.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
             if (DueDate != null)
-                writer.WriteElementString("due_date", DueDate.Value.ToString("yyyy-MM-dd",CultureInfo.InvariantCulture));
+                writer.WriteElementString("due_date", DueDate.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
 
             writer.WriteIfNotDefaultOrNull(DoneRatio, "done_ratio");
 

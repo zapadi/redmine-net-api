@@ -22,7 +22,9 @@ using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
-    [Serializable]
+    /// <summary>
+    /// Availability 2.1
+    /// </summary>
     [XmlRoot("group")]
     public class Group : IXmlSerializable, IEquatable<Group>
     {

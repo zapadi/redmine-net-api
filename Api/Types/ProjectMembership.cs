@@ -23,12 +23,12 @@ using System.Xml.Serialization;
 namespace Redmine.Net.Api.Types
 {
     /// <summary>
+    /// Availability 1.4
     /// POST - Adds a project member.
     /// GET - Returns the membership of given :id.
     /// PUT - Updates the membership of given :id. Only the roles can be updated, the project and the user of a membership are read-only.
     /// DELETE - Deletes a memberships. Memberships inherited from a group membership can not be deleted. You must delete the group membership.
     /// </summary>
-    [Serializable]
     [XmlRoot("membership")]
     public class ProjectMembership : Identifiable<ProjectMembership>, IEquatable<ProjectMembership>, IXmlSerializable
     {

@@ -22,9 +22,8 @@ using System.Xml.Serialization;
 namespace Redmine.Net.Api.Types
 {
     /// <summary>
-    /// 
+    /// Availability 1.0
     /// </summary>
-    [Serializable]
     [XmlRoot("project")]
     public class Project : IdentifiableName, IEquatable<Project>
     {

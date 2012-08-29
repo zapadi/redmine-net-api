@@ -22,9 +22,8 @@ using System.Xml.Serialization;
 namespace Redmine.Net.Api.Types
 {
     /// <summary>
-    /// 
+    /// Availability 1.1
     /// </summary>
-    [Serializable]
     [XmlRoot("time_entry")]
     public class TimeEntry : Identifiable<TimeEntry>, ICloneable, IEquatable<TimeEntry>, IXmlSerializable
     {

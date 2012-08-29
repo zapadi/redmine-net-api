@@ -23,7 +23,6 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// 
     /// </summary>
-    [Serializable]
     [XmlRoot("role")]
     public class MembershipRole : IdentifiableName, IEquatable<MembershipRole>
     {
