@@ -21,9 +21,8 @@ using System.Xml.Serialization;
 namespace Redmine.Net.Api.Types
 {
     /// <summary>
-    /// 
+    /// Availability 1.3
     /// </summary>
-    [Serializable]
     [XmlRoot("query")]
     public class Query : IdentifiableName, IEquatable<Query>
     {

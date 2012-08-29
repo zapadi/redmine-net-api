@@ -22,9 +22,8 @@ using System.Xml.Schema;
 namespace Redmine.Net.Api.Types
 {
     /// <summary>
-    /// 
+    /// Availability 1.3
     /// </summary>
-    [Serializable]
     [XmlRoot("tracker")]
     public class Tracker : IXmlSerializable, IEquatable<Tracker>
     {

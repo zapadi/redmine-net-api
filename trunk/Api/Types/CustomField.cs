@@ -16,6 +16,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -24,7 +25,6 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// 
     /// </summary>
-    [Serializable]
     [XmlRoot("custom_field")]
     public class CustomField : IdentifiableName, IEquatable<CustomField>
     {
@@ -56,14 +56,14 @@ namespace Redmine.Net.Api.Types
                 }
                 catch (Exception ex2)
                 {
-                    Trace.WriteLine("Redmine.NET: Could not load custom field value.", "ERROR");
+                    Trace.TraceError("Redmine.NET: Could not load custom field value.");
                 }
             }
         }
 
         public override void WriteXml(XmlWriter writer)
         {
-            writer.WriteAttributeString("id", Id.ToString());
+            writer.WriteAttributeString("id", Id.ToString(CultureInfo.InvariantCulture));
             writer.WriteElementString("value", Value);
         }
 

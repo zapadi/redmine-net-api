@@ -38,7 +38,7 @@ namespace Redmine.Net.Api
             {
                 var attribute = reader.GetAttribute(attributeName);
                 int result;
-#if RUNNING_ON_4
+#if RUNNING_ON_4_OR_ABOVE
                 if (String.IsNullOrWhiteSpace(attribute) || !Int32.TryParse(attribute, out result)) return default(int);
 #else
                 if (String.IsNullOrEmpty(attribute) || !Int32.TryParse(attribute, out result)) return default(int);
@@ -63,7 +63,7 @@ namespace Redmine.Net.Api
             {
                 var attribute = reader.GetAttribute(attributeName);
                 bool result;
-#if RUNNING_ON_4
+#if RUNNING_ON_4_OR_ABOVE
                 if (String.IsNullOrWhiteSpace(attribute) || !Boolean.TryParse(attribute, out result)) return false;
 #else
                 if (String.IsNullOrEmpty(attribute) || !Boolean.TryParse(attribute, out result)) return false;
@@ -86,7 +86,7 @@ namespace Redmine.Net.Api
             var str = reader.ReadElementContentAsString();
 
             DateTime result;
-#if RUNNING_ON_4
+#if RUNNING_ON_4_OR_ABOVE
             if (String.IsNullOrWhiteSpace(str) || !DateTime.TryParse(str, out result)) return null;
 #else
             if (String.IsNullOrEmpty(str) || !DateTime.TryParse(str, out result)) return null;
@@ -104,7 +104,7 @@ namespace Redmine.Net.Api
             var str = reader.ReadElementContentAsString();
 
             float result;
-#if RUNNING_ON_4
+#if RUNNING_ON_4_OR_ABOVE
             if (String.IsNullOrWhiteSpace(str) || !float.TryParse(str, out result)) return null;
 #else
             if (String.IsNullOrEmpty(str) || !float.TryParse(str, out result)) return null;
@@ -122,7 +122,7 @@ namespace Redmine.Net.Api
             var str = reader.ReadElementContentAsString();
 
             int result;
-#if RUNNING_ON_4
+#if RUNNING_ON_4_OR_ABOVE
             if (String.IsNullOrWhiteSpace(str) || !int.TryParse(str, out result)) return null;
 #else
             if (String.IsNullOrEmpty(str) || !int.TryParse(str, out result)) return null;
@@ -140,7 +140,7 @@ namespace Redmine.Net.Api
             var str = reader.ReadElementContentAsString();
 
             decimal result;
-#if RUNNING_ON_4
+#if RUNNING_ON_4_OR_ABOVE
             if (String.IsNullOrWhiteSpace(str) || !decimal.TryParse(str, out result)) return null;
 #else
             if (String.IsNullOrEmpty(str) || !decimal.TryParse(str, out result)) return null;

@@ -25,7 +25,6 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// 
     /// </summary>
-    [Serializable]
     [XmlRoot("journal")]
     public class Journal : IXmlSerializable, IEquatable<Journal>
     {

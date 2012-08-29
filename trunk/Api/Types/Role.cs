@@ -22,9 +22,8 @@ using System.Xml.Serialization;
 namespace Redmine.Net.Api.Types
 {
     /// <summary>
-    /// 
+    /// Availability 1.4
     /// </summary>
-    [Serializable]
     [XmlRoot("role")]
     public class Role : IXmlSerializable, IEquatable<Role>
     {

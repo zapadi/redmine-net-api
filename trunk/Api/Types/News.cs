@@ -22,9 +22,8 @@ using System.Xml.Serialization;
 namespace Redmine.Net.Api.Types
 {
     /// <summary>
-    /// 
+    /// Availability 1.1
     /// </summary>
-    [Serializable]
     [XmlRoot("news")]
     public class News : Identifiable<News>, IEquatable<News>, IXmlSerializable
     {

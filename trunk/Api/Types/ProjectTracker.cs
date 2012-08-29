@@ -22,7 +22,6 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// 
     /// </summary>
-    [Serializable]
     [XmlRoot("tracker")]
     public class ProjectTracker : IdentifiableName, IEquatable<ProjectTracker>
     {

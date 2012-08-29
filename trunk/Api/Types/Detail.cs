@@ -24,7 +24,6 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// 
     /// </summary>
-    [Serializable]
     [XmlRoot("detail")]
     public class Detail : IXmlSerializable, IEquatable<Detail>
     {

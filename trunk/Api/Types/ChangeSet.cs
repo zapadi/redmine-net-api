@@ -24,7 +24,6 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// 
     /// </summary>
-    [Serializable]
     [XmlRoot("changeset")]
     public class ChangeSet : IXmlSerializable, IEquatable<ChangeSet>
     {
