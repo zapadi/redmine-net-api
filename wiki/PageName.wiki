@@ -1,7 +1,7 @@
 #labels Featured,Phase-Implementation,Phase-Support
 #Sample usage
 
-<pre>
+{{{
 using System;
 using System.Collections.Specialized;
 using Redmine.Net.Api;
@@ -31,4 +31,4 @@ namespace RedmineTest
         }
     }
 }
-</pre>
+}}}
