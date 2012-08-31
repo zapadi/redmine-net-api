@@ -1,0 +1,78 @@
+Index: RedmineManager.cs
+===================================================================
+--- RedmineManager.cs	(revision 55)
++++ RedmineManager.cs	(working copy)
+@@ -47,6 +47,12 @@
+         private readonly CredentialCache cache;
+         private readonly string host;
+ 
++        /// <summary>
++        /// Maximum page-size when retrieving complete object lists
++        /// <remarks>By default only 25 results can be retrieved per request. Maximum is 100. To change the maximum value set in your Settings -> General, "Objects per page options".By adding (for instance) 9999 there would make you able to get that many results per request.</remarks>
++        /// </summary>
++        public int PageSize { get; set; }
++
+         private readonly Dictionary<Type, String> urls = new Dictionary<Type, string>
+             {
+                 {typeof (Issue), "issues"},
+@@ -73,6 +79,7 @@
+         /// <param name="verifyServerCert">if set to <c>true</c> [verify server cert].</param>
+         public RedmineManager(string host, bool verifyServerCert = true)
+         {
++            PageSize = 25;
+             this.host = host;
+ 
+             if (!verifyServerCert)
+@@ -90,6 +97,7 @@
+         public RedmineManager(string host, string apiKey, bool verifyServerCert = true)
+             : this(host, verifyServerCert)
+         {
++            PageSize = 25;
+             this.apiKey = apiKey;
+         }
+ 
+@@ -103,6 +111,7 @@
+         public RedmineManager(string host, string login, string password, bool verifyServerCert = true)
+             : this(host, verifyServerCert)
+         {
++            PageSize = 25;
+             cache = new CredentialCache { { new Uri(host), "Basic", new NetworkCredential(login, password) } };
+             basicAuthorization = "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(login + ":" + password));
+         }
+@@ -201,6 +210,36 @@
+         }
+ 
+         /// <summary>
++        /// Returns the complete list of objects.
++        /// </summary>
++        /// <typeparam name="T">The type of objects to retrieve.</typeparam>
++        /// <param name="parameters">Optional filters and/or optional fetched data.</param>
++        /// <returns>Returns a complete list of objects.</returns>
++        /// <remarks>By default only 25 results can be retrieved per request. Maximum is 100. To change the maximum value set in your Settings -> General, "Objects per page options".By adding (for instance) 9999 there would make you able to get that many results per request.</remarks>
++        /// <exception cref="Redmine.Net.Api.RedmineException"></exception>
++        public IList<T> GetTotalObjectList<T>(NameValueCollection parameters) where T : class
++        {
++            int totalCount;
++            List<T> resultList = null;
++            if (parameters == null)
++                parameters = new NameValueCollection();
++            int offset = 0;
++            do
++            {
++                parameters.Set("limit", PageSize.ToString());
++                parameters.Set("offset", offset.ToString());
++                List<T> tempResult = (List<T>)GetObjectList<T>(parameters, out totalCount);
++                if (resultList == null)
++                    resultList = tempResult;
++                else
++                    resultList.AddRange(tempResult);
++                offset += PageSize;
++            }
++            while (resultList.Count < totalCount);
++            return resultList;
++        }
++
++        /// <summary>
+         /// Returns a paginated list of objects.
+         /// </summary>
+         /// <typeparam name="T">The type of objects to retrieve.</typeparam>
