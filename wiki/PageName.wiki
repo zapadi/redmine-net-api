@@ -1,6 +1,4 @@
-#summary One-sentence summary of this page.
-
-Sample usage:
+#Sample usage
 
 <pre>
 using System;
