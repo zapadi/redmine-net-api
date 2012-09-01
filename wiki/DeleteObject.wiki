@@ -1,13 +1,34 @@
-#summary Sample using DeleteObject.
+#summary Sample using DeleteObject<T>.
 
-= Introduction =
+== Deleting an object of type T. ==
 
-Add your content here.
+For all the types, excepts the *IssueCategories*, of Redmine Api the delete operation is straight forward. You just need to send the id of the object.
+
+For IssueCategories you can use optional parameter 
+ * *reassign_to_id*:  when there are issues assigned to the category you are deleting, this parameter lets you reassign these issues to the category with this id.
 
 
-= Details =
+==== Example: ====
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+{{{
+using System;
+using System.Collections.Specialized;
+using Redmine.Net.Api;
+using Redmine.Net.Api.Types;
+
+namespace RedmineTest
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string host = "";
+            string apiKey = "";
+
+            var manager = new RedmineManager(host, apiKey);
+
+            manager.DeleteObject<Issue>("1", null);
+        }
+    }
+}
+}}}
