@@ -1,17 +1,17 @@
 #summary Sample using GetObjectList.
 
-*Returns a paginated list of issues. By default, page size is 25 and it returns open issues only.*
+== Returns a paginated list of issues. By default, page size is 25 and it returns open issues only.==
 
 Maximum size for page size is 100.
 
-= Parameters =
+=== Parameters ===
  * offset: skip this number of issues in response (optional)
  * limit: number of issues per page (optional)
  * sort: column to sort with. Append :desc to invert the order.
 
  * page: page number (optional) You can used instead of "offset" and "limit"
 
-= Optional filters =
+=== Optional filters ===
 
  * project_id: get issues from the project with the given id, where id is either project id or project identifier
 
@@ -25,7 +25,7 @@ Maximum size for page size is 100.
 
  * ...
 
-= Example =
+=== Example ===
 
 {{{
 using System;
