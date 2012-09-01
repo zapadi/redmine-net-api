@@ -1,13 +1,31 @@
 #summary Sample using GetObjectList.
 
-= Introduction =
+*Get all issues.*
 
-Add your content here.
+{{{
+using System;
+using System.Collections.Specialized;
+using Redmine.Net.Api;
+using Redmine.Net.Api.Types;
 
+namespace RedmineTest
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string host = "";
+            string apiKey = "";
 
-= Details =
+            var manager = new RedmineManager(host, apiKey);
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+            var parameters = new NameValueCollection {{"status_id", "*"}};
+            foreach (var issue in manager.GetObjectList<Issue>(parameters))
+            {
+                Console.WriteLine("#{0}: {1}", issue.Id, issue.Subject);
+            }
+        }
+    }
+}
+
+}}}
