@@ -1,13 +1,44 @@
-#summary Sample using CreateObject.
+#summary Sample using CreateObject<T>.
 
-= Introduction =
+== Creating an object of type T. ==
 
-Add your content here.
+When trying to create or update an object with invalid or missing attribute parameters, you will get a 422 Unprocessable Entity response. That means that the object could not be created or updated. In such cases CreatObject throws RedmineException that contains the corresponding error messages.
 
 
-= Details =
+==== Example: ====
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+{{{
+using System;
+using System.Collections.Specialized;
+using Redmine.Net.Api;
+using Redmine.Net.Api.Types;
+
+namespace RedmineTest
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string host = "";
+            string apiKey = "";
+
+            var manager = new RedmineManager(host, apiKey);
+
+            Issue issue = new Issue();
+            issue.Project = new IdentifiableName() { Id = 1 };
+            issue.Priority = new IdentifiableName() { Id = 4 };
+            issue.Subject = "Example";
+            issue.Description = "Description";
+            issue.Category = new IdentifiableName() { Id = 2 };
+            issue.Status = new IdentifiableName() { Id = 3 };
+            issue.AssignedTo = new IdentifiableName() { Id = 12 };
+            issue.ParentIssueId = 50;
+
+            manager.CreateObject(issue);
+
+        }
+    }
+}
+
+
+}}}
