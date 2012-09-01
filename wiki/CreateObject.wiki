@@ -2,7 +2,7 @@
 
 == Creating an object of type T. ==
 
-When trying to create or update an object with invalid or missing attribute parameters, you will get a 422 Unprocessable Entity response. That means that the object could not be created or updated. In such cases CreatObject throws RedmineException that contains the corresponding error messages.
+When trying to create or update an object with invalid or missing attribute parameters, you will get a 422 Unprocessable Entity response. That means that the object could not be created or updated. In such cases CreatObject<T> throws RedmineException that contains the corresponding error messages.
 
 
 ==== Example: ====
