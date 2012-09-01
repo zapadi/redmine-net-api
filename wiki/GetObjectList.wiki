@@ -25,7 +25,7 @@ Maximum page size is 100.
 
  * created_on: fetch issues for a date range.
 
-==== Example ====
+==== Example: ====
 
 {{{
 using System;
