@@ -4,10 +4,14 @@
 
 Maximum size for page size is 100.
 
-Parameters:
+= Parameters =
+ * offset: skip this number of issues in response (optional)
+ * limit: number of issues per page (optional)
+ * sort: column to sort with. Append :desc to invert the order.
 
+ * page: page number (optional) You can used instead of "offset" and "limit"
 
-Optional filters:
+= Optional filters =
 
  * project_id: get issues from the project with the given id, where id is either project id or project identifier
 
@@ -20,6 +24,8 @@ Optional filters:
  * cf_x: get issues with the given value for custom field with an ID of x. (Custom field must have 'used as a filter' checked.)
 
  * ...
+
+= Example =
 
 {{{
 using System;
