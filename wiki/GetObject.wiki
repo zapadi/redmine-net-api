@@ -1,6 +1,6 @@
 #summary Sample using GetObject<T>.
 
-Showing an object of type T
+==Showing an object of type T.==
 
 ==== Parameters: ====
 
@@ -10,7 +10,7 @@ Showing an object of type T
 
 To fetch multiple associations use comma (e.g ?include=relations,journals).
 
-== Example ==
+==== Example ====
 {{{
 using System;
 using System.Collections.Specialized;
