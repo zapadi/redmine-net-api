@@ -1,6 +1,6 @@
 #summary Sample using GetObject<T>.
 
-==Showing an object of type T.==
+==Getting an object of type T.==
 
 ==== Parameters: ====
 
