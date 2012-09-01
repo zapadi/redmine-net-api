@@ -1,6 +1,20 @@
 #summary Sample using GetObjectList.
 
-*Get all issues.*
+*Returns a paginated list of issues. By default, page size is 25 and it returns open issues only.*
+
+Maximum size for page size is 100.
+
+Parameters:
+
+
+Optional filters:
+
+* project_id: get issues from the project with the given id, where id is either project id or project identifier
+* tracker_id: get issues from the tracker with the given id
+* status_id: get issues with the given status id only. Possible values:  open, closed, * to get open and closed issues, status id
+* assigned_to_id: get issues which are assigned to the given user id
+* cf_x: get issues with the given value for custom field with an ID of x. (Custom field must have 'used as a filter' checked.)
+* ...
 
 {{{
 using System;
