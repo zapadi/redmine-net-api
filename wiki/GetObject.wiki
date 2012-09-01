@@ -1,13 +1,40 @@
-#summary Sample using GetObject.
+#summary Sample using GetObject<T>.
 
-= Introduction =
+Showing an object of type T
 
-Add your content here.
+==== Parameters: ====
 
+ include: fetch associated data (optional).
+ 
+ Possible values: children, attachments, relations, changesets and journals. 
 
-= Details =
+To fetch multiple associations use comma (e.g ?include=relations,journals).
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+== Example ==
+{{{
+using System;
+using System.Collections.Specialized;
+using Redmine.Net.Api;
+using Redmine.Net.Api.Types;
+
+namespace RedmineTest
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string host = "";
+            string apiKey = "";
+
+            var manager = new RedmineManager(host, apiKey);
+
+            //parameter - fetch associated relations.
+            var parameters = new NameValueCollection {{"include", "relations"}};
+      
+
+            var issue = manager.GetObject<Issue>("1", parameters);
+            Console.WriteLine("#{0}: {1}", issue.Id, issue.Subject);
+        }
+    }
+}
+}}}
