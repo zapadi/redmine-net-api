@@ -1,17 +1,17 @@
-#summary Sample using GetObjectList.
+#summary Sample using GetObjectList<T>.
 
-== Returns a paginated list of issues. By default, page size is 25 and it returns open issues only.==
-
-Maximum size for page size is 100.
+== Returns a paginated list of type T. ==
+By default, page size is 25 and it returns open issues only.
+Maximum page size is 100.
 
 === Parameters ===
  * offset: skip this number of issues in response (optional)
  * limit: number of issues per page (optional)
  * sort: column to sort with. Append :desc to invert the order.
 
- * page: page number (optional) You can used instead of "offset" and "limit"
+ * page: page number (optional). You can used instead of "offset" and "limit"
 
-=== Optional filters ===
+=== Optional filters (Issue) === 
 
  * project_id: get issues from the project with the given id, where id is either project id or project identifier
 
@@ -23,7 +23,7 @@ Maximum size for page size is 100.
 
  * cf_x: get issues with the given value for custom field with an ID of x. (Custom field must have 'used as a filter' checked.)
 
- * ...
+ * created_on: fetch issues for a date range.
 
 === Example ===
 
@@ -44,7 +44,12 @@ namespace RedmineTest
 
             var manager = new RedmineManager(host, apiKey);
 
+            //parameter - get all issues
             var parameters = new NameValueCollection {{"status_id", "*"}};
+
+            //parameter - fetch issues for a date range
+            parameters.Add("created_on", "><2012-03-01|2012-03-07");
+
             foreach (var issue in manager.GetObjectList<Issue>(parameters))
             {
                 Console.WriteLine("#{0}: {1}", issue.Id, issue.Subject);
