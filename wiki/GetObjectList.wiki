@@ -4,14 +4,14 @@
 By default, page size is 25 and it returns open issues only.
 Maximum page size is 100.
 
-=== Parameters ===
+==== Parameters: ====
  * offset: skip this number of issues in response (optional)
  * limit: number of issues per page (optional)
  * sort: column to sort with. Append :desc to invert the order.
 
  * page: page number (optional). You can used instead of "offset" and "limit"
 
-=== Optional filters (Issue) === 
+==== Optional filters: (Issue) ====
 
  * project_id: get issues from the project with the given id, where id is either project id or project identifier
 
@@ -25,7 +25,7 @@ Maximum page size is 100.
 
  * created_on: fetch issues for a date range.
 
-=== Example ===
+==== Example ====
 
 {{{
 using System;
