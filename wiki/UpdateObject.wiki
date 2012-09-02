@@ -1,4 +1,5 @@
 #summary Sample using UpdateObject.
+#labels Featured
 
 == Updating an object of type T. ==
 
