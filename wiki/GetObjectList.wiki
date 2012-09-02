@@ -60,3 +60,71 @@ namespace RedmineTest
 }
 
 }}}
+
+Getting the total issues that are available
+
+{{{
+using System;
+using System.Collections.Specialized;
+using Redmine.Net.Api;
+using Redmine.Net.Api.Types;
+
+namespace RedmineTest
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string host = "";
+            string apiKey = "";
+
+            var manager = new RedmineManager(host, apiKey);
+
+            //parameter - get all issues
+            var parameters = new NameValueCollection {{"status_id", "*"}};
+int totalItems;
+
+var items = manager.GetObjectList<Issue>(parameters, out totalItems);
+
+            Console.WriteLine("Total items: {0}", totalItems);
+            foreach (var issue in )
+            {
+                Console.WriteLine("#{0}: {1}", issue.Id, issue.Subject);
+            }
+        }
+    }
+}
+
+}}}
+
+Getting all the issues that are available:
+
+{{{
+using System;
+using System.Collections.Specialized;
+using Redmine.Net.Api;
+using Redmine.Net.Api.Types;
+
+namespace RedmineTest
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string host = "";
+            string apiKey = "";
+
+            var manager = new RedmineManager(host, apiKey);
+
+            //parameter - get all issues
+            var parameters = new NameValueCollection {{"status_id", "*"}};
+          
+            foreach (var issue in manager.GetTotalObjectList<Issue>(parameters))
+            {
+                Console.WriteLine("#{0}: {1}", issue.Id, issue.Subject);
+            }
+        }
+    }
+}
+
+}}}
