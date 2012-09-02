@@ -1,4 +1,5 @@
 #summary Sample using CreateObject<T>.
+#labels Featured
 
 == Creating an object of type T. ==
 
