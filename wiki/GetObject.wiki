@@ -1,5 +1,4 @@
 #summary Sample using GetObject<T>.
-#labels Featured
 
 ==Getting an object of type T.==
 
