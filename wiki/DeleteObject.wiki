@@ -1,4 +1,5 @@
 #summary Sample using DeleteObject<T>.
+#labels Featured
 
 == Deleting an object of type T. ==
 
