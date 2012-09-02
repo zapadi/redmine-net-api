@@ -1,4 +1,5 @@
 #summary Sample using GetObjectList<T>.
+#labels Featured
 
 == Returns a paginated list of type T. ==
 By default, page size is 25 and it returns open issues only.
