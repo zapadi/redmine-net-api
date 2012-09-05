@@ -363,27 +363,29 @@ namespace Redmine.Net.Api
         ///     redmineManager.CreateObject(project);
         /// </example>
         /// </code>
-        public void CreateObject<T>(T obj) where T : class
+        public T CreateObject<T>(T obj) where T : class
         {
             var type = typeof(T);
 
-            if (!urls.ContainsKey(type)) return;
+            if (!urls.ContainsKey(type)) return null;
 
             var xml = Serialize(obj);
 
-            if (string.IsNullOrEmpty(xml)) return;
+            if (string.IsNullOrEmpty(xml)) return null;
 
             using (var wc = CreateWebClient(null))
             {
                 try
                 {
-                    wc.UploadString(string.Format(Format, host, urls[type]), xml);
+                    string xmlRet = wc.UploadString(string.Format(Format, host, urls[type]), xml);
+                    return Deserialize<T>(xml);
                 }
                 catch (WebException webException)
                 {
                     ParseWebClientException(webException, type.Name);
                 }
             }
+            return null;
         }
 
         /// <summary>
