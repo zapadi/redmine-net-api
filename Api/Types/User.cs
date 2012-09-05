@@ -70,7 +70,7 @@ namespace Redmine.Net.Api.Types
         /// The authentication mode id.
         /// </value>
         [XmlElement("auth_source_id")]
-        public Int32 AuthenticationModeId { get; set; }
+        public Int32? AuthenticationModeId { get; set; }
 
         /// <summary>
         /// Gets or sets the created on.
@@ -142,7 +142,7 @@ namespace Redmine.Net.Api.Types
 
                     case "mail": Email = reader.ReadElementContentAsString(); break;
 
-                    case "auth_source_id": AuthenticationModeId = reader.ReadElementContentAsInt(); break;
+                    case "auth_source_id": AuthenticationModeId = reader.ReadElementContentAsNullableInt(); break;
 
                     case "last_login_on": LastLoginOn = reader.ReadElementContentAsNullableDateTime(); break;
 

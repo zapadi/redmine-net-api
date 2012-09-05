@@ -108,6 +108,8 @@ namespace Redmine.Net.Api.Types
 
                     case "description": Description = reader.ReadElementContentAsString(); break;
 
+                    case "content_url": ContentUrl = reader.ReadElementContentAsString(); break;
+
                     default: reader.Read(); break;
                 }
             }

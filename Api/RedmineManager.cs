@@ -146,13 +146,19 @@ namespace Redmine.Net.Api
                 wc.Headers.Add("Content-Type", "application/octet-stream");
                 // Workaround - it seems that WebClient doesn't send credentials in each POST request
                 wc.Headers.Add("Authorization", basicAuthorization);
+                try
+                {
+                    byte[] response = wc.UploadData(string.Format(Format, host, "uploads"), data);
+                    var responseString = Encoding.ASCII.GetString(response);
 
-                var response = wc.UploadData(string.Format(Format, host, "uploads"), data);
-
-                var responseString = Encoding.ASCII.GetString(response);
-
-                return Deserialize<Upload>(responseString);
+                    return Deserialize<Upload>(responseString);
+                }
+                catch (WebException webException)
+                {
+                    ParseWebClientException(webException, "Upload");
+                }
             }
+            return null;
         }
 
         /// <summary>
