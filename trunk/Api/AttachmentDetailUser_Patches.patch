@@ -1,0 +1,57 @@
+Index: Attachment.cs
+===================================================================
+--- Attachment.cs	(revision 95)
++++ Attachment.cs	(working copy)
+@@ -108,6 +108,8 @@
+ 
+                     case "description": Description = reader.ReadElementContentAsString(); break;
+ 
++                    case "content_url": ContentUrl = reader.ReadElementContentAsString(); break;
++
+                     default: reader.Read(); break;
+                 }
+             }
+Index: Detail.cs
+===================================================================
+--- Detail.cs	(revision 95)
++++ Detail.cs	(working copy)
+@@ -22,7 +22,7 @@
+ namespace Redmine.Net.Api.Types
+ {
+     /// <summary>
+-    /// 
++    /// info: http://www.redmine.org/projects/redmine/wiki/Rest_IssueJournals
+     /// </summary>
+     [XmlRoot("detail")]
+     public class Detail : IXmlSerializable, IEquatable<Detail>
+@@ -71,7 +71,7 @@
+         public void ReadXml(XmlReader reader)
+         {
+             Property = reader.GetAttribute("property");
+-            StatusId = reader.GetAttribute("status_id");
++            StatusId = reader.GetAttribute("name");
+ 
+             reader.Read();
+ 
+Index: User.cs
+===================================================================
+--- User.cs	(revision 95)
++++ User.cs	(working copy)
+@@ -70,7 +70,7 @@
+         /// The authentication mode id.
+         /// </value>
+         [XmlElement("auth_source_id")]
+-        public Int32 AuthenticationModeId { get; set; }
++        public Int32? AuthenticationModeId { get; set; }
+ 
+         /// <summary>
+         /// Gets or sets the created on.
+@@ -142,7 +142,7 @@
+ 
+                     case "mail": Email = reader.ReadElementContentAsString(); break;
+ 
+-                    case "auth_source_id": AuthenticationModeId = reader.ReadElementContentAsInt(); break;
++                    case "auth_source_id": AuthenticationModeId = reader.ReadElementContentAsNullableInt(); break;
+ 
+                     case "last_login_on": LastLoginOn = reader.ReadElementContentAsNullableDateTime(); break;
+ 

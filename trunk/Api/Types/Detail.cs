@@ -71,7 +71,7 @@ namespace Redmine.Net.Api.Types
         public void ReadXml(XmlReader reader)
         {
             Property = reader.GetAttribute("property");
-            StatusId = reader.GetAttribute("status_id");
+            StatusId = reader.GetAttribute("name");
 
             reader.Read();
 
