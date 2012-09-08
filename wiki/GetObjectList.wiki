@@ -95,7 +95,7 @@ var items = manager.GetObjectList<Issue>(parameters, out totalItems);
 
 }}}
 
-Getting all the issues that are available:
+Getting all the issues that are available (it will be available in 0.7 version):
 
 {{{
 using System;
