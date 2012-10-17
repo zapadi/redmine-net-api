@@ -6,7 +6,6 @@ namespace Redmine.Net.Api.Types
 {
     /// <summary>
     /// Support for adding attachments through the REST API is added in Redmine 1.4.0.
-    /// Maximum allowed file size (1024000)
     /// </summary>
     [XmlRoot("upload")]
     public class Upload : IEquatable<Upload>
@@ -20,6 +19,7 @@ namespace Redmine.Net.Api.Types
 
         /// <summary>
         /// Gets or sets the name of the file.
+        /// Maximum allowed file size (1024000).
         /// </summary>
         /// <value>The name of the file.</value>
         [XmlElement("filename")]
@@ -32,11 +32,8 @@ namespace Redmine.Net.Api.Types
         [XmlElement("content_type")]
         public string ContentType { get; set; }
 
-        public XmlSchema GetSchema()
-        {
-            return null;
-        }
-        
+        public XmlSchema GetSchema() { return null; }
+
         public bool Equals(Upload other)
         {
             return other != null && Token == other.Token;

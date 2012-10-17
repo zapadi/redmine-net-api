@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 Dorin Huzum, Adrian Popescu.
+   Copyright 2011 - 2012 Adrian Popescu, Dorin Huzum.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -38,11 +38,11 @@ namespace Redmine.Net.Api
             {
                 var attribute = reader.GetAttribute(attributeName);
                 int result;
-#if RUNNING_ON_4_OR_ABOVE
-                if (String.IsNullOrWhiteSpace(attribute) || !Int32.TryParse(attribute, out result)) return default(int);
-#else
-                if (String.IsNullOrEmpty(attribute) || !Int32.TryParse(attribute, out result)) return default(int);
-#endif
+                #if RUNNING_ON_4_OR_ABOVE
+                    if (String.IsNullOrWhiteSpace(attribute) || !Int32.TryParse(attribute, out result)) return default(int);
+                #else
+                    if (String.IsNullOrEmpty(attribute) || !Int32.TryParse(attribute, out result)) return default(int);
+                #endif
                 return result;
             }
             catch
@@ -63,11 +63,11 @@ namespace Redmine.Net.Api
             {
                 var attribute = reader.GetAttribute(attributeName);
                 bool result;
-#if RUNNING_ON_4_OR_ABOVE
-                if (String.IsNullOrWhiteSpace(attribute) || !Boolean.TryParse(attribute, out result)) return false;
-#else
-                if (String.IsNullOrEmpty(attribute) || !Boolean.TryParse(attribute, out result)) return false;
-#endif
+                #if RUNNING_ON_4_OR_ABOVE
+                    if (String.IsNullOrWhiteSpace(attribute) || !Boolean.TryParse(attribute, out result)) return false;
+                #else
+                    if (String.IsNullOrEmpty(attribute) || !Boolean.TryParse(attribute, out result)) return false;
+                #endif
                 return result;
             }
             catch
@@ -86,11 +86,11 @@ namespace Redmine.Net.Api
             var str = reader.ReadElementContentAsString();
 
             DateTime result;
-#if RUNNING_ON_4_OR_ABOVE
-            if (String.IsNullOrWhiteSpace(str) || !DateTime.TryParse(str, out result)) return null;
-#else
-            if (String.IsNullOrEmpty(str) || !DateTime.TryParse(str, out result)) return null;
-#endif
+            #if RUNNING_ON_4_OR_ABOVE
+                if (String.IsNullOrWhiteSpace(str) || !DateTime.TryParse(str, out result)) return null;
+            #else
+                if (String.IsNullOrEmpty(str) || !DateTime.TryParse(str, out result)) return null;
+            #endif
             return result;
         }
 
@@ -104,11 +104,11 @@ namespace Redmine.Net.Api
             var str = reader.ReadElementContentAsString();
 
             float result;
-#if RUNNING_ON_4_OR_ABOVE
-            if (String.IsNullOrWhiteSpace(str) || !float.TryParse(str, out result)) return null;
-#else
-            if (String.IsNullOrEmpty(str) || !float.TryParse(str, out result)) return null;
-#endif
+            #if RUNNING_ON_4_OR_ABOVE
+                if (String.IsNullOrWhiteSpace(str) || !float.TryParse(str, out result)) return null;
+            #else
+                if (String.IsNullOrEmpty(str) || !float.TryParse(str, out result)) return null;
+            #endif
             return result;
         }
 
@@ -122,11 +122,11 @@ namespace Redmine.Net.Api
             var str = reader.ReadElementContentAsString();
 
             int result;
-#if RUNNING_ON_4_OR_ABOVE
-            if (String.IsNullOrWhiteSpace(str) || !int.TryParse(str, out result)) return null;
-#else
-            if (String.IsNullOrEmpty(str) || !int.TryParse(str, out result)) return null;
-#endif
+            #if RUNNING_ON_4_OR_ABOVE
+                if (String.IsNullOrWhiteSpace(str) || !int.TryParse(str, out result)) return null;
+            #else
+                if (String.IsNullOrEmpty(str) || !int.TryParse(str, out result)) return null;
+            #endif
             return result;
         }
 
@@ -140,11 +140,11 @@ namespace Redmine.Net.Api
             var str = reader.ReadElementContentAsString();
 
             decimal result;
-#if RUNNING_ON_4_OR_ABOVE
-            if (String.IsNullOrWhiteSpace(str) || !decimal.TryParse(str, out result)) return null;
-#else
-            if (String.IsNullOrEmpty(str) || !decimal.TryParse(str, out result)) return null;
-#endif
+            #if RUNNING_ON_4_OR_ABOVE
+                if (String.IsNullOrWhiteSpace(str) || !decimal.TryParse(str, out result)) return null;
+            #else
+                if (String.IsNullOrEmpty(str) || !decimal.TryParse(str, out result)) return null;
+            #endif
             return result;
         }
 

@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2012 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2012 Adrian Popescu, Dorin Huzum.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -101,6 +101,7 @@ namespace Redmine.Net.Api.Types
             if(UserIds != null)
             {
                 writer.WriteStartElement("user_ids");
+                writer.WriteAttributeString("type", "array");
                 foreach (var userId in UserIds)
                 {
                     new XmlSerializer(typeof(int)).Serialize(writer, userId);

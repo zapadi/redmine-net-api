@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 Dorin Huzum, Adrian Popescu.
+   Copyright 2011 - 2012 Adrian Popescu, Dorin Huzum.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -123,9 +123,9 @@ namespace Redmine.Net.Api.Types
         {
             writer.WriteElementString("name", Name);
             writer.WriteElementString("identifier", Identifier);
+            writer.WriteElementString("description", Description);
             if (Id == 0) return;
             writer.WriteIdIfNotNull(Parent, "parent_id");
-            writer.WriteElementString("description", Description);
             writer.WriteElementString("homepage", HomePage);
         }
 
