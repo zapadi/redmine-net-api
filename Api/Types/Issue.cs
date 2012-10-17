@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2012 Adrian Popescu, Dorin Huzum.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -215,10 +215,7 @@ namespace Redmine.Net.Api.Types
         [XmlArrayItem("upload")]
         public IList<Upload> Uploads { get; set; }
 
-        public XmlSchema GetSchema()
-        {
-            return null;
-        }
+        public XmlSchema GetSchema() { return null; }
 
         public void ReadXml(XmlReader reader)
         {
@@ -303,6 +300,9 @@ namespace Redmine.Net.Api.Types
             if (Uploads != null)
             {
                 writer.WriteStartElement("uploads");
+                //ajout Pierre Labrie
+                writer.WriteAttributeString("type", "array");
+               
                 foreach (var u in Uploads)
                 {
                     new XmlSerializer(u.GetType()).Serialize(writer, u);

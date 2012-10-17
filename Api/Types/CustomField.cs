@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2012 Adrian Popescu, Dorin Huzum.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Xml;
@@ -32,8 +33,9 @@ namespace Redmine.Net.Api.Types
         /// Gets or sets the value.
         /// </summary>
         /// <value>The value.</value>
-        [XmlText]
-        public string Value { get; set; }
+        [XmlArray("value")]
+        [XmlArrayItem("value")]
+        public IList<CustomFieldValue> Values { get; set; }
 
         [XmlAttribute("multiple")]
         public bool Multiple { get; set; }
@@ -43,34 +45,59 @@ namespace Redmine.Net.Api.Types
             Id = reader.ReadAttributeAsInt("id");
             Name = reader.GetAttribute("name");
             Multiple = reader.ReadAttributeAsBoolean("multiple");
+            reader.Read();
 
-            try
+            if (string.IsNullOrEmpty(reader.GetAttribute("type")))
             {
-                Value = Multiple ? reader.ReadElementContentAsString() : reader.ReadElementString();
+                Values = new List<CustomFieldValue> { new CustomFieldValue() { Info = reader.ReadElementContentAsString() } };
             }
-            catch (Exception ex)
+            else
             {
-                try
-                {
-                    Value = reader.ReadElementContentAsString();
-                }
-                catch (Exception ex2)
-                {
-                    Trace.TraceError("Redmine.NET: Could not load custom field value.");
-                }
+                var result = reader.ReadElementContentAsCollection<CustomFieldValue>();
+                Values = result;
             }
         }
 
         public override void WriteXml(XmlWriter writer)
         {
-            writer.WriteAttributeString("id", Id.ToString(CultureInfo.InvariantCulture));
-            writer.WriteElementString("value", Value);
+            if (Values != null)
+            {
+                var itemsCount = Values.Count;
+                if (itemsCount == 0) return;
+
+                writer.WriteAttributeString("id", Id.ToString(CultureInfo.InvariantCulture));
+                if (itemsCount > 1)
+                {
+                    writer.WriteStartElement("value");
+                    writer.WriteAttributeString("type", "array");
+
+                    foreach (var v in Values) writer.WriteElementString("value", v.Info);
+
+                    writer.WriteEndElement();
+                }
+                else
+                {
+                    writer.WriteElementString("value", Values[0].Info);
+                }
+            }
         }
 
         public bool Equals(CustomField other)
         {
             if (other == null) return false;
-            return (Id == other.Id && Name == other.Name && Multiple == other.Multiple && Value == other.Value);
+            return (Id == other.Id && Name == other.Name && Multiple == other.Multiple && Values == other.Values);
+        }
+    }
+
+    [XmlRoot("value")]
+    public class CustomFieldValue
+    {
+        [XmlText]
+        public string Info { get; set; }
+
+        public override string ToString()
+        {
+            return Info;
         }
     }
 }

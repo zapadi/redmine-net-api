@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2012 Adrian Popescu, Dorin Huzum.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -36,16 +36,16 @@ namespace Redmine.Net.Api
     /// </summary>
     public class RedmineManager
     {
-        private const string RequestFormat = "{0}/{1}/{2}.xml";
-        private const string Format = "{0}/{1}.xml";
+        private const string RequestFormat = "{0}/{1}/{2}.{3}";
+        private const string Format = "{0}/{1}.{2}";
         private const string CurrentUserUri = "current";
         private const string PUT = "PUT";
         private const string POST = "POST";
         private const string DELETE = "DELETE";
 
-        private readonly string apiKey, basicAuthorization;
+        private readonly string host, apiKey, basicAuthorization;
+        string responseType = "xml";
         private readonly CredentialCache cache;
-        private readonly string host;
 
         /// <summary>
         /// Maximum page-size when retrieving complete object lists
@@ -127,7 +127,7 @@ namespace Redmine.Net.Api
         {
             using (var wc = CreateWebClient(parameters))
             {
-                var xml = wc.DownloadString(string.Format(RequestFormat, host, urls[typeof(User)], CurrentUserUri));
+                var xml = wc.DownloadString(string.Format(RequestFormat, host, urls[typeof(User)], CurrentUserUri, responseType));
                 return Deserialize<User>(xml);
             }
         }
@@ -148,7 +148,7 @@ namespace Redmine.Net.Api
                 wc.Headers.Add("Authorization", basicAuthorization);
                 try
                 {
-                    byte[] response = wc.UploadData(string.Format(Format, host, "uploads"), data);
+                    byte[] response = wc.UploadData(string.Format(Format, host, "uploads", responseType), data);
                     var responseString = Encoding.ASCII.GetString(response);
 
                     return Deserialize<Upload>(responseString);
@@ -172,7 +172,7 @@ namespace Redmine.Net.Api
             {
                 try
                 {
-                    wc.UploadString(string.Format(RequestFormat, host, urls[typeof(Group)], groupId + "/users"), POST, "<user_id>" + userId + "</user_id>");
+                    wc.UploadString(string.Format(RequestFormat, host, urls[typeof(Group)], groupId + "/users", responseType), POST, "<user_id>" + userId + "</user_id>");
                 }
                 catch (WebException webException)
                 {
@@ -192,7 +192,7 @@ namespace Redmine.Net.Api
             {
                 try
                 {
-                    wc.UploadString(string.Format(RequestFormat, host, urls[typeof(Group)], groupId + "/users/" + userId), DELETE, string.Empty);
+                    wc.UploadString(string.Format(RequestFormat, host, urls[typeof(Group)], groupId + "/users/" + userId, responseType), DELETE, string.Empty);
                 }
                 catch (WebException webException)
                 {
@@ -280,11 +280,11 @@ namespace Redmine.Net.Api
                             throw new RedmineException("The project id is mandatory! \nCheck if you have included the parameter project_id to parameters.");
                         }
 
-                        result = wc.DownloadString(string.Format("{0}/projects/{1}/{2}.xml", host, projectId, urls[type]));
+                        result = wc.DownloadString(string.Format("{0}/projects/{1}/{2}.{3}", host, projectId, urls[type], responseType));
                     }
                     else
                     {
-                        result = wc.DownloadString(string.Format(Format, host, urls[type]));
+                        result = wc.DownloadString(string.Format(Format, host, urls[type], responseType));
                     }
 
                     using (var text = new StringReader(result))
@@ -336,7 +336,7 @@ namespace Redmine.Net.Api
             {
                 try
                 {
-                    var xml = wc.DownloadString(string.Format(RequestFormat, host, urls[type], id));
+                    var xml = wc.DownloadString(string.Format(RequestFormat, host, urls[type], id, responseType));
                     return Deserialize<T>(xml);
                 }
                 catch (WebException webException)
@@ -377,8 +377,8 @@ namespace Redmine.Net.Api
             {
                 try
                 {
-                    string xmlRet = wc.UploadString(string.Format(Format, host, urls[type]), xml);
-                    return Deserialize<T>(xml);
+                    var xmlRet = wc.UploadString(string.Format(Format, host, urls[type], responseType), xml);
+                    return Deserialize<T>(xmlRet);
                 }
                 catch (WebException webException)
                 {
@@ -411,7 +411,7 @@ namespace Redmine.Net.Api
             {
                 try
                 {
-                    wc.UploadString(string.Format(RequestFormat, host, urls[type], id), PUT, xml);
+                    wc.UploadString(string.Format(RequestFormat, host, urls[type], id, responseType), PUT, xml);
                 }
                 catch (WebException webException)
                 {
@@ -438,7 +438,7 @@ namespace Redmine.Net.Api
             {
                 try
                 {
-                    wc.UploadString(string.Format(RequestFormat, host, urls[type], id), DELETE, string.Empty);
+                    wc.UploadString(string.Format(RequestFormat, host, urls[type], id, responseType), DELETE, string.Empty);
                 }
                 catch (WebException webException)
                 {
@@ -465,7 +465,7 @@ namespace Redmine.Net.Api
                 if (cache != null) webClient.Credentials = cache;
             }
 
-            webClient.Headers.Add("Content-Type", "text/xml; charset=utf-8");
+            webClient.Headers.Add("Content-Type", "application/xml; charset=utf-8");
             webClient.Encoding = Encoding.UTF8;
             return webClient;
         }
@@ -528,8 +528,6 @@ namespace Redmine.Net.Api
         {
             if (exception == null) return;
 
-            var errors = ReadWebExceptionResponse(exception.Response);
-
             switch (exception.Status)
             {
                 case WebExceptionStatus.NameResolutionFailure: throw new RedmineException("Bad domain name!");
@@ -539,21 +537,22 @@ namespace Redmine.Net.Api
                         switch ((int)response.StatusCode)
                         {
                             case (int)HttpStatusCode.NotFound:
-                                throw new RedmineException(response.StatusDescription + (errors != null ? "\n Errors: " + errors : null));
                             case (int)HttpStatusCode.Forbidden:
-                                throw new RedmineException(response.StatusDescription + (errors != null ? "\n Errors: " + errors : null));
+                                throw new RedmineException(response.StatusDescription);
+
                             case 422:
+                                var errors = ReadWebExceptionResponse(exception.Response);
                                 string message = string.Empty;
                                 foreach (Error error in errors) message += error.Info + "\n";
-                                throw new RedmineException(objectName + " has invalid or missing attribute parameters: " + message);//+ (errors != null ? "\n" + errors.Aggregate(string.Empty, (s, error) => s + error.Info + "\n") : null));
-                            case (int)HttpStatusCode.NotAcceptable:
-                                throw new RedmineException();
+
+                                throw new RedmineException(objectName + " has invalid or missing attribute parameters: " + message);
+
+                            case (int)HttpStatusCode.NotAcceptable: throw new RedmineException();
                         }
                     }
                     break;
-                case WebExceptionStatus.UnknownError: throw new RedmineException(exception.Message);
 
-                default: throw exception;
+                default: throw new RedmineException(exception.Message);
             }
         }
 
