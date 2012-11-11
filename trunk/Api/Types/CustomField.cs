@@ -49,7 +49,7 @@ namespace Redmine.Net.Api.Types
 
             if (string.IsNullOrEmpty(reader.GetAttribute("type")))
             {
-                Values = new List<CustomFieldValue> { new CustomFieldValue() { Info = reader.ReadElementContentAsString() } };
+                Values = new List<CustomFieldValue> { new CustomFieldValue { Info = reader.ReadElementContentAsString() } };
             }
             else
             {
@@ -63,8 +63,7 @@ namespace Redmine.Net.Api.Types
             if (Values != null)
             {
                 var itemsCount = Values.Count;
-                if (itemsCount == 0) return;
-
+               
                 writer.WriteAttributeString("id", Id.ToString(CultureInfo.InvariantCulture));
                 if (itemsCount > 1)
                 {
@@ -77,7 +76,7 @@ namespace Redmine.Net.Api.Types
                 }
                 else
                 {
-                    writer.WriteElementString("value", Values[0].Info);
+                    writer.WriteElementString("value", itemsCount > 0 ? Values[0].Info : null);
                 }
             }
         }

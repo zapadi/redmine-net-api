@@ -45,14 +45,9 @@ namespace Redmine.Net.Api.Types
         [XmlElement("name")]
         public string Name { get; set; }
 
-        public void WriteXml(XmlWriter writer)
-        {
-        }
+        public void WriteXml(XmlWriter writer) { }
 
-        public XmlSchema GetSchema()
-        {
-            return null;
-        }
+        public XmlSchema GetSchema() { return null; }
 
         /// <summary>
         /// Generates an object from its XML representation.

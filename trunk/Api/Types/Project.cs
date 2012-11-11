@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Serialization;
+using System.Web.Script.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
@@ -25,7 +26,7 @@ namespace Redmine.Net.Api.Types
     /// Availability 1.0
     /// </summary>
     [XmlRoot("project")]
-    public class Project : IdentifiableName, IEquatable<Project>
+    public class Project : IdentifiableName, IEquatable<Project>, IJSon<Project>
     {
         /// <summary>
         /// Gets or sets the identifier.
@@ -134,5 +135,28 @@ namespace Redmine.Net.Api.Types
             if (other == null) return false;
             return (Id == other.Id && Identifier == other.Identifier);
         }
+
+        public IEnumerable<Type> SupportedTypes
+        {
+            get { return new List<Type>(new Type[] { typeof(ChangeSet) }); }
+        }
+
+        public IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer)
+        {
+            return null;
+        }
+
+        public Project Deserialize(IDictionary<string, object> dictionary, Type type, JavaScriptSerializer serializer)
+        {
+            return null;
+        }
+
+    }
+
+    public interface IJSon<T>
+    {
+        IEnumerable<Type> SupportedTypes { get; }
+        IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer);
+        T Deserialize(IDictionary<string, object> dictionary, Type type, JavaScriptSerializer serializer);
     }
 }
