@@ -60,24 +60,22 @@ namespace Redmine.Net.Api.Types
 
         public override void WriteXml(XmlWriter writer)
         {
-            if (Values != null)
-            {
-                var itemsCount = Values.Count;
+            if (Values == null) return;
+            var itemsCount = Values.Count;
                
-                writer.WriteAttributeString("id", Id.ToString(CultureInfo.InvariantCulture));
-                if (itemsCount > 1)
-                {
-                    writer.WriteStartElement("value");
-                    writer.WriteAttributeString("type", "array");
+            writer.WriteAttributeString("id", Id.ToString(CultureInfo.InvariantCulture));
+            if (itemsCount > 1)
+            {
+                writer.WriteStartElement("value");
+                writer.WriteAttributeString("type", "array");
 
-                    foreach (var v in Values) writer.WriteElementString("value", v.Info);
+                foreach (var v in Values) writer.WriteElementString("value", v.Info);
 
-                    writer.WriteEndElement();
-                }
-                else
-                {
-                    writer.WriteElementString("value", itemsCount > 0 ? Values[0].Info : null);
-                }
+                writer.WriteEndElement();
+            }
+            else
+            {
+                writer.WriteElementString("value", itemsCount > 0 ? Values[0].Info : null);
             }
         }
 

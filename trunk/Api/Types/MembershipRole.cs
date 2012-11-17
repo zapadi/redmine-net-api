@@ -46,9 +46,7 @@ namespace Redmine.Net.Api.Types
             Inherited = reader.ReadAttributeAsBoolean("inherited");
         }
 
-        public override void WriteXml(XmlWriter writer)
-        {
-        }
+        public override void WriteXml(XmlWriter writer) { }
 
         public bool Equals(MembershipRole other)
         {

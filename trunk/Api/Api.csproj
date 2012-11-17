@@ -20,7 +20,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;<DefineConstants Condition=" 'v4.0.3' &gt;= 'v4.0' ">RUNNING_ON_4_OR_ABOVE</DefineConstants></DefineConstants>
+    <DefineConstants>TRACE;DEBUG;<DefineConstants Condition=" 'v4.0.3' &gt;= 'v3.5' ">RUNNING_ON_35_OR_ABOVE</DefineConstants><DefineConstants Condition=" 'v4.0.3' &gt;= 'v4.0' ">RUNNING_ON_40_OR_ABOVE</DefineConstants></DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -28,9 +28,12 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;<DefineConstants Condition=" 'v4.0.3' &gt;= 'v4.0' ">RUNNING_ON_4_OR_ABOVE</DefineConstants></DefineConstants>
+    <DefineConstants>TRACE;DEBUG;<DefineConstants Condition=" 'v4.0.3' &gt;= 'v3.5' ">RUNNING_ON_35_OR_ABOVE</DefineConstants><DefineConstants Condition=" 'v4.0.3' &gt;= 'v4.0' ">RUNNING_ON_40_OR_ABOVE</DefineConstants></DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Net40|AnyCPU'">
+    <OutputPath>bin\Net40\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -44,6 +47,32 @@
   <ItemGroup>
     <Compile Include="ExtensionAttribute.cs" />
     <Compile Include="ExtensionMethods.cs" />
+    <Compile Include="JSonConverters\AttachmentConverter.cs" />
+    <Compile Include="JSonConverters\ChangeSetConverter.cs" />
+    <Compile Include="JSonConverters\CustomFieldConverter.cs" />
+    <Compile Include="JSonConverters\DetailConverter.cs" />
+    <Compile Include="JSonConverters\ErrorConverter.cs" />
+    <Compile Include="JSonConverters\GroupConverter.cs" />
+    <Compile Include="JSonConverters\IdentifiableNameConverter.cs" />
+    <Compile Include="JSonConverters\IssueCategoryConverter.cs" />
+    <Compile Include="JSonConverters\IssueConverter.cs" />
+    <Compile Include="JSonConverters\IssueRelationConverter.cs" />
+    <Compile Include="JSonConverters\IssueStatusConverter.cs" />
+    <Compile Include="JSonConverters\JournalConverter.cs" />
+    <Compile Include="JSonConverters\MembershipConverter.cs" />
+    <Compile Include="JSonConverters\MembershipRoleConverter.cs" />
+    <Compile Include="JSonConverters\NewsConverter.cs" />
+    <Compile Include="JSonConverters\ProjectConverter.cs" />
+    <Compile Include="JSonConverters\ProjectMembershipConverter.cs" />
+    <Compile Include="JSonConverters\ProjectTrackerConverter.cs" />
+    <Compile Include="JSonConverters\QueryConverter.cs" />
+    <Compile Include="JSonConverters\RoleConverter.cs" />
+    <Compile Include="JSonConverters\TimeEntryConverter.cs" />
+    <Compile Include="JSonConverters\TrackerConverter.cs" />
+    <Compile Include="JSonConverters\UploadConverter.cs" />
+    <Compile Include="JSonConverters\UserConverter.cs" />
+    <Compile Include="JSonConverters\UserGroupConverter.cs" />
+    <Compile Include="JSonConverters\VersionConverter.cs" />
     <Compile Include="RedmineSerialization.cs" />
     <Compile Include="RedmineWebClient.cs">
       <SubType>Component</SubType>
@@ -60,6 +89,7 @@
     <Compile Include="Types\IdentifiableName.cs" />
     <Compile Include="Types\Issue.cs" />
     <Compile Include="Types\IssueCategory.cs" />
+    <Compile Include="Types\IssuePriorities.cs" />
     <Compile Include="Types\IssueRelation.cs" />
     <Compile Include="Types\IssueStatus.cs" />
     <Compile Include="Types\Journal.cs" />
@@ -73,11 +103,13 @@
     <Compile Include="Types\MembershipRole.cs" />
     <Compile Include="Types\TimeEntry.cs" />
     <Compile Include="Types\Identifiable.cs" />
+    <Compile Include="Types\TimeEntryActivity.cs" />
     <Compile Include="Types\Tracker.cs" />
     <Compile Include="Types\Upload.cs" />
     <Compile Include="Types\User.cs" />
     <Compile Include="Types\UserGroup.cs" />
     <Compile Include="Types\Version.cs" />
+    <Compile Include="Types\WikiPage.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

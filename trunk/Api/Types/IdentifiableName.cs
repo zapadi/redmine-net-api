@@ -49,10 +49,7 @@ namespace Redmine.Net.Api.Types
         [XmlAttribute("name")]
         public String Name { get; set; }
 
-        public XmlSchema GetSchema()
-        {
-            return null;
-        }
+        public XmlSchema GetSchema() { return null; }
 
         public virtual void ReadXml(XmlReader reader)
         {

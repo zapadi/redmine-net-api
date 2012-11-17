@@ -60,10 +60,7 @@ namespace Redmine.Net.Api.Types
             return (Id == other.Id && Project == other.Project && AsignTo == other.AsignTo && Name == other.Name);
         }
 
-        public XmlSchema GetSchema()
-        {
-            return null;
-        }
+        public XmlSchema GetSchema() { return null; }
 
         public void ReadXml(XmlReader reader)
         {

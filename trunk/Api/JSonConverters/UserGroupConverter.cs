@@ -1,4 +1,4 @@
-﻿/*
+/*
    Copyright 2011 - 2012 Adrian Popescu, Dorin Huzum.
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,20 +13,23 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
+//#if RUNNING_ON_35_OR_ABOVE
+using System;
+using System.Collections.Generic;
+using Redmine.Net.Api.Types;
 
-using System.Xml.Serialization;
-
-namespace Redmine.Net.Api.Types
+namespace Redmine.Net.Api.JSonConverters
 {
-    [XmlRoot("error")]
-    public class Error
+    public class UserGroupConverter : IdentifiableNameConverter
     {
-        [XmlText]
-        public string Info { get; set; }
+        #region Overrides of JavaScriptConverter
 
-        public override string ToString()
+        public override IEnumerable<Type> SupportedTypes
         {
-            return Info;
+            get { return new List<Type>(new[] { typeof(UserGroup) }); }
         }
+
+        #endregion
     }
 }
+//#endif

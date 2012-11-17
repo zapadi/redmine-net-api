@@ -66,9 +66,7 @@ namespace Redmine.Net.Api.Types
             }
         }
 
-        public override void WriteXml(XmlWriter writer)
-        {
-        }
+        public override void WriteXml(XmlWriter writer) { }
 
         public bool Equals(Query other)
         {

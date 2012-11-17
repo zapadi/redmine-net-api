@@ -71,10 +71,7 @@ namespace Redmine.Net.Api.Types
             return (Id == other.Id && Project == other.Project && Roles == other.Roles && User == other.User && Group == other.Group);
         }
 
-        public XmlSchema GetSchema()
-        {
-            return null;
-        }
+        public XmlSchema GetSchema() { return null; }
 
         public void ReadXml(XmlReader reader)
         {
@@ -106,7 +103,7 @@ namespace Redmine.Net.Api.Types
 
         public void WriteXml(XmlWriter writer)
         {
-            if(User != null && User.Id == 0) writer.WriteElementString("user_id",User.Id.ToString());
+            if (User != null && User.Id == 0) writer.WriteElementString("user_id", User.Id.ToString());
 
             writer.WriteStartElement("role_ids");
             writer.WriteAttributeString("type", "array");

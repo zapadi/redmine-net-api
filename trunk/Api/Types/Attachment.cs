@@ -76,10 +76,7 @@ namespace Redmine.Net.Api.Types
         [XmlElement("created_on")]
         public DateTime? CreatedOn { get; set; }
 
-        public XmlSchema GetSchema()
-        {
-            return null;
-        }
+        public XmlSchema GetSchema() { return null; }
 
         public void ReadXml(XmlReader reader)
         {
@@ -115,9 +112,7 @@ namespace Redmine.Net.Api.Types
             }
         }
 
-        public void WriteXml(XmlWriter writer)
-        {
-        }
+        public void WriteXml(XmlWriter writer) { }
 
         public bool Equals(Attachment other)
         {

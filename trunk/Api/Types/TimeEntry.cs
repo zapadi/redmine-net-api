@@ -84,10 +84,7 @@ namespace Redmine.Net.Api.Types
             return timeEntry;
         }
 
-        public XmlSchema GetSchema()
-        {
-            return null;
-        }
+        public XmlSchema GetSchema() { return null; }
 
         public void ReadXml(XmlReader reader)
         {
