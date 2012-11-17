@@ -43,10 +43,7 @@ namespace Redmine.Net.Api.Types
         [XmlArrayItem("role")]
         public List<MembershipRole> Roles { get; set; }
 
-        public XmlSchema GetSchema()
-        {
-            return null;
-        }
+        public XmlSchema GetSchema() { return null; }
 
         public void ReadXml(XmlReader reader)
         {
@@ -76,9 +73,7 @@ namespace Redmine.Net.Api.Types
             }
         }
 
-        public void WriteXml(XmlWriter writer)
-        {
-        }
+        public void WriteXml(XmlWriter writer) { }
 
         public bool Equals(Membership other)
         {

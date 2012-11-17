@@ -63,10 +63,7 @@ namespace Redmine.Net.Api.Types
         [XmlElement("new_value")]
         public string NewValue { get; set; }
 
-        public XmlSchema GetSchema()
-        {
-            return null;
-        }
+        public XmlSchema GetSchema() { return null; }
 
         public void ReadXml(XmlReader reader)
         {
@@ -94,9 +91,7 @@ namespace Redmine.Net.Api.Types
             }
         }
 
-        public void WriteXml(XmlWriter writer)
-        {
-        }
+        public void WriteXml(XmlWriter writer) { }
 
         public bool Equals(Detail other)
         {

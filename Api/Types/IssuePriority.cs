@@ -1,4 +1,4 @@
-﻿/*
+/*
    Copyright 2011 - 2012 Adrian Popescu, Dorin Huzum.
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,7 +15,6 @@
 */
 
 using System;
-using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
@@ -23,10 +22,10 @@ using System.Xml.Serialization;
 namespace Redmine.Net.Api.Types
 {
     /// <summary>
-    /// 
+    /// Availability 2.2
     /// </summary>
-    [XmlRoot("journal")]
-    public class Journal : IXmlSerializable, IEquatable<Journal>
+    [XmlRoot("issue_priority")]
+    public class IssuePriority : IXmlSerializable, IEquatable<IssuePriority>
     {
         /// <summary>
         /// Gets or sets the id.
@@ -34,53 +33,32 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The id.
         /// </value>
-        [XmlAttribute("id")]
+        [XmlElement("id")]
         public int Id { get; set; }
 
         /// <summary>
-        /// Gets or sets the user.
+        /// Gets or sets the name.
         /// </summary>
         /// <value>
-        /// The user.
+        /// The name.
         /// </value>
-        [XmlElement("user")]
-        public IdentifiableName User { get; set; }
-
-        /// <summary>
-        /// Gets or sets the notes.
-        /// </summary>
-        /// <value>
-        /// The notes.
-        /// </value>
-        [XmlElement("notes")]
-        public string Notes { get; set; }
-
-        /// <summary>
-        /// Gets or sets the created on.
-        /// </summary>
-        /// <value>
-        /// The created on.
-        /// </value>
-        [XmlElement("created_on")]
-        public DateTime? CreatedOn { get; set; }
-
-        /// <summary>
-        /// Gets or sets the details.
-        /// </summary>
-        /// <value>
-        /// The details.
-        /// </value>
-        [XmlArray("details")]
-        [XmlArrayItem("detail")]
-        public IList<Detail> Details { get; set; }
+        [XmlElement("name")]
+        public string Name { get; set; }
+       
+        [XmlElement("is_default")]
+        public bool IsDefault { get; set; }
+       
+        #region Implementation of IXmlSerializable
 
         public XmlSchema GetSchema() { return null; }
 
+        /// <summary>
+        /// Generates an object from its XML representation.
+        /// </summary>
+        /// <param name="reader">The <see cref="T:System.Xml.XmlReader"/> stream from which the object is deserialized.</param>
         public void ReadXml(XmlReader reader)
         {
-            Id = reader.ReadAttributeAsInt("id");
             reader.Read();
-
             while (!reader.EOF)
             {
                 if (reader.IsEmptyElement && !reader.HasAttributes)
@@ -91,13 +69,11 @@ namespace Redmine.Net.Api.Types
 
                 switch (reader.Name)
                 {
-                    case "user": User = new IdentifiableName(reader); break;
+                    case "id": Id = reader.ReadElementContentAsInt(); break;
 
-                    case "notes": Notes = reader.ReadElementContentAsString(); break;
+                    case "name": Name = reader.ReadElementContentAsString(); break;
 
-                    case "created_on": CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
-
-                    case "details": Details = reader.ReadElementContentAsCollection<Detail>(); break;
+                    case "is_default": IsDefault = reader.ReadElementContentAsBoolean(); break;
 
                     default: reader.Read(); break;
                 }
@@ -106,10 +82,17 @@ namespace Redmine.Net.Api.Types
 
         public void WriteXml(XmlWriter writer) { }
 
-        public bool Equals(Journal other)
+        #endregion
+
+        #region Implementation of IEquatable<IssuePriority>
+
+        public bool Equals(IssuePriority other)
         {
             if (other == null) return false;
-            return Id == other.Id && User == other.User && Notes == other.Notes && CreatedOn == other.CreatedOn && Details == other.Details;
+
+            return Id == other.Id && Name == other.Name && IsDefault == other.IsDefault;
         }
+
+        #endregion
     }
 }

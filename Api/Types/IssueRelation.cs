@@ -55,10 +55,7 @@ namespace Redmine.Net.Api.Types
         [XmlElement("delay")]
         public int? Delay { get; set; }
 
-        public XmlSchema GetSchema()
-        {
-            return null;
-        }
+        public XmlSchema GetSchema() { return null; }
 
         public void ReadXml(XmlReader reader)
         {
@@ -92,7 +89,7 @@ namespace Redmine.Net.Api.Types
         {
             writer.WriteElementString("issue_to_id", IssueToId.ToString());
             writer.WriteElementString("relation_type", Type.ToString());
-            if(Type == IssueRelationType.precedes || Type == IssueRelationType.follows)
+            if (Type == IssueRelationType.precedes || Type == IssueRelationType.follows)
                 writer.WriteElementString("delay", Delay.ToString());
         }
 

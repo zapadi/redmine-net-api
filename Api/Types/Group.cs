@@ -46,10 +46,9 @@ namespace Redmine.Net.Api.Types
         [XmlElement("name")]
         public string Name { get; set; }
 
-        [XmlArray("user_ids")]
-        [XmlArrayItem("user_id")]
-        public List<int> UserIds { get; set; }
-
+        /// <summary>
+        /// Represents the group's users.
+        /// </summary>
         [XmlArray("users")]
         [XmlArrayItem("user")]
         public List<User> Users { get; set; }
@@ -85,6 +84,8 @@ namespace Redmine.Net.Api.Types
 
                     case "name": Name = reader.ReadElementContentAsString(); break;
 
+                    case "users": Users = reader.ReadElementContentAsCollection<User>(); break;
+
                     default: reader.Read(); break;
                 }
             }
@@ -98,16 +99,15 @@ namespace Redmine.Net.Api.Types
         {
             writer.WriteElementString("name", Name);
 
-            if(UserIds != null)
+            if (Users == null) return;
+            
+            writer.WriteStartElement("user_ids");
+            writer.WriteAttributeString("type", "array");
+            foreach (var userId in Users)
             {
-                writer.WriteStartElement("user_ids");
-                writer.WriteAttributeString("type", "array");
-                foreach (var userId in UserIds)
-                {
-                    new XmlSerializer(typeof(int)).Serialize(writer, userId);
-                }
-                writer.WriteEndElement();
+                new XmlSerializer(typeof(int)).Serialize(writer, userId.Id);
             }
+            writer.WriteEndElement();
         }
 
         #endregion
