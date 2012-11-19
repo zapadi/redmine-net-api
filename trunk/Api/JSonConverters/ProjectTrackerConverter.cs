@@ -40,14 +40,16 @@ namespace Redmine.Net.Api.JSonConverters
         public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer)
         {
             var entity = obj as ProjectTracker;
+            var root = new Dictionary<string, object>();
             var result = new Dictionary<string, object>();
 
             if (entity != null)
             {
                 result.Add("id", entity.Id);
                 result.Add("name", entity.Name);
-              
-                return result;
+
+                root["tracker"] = result;
+                return root;
             }
             return result;
         }

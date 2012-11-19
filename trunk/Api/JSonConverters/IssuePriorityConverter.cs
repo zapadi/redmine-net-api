@@ -22,22 +22,19 @@ using Redmine.Net.Api.Types;
 
 namespace Redmine.Net.Api.JSonConverters
 {
-    public class IssueCategoryConverter : JavaScriptConverter
+    public class IssuePriorityConverter : JavaScriptConverter
     {
-        #region Overrides of JavaScriptConverter
-
         public override object Deserialize(IDictionary<string, object> dictionary, Type type, JavaScriptSerializer serializer)
         {
-            if ((dictionary != null) && (type == typeof(IssueCategory)))
+            if ((dictionary != null) && (type == typeof(IssuePriority)))
             {
-                var issueCategory = new IssueCategory();
+                var issuePriority = new IssuePriority();
 
-                issueCategory.Id = dictionary.GetValue<int>("id");
-                issueCategory.Project = dictionary.GetValueAsIdentifiableName("project");
-                issueCategory.AsignTo = dictionary.GetValueAsIdentifiableName("assigned_to");
-                issueCategory.Name = dictionary.GetValue<string>("name");
-            
-                return issueCategory;
+                issuePriority.Id = dictionary.GetValue<int>("id");
+                issuePriority.Name = dictionary.GetValue<string>("name");
+                issuePriority.IsDefault = dictionary.GetValue<bool>("is_default");
+
+                return issuePriority;
             }
 
             return null;
@@ -45,29 +42,13 @@ namespace Redmine.Net.Api.JSonConverters
 
         public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer)
         {
-            var entity = obj as IssueCategory;
-            var root = new Dictionary<string, object>();
-            var result = new Dictionary<string, object>();
-
-            if (entity != null)
-            {
-                result.Add("name", entity.Name);
-                result.WriteIdIfNotNull(entity.Project,"project_id");
-                result.WriteIdIfNotNull(entity.AsignTo,"assigned_to_id");
-
-                root["issue_category"] = result;
-                return root;
-            }
-
-            return result;
+            return null;
         }
 
         public override IEnumerable<Type> SupportedTypes
         {
-            get { return new List<Type>(new[] { typeof(IssueCategory) }); }
+            get { return new List<Type>(new[] { typeof(IssuePriority) }); }
         }
-
-        #endregion
     }
 }
 //#endif

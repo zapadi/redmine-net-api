@@ -3,12 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 //#if RUNNING_ON_35_OR_ABOVE
+using System.Linq;
 using System.Web.Script.Serialization;
 using Redmine.Net.Api.JSonConverters;
 //#endif
 using System.Xml;
 using System.Xml.Serialization;
-
 using Redmine.Net.Api.Types;
 using Version = Redmine.Net.Api.Types.Version;
 
@@ -16,9 +16,9 @@ namespace Redmine.Net.Api
 {
     public static class RedmineSerialization
     {
-      //  #if RUNNING_ON_35_OR_ABOVE
+        //  #if RUNNING_ON_35_OR_ABOVE
         private static readonly Dictionary<Type, JavaScriptConverter> converters = new Dictionary<Type, JavaScriptConverter>
-                                                                                       {
+        {
             {typeof (Issue), new IssueConverter()},
             {typeof (Project), new ProjectConverter()},
             {typeof (User), new UserConverter()},
@@ -37,12 +37,15 @@ namespace Redmine.Net.Api
             {typeof (Error), new ErrorConverter()},
             {typeof (CustomField), new CustomFieldConverter()},
             {typeof (ProjectTracker), new ProjectTrackerConverter()},
-            {typeof (Journal), new JournalConverter()}
+            {typeof (Journal), new JournalConverter()},
+            {typeof (TimeEntryActivity), new TimeEntryActivityConverter()},
+            {typeof (IssuePriority), new IssuePriorityConverter()},
+            {typeof (WikiPage), new WikiPageConverter()}
         };
 
-        public static Dictionary<Type, JavaScriptConverter> Converters { get { return converters; } } 
+        public static Dictionary<Type, JavaScriptConverter> Converters { get { return converters; } }
 
-       // #endif
+        // #endif
         /// <summary>
         /// Serializes the specified System.Object and writes the XML document to a string.
         /// </summary>
@@ -125,7 +128,7 @@ namespace Redmine.Net.Api
         //    return output;
         //}
 
-      //  #if RUNNING_ON_35_OR_ABOVE
+        //  #if RUNNING_ON_35_OR_ABOVE
         /// <summary>
         /// JSON Serialization
         /// </summary>
@@ -153,16 +156,13 @@ namespace Redmine.Net.Api
             return JsonDeserializeToList<T>(jsonString, root, out totalCount);
         }
 
-        /// <summary>
-        /// JSON Deserialization
-        /// </summary>
-        public static List<T> JsonDeserializeToList<T>(string jsonString, string root, out int totalCount) where T : class,new()
+        public static object JsonDeserializeToList(string jsonString, string root, Type type, out int totalCount)
         {
             totalCount = 0;
             if (String.IsNullOrEmpty(jsonString)) return null;
 
             var ser = new JavaScriptSerializer();
-            ser.RegisterConverters(new[] {converters[typeof(T)] });
+            ser.RegisterConverters(new[] { converters[type] });
             var dic = ser.Deserialize<Dictionary<string, object>>(jsonString);
             if (dic == null) return null;
 
@@ -172,8 +172,8 @@ namespace Redmine.Net.Api
 
             if (dic.TryGetValue(root, out obj))
             {
-                var list = new List<T>();
-                if (typeof(T) == typeof(Error))
+                var list = new ArrayList();
+                if (type == typeof(Error))
                 {
                     string info = null;
                     foreach (var item in (ArrayList)obj)
@@ -187,28 +187,38 @@ namespace Redmine.Net.Api
                             info += item as string + " ";
                     }
                     var err = new Error { Info = info };
-                    list.Add(err as T);
+                    list.Add(err);
                 }
                 else
                 {
-                    AddToList(ser, list, obj);
+                    AddToList(ser, list, type, obj);
                 }
                 return list;
             }
             return null;
         }
 
-        private static void AddToList<T>(JavaScriptSerializer ser, ICollection<T> list, object obj) where T : new()
+        /// <summary>
+        /// JSON Deserialization
+        /// </summary>
+        public static List<T> JsonDeserializeToList<T>(string jsonString, string root, out int totalCount) where T : class,new()
+        {
+            var result = JsonDeserializeToList(jsonString, root, typeof(T), out totalCount);
+
+            return result == null ? null : ((ArrayList) result).OfType<T>().ToList();
+        }
+
+        private static void AddToList(JavaScriptSerializer ser, IList list, Type type, object obj)
         {
             foreach (var item in (ArrayList)obj)
             {
                 if (item is ArrayList)
                 {
-                    AddToList(ser, list, item);
+                    AddToList(ser, list, type, item);
                 }
                 else
                 {
-                    var o = ser.ConvertToType<T>(item);
+                    var o = ser.ConvertToType(item, type);
                     list.Add(o);
                 }
             }
@@ -216,24 +226,33 @@ namespace Redmine.Net.Api
 
         public static T JsonDeserialize<T>(string jsonString) where T : new()
         {
-            if (String.IsNullOrEmpty(jsonString)) return default(T);
+            var type = typeof(T);
+            var result = JsonDeserialize(jsonString, type);
+            if (result == null) return default(T);
+
+            return (T)result;
+        }
+
+        public static object JsonDeserialize(string jsonString, Type type)
+        {
+            if (String.IsNullOrEmpty(jsonString)) return null;
 
             var ser = new JavaScriptSerializer();
-            ser.RegisterConverters(new[] { converters[typeof(T)] });
+            ser.RegisterConverters(new[] { converters[type] });
 
             var dic = ser.Deserialize<Dictionary<string, object>>(jsonString);
-            if (dic == null) return default(T);
+            if (dic == null) return null;
 
             object obj;
-            if (dic.TryGetValue(typeof(T).Name.ToLower(), out obj))
+            if (dic.TryGetValue(type.Name.ToLower(), out obj))
             {
-                var deserializedObject = ser.ConvertToType<T>(obj);
+                var deserializedObject = ser.ConvertToType(obj, type);
 
                 return deserializedObject;
             }
-            return default(T);
+            return null;
         }
-       
+
         public static List<T> GetValueAsCollection<T>(this IDictionary<string, object> dictionary, string key) where T : new()
         {
             object val;
@@ -269,6 +288,6 @@ namespace Redmine.Net.Api
             return null;
         }
 
-     //   #endif
+        //   #endif
     }
 }

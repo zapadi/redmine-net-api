@@ -36,7 +36,6 @@ namespace Redmine.Net.Api.JSonConverters
                 customField.Name = dictionary.GetValue<string>("name");
                 customField.Multiple = dictionary.GetValue<bool>("multiple");
 
-
                 return customField;
             }
 
@@ -46,6 +45,7 @@ namespace Redmine.Net.Api.JSonConverters
         public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer)
         {
             var entity = obj as CustomField;
+
             var result = new Dictionary<string, object>();
 
             if (entity != null)
@@ -56,7 +56,7 @@ namespace Redmine.Net.Api.JSonConverters
                 result.Add("id", entity.Id);
                 if (itemsCount > 1)
                 {
-                    result.Add("value", entity.Values.ToArray());
+                    result.Add("value", entity.Values.Select(x=>x.Info).ToArray());
                 }
                 else
                 {

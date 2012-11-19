@@ -43,6 +43,7 @@ namespace Redmine.Net.Api.JSonConverters
         public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer)
         {
             var entity = obj as Upload;
+            var root = new Dictionary<string, object>();
             var result = new Dictionary<string, object>();
 
             if (entity != null)
@@ -50,8 +51,9 @@ namespace Redmine.Net.Api.JSonConverters
                 result.Add("content_type", entity.ContentType);
                 result.Add("filename", entity.FileName);
                 result.Add("token", entity.Token);
-              
-                return result;
+
+                root["upload"] = result;
+                return root;
             }
 
             return result;

@@ -44,6 +44,7 @@ namespace Redmine.Net.Api.JSonConverters
         public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer)
         {
             var entity = obj as Group;
+            var root = new Dictionary<string, object>();
             var result = new Dictionary<string, object>();
 
             if (entity != null)
@@ -52,7 +53,8 @@ namespace Redmine.Net.Api.JSonConverters
                 if (entity.Users != null)
                     result.Add("user_ids", entity.Users.ToArray());
 
-                return result;
+                root["group"] = result;
+                return root;
             }
 
             return result;

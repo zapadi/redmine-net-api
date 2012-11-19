@@ -51,6 +51,7 @@ namespace Redmine.Net.Api.JSonConverters
         public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer)
         {
             var entity = obj as Version;
+            var root = new Dictionary<string, object>();
             var result = new Dictionary<string, object>();
 
             if (entity != null)
@@ -60,7 +61,9 @@ namespace Redmine.Net.Api.JSonConverters
                 result.Add("sharing", entity.Sharing.ToString());
                 result.Add("description", entity.Description);
                 result.WriteIfNotDefaultOrNull(entity.DueDate, "due_date");
-                return result;
+
+                root["version"] = result;
+                return root;
             }
 
             return result;
