@@ -46,6 +46,7 @@ namespace Redmine.Net.Api.JSonConverters
         public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer)
         {
             var entity = obj as IssueRelation;
+            var root = new Dictionary<string, object>();
             var result = new Dictionary<string, object>();
 
             if (entity != null)
@@ -54,8 +55,9 @@ namespace Redmine.Net.Api.JSonConverters
                 result.Add("relation_type", entity.Type.ToString());
                 if (entity.Type == IssueRelationType.precedes || entity.Type == IssueRelationType.follows)
                     result.Add("delay", entity.Delay);
-               
-                return result;
+
+                root["relation"] = result;
+                return root;
             }
 
             return result;

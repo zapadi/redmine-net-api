@@ -64,6 +64,7 @@ namespace Redmine.Net.Api.JSonConverters
         public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer)
         {
             var entity = obj as Issue;
+            var root = new Dictionary<string, object>();
             var result = new Dictionary<string, object>();
 
             if (entity != null)
@@ -88,9 +89,14 @@ namespace Redmine.Net.Api.JSonConverters
 
                 if (entity.Uploads != null) result.Add("uploads", entity.Uploads.ToArray());
 
-                if (entity.CustomFields != null) result.Add("custom_fields", entity.CustomFields.ToArray());
+                if (entity.CustomFields != null)
+                {
+                    serializer.RegisterConverters(new[]{new CustomFieldConverter()});
+                    result.Add("custom_fields", entity.CustomFields.ToArray());
+                }
 
-                return result;
+                root["issue"] = result;
+                return root;
             }
 
             return result;

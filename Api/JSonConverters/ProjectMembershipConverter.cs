@@ -45,6 +45,7 @@ namespace Redmine.Net.Api.JSonConverters
         public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer)
         {
             var entity = obj as ProjectMembership;
+            var root = new Dictionary<string, object>();
             var result = new Dictionary<string, object>();
 
             if (entity != null)
@@ -53,7 +54,8 @@ namespace Redmine.Net.Api.JSonConverters
                     result.Add("user_id", entity.User.Id);
                 result.Add("role_ids", entity.Roles.ToArray());
 
-                return result;
+                root["membership"] = result;
+                return root;
             }
 
             return result;

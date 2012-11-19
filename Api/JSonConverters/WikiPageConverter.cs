@@ -22,22 +22,24 @@ using Redmine.Net.Api.Types;
 
 namespace Redmine.Net.Api.JSonConverters
 {
-    public class IssueCategoryConverter : JavaScriptConverter
+    public class WikiPageConverter : JavaScriptConverter
     {
-        #region Overrides of JavaScriptConverter
-
         public override object Deserialize(IDictionary<string, object> dictionary, Type type, JavaScriptSerializer serializer)
         {
-            if ((dictionary != null) && (type == typeof(IssueCategory)))
+            if ((dictionary != null) && (type == typeof(WikiPage)))
             {
-                var issueCategory = new IssueCategory();
+                var tracker = new WikiPage();
 
-                issueCategory.Id = dictionary.GetValue<int>("id");
-                issueCategory.Project = dictionary.GetValueAsIdentifiableName("project");
-                issueCategory.AsignTo = dictionary.GetValueAsIdentifiableName("assigned_to");
-                issueCategory.Name = dictionary.GetValue<string>("name");
-            
-                return issueCategory;
+                tracker.Id = dictionary.GetValue<int>("id");
+                tracker.Author = dictionary.GetValueAsIdentifiableName("author");
+                tracker.Comments = dictionary.GetValue<string>("comments");
+                tracker.CreatedOn = dictionary.GetValue<DateTime?>("created_on");
+                tracker.Text = dictionary.GetValue<string>("text");
+                tracker.Title = dictionary.GetValue<string>("title");
+                tracker.UpdatedOn = dictionary.GetValue<DateTime?>("updated_on");
+                tracker.Version = dictionary.GetValue<int>("version");
+
+                return tracker;
             }
 
             return null;
@@ -45,17 +47,17 @@ namespace Redmine.Net.Api.JSonConverters
 
         public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer)
         {
-            var entity = obj as IssueCategory;
+            var entity = obj as WikiPage;
             var root = new Dictionary<string, object>();
             var result = new Dictionary<string, object>();
 
             if (entity != null)
             {
-                result.Add("name", entity.Name);
-                result.WriteIdIfNotNull(entity.Project,"project_id");
-                result.WriteIdIfNotNull(entity.AsignTo,"assigned_to_id");
+                result.Add("text", entity.Text);
+                result.Add("comments", entity.Comments);
+                result.WriteIfNotDefaultOrNull<int>(entity.Version, "version");
 
-                root["issue_category"] = result;
+                root["wiki_page"] = result;
                 return root;
             }
 
@@ -64,10 +66,8 @@ namespace Redmine.Net.Api.JSonConverters
 
         public override IEnumerable<Type> SupportedTypes
         {
-            get { return new List<Type>(new[] { typeof(IssueCategory) }); }
+            get { return new List<Type>(new[] { typeof(WikiPage) }); }
         }
-
-        #endregion
     }
 }
 //#endif

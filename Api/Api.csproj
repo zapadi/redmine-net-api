@@ -56,6 +56,7 @@
     <Compile Include="JSonConverters\IdentifiableNameConverter.cs" />
     <Compile Include="JSonConverters\IssueCategoryConverter.cs" />
     <Compile Include="JSonConverters\IssueConverter.cs" />
+    <Compile Include="JSonConverters\IssuePriorityConverter.cs" />
     <Compile Include="JSonConverters\IssueRelationConverter.cs" />
     <Compile Include="JSonConverters\IssueStatusConverter.cs" />
     <Compile Include="JSonConverters\JournalConverter.cs" />
@@ -67,12 +68,14 @@
     <Compile Include="JSonConverters\ProjectTrackerConverter.cs" />
     <Compile Include="JSonConverters\QueryConverter.cs" />
     <Compile Include="JSonConverters\RoleConverter.cs" />
+    <Compile Include="JSonConverters\TimeEntryActivityConverter.cs" />
     <Compile Include="JSonConverters\TimeEntryConverter.cs" />
     <Compile Include="JSonConverters\TrackerConverter.cs" />
     <Compile Include="JSonConverters\UploadConverter.cs" />
     <Compile Include="JSonConverters\UserConverter.cs" />
     <Compile Include="JSonConverters\UserGroupConverter.cs" />
     <Compile Include="JSonConverters\VersionConverter.cs" />
+    <Compile Include="JSonConverters\WikiPageConverter.cs" />
     <Compile Include="RedmineSerialization.cs" />
     <Compile Include="RedmineWebClient.cs">
       <SubType>Component</SubType>
@@ -89,7 +92,7 @@
     <Compile Include="Types\IdentifiableName.cs" />
     <Compile Include="Types\Issue.cs" />
     <Compile Include="Types\IssueCategory.cs" />
-    <Compile Include="Types\IssuePriorities.cs" />
+    <Compile Include="Types\IssuePriority.cs" />
     <Compile Include="Types\IssueRelation.cs" />
     <Compile Include="Types\IssueStatus.cs" />
     <Compile Include="Types\Journal.cs" />

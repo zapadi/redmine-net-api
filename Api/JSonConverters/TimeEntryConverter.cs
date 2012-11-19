@@ -49,6 +49,7 @@ namespace Redmine.Net.Api.JSonConverters
         public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer)
         {
             var entity = obj as TimeEntry;
+            var root = new Dictionary<string, object>();
             var result = new Dictionary<string, object>();
 
             if (entity != null)
@@ -60,8 +61,9 @@ namespace Redmine.Net.Api.JSonConverters
                 result.Add("spent_on", entity.SpentOn);
                 result.Add("hours", entity.Hours);
                 result.Add("comments", entity.Comments);
-               
-                return result;
+
+                root["time_entry"] = result;
+                return root;
             }
 
             return result;

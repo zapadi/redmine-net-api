@@ -15,6 +15,7 @@
 */
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -173,6 +174,32 @@ namespace Redmine.Net.Api
 
                     var subTree = r.ReadSubtree();
                     var temp = serializer.Deserialize(subTree) as T;
+                    if (temp != null) result.Add(temp);
+                    r.Read();
+                }
+            }
+            return result;
+        }
+
+        public static ArrayList ReadElementContentAsCollection(this XmlReader reader, Type type)
+        {
+            var result = new ArrayList();
+            var serializer = new XmlSerializer(type);
+            var xml = reader.ReadOuterXml();
+            using (var sr = new StringReader(xml))
+            {
+                var r = new XmlTextReader(sr);
+                r.ReadStartElement();
+                while (!r.EOF)
+                {
+                    if (r.NodeType == XmlNodeType.EndElement)
+                    {
+                        r.ReadEndElement();
+                        continue;
+                    }
+
+                    var subTree = r.ReadSubtree();
+                    var temp = serializer.Deserialize(subTree);
                     if (temp != null) result.Add(temp);
                     r.Read();
                 }
