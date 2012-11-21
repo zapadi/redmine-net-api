@@ -27,6 +27,18 @@ namespace Redmine.Net.Api.JSonConverters
 
         public override object Deserialize(IDictionary<string, object> dictionary, Type type, JavaScriptSerializer serializer)
         {
+            if ((dictionary != null) && (type == typeof(ChangeSet)))
+            {
+                var changeSet = new ChangeSet();
+
+                changeSet.Revision = dictionary.GetValue<int>("revision");
+                changeSet.Comments = dictionary.GetValue<string>("comments");
+                changeSet.User = dictionary.GetValueAsIdentifiableName("user");
+                changeSet.CommittedOn = dictionary.GetValue<DateTime?>("committed_on");
+
+                return changeSet;
+            }
+
             return null;
         }
 

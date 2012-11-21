@@ -40,7 +40,9 @@ namespace Redmine.Net.Api
             {typeof (Journal), new JournalConverter()},
             {typeof (TimeEntryActivity), new TimeEntryActivityConverter()},
             {typeof (IssuePriority), new IssuePriorityConverter()},
-            {typeof (WikiPage), new WikiPageConverter()}
+            {typeof (WikiPage), new WikiPageConverter()},
+            {typeof (Detail), new DetailConverter()},
+            {typeof (ChangeSet), new ChangeSetConverter()}
         };
 
         public static Dictionary<Type, JavaScriptConverter> Converters { get { return converters; } }
@@ -224,16 +226,16 @@ namespace Redmine.Net.Api
             }
         }
 
-        public static T JsonDeserialize<T>(string jsonString) where T : new()
+        public static T JsonDeserialize<T>(string jsonString, string root) where T : new()
         {
             var type = typeof(T);
-            var result = JsonDeserialize(jsonString, type);
+            var result = JsonDeserialize(jsonString, type, root);
             if (result == null) return default(T);
 
             return (T)result;
         }
 
-        public static object JsonDeserialize(string jsonString, Type type)
+        public static object JsonDeserialize(string jsonString, Type type, string root)
         {
             if (String.IsNullOrEmpty(jsonString)) return null;
 
@@ -244,7 +246,7 @@ namespace Redmine.Net.Api
             if (dic == null) return null;
 
             object obj;
-            if (dic.TryGetValue(type.Name.ToLower(), out obj))
+            if (dic.TryGetValue(root ?? type.Name.ToLower(), out obj))
             {
                 var deserializedObject = ser.ConvertToType(obj, type);
 

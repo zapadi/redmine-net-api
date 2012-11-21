@@ -32,11 +32,11 @@ namespace Redmine.Net.Api.JSonConverters
                 var timeEntry = new TimeEntry();
 
                 timeEntry.Id = dictionary.GetValue<int>("id");
-                timeEntry.Activity = dictionary.GetValueAsIdentifiableName("activity_id");
+                timeEntry.Activity = dictionary.GetValueAsIdentifiableName("activity");
                 timeEntry.Comments = dictionary.GetValue<string>("comments");
                 timeEntry.Hours = dictionary.GetValue<decimal>("hours");
-                timeEntry.Issue = dictionary.GetValueAsIdentifiableName("identifier");
-                timeEntry.Project = dictionary.GetValueAsIdentifiableName("project_id");
+                timeEntry.Issue = dictionary.GetValueAsIdentifiableName("issue");
+                timeEntry.Project = dictionary.GetValueAsIdentifiableName("project");
                 timeEntry.SpentOn = dictionary.GetValue<DateTime?>("spent_on");
                 timeEntry.User = dictionary.GetValueAsIdentifiableName("user");
 

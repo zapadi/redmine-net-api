@@ -159,7 +159,7 @@ namespace Redmine.Net.Api
 
                 //#if RUNNING_ON_35_OR_ABOVE
                 if (mimeFormat == MimeFormat.json)
-                    return RedmineSerialization.JsonDeserialize<User>(response);
+                    return RedmineSerialization.JsonDeserialize<User>(response, null);
                 //#endif
                 return RedmineSerialization.FromXML<User>(response);
             }
@@ -202,7 +202,7 @@ namespace Redmine.Net.Api
                                                                 : string.Format("{0}/projects/{1}/wiki/{2}/{3}.{4}", host, projectId, pageName, version, mimeFormat));
                     //   #if RUNNING_ON_35_OR_ABOVE
                     if (mimeFormat == MimeFormat.json)
-                        return RedmineSerialization.JsonDeserialize<WikiPage>(response);
+                        return RedmineSerialization.JsonDeserialize<WikiPage>(response, null);
                     // #endif
                     return RedmineSerialization.FromXML<WikiPage>(response);
                 }
@@ -291,7 +291,7 @@ namespace Redmine.Net.Api
                     var response = wc.UploadString(string.Format("{0}/projects/{1}/wiki/{2}.{3}", host, projectId, pageName, mimeFormat), PUT, result);
                     //  #if RUNNING_ON_35_OR_ABOVE
                     if (mimeFormat == MimeFormat.json)
-                        return RedmineSerialization.JsonDeserialize<WikiPage>(response);
+                        return RedmineSerialization.JsonDeserialize<WikiPage>(response, null);
                     // #endif
                     return RedmineSerialization.FromXML<WikiPage>(response);
                 }
@@ -659,7 +659,7 @@ namespace Redmine.Net.Api
                     var response = wc.DownloadString(string.Format(RequestFormat, host, urls[type], id, mimeFormat));
                     //   #if RUNNING_ON_35_OR_ABOVE
                     if (mimeFormat == MimeFormat.json)
-                        return RedmineSerialization.JsonDeserialize<T>(response);
+                        return RedmineSerialization.JsonDeserialize<T>(response, null);
                     // #endif
                     return RedmineSerialization.FromXML<T>(response);
                 }
@@ -698,6 +698,20 @@ namespace Redmine.Net.Api
         /// </summary>
         /// <typeparam name="T">The type of object to create.</typeparam>
         /// <param name="obj">The object to create.</param>
+        /// <param name="parameters"></param>
+        /// <remarks>When trying to create an object with invalid or missing attribute parameters, you will get a 422 Unprocessable Entity response. That means that the object could not be created.</remarks>
+        /// <exception cref="Redmine.Net.Api.RedmineException"></exception>
+        public T CreateObject<T>(T obj) where T : class, new()
+        {
+            return CreateObject(obj, null);
+        }
+
+        /// <summary>
+        /// Creates a new Redmine object.
+        /// </summary>
+        /// <typeparam name="T">The type of object to create.</typeparam>
+        /// <param name="obj">The object to create.</param>
+        /// <param name="ownerId"></param>
         /// <remarks>When trying to create an object with invalid or missing attribute parameters, you will get a 422 Unprocessable Entity response. That means that the object could not be created.</remarks>
         /// <exception cref="Redmine.Net.Api.RedmineException"></exception>
         /// <code>
@@ -709,7 +723,7 @@ namespace Redmine.Net.Api
         ///     redmineManager.CreateObject(project);
         /// </example>
         /// </code>
-        public T CreateObject<T>(T obj) where T : class, new()
+        public T CreateObject<T>(T obj, string ownerId) where T : class, new()
         {
             var type = typeof(T);
 
@@ -728,10 +742,29 @@ namespace Redmine.Net.Api
             {
                 try
                 {
-                    var response = wc.UploadString(string.Format(Format, host, urls[type], mimeFormat), result);
+                    string response;
+                    if (type == typeof(Version) || type == typeof(IssueCategory) || type == typeof(ProjectMembership))
+                    {
+                        if (string.IsNullOrEmpty(ownerId)) throw new RedmineException("The owner id is mandatory!");
+                        response = wc.UploadString(string.Format("{0}/projects/{1}/{2}.{3}", host, ownerId, urls[type], mimeFormat), result);
+                    }
+                    else
+                        if (type == typeof(IssueRelation))
+                        {
+                            if (string.IsNullOrEmpty(ownerId)) throw new RedmineException("The owner id is mandatory!");
+                            response = wc.UploadString(string.Format("{0}/issues/{1}/{2}.{3}", host, ownerId, urls[type], mimeFormat), result);
+                        }
+                        else
+                            response = wc.UploadString(string.Format(Format, host, urls[type], mimeFormat), result);
                     //  #if RUNNING_ON_35_OR_ABOVE
                     if (mimeFormat == MimeFormat.json)
-                        return RedmineSerialization.JsonDeserialize<T>(response);
+                        if (type == typeof (IssueCategory))
+                        {
+                            return RedmineSerialization.JsonDeserialize<T>(response, "issue_category");
+                        }
+                        else
+                            return RedmineSerialization.JsonDeserialize<T>(response, null);
+
                     // #endif
                     return RedmineSerialization.FromXML<T>(response);
                 }
@@ -784,6 +817,21 @@ namespace Redmine.Net.Api
         /// <code></code>
         public void UpdateObject<T>(string id, T obj) where T : class, new()
         {
+            UpdateObject(id, obj, null);
+        }
+
+        /// <summary>
+        /// Updates a Redmine object.
+        /// </summary>
+        /// <typeparam name="T">The type of object to be update.</typeparam>
+        /// <param name="id">The id of the object to be update.</param>
+        /// <param name="obj">The object to be update.</param>
+        /// <param name="projectId"></param>
+        /// <remarks>When trying to update an object with invalid or missing attribute parameters, you will get a 422 Unprocessable Entity response. That means that the object could not be updated.</remarks>
+        /// <exception cref="Redmine.Net.Api.RedmineException"></exception>
+        /// <code></code>
+        public void UpdateObject<T>(string id, T obj, string projectId) where T : class, new()
+        {
             var type = typeof(T);
             string request = null;
             if (!urls.ContainsKey(type)) return;
@@ -799,7 +847,13 @@ namespace Redmine.Net.Api
             {
                 try
                 {
-                    wc.UploadString(string.Format(RequestFormat, host, urls[type], id, mimeFormat), PUT, request);
+                    if (type == typeof(Version) || type == typeof(IssueCategory) || type == typeof(ProjectMembership))
+                    {
+                        if (string.IsNullOrEmpty(projectId)) throw new RedmineException("The project owner id is mandatory!");
+                        wc.UploadString(string.Format("{0}/projects/{1}/{2}.{3}", host, projectId, urls[type], mimeFormat), request);
+                    }
+                    else
+                        wc.UploadString(string.Format(RequestFormat, host, urls[type], id, mimeFormat), PUT, request);
                 }
                 catch (WebException webException)
                 {
@@ -808,28 +862,46 @@ namespace Redmine.Net.Api
             }
         }
 
+
+        public Guid UpdateObjectAsync<T>(string id, T obj) where T : class, new()
+        {
+            return UpdateObjectAsync(id, obj, null);
+        }
+
         /// <summary>
         /// Updates a Redmine object. This method does not block the calling thread.
         /// </summary>
         /// <typeparam name="T">The type of object to be update.</typeparam>
         /// <param name="id">The id of the object to be update.</param>
         /// <param name="obj">The object to be update.</param>
+        /// <param name="projectId"></param>
         /// <returns>Returns the Guid associated with the async request.</returns>
-        public Guid UpdateObjectAsync<T>(string id, T obj) where T : class
+        public Guid UpdateObjectAsync<T>(string id, T obj, string projectId) where T : class, new ()
         {
             var type = typeof(T);
 
             if (!urls.ContainsKey(type)) return Guid.Empty;
+            string request;
+            //  #if RUNNING_ON_35_OR_ABOVE
+            if (mimeFormat == MimeFormat.json)
+                request = RedmineSerialization.JsonSerializer(obj);
+            else
+                request = RedmineSerialization.ToXML(obj);
+            // #endif
 
-            var response = RedmineSerialization.ToXML(obj);
-
-            if (string.IsNullOrEmpty(response)) return Guid.Empty;
+            if (string.IsNullOrEmpty(request)) return Guid.Empty;
 
             using (var wc = CreateWebClient(null))
             {
                 var guid = Guid.NewGuid();
                 wc.DownloadStringCompleted += WcDownloadStringCompleted;
-                wc.UploadStringAsync(new Uri(string.Format(RequestFormat, host, urls[type], id, mimeFormat)), PUT, response, new AsyncToken { Method = RedmineMethod.UpdateObject, ResponseType = type, Parameter = obj, TokenId = guid });
+                if (type == typeof (Version) || type == typeof (IssueCategory) || type == typeof (ProjectMembership))
+                {
+                    if (string.IsNullOrEmpty(projectId)) throw new RedmineException("The project owner id is mandatory!");
+                    wc.UploadStringAsync(new Uri(string.Format("{0}/projects/{1}/{2}.{3}", host, projectId, urls[type], mimeFormat)), PUT, request, new AsyncToken { Method = RedmineMethod.UpdateObject, ResponseType = type, Parameter = obj, TokenId = guid });
+                }
+                else
+                wc.UploadStringAsync(new Uri(string.Format(RequestFormat, host, urls[type], id, mimeFormat)), PUT, request, new AsyncToken { Method = RedmineMethod.UpdateObject, ResponseType = type, Parameter = obj, TokenId = guid });
                 return guid;
             }
         }
@@ -965,7 +1037,7 @@ namespace Redmine.Net.Api
                         aev.TotalItems = totalItems;
                     }
                     else
-                        aev.Result = RedmineSerialization.JsonDeserialize(response, responseType);
+                        aev.Result = RedmineSerialization.JsonDeserialize(response, responseType, null);
                 else
                     if (method == RedmineMethod.GetObjectList)
                     {
@@ -1012,6 +1084,7 @@ namespace Redmine.Net.Api
                         switch ((int)response.StatusCode)
                         {
                             case (int)HttpStatusCode.InternalServerError:
+
                             case (int)HttpStatusCode.NotFound:
                             case (int)HttpStatusCode.Forbidden:
                                 throw new RedmineException(response.StatusDescription);
@@ -1021,12 +1094,14 @@ namespace Redmine.Net.Api
 
                             case 422:
                                 var errors = ReadWebExceptionResponse(exception.Response);
-                                var message = string.Empty;
-                                foreach (var error in errors) message += error.Info + "\n";
-
+                                string message = string.Empty;
+                                if (errors != null)
+                                {
+                                    foreach (var error in errors) message += error.Info + "\n";
+                                }
                                 throw new RedmineException(method + " has invalid or missing attribute parameters: " + message);
 
-                            case (int)HttpStatusCode.NotAcceptable: throw new RedmineException();
+                            case (int)HttpStatusCode.NotAcceptable: throw new RedmineException(response.StatusDescription);
                         }
                     }
                     break;
@@ -1052,16 +1127,16 @@ namespace Redmine.Net.Api
                     {
                         //   #if RUNNING_ON_35_OR_ABOVE
                         if (mimeFormat == MimeFormat.json)
-                            errors = RedmineSerialization.JsonDeserializeToList<Error>(responseFromServer, "error");
-                        //#else
+                            errors = RedmineSerialization.JsonDeserializeToList<Error>(responseFromServer, "errors");
+                        else
 
-                        using (var xmlReader = new XmlTextReader(reader))
-                        {
-                            xmlReader.WhitespaceHandling = WhitespaceHandling.None;
-                            xmlReader.Read();
-                            xmlReader.Read();
-                            errors = xmlReader.ReadElementContentAsCollection<Error>();
-                        }
+                            using (var xmlReader = new XmlTextReader(reader))
+                            {
+                                xmlReader.WhitespaceHandling = WhitespaceHandling.None;
+                                xmlReader.Read();
+                                xmlReader.Read();
+                                errors = xmlReader.ReadElementContentAsCollection<Error>();
+                            }
                         // #endif
                     }
                     catch (Exception ex)

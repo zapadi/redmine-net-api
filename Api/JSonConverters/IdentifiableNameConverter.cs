@@ -31,8 +31,8 @@ namespace Redmine.Net.Api.JSonConverters
             {
                 var entity = new IdentifiableName();
 
-                entity.Id = serializer.ConvertToType<int>(dictionary["id"]);
-                entity.Name = serializer.ConvertToType<string>(dictionary["name"]);
+                entity.Id = dictionary.GetValue<int>("id");
+                entity.Name = dictionary.GetValue<string>("name");
 
                 return entity;
             }
@@ -46,9 +46,9 @@ namespace Redmine.Net.Api.JSonConverters
 
             if (entity != null)
             {
-                result.Add("id", entity.Id);
-                result.Add("name", entity.Name);
-
+                result.WriteIdIfNotNull(entity, "id");
+                if (!string.IsNullOrEmpty(entity.Name))
+                    result.Add("name", entity.Name);
                 return result;
             }
 

@@ -153,8 +153,8 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The parent issue id.
         /// </value>
-        [XmlElement("parent_issue_id")]
-        public Int32 ParentIssueId { get; set; }
+        [XmlElement("parent")]
+        public IdentifiableName ParentIssue { get; set; }
 
         /// <summary>
         /// Gets or sets the fixed version.
@@ -183,7 +183,7 @@ namespace Redmine.Net.Api.Types
         /// </value>
         [XmlArray("changesets")]
         [XmlArrayItem("changeset")]
-        public IList<Journal> Changesets { get; set; }
+        public IList<ChangeSet> Changesets { get; set; }
 
         /// <summary>
         /// Gets or sets the attachments.
@@ -247,6 +247,8 @@ namespace Redmine.Net.Api.Types
 
                     case "category": Category = new IdentifiableName(reader); break;
 
+                    case "parent": ParentIssue = new IdentifiableName(reader); break;
+
                     case "fixed_version": FixedVersion = new IdentifiableName(reader); break;
 
                     case "subject": Subject = reader.ReadElementContentAsString(); break;
@@ -273,6 +275,8 @@ namespace Redmine.Net.Api.Types
 
                     case "journals": Journals = reader.ReadElementContentAsCollection<Journal>(); break;
 
+                    case "changesets": Changesets = reader.ReadElementContentAsCollection<ChangeSet>(); break;
+
                     default: reader.Read(); break;
                 }
             }
@@ -288,7 +292,7 @@ namespace Redmine.Net.Api.Types
             writer.WriteIdIfNotNull(Category, "category_id");
             writer.WriteIdIfNotNull(Tracker, "tracker_id");
             writer.WriteIdIfNotNull(AssignedTo, "assigned_to_id");
-            writer.WriteElementString("parent_issue_id", ParentIssueId.ToString());
+            writer.WriteIdIfNotNull(ParentIssue, "parent_issue_id");
             writer.WriteIfNotDefaultOrNull(EstimatedHours, "estimated_hours");
             if (StartDate != null)
                 writer.WriteElementString("start_date", StartDate.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
@@ -302,7 +306,7 @@ namespace Redmine.Net.Api.Types
                 writer.WriteStartElement("uploads");
                 //ajout Pierre Labrie
                 writer.WriteAttributeString("type", "array");
-               
+
                 foreach (var u in Uploads)
                 {
                     new XmlSerializer(u.GetType()).Serialize(writer, u);
