@@ -172,7 +172,7 @@ namespace Redmine.Net.Api
 
             if (dic.TryGetValue("total_count", out tc)) totalCount = (int)tc;
 
-            if (dic.TryGetValue(root, out obj))
+            if (dic.TryGetValue(root.ToLower(), out obj))
             {
                 var list = new ArrayList();
                 if (type == typeof(Error))

@@ -585,11 +585,11 @@ namespace Redmine.Net.Api
                     }
                     if (!hasProjectId) throw new RedmineException("The project id is mandatory! \nCheck if you have included the parameter project_id to parameters.");
 
-                    wc.DownloadStringAsync(new Uri(string.Format("{0}/projects/{1}/{2}.{3}", host, projectId, urls[type], mimeFormat)), new AsyncToken { Method = RedmineMethod.GetObjectList, ResponseType = type, TokenId = id });
+                    wc.DownloadStringAsync(new Uri(string.Format("{0}/projects/{1}/{2}.{3}", host, projectId, urls[type], mimeFormat)), new AsyncToken { Method = RedmineMethod.GetObjectList, ResponseType = type, TokenId = id, JsonRoot = type.Name + "s"});
                 }
                 else
                 {
-                    wc.DownloadStringAsync(new Uri(string.Format(Format, host, urls[type], mimeFormat)), new AsyncToken { Method = RedmineMethod.GetObjectList, ResponseType = type, TokenId = id });
+                    wc.DownloadStringAsync(new Uri(string.Format(Format, host, urls[type], mimeFormat)), new AsyncToken { Method = RedmineMethod.GetObjectList, ResponseType = type, TokenId = id, JsonRoot = type.Name + "s" });
                 }
                 return id;
             }
@@ -876,7 +876,7 @@ namespace Redmine.Net.Api
         /// <param name="obj">The object to be update.</param>
         /// <param name="projectId"></param>
         /// <returns>Returns the Guid associated with the async request.</returns>
-        public Guid UpdateObjectAsync<T>(string id, T obj, string projectId) where T : class, new ()
+        public Guid UpdateObjectAsync<T>(string id, T obj, string projectId) where T : class, new()
         {
             var type = typeof(T);
 
@@ -895,13 +895,13 @@ namespace Redmine.Net.Api
             {
                 var guid = Guid.NewGuid();
                 wc.DownloadStringCompleted += WcDownloadStringCompleted;
-                if (type == typeof (Version) || type == typeof (IssueCategory) || type == typeof (ProjectMembership))
+                if (type == typeof(Version) || type == typeof(IssueCategory) || type == typeof(ProjectMembership))
                 {
                     if (string.IsNullOrEmpty(projectId)) throw new RedmineException("The project owner id is mandatory!");
                     wc.UploadStringAsync(new Uri(string.Format("{0}/projects/{1}/{2}.{3}", host, projectId, urls[type], mimeFormat)), PUT, request, new AsyncToken { Method = RedmineMethod.UpdateObject, ResponseType = type, Parameter = obj, TokenId = guid });
                 }
                 else
-                wc.UploadStringAsync(new Uri(string.Format(RequestFormat, host, urls[type], id, mimeFormat)), PUT, request, new AsyncToken { Method = RedmineMethod.UpdateObject, ResponseType = type, Parameter = obj, TokenId = guid });
+                    wc.UploadStringAsync(new Uri(string.Format(RequestFormat, host, urls[type], id, mimeFormat)), PUT, request, new AsyncToken { Method = RedmineMethod.UpdateObject, ResponseType = type, Parameter = obj, TokenId = guid });
                 return guid;
             }
         }
@@ -1006,7 +1006,7 @@ namespace Redmine.Net.Api
             else
                 if (!e.Cancelled)
                 {
-                    ShowAsyncResult(e.Result, ut.ResponseType, ut.Method);
+                    ShowAsyncResult(e.Result, ut.ResponseType, ut.Method, ut.JsonRoot);
                 }
         }
 
@@ -1019,11 +1019,11 @@ namespace Redmine.Net.Api
                 if (!e.Cancelled)
                 {
                     var responseString = Encoding.ASCII.GetString(e.Result);
-                    ShowAsyncResult(responseString, ut.ResponseType, ut.Method);
+                    ShowAsyncResult(responseString, ut.ResponseType, ut.Method, ut.JsonRoot);
                 }
         }
 
-        private void ShowAsyncResult(string response, Type responseType, RedmineMethod method)
+        private void ShowAsyncResult(string response, Type responseType, RedmineMethod method, string jsonRoot)
         {
             var aev = new AsyncEventArgs();
             try
@@ -1033,7 +1033,7 @@ namespace Redmine.Net.Api
                     if (method == RedmineMethod.GetObjectList)
                     {
                         int totalItems;
-                        aev.Result = RedmineSerialization.JsonDeserializeToList(response, responseType.Name.ToLower(), responseType, out totalItems);
+                        aev.Result = RedmineSerialization.JsonDeserializeToList(response, jsonRoot, responseType, out totalItems);
                         aev.TotalItems = totalItems;
                     }
                     else
@@ -1155,6 +1155,7 @@ namespace Redmine.Net.Api
         public RedmineMethod Method { get; set; }
         public Type ResponseType { get; set; }
         public object Parameter { get; set; }
+        public string JsonRoot { get; set; }
     }
 
     internal enum RedmineMethod
@@ -1180,6 +1181,7 @@ namespace Redmine.Net.Api
         public string Error { get; set; }
         public object Result { get; set; }
         public int TotalItems { get; set; }
+
     }
 
     public enum MimeFormat
