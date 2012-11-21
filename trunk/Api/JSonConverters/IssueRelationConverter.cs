@@ -35,7 +35,7 @@ namespace Redmine.Net.Api.JSonConverters
                 issueRelation.IssueId = dictionary.GetValue<int>("issue_id");
                 issueRelation.IssueToId = dictionary.GetValue<int>("issue_to_id");
                 issueRelation.Type = dictionary.GetValue<IssueRelationType>("relation_type");
-                issueRelation.Delay = dictionary.GetValue<int>("delay");
+                issueRelation.Delay = dictionary.GetValue<int?>("delay");
                
                 return issueRelation;
             }
@@ -54,7 +54,7 @@ namespace Redmine.Net.Api.JSonConverters
                 result.Add("issue_to_id", entity.IssueToId);
                 result.Add("relation_type", entity.Type.ToString());
                 if (entity.Type == IssueRelationType.precedes || entity.Type == IssueRelationType.follows)
-                    result.Add("delay", entity.Delay);
+                    result.WriteIfNotDefaultOrNull(entity.Delay, "delay");
 
                 root["relation"] = result;
                 return root;

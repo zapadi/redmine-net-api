@@ -71,7 +71,7 @@ namespace Redmine.Net.Api.JSonConverters
 
         public override IEnumerable<Type> SupportedTypes
         {
-            get { return new List<Type>(new[] { typeof(Types.Version) }); }
+            get { return new List<Type>(new[] { typeof(Version) }); }
         }
 
         #endregion

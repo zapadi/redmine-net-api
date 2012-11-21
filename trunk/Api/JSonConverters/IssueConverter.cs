@@ -50,11 +50,13 @@ namespace Redmine.Net.Api.JSonConverters
                 issue.DueDate = dictionary.GetValue<DateTime?>("due_date");
                 issue.DoneRatio = dictionary.GetValue<float>("done_ratio");
                 issue.EstimatedHours = dictionary.GetValue<float>("estimated_hours");
+                issue.ParentIssue = dictionary.GetValueAsIdentifiableName("parent");
 
                 issue.CustomFields = dictionary.GetValueAsCollection<CustomField>("custom_fields");
                 issue.Attachments = dictionary.GetValueAsCollection<Attachment>("attachments");
                 issue.Relations = dictionary.GetValueAsCollection<IssueRelation>("relations");
                 issue.Journals = dictionary.GetValueAsCollection<Journal>("journals");
+                issue.Changesets = dictionary.GetValueAsCollection<ChangeSet>("changesets");
                 return issue;
             }
 
@@ -77,9 +79,9 @@ namespace Redmine.Net.Api.JSonConverters
                 result.WriteIdIfNotNull(entity.Category, "category_id");
                 result.WriteIdIfNotNull(entity.Tracker, "tracker_id");
                 result.WriteIdIfNotNull(entity.AssignedTo, "assigned_to_id");
-                result.Add("parent_issue_id", entity.ParentIssueId);
+                result.WriteIdIfNotNull(entity.ParentIssue, "parent_issue_id");
                 result.WriteIfNotDefaultOrNull(entity.EstimatedHours, "estimated_hours");
-                
+
                 if (entity.StartDate != null)
                     result.Add("start_date", entity.StartDate.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
                 if (entity.DueDate != null)
@@ -91,7 +93,7 @@ namespace Redmine.Net.Api.JSonConverters
 
                 if (entity.CustomFields != null)
                 {
-                    serializer.RegisterConverters(new[]{new CustomFieldConverter()});
+                    serializer.RegisterConverters(new[] { new CustomFieldConverter() });
                     result.Add("custom_fields", entity.CustomFields.ToArray());
                 }
 
