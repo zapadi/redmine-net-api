@@ -585,11 +585,11 @@ namespace Redmine.Net.Api
                     }
                     if (!hasProjectId) throw new RedmineException("The project id is mandatory! \nCheck if you have included the parameter project_id to parameters.");
 
-                    wc.DownloadStringAsync(new Uri(string.Format("{0}/projects/{1}/{2}.{3}", host, projectId, urls[type], mimeFormat)), new AsyncToken { Method = RedmineMethod.GetObjectList, ResponseType = type, TokenId = id, JsonRoot = type.Name + "s"});
+                    wc.DownloadStringAsync(new Uri(string.Format("{0}/projects/{1}/{2}.{3}", host, projectId, urls[type], mimeFormat)), new AsyncToken { Method = RedmineMethod.GetObjectList, ResponseType = type, TokenId = id, JsonRoot = urls[type] });
                 }
                 else
                 {
-                    wc.DownloadStringAsync(new Uri(string.Format(Format, host, urls[type], mimeFormat)), new AsyncToken { Method = RedmineMethod.GetObjectList, ResponseType = type, TokenId = id, JsonRoot = type.Name + "s" });
+                    wc.DownloadStringAsync(new Uri(string.Format(Format, host, urls[type], mimeFormat)), new AsyncToken { Method = RedmineMethod.GetObjectList, ResponseType = type, TokenId = id, JsonRoot = urls[type] });
                 }
                 return id;
             }
@@ -758,7 +758,7 @@ namespace Redmine.Net.Api
                             response = wc.UploadString(string.Format(Format, host, urls[type], mimeFormat), result);
                     //  #if RUNNING_ON_35_OR_ABOVE
                     if (mimeFormat == MimeFormat.json)
-                        if (type == typeof (IssueCategory))
+                        if (type == typeof(IssueCategory))
                         {
                             return RedmineSerialization.JsonDeserialize<T>(response, "issue_category");
                         }
