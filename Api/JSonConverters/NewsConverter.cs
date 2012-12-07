@@ -28,7 +28,7 @@ namespace Redmine.Net.Api.JSonConverters
 
         public override object Deserialize(IDictionary<string, object> dictionary, Type type, JavaScriptSerializer serializer)
         {
-            if ((dictionary != null) && (type == typeof(News)))
+            if ((dictionary != null))
             {
                 var news = new News();
 

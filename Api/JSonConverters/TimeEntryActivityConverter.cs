@@ -26,7 +26,7 @@ namespace Redmine.Net.Api.JSonConverters
     {
         public override object Deserialize(IDictionary<string, object> dictionary, Type type, JavaScriptSerializer serializer)
         {
-            if ((dictionary != null) && (type == typeof(TimeEntryActivity)))
+            if ((dictionary != null))
             {
                 var timeEntryActivity = new TimeEntryActivity();
 

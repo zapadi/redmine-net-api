@@ -27,12 +27,16 @@ namespace Redmine.Net.Api.JSonConverters
 
         public override object Deserialize(IDictionary<string, object> dictionary, Type type, JavaScriptSerializer serializer)
         {
-            var role = new Role();
+            if ((dictionary != null))
+            {
+                var role = new Role();
 
-            role.Id = dictionary.GetValue<int>("id");
-            role.Name = dictionary.GetValue<string>("name");
+                role.Id = dictionary.GetValue<int>("id");
+                role.Name = dictionary.GetValue<string>("name");
 
-            return role;
+                return role;
+            }
+            return null;
         }
 
         public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer)

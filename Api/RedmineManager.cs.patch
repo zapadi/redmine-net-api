@@ -1,0 +1,102 @@
+Index: Api/RedmineManager.cs
+===================================================================
+--- Api/RedmineManager.cs	(revision 105)
++++ Api/RedmineManager.cs	(working copy)
+@@ -361,23 +361,20 @@
+         /// <returns>Returns 'Upload' object with inialized 'Token' by server response.</returns>
+         public Upload UploadData(byte[] data)
+         {
+-            using (var wc = new WebClient())
++            using (var wc = CreateUploadWebClient())
+             {
+-                wc.UseDefaultCredentials = false;
+-
+-                wc.Headers.Add("Content-Type", "application/octet-stream");
+-                // Workaround - it seems that WebClient doesn't send credentials in each POST request
+-                wc.Headers.Add("Authorization", basicAuthorization);
+                 try
+                 {
+                     wc.UploadDataCompleted += WcUploadDataCompleted;
+ 
+                     var response = wc.UploadData(string.Format(Format, host, "uploads", mimeFormat), data);
+                     var responseString = Encoding.ASCII.GetString(response);
++
+ #if RUNNING_ON_35_OR_ABOVE
+                     if (mimeFormat == MimeFormat.json)
+                         return RedmineSerialization.JsonDeserialize<Upload>(responseString);
+ #endif
++
+                     return RedmineSerialization.FromXML<Upload>(responseString);
+                 }
+                 catch (WebException webException)
+@@ -385,6 +382,7 @@
+                     HandleWebException(webException, "Upload");
+                 }
+             }
++
+             return null;
+         }
+ 
+@@ -395,12 +393,8 @@
+         /// <returns>Returns the Guid associated with the async request.</returns>
+         public Guid UploadDataAsync(byte[] data)
+         {
+-            using (var wc = new WebClient())
++            using (var wc = CreateUploadWebClient())
+             {
+-                wc.UseDefaultCredentials = false;
+-                wc.Headers.Add("Content-Type", "application/octet-stream");
+-                // Workaround - it seems that WebClient doesn't send credentials in each POST request
+-                wc.Headers.Add("Authorization", basicAuthorization);
+                 var id = Guid.NewGuid();
+                 wc.UploadDataCompleted += WcUploadDataCompleted;
+                 wc.UploadDataAsync(new Uri(string.Format(Format, host, "uploads", mimeFormat)), POST, data, new AsyncToken { Method = RedmineMethod.UploadData, ResponseType = typeof(Upload), TokenId = id });
+@@ -967,7 +961,10 @@
+ 
+             if (parameters != null) webClient.QueryString = parameters;
+ 
+-            if (!string.IsNullOrEmpty(apiKey)) webClient.QueryString["key"] = apiKey;
++            if (!string.IsNullOrEmpty(apiKey))
++            {
++                webClient.QueryString["key"] = apiKey;
++            }
+             else
+             {
+                 if (cache != null) webClient.Credentials = cache;
+@@ -984,6 +981,36 @@
+         }
+ 
+         /// <summary>
++        /// Creates the Redmine web client.
++        /// </summary>
++        /// <param name="parameters">The parameters.</param>
++        /// <returns></returns>
++        /// <code></code>
++        protected WebClient CreateUploadWebClient(NameValueCollection parameters = null)
++        {
++            var webClient = new RedmineWebClient();
++
++            if (parameters != null) webClient.QueryString = parameters;
++
++            if (!string.IsNullOrEmpty(apiKey))
++            {
++                webClient.QueryString["key"] = apiKey;
++            }
++            else
++            {
++                if (cache != null) webClient.Credentials = cache;
++            }
++
++            webClient.UseDefaultCredentials = false;
++
++            webClient.Headers.Add("Content-Type", "application/octet-stream");
++            // Workaround - it seems that WebClient doesn't send credentials in each POST request
++            webClient.Headers.Add("Authorization", basicAuthorization);
++
++            return webClient;
++        }
++
++        /// <summary>
+         /// This is to take care of SSL certification validation which are not issued by Trusted Root CA. Recommended for testing  only.
+         /// </summary>
+         /// <param name="sender">The sender.</param>

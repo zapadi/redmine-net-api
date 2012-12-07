@@ -27,7 +27,7 @@ namespace Redmine.Net.Api.JSonConverters
 
         public override object Deserialize(IDictionary<string, object> dictionary, Type type, JavaScriptSerializer serializer)
         {
-            if ((dictionary != null) && (type == typeof(User)))
+            if ((dictionary != null))
             {
                 User user = new User();
                 user.Login = dictionary.GetValue<string>("login");

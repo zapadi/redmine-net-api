@@ -15,6 +15,7 @@
 */
 //#if RUNNING_ON_35_OR_ABOVE
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Web.Script.Serialization;
 using Redmine.Net.Api.Types;
@@ -27,7 +28,7 @@ namespace Redmine.Net.Api.JSonConverters
 
         public override object Deserialize(IDictionary<string, object> dictionary, Type type, JavaScriptSerializer serializer)
         {
-            if ((dictionary != null) && (type == typeof(Group)))
+            if ((dictionary != null))
             {
                 var group = new Group();
 
@@ -51,7 +52,7 @@ namespace Redmine.Net.Api.JSonConverters
             {
                 result.Add("name", entity.Name);
                 if (entity.Users != null)
-                    result.Add("user_ids", entity.Users.ToArray());
+                    result.Add("user_ids", entity.Users.Select(x=>x.Id).ToArray());
 
                 root["group"] = result;
                 return root;

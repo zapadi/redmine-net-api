@@ -39,16 +39,35 @@ namespace Redmine.Net.Api
             {
                 var attribute = reader.GetAttribute(attributeName);
                 int result;
-                #if RUNNING_ON_4_OR_ABOVE
+#if RUNNING_ON_4_OR_ABOVE
                     if (String.IsNullOrWhiteSpace(attribute) || !Int32.TryParse(attribute, out result)) return default(int);
-                #else
-                    if (String.IsNullOrEmpty(attribute) || !Int32.TryParse(attribute, out result)) return default(int);
-                #endif
+#else
+                if (String.IsNullOrEmpty(attribute) || !Int32.TryParse(attribute, out result)) return default(int);
+#endif
                 return result;
             }
             catch
             {
                 return -1;
+            }
+        }
+
+        public static int? ReadAttributeAsNullableInt(this XmlReader reader, string attributeName)
+        {
+            try
+            {
+                var attribute = reader.GetAttribute(attributeName);
+                int result;
+#if RUNNING_ON_4_OR_ABOVE
+                    if (String.IsNullOrWhiteSpace(attribute) || !Int32.TryParse(attribute, out result)) return null;
+#else
+                if (String.IsNullOrEmpty(attribute) || !Int32.TryParse(attribute, out result)) return default(int?);
+#endif
+                return result;
+            }
+            catch
+            {
+                return null;
             }
         }
 
@@ -64,11 +83,11 @@ namespace Redmine.Net.Api
             {
                 var attribute = reader.GetAttribute(attributeName);
                 bool result;
-                #if RUNNING_ON_4_OR_ABOVE
+#if RUNNING_ON_4_OR_ABOVE
                     if (String.IsNullOrWhiteSpace(attribute) || !Boolean.TryParse(attribute, out result)) return false;
-                #else
-                    if (String.IsNullOrEmpty(attribute) || !Boolean.TryParse(attribute, out result)) return false;
-                #endif
+#else
+                if (String.IsNullOrEmpty(attribute) || !Boolean.TryParse(attribute, out result)) return false;
+#endif
                 return result;
             }
             catch
@@ -87,11 +106,11 @@ namespace Redmine.Net.Api
             var str = reader.ReadElementContentAsString();
 
             DateTime result;
-            #if RUNNING_ON_4_OR_ABOVE
+#if RUNNING_ON_4_OR_ABOVE
                 if (String.IsNullOrWhiteSpace(str) || !DateTime.TryParse(str, out result)) return null;
-            #else
-                if (String.IsNullOrEmpty(str) || !DateTime.TryParse(str, out result)) return null;
-            #endif
+#else
+            if (String.IsNullOrEmpty(str) || !DateTime.TryParse(str, out result)) return null;
+#endif
             return result;
         }
 
@@ -105,11 +124,11 @@ namespace Redmine.Net.Api
             var str = reader.ReadElementContentAsString();
 
             float result;
-            #if RUNNING_ON_4_OR_ABOVE
+#if RUNNING_ON_4_OR_ABOVE
                 if (String.IsNullOrWhiteSpace(str) || !float.TryParse(str, out result)) return null;
-            #else
-                if (String.IsNullOrEmpty(str) || !float.TryParse(str, out result)) return null;
-            #endif
+#else
+            if (String.IsNullOrEmpty(str) || !float.TryParse(str, out result)) return null;
+#endif
             return result;
         }
 
@@ -123,11 +142,11 @@ namespace Redmine.Net.Api
             var str = reader.ReadElementContentAsString();
 
             int result;
-            #if RUNNING_ON_4_OR_ABOVE
+#if RUNNING_ON_4_OR_ABOVE
                 if (String.IsNullOrWhiteSpace(str) || !int.TryParse(str, out result)) return null;
-            #else
-                if (String.IsNullOrEmpty(str) || !int.TryParse(str, out result)) return null;
-            #endif
+#else
+            if (String.IsNullOrEmpty(str) || !int.TryParse(str, out result)) return null;
+#endif
             return result;
         }
 
@@ -141,11 +160,11 @@ namespace Redmine.Net.Api
             var str = reader.ReadElementContentAsString();
 
             decimal result;
-            #if RUNNING_ON_4_OR_ABOVE
+#if RUNNING_ON_4_OR_ABOVE
                 if (String.IsNullOrWhiteSpace(str) || !decimal.TryParse(str, out result)) return null;
-            #else
-                if (String.IsNullOrEmpty(str) || !decimal.TryParse(str, out result)) return null;
-            #endif
+#else
+            if (String.IsNullOrEmpty(str) || !decimal.TryParse(str, out result)) return null;
+#endif
             return result;
         }
 
@@ -213,7 +232,7 @@ namespace Redmine.Net.Api
         /// <param name="writer">The writer.</param>
         /// <param name="ident">The ident.</param>
         /// <param name="tag">The tag.</param>
-        public static void WriteIdIfNotNull(this XmlWriter writer, IdentifiableName ident, String tag)  
+        public static void WriteIdIfNotNull(this XmlWriter writer, IdentifiableName ident, String tag)
         {
             if (ident != null) writer.WriteElementString(tag, ident.Id.ToString(CultureInfo.InvariantCulture));
         }
@@ -248,7 +267,7 @@ namespace Redmine.Net.Api
         {
             //  Project p = new Project();
             //var pd =  TypeDescriptor.GetProperties(p, new Attribute[] { new XmlElementAttribute(), new XmlArrayAttribute()});
-           
+
             object val;
             var dict = dictionary;
             Type type = typeof(T);
@@ -262,8 +281,13 @@ namespace Redmine.Net.Api
                 }
                 else
                 {
-                    if (type.IsEnum)
-                        val = Enum.Parse(type, val.ToString(), true);
+                    if (val.GetType() == typeof(ArrayList))
+                    {
+                        return (T)val;
+                    }
+                    else
+                        if (type.IsEnum)
+                            val = Enum.Parse(type, val.ToString(), true);
 
                 }
                 return (T)Convert.ChangeType(val, type);
