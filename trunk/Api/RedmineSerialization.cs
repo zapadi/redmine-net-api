@@ -32,7 +32,7 @@ namespace Redmine.Net.Api
             {typeof (Tracker),new TrackerConverter()},
             {typeof (IssueCategory), new IssueCategoryConverter()},
             {typeof (Role), new RoleConverter()},
-            {typeof (ProjectMembership), new MembershipConverter()},
+            {typeof (ProjectMembership), new ProjectMembershipConverter()},
             {typeof (Group), new GroupConverter()},
             {typeof (Error), new ErrorConverter()},
             {typeof (CustomField), new CustomFieldConverter()},
@@ -42,7 +42,10 @@ namespace Redmine.Net.Api
             {typeof (IssuePriority), new IssuePriorityConverter()},
             {typeof (WikiPage), new WikiPageConverter()},
             {typeof (Detail), new DetailConverter()},
-            {typeof (ChangeSet), new ChangeSetConverter()}
+            {typeof (ChangeSet), new ChangeSetConverter()},
+            {typeof(Membership), new MembershipConverter()},
+            {typeof(MembershipRole), new MembershipRoleConverter()},
+            {typeof(UserGroup),new UserGroupConverter()}
         };
 
         public static Dictionary<Type, JavaScriptConverter> Converters { get { return converters; } }

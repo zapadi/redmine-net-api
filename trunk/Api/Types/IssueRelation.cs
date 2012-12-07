@@ -67,19 +67,19 @@ namespace Redmine.Net.Api.Types
                     reader.Read();
                     continue;
                 }
-
                 switch (reader.Name)
                 {
                     case "id": Id = reader.ReadElementContentAsInt(); break;
-
                     case "issue_id": IssueId = reader.ReadElementContentAsInt(); break;
-
                     case "issue_to_id": IssueToId = reader.ReadElementContentAsInt(); break;
-
-                    case "relation_type": Type = (IssueRelationType)Enum.Parse(typeof(IssueRelationType), reader.ReadElementContentAsString(), true); break;
-
-                    case "delay": Delay = reader.ReadElementContentAsNullableInt(); break;
-
+                    case "relation_type": var rt = reader.ReadElementContentAsString();
+                        if (!string.IsNullOrEmpty(rt))
+                        {
+                            Type = (IssueRelationType)Enum.Parse(typeof(IssueRelationType), rt, true);
+                        }
+                        break;
+                    case "delay":
+                        Delay = reader.ReadElementContentAsNullableInt(); break;
                     default: reader.Read(); break;
                 }
             }

@@ -27,7 +27,7 @@ namespace Redmine.Net.Api.JSonConverters
 
         public override object Deserialize(IDictionary<string, object> dictionary, Type type, JavaScriptSerializer serializer)
         {
-            if ((dictionary != null) && (type == typeof(Tracker)))
+            if ((dictionary != null))
             {
                 var tracker = new Tracker();
 

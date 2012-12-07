@@ -15,6 +15,7 @@
 */
 //#if RUNNING_ON_35_OR_ABOVE
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Script.Serialization;
@@ -28,7 +29,7 @@ namespace Redmine.Net.Api.JSonConverters
 
         public override object Deserialize(IDictionary<string, object> dictionary, Type type, JavaScriptSerializer serializer)
         {
-            if ((dictionary != null) && (type == typeof(CustomField)))
+            if ((dictionary != null))
             {
                 var customField = new CustomField();
 
@@ -36,6 +37,24 @@ namespace Redmine.Net.Api.JSonConverters
                 customField.Name = dictionary.GetValue<string>("name");
                 customField.Multiple = dictionary.GetValue<bool>("multiple");
 
+                var val = dictionary.GetValue<object>("value");
+
+                if (val != null)
+                {
+                    if (customField.Values == null) customField.Values = new List<CustomFieldValue>();
+                    var list = val as ArrayList;
+                    if (list != null)
+                    {
+                        foreach (string value in list)
+                        {
+                            customField.Values.Add(new CustomFieldValue { Info = val as string });
+                        }
+                    }
+                    else
+                    {
+                        customField.Values.Add(new CustomFieldValue { Info = val as string });
+                    }
+                }
                 return customField;
             }
 
@@ -56,7 +75,7 @@ namespace Redmine.Net.Api.JSonConverters
                 result.Add("id", entity.Id);
                 if (itemsCount > 1)
                 {
-                    result.Add("value", entity.Values.Select(x=>x.Info).ToArray());
+                    result.Add("value", entity.Values.Select(x => x.Info).ToArray());
                 }
                 else
                 {
