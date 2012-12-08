@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -25,6 +26,7 @@ namespace Redmine.Net.Api.Types
     /// Availability 1.0
     /// </summary>
     [XmlRoot("project")]
+   // [DataContract(Name = "project")]
     public class Project : IdentifiableName, IEquatable<Project>
     {
         /// <summary>
@@ -32,6 +34,7 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <value>The identifier.</value>
         [XmlElement("identifier")]
+        [DataMember(Name = "identifier")]
         public String Identifier { get; set; }
 
         /// <summary>
@@ -39,6 +42,7 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <value>The description.</value>
         [XmlElement("description")]
+        [DataMember(Name = "description")]
         public String Description { get; set; }
 
         /// <summary>
@@ -46,6 +50,7 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <value>The parent.</value>
         [XmlElement("parent")]
+        [DataMember(Name = "parent")]
         public IdentifiableName Parent { get; set; }
 
         /// <summary>
@@ -53,6 +58,7 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <value>The home page.</value>
         [XmlElement("homepage")]
+        [DataMember(Name = "homepage")]
         public String HomePage { get; set; }
 
         /// <summary>
@@ -60,6 +66,7 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <value>The created on.</value>
         [XmlElement("created_on")]
+        [DataMember(Name = "created_on")]
         public DateTime? CreatedOn { get; set; }
 
         /// <summary>
@@ -67,6 +74,7 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <value>The updated on.</value>
         [XmlElement("updated_on")]
+        [DataMember(Name = "updated_on")]
         public DateTime? UpdatedOn { get; set; }
 
         /// <summary>
@@ -77,7 +85,12 @@ namespace Redmine.Net.Api.Types
         /// </value>
         [XmlArray("trackers")]
         [XmlArrayItem("tracker")]
+        [DataMember(Name = "trackers")]
         public IList<ProjectTracker> Trackers { get; set; }
+
+        [XmlArray("custom_fields")]
+        [XmlArrayItem("custom_field")]
+        public IList<CustomField> CustomFields { get; set; } 
 
         /// <summary>
         /// Generates an object from its XML representation.
@@ -114,6 +127,7 @@ namespace Redmine.Net.Api.Types
 
                     case "trackers": Trackers = reader.ReadElementContentAsCollection<ProjectTracker>(); break;
 
+                    case "custom_fields": CustomFields = reader.ReadElementContentAsCollection<CustomField>(); break;
                     default: reader.Read(); break;
                 }
             }
