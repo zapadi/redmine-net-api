@@ -191,34 +191,17 @@ namespace Redmine.Net.Api
                         continue;
                     }
 
-                    var subTree = r.ReadSubtree();
-                    var temp = serializer.Deserialize(subTree) as T;
-                    if (temp != null) result.Add(temp);
-                    r.Read();
-                }
-            }
-            return result;
-        }
+                    T temp;
 
-        public static ArrayList ReadElementContentAsCollection(this XmlReader reader, Type type)
-        {
-            var result = new ArrayList();
-            var serializer = new XmlSerializer(type);
-            var xml = reader.ReadOuterXml();
-            using (var sr = new StringReader(xml))
-            {
-                var r = new XmlTextReader(sr);
-                r.ReadStartElement();
-                while (!r.EOF)
-                {
-                    if (r.NodeType == XmlNodeType.EndElement)
+                    if (r.IsEmptyElement && r.HasAttributes)
                     {
-                        r.ReadEndElement();
-                        continue;
+                        temp = serializer.Deserialize(r) as T;
                     }
-
-                    var subTree = r.ReadSubtree();
-                    var temp = serializer.Deserialize(subTree);
+                    else
+                    {
+                        var subTree = r.ReadSubtree();
+                        temp = serializer.Deserialize(subTree) as T;
+                    }
                     if (temp != null) result.Add(temp);
                     r.Read();
                 }
@@ -281,14 +264,9 @@ namespace Redmine.Net.Api
                 }
                 else
                 {
-                    if (val.GetType() == typeof(ArrayList))
-                    {
-                        return (T)val;
-                    }
-                    else
-                        if (type.IsEnum)
-                            val = Enum.Parse(type, val.ToString(), true);
-
+                    if (val.GetType() == typeof (ArrayList)) return (T) val;
+                    
+                    if (type.IsEnum) val = Enum.Parse(type, val.ToString(), true);
                 }
                 return (T)Convert.ChangeType(val, type);
             }
