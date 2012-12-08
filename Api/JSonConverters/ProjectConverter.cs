@@ -39,7 +39,7 @@ namespace Redmine.Net.Api.JSonConverters
                 project.CreatedOn = dictionary.GetValue<DateTime?>("created_on");
                 project.UpdatedOn = dictionary.GetValue<DateTime?>("updated_on");
                 project.Trackers = dictionary.GetValueAsCollection<ProjectTracker>("trackers");
-
+                project.CustomFields = dictionary.GetValueAsCollection<CustomField>("custom_fields");
                 return project;
             }
 
