@@ -76,7 +76,10 @@
     <Compile Include="JSonConverters\UserGroupConverter.cs" />
     <Compile Include="JSonConverters\VersionConverter.cs" />
     <Compile Include="JSonConverters\WikiPageConverter.cs" />
+    <Compile Include="MimeFormat.cs" />
+    <Compile Include="RedmineManagerAsync.cs" />
     <Compile Include="RedmineSerialization.cs" />
+    <Compile Include="RedmineSerializationJSON.cs" />
     <Compile Include="RedmineWebClient.cs">
       <SubType>Component</SubType>
     </Compile>
