@@ -616,7 +616,7 @@ namespace Redmine.Net.Api
                     if (type == typeof(Version) || type == typeof(IssueCategory) || type == typeof(ProjectMembership))
                     {
                         if (string.IsNullOrEmpty(projectId)) throw new RedmineException("The project owner id is mandatory!");
-                        wc.UploadString(string.Format(EntityWithParentFormat, host, "projects", projectId, urls[type], mimeFormat), request);
+                        wc.UploadString(string.Format(EntityWithParentFormat, host, "projects", projectId, urls[type], mimeFormat), PUT, request);
                     }
                     else
                         wc.UploadString(string.Format(RequestFormat, host, urls[type], id, mimeFormat), PUT, request);
