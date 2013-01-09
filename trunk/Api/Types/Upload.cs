@@ -32,6 +32,13 @@ namespace Redmine.Net.Api.Types
         [XmlElement("content_type")]
         public string ContentType { get; set; }
 
+        /// <summary>
+        /// Gets or sets the file description. (Undocumented feature)
+        /// </summary>
+        /// <value>The file descroütopm.</value>
+        [XmlElement("description")]
+        public string Description { get; set; }
+
         public XmlSchema GetSchema() { return null; }
 
         public bool Equals(Upload other)

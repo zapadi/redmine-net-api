@@ -34,6 +34,7 @@ namespace Redmine.Net.Api.JSonConverters
                 upload.ContentType = dictionary.GetValue<string>("content_type");
                 upload.FileName = dictionary.GetValue<string>("filename");
                 upload.Token = dictionary.GetValue<string>("token");
+                upload.Description = dictionary.GetValue<string>("description");
                 return upload;
             }
 
@@ -51,7 +52,7 @@ namespace Redmine.Net.Api.JSonConverters
                 result.Add("content_type", entity.ContentType);
                 result.Add("filename", entity.FileName);
                 result.Add("token", entity.Token);
-
+                result.Add("description", entity.Description);
                 root["upload"] = result;
                 return root;
             }

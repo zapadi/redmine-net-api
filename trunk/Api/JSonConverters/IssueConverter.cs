@@ -46,6 +46,7 @@ namespace Redmine.Net.Api.JSonConverters
                 issue.Category = dictionary.GetValueAsIdentifiableName("category");
                 issue.FixedVersion = dictionary.GetValueAsIdentifiableName("fixed_version");
                 issue.Subject = dictionary.GetValue<string>("subject");
+                issue.Notes = dictionary.GetValue<string>("notes");
                 issue.StartDate = dictionary.GetValue<DateTime?>("start_date");
                 issue.DueDate = dictionary.GetValue<DateTime?>("due_date");
                 issue.DoneRatio = dictionary.GetValue<float>("done_ratio");
@@ -73,6 +74,7 @@ namespace Redmine.Net.Api.JSonConverters
             {
                 result.Add("subject", entity.Subject);
                 result.Add("description", entity.Description);
+                result.Add("notes", entity.Notes);
                 result.WriteIdIfNotNull(entity.Project, "project_id");
                 result.WriteIdIfNotNull(entity.Priority, "priority_id");
                 result.WriteIdIfNotNull(entity.Status, "status_id");
