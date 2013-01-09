@@ -1,0 +1,18 @@
+Index: Api/Types/Upload.cs
+===================================================================
+--- Api/Types/Upload.cs	(revision 110)
++++ Api/Types/Upload.cs	(working copy)
+@@ -31,6 +31,13 @@
+         /// <value>The name of the file.</value>
+         [XmlElement("content_type")]
+         public string ContentType { get; set; }
++        
++                /// <summary>
++        /// Gets or sets the file description. (Undocumented feature)
++        /// </summary>
++        /// <value>The file descroütopm.</value>
++        [XmlElement("description")]
++        public string Description { get; set; }
+ 
+         public XmlSchema GetSchema() { return null; }
+ 
