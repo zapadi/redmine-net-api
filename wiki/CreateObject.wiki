@@ -20,8 +20,8 @@ namespace RedmineTest
     {
         static void Main(string[] args)
         {
-            string host = "";
-            string apiKey = "";
+            string host = "your host";
+            string apiKey = "your api key";
 
             var manager = new RedmineManager(host, apiKey);
 
