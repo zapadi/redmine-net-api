@@ -14,7 +14,6 @@
    limitations under the License.
 */
 
-//#if RUNNING_ON_35_OR_ABOVE
 using System;
 using System.Collections.Generic;
 using System.Web.Script.Serialization;
@@ -22,23 +21,14 @@ using Redmine.Net.Api.Types;
 
 namespace Redmine.Net.Api.JSonConverters
 {
-    public class JournalConverter : JavaScriptConverter
+    public class PermissionConverter : JavaScriptConverter
     {
-        #region Overrides of JavaScriptConverter
-
         public override object Deserialize(IDictionary<string, object> dictionary, Type type, JavaScriptSerializer serializer)
         {
             if (dictionary != null)
             {
-                var journal = new Journal();
-
-                journal.Id = dictionary.GetValue<int>("id");
-                journal.Notes = dictionary.GetValue<string>("notes");
-                journal.User = dictionary.GetValueAsIdentifiableName("user");
-                journal.CreatedOn = dictionary.GetValue<DateTime?>("created_on");
-                journal.Details = dictionary.GetValueAsCollection<Detail>("details");
-
-                return journal;
+                var permission = new Permission { Info = dictionary.GetValue<string>("permission") };
+                return permission;
             }
 
             return null;
@@ -46,9 +36,6 @@ namespace Redmine.Net.Api.JSonConverters
 
         public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer) { return null; }
 
-        public override IEnumerable<Type> SupportedTypes { get { return new List<Type>(new[] { typeof(Journal) }); } }
-
-        #endregion
+        public override IEnumerable<Type> SupportedTypes { get { return new List<Type>(new[] { typeof(Permission) }); } }
     }
 }
-//#endif

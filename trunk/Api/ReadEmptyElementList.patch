@@ -1,0 +1,14 @@
+Index: ExtensionMethods.cs
+===================================================================
+--- ExtensionMethods.cs	(revision 110)
++++ ExtensionMethods.cs	(working copy)
+@@ -203,7 +203,8 @@
+                         temp = serializer.Deserialize(subTree) as T;
+                     }
+                     if (temp != null) result.Add(temp);
+-                    r.Read();
++                    if (!r.IsEmptyElement)
++                        r.Read();
+                 }
+             }
+             return result;

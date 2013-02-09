@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2013 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2012 Adrian Popescu, Dorin Huzum.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -14,13 +14,19 @@
    limitations under the License.
 */
 
-namespace Redmine.Net.Api
+using System.Xml.Serialization;
+
+namespace Redmine.Net.Api.Types
 {
-    public enum MimeFormat
+    [XmlRoot("permission")]
+    public class Permission
     {
-        xml
-        //#if RUNNING_ON_35_OR_ABOVE
-        , json
-        //#endif
+        [XmlText]
+        public string Info { get; set; }
+
+        public override string ToString()
+        {
+            return Info;
+        }
     }
 }

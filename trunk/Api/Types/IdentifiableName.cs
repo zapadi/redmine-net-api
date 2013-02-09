@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2012 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2013 Adrian Popescu, Dorin Huzum.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 */
 
 using System;
+using System.Globalization;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
@@ -60,7 +61,7 @@ namespace Redmine.Net.Api.Types
 
         public virtual void WriteXml(XmlWriter writer)
         {
-            writer.WriteAttributeString("id", Id.ToString());
+            writer.WriteAttributeString("id", Id.ToString(CultureInfo.InvariantCulture));
             writer.WriteAttributeString("name", Name);
         }
 

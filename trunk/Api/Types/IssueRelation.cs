@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2012 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2013 Adrian Popescu, Dorin Huzum.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -59,7 +59,7 @@ namespace Redmine.Net.Api.Types
 
         public void ReadXml(XmlReader reader)
         {
-            if(!reader.IsEmptyElement) reader.Read();
+            if (!reader.IsEmptyElement) reader.Read();
             while (!reader.EOF)
             {
                 if (reader.IsEmptyElement && !reader.HasAttributes)
@@ -75,15 +75,9 @@ namespace Redmine.Net.Api.Types
                         var attributeName = reader.Name;
                         switch (reader.Name)
                         {
-                            case "id":
-                                Id = reader.ReadAttributeAsInt(attributeName);
-                                break;
-                            case "issue_id":
-                                IssueId = reader.ReadAttributeAsInt(attributeName);
-                                break;
-                            case "issue_to_id":
-                                IssueToId = reader.ReadAttributeAsInt(attributeName);
-                                break;
+                            case "id": Id = reader.ReadAttributeAsInt(attributeName); break;
+                            case "issue_id": IssueId = reader.ReadAttributeAsInt(attributeName); break;
+                            case "issue_to_id": IssueToId = reader.ReadAttributeAsInt(attributeName); break;
                             case "relation_type":
                                 var rt = reader.GetAttribute(attributeName);
                                 if (!string.IsNullOrEmpty(rt))
@@ -91,38 +85,26 @@ namespace Redmine.Net.Api.Types
                                     Type = (IssueRelationType)Enum.Parse(typeof(IssueRelationType), rt, true);
                                 }
                                 break;
-                            case "delay":
-                                Delay = reader.ReadAttributeAsNullableInt(attributeName);
-                                break;
+                            case "delay": Delay = reader.ReadAttributeAsNullableInt(attributeName); break;
                         }
                     }
                     return;
                 }
-                
+
                 switch (reader.Name)
                 {
-                    case "id":
-                        Id = reader.ReadElementContentAsInt();
-                        break;
-                    case "issue_id":
-                        IssueId = reader.ReadElementContentAsInt();
-                        break;
-                    case "issue_to_id":
-                        IssueToId = reader.ReadElementContentAsInt();
-                        break;
+                    case "id": Id = reader.ReadElementContentAsInt(); break;
+                    case "issue_id": IssueId = reader.ReadElementContentAsInt(); break;
+                    case "issue_to_id": IssueToId = reader.ReadElementContentAsInt(); break;
                     case "relation_type":
                         var rt = reader.ReadElementContentAsString();
                         if (!string.IsNullOrEmpty(rt))
                         {
-                            Type = (IssueRelationType) Enum.Parse(typeof (IssueRelationType), rt, true);
+                            Type = (IssueRelationType)Enum.Parse(typeof(IssueRelationType), rt, true);
                         }
                         break;
-                    case "delay":
-                        Delay = reader.ReadElementContentAsNullableInt();
-                        break;
-                    default:
-                        reader.Read();
-                        break;
+                    case "delay": Delay = reader.ReadElementContentAsNullableInt(); break;
+                    default: reader.Read(); break;
                 }
             }
         }

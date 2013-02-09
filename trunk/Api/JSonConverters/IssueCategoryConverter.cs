@@ -1,5 +1,5 @@
 /*
-   Copyright 2011 - 2012 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2013 Adrian Popescu, Dorin Huzum.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ namespace Redmine.Net.Api.JSonConverters
                 issueCategory.Project = dictionary.GetValueAsIdentifiableName("project");
                 issueCategory.AsignTo = dictionary.GetValueAsIdentifiableName("assigned_to");
                 issueCategory.Name = dictionary.GetValue<string>("name");
-            
+
                 return issueCategory;
             }
 
@@ -52,8 +52,8 @@ namespace Redmine.Net.Api.JSonConverters
             if (entity != null)
             {
                 result.Add("name", entity.Name);
-                result.WriteIdIfNotNull(entity.Project,"project_id");
-                result.WriteIdIfNotNull(entity.AsignTo,"assigned_to_id");
+                result.WriteIdIfNotNull(entity.Project, "project_id");
+                result.WriteIdIfNotNull(entity.AsignTo, "assigned_to_id");
 
                 root["issue_category"] = result;
                 return root;
@@ -62,10 +62,7 @@ namespace Redmine.Net.Api.JSonConverters
             return result;
         }
 
-        public override IEnumerable<Type> SupportedTypes
-        {
-            get { return new List<Type>(new[] { typeof(IssueCategory) }); }
-        }
+        public override IEnumerable<Type> SupportedTypes { get { return new List<Type>(new[] { typeof(IssueCategory) }); } }
 
         #endregion
     }

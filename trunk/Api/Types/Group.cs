@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2012 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2013 Adrian Popescu, Dorin Huzum.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -53,6 +53,22 @@ namespace Redmine.Net.Api.Types
         [XmlArrayItem("user")]
         public List<User> Users { get; set; }
 
+        /// <summary>
+        /// Gets or sets the custom fields.
+        /// </summary>
+        /// <value>The custom fields.</value>
+        [XmlArray("custom_fields")]
+        [XmlArrayItem("custom_field")]
+        public IList<CustomField> CustomFields { get; set; }
+
+        /// <summary>
+        /// Gets or sets the custom fields.
+        /// </summary>
+        /// <value>The custom fields.</value>
+        [XmlArray("memberships")]
+        [XmlArrayItem("membership")]
+        public IList<Membership> Memberships { get; set; }
+
         #region Implementation of IXmlSerializable
 
         /// <summary>
@@ -85,6 +101,10 @@ namespace Redmine.Net.Api.Types
                     case "name": Name = reader.ReadElementContentAsString(); break;
 
                     case "users": Users = reader.ReadElementContentAsCollection<User>(); break;
+
+                    case "custom_fields": CustomFields = reader.ReadElementContentAsCollection<CustomField>(); break;
+
+                    case "membershipds": Memberships = reader.ReadElementContentAsCollection<Membership>(); break;
 
                     default: reader.Read(); break;
                 }
@@ -124,7 +144,7 @@ namespace Redmine.Net.Api.Types
         public bool Equals(Group other)
         {
             if (other == null) return false;
-            return Id == other.Id && Name == other.Name;
+            return Id == other.Id && Name == other.Name && Users == other.Users && CustomFields == other.CustomFields && Memberships == other.Memberships;
         }
 
         #endregion

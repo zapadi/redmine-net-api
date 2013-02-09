@@ -1,0 +1,28 @@
+Changelog:
+
+Version 0.9
+
+Fixed: 	
+
+Wrong number conversion in some cultures.
+Issue Attachment Description( michael.jo.kling)
+Add note to updated issue(michael.jo.kling)
+XML Serialization of a list with empty elements(bas.themagician)
+JSON "Version" deserialization issue.
+JSON "UserGroup" deserialization issue.
+
+Features:
+
+Added async requests to RedmineManager.
+Added "CustomFields" to User.
+Added "CustomFields" to Version.
+Added "CustomFields", "Memberships" to Groups.
+Added "CustomFields", "CreatedOn", "UpdatedOn" to TimeEntry.
+Added "Parent" to Project when deserialize JSON format.
+Added "IssueCategories" to Project.
+Added "Attachments" to WikiPage.
+Added "Permissions" to Role.
+
+
+
+

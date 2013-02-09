@@ -28,7 +28,7 @@ namespace Redmine.Net.Api.JSonConverters
 
         public override object Deserialize(IDictionary<string, object> dictionary, Type type, JavaScriptSerializer serializer)
         {
-            if ((dictionary != null))
+            if (dictionary != null)
             {
                 var news = new News();
 
@@ -45,15 +45,9 @@ namespace Redmine.Net.Api.JSonConverters
             return null;
         }
 
-        public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer)
-        {
-            return null;
-        }
+        public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer) { return null; }
 
-        public override IEnumerable<Type> SupportedTypes
-        {
-            get { return new List<Type>(new[] { typeof(News) }); }
-        }
+        public override IEnumerable<Type> SupportedTypes { get { return new List<Type>(new[] { typeof(News) }); } }
 
         #endregion
     }

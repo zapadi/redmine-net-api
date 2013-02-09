@@ -15,6 +15,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
@@ -45,10 +46,17 @@ namespace Redmine.Net.Api.Types
         [XmlElement("name")]
         public string Name { get; set; }
 
-        public XmlSchema GetSchema()
-        {
-            return null;
-        }
+        /// <summary>
+        /// Gets or sets the permissions.
+        /// </summary>
+        /// <value>
+        /// The issue relations.
+        /// </value>
+        [XmlArray("permissions")]
+        [XmlArrayItem("permission")]
+        public IList<Permission> Permissions { get; set; }
+
+        public XmlSchema GetSchema(){return null;}
 
         public void ReadXml(XmlReader reader)
         {
@@ -67,14 +75,14 @@ namespace Redmine.Net.Api.Types
 
                     case "name": Name = reader.ReadElementContentAsString(); break;
 
+                    case "permissions": Permissions = reader.ReadElementContentAsCollection<Permission>(); break;
+
                     default: reader.Read(); break;
                 }
             }
         }
 
-        public void WriteXml(XmlWriter writer)
-        {
-        }
+        public void WriteXml(XmlWriter writer){}
 
         public bool Equals(Role other)
         {

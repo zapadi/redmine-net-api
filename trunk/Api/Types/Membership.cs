@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2012 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2013 Adrian Popescu, Dorin Huzum.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ using System.Xml.Serialization;
 namespace Redmine.Net.Api.Types
 {
     /// <summary>
-    /// 
+    /// Only the roles can be updated, the project and the user of a membership are read-only.
     /// </summary>
     [XmlRoot("membership")]
     public class Membership : Identifiable<Membership>, IEquatable<Membership>, IXmlSerializable
@@ -58,17 +58,13 @@ namespace Redmine.Net.Api.Types
 
                 switch (reader.Name)
                 {
-                    case "id": Id = reader.ReadElementContentAsInt();
-                        break;
+                    case "id": Id = reader.ReadElementContentAsInt();break;
 
                     case "project": Project = new IdentifiableName(reader); break;
 
-                    case "roles":
-                        Roles = reader.ReadElementContentAsCollection<MembershipRole>();
-                        break;
-                    default:
-                        reader.Read();
-                        break;
+                    case "roles": Roles = reader.ReadElementContentAsCollection<MembershipRole>();break;
+                    
+                    default: reader.Read();break;
                 }
             }
         }

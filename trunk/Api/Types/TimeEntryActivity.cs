@@ -94,5 +94,10 @@ namespace Redmine.Net.Api.Types
         }
 
         #endregion
+
+        public override string ToString()
+        {
+            return Id + ", " + Name;
+        }
     }
 }

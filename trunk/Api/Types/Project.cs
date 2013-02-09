@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2012 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2013 Adrian Popescu, Dorin Huzum.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -90,7 +90,11 @@ namespace Redmine.Net.Api.Types
 
         [XmlArray("custom_fields")]
         [XmlArrayItem("custom_field")]
-        public IList<CustomField> CustomFields { get; set; } 
+        public IList<CustomField> CustomFields { get; set; }
+
+        [XmlArray("issue_categories")]
+        [XmlArrayItem("issue_category")]
+        public IList<IssueCategory> IssueCategories { get; set; } 
 
         /// <summary>
         /// Generates an object from its XML representation.
@@ -128,6 +132,8 @@ namespace Redmine.Net.Api.Types
                     case "trackers": Trackers = reader.ReadElementContentAsCollection<ProjectTracker>(); break;
 
                     case "custom_fields": CustomFields = reader.ReadElementContentAsCollection<CustomField>(); break;
+
+                    case "issue_categories": IssueCategories = reader.ReadElementContentAsCollection<IssueCategory>(); break;
                     default: reader.Read(); break;
                 }
             }
