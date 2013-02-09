@@ -1,5 +1,5 @@
 /*
-   Copyright 2011 - 2012 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2013 Adrian Popescu, Dorin Huzum.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
+
 //#if RUNNING_ON_35_OR_ABOVE
 using System;
 using System.Collections.Generic;
@@ -27,7 +28,7 @@ namespace Redmine.Net.Api.JSonConverters
 
         public override object Deserialize(IDictionary<string, object> dictionary, Type type, JavaScriptSerializer serializer)
         {
-            if ((dictionary != null))
+            if (dictionary != null)
             {
                 var membershipRole = new MembershipRole();
 
@@ -41,15 +42,9 @@ namespace Redmine.Net.Api.JSonConverters
             return null;
         }
 
-        public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer)
-        {
-            return null;
-        }
+        public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer) { return null; }
 
-        public override IEnumerable<Type> SupportedTypes
-        {
-            get { return new List<Type>(new[] { typeof(MembershipRole) }); }
-        }
+        public override IEnumerable<Type> SupportedTypes { get { return new List<Type>(new[] { typeof(MembershipRole) }); } }
 
         #endregion
     }

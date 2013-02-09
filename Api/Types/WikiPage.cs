@@ -15,6 +15,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
@@ -56,6 +57,16 @@ namespace Redmine.Net.Api.Types
         [XmlElement("updated_on")]
         public DateTime? UpdatedOn { get; set; }
 
+        /// <summary>
+        /// Gets or sets the attachments.
+        /// </summary>
+        /// <value>
+        /// The attachments.
+        /// </value>
+        [XmlArray("attachments")]
+        [XmlArrayItem("attachment")]
+        public IList<Attachment> Attachments { get; set; }
+
         #region Implementation of IXmlSerializable
 
         public XmlSchema GetSchema() { return null; }
@@ -88,6 +99,8 @@ namespace Redmine.Net.Api.Types
                     case "created_on": CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
 
                     case "updated_on": UpdatedOn = reader.ReadElementContentAsNullableDateTime(); break;
+
+                    case "attachments": Attachments = reader.ReadElementContentAsCollection<Attachment>(); break;
 
                     default: reader.Read(); break;
                 }

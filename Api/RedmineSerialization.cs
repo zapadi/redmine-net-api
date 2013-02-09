@@ -1,3 +1,19 @@
+/*
+   Copyright 2011 - 2013 Adrian Popescu, Dorin Huzum.
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
+
 using System;
 using System.IO;
 using System.Xml;
@@ -16,13 +32,12 @@ namespace Redmine.Net.Api
         /// <exception cref="InvalidOperationException"></exception>
         public static string ToXML<T>(T obj) where T : class
         {
-            var xws = new XmlWriterSettings { OmitXmlDeclaration = true };
-
+            var xws = new XmlWriterSettings{OmitXmlDeclaration = true};
             using (var stringWriter = new StringWriter())
             {
                 using (var xmlWriter = XmlWriter.Create(stringWriter, xws))
                 {
-                    var sr = new XmlSerializer(typeof(T));
+                    var sr = new XmlSerializer(typeof (T));
                     sr.Serialize(xmlWriter, obj);
                     return stringWriter.ToString();
                 }
@@ -41,7 +56,7 @@ namespace Redmine.Net.Api
         {
             using (var text = new StringReader(xml))
             {
-                var sr = new XmlSerializer(typeof(T));
+                var sr = new XmlSerializer(typeof (T));
                 return sr.Deserialize(text) as T;
             }
         }

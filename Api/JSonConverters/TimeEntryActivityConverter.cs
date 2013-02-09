@@ -1,5 +1,5 @@
 /*
-   Copyright 2011 - 2012 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2013 Adrian Popescu, Dorin Huzum.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -26,29 +26,18 @@ namespace Redmine.Net.Api.JSonConverters
     {
         public override object Deserialize(IDictionary<string, object> dictionary, Type type, JavaScriptSerializer serializer)
         {
-            if ((dictionary != null))
+            if (dictionary != null)
             {
-                var timeEntryActivity = new TimeEntryActivity();
-
-                timeEntryActivity.Id = dictionary.GetValue<int>("id");
-                timeEntryActivity.Name = dictionary.GetValue<string>("name");
-                timeEntryActivity.IsDefault = dictionary.GetValue<bool>("is_default");
-
+                var timeEntryActivity = new TimeEntryActivity { Id = dictionary.GetValue<int>("id"), Name = dictionary.GetValue<string>("name"), IsDefault = dictionary.GetValue<bool>("is_default") };
                 return timeEntryActivity;
             }
 
             return null;
         }
 
-        public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer)
-        {
-            return null;
-        }
+        public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer) { return null; }
 
-        public override IEnumerable<Type> SupportedTypes
-        {
-            get { return new List<Type>(new[] { typeof(TimeEntryActivity) }); }
-        }
+        public override IEnumerable<Type> SupportedTypes { get { return new List<Type>(new[] { typeof(TimeEntryActivity) }); } }
     }
 }
 //#endif

@@ -1,5 +1,5 @@
 /*
-   Copyright 2011 - 2012 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2013 Adrian Popescu, Dorin Huzum.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ namespace Redmine.Net.Api.JSonConverters
     {
         public override object Deserialize(IDictionary<string, object> dictionary, Type type, JavaScriptSerializer serializer)
         {
-            if ((dictionary != null))
+            if (dictionary != null)
             {
                 var tracker = new WikiPage();
 
@@ -38,6 +38,7 @@ namespace Redmine.Net.Api.JSonConverters
                 tracker.Title = dictionary.GetValue<string>("title");
                 tracker.UpdatedOn = dictionary.GetValue<DateTime?>("updated_on");
                 tracker.Version = dictionary.GetValue<int>("version");
+                tracker.Attachments = dictionary.GetValueAsCollection<Attachment>("attachments");
 
                 return tracker;
             }
@@ -64,10 +65,7 @@ namespace Redmine.Net.Api.JSonConverters
             return result;
         }
 
-        public override IEnumerable<Type> SupportedTypes
-        {
-            get { return new List<Type>(new[] { typeof(WikiPage) }); }
-        }
+        public override IEnumerable<Type> SupportedTypes { get { return new List<Type>(new[] { typeof(WikiPage) }); } }
     }
 }
 //#endif

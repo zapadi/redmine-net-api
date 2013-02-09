@@ -1,5 +1,5 @@
 /*
-   Copyright 2011 - 2012 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2013 Adrian Popescu, Dorin Huzum.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
+
 //#if RUNNING_ON_35_OR_ABOVE
 using System;
 using System.Collections.Generic;
@@ -27,7 +28,7 @@ namespace Redmine.Net.Api.JSonConverters
 
         public override object Deserialize(IDictionary<string, object> dictionary, Type type, JavaScriptSerializer serializer)
         {
-            if ((dictionary != null))
+            if (dictionary != null)
             {
                 var timeEntry = new TimeEntry();
 
@@ -39,6 +40,9 @@ namespace Redmine.Net.Api.JSonConverters
                 timeEntry.Project = dictionary.GetValueAsIdentifiableName("project");
                 timeEntry.SpentOn = dictionary.GetValue<DateTime?>("spent_on");
                 timeEntry.User = dictionary.GetValueAsIdentifiableName("user");
+                timeEntry.CustomFields = dictionary.GetValueAsCollection<CustomField>("custom_fields");
+                timeEntry.CreatedOn = dictionary.GetValue<DateTime?>("created_on");
+                timeEntry.UpdatedOn = dictionary.GetValue<DateTime?>("updated_on");
 
                 return timeEntry;
             }
@@ -54,8 +58,8 @@ namespace Redmine.Net.Api.JSonConverters
 
             if (entity != null)
             {
-                result.WriteIdIfNotNull(entity.Issue,"issue_id");
-                result.WriteIdIfNotNull(entity.Project,"project_id");
+                result.WriteIdIfNotNull(entity.Issue, "issue_id");
+                result.WriteIdIfNotNull(entity.Project, "project_id");
                 result.WriteIdIfNotNull(entity.Activity, "activity_id");
                 if (!entity.SpentOn.HasValue) entity.SpentOn = DateTime.Now;
                 result.Add("spent_on", entity.SpentOn);
@@ -69,10 +73,7 @@ namespace Redmine.Net.Api.JSonConverters
             return result;
         }
 
-        public override IEnumerable<Type> SupportedTypes
-        {
-            get { return new List<Type>(new[] { typeof(TimeEntry) }); }
-        }
+        public override IEnumerable<Type> SupportedTypes { get { return new List<Type>(new[] { typeof(TimeEntry) }); } }
 
         #endregion
     }

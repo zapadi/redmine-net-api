@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2012 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2013 Adrian Popescu, Dorin Huzum.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -75,6 +76,14 @@ namespace Redmine.Net.Api.Types
         [XmlElement("updated_on")]
         public DateTime? UpdatedOn { get; set; }
 
+        /// <summary>
+        /// Gets or sets the custom fields.
+        /// </summary>
+        /// <value>The custom fields.</value>
+        [XmlArray("custom_fields")]
+        [XmlArrayItem("custom_field")]
+        public IList<CustomField> CustomFields { get; set; }
+
         public override void ReadXml(XmlReader reader)
         {
             reader.Read();
@@ -106,6 +115,8 @@ namespace Redmine.Net.Api.Types
 
                     case "updated_on": UpdatedOn = reader.ReadElementContentAsNullableDateTime(); break;
 
+                    case "custom_fields": CustomFields = reader.ReadElementContentAsCollection<CustomField>(); break;
+
                     default: reader.Read(); break;
                 }
             }
@@ -123,7 +134,7 @@ namespace Redmine.Net.Api.Types
         public bool Equals(Version other)
         {
             if (other == null) return false;
-            return (Id == other.Id && Name == other.Name && Project == other.Project && Description == other.Description && Status == other.Status && DueDate == other.DueDate && Sharing == other.Sharing && CreatedOn == other.CreatedOn && UpdatedOn == other.UpdatedOn);
+            return (Id == other.Id && Name == other.Name && Project == other.Project && Description == other.Description && Status == other.Status && DueDate == other.DueDate && Sharing == other.Sharing && CreatedOn == other.CreatedOn && UpdatedOn == other.UpdatedOn && CustomFields == other.CustomFields);
         }
     }
 

@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2012 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2013 Adrian Popescu, Dorin Huzum.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -15,6 +15,8 @@
 */
 
 using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
@@ -78,9 +80,31 @@ namespace Redmine.Net.Api.Types
         [XmlAttribute("comments")]
         public String Comments { get; set; }
 
+        /// <summary>
+        /// Gets or sets the created on.
+        /// </summary>
+        /// <value>The created on.</value>
+        [XmlElement("created_on")]
+        public DateTime? CreatedOn { get; set; }
+
+        /// <summary>
+        /// Gets or sets the updated on.
+        /// </summary>
+        /// <value>The updated on.</value>
+        [XmlElement("updated_on")]
+        public DateTime? UpdatedOn { get; set; }
+
+        /// <summary>
+        /// Gets or sets the custom fields.
+        /// </summary>
+        /// <value>The custom fields.</value>
+        [XmlArray("custom_fields")]
+        [XmlArrayItem("custom_field")]
+        public IList<CustomField> CustomFields { get; set; }
+
         public object Clone()
         {
-            var timeEntry = new TimeEntry { Activity = Activity, Comments = Comments, Hours = Hours, Issue = Issue, Project = Project, SpentOn = SpentOn, User = User };
+            var timeEntry = new TimeEntry { Activity = Activity, Comments = Comments, Hours = Hours, Issue = Issue, Project = Project, SpentOn = SpentOn, User = User, CustomFields = CustomFields};
             return timeEntry;
         }
 
@@ -115,6 +139,12 @@ namespace Redmine.Net.Api.Types
 
                     case "comments": Comments = reader.ReadElementContentAsString(); break;
 
+                    case "created_on": CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
+
+                    case "updated_on": UpdatedOn = reader.ReadElementContentAsNullableDateTime(); break;
+
+                    case "custom_fields": CustomFields = reader.ReadElementContentAsCollection<CustomField>(); break;
+
                     default: reader.Read(); break;
                 }
             }
@@ -125,8 +155,8 @@ namespace Redmine.Net.Api.Types
             writer.WriteIdIfNotNull(Issue, "issue_id");
             writer.WriteIdIfNotNull(Project, "project_id");
             if (!SpentOn.HasValue) SpentOn = DateTime.Now;
-            writer.WriteElementString("spent_on", SpentOn.Value.ToString());
-            writer.WriteElementString("hours", Hours.ToString());
+            writer.WriteElementString("spent_on", SpentOn.Value.ToString(CultureInfo.InvariantCulture));
+            writer.WriteElementString("hours", Hours.ToString(CultureInfo.InvariantCulture));
             writer.WriteIdIfNotNull(Activity, "activity_id");
             writer.WriteElementString("comments", Comments);
         }
@@ -134,7 +164,8 @@ namespace Redmine.Net.Api.Types
         public bool Equals(TimeEntry other)
         {
             if (other == null) return false;
-            return (Id == other.Id && Issue == other.Issue && Project == other.Project && SpentOn == other.SpentOn && Hours == other.Hours && Activity == other.Activity && Comments == other.Comments && User == other.User);
+            return (Id == other.Id && Issue == other.Issue && Project == other.Project && SpentOn == other.SpentOn && Hours == other.Hours 
+                && Activity == other.Activity && Comments == other.Comments && User == other.User && CreatedOn == other.CreatedOn && UpdatedOn == other.UpdatedOn && CustomFields == other.CustomFields);
         }
     }
 }

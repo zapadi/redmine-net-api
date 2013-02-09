@@ -1,5 +1,5 @@
 /*
-   Copyright 2011 - 2012 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2013 Adrian Popescu, Dorin Huzum.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
+
 //#if RUNNING_ON_35_OR_ABOVE
 using System;
 using System.Linq;
@@ -28,13 +29,15 @@ namespace Redmine.Net.Api.JSonConverters
 
         public override object Deserialize(IDictionary<string, object> dictionary, Type type, JavaScriptSerializer serializer)
         {
-            if ((dictionary != null))
+            if (dictionary != null)
             {
                 var group = new Group();
 
                 group.Id = dictionary.GetValue<int>("id");
                 group.Name = dictionary.GetValue<string>("name");
                 group.Users = dictionary.GetValueAsCollection<User>("users");
+                group.CustomFields = dictionary.GetValueAsCollection<CustomField>("custom_fields");
+                group.Memberships = dictionary.GetValueAsCollection<Membership>("memberships");
 
                 return group;
             }
@@ -52,7 +55,7 @@ namespace Redmine.Net.Api.JSonConverters
             {
                 result.Add("name", entity.Name);
                 if (entity.Users != null)
-                    result.Add("user_ids", entity.Users.Select(x=>x.Id).ToArray());
+                    result.Add("user_ids", entity.Users.Select(x => x.Id).ToArray());
 
                 root["group"] = result;
                 return root;
@@ -61,10 +64,7 @@ namespace Redmine.Net.Api.JSonConverters
             return result;
         }
 
-        public override IEnumerable<Type> SupportedTypes
-        {
-            get { return new List<Type>(new[] { typeof(Group) }); }
-        }
+        public override IEnumerable<Type> SupportedTypes { get { return new List<Type>(new[] { typeof(Group) }); } }
 
         #endregion
     }

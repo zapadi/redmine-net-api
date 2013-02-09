@@ -88,5 +88,10 @@ namespace Redmine.Net.Api.Types
 
             return Id == other.Id && Name == other.Name;
         }
+
+        public override string ToString()
+        {
+            return Id + ", " + Name;
+        }
     }
 }

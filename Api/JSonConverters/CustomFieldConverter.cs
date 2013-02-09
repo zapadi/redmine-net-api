@@ -1,5 +1,5 @@
 /*
-   Copyright 2011 - 2012 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2013 Adrian Popescu, Dorin Huzum.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
+
 //#if RUNNING_ON_35_OR_ABOVE
 using System;
 using System.Collections;
@@ -29,7 +30,7 @@ namespace Redmine.Net.Api.JSonConverters
 
         public override object Deserialize(IDictionary<string, object> dictionary, Type type, JavaScriptSerializer serializer)
         {
-            if ((dictionary != null))
+            if (dictionary != null)
             {
                 var customField = new CustomField();
 
@@ -47,7 +48,7 @@ namespace Redmine.Net.Api.JSonConverters
                     {
                         foreach (string value in list)
                         {
-                            customField.Values.Add(new CustomFieldValue { Info = val as string });
+                            customField.Values.Add(new CustomFieldValue { Info = value });
                         }
                     }
                     else
@@ -88,10 +89,7 @@ namespace Redmine.Net.Api.JSonConverters
             return result;
         }
 
-        public override IEnumerable<Type> SupportedTypes
-        {
-            get { return new List<Type>(new[] { typeof(CustomField) }); }
-        }
+        public override IEnumerable<Type> SupportedTypes { get { return new List<Type>(new[] { typeof(CustomField) }); } }
 
         #endregion
     }

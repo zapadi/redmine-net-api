@@ -28,7 +28,7 @@ namespace Redmine.Net.Api.JSonConverters
 
         public override object Deserialize(IDictionary<string, object> dictionary, Type type, JavaScriptSerializer serializer)
         {
-            if ((dictionary != null))
+            if (dictionary != null)
             {
                 var attachment = new Attachment();
 
@@ -40,22 +40,16 @@ namespace Redmine.Net.Api.JSonConverters
                 attachment.CreatedOn = dictionary.GetValue<DateTime?>("created_on");
                 attachment.FileName = dictionary.GetValue<string>("filename");
                 attachment.FileSize = dictionary.GetValue<int>("filesize");
-                
+
                 return attachment;
             }
 
             return null;
         }
 
-        public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer)
-        {
-            return null;
-        }
+        public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer) { return null; }
 
-        public override IEnumerable<Type> SupportedTypes
-        {
-            get { return new List<Type>(new[] { typeof(Attachment) }); }
-        }
+        public override IEnumerable<Type> SupportedTypes { get { return new List<Type>(new[] { typeof(Attachment) }); } }
 
         #endregion
     }

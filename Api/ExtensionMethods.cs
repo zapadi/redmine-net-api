@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2012 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2013 Adrian Popescu, Dorin Huzum.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -40,9 +40,9 @@ namespace Redmine.Net.Api
                 var attribute = reader.GetAttribute(attributeName);
                 int result;
 #if RUNNING_ON_4_OR_ABOVE
-                    if (String.IsNullOrWhiteSpace(attribute) || !Int32.TryParse(attribute, out result)) return default(int);
+                    if (String.IsNullOrWhiteSpace(attribute) || !Int32.TryParse(attribute, NumberStyles.Any, NumberFormatInfo.InvariantInfo, out result)) return default(int);
 #else
-                if (String.IsNullOrEmpty(attribute) || !Int32.TryParse(attribute, out result)) return default(int);
+                if (String.IsNullOrEmpty(attribute) || !Int32.TryParse(attribute, NumberStyles.Any, NumberFormatInfo.InvariantInfo, out result)) return default(int);
 #endif
                 return result;
             }
@@ -59,9 +59,9 @@ namespace Redmine.Net.Api
                 var attribute = reader.GetAttribute(attributeName);
                 int result;
 #if RUNNING_ON_4_OR_ABOVE
-                    if (String.IsNullOrWhiteSpace(attribute) || !Int32.TryParse(attribute, out result)) return null;
+                    if (String.IsNullOrWhiteSpace(attribute) || !Int32.TryParse(attribute, NumberStyles.Any, NumberFormatInfo.InvariantInfo, out result)) return null;
 #else
-                if (String.IsNullOrEmpty(attribute) || !Int32.TryParse(attribute, out result)) return default(int?);
+                if (String.IsNullOrEmpty(attribute) || !Int32.TryParse(attribute, NumberStyles.Any, NumberFormatInfo.InvariantInfo, out result)) return default(int?);
 #endif
                 return result;
             }
@@ -125,9 +125,9 @@ namespace Redmine.Net.Api
 
             float result;
 #if RUNNING_ON_4_OR_ABOVE
-                if (String.IsNullOrWhiteSpace(str) || !float.TryParse(str, out result)) return null;
+                if (String.IsNullOrWhiteSpace(str) || !float.TryParse(str, NumberStyles.Any, NumberFormatInfo.InvariantInfo, out result)) return null;
 #else
-            if (String.IsNullOrEmpty(str) || !float.TryParse(str, out result)) return null;
+            if (String.IsNullOrEmpty(str) || !float.TryParse(str, NumberStyles.Any, NumberFormatInfo.InvariantInfo, out result)) return null;
 #endif
             return result;
         }
@@ -143,9 +143,9 @@ namespace Redmine.Net.Api
 
             int result;
 #if RUNNING_ON_4_OR_ABOVE
-                if (String.IsNullOrWhiteSpace(str) || !int.TryParse(str, out result)) return null;
+                if (String.IsNullOrWhiteSpace(str) || !int.TryParse(str, NumberStyles.Any, NumberFormatInfo.InvariantInfo, out result)) return null;
 #else
-            if (String.IsNullOrEmpty(str) || !int.TryParse(str, out result)) return null;
+            if (String.IsNullOrEmpty(str) || !int.TryParse(str, NumberStyles.Any, NumberFormatInfo.InvariantInfo, out result)) return null;
 #endif
             return result;
         }
@@ -161,9 +161,9 @@ namespace Redmine.Net.Api
 
             decimal result;
 #if RUNNING_ON_4_OR_ABOVE
-                if (String.IsNullOrWhiteSpace(str) || !decimal.TryParse(str, out result)) return null;
+                if (String.IsNullOrWhiteSpace(str) || !decimal.TryParse(str, NumberStyles.Any, NumberFormatInfo.InvariantInfo, out result)) return null;
 #else
-            if (String.IsNullOrEmpty(str) || !decimal.TryParse(str, out result)) return null;
+            if (String.IsNullOrEmpty(str) || !decimal.TryParse(str, NumberStyles.Any, NumberFormatInfo.InvariantInfo, out result)) return null;
 #endif
             return result;
         }
@@ -203,7 +203,8 @@ namespace Redmine.Net.Api
                         temp = serializer.Deserialize(subTree) as T;
                     }
                     if (temp != null) result.Add(temp);
-                    r.Read();
+                    if (!r.IsEmptyElement)
+                        r.Read();
                 }
             }
             return result;
@@ -262,7 +263,7 @@ namespace Redmine.Net.Api
         {
             if (!val.HasValue) return;
             if (!EqualityComparer<T>.Default.Equals(val.Value, default(T)))
-                writer.WriteElementString(tag, val.Value.ToString());
+                writer.WriteElementString(tag, string.Format(NumberFormatInfo.InvariantInfo, "{0}", val.Value));
         }
 
         public static void WriteIfNotDefaultOrNull<T>(this Dictionary<string, object> dictionary, T? val, String tag) where T : struct
@@ -274,12 +275,9 @@ namespace Redmine.Net.Api
 
         public static T GetValue<T>(this IDictionary<string, object> dictionary, string key)
         {
-            //  Project p = new Project();
-            //var pd =  TypeDescriptor.GetProperties(p, new Attribute[] { new XmlElementAttribute(), new XmlArrayAttribute()});
-
             object val;
             var dict = dictionary;
-            Type type = typeof(T);
+            var type = typeof(T);
             if (dict.TryGetValue(key, out val))
             {
                 if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
@@ -288,10 +286,10 @@ namespace Redmine.Net.Api
 
                     type = Nullable.GetUnderlyingType(type);
                 }
-                else
+              //  else
                 {
-                    if (val.GetType() == typeof (ArrayList)) return (T) val;
-                   
+                    if (val.GetType() == typeof(ArrayList)) return (T)val;
+
                     if (type.IsEnum) val = Enum.Parse(type, val.ToString(), true);
                 }
                 return (T)Convert.ChangeType(val, type);

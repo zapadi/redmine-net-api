@@ -1,5 +1,5 @@
 /*
-   Copyright 2011 - 2012 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2013 Adrian Popescu, Dorin Huzum.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
+
 //#if RUNNING_ON_35_OR_ABOVE
 using System;
 using System.Collections.Generic;
@@ -29,7 +30,7 @@ namespace Redmine.Net.Api.JSonConverters
 
         public override object Deserialize(IDictionary<string, object> dictionary, Type type, JavaScriptSerializer serializer)
         {
-            if ((dictionary != null))
+            if (dictionary != null)
             {
                 var issue = new Issue();
 
@@ -81,6 +82,7 @@ namespace Redmine.Net.Api.JSonConverters
                 result.WriteIdIfNotNull(entity.Category, "category_id");
                 result.WriteIdIfNotNull(entity.Tracker, "tracker_id");
                 result.WriteIdIfNotNull(entity.AssignedTo, "assigned_to_id");
+                result.WriteIdIfNotNull(entity.FixedVersion, "fixed_version");
                 result.WriteIdIfNotNull(entity.ParentIssue, "parent_issue_id");
                 result.WriteIfNotDefaultOrNull(entity.EstimatedHours, "estimated_hours");
 
@@ -106,10 +108,7 @@ namespace Redmine.Net.Api.JSonConverters
             return result;
         }
 
-        public override IEnumerable<Type> SupportedTypes
-        {
-            get { return new List<Type>(new[] { typeof(Issue) }); }
-        }
+        public override IEnumerable<Type> SupportedTypes { get { return new List<Type>(new[] { typeof(Issue) }); } }
 
         #endregion
     }
