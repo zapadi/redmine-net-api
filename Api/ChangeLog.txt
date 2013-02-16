@@ -1,5 +1,13 @@
 Changelog:
 
+Version 0.10
+
+Fixed:
+
+	Requested children of an issue are not stored/parsed(bas.themagician)
+	Requesting the TimeEntries of an issue does not parse xml correctly(bas.themagician)
+
+
 Version 0.9
 
 Fixed: 	
