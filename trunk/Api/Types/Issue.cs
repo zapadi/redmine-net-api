@@ -212,6 +212,17 @@ namespace Redmine.Net.Api.Types
         public IList<IssueRelation> Relations { get; set; }
 
         /// <summary>
+        /// Gets or sets the issue children.
+        /// </summary>
+        /// <value>
+        /// The issue children.
+        /// NOTE: Only Id, tracker and subject are filled.
+        /// </value>
+        [XmlArray("children")]
+        [XmlArrayItem("issue")]
+        public IList<IssueChild> Children { get; set; }
+
+        /// <summary>
         /// Gets or sets the attachments.
         /// </summary>
         /// <value>
@@ -284,6 +295,8 @@ namespace Redmine.Net.Api.Types
                     case "journals": Journals = reader.ReadElementContentAsCollection<Journal>(); break;
 
                     case "changesets": Changesets = reader.ReadElementContentAsCollection<ChangeSet>(); break;
+
+                    case "children": Children = reader.ReadElementContentAsCollection<IssueChild>(); break;
 
                     default: reader.Read(); break;
                 }

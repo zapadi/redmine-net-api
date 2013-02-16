@@ -104,7 +104,7 @@ namespace Redmine.Net.Api.Types
 
         public object Clone()
         {
-            var timeEntry = new TimeEntry { Activity = Activity, Comments = Comments, Hours = Hours, Issue = Issue, Project = Project, SpentOn = SpentOn, User = User, CustomFields = CustomFields};
+            var timeEntry = new TimeEntry { Activity = Activity, Comments = Comments, Hours = Hours, Issue = Issue, Project = Project, SpentOn = SpentOn, User = User, CustomFields = CustomFields };
             return timeEntry;
         }
 
@@ -126,8 +126,10 @@ namespace Redmine.Net.Api.Types
                     case "id": Id = reader.ReadElementContentAsInt(); break;
 
                     case "issue_id": Issue = new IdentifiableName(reader); break;
+                    case "issue": Issue = new IdentifiableName(reader); break;
 
                     case "project_id": Project = new IdentifiableName(reader); break;
+                    case "project": Project = new IdentifiableName(reader); break;
 
                     case "spent_on": SpentOn = reader.ReadElementContentAsNullableDateTime(); break;
 
@@ -136,6 +138,7 @@ namespace Redmine.Net.Api.Types
                     case "hours": Hours = reader.ReadElementContentAsDecimal(); break;
 
                     case "activity_id": Activity = new IdentifiableName(reader); break;
+                    case "activity": Activity = new IdentifiableName(reader); break;
 
                     case "comments": Comments = reader.ReadElementContentAsString(); break;
 
@@ -164,7 +167,7 @@ namespace Redmine.Net.Api.Types
         public bool Equals(TimeEntry other)
         {
             if (other == null) return false;
-            return (Id == other.Id && Issue == other.Issue && Project == other.Project && SpentOn == other.SpentOn && Hours == other.Hours 
+            return (Id == other.Id && Issue == other.Issue && Project == other.Project && SpentOn == other.SpentOn && Hours == other.Hours
                 && Activity == other.Activity && Comments == other.Comments && User == other.User && CreatedOn == other.CreatedOn && UpdatedOn == other.UpdatedOn && CustomFields == other.CustomFields);
         }
     }

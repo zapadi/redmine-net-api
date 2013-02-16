@@ -56,6 +56,7 @@
     <Compile Include="JSonConverters\GroupConverter.cs" />
     <Compile Include="JSonConverters\IdentifiableNameConverter.cs" />
     <Compile Include="JSonConverters\IssueCategoryConverter.cs" />
+    <Compile Include="JSonConverters\IssueChildConverter.cs" />
     <Compile Include="JSonConverters\IssueConverter.cs" />
     <Compile Include="JSonConverters\IssuePriorityConverter.cs" />
     <Compile Include="JSonConverters\IssueRelationConverter.cs" />
@@ -98,6 +99,7 @@
     <Compile Include="Types\IdentifiableName.cs" />
     <Compile Include="Types\Issue.cs" />
     <Compile Include="Types\IssueCategory.cs" />
+    <Compile Include="Types\IssueChild.cs" />
     <Compile Include="Types\IssuePriority.cs" />
     <Compile Include="Types\IssueRelation.cs" />
     <Compile Include="Types\IssueStatus.cs" />

@@ -62,7 +62,7 @@ namespace Redmine.Net.Api.Types
         {
             if (Values == null) return;
             var itemsCount = Values.Count;
-               
+
             writer.WriteAttributeString("id", Id.ToString(CultureInfo.InvariantCulture));
             if (itemsCount > 1)
             {
