@@ -315,7 +315,7 @@ namespace Redmine.Net.Api.Types
             writer.WriteIdIfNotNull(Tracker, "tracker_id");
             writer.WriteIdIfNotNull(AssignedTo, "assigned_to_id");
             writer.WriteIdIfNotNull(ParentIssue, "parent_issue_id");
-            writer.WriteIdIfNotNull(FixedVersion, "fixed_version");
+            writer.WriteIdIfNotNull(FixedVersion, "fixed_version_id");
             writer.WriteIfNotDefaultOrNull(EstimatedHours, "estimated_hours");
             if (StartDate != null)
                 writer.WriteElementString("start_date", StartDate.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
