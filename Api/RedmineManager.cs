@@ -79,7 +79,8 @@ namespace Redmine.Net.Api
             {typeof (ProjectMembership), "memberships"},
             {typeof (Group), "groups"},
             {typeof (TimeEntryActivity), "enumerations/time_entry_activities"},
-            {typeof (IssuePriority), "enumerations/issue_priorities"}
+            {typeof (IssuePriority), "enumerations/issue_priorities"},
+            {typeof (Watcher), "watchers"}
         };
 
         /// <summary>
@@ -183,6 +184,37 @@ namespace Redmine.Net.Api
                     HandleWebException(webException, "WikiPage");
                 }
                 return null;
+            }
+        }
+
+
+        public void AddWatcherToIssue(int issueId, int userId)
+        {
+            using (var wc = CreateWebClient(null))
+            {
+                try
+                {
+                    wc.UploadString(string.Format(RequestFormat, host, urls[typeof(Issue)], issueId + "/watchers", mimeFormat), POST, mimeFormat == MimeFormat.xml ? "<user_id>" + userId + "</user_id>" : "user_id:" + userId);
+                }
+                catch (WebException webException)
+                {
+                    HandleWebException(webException, "Watcher");
+                }
+            }
+        }
+
+        public void RemoveIssueWatcher(int issueId, int userId)
+        {
+            using (var wc = CreateWebClient(null))
+            {
+                try
+                {
+                    wc.UploadString(string.Format(RequestFormat, host, urls[typeof(Issue)], issueId + "/watchers/" + userId, mimeFormat), DELETE, string.Empty);
+                }
+                catch (WebException webException)
+                {
+                    HandleWebException(webException, "Watcher");
+                }
             }
         }
 

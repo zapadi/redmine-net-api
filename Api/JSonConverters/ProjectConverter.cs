@@ -42,7 +42,7 @@ namespace Redmine.Net.Api.JSonConverters
                 project.Trackers = dictionary.GetValueAsCollection<ProjectTracker>("trackers");
                 project.CustomFields = dictionary.GetValueAsCollection<CustomField>("custom_fields");
                 project.Parent = dictionary.GetValueAsIdentifiableName("parent");
-                project.IssueCategories = dictionary.GetValueAsCollection<IssueCategory>("issue_categories");
+                project.IssueCategories = dictionary.GetValueAsCollection<ProjectIssueCategory>("issue_categories");
                 return project;
             }
 

@@ -232,6 +232,10 @@ namespace Redmine.Net.Api.Types
         [XmlArrayItem("upload")]
         public IList<Upload> Uploads { get; set; }
 
+        [XmlArray("watchers")]
+        [XmlArrayItem("watcher")]
+        public IList<Watcher> Watchers { get; set; }
+
         public XmlSchema GetSchema() { return null; }
 
         public void ReadXml(XmlReader reader)
@@ -298,6 +302,8 @@ namespace Redmine.Net.Api.Types
 
                     case "children": Children = reader.ReadElementContentAsCollection<IssueChild>(); break;
 
+                    case "watchers": Watchers = reader.ReadElementContentAsCollection<Watcher>(); break;
+
                     default: reader.Read(); break;
                 }
             }
@@ -347,11 +353,22 @@ namespace Redmine.Net.Api.Types
                 }
                 writer.WriteEndElement();
             }
+
+            if (Watchers != null)
+            {
+                writer.WriteStartElement("watcher_user_ids");
+                writer.WriteAttributeString("type", "array");
+                foreach (var watcher in Watchers)
+                {
+                    new XmlSerializer(typeof(int)).Serialize(writer, watcher.Id);
+                }
+                writer.WriteEndElement();
+            }
         }
 
         public object Clone()
         {
-            var issue = new Issue { AssignedTo = AssignedTo, Author = Author, Category = Category, CustomFields = CustomFields, Description = Description, DoneRatio = DoneRatio, DueDate = DueDate, EstimatedHours = EstimatedHours, Priority = Priority, StartDate = StartDate, Status = Status, Subject = Subject, Tracker = Tracker, Project = Project, FixedVersion = FixedVersion, Notes = Notes };
+            var issue = new Issue { AssignedTo = AssignedTo, Author = Author, Category = Category, CustomFields = CustomFields, Description = Description, DoneRatio = DoneRatio, DueDate = DueDate, EstimatedHours = EstimatedHours, Priority = Priority, StartDate = StartDate, Status = Status, Subject = Subject, Tracker = Tracker, Project = Project, FixedVersion = FixedVersion, Notes = Notes, Watchers = Watchers};
             return issue;
         }
 
@@ -362,7 +379,7 @@ namespace Redmine.Net.Api.Types
                 && Author == other.Author && Category == other.Category && Subject == other.Subject && Description == other.Description && StartDate == other.StartDate
                 && DueDate == other.DueDate && DoneRatio == other.DoneRatio && EstimatedHours == other.EstimatedHours && CustomFields == other.CustomFields
                 && CreatedOn == other.CreatedOn && UpdatedOn == other.UpdatedOn && AssignedTo == other.AssignedTo && FixedVersion == other.FixedVersion
-                && Notes == other.Notes
+                && Notes == other.Notes && Watchers == other.Watchers
                 );
         }
     }

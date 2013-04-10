@@ -6,7 +6,8 @@ Fixed:
 
 	Requested children of an issue are not stored/parsed(bas.themagician)
 	Requesting the TimeEntries of an issue does not parse xml correctly(bas.themagician)
-
+	Parsing Issue Categories of a project(bas.themagician)
+	Setting issue's fixed version(AverkievKA)
 
 Version 0.9
 
