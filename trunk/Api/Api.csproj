@@ -78,6 +78,7 @@
     <Compile Include="JSonConverters\UserConverter.cs" />
     <Compile Include="JSonConverters\UserGroupConverter.cs" />
     <Compile Include="JSonConverters\VersionConverter.cs" />
+    <Compile Include="JSonConverters\WatcherConverter.cs" />
     <Compile Include="JSonConverters\WikiPageConverter.cs" />
     <Compile Include="MimeFormat.cs" />
     <Compile Include="RedmineManagerAsync.cs" />
@@ -108,6 +109,7 @@
     <Compile Include="Types\News.cs" />
     <Compile Include="Types\Permission.cs" />
     <Compile Include="Types\Project.cs" />
+    <Compile Include="Types\ProjectIssueCategory.cs" />
     <Compile Include="Types\ProjectMembership.cs" />
     <Compile Include="Types\ProjectTracker.cs" />
     <Compile Include="Types\Query.cs" />
@@ -121,6 +123,7 @@
     <Compile Include="Types\User.cs" />
     <Compile Include="Types\UserGroup.cs" />
     <Compile Include="Types\Version.cs" />
+    <Compile Include="Types\Watcher.cs" />
     <Compile Include="Types\WikiPage.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

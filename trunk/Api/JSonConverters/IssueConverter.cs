@@ -59,6 +59,7 @@ namespace Redmine.Net.Api.JSonConverters
                 issue.Relations = dictionary.GetValueAsCollection<IssueRelation>("relations");
                 issue.Journals = dictionary.GetValueAsCollection<Journal>("journals");
                 issue.Changesets = dictionary.GetValueAsCollection<ChangeSet>("changesets");
+                issue.Watchers = dictionary.GetValueAsCollection<Watcher>("watchers");
                 return issue;
             }
 
@@ -99,6 +100,12 @@ namespace Redmine.Net.Api.JSonConverters
                 {
                     serializer.RegisterConverters(new[] { new CustomFieldConverter() });
                     result.Add("custom_fields", entity.CustomFields.ToArray());
+                }
+
+                if (entity.Watchers != null)
+                {
+                    serializer.RegisterConverters(new[] { new WatcherConverter()  });
+                    result.Add("watchers", entity.Watchers.ToArray());
                 }
 
                 root["issue"] = result;

@@ -63,7 +63,8 @@ namespace Redmine.Net.Api
             {typeof (UserGroup), new UserGroupConverter()},
             {typeof (IdentifiableName), new IdentifiableNameConverter()},
             {typeof (Permission), new PermissionConverter()},
-            {typeof (IssueChild), new IssueChildConverter()}
+            {typeof (IssueChild), new IssueChildConverter()},
+            {typeof (Watcher), new WatcherConverter()}
         };
 
         public static Dictionary<Type, JavaScriptConverter> Converters { get { return converters; } }

@@ -94,7 +94,7 @@ namespace Redmine.Net.Api.Types
 
         [XmlArray("issue_categories")]
         [XmlArrayItem("issue_category")]
-        public IList<IssueCategory> IssueCategories { get; set; } 
+        public IList<ProjectIssueCategory> IssueCategories { get; set; } 
 
         /// <summary>
         /// Generates an object from its XML representation.
@@ -133,7 +133,7 @@ namespace Redmine.Net.Api.Types
 
                     case "custom_fields": CustomFields = reader.ReadElementContentAsCollection<CustomField>(); break;
 
-                    case "issue_categories": IssueCategories = reader.ReadElementContentAsCollection<IssueCategory>(); break;
+                    case "issue_categories": IssueCategories = reader.ReadElementContentAsCollection<ProjectIssueCategory>(); break;
                     default: reader.Read(); break;
                 }
             }
