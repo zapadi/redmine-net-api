@@ -87,6 +87,12 @@ namespace Redmine.Net.Api.Types
         public DateTime? LastLoginOn { get; set; }
 
         /// <summary>
+        /// Gets or sets the user's Api key.
+        /// </summary>
+        [XmlElement("api_key")]
+        public string ApiKey { get; set; }
+
+        /// <summary>
         /// Gets or sets the custom fields.
         /// </summary>
         /// <value>The custom fields.</value>
@@ -148,6 +154,8 @@ namespace Redmine.Net.Api.Types
 
                     case "created_on": CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
 
+                    case "api_key": ApiKey = reader.ReadElementContentAsString(); break;
+
                     case "custom_fields": CustomFields = reader.ReadElementContentAsCollection<CustomField>(); break;
 
                     case "memberships": Memberships = reader.ReadElementContentAsCollection<Membership>(); break;
@@ -173,7 +181,10 @@ namespace Redmine.Net.Api.Types
         {
             if (other == null) return false;
             return (Id == other.Id && Login == other.Login && Password == other.Password
-                && FirstName == other.FirstName && LastName == other.LastName && Email == other.Email && CreatedOn == other.CreatedOn && LastLoginOn == other.LastLoginOn && CustomFields == other.CustomFields && Memberships == other.Memberships && Groups == other.Groups);
+                && FirstName == other.FirstName && LastName == other.LastName && Email == other.Email 
+                && CreatedOn == other.CreatedOn && LastLoginOn == other.LastLoginOn 
+                && CustomFields == other.CustomFields && Memberships == other.Memberships 
+                && Groups == other.Groups && ApiKey == other.ApiKey);
         }
     }
 }

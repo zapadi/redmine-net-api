@@ -158,7 +158,7 @@ namespace Redmine.Net.Api.Types
             writer.WriteIdIfNotNull(Issue, "issue_id");
             writer.WriteIdIfNotNull(Project, "project_id");
             if (!SpentOn.HasValue) SpentOn = DateTime.Now;
-            writer.WriteElementString("spent_on", SpentOn.Value.ToString(CultureInfo.InvariantCulture));
+            writer.WriteElementString("spent_on", SpentOn.Value.ToString("yyyy-MM-dd",CultureInfo.InvariantCulture));
             writer.WriteElementString("hours", Hours.ToString(CultureInfo.InvariantCulture));
             writer.WriteIdIfNotNull(Activity, "activity_id");
             writer.WriteElementString("comments", Comments);
