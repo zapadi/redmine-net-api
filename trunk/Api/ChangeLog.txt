@@ -9,11 +9,19 @@ Fixed:
 	Parsing Issue Categories of a project(bas.themagician)
 	Setting issue's fixed version(AverkievKA)
 	TimeEntry spent_on serialization problem(mathieu.myrandbolduc).
+	Creating or updating Projects, the API does not update the custom fields present in the project(mathieu.myrandbolduc).
 
 Features:
 	
-	Added watchers to issue (available only for redmine 2.3.0)
-	Added apikey to user (available only for redmine 2.3.0)
+	Added watchers to issue (added in 2.3.0)
+	Added apikey of the user visible for admins and for yourself(added in 2.3.0)
+	Added status of the user, visible for admins only (added in 2.4.0)
+	Added GetUsers(optional filter) 
+		Optional filters:
+			status: get only users with the given status. Default is 1 (active users)
+			name: filter users on their login, firstname, lastname and mail ; if the pattern contains a space, it will also return users whose firstname match the first word or lastname match the second word.
+			group_id: get only users who are members of the given group
+	Added UserImpersonation
 
 Version 0.9
 

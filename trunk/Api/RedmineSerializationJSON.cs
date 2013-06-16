@@ -64,6 +64,7 @@ namespace Redmine.Net.Api
             {typeof (IdentifiableName), new IdentifiableNameConverter()},
             {typeof (Permission), new PermissionConverter()},
             {typeof (IssueChild), new IssueChildConverter()},
+            {typeof(ProjectIssueCategory), new ProjectIssueCategoryConverter()},
             {typeof (Watcher), new WatcherConverter()}
         };
 

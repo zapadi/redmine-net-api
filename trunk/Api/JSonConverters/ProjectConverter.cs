@@ -17,6 +17,7 @@
 //#if RUNNING_ON_35_OR_ABOVE
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web.Script.Serialization;
 using Redmine.Net.Api.Types;
 
@@ -65,6 +66,12 @@ namespace Redmine.Net.Api.JSonConverters
                     if (entity.Parent != null)
                         result.Add("parent_id", entity.Parent.Id);
                     result.Add("homepage", entity.HomePage);
+                }
+
+                if (entity.CustomFields != null)
+                {
+                    serializer.RegisterConverters(new[] { new CustomFieldConverter() });
+                    result.Add("custom_fields", entity.CustomFields.ToArray());
                 }
 
                 root["project"] = result;

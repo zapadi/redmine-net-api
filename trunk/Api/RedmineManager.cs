@@ -22,13 +22,11 @@ using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Net.Security;
-using System.Runtime.Serialization.Json;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Xml;
 using Redmine.Net.Api.Types;
 using Version = Redmine.Net.Api.Types.Version;
-using System.Threading;
 
 namespace Redmine.Net.Api
 {
@@ -167,54 +165,112 @@ namespace Redmine.Net.Api
         /// using the System.Exception.InnerException property.</exception>
         public User GetCurrentUser(NameValueCollection parameters = null)
         {
-            using (var wc = CreateWebClient(parameters))
+            return ExecuteDownload<User>(string.Format(RequestFormat, host, urls[typeof(User)], CurrentUserUri, mimeFormat), "GetCurrentUser");
+        }
+
+        /// <summary>
+        /// As of Redmine 2.2.0 you can impersonate user setting user login (eg. jsmith). This only works when using the API with an administrator account, this header will be ignored when using the API with a regular user account.
+        /// </summary>
+        public string ImpersonateUser { get; set; }
+
+        /// <summary>
+        /// Returns a list of users.
+        /// </summary>
+        /// <param name="userStatus">get only users with the given status. Default is 1 (active users)</param>
+        /// <param name="name"> filter users on their login, firstname, lastname and mail ; if the pattern contains a space, it will also return users whose firstname match the first word or lastname match the second word.</param>
+        /// <param name="groupId">get only users who are members of the given group</param>
+        /// <returns></returns>
+        public IList<User> GetUsers(UserStatus userStatus = UserStatus.STATUS_ACTIVE, string name = null, int groupId = 0)
+        {
+            var filters = new NameValueCollection { { "status", ((int)userStatus).ToString(CultureInfo.InvariantCulture) } };
+
+            if (!string.IsNullOrWhiteSpace(name)) filters.Add("name", name);
+
+            if (groupId > 0) filters.Add("groupId", groupId.ToString(CultureInfo.InvariantCulture));
+
+            return GetObjectList<User>(filters);
+        }
+
+        public void AddWatcher(int issueId, int userId)
+        {
+            ExecuteUpload(string.Format(RequestFormat, host, urls[typeof(Issue)], issueId + "/watchers", mimeFormat), POST, mimeFormat == MimeFormat.xml ? "<user_id>" + userId + "</user_id>" : "user_id:" + userId, "AddWatcher");
+        }
+
+        public void RemoveWatcher(int issueId, int userId)
+        {
+            ExecuteUpload(string.Format(RequestFormat, host, urls[typeof(Issue)], issueId + "/watchers/" + userId, mimeFormat), DELETE, string.Empty, "RemoveWatcher");
+        }
+
+        private string ExecuteUpload(string address, string actionType, string data, string methodName)
+        {
+            using (var wc = CreateWebClient(null))
             {
                 try
                 {
-                    var response = wc.DownloadString(string.Format(RequestFormat, host, urls[typeof(User)], CurrentUserUri, mimeFormat));
-
-                    //#if RUNNING_ON_35_OR_ABOVE
-                    if (mimeFormat == MimeFormat.json)
-                        return RedmineSerialization.JsonDeserialize<User>(response, null);
-                    //#endif
-                    return RedmineSerialization.FromXML<User>(response);
+                    if (actionType == POST || actionType == DELETE || actionType == PUT)
+                    {
+                        return wc.UploadString(address, actionType, data);
+                    }
                 }
                 catch (WebException webException)
                 {
-                    HandleWebException(webException, "WikiPage");
+                    HandleWebException(webException, methodName);
                 }
                 return null;
             }
         }
 
-
-        public void AddWatcherToIssue(int issueId, int userId)
+        private T ExecuteUpload<T>(string address, string actionType, string data, string methodName) where T:class , new()
         {
             using (var wc = CreateWebClient(null))
             {
                 try
                 {
-                    wc.UploadString(string.Format(RequestFormat, host, urls[typeof(Issue)], issueId + "/watchers", mimeFormat), POST, mimeFormat == MimeFormat.xml ? "<user_id>" + userId + "</user_id>" : "user_id:" + userId);
+                    if (actionType == POST || actionType == DELETE || actionType == PUT)
+                    {
+                        var response = wc.UploadString(address, actionType, data);
+                        return Deserialize<T>(response);
+                    }
                 }
                 catch (WebException webException)
                 {
-                    HandleWebException(webException, "Watcher");
+                    HandleWebException(webException, methodName);
                 }
+                return default(T);
             }
         }
 
-        public void RemoveIssueWatcher(int issueId, int userId)
+        private T ExecuteDownload<T>(string address, string methodName) where T : class, new()
         {
             using (var wc = CreateWebClient(null))
             {
                 try
                 {
-                    wc.UploadString(string.Format(RequestFormat, host, urls[typeof(Issue)], issueId + "/watchers/" + userId, mimeFormat), DELETE, string.Empty);
+                    var response = wc.DownloadString(address);
+                    return Deserialize<T>(response);
                 }
                 catch (WebException webException)
                 {
-                    HandleWebException(webException, "Watcher");
+                    HandleWebException(webException, methodName);
                 }
+                return default(T);
+            }
+        }
+
+        private T ExecuteDownload<T>(string address, NameValueCollection parameters, string methodName) where T : class, new()
+        {
+            using (var wc = CreateWebClient(parameters))
+            {
+                try
+                {
+                    var response = wc.DownloadString(address);
+                    return Deserialize<T>(response);
+                }
+                catch (WebException webException)
+                {
+                    HandleWebException(webException, methodName);
+                }
+                return default(T);
             }
         }
 
@@ -237,25 +293,11 @@ namespace Redmine.Net.Api
         /// <returns></returns>
         public WikiPage GetWikiPage(string projectId, NameValueCollection parameters, string pageName, uint version = 0)
         {
-            using (var wc = CreateWebClient(parameters))
-            {
-                try
-                {
-                    var response = wc.DownloadString(version == 0
-                                                                ? string.Format(WikiPageFormat, host, projectId, pageName, mimeFormat)
-                                                                : string.Format(WikiVersionFormat, host, projectId, pageName, version, mimeFormat));
-                    //   #if RUNNING_ON_35_OR_ABOVE
-                    if (mimeFormat == MimeFormat.json)
-                        return RedmineSerialization.JsonDeserialize<WikiPage>(response, null);
-                    // #endif
-                    return RedmineSerialization.FromXML<WikiPage>(response);
-                }
-                catch (WebException webException)
-                {
-                    HandleWebException(webException, "WikiPage");
-                }
-                return null;
-            }
+            string address = version == 0
+                                 ? string.Format(WikiPageFormat, host, projectId, pageName, mimeFormat)
+                                 : string.Format(WikiVersionFormat, host, projectId, pageName, version, mimeFormat);
+
+            return ExecuteDownload<WikiPage>(address, parameters, "GetWikiPage");
         }
 
         /// <summary>
@@ -293,20 +335,8 @@ namespace Redmine.Net.Api
             string result = Serialize(wikiPage);
 
             if (string.IsNullOrEmpty(result)) return null;
-
-            using (var wc = CreateWebClient(null))
-            {
-                try
-                {
-                    var response = wc.UploadString(string.Format(WikiPageFormat, host, projectId, pageName, mimeFormat), PUT, result);
-                    return Deserialize<WikiPage>(response);
-                }
-                catch (WebException webException)
-                {
-                    HandleWebException(webException, "WikiPage");
-                }
-            }
-            return null;
+           
+            return ExecuteUpload<WikiPage>(string.Format(WikiPageFormat, host, projectId, pageName, mimeFormat), PUT, result, "CreateOrUpdateWikiPage");
         }
 
         /// <summary>
@@ -316,17 +346,7 @@ namespace Redmine.Net.Api
         /// <param name="pageName">The wiki page name.</param>
         public void DeleteWikiPage(string projectId, string pageName)
         {
-            using (var wc = CreateWebClient(null))
-            {
-                try
-                {
-                    wc.UploadString(string.Format(WikiPageFormat, host, projectId, pageName, mimeFormat), DELETE, string.Empty);
-                }
-                catch (WebException webException)
-                {
-                    HandleWebException(webException, "WikiPage");
-                }
-            }
+            ExecuteUpload(string.Format(WikiPageFormat, host, projectId, pageName, mimeFormat), DELETE, string.Empty, "DeleteWikiPage");
         }
 
         /// <summary>
@@ -336,17 +356,13 @@ namespace Redmine.Net.Api
         /// <returns>Returns 'Upload' object with inialized 'Token' by server response.</returns>
         public Upload UploadData(byte[] data)
         {
-            using (var wc = CreateUploadWebClient(null))
+            using (var wc = CreateUploadWebClient())
             {
                 try
                 {
                     var response = wc.UploadData(string.Format(Format, host, "uploads", mimeFormat), data);
                     var responseString = Encoding.ASCII.GetString(response);
-#if RUNNING_ON_35_OR_ABOVE
-                    if (mimeFormat == MimeFormat.json)
-                        return RedmineSerialization.JsonDeserialize<Upload>(responseString);
-#endif
-                    return RedmineSerialization.FromXML<Upload>(responseString);
+                    return Deserialize<Upload>(responseString);
                 }
                 catch (WebException webException)
                 {
@@ -364,17 +380,7 @@ namespace Redmine.Net.Api
         /// <param name="userId">The user id.</param>
         public void AddUserToGroup(int groupId, int userId)
         {
-            using (var wc = CreateWebClient(null))
-            {
-                try
-                {
-                    wc.UploadString(string.Format(RequestFormat, host, urls[typeof(Group)], groupId + "/users", mimeFormat), POST, mimeFormat == MimeFormat.xml ? "<user_id>" + userId + "</user_id>" : "user_id:" + userId);
-                }
-                catch (WebException webException)
-                {
-                    HandleWebException(webException, "User");
-                }
-            }
+            ExecuteUpload(string.Format(RequestFormat, host, urls[typeof(Group)], groupId + "/users", mimeFormat), POST, mimeFormat == MimeFormat.xml ? "<user_id>" + userId + "</user_id>" : "user_id:" + userId, "AddUserToGroup");
         }
 
         /// <summary>
@@ -384,17 +390,7 @@ namespace Redmine.Net.Api
         /// <param name="userId">The user id.</param>
         public void DeleteUserFromGroup(int groupId, int userId)
         {
-            using (var wc = CreateWebClient(null))
-            {
-                try
-                {
-                    wc.UploadString(string.Format(RequestFormat, host, urls[typeof(Group)], groupId + "/users/" + userId, mimeFormat), DELETE, string.Empty);
-                }
-                catch (WebException webException)
-                {
-                    HandleWebException(webException, "User");
-                }
-            }
+            ExecuteUpload(string.Format(RequestFormat, host, urls[typeof(Group)], groupId + "/users/" + userId, mimeFormat), DELETE, string.Empty, "DeleteUserFromGroup");
         }
 
         /// <summary>
@@ -517,21 +513,7 @@ namespace Redmine.Net.Api
         {
             var type = typeof(T);
 
-            if (!urls.ContainsKey(type)) return null;
-
-            using (var wc = CreateWebClient(parameters))
-            {
-                try
-                {
-                    var response = wc.DownloadString(string.Format(RequestFormat, host, urls[type], id, mimeFormat));
-                    return Deserialize<T>(response);
-                }
-                catch (WebException webException)
-                {
-                    HandleWebException(webException, type.Name);
-                }
-                return null;
-            }
+            return !urls.ContainsKey(type) ? null : ExecuteDownload<T>(string.Format(RequestFormat, host, urls[type], id, mimeFormat), "GetObject<" + type.Name + ">");
         }
 
         /// <summary>
@@ -674,17 +656,7 @@ namespace Redmine.Net.Api
 
             if (!urls.ContainsKey(typeof(T))) return;
 
-            using (var wc = CreateWebClient(parameters))
-            {
-                try
-                {
-                    wc.UploadString(string.Format(RequestFormat, host, urls[type], id, mimeFormat), DELETE, string.Empty);
-                }
-                catch (WebException webException)
-                {
-                    HandleWebException(webException, type.Name);
-                }
-            }
+            ExecuteUpload(string.Format(RequestFormat, host, urls[type], id, mimeFormat), DELETE, string.Empty, "DeleteObject<" + type.Name + ">");
         }
 
         /// <summary>
@@ -708,12 +680,9 @@ namespace Redmine.Net.Api
                 if (cache != null) webClient.Credentials = cache;
             }
 
-            // #if RUNNING_ON_35_OR_ABOVE
-            webClient.Headers.Add("Content-Type", mimeFormat == MimeFormat.json ? "application/json; charset=utf-8" : "application/xml; charset=utf-8");
-            //  #elseif
-            //      webClient.Headers.Add("Content-Type", "application/xml; charset=utf-8");
-            //  #endif
+            if (!string.IsNullOrWhiteSpace(ImpersonateUser)) webClient.Headers.Add("X-Redmine-Switch-User", ImpersonateUser);
 
+            webClient.Headers.Add("Content-Type", mimeFormat == MimeFormat.json ? "application/json; charset=utf-8" : "application/xml; charset=utf-8");
             webClient.Encoding = Encoding.UTF8;
             return webClient;
         }
@@ -815,7 +784,7 @@ namespace Redmine.Net.Api
             return ownerId;
         }
 
-        private IList<Error> ReadWebExceptionResponse(WebResponse webResponse)
+        private IEnumerable<Error> ReadWebExceptionResponse(WebResponse webResponse)
         {
             using (var dataStream = webResponse.GetResponseStream())
             {
@@ -852,10 +821,15 @@ namespace Redmine.Net.Api
 
         private T Deserialize<T>(string response) where T : class, new()
         {
-            //  #if RUNNING_ON_35_OR_ABOVE
             if (mimeFormat == MimeFormat.json)
                 return RedmineSerialization.JsonDeserialize<T>(response, null);
-            // #endif
+
+            //using (var stringReader = new StringReader(response))
+            //{
+            //    var deserializer = new RedmineSerialization.XmlStreamingDeserializer<T>(stringReader);
+            //    return deserializer.Deserialize();
+            //}
+
             return RedmineSerialization.FromXML<T>(response);
         }
 

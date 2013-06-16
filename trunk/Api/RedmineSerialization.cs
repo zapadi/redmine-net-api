@@ -32,12 +32,12 @@ namespace Redmine.Net.Api
         /// <exception cref="InvalidOperationException"></exception>
         public static string ToXML<T>(T obj) where T : class
         {
-            var xws = new XmlWriterSettings{OmitXmlDeclaration = true};
+            var xws = new XmlWriterSettings { OmitXmlDeclaration = true };
             using (var stringWriter = new StringWriter())
             {
                 using (var xmlWriter = XmlWriter.Create(stringWriter, xws))
                 {
-                    var sr = new XmlSerializer(typeof (T));
+                    var sr = new XmlSerializer(typeof(T));
                     sr.Serialize(xmlWriter, obj);
                     return stringWriter.ToString();
                 }
@@ -56,7 +56,7 @@ namespace Redmine.Net.Api
         {
             using (var text = new StringReader(xml))
             {
-                var sr = new XmlSerializer(typeof (T));
+                var sr = new XmlSerializer(typeof(T));
                 return sr.Deserialize(text) as T;
             }
         }
@@ -75,6 +75,114 @@ namespace Redmine.Net.Api
             {
                 var sr = new XmlSerializer(type);
                 return sr.Deserialize(text);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <remarks>http://florianreischl.blogspot.ro/search/label/c%23</remarks>
+        public class XmlStreamingSerializer<T>
+        {
+            static XmlSerializerNamespaces ns;
+            XmlSerializer serializer = new XmlSerializer(typeof(T));
+            XmlWriter writer;
+            bool finished;
+
+            static XmlStreamingSerializer()
+            {
+                ns = new XmlSerializerNamespaces();
+                ns.Add("", "");
+            }
+
+            private XmlStreamingSerializer()
+            {
+                serializer = new XmlSerializer(typeof(T));
+            }
+
+            public XmlStreamingSerializer(TextWriter w)
+                : this(XmlWriter.Create(w))
+            {
+            }
+
+            public XmlStreamingSerializer(XmlWriter writer)
+                : this()
+            {
+                this.writer = writer;
+                writer.WriteStartDocument();
+                writer.WriteStartElement("ArrayOf" + typeof(T).Name);
+            }
+
+            public void Finish()
+            {
+                writer.WriteEndDocument();
+                writer.Flush();
+                finished = true;
+            }
+
+            public void Close()
+            {
+                if (!finished)
+                    Finish();
+                writer.Close();
+            }
+
+            public void Serialize(T item)
+            {
+                serializer.Serialize(writer, item, ns);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <remarks>http://florianreischl.blogspot.ro/search/label/c%23</remarks>
+        public class XmlStreamingDeserializer<T>
+        {
+            static XmlSerializerNamespaces ns;
+            XmlSerializer serializer = new XmlSerializer(typeof(T));
+            XmlReader reader;
+
+            static XmlStreamingDeserializer()
+            {
+                ns = new XmlSerializerNamespaces();
+                ns.Add("", "");
+            }
+
+            private XmlStreamingDeserializer()
+            {
+                serializer = new XmlSerializer(typeof(T));
+            }
+
+            public XmlStreamingDeserializer(TextReader reader)
+                : this(XmlReader.Create(reader))
+            {
+            }
+
+            public XmlStreamingDeserializer(XmlReader reader)
+                : this()
+            {
+                this.reader = reader;
+            }
+
+            public void Close()
+            {
+                reader.Close();
+            }
+
+            public T Deserialize()
+            {
+                while (reader.Read())
+                {
+                    if (reader.NodeType == XmlNodeType.Element && reader.Depth == 1 && reader.Name == typeof(T).Name)
+                    {
+                        XmlReader xmlReader = reader.ReadSubtree();
+                        return (T)serializer.Deserialize(xmlReader);
+                    }
+                }
+                return default(T);
             }
         }
     }
