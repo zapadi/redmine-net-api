@@ -49,16 +49,6 @@ namespace Redmine.Net.Api
         private const string POST = "POST";
         private const string DELETE = "DELETE";
 
-        private readonly string host, apiKey, basicAuthorization;
-        private readonly MimeFormat mimeFormat;
-        private readonly CredentialCache cache;
-
-        /// <summary>
-        /// Maximum page-size when retrieving complete object lists
-        /// <remarks>By default only 25 results can be retrieved per request. Maximum is 100. To change the maximum value set in your Settings -> General, "Objects per page options".By adding (for instance) 9999 there would make you able to get that many results per request.</remarks>
-        /// </summary>
-        public int PageSize { get; set; }
-
         private readonly Dictionary<Type, String> urls = new Dictionary<Type, string>
         {
             {typeof (Issue), "issues"},
@@ -80,6 +70,21 @@ namespace Redmine.Net.Api
             {typeof (IssuePriority), "enumerations/issue_priorities"},
             {typeof (Watcher), "watchers"}
         };
+
+        private readonly string host, apiKey, basicAuthorization;
+        private readonly MimeFormat mimeFormat;
+        private readonly CredentialCache cache;
+
+        /// <summary>
+        /// Maximum page-size when retrieving complete object lists
+        /// <remarks>By default only 25 results can be retrieved per request. Maximum is 100. To change the maximum value set in your Settings -> General, "Objects per page options".By adding (for instance) 9999 there would make you able to get that many results per request.</remarks>
+        /// </summary>
+        public int PageSize { get; set; }
+
+        /// <summary>
+        /// As of Redmine 2.2.0 you can impersonate user setting user login (eg. jsmith). This only works when using the API with an administrator account, this header will be ignored when using the API with a regular user account.
+        /// </summary>
+        public string ImpersonateUser { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RedmineManager"/> class.
@@ -169,11 +174,6 @@ namespace Redmine.Net.Api
         }
 
         /// <summary>
-        /// As of Redmine 2.2.0 you can impersonate user setting user login (eg. jsmith). This only works when using the API with an administrator account, this header will be ignored when using the API with a regular user account.
-        /// </summary>
-        public string ImpersonateUser { get; set; }
-
-        /// <summary>
         /// Returns a list of users.
         /// </summary>
         /// <param name="userStatus">get only users with the given status. Default is 1 (active users)</param>
@@ -201,77 +201,24 @@ namespace Redmine.Net.Api
             ExecuteUpload(string.Format(RequestFormat, host, urls[typeof(Issue)], issueId + "/watchers/" + userId, mimeFormat), DELETE, string.Empty, "RemoveWatcher");
         }
 
-        private string ExecuteUpload(string address, string actionType, string data, string methodName)
+        /// <summary>
+        /// Adds an existing user to a group.
+        /// </summary>
+        /// <param name="groupId">The group id.</param>
+        /// <param name="userId">The user id.</param>
+        public void AddUser(int groupId, int userId)
         {
-            using (var wc = CreateWebClient(null))
-            {
-                try
-                {
-                    if (actionType == POST || actionType == DELETE || actionType == PUT)
-                    {
-                        return wc.UploadString(address, actionType, data);
-                    }
-                }
-                catch (WebException webException)
-                {
-                    HandleWebException(webException, methodName);
-                }
-                return null;
-            }
+            ExecuteUpload(string.Format(RequestFormat, host, urls[typeof(Group)], groupId + "/users", mimeFormat), POST, mimeFormat == MimeFormat.xml ? "<user_id>" + userId + "</user_id>" : "user_id:" + userId, "AddUser");
         }
 
-        private T ExecuteUpload<T>(string address, string actionType, string data, string methodName) where T:class , new()
+        /// <summary>
+        /// Removes an user from a group.
+        /// </summary>
+        /// <param name="groupId">The group id.</param>
+        /// <param name="userId">The user id.</param>
+        public void DeleteUser(int groupId, int userId)
         {
-            using (var wc = CreateWebClient(null))
-            {
-                try
-                {
-                    if (actionType == POST || actionType == DELETE || actionType == PUT)
-                    {
-                        var response = wc.UploadString(address, actionType, data);
-                        return Deserialize<T>(response);
-                    }
-                }
-                catch (WebException webException)
-                {
-                    HandleWebException(webException, methodName);
-                }
-                return default(T);
-            }
-        }
-
-        private T ExecuteDownload<T>(string address, string methodName) where T : class, new()
-        {
-            using (var wc = CreateWebClient(null))
-            {
-                try
-                {
-                    var response = wc.DownloadString(address);
-                    return Deserialize<T>(response);
-                }
-                catch (WebException webException)
-                {
-                    HandleWebException(webException, methodName);
-                }
-                return default(T);
-            }
-        }
-
-        private T ExecuteDownload<T>(string address, NameValueCollection parameters, string methodName) where T : class, new()
-        {
-            using (var wc = CreateWebClient(parameters))
-            {
-                try
-                {
-                    var response = wc.DownloadString(address);
-                    return Deserialize<T>(response);
-                }
-                catch (WebException webException)
-                {
-                    HandleWebException(webException, methodName);
-                }
-                return default(T);
-            }
+            ExecuteUpload(string.Format(RequestFormat, host, urls[typeof(Group)], groupId + "/users/" + userId, mimeFormat), DELETE, string.Empty, "DeleteUser");
         }
 
         /// <summary>
@@ -297,7 +244,7 @@ namespace Redmine.Net.Api
                                  ? string.Format(WikiPageFormat, host, projectId, pageName, mimeFormat)
                                  : string.Format(WikiVersionFormat, host, projectId, pageName, version, mimeFormat);
 
-            return ExecuteDownload<WikiPage>(address, parameters, "GetWikiPage");
+            return ExecuteDownload<WikiPage>(address, "GetWikiPage", parameters);
         }
 
         /// <summary>
@@ -307,20 +254,8 @@ namespace Redmine.Net.Api
         /// <returns></returns>
         public IList<WikiPage> GetAllWikiPages(string projectId)
         {
-            using (var wc = CreateWebClient(null))
-            {
-                try
-                {
-                    var response = wc.DownloadString(string.Format(WikiIndexFormat, host, projectId, mimeFormat));
-                    int totalCount;
-                    return DeserializeList<WikiPage>(response, "wiki", out totalCount);
-                }
-                catch (WebException webException)
-                {
-                    HandleWebException(webException, "WikiPage");
-                }
-                return null;
-            }
+            int totalCount = -1;
+            return ExecuteDownloadList<WikiPage>(string.Format(WikiIndexFormat, host, projectId, mimeFormat),"GetAllWikiPages", "wiki", out totalCount);
         }
 
         /// <summary>
@@ -335,7 +270,7 @@ namespace Redmine.Net.Api
             string result = Serialize(wikiPage);
 
             if (string.IsNullOrEmpty(result)) return null;
-           
+
             return ExecuteUpload<WikiPage>(string.Format(WikiPageFormat, host, projectId, pageName, mimeFormat), PUT, result, "CreateOrUpdateWikiPage");
         }
 
@@ -374,26 +309,6 @@ namespace Redmine.Net.Api
         }
 
         /// <summary>
-        /// Adds an existing user to a group.
-        /// </summary>
-        /// <param name="groupId">The group id.</param>
-        /// <param name="userId">The user id.</param>
-        public void AddUserToGroup(int groupId, int userId)
-        {
-            ExecuteUpload(string.Format(RequestFormat, host, urls[typeof(Group)], groupId + "/users", mimeFormat), POST, mimeFormat == MimeFormat.xml ? "<user_id>" + userId + "</user_id>" : "user_id:" + userId, "AddUserToGroup");
-        }
-
-        /// <summary>
-        /// Removes an user from a group.
-        /// </summary>
-        /// <param name="groupId">The group id.</param>
-        /// <param name="userId">The user id.</param>
-        public void DeleteUserFromGroup(int groupId, int userId)
-        {
-            ExecuteUpload(string.Format(RequestFormat, host, urls[typeof(Group)], groupId + "/users/" + userId, mimeFormat), DELETE, string.Empty, "DeleteUserFromGroup");
-        }
-
-        /// <summary>
         /// Returns a paginated list of objects.
         /// </summary>
         /// <typeparam name="T">The type of objects to retrieve.</typeparam>
@@ -422,40 +337,27 @@ namespace Redmine.Net.Api
             totalCount = -1;
             if (!urls.ContainsKey(typeof(T))) return null;
 
-            using (var wc = CreateWebClient(parameters))
+            var type = typeof(T);
+            string address;
+            if (type == typeof(Version) || type == typeof(IssueCategory) || type == typeof(ProjectMembership))
             {
-                var type = typeof(T);
-                try
-                {
-                    string result;
+                var projectId = GetOwnerId(parameters, "project_id");
+                if (string.IsNullOrEmpty(projectId)) throw new RedmineException("The project id is mandatory! \nCheck if you have included the parameter project_id to parameters.");
 
-                    if (type == typeof(Version) || type == typeof(IssueCategory) || type == typeof(ProjectMembership))
-                    {
-                        var projectId = GetOwnerId(parameters, "project_id");
-                        if (string.IsNullOrEmpty(projectId))
-                            throw new RedmineException("The project id is mandatory! \nCheck if you have included the parameter project_id to parameters.");
-
-                        result = wc.DownloadString(string.Format(EntityWithParentFormat, host, "projects", projectId, urls[type], mimeFormat));
-                    }
-                    else
-                        if (type == typeof(IssueRelation))
-                        {
-                            string issueId = GetOwnerId(parameters, "issue_id");
-                            if (string.IsNullOrEmpty(issueId)) throw new RedmineException("The issue id is mandatory! \nCheck if you have included the parameter issue_id to parameters");
-
-                            result = wc.DownloadString(string.Format(EntityWithParentFormat, host, "issues", issueId, urls[type], mimeFormat));
-                        }
-                        else
-                            result = wc.DownloadString(string.Format(Format, host, urls[type], mimeFormat));
-
-                    return DeserializeList<T>(result, urls[type], out totalCount);
-                }
-                catch (WebException webException)
-                {
-                    HandleWebException(webException, type.Name);
-                }
-                return null;
+                address = string.Format(EntityWithParentFormat, host, "projects", projectId, urls[type], mimeFormat);
             }
+            else
+                if (type == typeof(IssueRelation))
+                {
+                    string issueId = GetOwnerId(parameters, "issue_id");
+                    if (string.IsNullOrEmpty(issueId)) throw new RedmineException("The issue id is mandatory! \nCheck if you have included the parameter issue_id to parameters");
+
+                    address = string.Format(EntityWithParentFormat, host, "issues", issueId, urls[type], mimeFormat);
+                }
+                else
+                    address = string.Format(Format, host, urls[type], mimeFormat);
+
+            return ExecuteDownloadList<T>(address, "GetObjectList<" + type.Name + ">", urls[type], out totalCount, parameters);
         }
 
         /// <summary>
@@ -556,38 +458,23 @@ namespace Redmine.Net.Api
 
             if (string.IsNullOrEmpty(result)) return null;
 
-            using (var wc = CreateWebClient(null))
+            string address;
+
+            if (type == typeof(Version) || type == typeof(IssueCategory) || type == typeof(ProjectMembership))
             {
-                try
-                {
-                    string response;
-                    if (type == typeof(Version) || type == typeof(IssueCategory) || type == typeof(ProjectMembership))
-                    {
-                        if (string.IsNullOrEmpty(ownerId)) throw new RedmineException("The owner id(project id) is mandatory!");
-                        response = wc.UploadString(string.Format(EntityWithParentFormat, host, "projects", ownerId, urls[type], mimeFormat), result);
-                    }
-                    else
-                        if (type == typeof(IssueRelation))
-                        {
-                            if (string.IsNullOrEmpty(ownerId)) throw new RedmineException("The owner id(issue id) is mandatory!");
-                            response = wc.UploadString(string.Format(EntityWithParentFormat, host, "issues", ownerId, urls[type], mimeFormat), result);
-                        }
-                        else
-                            response = wc.UploadString(string.Format(Format, host, urls[type], mimeFormat), result);
-                    //  #if RUNNING_ON_35_OR_ABOVE
-                    if (mimeFormat == MimeFormat.json)
-                        return type == typeof(IssueCategory)
-                            ? RedmineSerialization.JsonDeserialize<T>(response, "issue_category")
-                            : RedmineSerialization.JsonDeserialize<T>(response, type == typeof(IssueRelation) ? "relation" : null);
-                    // #endif
-                    return RedmineSerialization.FromXML<T>(response);
-                }
-                catch (WebException webException)
-                {
-                    HandleWebException(webException, type.Name);
-                }
+                if (string.IsNullOrEmpty(ownerId)) throw new RedmineException("The owner id(project id) is mandatory!");
+                address = string.Format(EntityWithParentFormat, host, "projects", ownerId, urls[type], mimeFormat);
             }
-            return null;
+            else
+                if (type == typeof(IssueRelation))
+                {
+                    if (string.IsNullOrEmpty(ownerId)) throw new RedmineException("The owner id(issue id) is mandatory!");
+                    address = string.Format(EntityWithParentFormat, host, "issues", ownerId, urls[type], mimeFormat);
+                }
+                else
+                    address = string.Format(Format, host, urls[type], mimeFormat);
+
+            return ExecuteUpload<T>(address, POST, result, "CreateObject<" + type.Name + ">");
         }
 
         /// <summary>
@@ -623,23 +510,19 @@ namespace Redmine.Net.Api
             var request = Serialize(obj);
             if (string.IsNullOrEmpty(request)) return;
 
-            using (var wc = CreateWebClient(null))
+            string address;
+
+            if (type == typeof(Version) || type == typeof(IssueCategory) || type == typeof(ProjectMembership))
             {
-                try
-                {
-                    if (type == typeof(Version) || type == typeof(IssueCategory) || type == typeof(ProjectMembership))
-                    {
-                        if (string.IsNullOrEmpty(projectId)) throw new RedmineException("The project owner id is mandatory!");
-                        wc.UploadString(string.Format(EntityWithParentFormat, host, "projects", projectId, urls[type], mimeFormat), PUT, request);
-                    }
-                    else
-                        wc.UploadString(string.Format(RequestFormat, host, urls[type], id, mimeFormat), PUT, request);
-                }
-                catch (WebException webException)
-                {
-                    HandleWebException(webException, type.Name);
-                }
+                if (string.IsNullOrEmpty(projectId)) throw new RedmineException("The project owner id is mandatory!");
+                address = string.Format(EntityWithParentFormat, host, "projects", projectId, urls[type], mimeFormat);
             }
+            else
+            {
+                address = string.Format(RequestFormat, host, urls[type], id, mimeFormat);
+            }
+
+            ExecuteUpload(address, PUT, request, "UpdateObject<" + type.Name + ">");
         }
 
         /// <summary>
@@ -821,24 +704,26 @@ namespace Redmine.Net.Api
 
         private T Deserialize<T>(string response) where T : class, new()
         {
+            Type type = typeof(T);
+
             if (mimeFormat == MimeFormat.json)
-                return RedmineSerialization.JsonDeserialize<T>(response, null);
+                return type == typeof(IssueCategory)
+                    ? RedmineSerialization.JsonDeserialize<T>(response, "issue_category")
+                    : RedmineSerialization.JsonDeserialize<T>(response, type == typeof(IssueRelation) ? "relation" : null);
+
+            return RedmineSerialization.FromXML<T>(response);
 
             //using (var stringReader = new StringReader(response))
             //{
             //    var deserializer = new RedmineSerialization.XmlStreamingDeserializer<T>(stringReader);
             //    return deserializer.Deserialize();
             //}
-
-            return RedmineSerialization.FromXML<T>(response);
         }
 
         private IList<T> DeserializeList<T>(string response, string jsonRoot, out int totalCount) where T : class, new()
         {
-            //#if RUNNING_ON_35_OR_ABOVE
             if (mimeFormat == MimeFormat.json)
                 return RedmineSerialization.JsonDeserializeToList<T>(response, jsonRoot, out totalCount);
-            // #endif
 
             using (var text = new StringReader(response))
             {
@@ -852,6 +737,81 @@ namespace Redmine.Net.Api
 
                     return xmlReader.ReadElementContentAsCollection<T>();
                 }
+            }
+        }
+
+        private string ExecuteUpload(string address, string actionType, string data, string methodName)
+        {
+            using (var wc = CreateWebClient(null))
+            {
+                try
+                {
+                    if (actionType == POST || actionType == DELETE || actionType == PUT)
+                    {
+                        return wc.UploadString(address, actionType, data);
+                    }
+                }
+                catch (WebException webException)
+                {
+                    HandleWebException(webException, methodName);
+                }
+                return null;
+            }
+        }
+
+        private T ExecuteUpload<T>(string address, string actionType, string data, string methodName) where T : class , new()
+        {
+            using (var wc = CreateWebClient(null))
+            {
+                try
+                {
+                    if (actionType == POST || actionType == DELETE || actionType == PUT)
+                    {
+                        var response = wc.UploadString(address, actionType, data);
+
+                        return Deserialize<T>(response);
+                    }
+                }
+                catch (WebException webException)
+                {
+                    HandleWebException(webException, methodName);
+                }
+                return default(T);
+            }
+        }
+
+        private T ExecuteDownload<T>(string address, string methodName, NameValueCollection parameters = null) where T : class, new()
+        {
+            using (var wc = CreateWebClient(parameters))
+            {
+                try
+                {
+                    var response = wc.DownloadString(address);
+                    return Deserialize<T>(response);
+                }
+                catch (WebException webException)
+                {
+                    HandleWebException(webException, methodName);
+                }
+                return default(T);
+            }
+        }
+
+        private IList<T> ExecuteDownloadList<T>(string address, string methodName, string jsonRoot,out int totalCount, NameValueCollection parameters = null) where T : class, new()
+        {
+            totalCount = -1;
+            using (var wc = CreateWebClient(parameters))
+            {
+                try
+                {
+                    var response = wc.DownloadString(address);
+                    return DeserializeList<T>(response, jsonRoot, out totalCount);
+                }
+                catch (WebException webException)
+                {
+                    HandleWebException(webException, methodName);
+                }
+                return null;
             }
         }
     }
