@@ -14,7 +14,6 @@
    limitations under the License.
 */
 
-//#if RUNNING_ON_35_OR_ABOVE
 using System;
 using System.Collections.Generic;
 using System.Web.Script.Serialization;
@@ -22,7 +21,7 @@ using Redmine.Net.Api.Types;
 
 namespace Redmine.Net.Api.JSonConverters
 {
-    public class ProjectTrackerConverter : JavaScriptConverter
+    public class ProjectIssueCategoryConverter : JavaScriptConverter
     {
         #region Overrides of JavaScriptConverter
 
@@ -30,7 +29,7 @@ namespace Redmine.Net.Api.JSonConverters
         {
             if ((dictionary != null))
             {
-                var projectTracker = new ProjectTracker();
+                var projectTracker = new ProjectIssueCategory();
                 projectTracker.Id = dictionary.GetValue<int>("id");
                 projectTracker.Name = dictionary.GetValue<string>("name");
                 return projectTracker;
@@ -40,15 +39,26 @@ namespace Redmine.Net.Api.JSonConverters
 
         public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer)
         {
-            return null;
+            var entity = obj as ProjectIssueCategory;
+            var root = new Dictionary<string, object>();
+            var result = new Dictionary<string, object>();
+
+            if (entity != null)
+            {
+                result.Add("id", entity.Id);
+                result.Add("name", entity.Name);
+
+                root["issue_category"] = result;
+                return root;
+            }
+            return result;
         }
 
         public override IEnumerable<Type> SupportedTypes
         {
-            get { return new List<Type>(new[] { typeof(ProjectTracker) }); }
+            get { return new List<Type>(new[] { typeof(ProjectIssueCategory) }); }
         }
 
         #endregion
     }
 }
-//#endif

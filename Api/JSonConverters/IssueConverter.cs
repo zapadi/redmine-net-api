@@ -60,6 +60,7 @@ namespace Redmine.Net.Api.JSonConverters
                 issue.Journals = dictionary.GetValueAsCollection<Journal>("journals");
                 issue.Changesets = dictionary.GetValueAsCollection<ChangeSet>("changesets");
                 issue.Watchers = dictionary.GetValueAsCollection<Watcher>("watchers");
+                issue.Children = dictionary.GetValueAsCollection<IssueChild>("children");
                 return issue;
             }
 
@@ -83,7 +84,7 @@ namespace Redmine.Net.Api.JSonConverters
                 result.WriteIdIfNotNull(entity.Category, "category_id");
                 result.WriteIdIfNotNull(entity.Tracker, "tracker_id");
                 result.WriteIdIfNotNull(entity.AssignedTo, "assigned_to_id");
-                result.WriteIdIfNotNull(entity.FixedVersion, "fixed_version");
+                result.WriteIdIfNotNull(entity.FixedVersion, "fixed_version_id");
                 result.WriteIdIfNotNull(entity.ParentIssue, "parent_issue_id");
                 result.WriteIfNotDefaultOrNull(entity.EstimatedHours, "estimated_hours");
 

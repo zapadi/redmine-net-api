@@ -17,6 +17,7 @@
 //#if RUNNING_ON_35_OR_ABOVE
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Web.Script.Serialization;
 using Redmine.Net.Api.Types;
 
@@ -62,7 +63,7 @@ namespace Redmine.Net.Api.JSonConverters
                 result.WriteIdIfNotNull(entity.Project, "project_id");
                 result.WriteIdIfNotNull(entity.Activity, "activity_id");
                 if (!entity.SpentOn.HasValue) entity.SpentOn = DateTime.Now;
-                result.Add("spent_on", entity.SpentOn);
+                result.Add("spent_on", entity.SpentOn.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
                 result.Add("hours", entity.Hours);
                 result.Add("comments", entity.Comments);
 

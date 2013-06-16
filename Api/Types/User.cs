@@ -87,10 +87,16 @@ namespace Redmine.Net.Api.Types
         public DateTime? LastLoginOn { get; set; }
 
         /// <summary>
-        /// Gets or sets the user's Api key.
+        /// Gets the API key of the user, visible for admins and for yourself (added in 2.3.0)
         /// </summary>
         [XmlElement("api_key")]
         public string ApiKey { get; set; }
+
+        /// <summary>
+        /// Gets the status of the user, visible for admins only (added in 2.4.0)
+        /// </summary>
+        [XmlElement("status")]
+        public UserStatus Status { get; set; }
 
         /// <summary>
         /// Gets or sets the custom fields.
@@ -118,7 +124,7 @@ namespace Redmine.Net.Api.Types
         /// </value>
         [XmlArray("groups")]
         [XmlArrayItem("group")]
-        public List<UserGroup> Groups { get; set; } 
+        public List<UserGroup> Groups { get; set; }
 
         public XmlSchema GetSchema()
         {
@@ -156,6 +162,8 @@ namespace Redmine.Net.Api.Types
 
                     case "api_key": ApiKey = reader.ReadElementContentAsString(); break;
 
+                    case "status":Status = (UserStatus)reader.ReadElementContentAsInt(); break;
+
                     case "custom_fields": CustomFields = reader.ReadElementContentAsCollection<CustomField>(); break;
 
                     case "memberships": Memberships = reader.ReadElementContentAsCollection<Membership>(); break;
@@ -181,10 +189,18 @@ namespace Redmine.Net.Api.Types
         {
             if (other == null) return false;
             return (Id == other.Id && Login == other.Login && Password == other.Password
-                && FirstName == other.FirstName && LastName == other.LastName && Email == other.Email 
-                && CreatedOn == other.CreatedOn && LastLoginOn == other.LastLoginOn 
-                && CustomFields == other.CustomFields && Memberships == other.Memberships 
+                && FirstName == other.FirstName && LastName == other.LastName && Email == other.Email
+                && CreatedOn == other.CreatedOn && LastLoginOn == other.LastLoginOn
+                && CustomFields == other.CustomFields && Memberships == other.Memberships
                 && Groups == other.Groups && ApiKey == other.ApiKey);
         }
+    }
+
+    public enum UserStatus
+    {
+        STATUS_ANONYMOUS = 0,
+        STATUS_ACTIVE = 1,
+        STATUS_REGISTERED = 2,
+        STATUS_LOCKED = 3
     }
 }

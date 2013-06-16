@@ -45,7 +45,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataContractJson\ProjectSerializer.cs" />
     <Compile Include="ExtensionAttribute.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="JSonConverters\AttachmentConverter.cs" />
@@ -67,6 +66,7 @@
     <Compile Include="JSonConverters\NewsConverter.cs" />
     <Compile Include="JSonConverters\PermissionConverter.cs" />
     <Compile Include="JSonConverters\ProjectConverter.cs" />
+    <Compile Include="JSonConverters\ProjectIssueCategoryConverter.cs" />
     <Compile Include="JSonConverters\ProjectMembershipConverter.cs" />
     <Compile Include="JSonConverters\ProjectTrackerConverter.cs" />
     <Compile Include="JSonConverters\QueryConverter.cs" />

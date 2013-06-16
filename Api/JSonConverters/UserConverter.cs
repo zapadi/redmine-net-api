@@ -40,6 +40,7 @@ namespace Redmine.Net.Api.JSonConverters
                 user.CreatedOn = dictionary.GetValue<DateTime?>("created_on");
                 user.LastLoginOn = dictionary.GetValue<DateTime?>("last_login_on");
                 user.ApiKey = dictionary.GetValue<string>("api_key");
+                user.Status = dictionary.GetValue<UserStatus>("status");
                 user.CustomFields = dictionary.GetValueAsCollection<CustomField>("custom_fields");
                 user.Memberships = dictionary.GetValueAsCollection<Membership>("memberships");
                 user.Groups = dictionary.GetValueAsCollection<UserGroup>("groups");

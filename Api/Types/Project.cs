@@ -147,6 +147,17 @@ namespace Redmine.Net.Api.Types
             if (Id == 0) return;
             writer.WriteIdIfNotNull(Parent, "parent_id");
             writer.WriteElementString("homepage", HomePage);
+
+            if (CustomFields != null)
+            {
+                writer.WriteStartElement("custom_fields");
+                writer.WriteAttributeString("type", "array");
+                foreach (var cf in CustomFields)
+                {
+                    new XmlSerializer(cf.GetType()).Serialize(writer, cf);
+                }
+                writer.WriteEndElement();
+            }
         }
 
         public bool Equals(Project other)
