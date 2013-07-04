@@ -170,7 +170,7 @@ namespace Redmine.Net.Api
         /// using the System.Exception.InnerException property.</exception>
         public User GetCurrentUser(NameValueCollection parameters = null)
         {
-            return ExecuteDownload<User>(string.Format(RequestFormat, host, urls[typeof(User)], CurrentUserUri, mimeFormat), "GetCurrentUser");
+            return ExecuteDownload<User>(string.Format(RequestFormat, host, urls[typeof(User)], CurrentUserUri, mimeFormat), "GetCurrentUser", parameters);
         }
 
         /// <summary>
@@ -415,7 +415,7 @@ namespace Redmine.Net.Api
         {
             var type = typeof(T);
 
-            return !urls.ContainsKey(type) ? null : ExecuteDownload<T>(string.Format(RequestFormat, host, urls[type], id, mimeFormat), "GetObject<" + type.Name + ">");
+            return !urls.ContainsKey(type) ? null : ExecuteDownload<T>(string.Format(RequestFormat, host, urls[type], id, mimeFormat), "GetObject<" + type.Name + ">", parameters);
         }
 
         /// <summary>
