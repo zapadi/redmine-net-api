@@ -20,6 +20,7 @@ using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
@@ -66,8 +67,8 @@ namespace Redmine.Net.Api
             {typeof (Role), "roles"},
             {typeof (ProjectMembership), "memberships"},
             {typeof (Group), "groups"},
-            {typeof (TimeEntryActivity), "enumerations/time_entry_activities"},
-            {typeof (IssuePriority), "enumerations/issue_priorities"},
+            {typeof (TimeEntryActivity), "time_entry_activities"},
+            {typeof (IssuePriority), "issue_priorities"},
             {typeof (Watcher), "watchers"}
         };
 
@@ -254,7 +255,7 @@ namespace Redmine.Net.Api
         /// <returns></returns>
         public IList<WikiPage> GetAllWikiPages(string projectId)
         {
-            int totalCount = -1;
+            int totalCount;
             return ExecuteDownloadList<WikiPage>(string.Format(WikiIndexFormat, host, projectId, mimeFormat),"GetAllWikiPages", "wiki", out totalCount);
         }
 
@@ -285,10 +286,11 @@ namespace Redmine.Net.Api
         }
 
         /// <summary>
-        /// Upload data on server.
+        /// Support for adding attachments through the REST API is added in Redmine 1.4.0.
+        /// Upload a file to server.
         /// </summary>
-        /// <param name="data">Data which will be uploaded on server</param>
-        /// <returns>Returns 'Upload' object with inialized 'Token' by server response.</returns>
+        /// <param name="data">The content of the file that will be uploaded on server.</param>
+        /// <returns>Returns the token for uploaded file.</returns>
         public Upload UploadData(byte[] data)
         {
             using (var wc = CreateUploadWebClient())
@@ -423,7 +425,6 @@ namespace Redmine.Net.Api
         /// </summary>
         /// <typeparam name="T">The type of object to create.</typeparam>
         /// <param name="obj">The object to create.</param>
-        /// <param name="parameters"></param>
         /// <remarks>When trying to create an object with invalid or missing attribute parameters, you will get a 422 Unprocessable Entity response. That means that the object could not be created.</remarks>
         /// <exception cref="Redmine.Net.Api.RedmineException"></exception>
         public T CreateObject<T>(T obj) where T : class, new()
@@ -642,7 +643,7 @@ namespace Redmine.Net.Api
                                 string message = string.Empty;
                                 if (errors != null)
                                 {
-                                    foreach (var error in errors) message += error.Info + "\n";
+                                    message = errors.Aggregate(message, (current, error) => current + (error.Info + "\n"));
                                 }
                                 throw new RedmineException(method + " has invalid or missing attribute parameters: " + message);
 
@@ -740,7 +741,7 @@ namespace Redmine.Net.Api
             }
         }
 
-        private string ExecuteUpload(string address, string actionType, string data, string methodName)
+        private void ExecuteUpload(string address, string actionType, string data, string methodName)
         {
             using (var wc = CreateWebClient(null))
             {
@@ -748,14 +749,13 @@ namespace Redmine.Net.Api
                 {
                     if (actionType == POST || actionType == DELETE || actionType == PUT)
                     {
-                        return wc.UploadString(address, actionType, data);
+                        wc.UploadString(address, actionType, data);
                     }
                 }
                 catch (WebException webException)
                 {
                     HandleWebException(webException, methodName);
                 }
-                return null;
             }
         }
 

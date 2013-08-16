@@ -82,9 +82,10 @@ namespace Redmine.Net.Api
         }
 
         /// <summary>
-        /// Uploads a data buffer to server. This method does not block the calling thread.
+        /// Support for adding attachments through the REST API is added in Redmine 1.4.0.
+        /// Upload a file to server. This method does not block the calling thread.
         /// </summary>
-        /// <param name="data">Data which will be uploaded on server</param>
+        /// <param name="data">The content of the file that will be uploaded on server.</param>
         /// <returns>Returns the Guid associated with the async request.</returns>
         public Guid UploadDataAsync(byte[] data)
         {
