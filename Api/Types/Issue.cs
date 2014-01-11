@@ -117,12 +117,19 @@ namespace Redmine.Net.Api.Types
         public float? EstimatedHours { get; set; }
 
         /// <summary>
+        /// Gets or sets the hours spent on the issue.
+        /// </summary>
+        /// <value>The hours spent on the issue.</value>
+        [XmlElement("spent_hours", IsNullable = true)]
+        public float? SpentHours { get; set; }
+
+        /// <summary>
         /// Gets or sets the custom fields.
         /// </summary>
         /// <value>The custom fields.</value>
         [XmlArray("custom_fields")]
         [XmlArrayItem("custom_field")]
-        public IList<CustomField> CustomFields { get; set; }
+        public IList<IssueCustomField> CustomFields { get; set; }
 
         /// <summary>
         /// Gets or sets the created on.
@@ -137,6 +144,13 @@ namespace Redmine.Net.Api.Types
         /// <value>The updated on.</value>
         [XmlElement("updated_on")]
         public DateTime? UpdatedOn { get; set; }
+
+        /// <summary>
+        /// Gets or sets the closed on.
+        /// </summary>
+        /// <value>The closed on.</value>
+        [XmlElement("closed_on")]
+        public DateTime? ClosedOn { get; set; }
 
         /// <summary>
         /// Gets or sets the notes.
@@ -286,11 +300,15 @@ namespace Redmine.Net.Api.Types
 
                     case "estimated_hours": EstimatedHours = reader.ReadElementContentAsNullableFloat(); break;
 
+                    case "spent_hours" : SpentHours = reader.ReadElementContentAsNullableFloat(); break;
+
                     case "created_on": CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
 
                     case "updated_on": UpdatedOn = reader.ReadElementContentAsNullableDateTime(); break;
 
-                    case "custom_fields": CustomFields = reader.ReadElementContentAsCollection<CustomField>(); break;
+                    case "closed_on": ClosedOn = reader.ReadElementContentAsNullableDateTime(); break;
+
+                    case "custom_fields": CustomFields = reader.ReadElementContentAsCollection<IssueCustomField>(); break;
 
                     case "attachments": Attachments = reader.ReadElementContentAsCollection<Attachment>(); break;
 
@@ -320,7 +338,7 @@ namespace Redmine.Net.Api.Types
             writer.WriteIdIfNotNull(Category, "category_id");
             writer.WriteIdIfNotNull(Tracker, "tracker_id");
             writer.WriteIdIfNotNull(AssignedTo, "assigned_to_id");
-            writer.WriteIdIfNotNull(ParentIssue, "parent_issue_id");
+            writer.WriteElementString("parent_issue_id", ParentIssue == null ? null : ParentIssue.Id.ToString(CultureInfo.InvariantCulture));
             writer.WriteIdIfNotNull(FixedVersion, "fixed_version_id");
             writer.WriteIfNotDefaultOrNull(EstimatedHours, "estimated_hours");
             if (StartDate != null)
@@ -368,7 +386,7 @@ namespace Redmine.Net.Api.Types
 
         public object Clone()
         {
-            var issue = new Issue { AssignedTo = AssignedTo, Author = Author, Category = Category, CustomFields = CustomFields, Description = Description, DoneRatio = DoneRatio, DueDate = DueDate, EstimatedHours = EstimatedHours, Priority = Priority, StartDate = StartDate, Status = Status, Subject = Subject, Tracker = Tracker, Project = Project, FixedVersion = FixedVersion, Notes = Notes, Watchers = Watchers};
+            var issue = new Issue { AssignedTo = AssignedTo, Author = Author, Category = Category, CustomFields = CustomFields, Description = Description, DoneRatio = DoneRatio, DueDate = DueDate, SpentHours = SpentHours, EstimatedHours = EstimatedHours, Priority = Priority, StartDate = StartDate, Status = Status, Subject = Subject, Tracker = Tracker, Project = Project, FixedVersion = FixedVersion, Notes = Notes, Watchers = Watchers};
             return issue;
         }
 
@@ -379,7 +397,7 @@ namespace Redmine.Net.Api.Types
                 && Author == other.Author && Category == other.Category && Subject == other.Subject && Description == other.Description && StartDate == other.StartDate
                 && DueDate == other.DueDate && DoneRatio == other.DoneRatio && EstimatedHours == other.EstimatedHours && CustomFields == other.CustomFields
                 && CreatedOn == other.CreatedOn && UpdatedOn == other.UpdatedOn && AssignedTo == other.AssignedTo && FixedVersion == other.FixedVersion
-                && Notes == other.Notes && Watchers == other.Watchers
+                && Notes == other.Notes && Watchers == other.Watchers && ClosedOn == other.ClosedOn && SpentHours == other.SpentHours
                 );
         }
     }

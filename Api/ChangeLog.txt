@@ -1,5 +1,28 @@
 Changelog:
 
+Version 0.11
+
+Fixed:
+	Issue 61:	GetObject return relations.
+	Issue 62:	Break compilatión on asp.net project.
+	Issue 63:	GetObjectList don't get enumerations, error on path
+	Parsing watchers from xml returned by redmine not working.
+	Priority list is not returned.
+	Change parent of an issue fails.
+	Build fails in VB.NET
+	IssuePriority/TimeEntryActivities json.
+	(daqiang@qq17854.com) 
+
+Features:
+
+	Added spent hours to issue.
+	Added closed_on to issue
+	Added DownloadFile method.
+	Added CustomFieldsV24
+
+Patched:
+	Get all users(daqiang@qq17854.com)
+
 Version 0.10
 
 Fixed:

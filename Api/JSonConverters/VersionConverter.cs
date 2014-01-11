@@ -42,7 +42,7 @@ namespace Redmine.Net.Api.JSonConverters
                 version.Project = dictionary.GetValueAsIdentifiableName("project");
                 version.Sharing = dictionary.GetValue<VersionSharing>("sharing");
                 version.Status = dictionary.GetValue<VersionStatus>("status");
-                version.CustomFields = dictionary.GetValueAsCollection<CustomField>("custom_fields");
+                version.CustomFields = dictionary.GetValueAsCollection<IssueCustomField>("custom_fields");
 
                 return version;
             }

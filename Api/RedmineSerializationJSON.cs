@@ -50,7 +50,7 @@ namespace Redmine.Net.Api
             {typeof (ProjectMembership), new ProjectMembershipConverter()},
             {typeof (Group), new GroupConverter()},
             {typeof (Error), new ErrorConverter()},
-            {typeof (CustomField), new CustomFieldConverter()},
+            {typeof (IssueCustomField), new IssueCustomFieldConverter()},
             {typeof (ProjectTracker), new ProjectTrackerConverter()},
             {typeof (Journal), new JournalConverter()},
             {typeof (TimeEntryActivity), new TimeEntryActivityConverter()},

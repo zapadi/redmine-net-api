@@ -1,4 +1,4 @@
-﻿/*
+/*
    Copyright 2011 - 2013 Adrian Popescu, Dorin Huzum.
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,73 +16,114 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
 using System.Xml;
+using System.Xml.Schema;
 using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    [XmlRoot("custom_field")]
-    public class CustomField : IdentifiableName, IEquatable<CustomField>
+    [XmlRoot("custom_fields")]
+    public class CustomField : IXmlSerializable, IEquatable<CustomField>
     {
-        /// <summary>
-        /// Gets or sets the value.
-        /// </summary>
-        /// <value>The value.</value>
-        [XmlArray("value")]
-        [XmlArrayItem("value")]
-        public IList<CustomFieldValue> Values { get; set; }
+        [XmlElement("id")]
+        public int Id { get; set; }
+        
+        [XmlElement("name")]
+        public string Name { get; set; }
+ 
+        [XmlElement("customized_type")]
+        public string CustomizedType { get; set; }
 
-        [XmlAttribute("multiple")]
+        [XmlElement("field_format")]
+        public string FieldFormat { get; set; }
+
+        [XmlElement("regexp")]
+        public string Regexp { get; set; }
+
+        [XmlElement("min_length")]
+        public int MinLength { get; set; }
+
+        [XmlElement("max_length")]
+        public int MaxLength { get; set; }
+
+        [XmlElement("is_required")]
+        public bool IsRequired { get; set; }
+
+        [XmlElement("is_filter")]
+        public bool IsFilter { get; set; }
+
+        [XmlElement("searchable")]
+        public bool Searchable { get; set; }
+
+        [XmlElement("multiple")]
         public bool Multiple { get; set; }
 
-        public override void ReadXml(XmlReader reader)
+        [XmlElement("default_value")]
+        public string DefaultValue { get; set; }
+
+        [XmlElement("visible")]
+        public bool Visible { get; set; }
+
+        [XmlArray("possible_values")]
+        [XmlArrayItem("possible_value")]
+        public IList<CustomFieldPossibleValue> PossibleValues { get; set; }
+
+        public XmlSchema GetSchema() { return null; }
+
+        public void ReadXml(XmlReader reader)
         {
-            Id = reader.ReadAttributeAsInt("id");
-            Name = reader.GetAttribute("name");
-            Multiple = reader.ReadAttributeAsBoolean("multiple");
             reader.Read();
+            while (!reader.EOF)
+            {
+                if (reader.IsEmptyElement && !reader.HasAttributes)
+                {
+                    reader.Read();
+                    continue;
+                }
 
-            if (string.IsNullOrEmpty(reader.GetAttribute("type")))
-            {
-                Values = new List<CustomFieldValue> { new CustomFieldValue { Info = reader.ReadElementContentAsString() } };
-            }
-            else
-            {
-                var result = reader.ReadElementContentAsCollection<CustomFieldValue>();
-                Values = result;
+                switch (reader.Name)
+                {
+                    case "id": Id = reader.ReadElementContentAsInt(); break;
+
+                    case "name": Name = reader.ReadElementContentAsString(); break;
+
+                    case "customized_type": CustomizedType = reader.ReadElementContentAsString(); break;
+
+                    case "field_format": FieldFormat = reader.ReadElementContentAsString(); break;
+
+                    case "regexp": Regexp = reader.ReadElementContentAsString(); break;
+
+                    case "min_length": MinLength = reader.ReadElementContentAsInt(); break;
+
+                    case "max_length": MaxLength = reader.ReadElementContentAsInt(); break;
+
+                    case "is_required": IsRequired = reader.ReadElementContentAsBoolean(); break;
+
+                    case "is_filter": IsFilter = reader.ReadElementContentAsBoolean(); break;
+
+                    case "searchable": Searchable = reader.ReadElementContentAsBoolean(); break;
+
+                    case "visible": Visible = reader.ReadElementContentAsBoolean(); break;
+
+                    case "default_value": DefaultValue = reader.ReadElementContentAsString(); break;
+
+                    case "multiple": Multiple = reader.ReadElementContentAsBoolean(); break;
+
+                    case "possible_values": PossibleValues = reader.ReadElementContentAsCollection<CustomFieldPossibleValue>(); break;
+
+                    default: reader.Read(); break;
+                }
             }
         }
 
-        public override void WriteXml(XmlWriter writer)
-        {
-            if (Values == null) return;
-            var itemsCount = Values.Count;
-
-            writer.WriteAttributeString("id", Id.ToString(CultureInfo.InvariantCulture));
-            if (itemsCount > 1)
-            {
-                writer.WriteStartElement("value");
-                writer.WriteAttributeString("type", "array");
-
-                foreach (var v in Values) writer.WriteElementString("value", v.Info);
-
-                writer.WriteEndElement();
-            }
-            else
-            {
-                writer.WriteElementString("value", itemsCount > 0 ? Values[0].Info : null);
-            }
-        }
+        public void WriteXml(XmlWriter writer) {  }
 
         public bool Equals(CustomField other)
         {
             if (other == null) return false;
-            return (Id == other.Id && Name == other.Name && Multiple == other.Multiple && Values == other.Values);
+            return (Id == other.Id && Name == other.Name && Multiple == other.Multiple && IsFilter == other.IsFilter && IsRequired == other.IsRequired && Searchable == other.Searchable && Visible == other.Visible 
+                    && CustomizedType == other.CustomizedType && DefaultValue == other.DefaultValue
+                    && FieldFormat == other.FieldFormat && MaxLength == other.MaxLength && MinLength == other.MinLength && Regexp == other.Regexp && PossibleValues == other.PossibleValues);
         }
     }
 }

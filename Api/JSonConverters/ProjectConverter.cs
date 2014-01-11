@@ -41,7 +41,7 @@ namespace Redmine.Net.Api.JSonConverters
                 project.CreatedOn = dictionary.GetValue<DateTime?>("created_on");
                 project.UpdatedOn = dictionary.GetValue<DateTime?>("updated_on");
                 project.Trackers = dictionary.GetValueAsCollection<ProjectTracker>("trackers");
-                project.CustomFields = dictionary.GetValueAsCollection<CustomField>("custom_fields");
+                project.CustomFields = dictionary.GetValueAsCollection<IssueCustomField>("custom_fields");
                 project.Parent = dictionary.GetValueAsIdentifiableName("parent");
                 project.IssueCategories = dictionary.GetValueAsCollection<ProjectIssueCategory>("issue_categories");
                 return project;
@@ -70,7 +70,7 @@ namespace Redmine.Net.Api.JSonConverters
 
                 if (entity.CustomFields != null)
                 {
-                    serializer.RegisterConverters(new[] { new CustomFieldConverter() });
+                    serializer.RegisterConverters(new[] { new IssueCustomFieldConverter() });
                     result.Add("custom_fields", entity.CustomFields.ToArray());
                 }
 

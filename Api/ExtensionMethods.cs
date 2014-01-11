@@ -257,7 +257,7 @@ namespace Redmine.Net.Api
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="writer">The writer.</param>
-        /// <param name="val">The val.</param>
+        /// <param name="val">The value.</param>
         /// <param name="tag">The tag.</param>
         public static void WriteIfNotDefaultOrNull<T>(this XmlWriter writer, T? val, String tag) where T : struct
         {

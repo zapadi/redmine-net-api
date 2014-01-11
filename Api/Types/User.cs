@@ -104,7 +104,7 @@ namespace Redmine.Net.Api.Types
         /// <value>The custom fields.</value>
         [XmlArray("custom_fields")]
         [XmlArrayItem("custom_field")]
-        public List<CustomField> CustomFields { get; set; }
+        public List<IssueCustomField> CustomFields { get; set; }
 
         /// <summary>
         /// Gets or sets the memberships.
@@ -164,7 +164,7 @@ namespace Redmine.Net.Api.Types
 
                     case "status":Status = (UserStatus)reader.ReadElementContentAsInt(); break;
 
-                    case "custom_fields": CustomFields = reader.ReadElementContentAsCollection<CustomField>(); break;
+                    case "custom_fields": CustomFields = reader.ReadElementContentAsCollection<IssueCustomField>(); break;
 
                     case "memberships": Memberships = reader.ReadElementContentAsCollection<Membership>(); break;
 
