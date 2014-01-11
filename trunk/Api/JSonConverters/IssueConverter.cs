@@ -41,6 +41,7 @@ namespace Redmine.Net.Api.JSonConverters
                 issue.Status = dictionary.GetValueAsIdentifiableName("status");
                 issue.CreatedOn = dictionary.GetValue<DateTime?>("created_on");
                 issue.UpdatedOn = dictionary.GetValue<DateTime?>("updated_on");
+                issue.ClosedOn = dictionary.GetValue<DateTime?>("closed_on");
                 issue.Priority = dictionary.GetValueAsIdentifiableName("priority");
                 issue.Author = dictionary.GetValueAsIdentifiableName("author");
                 issue.AssignedTo = dictionary.GetValueAsIdentifiableName("assigned_to");
@@ -54,7 +55,7 @@ namespace Redmine.Net.Api.JSonConverters
                 issue.EstimatedHours = dictionary.GetValue<float>("estimated_hours");
                 issue.ParentIssue = dictionary.GetValueAsIdentifiableName("parent");
 
-                issue.CustomFields = dictionary.GetValueAsCollection<CustomField>("custom_fields");
+                issue.CustomFields = dictionary.GetValueAsCollection<IssueCustomField>("custom_fields");
                 issue.Attachments = dictionary.GetValueAsCollection<Attachment>("attachments");
                 issue.Relations = dictionary.GetValueAsCollection<IssueRelation>("relations");
                 issue.Journals = dictionary.GetValueAsCollection<Journal>("journals");
@@ -85,9 +86,15 @@ namespace Redmine.Net.Api.JSonConverters
                 result.WriteIdIfNotNull(entity.Tracker, "tracker_id");
                 result.WriteIdIfNotNull(entity.AssignedTo, "assigned_to_id");
                 result.WriteIdIfNotNull(entity.FixedVersion, "fixed_version_id");
-                result.WriteIdIfNotNull(entity.ParentIssue, "parent_issue_id");
+               // result.WriteIdIfNotNull(entity.ParentIssue, "parent_issue_id");
                 result.WriteIfNotDefaultOrNull(entity.EstimatedHours, "estimated_hours");
 
+                if(entity.ParentIssue == null)
+                    result.Add("parent_issue_id", null);
+                else
+                {
+                    result.Add("parent_issue_id", entity.ParentIssue.Id);
+                }
                 if (entity.StartDate != null)
                     result.Add("start_date", entity.StartDate.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
                 if (entity.DueDate != null)
@@ -99,7 +106,7 @@ namespace Redmine.Net.Api.JSonConverters
 
                 if (entity.CustomFields != null)
                 {
-                    serializer.RegisterConverters(new[] { new CustomFieldConverter() });
+                    serializer.RegisterConverters(new[] { new IssueCustomFieldConverter() });
                     result.Add("custom_fields", entity.CustomFields.ToArray());
                 }
 

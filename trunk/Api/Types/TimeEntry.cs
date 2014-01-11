@@ -100,7 +100,7 @@ namespace Redmine.Net.Api.Types
         /// <value>The custom fields.</value>
         [XmlArray("custom_fields")]
         [XmlArrayItem("custom_field")]
-        public IList<CustomField> CustomFields { get; set; }
+        public IList<IssueCustomField> CustomFields { get; set; }
 
         public object Clone()
         {
@@ -146,7 +146,7 @@ namespace Redmine.Net.Api.Types
 
                     case "updated_on": UpdatedOn = reader.ReadElementContentAsNullableDateTime(); break;
 
-                    case "custom_fields": CustomFields = reader.ReadElementContentAsCollection<CustomField>(); break;
+                    case "custom_fields": CustomFields = reader.ReadElementContentAsCollection<IssueCustomField>(); break;
 
                     default: reader.Read(); break;
                 }

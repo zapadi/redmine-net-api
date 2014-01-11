@@ -90,7 +90,7 @@ namespace Redmine.Net.Api.Types
 
         [XmlArray("custom_fields")]
         [XmlArrayItem("custom_field")]
-        public IList<CustomField> CustomFields { get; set; }
+        public IList<IssueCustomField> CustomFields { get; set; }
 
         [XmlArray("issue_categories")]
         [XmlArrayItem("issue_category")]
@@ -131,7 +131,7 @@ namespace Redmine.Net.Api.Types
 
                     case "trackers": Trackers = reader.ReadElementContentAsCollection<ProjectTracker>(); break;
 
-                    case "custom_fields": CustomFields = reader.ReadElementContentAsCollection<CustomField>(); break;
+                    case "custom_fields": CustomFields = reader.ReadElementContentAsCollection<IssueCustomField>(); break;
 
                     case "issue_categories": IssueCategories = reader.ReadElementContentAsCollection<ProjectIssueCategory>(); break;
                     default: reader.Read(); break;

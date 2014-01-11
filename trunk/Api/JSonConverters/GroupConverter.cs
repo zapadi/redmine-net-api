@@ -36,7 +36,7 @@ namespace Redmine.Net.Api.JSonConverters
                 group.Id = dictionary.GetValue<int>("id");
                 group.Name = dictionary.GetValue<string>("name");
                 group.Users = dictionary.GetValueAsCollection<User>("users");
-                group.CustomFields = dictionary.GetValueAsCollection<CustomField>("custom_fields");
+                group.CustomFields = dictionary.GetValueAsCollection<IssueCustomField>("custom_fields");
                 group.Memberships = dictionary.GetValueAsCollection<Membership>("memberships");
 
                 return group;

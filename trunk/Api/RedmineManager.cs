@@ -67,9 +67,10 @@ namespace Redmine.Net.Api
             {typeof (Role), "roles"},
             {typeof (ProjectMembership), "memberships"},
             {typeof (Group), "groups"},
-            {typeof (TimeEntryActivity), "time_entry_activities"},
-            {typeof (IssuePriority), "issue_priorities"},
-            {typeof (Watcher), "watchers"}
+            {typeof (TimeEntryActivity), "enumerations/time_entry_activities"},
+            {typeof (IssuePriority), "enumerations/issue_priorities"},
+            {typeof (Watcher), "watchers"},
+            {typeof (IssueCustomField), "custom_fields"}
         };
 
         private readonly string host, apiKey, basicAuthorization;
@@ -189,7 +190,7 @@ namespace Redmine.Net.Api
 
             if (groupId > 0) filters.Add("groupId", groupId.ToString(CultureInfo.InvariantCulture));
 
-            return GetObjectList<User>(filters);
+            return GetTotalObjectList<User>(filters);
         }
 
         public void AddWatcher(int issueId, int userId)
@@ -291,7 +292,7 @@ namespace Redmine.Net.Api
         /// </summary>
         /// <param name="data">The content of the file that will be uploaded on server.</param>
         /// <returns>Returns the token for uploaded file.</returns>
-        public Upload UploadData(byte[] data)
+        public Upload UploadFile(byte[] data)
         {
             using (var wc = CreateUploadWebClient())
             {
@@ -304,6 +305,23 @@ namespace Redmine.Net.Api
                 catch (WebException webException)
                 {
                     HandleWebException(webException, "Upload");
+                }
+            }
+
+            return null;
+        }
+
+        public byte[] DownloadFile(string address)
+        {
+            using (var wc = CreateUploadWebClient())
+            {
+                try
+                {
+                    return wc.DownloadData(address);
+                }
+                catch (WebException webException)
+                {
+                    HandleWebException(webException, "Download");
                 }
             }
 
@@ -660,12 +678,9 @@ namespace Redmine.Net.Api
         {
             string ownerId = null;
 
-            if (parameters != null)
-            {
-                ownerId = parameters.Get(parameterName);
-                if (string.IsNullOrEmpty(ownerId)) return null;
-            }
-            return ownerId;
+            if (parameters == null) return ownerId;
+            ownerId = parameters.Get(parameterName);
+            return string.IsNullOrEmpty(ownerId) ? null : ownerId;
         }
 
         private IEnumerable<Error> ReadWebExceptionResponse(WebResponse webResponse)
@@ -713,18 +728,17 @@ namespace Redmine.Net.Api
                     : RedmineSerialization.JsonDeserialize<T>(response, type == typeof(IssueRelation) ? "relation" : null);
 
             return RedmineSerialization.FromXML<T>(response);
-
-            //using (var stringReader = new StringReader(response))
-            //{
-            //    var deserializer = new RedmineSerialization.XmlStreamingDeserializer<T>(stringReader);
-            //    return deserializer.Deserialize();
-            //}
         }
 
         private IList<T> DeserializeList<T>(string response, string jsonRoot, out int totalCount) where T : class, new()
         {
+            Type type = typeof(T);
             if (mimeFormat == MimeFormat.json)
+            {
+                if (type == typeof (IssuePriority)) jsonRoot = "issue_priorities";
+                if (type == typeof(TimeEntryActivity)) jsonRoot = "time_entry_activities";
                 return RedmineSerialization.JsonDeserializeToList<T>(response, jsonRoot, out totalCount);
+            }
 
             using (var text = new StringReader(response))
             {

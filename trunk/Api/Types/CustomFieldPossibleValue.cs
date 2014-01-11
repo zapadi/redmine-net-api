@@ -1,4 +1,4 @@
-﻿/*
+/*
    Copyright 2011 - 2013 Adrian Popescu, Dorin Huzum.
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,15 +15,20 @@
 */
 
 using System;
-using System.Xml;
-using System.Xml.Schema;
 using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
-    [XmlRoot("user")]
-    public class Watcher : IdentifiableName
+    [XmlRoot("possible_value")]
+    public class CustomFieldPossibleValue : IEquatable<CustomFieldPossibleValue>
     {
-        
+        [XmlElement("value")]
+        public string Value { get; set; }
+
+        public bool Equals(CustomFieldPossibleValue other)
+        {
+            if (other == null) return false;
+            return (Value == other.Value);
+        }
     }
 }

@@ -24,7 +24,7 @@ using Redmine.Net.Api.Types;
 
 namespace Redmine.Net.Api.JSonConverters
 {
-    public class CustomFieldConverter : JavaScriptConverter
+    public class IssueCustomFieldConverter : JavaScriptConverter
     {
         #region Overrides of JavaScriptConverter
 
@@ -32,7 +32,7 @@ namespace Redmine.Net.Api.JSonConverters
         {
             if (dictionary != null)
             {
-                var customField = new CustomField();
+                var customField = new IssueCustomField();
 
                 customField.Id = dictionary.GetValue<int>("id");
                 customField.Name = dictionary.GetValue<string>("name");
@@ -64,32 +64,28 @@ namespace Redmine.Net.Api.JSonConverters
 
         public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer)
         {
-            var entity = obj as CustomField;
+            var entity = obj as IssueCustomField;
 
             var result = new Dictionary<string, object>();
 
-            if (entity != null)
+            if (entity == null) return result;
+            if (entity.Values == null) return null;
+            var itemsCount = entity.Values.Count;
+
+            result.Add("id", entity.Id);
+            if (itemsCount > 1)
             {
-                if (entity.Values == null) return null;
-                var itemsCount = entity.Values.Count;
-
-                result.Add("id", entity.Id);
-                if (itemsCount > 1)
-                {
-                    result.Add("value", entity.Values.Select(x => x.Info).ToArray());
-                }
-                else
-                {
-                    result.Add("value", itemsCount > 0 ? entity.Values[0].Info : null);
-                }
-
-                return result;
+                result.Add("value", entity.Values.Select(x => x.Info).ToArray());
+            }
+            else
+            {
+                result.Add("value", itemsCount > 0 ? entity.Values[0].Info : null);
             }
 
             return result;
         }
 
-        public override IEnumerable<Type> SupportedTypes { get { return new List<Type>(new[] { typeof(CustomField) }); } }
+        public override IEnumerable<Type> SupportedTypes { get { return new List<Type>(new[] { typeof(IssueCustomField) }); } }
 
         #endregion
     }

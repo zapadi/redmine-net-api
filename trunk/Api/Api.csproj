@@ -45,7 +45,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ExtensionAttribute.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="JSonConverters\AttachmentConverter.cs" />
     <Compile Include="JSonConverters\ChangeSetConverter.cs" />
@@ -93,6 +92,8 @@
     <Compile Include="Types\Attachment.cs" />
     <Compile Include="Types\ChangeSet.cs" />
     <Compile Include="Types\CustomField.cs" />
+    <Compile Include="Types\CustomFieldPossibleValue.cs" />
+    <Compile Include="Types\IssueCustomField.cs" />
     <Compile Include="Types\CustomFieldValue.cs" />
     <Compile Include="Types\Detail.cs" />
     <Compile Include="Types\Error.cs" />

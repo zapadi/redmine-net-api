@@ -41,7 +41,7 @@ namespace Redmine.Net.Api.JSonConverters
                 timeEntry.Project = dictionary.GetValueAsIdentifiableName(dictionary.ContainsKey("project") ? "project" : "project_id");
                 timeEntry.SpentOn = dictionary.GetValue<DateTime?>("spent_on");
                 timeEntry.User = dictionary.GetValueAsIdentifiableName("user");
-                timeEntry.CustomFields = dictionary.GetValueAsCollection<CustomField>("custom_fields");
+                timeEntry.CustomFields = dictionary.GetValueAsCollection<IssueCustomField>("custom_fields");
                 timeEntry.CreatedOn = dictionary.GetValue<DateTime?>("created_on");
                 timeEntry.UpdatedOn = dictionary.GetValue<DateTime?>("updated_on");
 
