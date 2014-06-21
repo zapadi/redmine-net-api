@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2013 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2014 Adrian Popescu, Dorin Huzum.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -14,12 +14,14 @@
    limitations under the License.
 */
 
+using System.Xml;
+using System.Xml.Schema;
 using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
     [XmlRoot("error")]
-    public class Error
+    public class Error: IXmlSerializable
     {
         [XmlText]
         public string Info { get; set; }
@@ -28,5 +30,29 @@ namespace Redmine.Net.Api.Types
         {
             return Info;
         }
+
+        public XmlSchema GetSchema() { return null; }
+
+        public void ReadXml(XmlReader reader)
+        {
+            //reader.Read();
+            while (!reader.EOF)
+            {
+                if (reader.IsEmptyElement && !reader.HasAttributes)
+                {
+                    reader.Read();
+                    continue;
+                }
+
+                switch (reader.Name)
+                {
+                    case "error": Info = reader.ReadElementContentAsString(); break;
+
+                    default: reader.Read(); break;
+                }
+            }
+        }
+
+        public void WriteXml(XmlWriter writer) { }
     }
 }

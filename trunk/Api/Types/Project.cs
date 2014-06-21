@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2013 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2014 Adrian Popescu, Dorin Huzum.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -77,6 +77,9 @@ namespace Redmine.Net.Api.Types
         [DataMember(Name = "updated_on")]
         public DateTime? UpdatedOn { get; set; }
 
+        [XmlElement("status")]
+        public ProjectStatus Status { get; set; }
+
         /// <summary>
         /// Gets or sets the trackers.
         /// </summary>
@@ -120,6 +123,10 @@ namespace Redmine.Net.Api.Types
                     case "identifier": Identifier = reader.ReadElementContentAsString(); break;
 
                     case "description": Description = reader.ReadElementContentAsString(); break;
+
+                    case "status":
+                        Status = (ProjectStatus)reader.ReadElementContentAsInt();
+                        break;
 
                     case "parent": Parent = new IdentifiableName(reader); break;
 
@@ -165,5 +172,12 @@ namespace Redmine.Net.Api.Types
             if (other == null) return false;
             return (Id == other.Id && Identifier == other.Identifier);
         }
+    }
+
+    public enum ProjectStatus
+    {
+        Active = 1,
+        Closed = 5,
+        Archived = 9
     }
 }

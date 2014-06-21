@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2013 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2014 Adrian Popescu, Dorin Huzum.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ namespace Redmine.Net.Api
             {
                 var id = Guid.NewGuid();
                 wc.DownloadStringCompleted += WcDownloadStringCompleted;
-                wc.DownloadStringAsync(new Uri(string.Format(RequestFormat, host, urls[typeof(User)], CurrentUserUri, mimeFormat)), new AsyncToken { Method = RedmineMethod.GetCurrentUser, ResponseType = typeof(User), TokenId = id });
+                wc.DownloadStringAsync(new Uri(string.Format(REQUEST_FORMAT, host, urls[typeof(User)], CURRENT_USER_URI, mimeFormat)), new AsyncToken { Method = RedmineMethod.GetCurrentUser, ResponseType = typeof(User), TokenId = id });
                 return id;
             }
         }
@@ -48,8 +48,8 @@ namespace Redmine.Net.Api
                 var id = Guid.NewGuid();
                 wc.DownloadStringCompleted += WcDownloadStringCompleted;
                 wc.DownloadStringAsync(version == 0
-                ? new Uri(string.Format(WikiPageFormat, host, projectId, pageName, mimeFormat))
-                : new Uri(string.Format(WikiVersionFormat, host, projectId, pageName, version, mimeFormat)), new AsyncToken { Method = RedmineMethod.GetWikiPage, Parameter = projectId, ResponseType = typeof(WikiPage), TokenId = id });
+                ? new Uri(string.Format(WIKI_PAGE_FORMAT, host, projectId, pageName, mimeFormat))
+                : new Uri(string.Format(WIKI_VERSION_FORMAT, host, projectId, pageName, version, mimeFormat)), new AsyncToken { Method = RedmineMethod.GetWikiPage, Parameter = projectId, ResponseType = typeof(WikiPage), TokenId = id });
 
                 return id;
             }
@@ -65,7 +65,7 @@ namespace Redmine.Net.Api
             using (var wc = CreateWebClient(null))
             {
                 wc.DownloadStringCompleted += WcDownloadStringCompleted;
-                wc.UploadStringAsync(new Uri(string.Format(WikiPageFormat, host, projectId, pageName, mimeFormat)), PUT, result, new AsyncToken { Method = RedmineMethod.CreateWiki, Parameter = projectId, ResponseType = typeof(WikiPage), TokenId = id });
+                wc.UploadStringAsync(new Uri(string.Format(WIKI_PAGE_FORMAT, host, projectId, pageName, mimeFormat)), PUT, result, new AsyncToken { Method = RedmineMethod.CreateWiki, Parameter = projectId, ResponseType = typeof(WikiPage), TokenId = id });
             }
             return id;
         }
@@ -76,7 +76,7 @@ namespace Redmine.Net.Api
             {
                 var id = Guid.NewGuid();
                 wc.DownloadStringCompleted += WcDownloadStringCompleted;
-                wc.UploadStringAsync(new Uri(string.Format(WikiPageFormat, host, projectId, pageName, mimeFormat)), DELETE, string.Empty, new AsyncToken { Method = RedmineMethod.DeleteObject, ResponseType = typeof(WikiPage), Parameter = id, TokenId = id });
+                wc.UploadStringAsync(new Uri(string.Format(WIKI_PAGE_FORMAT, host, projectId, pageName, mimeFormat)), DELETE, string.Empty, new AsyncToken { Method = RedmineMethod.DeleteObject, ResponseType = typeof(WikiPage), Parameter = id, TokenId = id });
                 return id;
             }
         }
@@ -93,7 +93,7 @@ namespace Redmine.Net.Api
             {
                 var id = Guid.NewGuid();
                 wc.UploadDataCompleted += WcUploadDataCompleted;
-                wc.UploadDataAsync(new Uri(string.Format(Format, host, "uploads", mimeFormat)), POST, data, new AsyncToken { Method = RedmineMethod.UploadData, ResponseType = typeof(Upload), TokenId = id });
+                wc.UploadDataAsync(new Uri(string.Format(FORMAT, host, "uploads", mimeFormat)), POST, data, new AsyncToken { Method = RedmineMethod.UploadData, ResponseType = typeof(Upload), TokenId = id });
                 return id;
             }
         }
@@ -111,7 +111,7 @@ namespace Redmine.Net.Api
                 var id = Guid.NewGuid();
                 var asyncToken = new AsyncToken{Method = RedmineMethod.AddUserToGroup, Parameter = userId, TokenId = id};
                 wc.DownloadStringCompleted += WcDownloadStringCompleted;
-                wc.UploadStringAsync(new Uri(string.Format(RequestFormat, host, urls[typeof(Group)], groupId + "/users", mimeFormat)), POST, mimeFormat == MimeFormat.xml ? "<user_id>" + userId + "</user_id>" : "user_id:" + userId, asyncToken);
+                wc.UploadStringAsync(new Uri(string.Format(REQUEST_FORMAT, host, urls[typeof(Group)], groupId + "/users", mimeFormat)), POST, mimeFormat == MimeFormat.xml ? "<user_id>" + userId + "</user_id>" : "user_id:" + userId, asyncToken);
                 return id;
             }
         }
@@ -128,7 +128,7 @@ namespace Redmine.Net.Api
             {
                 var id = Guid.NewGuid();
                 wc.DownloadStringCompleted += WcDownloadStringCompleted;
-                wc.UploadStringAsync(new Uri(string.Format(RequestFormat, host, urls[typeof(Group)], groupId + "/users/" + userId, mimeFormat)), DELETE, string.Empty, new AsyncToken { Method = RedmineMethod.DeleteUserFromGroup, Parameter = userId, TokenId = id });
+                wc.UploadStringAsync(new Uri(string.Format(REQUEST_FORMAT, host, urls[typeof(Group)], groupId + "/users/" + userId, mimeFormat)), DELETE, string.Empty, new AsyncToken { Method = RedmineMethod.DeleteUserFromGroup, Parameter = userId, TokenId = id });
                 return id;
             }
         }
@@ -150,18 +150,18 @@ namespace Redmine.Net.Api
                     string projectId = GetOwnerId(parameters, "project_id");
                     if (string.IsNullOrEmpty(projectId)) throw new RedmineException("The project id is mandatory! \nCheck if you have included the parameter project_id to parameters.");
 
-                    wc.DownloadStringAsync(new Uri(string.Format(EntityWithParentFormat, host, "projects", projectId, urls[type], mimeFormat)), asyncToken);
+                    wc.DownloadStringAsync(new Uri(string.Format(ENTITY_WITH_PARENT_FORMAT, host, "projects", projectId, urls[type], mimeFormat)), asyncToken);
                 }
                 else
                     if (type == typeof(IssueRelation))
                     {
                         string issueId = GetOwnerId(parameters, "issue_id");
                         if (string.IsNullOrEmpty(issueId)) throw new RedmineException("The issue id is mandatory! \nCheck if you have included the parameter issue_id to parameters");
-                        wc.DownloadStringAsync(new Uri(string.Format(EntityWithParentFormat, host, "issues", issueId, urls[type], mimeFormat)), asyncToken);
+                        wc.DownloadStringAsync(new Uri(string.Format(ENTITY_WITH_PARENT_FORMAT, host, "issues", issueId, urls[type], mimeFormat)), asyncToken);
                     }
                     else
                     {
-                        wc.DownloadStringAsync(new Uri(string.Format(Format, host, urls[type], mimeFormat)), asyncToken);
+                        wc.DownloadStringAsync(new Uri(string.Format(FORMAT, host, urls[type], mimeFormat)), asyncToken);
                     }
                 return id;
             }
@@ -184,7 +184,7 @@ namespace Redmine.Net.Api
             {
                 var guid = Guid.NewGuid();
                 wc.DownloadStringCompleted += WcDownloadStringCompleted;
-                wc.DownloadStringAsync(new Uri(string.Format(RequestFormat, host, urls[type], id, mimeFormat)), new AsyncToken { Method = RedmineMethod.GetObject, ResponseType = type, Parameter = id, TokenId = guid });
+                wc.DownloadStringAsync(new Uri(string.Format(REQUEST_FORMAT, host, urls[type], id, mimeFormat)), new AsyncToken { Method = RedmineMethod.GetObject, ResponseType = type, Parameter = id, TokenId = guid });
                 return guid;
             }
         }
@@ -209,7 +209,7 @@ namespace Redmine.Net.Api
             {
                 var id = Guid.NewGuid();
                 wc.DownloadStringCompleted += WcDownloadStringCompleted;
-                wc.UploadStringAsync(new Uri(string.Format(Format, host, urls[type], mimeFormat)), POST, result, new AsyncToken { Method = RedmineMethod.CreateObject, ResponseType = type, Parameter = obj, TokenId = id });
+                wc.UploadStringAsync(new Uri(string.Format(FORMAT, host, urls[type], mimeFormat)), POST, result, new AsyncToken { Method = RedmineMethod.CreateObject, ResponseType = type, Parameter = obj, TokenId = id });
                 return id;
             }
         }
@@ -245,10 +245,10 @@ namespace Redmine.Net.Api
                 if (type == typeof(Version) || type == typeof(IssueCategory) || type == typeof(ProjectMembership))
                 {
                     if (string.IsNullOrEmpty(projectId)) throw new RedmineException("The project owner id is mandatory!");
-                    wc.UploadStringAsync(new Uri(string.Format(EntityWithParentFormat, host, "projects", projectId, urls[type], mimeFormat)), PUT, request, asyncToken);
+                    wc.UploadStringAsync(new Uri(string.Format(ENTITY_WITH_PARENT_FORMAT, host, "projects", projectId, urls[type], mimeFormat)), PUT, request, asyncToken);
                 }
                 else
-                    wc.UploadStringAsync(new Uri(string.Format(RequestFormat, host, urls[type], id, mimeFormat)), PUT, request, asyncToken);
+                    wc.UploadStringAsync(new Uri(string.Format(REQUEST_FORMAT, host, urls[type], id, mimeFormat)), PUT, request, asyncToken);
                 return guid;
             }
         }
@@ -270,7 +270,7 @@ namespace Redmine.Net.Api
             {
                 var guid = Guid.NewGuid();
                 wc.DownloadStringCompleted += WcDownloadStringCompleted;
-                wc.UploadStringAsync(new Uri(string.Format(RequestFormat, host, urls[type], id, mimeFormat)), DELETE, string.Empty, new AsyncToken { Method = RedmineMethod.DeleteObject, ResponseType = type, Parameter = id, TokenId = guid });
+                wc.UploadStringAsync(new Uri(string.Format(REQUEST_FORMAT, host, urls[type], id, mimeFormat)), DELETE, string.Empty, new AsyncToken { Method = RedmineMethod.DeleteObject, ResponseType = type, Parameter = id, TokenId = guid });
                 return guid;
             }
         }
