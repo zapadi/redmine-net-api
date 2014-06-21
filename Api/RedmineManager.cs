@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2013 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2014 Adrian Popescu, Dorin Huzum.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -36,16 +36,16 @@ namespace Redmine.Net.Api
     /// </summary>
     public partial class RedmineManager
     {
-        private const string RequestFormat = "{0}/{1}/{2}.{3}";
-        private const string Format = "{0}/{1}.{2}";
+        private const string REQUEST_FORMAT = "{0}/{1}/{2}.{3}";
+        private const string FORMAT = "{0}/{1}.{2}";
 
-        private const string WikiIndexFormat = "{0}/projects/{1}/wiki/index.{2}";
-        private const string WikiPageFormat = "{0}/projects/{1}/wiki/{2}.{3}";
-        private const string WikiVersionFormat = "{0}/projects/{1}/wiki/{2}/{3}.{4}";
+        private const string WIKI_INDEX_FORMAT = "{0}/projects/{1}/wiki/index.{2}";
+        private const string WIKI_PAGE_FORMAT = "{0}/projects/{1}/wiki/{2}.{3}";
+        private const string WIKI_VERSION_FORMAT = "{0}/projects/{1}/wiki/{2}/{3}.{4}";
 
-        private const string EntityWithParentFormat = "{0}/{1}/{2}/{3}.{4}";
+        private const string ENTITY_WITH_PARENT_FORMAT = "{0}/{1}/{2}/{3}.{4}";
 
-        private const string CurrentUserUri = "current";
+        private const string CURRENT_USER_URI = "current";
         private const string PUT = "PUT";
         private const string POST = "POST";
         private const string DELETE = "DELETE";
@@ -172,7 +172,7 @@ namespace Redmine.Net.Api
         /// using the System.Exception.InnerException property.</exception>
         public User GetCurrentUser(NameValueCollection parameters = null)
         {
-            return ExecuteDownload<User>(string.Format(RequestFormat, host, urls[typeof(User)], CurrentUserUri, mimeFormat), "GetCurrentUser", parameters);
+            return ExecuteDownload<User>(string.Format(REQUEST_FORMAT, host, urls[typeof(User)], CURRENT_USER_URI, mimeFormat), "GetCurrentUser", parameters);
         }
 
         /// <summary>
@@ -195,12 +195,12 @@ namespace Redmine.Net.Api
 
         public void AddWatcher(int issueId, int userId)
         {
-            ExecuteUpload(string.Format(RequestFormat, host, urls[typeof(Issue)], issueId + "/watchers", mimeFormat), POST, mimeFormat == MimeFormat.xml ? "<user_id>" + userId + "</user_id>" : "user_id:" + userId, "AddWatcher");
+            ExecuteUpload(string.Format(REQUEST_FORMAT, host, urls[typeof(Issue)], issueId + "/watchers", mimeFormat), POST, mimeFormat == MimeFormat.xml ? "<user_id>" + userId + "</user_id>" : "user_id:" + userId, "AddWatcher");
         }
 
         public void RemoveWatcher(int issueId, int userId)
         {
-            ExecuteUpload(string.Format(RequestFormat, host, urls[typeof(Issue)], issueId + "/watchers/" + userId, mimeFormat), DELETE, string.Empty, "RemoveWatcher");
+            ExecuteUpload(string.Format(REQUEST_FORMAT, host, urls[typeof(Issue)], issueId + "/watchers/" + userId, mimeFormat), DELETE, string.Empty, "RemoveWatcher");
         }
 
         /// <summary>
@@ -210,7 +210,7 @@ namespace Redmine.Net.Api
         /// <param name="userId">The user id.</param>
         public void AddUser(int groupId, int userId)
         {
-            ExecuteUpload(string.Format(RequestFormat, host, urls[typeof(Group)], groupId + "/users", mimeFormat), POST, mimeFormat == MimeFormat.xml ? "<user_id>" + userId + "</user_id>" : "user_id:" + userId, "AddUser");
+            ExecuteUpload(string.Format(REQUEST_FORMAT, host, urls[typeof(Group)], groupId + "/users", mimeFormat), POST, mimeFormat == MimeFormat.xml ? "<user_id>" + userId + "</user_id>" : "user_id:" + userId, "AddUser");
         }
 
         /// <summary>
@@ -220,7 +220,7 @@ namespace Redmine.Net.Api
         /// <param name="userId">The user id.</param>
         public void DeleteUser(int groupId, int userId)
         {
-            ExecuteUpload(string.Format(RequestFormat, host, urls[typeof(Group)], groupId + "/users/" + userId, mimeFormat), DELETE, string.Empty, "DeleteUser");
+            ExecuteUpload(string.Format(REQUEST_FORMAT, host, urls[typeof(Group)], groupId + "/users/" + userId, mimeFormat), DELETE, string.Empty, "DeleteUser");
         }
 
         /// <summary>
@@ -243,8 +243,8 @@ namespace Redmine.Net.Api
         public WikiPage GetWikiPage(string projectId, NameValueCollection parameters, string pageName, uint version = 0)
         {
             string address = version == 0
-                                 ? string.Format(WikiPageFormat, host, projectId, pageName, mimeFormat)
-                                 : string.Format(WikiVersionFormat, host, projectId, pageName, version, mimeFormat);
+                                 ? string.Format(WIKI_PAGE_FORMAT, host, projectId, pageName, mimeFormat)
+                                 : string.Format(WIKI_VERSION_FORMAT, host, projectId, pageName, version, mimeFormat);
 
             return ExecuteDownload<WikiPage>(address, "GetWikiPage", parameters);
         }
@@ -257,7 +257,7 @@ namespace Redmine.Net.Api
         public IList<WikiPage> GetAllWikiPages(string projectId)
         {
             int totalCount;
-            return ExecuteDownloadList<WikiPage>(string.Format(WikiIndexFormat, host, projectId, mimeFormat),"GetAllWikiPages", "wiki", out totalCount);
+            return ExecuteDownloadList<WikiPage>(string.Format(WIKI_INDEX_FORMAT, host, projectId, mimeFormat),"GetAllWikiPages", "wiki", out totalCount);
         }
 
         /// <summary>
@@ -273,7 +273,7 @@ namespace Redmine.Net.Api
 
             if (string.IsNullOrEmpty(result)) return null;
 
-            return ExecuteUpload<WikiPage>(string.Format(WikiPageFormat, host, projectId, pageName, mimeFormat), PUT, result, "CreateOrUpdateWikiPage");
+            return ExecuteUpload<WikiPage>(string.Format(WIKI_PAGE_FORMAT, host, projectId, pageName, mimeFormat), PUT, result, "CreateOrUpdateWikiPage");
         }
 
         /// <summary>
@@ -283,7 +283,7 @@ namespace Redmine.Net.Api
         /// <param name="pageName">The wiki page name.</param>
         public void DeleteWikiPage(string projectId, string pageName)
         {
-            ExecuteUpload(string.Format(WikiPageFormat, host, projectId, pageName, mimeFormat), DELETE, string.Empty, "DeleteWikiPage");
+            ExecuteUpload(string.Format(WIKI_PAGE_FORMAT, host, projectId, pageName, mimeFormat), DELETE, string.Empty, "DeleteWikiPage");
         }
 
         /// <summary>
@@ -298,7 +298,7 @@ namespace Redmine.Net.Api
             {
                 try
                 {
-                    var response = wc.UploadData(string.Format(Format, host, "uploads", mimeFormat), data);
+                    var response = wc.UploadData(string.Format(FORMAT, host, "uploads", mimeFormat), data);
                     var responseString = Encoding.ASCII.GetString(response);
                     return Deserialize<Upload>(responseString);
                 }
@@ -364,7 +364,7 @@ namespace Redmine.Net.Api
                 var projectId = GetOwnerId(parameters, "project_id");
                 if (string.IsNullOrEmpty(projectId)) throw new RedmineException("The project id is mandatory! \nCheck if you have included the parameter project_id to parameters.");
 
-                address = string.Format(EntityWithParentFormat, host, "projects", projectId, urls[type], mimeFormat);
+                address = string.Format(ENTITY_WITH_PARENT_FORMAT, host, "projects", projectId, urls[type], mimeFormat);
             }
             else
                 if (type == typeof(IssueRelation))
@@ -372,10 +372,10 @@ namespace Redmine.Net.Api
                     string issueId = GetOwnerId(parameters, "issue_id");
                     if (string.IsNullOrEmpty(issueId)) throw new RedmineException("The issue id is mandatory! \nCheck if you have included the parameter issue_id to parameters");
 
-                    address = string.Format(EntityWithParentFormat, host, "issues", issueId, urls[type], mimeFormat);
+                    address = string.Format(ENTITY_WITH_PARENT_FORMAT, host, "issues", issueId, urls[type], mimeFormat);
                 }
                 else
-                    address = string.Format(Format, host, urls[type], mimeFormat);
+                    address = string.Format(FORMAT, host, urls[type], mimeFormat);
 
             return ExecuteDownloadList<T>(address, "GetObjectList<" + type.Name + ">", urls[type], out totalCount, parameters);
         }
@@ -435,7 +435,7 @@ namespace Redmine.Net.Api
         {
             var type = typeof(T);
 
-            return !urls.ContainsKey(type) ? null : ExecuteDownload<T>(string.Format(RequestFormat, host, urls[type], id, mimeFormat), "GetObject<" + type.Name + ">", parameters);
+            return !urls.ContainsKey(type) ? null : ExecuteDownload<T>(string.Format(REQUEST_FORMAT, host, urls[type], id, mimeFormat), "GetObject<" + type.Name + ">", parameters);
         }
 
         /// <summary>
@@ -482,16 +482,16 @@ namespace Redmine.Net.Api
             if (type == typeof(Version) || type == typeof(IssueCategory) || type == typeof(ProjectMembership))
             {
                 if (string.IsNullOrEmpty(ownerId)) throw new RedmineException("The owner id(project id) is mandatory!");
-                address = string.Format(EntityWithParentFormat, host, "projects", ownerId, urls[type], mimeFormat);
+                address = string.Format(ENTITY_WITH_PARENT_FORMAT, host, "projects", ownerId, urls[type], mimeFormat);
             }
             else
                 if (type == typeof(IssueRelation))
                 {
                     if (string.IsNullOrEmpty(ownerId)) throw new RedmineException("The owner id(issue id) is mandatory!");
-                    address = string.Format(EntityWithParentFormat, host, "issues", ownerId, urls[type], mimeFormat);
+                    address = string.Format(ENTITY_WITH_PARENT_FORMAT, host, "issues", ownerId, urls[type], mimeFormat);
                 }
                 else
-                    address = string.Format(Format, host, urls[type], mimeFormat);
+                    address = string.Format(FORMAT, host, urls[type], mimeFormat);
 
             return ExecuteUpload<T>(address, POST, result, "CreateObject<" + type.Name + ">");
         }
@@ -529,16 +529,18 @@ namespace Redmine.Net.Api
             var request = Serialize(obj);
             if (string.IsNullOrEmpty(request)) return;
 
+            request = request.Replace("\n", "\r\n");
+
             string address;
 
             if (type == typeof(Version) || type == typeof(IssueCategory) || type == typeof(ProjectMembership))
             {
                 if (string.IsNullOrEmpty(projectId)) throw new RedmineException("The project owner id is mandatory!");
-                address = string.Format(EntityWithParentFormat, host, "projects", projectId, urls[type], mimeFormat);
+                address = string.Format(ENTITY_WITH_PARENT_FORMAT, host, "projects", projectId, urls[type], mimeFormat);
             }
             else
             {
-                address = string.Format(RequestFormat, host, urls[type], id, mimeFormat);
+                address = string.Format(REQUEST_FORMAT, host, urls[type], id, mimeFormat);
             }
 
             ExecuteUpload(address, PUT, request, "UpdateObject<" + type.Name + ">");
@@ -558,7 +560,7 @@ namespace Redmine.Net.Api
 
             if (!urls.ContainsKey(typeof(T))) return;
 
-            ExecuteUpload(string.Format(RequestFormat, host, urls[type], id, mimeFormat), DELETE, string.Empty, "DeleteObject<" + type.Name + ">");
+            ExecuteUpload(string.Format(REQUEST_FORMAT, host, urls[type], id, mimeFormat), DELETE, string.Empty, "DeleteObject<" + type.Name + ">");
         }
 
         /// <summary>
@@ -676,10 +678,8 @@ namespace Redmine.Net.Api
 
         private static string GetOwnerId(NameValueCollection parameters, string parameterName)
         {
-            string ownerId = null;
-
-            if (parameters == null) return ownerId;
-            ownerId = parameters.Get(parameterName);
+            if (parameters == null) return null;
+            string ownerId = parameters.Get(parameterName);
             return string.IsNullOrEmpty(ownerId) ? null : ownerId;
         }
 

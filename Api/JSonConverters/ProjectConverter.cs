@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2013 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2014 Adrian Popescu, Dorin Huzum.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -38,6 +38,7 @@ namespace Redmine.Net.Api.JSonConverters
                 project.HomePage = dictionary.GetValue<string>("homepage");
                 project.Name = dictionary.GetValue<string>("name");
                 project.Identifier = dictionary.GetValue<string>("identifier");
+                project.Status = dictionary.GetValue<ProjectStatus>("status");
                 project.CreatedOn = dictionary.GetValue<DateTime?>("created_on");
                 project.UpdatedOn = dictionary.GetValue<DateTime?>("updated_on");
                 project.Trackers = dictionary.GetValueAsCollection<ProjectTracker>("trackers");
