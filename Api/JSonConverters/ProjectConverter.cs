@@ -43,6 +43,7 @@ namespace Redmine.Net.Api.JSonConverters
                 project.UpdatedOn = dictionary.GetValue<DateTime?>("updated_on");
                 project.Trackers = dictionary.GetValueAsCollection<ProjectTracker>("trackers");
                 project.CustomFields = dictionary.GetValueAsCollection<IssueCustomField>("custom_fields");
+                project.IsPublic = dictionary.GetValue<bool>("is_public");
                 project.Parent = dictionary.GetValueAsIdentifiableName("parent");
                 project.IssueCategories = dictionary.GetValueAsCollection<ProjectIssueCategory>("issue_categories");
                 return project;

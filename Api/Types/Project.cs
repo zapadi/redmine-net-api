@@ -81,6 +81,16 @@ namespace Redmine.Net.Api.Types
         public ProjectStatus Status { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether this project is public.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this project is public; otherwise, <c>false</c>.
+        /// </value>
+        /// <remarks> is exposed since 2.6.0</remarks>
+        [XmlElement("is_public")]
+        public bool IsPublic { get; set; }
+
+        /// <summary>
         /// Gets or sets the trackers.
         /// </summary>
         /// <value>
@@ -132,6 +142,11 @@ namespace Redmine.Net.Api.Types
 
                     case "homepage": HomePage = reader.ReadElementContentAsString(); break;
 
+                    case "is_public":
+                        IsPublic = reader.ReadElementContentAsBoolean();
+                        break;
+
+                  
                     case "created_on": CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
 
                     case "updated_on": UpdatedOn = reader.ReadElementContentAsNullableDateTime(); break;
@@ -172,12 +187,5 @@ namespace Redmine.Net.Api.Types
             if (other == null) return false;
             return (Id == other.Id && Identifier == other.Identifier);
         }
-    }
-
-    public enum ProjectStatus
-    {
-        Active = 1,
-        Closed = 5,
-        Archived = 9
     }
 }

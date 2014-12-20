@@ -112,6 +112,7 @@
     <Compile Include="Types\Project.cs" />
     <Compile Include="Types\ProjectIssueCategory.cs" />
     <Compile Include="Types\ProjectMembership.cs" />
+    <Compile Include="Types\ProjectStatus.cs" />
     <Compile Include="Types\ProjectTracker.cs" />
     <Compile Include="Types\Query.cs" />
     <Compile Include="Types\Role.cs" />
