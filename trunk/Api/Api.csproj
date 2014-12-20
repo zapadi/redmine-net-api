@@ -120,6 +120,7 @@
     <Compile Include="Types\Identifiable.cs" />
     <Compile Include="Types\TimeEntryActivity.cs" />
     <Compile Include="Types\Tracker.cs" />
+    <Compile Include="Types\TrackerCustomField.cs" />
     <Compile Include="Types\Upload.cs" />
     <Compile Include="Types\User.cs" />
     <Compile Include="Types\UserGroup.cs" />
