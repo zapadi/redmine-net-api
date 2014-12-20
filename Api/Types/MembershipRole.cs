@@ -47,7 +47,10 @@ namespace Redmine.Net.Api.Types
             reader.Read();
         }
 
-        public override void WriteXml(XmlWriter writer) { }
+        public override void WriteXml(XmlWriter writer)
+        {
+            writer.WriteValue(Id);
+        }
 
         public bool Equals(MembershipRole other)
         {

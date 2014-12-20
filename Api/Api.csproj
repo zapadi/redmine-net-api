@@ -48,7 +48,7 @@
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="JSonConverters\AttachmentConverter.cs" />
     <Compile Include="JSonConverters\ChangeSetConverter.cs" />
-    <Compile Include="JSonConverters\CustomFieldConverter.cs" />
+    <Compile Include="JSonConverters\IssueCustomFieldConverter.cs" />
     <Compile Include="JSonConverters\DetailConverter.cs" />
     <Compile Include="JSonConverters\ErrorConverter.cs" />
     <Compile Include="JSonConverters\GroupConverter.cs" />
@@ -125,6 +125,7 @@
     <Compile Include="Types\Upload.cs" />
     <Compile Include="Types\User.cs" />
     <Compile Include="Types\UserGroup.cs" />
+    <Compile Include="Types\UserStatus.cs" />
     <Compile Include="Types\Version.cs" />
     <Compile Include="Types\Watcher.cs" />
     <Compile Include="Types\WikiPage.cs" />
