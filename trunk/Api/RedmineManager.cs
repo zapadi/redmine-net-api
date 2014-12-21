@@ -25,8 +25,10 @@ using System.Net;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Xml;
 using Redmine.Net.Api.Types;
+using Group = Redmine.Net.Api.Types.Group;
 using Version = Redmine.Net.Api.Types.Version;
 
 namespace Redmine.Net.Api
@@ -530,7 +532,7 @@ namespace Redmine.Net.Api
             var request = Serialize(obj);
             if (string.IsNullOrEmpty(request)) return;
 
-            request = request.Replace("\n", "\r\n");
+            request = Regex.Replace(request, @"\r\n|\r|\n", "\r\n");
 
             string address;
 
