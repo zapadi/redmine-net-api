@@ -29,7 +29,8 @@ namespace Redmine.Net.Api.JSonConverters
             {
                 var watcher = new Watcher();
 
-                // watcher.I = dictionary.GetValue<int>("id");
+                watcher.Id = dictionary.GetValue<int>("id");
+                watcher.Name = dictionary.GetValue<string>("name");
 
                 return watcher;
             }
@@ -40,25 +41,19 @@ namespace Redmine.Net.Api.JSonConverters
         public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer)
         {
             var entity = obj as Watcher;
-            var root = new Dictionary<string, object>();
             var result = new Dictionary<string, object>();
 
-            //if (entity != null)
-            //{
-            //    result.Add("name", entity.Name);
-            //    if (entity.wa != null)
-            //        result.Add("user_ids", entity.Users.Select(x => x.Id).ToArray());
-
-            //    root["group"] = result;
-            //    return root;
-            //}
+            if (entity != null)
+            {
+                result.Add("id", entity.Id);
+            }
 
             return result;
         }
 
         public override IEnumerable<Type> SupportedTypes
         {
-            get { return new List<Type>(new[] { typeof(Watcher) }); } 
+            get { return new List<Type>(new[] { typeof(Watcher) }); }
         }
     }
 }
