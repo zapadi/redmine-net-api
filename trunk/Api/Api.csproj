@@ -35,6 +35,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Net40|AnyCPU'">
     <OutputPath>bin\Net40\</OutputPath>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>redmine-net-api.pfx</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -129,6 +135,9 @@
     <Compile Include="Types\Version.cs" />
     <Compile Include="Types\Watcher.cs" />
     <Compile Include="Types\WikiPage.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="redmine-net-api.pfx" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
