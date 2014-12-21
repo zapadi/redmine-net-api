@@ -65,6 +65,12 @@ namespace Redmine.Net.Api.JSonConverters
                 result.Add("password", entity.Password);
                 result.WriteIfNotDefaultOrNull(entity.AuthenticationModeId, "auth_source_id");
 
+                if (entity.CustomFields != null)
+                {
+                    serializer.RegisterConverters(new[] { new IssueCustomFieldConverter() });
+                    result.Add("custom_fields", entity.CustomFields.ToArray());
+                }
+
                 root["user"] = result;
                 return root;
             }
