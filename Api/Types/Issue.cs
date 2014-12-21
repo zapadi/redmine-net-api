@@ -186,6 +186,14 @@ namespace Redmine.Net.Api.Types
         public IdentifiableName FixedVersion { get; set; }
 
         /// <summary>
+        /// indicate whether the issue is private or not
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this issue is private; otherwise, <c>false</c>.
+        /// </value>
+        [XmlElement("is_private")]
+        public bool IsPrivate { get; set; }
+        /// <summary>
         /// Gets or sets the journals.
         /// </summary>
         /// <value>
@@ -338,6 +346,7 @@ namespace Redmine.Net.Api.Types
             writer.WriteIdIfNotNull(Category, "category_id");
             writer.WriteIdIfNotNull(Tracker, "tracker_id");
             writer.WriteIdIfNotNull(AssignedTo, "assigned_to_id");
+            writer.WriteElementString("is_private", IsPrivate.ToString());
             writer.WriteElementString("parent_issue_id", ParentIssue == null ? null : ParentIssue.Id.ToString(CultureInfo.InvariantCulture));
             writer.WriteIdIfNotNull(FixedVersion, "fixed_version_id");
             writer.WriteIfNotDefaultOrNull(EstimatedHours, "estimated_hours");

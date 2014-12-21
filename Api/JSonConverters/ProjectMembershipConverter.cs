@@ -51,7 +51,7 @@ namespace Redmine.Net.Api.JSonConverters
 
             if (entity != null)
             {
-                if (entity.User != null && entity.User.Id == 0)
+                if (entity.User != null)
                     result.Add("user_id", entity.User.Id);
                 result.Add("role_ids", entity.Roles.ToArray());
 

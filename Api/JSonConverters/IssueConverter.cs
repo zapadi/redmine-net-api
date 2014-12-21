@@ -113,7 +113,7 @@ namespace Redmine.Net.Api.JSonConverters
                 if (entity.Watchers != null)
                 {
                     serializer.RegisterConverters(new[] { new WatcherConverter()  });
-                    result.Add("watchers", entity.Watchers.ToArray());
+                    result.Add("watcher_user_ids", entity.Watchers.ToArray());
                 }
 
                 root["issue"] = result;
