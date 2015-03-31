@@ -90,6 +90,9 @@ namespace Redmine.Net.Api.Types
         [XmlElement("is_public")]
         public bool IsPublic { get; set; }
 
+        [XmlElement("inherit_members")]
+        public bool InheritMembers { get; set; }
+
         /// <summary>
         /// Gets or sets the trackers.
         /// </summary>
@@ -146,6 +149,9 @@ namespace Redmine.Net.Api.Types
                         IsPublic = reader.ReadElementContentAsBoolean();
                         break;
 
+                    case "inherit_members":
+                        InheritMembers = reader.ReadElementContentAsBoolean();
+                        break;
                   
                     case "created_on": CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
 
@@ -166,10 +172,13 @@ namespace Redmine.Net.Api.Types
             writer.WriteElementString("name", Name);
             writer.WriteElementString("identifier", Identifier);
             writer.WriteElementString("description", Description);
-            if (Id == 0) return;
+            writer.WriteElementString("inherit_members", InheritMembers.ToString());
+            writer.WriteElementString("is_public", IsPublic.ToString());
             writer.WriteIdIfNotNull(Parent, "parent_id");
             writer.WriteElementString("homepage", HomePage);
-
+            
+            if (Id == 0) return;
+            
             if (CustomFields != null)
             {
                 writer.WriteStartElement("custom_fields");

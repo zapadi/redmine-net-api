@@ -27,7 +27,7 @@ namespace Test
         ///A test for GetObject
         ///</summary>
         public void GetObjectTestHelper<T>()
-            where T : class
+            where T : class, new()
         {
 
             RedmineManager target = new RedmineManager(host, apiKey); // TODO: Initialize to an appropriate value
@@ -52,7 +52,7 @@ namespace Test
         ///A test for GetObjectList
         ///</summary>
         public void GetObjectListTestHelper<T>()
-            where T : class
+            where T : class, new()
         {
             RedmineManager target = new RedmineManager(host, apiKey); // TODO: Initialize to an appropriate value
             NameValueCollection parameters = null; // TODO: Initialize to an appropriate value

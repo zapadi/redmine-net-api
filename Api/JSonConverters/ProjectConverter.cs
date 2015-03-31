@@ -63,13 +63,13 @@ namespace Redmine.Net.Api.JSonConverters
                 result.Add("name", entity.Name);
                 result.Add("identifier", entity.Identifier);
                 result.Add("description", entity.Description);
-                if (entity.Id != 0)
-                {
-                    if (entity.Parent != null)
-                        result.Add("parent_id", entity.Parent.Id);
-                    result.Add("homepage", entity.HomePage);
-                }
+                result.Add("homepage", entity.HomePage);
+                result.Add("inherit_members", entity.InheritMembers);
+                result.Add("is_public", entity.IsPublic);
 
+                if (entity.Parent != null)
+                    result.Add("parent_id", entity.Parent.Id);
+                
                 if (entity.CustomFields != null)
                 {
                     serializer.RegisterConverters(new[] { new IssueCustomFieldConverter() });
