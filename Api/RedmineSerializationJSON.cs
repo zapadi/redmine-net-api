@@ -25,7 +25,7 @@ using System.Web.Script.Serialization;
 using Redmine.Net.Api.JSonConverters;
 using Version = Redmine.Net.Api.Types.Version;
 
-//#endif
+
 
 namespace Redmine.Net.Api
 {

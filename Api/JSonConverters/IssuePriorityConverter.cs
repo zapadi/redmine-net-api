@@ -45,4 +45,4 @@ namespace Redmine.Net.Api.JSonConverters
         public override IEnumerable<Type> SupportedTypes { get { return new List<Type>(new[] { typeof(IssuePriority) }); } }
     }
 }
-//#endif
+

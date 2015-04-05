@@ -1,14 +1,7 @@
-﻿using System.IO;
-using System.Net;
-using System.Xml;
-using System.Xml.Serialization;
-using Redmine.Net.Api;
+﻿using System.Collections.Specialized;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+using Redmine.Net.Api;
 using Redmine.Net.Api.Types;
-using System.Collections.Specialized;
-using System.Collections.Generic;
-using System.Web;
 
 namespace Test
 {

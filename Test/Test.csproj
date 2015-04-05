@@ -3,9 +3,6 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>
-    </ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{DB746203-07F0-493B-9D31-7274C19449D2}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -52,21 +49,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <CodeAnalysisDependentAssemblyPaths Condition=" '$(VS100COMNTOOLS)' != '' " Include="$(VS100COMNTOOLS)..\IDE\PrivateAssemblies">
-      <Visible>False</Visible>
-    </CodeAnalysisDependentAssemblyPaths>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RedmineManagerTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Test References\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Api\Api.csproj">
-      <Project>{F99E4720-D2A0-461B-A454-E6169BFA8C38}</Project>
-      <Name>Api</Name>
+    <ProjectReference Include="..\redmine-net40-api\redmine-net40-api.csproj">
+      <Project>{0D9B763C-A16B-463B-BDDD-0A0467DCD32E}</Project>
+      <Name>redmine-net40-api</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

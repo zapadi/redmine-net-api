@@ -21,6 +21,6 @@ namespace Redmine.Net.Api
         xml
         //#if RUNNING_ON_35_OR_ABOVE
         , json
-        //#endif
+        
     }
 }

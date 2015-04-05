@@ -335,7 +335,7 @@ namespace Redmine.Net.Api
                     }
                     else
                         aev.Result = RedmineSerialization.FromXML(response, responseType);
-                //#endif
+                
             }
             catch (ThreadAbortException ex)
             {
