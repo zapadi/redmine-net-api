@@ -26,7 +26,7 @@ namespace Redmine.Net.Api.Types
     /// Availability 1.0
     /// </summary>
     [XmlRoot("project")]
-   // [DataContract(Name = "project")]
+    // [DataContract(Name = "project")]
     public class Project : IdentifiableName, IEquatable<Project>
     {
         /// <summary>
@@ -103,7 +103,12 @@ namespace Redmine.Net.Api.Types
 
         [XmlArray("issue_categories")]
         [XmlArrayItem("issue_category")]
-        public IList<ProjectIssueCategory> IssueCategories { get; set; } 
+        public IList<ProjectIssueCategory> IssueCategories { get; set; }
+
+        /// <summary>
+        /// enabled_module_names: (repeatable element) the module name: boards, calendar, documents, files, gantt, issue_tracking, news, repository, time_tracking, wiki
+        /// </summary>
+        public string EnabledModuleNames { get; set; }
 
         /// <summary>
         /// Generates an object from its XML representation.
@@ -130,22 +135,16 @@ namespace Redmine.Net.Api.Types
 
                     case "description": Description = reader.ReadElementContentAsString(); break;
 
-                    case "status":
-                        Status = (ProjectStatus)reader.ReadElementContentAsInt();
-                        break;
+                    case "status": Status = (ProjectStatus)reader.ReadElementContentAsInt(); break;
 
                     case "parent": Parent = new IdentifiableName(reader); break;
 
                     case "homepage": HomePage = reader.ReadElementContentAsString(); break;
 
-                    case "is_public":
-                        IsPublic = reader.ReadElementContentAsBoolean();
-                        break;
+                    case "is_public": IsPublic = reader.ReadElementContentAsBoolean(); break;
 
-                    case "inherit_members":
-                        InheritMembers = reader.ReadElementContentAsBoolean();
-                        break;
-                  
+                    case "inherit_members": InheritMembers = reader.ReadElementContentAsBoolean(); break;
+
                     case "created_on": CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
 
                     case "updated_on": UpdatedOn = reader.ReadElementContentAsNullableDateTime(); break;
@@ -169,9 +168,21 @@ namespace Redmine.Net.Api.Types
             writer.WriteElementString("is_public", IsPublic.ToString());
             writer.WriteIdIfNotNull(Parent, "parent_id");
             writer.WriteElementString("homepage", HomePage);
-            
+
+            if (!string.IsNullOrEmpty(EnabledModuleNames))
+            {
+               var tokens= EnabledModuleNames.Split(",", StringSplitOptions.RemoveEmptyEntries);
+               if (tokens != null)
+               {
+                   foreach (var token in tokens)
+                   {
+                       writer.WriteElementString("enabled_module_names", token);
+                   }
+               }
+            }
+
             if (Id == 0) return;
-            
+
             if (CustomFields != null)
             {
                 writer.WriteStartElement("custom_fields");
