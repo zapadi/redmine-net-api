@@ -32,134 +32,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\redmine-net45-api\Types\Attachment.cs">
-      <Link>Types\Attachment.cs</Link>
-    </Compile>
-    <Compile Include="..\redmine-net45-api\Types\ChangeSet.cs">
-      <Link>Types\ChangeSet.cs</Link>
-    </Compile>
-    <Compile Include="..\redmine-net45-api\Types\CustomField.cs">
-      <Link>Types\CustomField.cs</Link>
-    </Compile>
-    <Compile Include="..\redmine-net45-api\Types\CustomFieldPossibleValue.cs">
-      <Link>Types\CustomFieldPossibleValue.cs</Link>
-    </Compile>
-    <Compile Include="..\redmine-net45-api\Types\CustomFieldValue.cs">
-      <Link>Types\CustomFieldValue.cs</Link>
-    </Compile>
-    <Compile Include="..\redmine-net45-api\Types\Detail.cs">
-      <Link>Types\Detail.cs</Link>
-    </Compile>
-    <Compile Include="..\redmine-net45-api\Types\Error.cs">
-      <Link>Types\Error.cs</Link>
-    </Compile>
-    <Compile Include="..\redmine-net45-api\Types\Group.cs">
-      <Link>Types\Group.cs</Link>
-    </Compile>
-    <Compile Include="..\redmine-net45-api\Types\Identifiable.cs">
-      <Link>Types\Identifiable.cs</Link>
-    </Compile>
-    <Compile Include="..\redmine-net45-api\Types\IdentifiableName.cs">
-      <Link>Types\IdentifiableName.cs</Link>
-    </Compile>
-    <Compile Include="..\redmine-net45-api\Types\Issue.cs">
-      <Link>Types\Issue.cs</Link>
-    </Compile>
-    <Compile Include="..\redmine-net45-api\Types\IssueCategory.cs">
-      <Link>Types\IssueCategory.cs</Link>
-    </Compile>
-    <Compile Include="..\redmine-net45-api\Types\IssueChild.cs">
-      <Link>Types\IssueChild.cs</Link>
-    </Compile>
-    <Compile Include="..\redmine-net45-api\Types\IssueCustomField.cs">
-      <Link>Types\IssueCustomField.cs</Link>
-    </Compile>
-    <Compile Include="..\redmine-net45-api\Types\IssuePriority.cs">
-      <Link>Types\IssuePriority.cs</Link>
-    </Compile>
-    <Compile Include="..\redmine-net45-api\Types\IssueRelation.cs">
-      <Link>Types\IssueRelation.cs</Link>
-    </Compile>
-    <Compile Include="..\redmine-net45-api\Types\IssueStatus.cs">
-      <Link>Types\IssueStatus.cs</Link>
-    </Compile>
-    <Compile Include="..\redmine-net45-api\Types\Journal.cs">
-      <Link>Types\Journal.cs</Link>
-    </Compile>
-    <Compile Include="..\redmine-net45-api\Types\Membership.cs">
-      <Link>Types\Membership.cs</Link>
-    </Compile>
-    <Compile Include="..\redmine-net45-api\Types\MembershipRole.cs">
-      <Link>Types\MembershipRole.cs</Link>
-    </Compile>
-    <Compile Include="..\redmine-net45-api\Types\News.cs">
-      <Link>Types\News.cs</Link>
-    </Compile>
-    <Compile Include="..\redmine-net45-api\Types\Permission.cs">
-      <Link>Types\Permission.cs</Link>
-    </Compile>
-    <Compile Include="..\redmine-net45-api\Types\Project.cs">
-      <Link>Types\Project.cs</Link>
-    </Compile>
-    <Compile Include="..\redmine-net45-api\Types\ProjectIssueCategory.cs">
-      <Link>Types\ProjectIssueCategory.cs</Link>
-    </Compile>
-    <Compile Include="..\redmine-net45-api\Types\ProjectMembership.cs">
-      <Link>Types\ProjectMembership.cs</Link>
-    </Compile>
-    <Compile Include="..\redmine-net45-api\Types\ProjectStatus.cs">
-      <Link>Types\ProjectStatus.cs</Link>
-    </Compile>
-    <Compile Include="..\redmine-net45-api\Types\ProjectTracker.cs">
-      <Link>Types\ProjectTracker.cs</Link>
-    </Compile>
-    <Compile Include="..\redmine-net45-api\Types\Query.cs">
-      <Link>Types\Query.cs</Link>
-    </Compile>
-    <Compile Include="..\redmine-net45-api\Types\Role.cs">
-      <Link>Types\Role.cs</Link>
-    </Compile>
-    <Compile Include="..\redmine-net45-api\Types\TimeEntry.cs">
-      <Link>Types\TimeEntry.cs</Link>
-    </Compile>
-    <Compile Include="..\redmine-net45-api\Types\TimeEntryActivity.cs">
-      <Link>Types\TimeEntryActivity.cs</Link>
-    </Compile>
-    <Compile Include="..\redmine-net45-api\Types\Tracker.cs">
-      <Link>Types\Tracker.cs</Link>
-    </Compile>
-    <Compile Include="..\redmine-net45-api\Types\TrackerCustomField.cs">
-      <Link>Types\TrackerCustomField.cs</Link>
-    </Compile>
-    <Compile Include="..\redmine-net45-api\Types\Upload.cs">
-      <Link>Types\Upload.cs</Link>
-    </Compile>
-    <Compile Include="..\redmine-net45-api\Types\User.cs">
-      <Link>Types\User.cs</Link>
-    </Compile>
-    <Compile Include="..\redmine-net45-api\Types\UserGroup.cs">
-      <Link>Types\UserGroup.cs</Link>
-    </Compile>
-    <Compile Include="..\redmine-net45-api\Types\UserStatus.cs">
-      <Link>Types\UserStatus.cs</Link>
-    </Compile>
-    <Compile Include="..\redmine-net45-api\Types\Version.cs">
-      <Link>Types\Version.cs</Link>
-    </Compile>
-    <Compile Include="..\redmine-net45-api\Types\Watcher.cs">
-      <Link>Types\Watcher.cs</Link>
-    </Compile>
-    <Compile Include="..\redmine-net45-api\Types\WikiPage.cs">
-      <Link>Types\WikiPage.cs</Link>
-    </Compile>
     <Compile Include="ExtensionAttribute.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -169,6 +45,47 @@
     <Compile Include="RedmineWebClient.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Types\Attachment.cs" />
+    <Compile Include="Types\ChangeSet.cs" />
+    <Compile Include="Types\CustomField.cs" />
+    <Compile Include="Types\CustomFieldPossibleValue.cs" />
+    <Compile Include="Types\CustomFieldValue.cs" />
+    <Compile Include="Types\Detail.cs" />
+    <Compile Include="Types\Error.cs" />
+    <Compile Include="Types\Group.cs" />
+    <Compile Include="Types\Identifiable.cs" />
+    <Compile Include="Types\IdentifiableName.cs" />
+    <Compile Include="Types\Issue.cs" />
+    <Compile Include="Types\IssueCategory.cs" />
+    <Compile Include="Types\IssueChild.cs" />
+    <Compile Include="Types\IssueCustomField.cs" />
+    <Compile Include="Types\IssuePriority.cs" />
+    <Compile Include="Types\IssueRelation.cs" />
+    <Compile Include="Types\IssueRelationType.cs" />
+    <Compile Include="Types\IssueStatus.cs" />
+    <Compile Include="Types\Journal.cs" />
+    <Compile Include="Types\Membership.cs" />
+    <Compile Include="Types\MembershipRole.cs" />
+    <Compile Include="Types\News.cs" />
+    <Compile Include="Types\Permission.cs" />
+    <Compile Include="Types\Project.cs" />
+    <Compile Include="Types\ProjectIssueCategory.cs" />
+    <Compile Include="Types\ProjectMembership.cs" />
+    <Compile Include="Types\ProjectStatus.cs" />
+    <Compile Include="Types\ProjectTracker.cs" />
+    <Compile Include="Types\Query.cs" />
+    <Compile Include="Types\Role.cs" />
+    <Compile Include="Types\TimeEntry.cs" />
+    <Compile Include="Types\TimeEntryActivity.cs" />
+    <Compile Include="Types\Tracker.cs" />
+    <Compile Include="Types\TrackerCustomField.cs" />
+    <Compile Include="Types\Upload.cs" />
+    <Compile Include="Types\User.cs" />
+    <Compile Include="Types\UserGroup.cs" />
+    <Compile Include="Types\UserStatus.cs" />
+    <Compile Include="Types\Version.cs" />
+    <Compile Include="Types\Watcher.cs" />
+    <Compile Include="Types\WikiPage.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
