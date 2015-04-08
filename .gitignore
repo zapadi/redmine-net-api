@@ -1,2 +1,4 @@
 obj/
 bin/
+Test/RedmineManagerTest.cs
+Test/Test.csproj
