@@ -40,3 +40,17 @@ You can find your API key on your account page ( /my/account ) when logged in, o
 As of Redmine 2.2.0, you can impersonate user through the REST API by setting the X-Redmine-Switch-User header of your API request. It must be set to a user login (eg. X-Redmine-Switch-User: jsmith). This only works when using the API with an administrator account, this header will be ignored when using the API with a regular user account.
 
 If the login specified with the X-Redmine-Switch-User header does not exist or is not active, you will receive a 412 error response.
+
+
+<br />
+## Help me help you ##
+Your feedback is crucial. If you find anything that could improve the API, let me know. I will gladly receive your input and make the proper adjustments.
+
+**If you find this API useful let others know about it and/or rate it.**<br />
+Your contribution is always welcome.
+
+<br />
+## Licence ##
+The API is released under Apache 2 open-source license. You can use it for both personal and commercial purposes, build upon it and modify it.
+
+![http://www.jetbrains.com/img/logos/logo_resharper.gif](http://www.jetbrains.com/img/logos/logo_resharper.gif)
