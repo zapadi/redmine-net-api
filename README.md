@@ -53,4 +53,4 @@ Your contribution is always welcome.
 ## Licence ##
 The API is released under Apache 2 open-source license. You can use it for both personal and commercial purposes, build upon it and modify it.
 
-![http://www.jetbrains.com/img/logos/logo_resharper.gif](http://www.jetbrains.com/img/logos/logo_resharper.gif)
+
