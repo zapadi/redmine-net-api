@@ -171,7 +171,7 @@ namespace Redmine.Net.Api.Types
 
             if (!string.IsNullOrEmpty(EnabledModuleNames))
             {
-               var tokens= EnabledModuleNames.Split(",", StringSplitOptions.RemoveEmptyEntries);
+               var tokens= EnabledModuleNames.Split(new char[]{','}, StringSplitOptions.RemoveEmptyEntries);
                if (tokens != null)
                {
                    foreach (var token in tokens)
