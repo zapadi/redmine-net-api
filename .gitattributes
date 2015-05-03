@@ -1,0 +1,38 @@
+* text=auto
+
+### c# and c++ stuff
+*.cs text
+*.c text
+*.cpp text
+*.h text
+*.hpp text
+*.dsp text eol=crlf
+*.dsw text eol=crlf
+*.vcprops text eol=crlf
+*.vcproj text eol=crlf
+*.vcxproj text eol=crlf
+*.props text eol=crlf
+*.sln text eol=crlf
+*.vcxproj.filters text eol=crlf
+*.rc text=auto
+*.rc2 text=auto
+resource.h text=auto
+
+### Other
+*.ps1 text eol=crlf
+*.bat text eol=crlf
+*.reg text
+Makefile text
+*.sh text
+*.txt text
+*.bmp binary
+*.png binary
+*.jpg binary
+*.gif binary
+*.xml text
+*.wsdl text
+*.html text
+*.htm text
+*.css text
+*.js text
+*.mib text

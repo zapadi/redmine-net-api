@@ -202,7 +202,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RedmineException.cs" />
     <Compile Include="RedmineManager.cs" />
-    <Compile Include="RedmineManagerAsync.cs" />
     <Compile Include="RedmineSerialization.cs" />
     <Compile Include="RedmineSerializationJSON.cs" />
     <Compile Include="RedmineWebClient.cs">
