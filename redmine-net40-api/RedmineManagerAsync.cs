@@ -15,14 +15,11 @@
 */
 
 using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Xml;
 using Redmine.Net.Api.Types;
 using Version = Redmine.Net.Api.Types.Version;
@@ -33,23 +30,29 @@ namespace Redmine.Net.Api
     {
         public event EventHandler<AsyncEventArgs> DownloadCompleted;
 
-        public async Task<User> GetCurrentUserAsync(NameValueCollection parameters = null)
+        public Guid GetCurrentUserAsync(NameValueCollection parameters = null)
         {
-            string uri = string.Format(REQUEST_FORMAT, host, urls[typeof(User)], CURRENT_USER_URI, mimeFormat);
-            var result = await new RedmineAsyncWebClient().DownloadStringAsync(uri);
-
-            return DeserializeResult<User>(result);
+            using (var wc = CreateWebClient(parameters))
+            {
+                var id = Guid.NewGuid();
+                wc.DownloadStringCompleted += WcDownloadStringCompleted;
+                wc.DownloadStringAsync(new Uri(string.Format(REQUEST_FORMAT, host, urls[typeof(User)], CURRENT_USER_URI, mimeFormat)), new AsyncToken { Method = RedmineMethod.GetCurrentUser, ResponseType = typeof(User), TokenId = id });
+                return id;
+            }
         }
 
-        public async Task<WikiPage> GetWikiPageAsync(string projectId, NameValueCollection parameters, string pageName, uint version = 0)
+        public Guid GetWikiPageAsync(string projectId, NameValueCollection parameters, string pageName, uint version = 0)
         {
-            string uri = version == 0 
-                ? string.Format(WIKI_PAGE_FORMAT, host, projectId, pageName, mimeFormat) 
-                : string.Format(WIKI_VERSION_FORMAT, host, projectId, pageName, version, mimeFormat);
+            using (var wc = CreateWebClient(parameters))
+            {
+                var id = Guid.NewGuid();
+                wc.DownloadStringCompleted += WcDownloadStringCompleted;
+                wc.DownloadStringAsync(version == 0
+                ? new Uri(string.Format(WIKI_PAGE_FORMAT, host, projectId, pageName, mimeFormat))
+                : new Uri(string.Format(WIKI_VERSION_FORMAT, host, projectId, pageName, version, mimeFormat)), new AsyncToken { Method = RedmineMethod.GetWikiPage, Parameter = projectId, ResponseType = typeof(WikiPage), TokenId = id });
 
-            var result = await new RedmineAsyncWebClient().DownloadStringAsync(uri);
-
-            return DeserializeResult<WikiPage>(result);
+                return id;
+            }
         }
 
         public Guid CreateOrUpdateWikiPageAsync(string projectId, string pageName, WikiPage wikiPage)
@@ -106,7 +109,7 @@ namespace Redmine.Net.Api
             using (var wc = CreateWebClient(null))
             {
                 var id = Guid.NewGuid();
-                var asyncToken = new AsyncToken { Method = RedmineMethod.AddUserToGroup, Parameter = userId, TokenId = id };
+                var asyncToken = new AsyncToken{Method = RedmineMethod.AddUserToGroup, Parameter = userId, TokenId = id};
                 wc.DownloadStringCompleted += WcDownloadStringCompleted;
                 wc.UploadStringAsync(new Uri(string.Format(REQUEST_FORMAT, host, urls[typeof(Group)], groupId + "/users", mimeFormat)), POST, mimeFormat == MimeFormat.xml ? "<user_id>" + userId + "</user_id>" : "user_id:" + userId, asyncToken);
                 return id;
@@ -130,40 +133,38 @@ namespace Redmine.Net.Api
             }
         }
 
-        public async Task<List<T>> GetObjectListAsync<T>(NameValueCollection parameters)
+        public Guid GetObjectListAsync<T>(NameValueCollection parameters)
         {
-            if (!urls.ContainsKey(typeof(T))) return null;
+            if (!urls.ContainsKey(typeof(T))) return Guid.Empty;
 
-            //using (var wc = CreateWebClient(parameters))
-            //{
-            //    var id = Guid.NewGuid();
-            //    var type = typeof(T);
-            //    wc.DownloadStringCompleted += WcDownloadStringCompleted;
+            using (var wc = CreateWebClient(parameters))
+            {
+                var id = Guid.NewGuid();
+                var type = typeof(T);
+                wc.DownloadStringCompleted += WcDownloadStringCompleted;
 
-            //    var asyncToken = new AsyncToken { Method = RedmineMethod.GetObjectList, ResponseType = type, TokenId = id, JsonRoot = urls[type] };
+                var asyncToken = new AsyncToken { Method = RedmineMethod.GetObjectList, ResponseType = type, TokenId = id, JsonRoot = urls[type] };
 
-            //    if (type == typeof(Version) || type == typeof(IssueCategory) || type == typeof(ProjectMembership))
-            //    {
-            //        string projectId = GetOwnerId(parameters, "project_id");
-            //        if (string.IsNullOrEmpty(projectId)) throw new RedmineException("The project id is mandatory! \nCheck if you have included the parameter project_id to parameters.");
+                if (type == typeof(Version) || type == typeof(IssueCategory) || type == typeof(ProjectMembership))
+                {
+                    string projectId = GetOwnerId(parameters, "project_id");
+                    if (string.IsNullOrEmpty(projectId)) throw new RedmineException("The project id is mandatory! \nCheck if you have included the parameter project_id to parameters.");
 
-            //        wc.DownloadStringAsync(new Uri(string.Format(ENTITY_WITH_PARENT_FORMAT, host, "projects", projectId, urls[type], mimeFormat)), asyncToken);
-            //    }
-            //    else
-            //        if (type == typeof(IssueRelation))
-            //        {
-            //            string issueId = GetOwnerId(parameters, "issue_id");
-            //            if (string.IsNullOrEmpty(issueId)) throw new RedmineException("The issue id is mandatory! \nCheck if you have included the parameter issue_id to parameters");
-            //            wc.DownloadStringAsync(new Uri(string.Format(ENTITY_WITH_PARENT_FORMAT, host, "issues", issueId, urls[type], mimeFormat)), asyncToken);
-            //        }
-            //        else
-            //        {
-            //            wc.DownloadStringAsync(new Uri(string.Format(FORMAT, host, urls[type], mimeFormat)), asyncToken);
-            //        }
-            //    return id;
-            //}
-
-            return null;
+                    wc.DownloadStringAsync(new Uri(string.Format(ENTITY_WITH_PARENT_FORMAT, host, "projects", projectId, urls[type], mimeFormat)), asyncToken);
+                }
+                else
+                    if (type == typeof(IssueRelation))
+                    {
+                        string issueId = GetOwnerId(parameters, "issue_id");
+                        if (string.IsNullOrEmpty(issueId)) throw new RedmineException("The issue id is mandatory! \nCheck if you have included the parameter issue_id to parameters");
+                        wc.DownloadStringAsync(new Uri(string.Format(ENTITY_WITH_PARENT_FORMAT, host, "issues", issueId, urls[type], mimeFormat)), asyncToken);
+                    }
+                    else
+                    {
+                        wc.DownloadStringAsync(new Uri(string.Format(FORMAT, host, urls[type], mimeFormat)), asyncToken);
+                    }
+                return id;
+            }
         }
 
         /// <summary>
@@ -173,21 +174,19 @@ namespace Redmine.Net.Api
         /// <param name="id">The id of the object.</param>
         /// <param name="parameters">Optional filters and/or optional fetched data.</param>
         /// <returns>Returns the Guid associated with the async request.</returns>
-        public async Task<T> GetObjectAsync<T>(string id, NameValueCollection parameters) where T : class
+        public Guid GetObjectAsync<T>(string id, NameValueCollection parameters) where T : class
         {
             var type = typeof(T);
 
-            if (!urls.ContainsKey(type)) return default(T);
+            if (!urls.ContainsKey(type)) return Guid.Empty;
 
-            //using (var wc = CreateWebClient(parameters))
-            //{
-            //    var guid = Guid.NewGuid();
-            //    wc.DownloadStringCompleted += WcDownloadStringCompleted;
-            //    wc.DownloadStringAsync(new Uri(string.Format(REQUEST_FORMAT, host, urls[type], id, mimeFormat)), new AsyncToken { Method = RedmineMethod.GetObject, ResponseType = type, Parameter = id, TokenId = guid });
-            //    return guid;
-            //}
-
-            return null;
+            using (var wc = CreateWebClient(parameters))
+            {
+                var guid = Guid.NewGuid();
+                wc.DownloadStringCompleted += WcDownloadStringCompleted;
+                wc.DownloadStringAsync(new Uri(string.Format(REQUEST_FORMAT, host, urls[type], id, mimeFormat)), new AsyncToken { Method = RedmineMethod.GetObject, ResponseType = type, Parameter = id, TokenId = guid });
+                return guid;
+            }
         }
 
         /// <summary>
@@ -236,7 +235,7 @@ namespace Redmine.Net.Api
             using (var wc = CreateWebClient(null))
             {
                 var guid = Guid.NewGuid();
-                var asyncToken = new AsyncToken { Method = RedmineMethod.UpdateObject, ResponseType = type, Parameter = obj, TokenId = guid };
+                var asyncToken = new AsyncToken{Method = RedmineMethod.UpdateObject, ResponseType = type, Parameter = obj, TokenId = guid};
                 wc.DownloadStringCompleted += WcDownloadStringCompleted;
                 if (type == typeof(Version) || type == typeof(IssueCategory) || type == typeof(ProjectMembership))
                 {
@@ -296,56 +295,12 @@ namespace Redmine.Net.Api
                 }
         }
 
-        public T DeserializeResult<T>(string result)
-        {
-            int totalItems = 0;
-            return DeserializeResult<T>(result, out totalItems);
-        }
-
-        public T DeserializeResult<T>(string result, out int totalItems, string jsonRoot = null)
-        {
-            totalItems = 0;
-            if (string.IsNullOrWhiteSpace(result)) return default(T);
-
-            var type = typeof(T);
-            if (type == typeof(List<T>))
-            {
-                if (mimeFormat == MimeFormat.json)
-                {
-                    return (T)RedmineSerialization.JsonDeserializeToList(result, jsonRoot, type, out totalItems);
-                }
-
-                using (var text = new StringReader(result))
-                {
-                    using (var xmlReader = new XmlTextReader(text))
-                    {
-                        xmlReader.WhitespaceHandling = WhitespaceHandling.None;
-                        xmlReader.Read();
-                        xmlReader.Read();
-
-                        totalItems = xmlReader.ReadAttributeAsInt("total_count");
-
-                        return (T)(object)xmlReader.ReadElementContentAsCollection(type);
-                    }
-                }
-            }
-            else
-            {
-                if (mimeFormat == MimeFormat.json)
-                {
-                    return (T)RedmineSerialization.JsonDeserialize(result, type, jsonRoot);
-                }
-
-                return (T)RedmineSerialization.FromXML(result, type);
-            }
-        }
-
         private void ShowAsyncResult(string response, Type responseType, RedmineMethod method, string jsonRoot)
         {
             var aev = new AsyncEventArgs();
             try
             {
-
+                
                 if (mimeFormat == MimeFormat.json)
                     if (method == RedmineMethod.GetObjectList)
                     {
@@ -374,7 +329,7 @@ namespace Redmine.Net.Api
                     }
                     else
                         aev.Result = RedmineSerialization.FromXML(response, responseType);
-
+                
             }
             catch (ThreadAbortException ex)
             {

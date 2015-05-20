@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{DB746203-07F0-493B-9D31-7274C19449D2}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "redmine-net20-api", "redmine-net20-api\redmine-net20-api.csproj", "{DA3E3C1B-2C01-4FB5-968B-3769BBF382BD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "redmine-net40-api", "redmine-net40-api\redmine-net40-api.csproj", "{0D9B763C-A16B-463B-BDDD-0A0467DCD32E}"
@@ -28,21 +26,6 @@ Global
 		RUNNING_ON_35_OR_ABOVE|x86 = RUNNING_ON_35_OR_ABOVE|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{DB746203-07F0-493B-9D31-7274C19449D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DB746203-07F0-493B-9D31-7274C19449D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DB746203-07F0-493B-9D31-7274C19449D2}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{DB746203-07F0-493B-9D31-7274C19449D2}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{DB746203-07F0-493B-9D31-7274C19449D2}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{DB746203-07F0-493B-9D31-7274C19449D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DB746203-07F0-493B-9D31-7274C19449D2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DB746203-07F0-493B-9D31-7274C19449D2}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{DB746203-07F0-493B-9D31-7274C19449D2}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{DB746203-07F0-493B-9D31-7274C19449D2}.Release|x86.ActiveCfg = Release|Any CPU
-		{DB746203-07F0-493B-9D31-7274C19449D2}.RUNNING_ON_35_OR_ABOVE|Any CPU.ActiveCfg = Release|Any CPU
-		{DB746203-07F0-493B-9D31-7274C19449D2}.RUNNING_ON_35_OR_ABOVE|Any CPU.Build.0 = Release|Any CPU
-		{DB746203-07F0-493B-9D31-7274C19449D2}.RUNNING_ON_35_OR_ABOVE|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{DB746203-07F0-493B-9D31-7274C19449D2}.RUNNING_ON_35_OR_ABOVE|Mixed Platforms.Build.0 = Release|Any CPU
-		{DB746203-07F0-493B-9D31-7274C19449D2}.RUNNING_ON_35_OR_ABOVE|x86.ActiveCfg = Release|Any CPU
 		{DA3E3C1B-2C01-4FB5-968B-3769BBF382BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DA3E3C1B-2C01-4FB5-968B-3769BBF382BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DA3E3C1B-2C01-4FB5-968B-3769BBF382BD}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
