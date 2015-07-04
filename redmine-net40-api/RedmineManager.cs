@@ -27,6 +27,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
+using Anotar.NLog;
 using Redmine.Net.Api.Types;
 using Group = Redmine.Net.Api.Types.Group;
 using Version = Redmine.Net.Api.Types.Version;
@@ -627,6 +628,7 @@ namespace Redmine.Net.Api
             return true;
         }
 
+        [LogToErrorOnException]
         private void HandleWebException(WebException exception, string method)
         {
             if (exception == null) return;
@@ -745,6 +747,8 @@ namespace Redmine.Net.Api
 
         private void ExecuteUpload(string address, string actionType, string data, string methodName)
         {
+            LogTo.Trace("[{1}] {0}", address, actionType);
+
             using (var wc = CreateWebClient(null))
             {
                 try
@@ -763,6 +767,8 @@ namespace Redmine.Net.Api
 
         private T ExecuteUpload<T>(string address, string actionType, string data, string methodName) where T : class , new()
         {
+            LogTo.Trace("[{1}] {0}", address, actionType);
+
             using (var wc = CreateWebClient(null))
             {
                 try
@@ -784,6 +790,8 @@ namespace Redmine.Net.Api
 
         private T ExecuteDownload<T>(string address, string methodName, NameValueCollection parameters = null) where T : class, new()
         {
+            LogTo.Trace("[GET] {0}", address);
+
             using (var wc = CreateWebClient(parameters))
             {
                 try
@@ -801,6 +809,8 @@ namespace Redmine.Net.Api
 
         private IList<T> ExecuteDownloadList<T>(string address, string methodName, string jsonRoot, out int totalCount, NameValueCollection parameters = null) where T : class, new()
         {
+            LogTo.Trace("[GET] {0}", address);
+
             totalCount = -1;
             using (var wc = CreateWebClient(parameters))
             {
