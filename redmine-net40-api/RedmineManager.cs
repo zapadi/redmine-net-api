@@ -723,25 +723,35 @@ namespace Redmine.Net.Api
         private IList<T> DeserializeList<T>(string response, string jsonRoot, out int totalCount) where T : class, new()
         {
             Type type = typeof(T);
-            if (mimeFormat == MimeFormat.json)
-            {
-                if (type == typeof(IssuePriority)) jsonRoot = "issue_priorities";
-                if (type == typeof(TimeEntryActivity)) jsonRoot = "time_entry_activities";
-                return RedmineSerialization.JsonDeserializeToList<T>(response, jsonRoot, out totalCount);
-            }
-
-            using (var text = new StringReader(response))
-            {
-                using (var xmlReader = new XmlTextReader(text))
+            try
                 {
-                    xmlReader.WhitespaceHandling = WhitespaceHandling.None;
-                    xmlReader.Read();
-                    xmlReader.Read();
-
-                    totalCount = xmlReader.ReadAttributeAsInt("total_count");
-
-                    return xmlReader.ReadElementContentAsCollection<T>();
+                  
+                if (mimeFormat == MimeFormat.json)
+                {
+                    if (type == typeof(IssuePriority)) jsonRoot = "issue_priorities";
+                    if (type == typeof(TimeEntryActivity)) jsonRoot = "time_entry_activities";
+                    return RedmineSerialization.JsonDeserializeToList<T>(response, jsonRoot, out totalCount);
                 }
+
+                using (var text = new StringReader(response))
+                {
+                      using (var xmlReader = new XmlTextReader(text))
+                        {
+                            xmlReader.WhitespaceHandling = WhitespaceHandling.None;
+                            xmlReader.Read();
+                            xmlReader.Read();
+
+                            totalCount = xmlReader.ReadAttributeAsInt("total_count");
+
+                            return xmlReader.ReadElementContentAsCollection<T>();
+                        }
+                
+                }
+            }
+            catch (Exception ex)
+            {
+                LogTo.ErrorException(response, ex);
+                throw;
             }
         }
 

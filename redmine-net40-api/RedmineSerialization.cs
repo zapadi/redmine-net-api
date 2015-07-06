@@ -18,6 +18,7 @@ using System;
 using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
+using Anotar.NLog;
 
 namespace Redmine.Net.Api
 {
@@ -32,15 +33,23 @@ namespace Redmine.Net.Api
         /// <exception cref="InvalidOperationException"></exception>
         public static string ToXML<T>(T obj) where T : class
         {
-            var xws = new XmlWriterSettings { OmitXmlDeclaration = true };
-            using (var stringWriter = new StringWriter())
+            try
             {
-                using (var xmlWriter = XmlWriter.Create(stringWriter, xws))
+                var xws = new XmlWriterSettings { OmitXmlDeclaration = true };
+                using (var stringWriter = new StringWriter())
                 {
-                    var sr = new XmlSerializer(typeof(T));
-                    sr.Serialize(xmlWriter, obj);
-                    return stringWriter.ToString();
+                    using (var xmlWriter = XmlWriter.Create(stringWriter, xws))
+                    {
+                        var sr = new XmlSerializer(typeof(T));
+                        sr.Serialize(xmlWriter, obj);
+                        return stringWriter.ToString();
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                LogTo.ErrorException(obj.GetType().ToString(), ex);
+                throw;
             }
         }
 
@@ -54,10 +63,18 @@ namespace Redmine.Net.Api
         /// using the System.Exception.InnerException property.</exception>
         public static T FromXML<T>(string xml) where T : class
         {
-            using (var text = new StringReader(xml))
+            try
             {
-                var sr = new XmlSerializer(typeof(T));
-                return sr.Deserialize(text) as T;
+                using (var text = new StringReader(xml))
+                {
+                    var sr = new XmlSerializer(typeof (T));
+                    return sr.Deserialize(text) as T;
+                }
+            }
+            catch (Exception ex)
+            {
+                LogTo.ErrorException(xml, ex);
+                throw;
             }
         }
 
@@ -71,10 +88,18 @@ namespace Redmine.Net.Api
         /// using the System.Exception.InnerException property.</exception>
         public static object FromXML(string xml, Type type)
         {
-            using (var text = new StringReader(xml))
+            try
             {
-                var sr = new XmlSerializer(type);
-                return sr.Deserialize(text);
+                using (var text = new StringReader(xml))
+                {
+                    var sr = new XmlSerializer(type);
+                    return sr.Deserialize(text);
+                }
+            }
+            catch (Exception ex)
+            {
+                LogTo.ErrorException(xml, ex);
+                throw;
             }
         }
 
