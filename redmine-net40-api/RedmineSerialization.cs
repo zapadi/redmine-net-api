@@ -18,7 +18,6 @@ using System;
 using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
-using Anotar.NLog;
 
 namespace Redmine.Net.Api
 {
@@ -48,7 +47,10 @@ namespace Redmine.Net.Api
             }
             catch (Exception ex)
             {
-                LogTo.ErrorException(obj.GetType().ToString(), ex);
+                OnError(new SerializationErrorEventArgs(ex)
+                {
+                    Content = obj.GetType().ToString()
+                });
                 throw;
             }
         }
@@ -73,7 +75,10 @@ namespace Redmine.Net.Api
             }
             catch (Exception ex)
             {
-                LogTo.ErrorException(xml, ex);
+                OnError(new SerializationErrorEventArgs(ex)
+                {
+                    Content = xml
+                });
                 throw;
             }
         }
@@ -98,9 +103,20 @@ namespace Redmine.Net.Api
             }
             catch (Exception ex)
             {
-                LogTo.ErrorException(xml, ex);
+                OnError( new SerializationErrorEventArgs(ex)
+                {
+                    Content = xml
+                });
                 throw;
             }
+        }
+
+        public static event EventHandler<SerializationErrorEventArgs> Error;
+
+        private static void OnError(SerializationErrorEventArgs e)
+        {
+            var handler = Error;
+            if (handler != null) handler(null, e);
         }
 
         /// <summary>

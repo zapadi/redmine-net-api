@@ -27,7 +27,6 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
-using Anotar.NLog;
 using Redmine.Net.Api.Types;
 using Group = Redmine.Net.Api.Types.Group;
 using Version = Redmine.Net.Api.Types.Version;
@@ -91,6 +90,7 @@ namespace Redmine.Net.Api
         /// As of Redmine 2.2.0 you can impersonate user setting user login (eg. jsmith). This only works when using the API with an administrator account, this header will be ignored when using the API with a regular user account.
         /// </summary>
         public string ImpersonateUser { get; set; }
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RedmineManager"/> class.
@@ -628,10 +628,12 @@ namespace Redmine.Net.Api
             return true;
         }
 
-        [LogToErrorOnException]
         private void HandleWebException(WebException exception, string method)
         {
             if (exception == null) return;
+
+            //custom handle exception
+            OnHandleException(new ErrorEventArgs(exception));
 
             switch (exception.Status)
             {
@@ -724,7 +726,7 @@ namespace Redmine.Net.Api
         {
             Type type = typeof(T);
             try
-                {
+            {
                   
                 if (mimeFormat == MimeFormat.json)
                 {
@@ -750,14 +752,23 @@ namespace Redmine.Net.Api
             }
             catch (Exception ex)
             {
-                LogTo.ErrorException(response, ex);
+                OnLog(new LogEventArgs
+                {
+                    Content = response
+                });
+                OnError(new ErrorEventArgs(ex));
                 throw;
             }
         }
 
         private void ExecuteUpload(string address, string actionType, string data, string methodName)
         {
-            LogTo.Trace("[{1}] {0}", address, actionType);
+            OnLog(new LogEventArgs
+            {
+                Address = address,
+                Method = actionType,
+                Content = data
+            });
 
             using (var wc = CreateWebClient(null))
             {
@@ -777,7 +788,12 @@ namespace Redmine.Net.Api
 
         private T ExecuteUpload<T>(string address, string actionType, string data, string methodName) where T : class , new()
         {
-            LogTo.Trace("[{1}] {0}", address, actionType);
+            OnLog(new LogEventArgs
+            {
+                Address = address,
+                Method = actionType,
+                Content = data
+            });
 
             using (var wc = CreateWebClient(null))
             {
@@ -800,7 +816,11 @@ namespace Redmine.Net.Api
 
         private T ExecuteDownload<T>(string address, string methodName, NameValueCollection parameters = null) where T : class, new()
         {
-            LogTo.Trace("[GET] {0}", address);
+            OnLog(new LogEventArgs
+            {
+                Address = address,
+                Method = "GET"
+            });
 
             using (var wc = CreateWebClient(parameters))
             {
@@ -819,7 +839,11 @@ namespace Redmine.Net.Api
 
         private IList<T> ExecuteDownloadList<T>(string address, string methodName, string jsonRoot, out int totalCount, NameValueCollection parameters = null) where T : class, new()
         {
-            LogTo.Trace("[GET] {0}", address);
+            OnLog(new LogEventArgs
+            {
+                Address = address,
+                Method = "GET"
+            });
 
             totalCount = -1;
             using (var wc = CreateWebClient(parameters))
@@ -835,6 +859,34 @@ namespace Redmine.Net.Api
                 }
                 return null;
             }
+        }
+
+        //Events
+
+        public event EventHandler<LogEventArgs> Log;
+
+        protected virtual void OnLog(LogEventArgs e)
+        {
+            var handler = Log;
+            if (handler != null) handler(this, e);
+
+        }
+
+        public event EventHandler<ErrorEventArgs> Error;
+
+        protected virtual void OnError(ErrorEventArgs e)
+        {
+            var handler = Error;
+            if (handler != null) handler(this, e);
+        }
+
+
+        public event EventHandler<ErrorEventArgs> HandleException;
+
+        protected virtual void OnHandleException(ErrorEventArgs e)
+        {
+            var handler = HandleException;
+            if (handler != null) handler(this, e);
         }
     }
 }

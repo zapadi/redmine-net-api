@@ -39,6 +39,7 @@
   <ItemGroup>
     <Compile Include="ExtensionAttribute.cs" />
     <Compile Include="ExtensionMethods.cs" />
+    <Compile Include="LogEventArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RedmineException.cs" />
     <Compile Include="RedmineManager.cs" />
