@@ -424,6 +424,7 @@ namespace Redmine.Net.Api.Types
                 && DueDate == other.DueDate && DoneRatio == other.DoneRatio && EstimatedHours == other.EstimatedHours && Equals(CustomFields, other.CustomFields)
                 && CreatedOn == other.CreatedOn && UpdatedOn == other.UpdatedOn && AssignedTo == other.AssignedTo && FixedVersion == other.FixedVersion
                 && Notes == other.Notes && Equals(Watchers, other.Watchers) && ClosedOn == other.ClosedOn && SpentHours == other.SpentHours
+                && PrivateNotes == other.PrivateNotes
                 );
         }
     }

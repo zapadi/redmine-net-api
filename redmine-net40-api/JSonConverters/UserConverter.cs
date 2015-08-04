@@ -40,6 +40,7 @@ namespace Redmine.Net.Api.JSonConverters
                 user.LastLoginOn = dictionary.GetValue<DateTime?>("last_login_on");
                 user.ApiKey = dictionary.GetValue<string>("api_key");
                 user.Status = dictionary.GetValue<UserStatus>("status");
+                user.MustChangePassword = dictionary.GetValue<bool>("must_change_passwd");
                 user.CustomFields = dictionary.GetValueAsCollection<IssueCustomField>("custom_fields");
                 user.Memberships = dictionary.GetValueAsCollection<Membership>("memberships");
                 user.Groups = dictionary.GetValueAsCollection<UserGroup>("groups");
@@ -62,6 +63,7 @@ namespace Redmine.Net.Api.JSonConverters
                 result.Add("lastname", entity.LastName);
                 result.Add("mail", entity.Email);
                 result.Add("password", entity.Password);
+                result.Add("must_change_passwd", entity.MustChangePassword);
                 result.WriteIfNotDefaultOrNull(entity.AuthenticationModeId, "auth_source_id");
 
                 if (entity.CustomFields != null)
