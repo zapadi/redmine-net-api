@@ -1,5 +1,5 @@
 /*
-   Copyright 2011 - 2014 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2015 Adrian Popescu, Dorin Huzum., Dorin Huzum.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -75,114 +75,6 @@ namespace Redmine.Net.Api
             {
                 var sr = new XmlSerializer(type);
                 return sr.Deserialize(text);
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <remarks>http://florianreischl.blogspot.ro/search/label/c%23</remarks>
-        public class XmlStreamingSerializer<T>
-        {
-            static XmlSerializerNamespaces ns;
-            XmlSerializer serializer = new XmlSerializer(typeof(T));
-            XmlWriter writer;
-            bool finished;
-
-            static XmlStreamingSerializer()
-            {
-                ns = new XmlSerializerNamespaces();
-                ns.Add("", "");
-            }
-
-            private XmlStreamingSerializer()
-            {
-                serializer = new XmlSerializer(typeof(T));
-            }
-
-            public XmlStreamingSerializer(TextWriter w)
-                : this(XmlWriter.Create(w))
-            {
-            }
-
-            public XmlStreamingSerializer(XmlWriter writer)
-                : this()
-            {
-                this.writer = writer;
-                writer.WriteStartDocument();
-                writer.WriteStartElement("ArrayOf" + typeof(T).Name);
-            }
-
-            public void Finish()
-            {
-                writer.WriteEndDocument();
-                writer.Flush();
-                finished = true;
-            }
-
-            public void Close()
-            {
-                if (!finished)
-                    Finish();
-                writer.Close();
-            }
-
-            public void Serialize(T item)
-            {
-                serializer.Serialize(writer, item, ns);
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <remarks>http://florianreischl.blogspot.ro/search/label/c%23</remarks>
-        public class XmlStreamingDeserializer<T>
-        {
-            static XmlSerializerNamespaces ns;
-            XmlSerializer serializer = new XmlSerializer(typeof(T));
-            XmlReader reader;
-
-            static XmlStreamingDeserializer()
-            {
-                ns = new XmlSerializerNamespaces();
-                ns.Add("", "");
-            }
-
-            private XmlStreamingDeserializer()
-            {
-                serializer = new XmlSerializer(typeof(T));
-            }
-
-            public XmlStreamingDeserializer(TextReader reader)
-                : this(XmlReader.Create(reader))
-            {
-            }
-
-            public XmlStreamingDeserializer(XmlReader reader)
-                : this()
-            {
-                this.reader = reader;
-            }
-
-            public void Close()
-            {
-                reader.Close();
-            }
-
-            public T Deserialize()
-            {
-                while (reader.Read())
-                {
-                    if (reader.NodeType == XmlNodeType.Element && reader.Depth == 1 && reader.Name == typeof(T).Name)
-                    {
-                        XmlReader xmlReader = reader.ReadSubtree();
-                        return (T)serializer.Deserialize(xmlReader);
-                    }
-                }
-                return default(T);
             }
         }
     }

@@ -1,5 +1,5 @@
 ﻿/*
-Copyright 2011 - 2015 Adrian Popescu
+Copyright 2011 - 2015 Adrian Popescu, Dorin Huzum.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

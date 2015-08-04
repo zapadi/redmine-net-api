@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2015 Adrian Popescu
+   Copyright 2011 - 2015 Adrian Popescu, Dorin Huzum.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -352,8 +352,12 @@ namespace Redmine.Net.Api.Types
             writer.WriteIfNotDefaultOrNull(EstimatedHours, "estimated_hours");
             if (StartDate != null)
                 writer.WriteElementString("start_date", StartDate.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
+            
             if (DueDate != null)
                 writer.WriteElementString("due_date", DueDate.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
+
+            if (UpdatedOn != null)
+                writer.WriteElementString("updated_on", UpdatedOn.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
 
             if(DoneRatio != null)
                 writer.WriteElementString("done_ratio", string.Format(NumberFormatInfo.InvariantInfo, "{0}", DoneRatio.Value));
@@ -406,9 +410,9 @@ namespace Redmine.Net.Api.Types
             if (other == null) return false;
             return (Id == other.Id && Project == other.Project && Tracker == other.Tracker && Status == other.Status && Priority == other.Priority
                 && Author == other.Author && Category == other.Category && Subject == other.Subject && Description == other.Description && StartDate == other.StartDate
-                && DueDate == other.DueDate && DoneRatio == other.DoneRatio && EstimatedHours == other.EstimatedHours && CustomFields == other.CustomFields
+                && DueDate == other.DueDate && DoneRatio == other.DoneRatio && EstimatedHours == other.EstimatedHours && Equals(CustomFields, other.CustomFields)
                 && CreatedOn == other.CreatedOn && UpdatedOn == other.UpdatedOn && AssignedTo == other.AssignedTo && FixedVersion == other.FixedVersion
-                && Notes == other.Notes && Watchers == other.Watchers && ClosedOn == other.ClosedOn && SpentHours == other.SpentHours
+                && Notes == other.Notes && Equals(Watchers, other.Watchers) && ClosedOn == other.ClosedOn && SpentHours == other.SpentHours
                 );
         }
     }

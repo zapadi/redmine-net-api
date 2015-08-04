@@ -1,5 +1,5 @@
 /*
-   Copyright 2011 - 2015 Adrian Popescu
+   Copyright 2011 - 2015 Adrian Popescu, Dorin Huzum.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -96,10 +96,15 @@ namespace Redmine.Net.Api.JSonConverters
                 }
                 if (entity.StartDate != null)
                     result.Add("start_date", entity.StartDate.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
+                
                 if (entity.DueDate != null)
                     result.Add("due_date", entity.DueDate.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
+                
+                if (entity.UpdatedOn != null)
+                    result.Add("updated_on", entity.UpdatedOn.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
 
-                result.WriteIfNotDefaultOrNull(entity.DoneRatio, "done_ratio");
+                if(entity.DoneRatio != null)
+                    result.Add("done_ratio", entity.DoneRatio);
 
                 if (entity.Uploads != null) result.Add("uploads", entity.Uploads.ToArray());
 
