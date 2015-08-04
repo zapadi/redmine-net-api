@@ -248,7 +248,7 @@ namespace Redmine.Net.Api
         public static void WriteIfNotDefaultOrNull<T>(this Dictionary<string, object> dictionary, T? val, String tag) where T : struct
         {
             if (!val.HasValue) return;
-            if (!EqualityComparer<T>.Default.Equals(val.Value, default(T)))
+            //if (!EqualityComparer<T>.Default.Equals(val.Value, default(T)))
                 dictionary.Add(tag, val.Value);
         }
 

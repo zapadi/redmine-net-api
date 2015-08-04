@@ -355,7 +355,9 @@ namespace Redmine.Net.Api.Types
             if (DueDate != null)
                 writer.WriteElementString("due_date", DueDate.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
 
-            writer.WriteIfNotDefaultOrNull(DoneRatio, "done_ratio");
+            if(DoneRatio != null)
+                writer.WriteElementString("done_ratio", string.Format(NumberFormatInfo.InvariantInfo, "{0}", DoneRatio.Value));
+           
 
             if (Uploads != null)
             {
