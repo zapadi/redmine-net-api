@@ -109,6 +109,9 @@ namespace Redmine.Net.Api.Types
         [XmlElement("done_ratio", IsNullable = true)]
         public float? DoneRatio { get; set; }
 
+        [XmlElement("private_notes")]
+        public bool PrivateNotes { get; set; }
+
         /// <summary>
         /// Gets or sets the estimated hours.
         /// </summary>
@@ -294,6 +297,10 @@ namespace Redmine.Net.Api.Types
 
                     case "fixed_version": FixedVersion = new IdentifiableName(reader); break;
 
+                    case "private_notes":
+                        PrivateNotes = reader.ReadElementContentAsBoolean();
+                        break;
+
                     case "subject": Subject = reader.ReadElementContentAsString(); break;
 
                     case "notes": Notes = reader.ReadElementContentAsString(); break;
@@ -308,7 +315,7 @@ namespace Redmine.Net.Api.Types
 
                     case "estimated_hours": EstimatedHours = reader.ReadElementContentAsNullableFloat(); break;
 
-                    case "spent_hours" : SpentHours = reader.ReadElementContentAsNullableFloat(); break;
+                    case "spent_hours": SpentHours = reader.ReadElementContentAsNullableFloat(); break;
 
                     case "created_on": CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
 
@@ -339,6 +346,10 @@ namespace Redmine.Net.Api.Types
         {
             writer.WriteElementString("subject", Subject);
             writer.WriteElementString("notes", Notes);
+            if (Id != 0)
+            {
+                writer.WriteElementString("private_notes", PrivateNotes.ToString());
+            }
             writer.WriteElementString("description", Description);
             writer.WriteIdIfNotNull(Project, "project_id");
             writer.WriteIdIfNotNull(Priority, "priority_id");
@@ -352,16 +363,16 @@ namespace Redmine.Net.Api.Types
             writer.WriteIfNotDefaultOrNull(EstimatedHours, "estimated_hours");
             if (StartDate != null)
                 writer.WriteElementString("start_date", StartDate.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
-            
+
             if (DueDate != null)
                 writer.WriteElementString("due_date", DueDate.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
 
             if (UpdatedOn != null)
                 writer.WriteElementString("updated_on", UpdatedOn.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
 
-            if(DoneRatio != null)
+            if (DoneRatio != null)
                 writer.WriteElementString("done_ratio", string.Format(NumberFormatInfo.InvariantInfo, "{0}", DoneRatio.Value));
-           
+
 
             if (Uploads != null)
             {
@@ -401,7 +412,7 @@ namespace Redmine.Net.Api.Types
 
         public object Clone()
         {
-            var issue = new Issue { AssignedTo = AssignedTo, Author = Author, Category = Category, CustomFields = CustomFields, Description = Description, DoneRatio = DoneRatio, DueDate = DueDate, SpentHours = SpentHours, EstimatedHours = EstimatedHours, Priority = Priority, StartDate = StartDate, Status = Status, Subject = Subject, Tracker = Tracker, Project = Project, FixedVersion = FixedVersion, Notes = Notes, Watchers = Watchers};
+            var issue = new Issue { AssignedTo = AssignedTo, Author = Author, Category = Category, CustomFields = CustomFields, Description = Description, DoneRatio = DoneRatio, DueDate = DueDate, SpentHours = SpentHours, EstimatedHours = EstimatedHours, Priority = Priority, StartDate = StartDate, Status = Status, Subject = Subject, Tracker = Tracker, Project = Project, FixedVersion = FixedVersion, Notes = Notes, Watchers = Watchers };
             return issue;
         }
 
