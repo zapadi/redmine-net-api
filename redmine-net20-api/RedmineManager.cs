@@ -535,7 +535,7 @@ namespace Redmine.Net.Api
 
             string address;
 
-            if (type == typeof(Version) || type == typeof(IssueCategory) || type == typeof(ProjectMembership))
+            if (type == typeof(IssueCategory) || type == typeof(ProjectMembership))
             {
                 if (string.IsNullOrEmpty(projectId)) throw new RedmineException("The project owner id is mandatory!");
                 address = string.Format(ENTITY_WITH_PARENT_FORMAT, host, "projects", projectId, urls[type]);
