@@ -127,7 +127,8 @@ namespace Redmine.Net.Api.Types
             writer.WriteElementString("name", Name);
             writer.WriteElementString("status", Status.ToString());
             writer.WriteElementString("sharing", Sharing.ToString());
-            writer.WriteIfNotDefaultOrNull(DueDate, "due_date");
+			if(DueDate != null)
+				writer.WriteElementString( "due_date", DueDate.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
             writer.WriteElementString("description", Description);
         }
 

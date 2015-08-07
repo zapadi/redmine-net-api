@@ -61,7 +61,8 @@ namespace Redmine.Net.Api.JSonConverters
                 result.Add("status", entity.Status.ToString());
                 result.Add("sharing", entity.Sharing.ToString());
                 result.Add("description", entity.Description);
-                result.WriteIfNotDefaultOrNull(entity.DueDate, "due_date");
+				if (entity.DueDate != null)
+					result.Add("due_date", entity.DueDate.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
 
                 root["version"] = result;
                 return root;
