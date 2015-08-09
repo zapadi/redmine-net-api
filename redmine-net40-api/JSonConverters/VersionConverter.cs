@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Web.Script.Serialization;
 using Redmine.Net.Api.Types;
 using Version = Redmine.Net.Api.Types.Version;
