@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2015 Adrian Popescu
+   Copyright 2011 - 2015 Adrian Popescu, Dorin Huzum.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -127,7 +128,8 @@ namespace Redmine.Net.Api.Types
             writer.WriteElementString("name", Name);
             writer.WriteElementString("status", Status.ToString());
             writer.WriteElementString("sharing", Sharing.ToString());
-            writer.WriteIfNotDefaultOrNull(DueDate, "due_date");
+			if(DueDate != null)
+				writer.WriteElementString( "due_date", DueDate.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
             writer.WriteElementString("description", Description);
         }
 

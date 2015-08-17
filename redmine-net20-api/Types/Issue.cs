@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2015 Adrian Popescu
+   Copyright 2011 - 2015 Adrian Popescu, Dorin Huzum.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -108,6 +108,9 @@ namespace Redmine.Net.Api.Types
         /// <value>The done ratio.</value>
         [XmlElement("done_ratio", IsNullable = true)]
         public float? DoneRatio { get; set; }
+
+        [XmlElement("private_notes")]
+        public bool PrivateNotes { get; set; }
 
         /// <summary>
         /// Gets or sets the estimated hours.
@@ -294,6 +297,10 @@ namespace Redmine.Net.Api.Types
 
                     case "fixed_version": FixedVersion = new IdentifiableName(reader); break;
 
+                    case "private_notes":
+                        PrivateNotes = reader.ReadElementContentAsBoolean();
+                        break;
+
                     case "subject": Subject = reader.ReadElementContentAsString(); break;
 
                     case "notes": Notes = reader.ReadElementContentAsString(); break;
@@ -308,7 +315,7 @@ namespace Redmine.Net.Api.Types
 
                     case "estimated_hours": EstimatedHours = reader.ReadElementContentAsNullableFloat(); break;
 
-                    case "spent_hours" : SpentHours = reader.ReadElementContentAsNullableFloat(); break;
+                    case "spent_hours": SpentHours = reader.ReadElementContentAsNullableFloat(); break;
 
                     case "created_on": CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
 
@@ -339,6 +346,10 @@ namespace Redmine.Net.Api.Types
         {
             writer.WriteElementString("subject", Subject);
             writer.WriteElementString("notes", Notes);
+            if (Id != 0)
+            {
+                writer.WriteElementString("private_notes", PrivateNotes.ToString());
+            }
             writer.WriteElementString("description", Description);
             writer.WriteIdIfNotNull(Project, "project_id");
             writer.WriteIdIfNotNull(Priority, "priority_id");
@@ -352,10 +363,16 @@ namespace Redmine.Net.Api.Types
             writer.WriteIfNotDefaultOrNull(EstimatedHours, "estimated_hours");
             if (StartDate != null)
                 writer.WriteElementString("start_date", StartDate.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
+
             if (DueDate != null)
                 writer.WriteElementString("due_date", DueDate.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
 
-            writer.WriteIfNotDefaultOrNull(DoneRatio, "done_ratio");
+            if (UpdatedOn != null)
+                writer.WriteElementString("updated_on", UpdatedOn.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
+
+            if (DoneRatio != null)
+                writer.WriteElementString("done_ratio", string.Format(NumberFormatInfo.InvariantInfo, "{0}", DoneRatio.Value));
+
 
             if (Uploads != null)
             {
@@ -395,7 +412,7 @@ namespace Redmine.Net.Api.Types
 
         public object Clone()
         {
-            var issue = new Issue { AssignedTo = AssignedTo, Author = Author, Category = Category, CustomFields = CustomFields, Description = Description, DoneRatio = DoneRatio, DueDate = DueDate, SpentHours = SpentHours, EstimatedHours = EstimatedHours, Priority = Priority, StartDate = StartDate, Status = Status, Subject = Subject, Tracker = Tracker, Project = Project, FixedVersion = FixedVersion, Notes = Notes, Watchers = Watchers};
+            var issue = new Issue { AssignedTo = AssignedTo, Author = Author, Category = Category, CustomFields = CustomFields, Description = Description, DoneRatio = DoneRatio, DueDate = DueDate, SpentHours = SpentHours, EstimatedHours = EstimatedHours, Priority = Priority, StartDate = StartDate, Status = Status, Subject = Subject, Tracker = Tracker, Project = Project, FixedVersion = FixedVersion, Notes = Notes, Watchers = Watchers };
             return issue;
         }
 
@@ -404,9 +421,10 @@ namespace Redmine.Net.Api.Types
             if (other == null) return false;
             return (Id == other.Id && Project == other.Project && Tracker == other.Tracker && Status == other.Status && Priority == other.Priority
                 && Author == other.Author && Category == other.Category && Subject == other.Subject && Description == other.Description && StartDate == other.StartDate
-                && DueDate == other.DueDate && DoneRatio == other.DoneRatio && EstimatedHours == other.EstimatedHours && CustomFields == other.CustomFields
+                && DueDate == other.DueDate && DoneRatio == other.DoneRatio && EstimatedHours == other.EstimatedHours && Equals(CustomFields, other.CustomFields)
                 && CreatedOn == other.CreatedOn && UpdatedOn == other.UpdatedOn && AssignedTo == other.AssignedTo && FixedVersion == other.FixedVersion
-                && Notes == other.Notes && Watchers == other.Watchers && ClosedOn == other.ClosedOn && SpentHours == other.SpentHours
+                && Notes == other.Notes && Equals(Watchers, other.Watchers) && ClosedOn == other.ClosedOn && SpentHours == other.SpentHours
+                && PrivateNotes == other.PrivateNotes
                 );
         }
     }

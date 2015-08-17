@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2015 Adrian Popescu
+   Copyright 2011 - 2015 Adrian Popescu, Dorin Huzum.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -29,6 +29,8 @@ namespace Redmine.Net.Api.Types
     [XmlRoot("time_entry")]
     public class TimeEntry : Identifiable<TimeEntry>, ICloneable, IEquatable<TimeEntry>, IXmlSerializable
     {
+        private string comments;
+
         /// <summary>
         /// Gets or sets the issue id to log time on.
         /// </summary>
@@ -78,7 +80,21 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <value>The comments.</value>
         [XmlAttribute("comments")]
-        public String Comments { get; set; }
+        public String Comments
+        {
+            get { return comments; }
+            set
+            {
+                if (!string.IsNullOrEmpty(value))
+                {
+                    if (value.Length > 255)
+                    {
+                        value = value.Substring(0, 255);
+                    }
+                }
+                comments = value;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the created on.

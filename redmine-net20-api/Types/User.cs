@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2015 Adrian Popescu
+   Copyright 2011 - 2015 Adrian Popescu, Dorin Huzum.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -98,6 +98,9 @@ namespace Redmine.Net.Api.Types
         [XmlElement("status")]
         public UserStatus Status { get; set; }
 
+        [XmlElement("must_change_passwd")]
+        public bool MustChangePassword { get; set; }
+
         /// <summary>
         /// Gets or sets the custom fields.
         /// </summary>
@@ -154,6 +157,10 @@ namespace Redmine.Net.Api.Types
 
                     case "mail": Email = reader.ReadElementContentAsString(); break;
 
+                    case "must_change_passwd":
+                        MustChangePassword = reader.ReadElementContentAsBoolean();
+                        break;
+
                     case "auth_source_id": AuthenticationModeId = reader.ReadElementContentAsNullableInt(); break;
 
                     case "last_login_on": LastLoginOn = reader.ReadElementContentAsNullableDateTime(); break;
@@ -183,6 +190,7 @@ namespace Redmine.Net.Api.Types
             writer.WriteElementString("mail", Email);
             writer.WriteElementString("password", Password);
             writer.WriteElementString("auth_source_id", AuthenticationModeId.ToString());
+            writer.WriteElementString("must_change_passwd", MustChangePassword.ToString());
 
             if (CustomFields != null)
             {
@@ -201,6 +209,7 @@ namespace Redmine.Net.Api.Types
             if (other == null) return false;
             return (Id == other.Id && Login == other.Login && Password == other.Password
                 && FirstName == other.FirstName && LastName == other.LastName && Email == other.Email
+                && MustChangePassword == other.MustChangePassword
                 && CreatedOn == other.CreatedOn && LastLoginOn == other.LastLoginOn
                 && CustomFields == other.CustomFields && Memberships == other.Memberships
                 && Groups == other.Groups && ApiKey == other.ApiKey);

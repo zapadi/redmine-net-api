@@ -1,5 +1,5 @@
 /*
-   Copyright 2011 - 2015 Adrian Popescu
+   Copyright 2011 - 2015 Adrian Popescu, Dorin Huzum.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -48,6 +48,7 @@ namespace Redmine.Net.Api.JSonConverters
                 issue.FixedVersion = dictionary.GetValueAsIdentifiableName("fixed_version");
                 issue.Subject = dictionary.GetValue<string>("subject");
                 issue.Notes = dictionary.GetValue<string>("notes");
+                issue.IsPrivate = dictionary.GetValue<bool>("is_private");
                 issue.StartDate = dictionary.GetValue<DateTime?>("start_date");
                 issue.DueDate = dictionary.GetValue<DateTime?>("due_date");
                 issue.DoneRatio = dictionary.GetValue<float>("done_ratio");
@@ -78,6 +79,11 @@ namespace Redmine.Net.Api.JSonConverters
                 result.Add("subject", entity.Subject);
                 result.Add("description", entity.Description);
                 result.Add("notes", entity.Notes);
+                if (entity.Id != 0)
+                {
+                    result.Add("private_notes", entity.IsPrivate);
+                }
+                result.Add("is_private", entity.IsPrivate);
                 result.WriteIdIfNotNull(entity.Project, "project_id");
                 result.WriteIdIfNotNull(entity.Priority, "priority_id");
                 result.WriteIdIfNotNull(entity.Status, "status_id");
@@ -96,10 +102,15 @@ namespace Redmine.Net.Api.JSonConverters
                 }
                 if (entity.StartDate != null)
                     result.Add("start_date", entity.StartDate.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
+                
                 if (entity.DueDate != null)
                     result.Add("due_date", entity.DueDate.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
+                
+                if (entity.UpdatedOn != null)
+                    result.Add("updated_on", entity.UpdatedOn.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
 
-                result.WriteIfNotDefaultOrNull(entity.DoneRatio, "done_ratio");
+                if(entity.DoneRatio != null)
+                    result.Add("done_ratio", entity.DoneRatio);
 
                 if (entity.Uploads != null) result.Add("uploads", entity.Uploads.ToArray());
 

@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2015 Adrian Popescu
+   Copyright 2011 - 2015 Adrian Popescu, Dorin Huzum.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -171,14 +170,11 @@ namespace Redmine.Net.Api.Types
 
             if (!string.IsNullOrEmpty(EnabledModuleNames))
             {
-               var tokens= EnabledModuleNames.Split(new char[]{','}, StringSplitOptions.RemoveEmptyEntries);
-               if (tokens != null)
-               {
-                   foreach (var token in tokens)
-                   {
-                       writer.WriteElementString("enabled_module_names", token);
-                   }
-               }
+                var tokens = EnabledModuleNames.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                foreach (var token in tokens)
+                {
+                    writer.WriteElementString("enabled_module_names", token);
+                }
             }
 
             if (Id == 0) return;

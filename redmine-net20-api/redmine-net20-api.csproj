@@ -88,6 +88,8 @@
     <Compile Include="Types\Version.cs" />
     <Compile Include="Types\Watcher.cs" />
     <Compile Include="Types\WikiPage.cs" />
+    <Compile Include="XmlStreamingDeserializer.cs" />
+    <Compile Include="XmlStreamingSerializer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
