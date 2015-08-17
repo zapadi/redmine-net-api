@@ -119,6 +119,9 @@
     <Compile Include="..\redmine-net20-api\Types\Project.cs">
       <Link>Types\Project.cs</Link>
     </Compile>
+    <Compile Include="..\redmine-net20-api\Types\ProjectEnabledModule.cs">
+      <Link>Types\ProjectEnabledModule.cs</Link>
+    </Compile>
     <Compile Include="..\redmine-net20-api\Types\ProjectIssueCategory.cs">
       <Link>Types\ProjectIssueCategory.cs</Link>
     </Compile>
