@@ -104,6 +104,10 @@ namespace Redmine.Net.Api.Types
         [XmlArrayItem("issue_category")]
         public IList<ProjectIssueCategory> IssueCategories { get; set; }
 
+        [XmlArray("enabled_modules")]
+        [XmlArrayItem("enabled_module")]
+        public IList<ProjectEnabledModule> EnabledModules { get; set; }
+
         /// <summary>
         /// enabled_module_names: (repeatable element) the module name: boards, calendar, documents, files, gantt, issue_tracking, news, repository, time_tracking, wiki
         /// </summary>
@@ -153,6 +157,8 @@ namespace Redmine.Net.Api.Types
                     case "custom_fields": CustomFields = reader.ReadElementContentAsCollection<IssueCustomField>(); break;
 
                     case "issue_categories": IssueCategories = reader.ReadElementContentAsCollection<ProjectIssueCategory>(); break;
+
+                    case "enabled_modules": EnabledModules = reader.ReadElementContentAsCollection<ProjectEnabledModule>(); break;
                     default: reader.Read(); break;
                 }
             }
