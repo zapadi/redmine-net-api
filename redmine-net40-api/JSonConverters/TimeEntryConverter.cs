@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Web.Script.Serialization;
 using Redmine.Net.Api.Types;
 
@@ -65,6 +66,12 @@ namespace Redmine.Net.Api.JSonConverters
                 result.Add("spent_on", entity.SpentOn.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
                 result.Add("hours", entity.Hours);
                 result.Add("comments", entity.Comments);
+
+                if (entity.CustomFields != null)
+                {
+                    serializer.RegisterConverters(new[] { new IssueCustomFieldConverter() });
+                    result.Add("custom_fields", entity.CustomFields.ToArray());
+                }
 
                 root["time_entry"] = result;
                 return root;
