@@ -711,9 +711,14 @@ namespace Redmine.Net.Api
             Type type = typeof(T);
 
             if (mimeFormat == MimeFormat.json)
-                return type == typeof(IssueCategory)
-                    ? RedmineSerialization.JsonDeserialize<T>(response, "issue_category")
-                    : RedmineSerialization.JsonDeserialize<T>(response, type == typeof(IssueRelation) ? "relation" : null);
+            {
+                var jsonRoot = (string)null;
+                if (type == typeof(IssueCategory)) jsonRoot = "issue_category";
+                if (type == typeof(IssueRelation)) jsonRoot = "relation";
+                if (type == typeof(TimeEntry)) jsonRoot = "time_entry";
+
+                return RedmineSerialization.JsonDeserialize<T>(response, jsonRoot);
+            }
 
             return RedmineSerialization.FromXML<T>(response);
         }
