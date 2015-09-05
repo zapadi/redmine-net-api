@@ -232,6 +232,9 @@
     <Compile Include="..\redmine-net40-api\JSonConverters\ProjectConverter.cs">
       <Link>JSonConverters\ProjectConverter.cs</Link>
     </Compile>
+    <Compile Include="..\redmine-net40-api\JSonConverters\ProjectEnabledModuleConverter.cs">
+      <Link>JSonConverters\ProjectEnabledModuleConverter.cs</Link>
+    </Compile>
     <Compile Include="..\redmine-net40-api\JSonConverters\ProjectIssueCategoryConverter.cs">
       <Link>JSonConverters\ProjectIssueCategoryConverter.cs</Link>
     </Compile>

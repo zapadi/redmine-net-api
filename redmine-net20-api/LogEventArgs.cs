@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Specialized;
 using System.IO;
 
 namespace Redmine.Net.Api
@@ -10,6 +11,8 @@ namespace Redmine.Net.Api
         public string Address { get; set; }
 
         public string Content { get; set; }
+
+        public NameValueCollection Parameters { get; set; }
 
         public override string ToString()
         {

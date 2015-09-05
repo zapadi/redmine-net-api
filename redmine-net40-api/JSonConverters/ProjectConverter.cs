@@ -45,6 +45,7 @@ namespace Redmine.Net.Api.JSonConverters
                 project.IsPublic = dictionary.GetValue<bool>("is_public");
                 project.Parent = dictionary.GetValueAsIdentifiableName("parent");
                 project.IssueCategories = dictionary.GetValueAsCollection<ProjectIssueCategory>("issue_categories");
+                project.EnabledModules = dictionary.GetValueAsCollection<ProjectEnabledModule>("enabled_modules");
                 return project;
             }
 
@@ -73,6 +74,15 @@ namespace Redmine.Net.Api.JSonConverters
                 {
                     serializer.RegisterConverters(new[] { new IssueCustomFieldConverter() });
                     result.Add("custom_fields", entity.CustomFields.ToArray());
+                }
+
+                if (entity.EnabledModules != null)
+                {
+                    var enabledModuleNames = entity.EnabledModules
+                        .Where(projectEnabledModule => !string.IsNullOrEmpty(projectEnabledModule.Name))
+                        .Aggregate("", (current, projectEnabledModule) => current + projectEnabledModule.Name);
+
+                    result.Add("enabled_module_names", enabledModuleNames);
                 }
 
                 root["project"] = result;

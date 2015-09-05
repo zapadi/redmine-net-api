@@ -193,6 +193,7 @@
     <Compile Include="JSonConverters\NewsConverter.cs" />
     <Compile Include="JSonConverters\PermissionConverter.cs" />
     <Compile Include="JSonConverters\ProjectConverter.cs" />
+    <Compile Include="JSonConverters\ProjectEnabledModuleConverter.cs" />
     <Compile Include="JSonConverters\ProjectIssueCategoryConverter.cs" />
     <Compile Include="JSonConverters\ProjectMembershipConverter.cs" />
     <Compile Include="JSonConverters\ProjectTrackerConverter.cs" />

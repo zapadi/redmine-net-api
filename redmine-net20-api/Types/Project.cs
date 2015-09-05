@@ -109,7 +109,7 @@ namespace Redmine.Net.Api.Types
         public IList<ProjectEnabledModule> EnabledModules { get; set; }
 
         /// <summary>
-        /// enabled_module_names: (repeatable element) the module name: boards, calendar, documents, files, gantt, issue_tracking, news, repository, time_tracking, wiki
+        // enabled_module_names: (repeatable element) the module name: boards, calendar, documents, files, gantt, issue_tracking, news, repository, time_tracking, wiki
         /// </summary>
         public string EnabledModuleNames { get; set; }
 
@@ -174,13 +174,18 @@ namespace Redmine.Net.Api.Types
             writer.WriteIdIfNotNull(Parent, "parent_id");
             writer.WriteElementString("homepage", HomePage);
 
-            if (!string.IsNullOrEmpty(EnabledModuleNames))
+            if (EnabledModules != null)
             {
-                var tokens = EnabledModuleNames.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                foreach (var token in tokens)
+                var enabledModuleNames = "";
+                foreach (var projectEnabledModule in EnabledModules)
                 {
-                    writer.WriteElementString("enabled_module_names", token);
+                    if (!string.IsNullOrEmpty(projectEnabledModule.Name))
+                    {
+                        enabledModuleNames += projectEnabledModule.Name;
+                    }
                 }
+
+                writer.WriteElementString("enabled_module_names", enabledModuleNames);
             }
 
             if (Id == 0) return;

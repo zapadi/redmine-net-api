@@ -61,7 +61,8 @@ namespace Redmine.Net.Api
             {typeof (IssueChild), new IssueChildConverter()},
             {typeof (ProjectIssueCategory), new ProjectIssueCategoryConverter()},
             {typeof (Watcher), new WatcherConverter()},
-            {typeof (Upload), new UploadConverter()}
+            {typeof (Upload), new UploadConverter()},
+            {typeof (ProjectEnabledModule), new ProjectEnabledModuleConverter()}
         };
 
         public static Dictionary<Type, JavaScriptConverter> Converters { get { return converters; } }

@@ -561,7 +561,7 @@ namespace Redmine.Net.Api
         /// <param name="parameters">The parameters.</param>
         /// <returns></returns>
         /// <code></code>
-        protected WebClient CreateWebClient(NameValueCollection parameters)
+        protected virtual WebClient CreateWebClient(NameValueCollection parameters)
         {
             var webClient = new RedmineWebClient();
 
@@ -622,7 +622,7 @@ namespace Redmine.Net.Api
         /// <param name="error">The error.</param>
         /// <returns></returns>
         /// <code></code>
-        protected bool RemoteCertValidate(object sender, X509Certificate cert, X509Chain chain, SslPolicyErrors error)
+        protected virtual bool RemoteCertValidate(object sender, X509Certificate cert, X509Chain chain, SslPolicyErrors error)
         {
             //Cert Validation Logic
             return true;
@@ -715,9 +715,14 @@ namespace Redmine.Net.Api
             Type type = typeof(T);
 
             if (mimeFormat == MimeFormat.json)
-                return type == typeof(IssueCategory)
-                    ? RedmineSerialization.JsonDeserialize<T>(response, "issue_category")
-                    : RedmineSerialization.JsonDeserialize<T>(response, type == typeof(IssueRelation) ? "relation" : null);
+            {
+                var jsonRoot = (string)null;
+                if (type == typeof(IssueCategory)) jsonRoot = "issue_category";
+                if (type == typeof(IssueRelation)) jsonRoot = "relation";
+                if (type == typeof(TimeEntry)) jsonRoot = "time_entry";
+
+                return RedmineSerialization.JsonDeserialize<T>(response, jsonRoot);
+            }
 
             return RedmineSerialization.FromXML<T>(response);
         }
@@ -819,7 +824,8 @@ namespace Redmine.Net.Api
             OnLog(new LogEventArgs
             {
                 Address = address,
-                Method = "GET"
+                Method = "GET",
+                Parameters = parameters
             });
 
             using (var wc = CreateWebClient(parameters))
@@ -842,7 +848,8 @@ namespace Redmine.Net.Api
             OnLog(new LogEventArgs
             {
                 Address = address,
-                Method = "GET"
+                Method = "GET",
+                Parameters = parameters
             });
 
             totalCount = -1;
@@ -850,7 +857,8 @@ namespace Redmine.Net.Api
             {
                 try
                 {
-                    var response = wc.DownloadString(address);
+                    
+                    var response = wc.DownloadString(address);                    
                     return DeserializeList<T>(response, jsonRoot, out totalCount);
                 }
                 catch (WebException webException)
