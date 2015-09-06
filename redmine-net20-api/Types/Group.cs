@@ -104,7 +104,7 @@ namespace Redmine.Net.Api.Types
 
                     case "custom_fields": CustomFields = reader.ReadElementContentAsCollection<IssueCustomField>(); break;
 
-                    case "membershipds": Memberships = reader.ReadElementContentAsCollection<Membership>(); break;
+                    case "memberships": Memberships = reader.ReadElementContentAsCollection<Membership>(); break;
 
                     default: reader.Read(); break;
                 }
