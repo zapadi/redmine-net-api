@@ -49,6 +49,7 @@
     <Compile Include="Types\ChangeSet.cs" />
     <Compile Include="Types\CustomField.cs" />
     <Compile Include="Types\CustomFieldPossibleValue.cs" />
+    <Compile Include="Types\CustomFieldRole.cs" />
     <Compile Include="Types\CustomFieldValue.cs" />
     <Compile Include="Types\Detail.cs" />
     <Compile Include="Types\Error.cs" />

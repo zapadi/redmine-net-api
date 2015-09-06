@@ -303,10 +303,28 @@ namespace Redmine.Net.Api
             ser.RegisterConverters(new[] { RedmineSerialization.Converters[typeof(T)] });
 
             List<T> list = new List<T>();
-            foreach (var item in ((ArrayList) val))
+
+            var arrayList = val as ArrayList;
+            if (arrayList != null)
             {
-                var type = ser.ConvertToType<T>(item);
-                list.Add(type);
+                foreach (var item in arrayList)
+                {
+                    var type = ser.ConvertToType<T>(item);
+                    list.Add(type);
+                }
+            }
+            else
+            {
+                var dict = val as Dictionary<string, object>;
+                if (dict != null)
+                {
+                    foreach (var pair in dict)
+                    {
+                        var type = ser.ConvertToType<T>(pair.Value);
+                        list.Add(type);    
+                    }
+                    
+                }
             }
             return list;
         }

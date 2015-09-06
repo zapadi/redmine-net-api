@@ -52,6 +52,9 @@
     <Compile Include="..\redmine-net20-api\Types\CustomFieldPossibleValue.cs">
       <Link>Types\CustomFieldPossibleValue.cs</Link>
     </Compile>
+    <Compile Include="..\redmine-net20-api\Types\CustomFieldRole.cs">
+      <Link>Types\CustomFieldRole.cs</Link>
+    </Compile>
     <Compile Include="..\redmine-net20-api\Types\CustomFieldValue.cs">
       <Link>Types\CustomFieldValue.cs</Link>
     </Compile>
@@ -178,6 +181,15 @@
     <Compile Include="..\redmine-net40-api\JSonConverters\ChangeSetConverter.cs">
       <Link>JSonConverters\ChangeSetConverter.cs</Link>
     </Compile>
+    <Compile Include="..\redmine-net40-api\JSonConverters\CustomFieldConverter.cs">
+      <Link>JSonConverters\CustomFieldConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\redmine-net40-api\JSonConverters\CustomFieldPossibleValueConverter.cs">
+      <Link>JSonConverters\CustomFieldPossibleValueConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\redmine-net40-api\JSonConverters\CustomFieldRoleConverter.cs">
+      <Link>JSonConverters\CustomFieldRoleConverter.cs</Link>
+    </Compile>
     <Compile Include="..\redmine-net40-api\JSonConverters\DetailConverter.cs">
       <Link>JSonConverters\DetailConverter.cs</Link>
     </Compile>
@@ -258,6 +270,9 @@
     </Compile>
     <Compile Include="..\redmine-net40-api\JSonConverters\TrackerConverter.cs">
       <Link>JSonConverters\TrackerConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\redmine-net40-api\JSonConverters\TrackerCustomFieldConverter.cs">
+      <Link>JSonConverters\TrackerCustomFieldConverter.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net40-api\JSonConverters\UploadConverter.cs">
       <Link>JSonConverters\UploadConverter.cs</Link>
