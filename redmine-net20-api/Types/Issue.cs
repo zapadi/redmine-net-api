@@ -92,14 +92,14 @@ namespace Redmine.Net.Api.Types
         /// Gets or sets the start date.
         /// </summary>
         /// <value>The start date.</value>
-        [XmlElement("start_date")]
+        [XmlElement("start_date", IsNullable = true)]
         public DateTime? StartDate { get; set; }
 
         /// <summary>
         /// Gets or sets the due date.
         /// </summary>
         /// <value>The due date.</value>
-        [XmlElement("due_date")]
+        [XmlElement("due_date", IsNullable = true)]
         public DateTime? DueDate { get; set; }
 
         /// <summary>
@@ -361,19 +361,19 @@ namespace Redmine.Net.Api.Types
             writer.WriteElementString("parent_issue_id", ParentIssue == null ? null : ParentIssue.Id.ToString(CultureInfo.InvariantCulture));
             writer.WriteIdIfNotNull(FixedVersion, "fixed_version_id");
             writer.WriteIfNotDefaultOrNull(EstimatedHours, "estimated_hours");
-            if (StartDate != null)
-                writer.WriteElementString("start_date", StartDate.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
 
-            if (DueDate != null)
-                writer.WriteElementString("due_date", DueDate.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
+            writer.WriteElementString("start_date",
+                StartDate != null ? StartDate.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture) : string.Empty);
+
+            writer.WriteElementString("due_date",
+                DueDate != null ? DueDate.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture) : string.Empty);
 
             if (UpdatedOn != null)
                 writer.WriteElementString("updated_on", UpdatedOn.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
 
             if (DoneRatio != null)
                 writer.WriteElementString("done_ratio", string.Format(NumberFormatInfo.InvariantInfo, "{0}", DoneRatio.Value));
-
-
+            
             if (Uploads != null)
             {
                 writer.WriteStartElement("uploads");
