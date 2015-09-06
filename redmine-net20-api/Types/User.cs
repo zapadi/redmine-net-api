@@ -127,7 +127,7 @@ namespace Redmine.Net.Api.Types
         /// </value>
         [XmlArray("groups")]
         [XmlArrayItem("group")]
-        public List<UserGroup> Groups { get; set; }
+        public List<GroupUser> Groups { get; set; }
 
         public XmlSchema GetSchema()
         {
@@ -175,7 +175,7 @@ namespace Redmine.Net.Api.Types
 
                     case "memberships": Memberships = reader.ReadElementContentAsCollection<Membership>(); break;
 
-                    case "groups": Groups = reader.ReadElementContentAsCollection<UserGroup>(); break;
+                    case "groups": Groups = reader.ReadElementContentAsCollection<GroupUser>(); break;
 
                     default: reader.Read(); break;
                 }

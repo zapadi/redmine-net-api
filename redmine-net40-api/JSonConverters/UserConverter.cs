@@ -43,7 +43,7 @@ namespace Redmine.Net.Api.JSonConverters
                 user.MustChangePassword = dictionary.GetValue<bool>("must_change_passwd");
                 user.CustomFields = dictionary.GetValueAsCollection<IssueCustomField>("custom_fields");
                 user.Memberships = dictionary.GetValueAsCollection<Membership>("memberships");
-                user.Groups = dictionary.GetValueAsCollection<UserGroup>("groups");
+                user.Groups = dictionary.GetValueAsCollection<GroupUser>("groups");
 
                 return user;
             }

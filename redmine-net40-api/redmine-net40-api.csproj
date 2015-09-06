@@ -65,6 +65,9 @@
     <Compile Include="..\redmine-net20-api\Types\Group.cs">
       <Link>Types\Group.cs</Link>
     </Compile>
+    <Compile Include="..\redmine-net20-api\Types\GroupUser.cs">
+      <Link>Types\GroupUser.cs</Link>
+    </Compile>
     <Compile Include="..\redmine-net20-api\Types\Identifiable.cs">
       <Link>Types\Identifiable.cs</Link>
     </Compile>
@@ -173,6 +176,7 @@
     <Compile Include="JSonConverters\DetailConverter.cs" />
     <Compile Include="JSonConverters\ErrorConverter.cs" />
     <Compile Include="JSonConverters\GroupConverter.cs" />
+    <Compile Include="JSonConverters\GroupUserConverter.cs" />
     <Compile Include="JSonConverters\IdentifiableNameConverter.cs" />
     <Compile Include="JSonConverters\IssueCategoryConverter.cs" />
     <Compile Include="JSonConverters\IssueChildConverter.cs" />
