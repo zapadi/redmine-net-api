@@ -302,7 +302,13 @@ namespace Redmine.Net.Api
             var ser = new JavaScriptSerializer();
             ser.RegisterConverters(new[] { RedmineSerialization.Converters[typeof(T)] });
 
-            return (from object item in (ArrayList)val select ser.ConvertToType<T>(item)).ToList();
+            List<T> list = new List<T>();
+            foreach (var item in ((ArrayList) val))
+            {
+                var type = ser.ConvertToType<T>(item);
+                list.Add(type);
+            }
+            return list;
         }
 
     }

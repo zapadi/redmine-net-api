@@ -19,7 +19,7 @@ using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
-    [XmlRoot("group")]
+    [XmlRoot("user")]
     public class GroupUser : IdentifiableName, IEquatable<GroupUser>
     {
         public bool Equals(GroupUser other)
