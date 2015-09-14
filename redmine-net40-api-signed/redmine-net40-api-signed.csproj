@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Redmine.Net.Api</RootNamespace>
     <AssemblyName>redmine-net40-api-signed</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -101,7 +101,7 @@
       <Link>Types\IssueRelation.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net20-api\Types\IssueRelationType.cs">
-      <Link>IssueRelationType.cs</Link>
+      <Link>Types\IssueRelationType.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net20-api\Types\IssueStatus.cs">
       <Link>Types\IssueStatus.cs</Link>
