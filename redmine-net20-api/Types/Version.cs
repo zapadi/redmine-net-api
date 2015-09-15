@@ -53,7 +53,7 @@ namespace Redmine.Net.Api.Types
         /// Gets or sets the due date.
         /// </summary>
         /// <value>The due date.</value>
-        [XmlElement("due_date")]
+        [XmlElement("due_date",IsNullable = true)]
         public DateTime? DueDate { get; set; }
 
         /// <summary>
@@ -67,14 +67,14 @@ namespace Redmine.Net.Api.Types
         /// Gets or sets the created on.
         /// </summary>
         /// <value>The created on.</value>
-        [XmlElement("created_on")]
+        [XmlElement("created_on", IsNullable = true)]
         public DateTime? CreatedOn { get; set; }
 
         /// <summary>
         /// Gets or sets the updated on.
         /// </summary>
         /// <value>The updated on.</value>
-        [XmlElement("updated_on")]
+        [XmlElement("updated_on", IsNullable = true)]
         public DateTime? UpdatedOn { get; set; }
 
         /// <summary>

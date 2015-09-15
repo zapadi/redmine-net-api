@@ -563,7 +563,7 @@ namespace Redmine.Net.Api
         protected WebClient CreateWebClient(NameValueCollection parameters)
         {
             var webClient = new RedmineWebClient();
-
+            
             if (parameters != null) webClient.QueryString = parameters;
 
             if (!string.IsNullOrEmpty(apiKey))
@@ -577,8 +577,12 @@ namespace Redmine.Net.Api
 
             if (!string.IsNullOrWhiteSpace(ImpersonateUser)) webClient.Headers.Add("X-Redmine-Switch-User", ImpersonateUser);
 
+            webClient.UseDefaultCredentials = false;
+
             webClient.Headers.Add("Content-Type", mimeFormat == MimeFormat.json ? "application/json; charset=utf-8" : "application/xml; charset=utf-8");
             webClient.Encoding = Encoding.UTF8;
+            webClient.Headers.Add("Authorization", basicAuthorization);
+
             return webClient;
         }
 

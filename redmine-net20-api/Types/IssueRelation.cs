@@ -52,7 +52,7 @@ namespace Redmine.Net.Api.Types
         /// Gets or sets the delay for a "precedes" or "follows" relation.
         /// </summary>
         /// <value>The delay.</value>
-        [XmlElement("delay")]
+        [XmlElement("delay", IsNullable = true)]
         public int? Delay { get; set; }
 
         public XmlSchema GetSchema() { return null; }

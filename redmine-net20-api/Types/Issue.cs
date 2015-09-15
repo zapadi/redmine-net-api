@@ -138,21 +138,21 @@ namespace Redmine.Net.Api.Types
         /// Gets or sets the created on.
         /// </summary>
         /// <value>The created on.</value>
-        [XmlElement("created_on")]
+        [XmlElement("created_on", IsNullable = true)]
         public DateTime? CreatedOn { get; set; }
 
         /// <summary>
         /// Gets or sets the updated on.
         /// </summary>
         /// <value>The updated on.</value>
-        [XmlElement("updated_on")]
+        [XmlElement("updated_on", IsNullable = true)]
         public DateTime? UpdatedOn { get; set; }
 
         /// <summary>
         /// Gets or sets the closed on.
         /// </summary>
         /// <value>The closed on.</value>
-        [XmlElement("closed_on")]
+        [XmlElement("closed_on", IsNullable = true)]
         public DateTime? ClosedOn { get; set; }
 
         /// <summary>

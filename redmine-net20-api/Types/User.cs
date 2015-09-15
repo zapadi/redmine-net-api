@@ -69,36 +69,36 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The authentication mode id.
         /// </value>
-        [XmlElement("auth_source_id")]
+        [XmlElement("auth_source_id", IsNullable = true)]
         public Int32? AuthenticationModeId { get; set; }
 
         /// <summary>
         /// Gets or sets the created on.
         /// </summary>
         /// <value>The created on.</value>
-        [XmlElement("created_on")]
+        [XmlElement("created_on", IsNullable = true)]
         public DateTime? CreatedOn { get; set; }
 
         /// <summary>
         /// Gets or sets the last login on.
         /// </summary>
         /// <value>The last login on.</value>
-        [XmlElement("last_login_on")]
+        [XmlElement("last_login_on", IsNullable = true)]
         public DateTime? LastLoginOn { get; set; }
 
         /// <summary>
         /// Gets the API key of the user, visible for admins and for yourself (added in 2.3.0)
         /// </summary>
-        [XmlElement("api_key")]
+        [XmlElement("api_key", IsNullable = true)]
         public string ApiKey { get; set; }
 
         /// <summary>
         /// Gets the status of the user, visible for admins only (added in 2.4.0)
         /// </summary>
-        [XmlElement("status")]
+        [XmlElement("status", IsNullable = true)]
         public UserStatus Status { get; set; }
 
-        [XmlElement("must_change_passwd")]
+        [XmlElement("must_change_passwd", IsNullable = true)]
         public bool MustChangePassword { get; set; }
 
         /// <summary>
@@ -157,9 +157,7 @@ namespace Redmine.Net.Api.Types
 
                     case "mail": Email = reader.ReadElementContentAsString(); break;
 
-                    case "must_change_passwd":
-                        MustChangePassword = reader.ReadElementContentAsBoolean();
-                        break;
+                    case "must_change_passwd": MustChangePassword = reader.ReadElementContentAsBoolean(); break;
 
                     case "auth_source_id": AuthenticationModeId = reader.ReadElementContentAsNullableInt(); break;
 
@@ -169,7 +167,7 @@ namespace Redmine.Net.Api.Types
 
                     case "api_key": ApiKey = reader.ReadElementContentAsString(); break;
 
-                    case "status":Status = (UserStatus)reader.ReadElementContentAsInt(); break;
+                    case "status": Status = (UserStatus)reader.ReadElementContentAsInt(); break;
 
                     case "custom_fields": CustomFields = reader.ReadElementContentAsCollection<IssueCustomField>(); break;
 
@@ -189,7 +187,7 @@ namespace Redmine.Net.Api.Types
             writer.WriteElementString("lastname", LastName);
             writer.WriteElementString("mail", Email);
             writer.WriteElementString("password", Password);
-            writer.WriteElementString("auth_source_id", AuthenticationModeId.ToString());
+            writer.WriteElementString("auth_source_id", AuthenticationModeId.HasValue ? AuthenticationModeId.ToString() : string.Empty);
             writer.WriteElementString("must_change_passwd", MustChangePassword.ToString());
 
             if (CustomFields != null)
@@ -207,12 +205,21 @@ namespace Redmine.Net.Api.Types
         public bool Equals(User other)
         {
             if (other == null) return false;
-            return (Id == other.Id && Login == other.Login && Password == other.Password
-                && FirstName == other.FirstName && LastName == other.LastName && Email == other.Email
+            return (Id == other.Id
+                && AuthenticationModeId == other.AuthenticationModeId
+                && Login == other.Login
+                && Password == other.Password
+                && FirstName == other.FirstName
+                && LastName == other.LastName
+                && Email == other.Email
                 && MustChangePassword == other.MustChangePassword
-                && CreatedOn == other.CreatedOn && LastLoginOn == other.LastLoginOn
-                && CustomFields == other.CustomFields && Memberships == other.Memberships
-                && Groups == other.Groups && ApiKey == other.ApiKey);
+                && CreatedOn == other.CreatedOn
+                && LastLoginOn == other.LastLoginOn
+                && CustomFields == other.CustomFields
+                && Memberships == other.Memberships
+                && Status == other.Status
+                && Groups == other.Groups
+                && ApiKey == other.ApiKey);
         }
     }
 }

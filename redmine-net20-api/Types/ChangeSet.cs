@@ -48,7 +48,7 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// 
         /// </summary>
-        [XmlElement("committed_on")]
+        [XmlElement("committed_on", IsNullable = true)]
         public DateTime? CommittedOn { get; set; }
 
         public XmlSchema GetSchema() { return null; }
