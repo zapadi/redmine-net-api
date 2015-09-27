@@ -187,19 +187,10 @@ namespace Redmine.Net.Api.Types
             writer.WriteElementString("lastname", LastName);
             writer.WriteElementString("mail", Email);
             writer.WriteElementString("password", Password);
-            writer.WriteElementString("auth_source_id", AuthenticationModeId.HasValue ? AuthenticationModeId.ToString() : string.Empty);
+            writer.WriteValue(AuthenticationModeId, "auth_source_id");
             writer.WriteElementString("must_change_passwd", MustChangePassword.ToString());
 
-            if (CustomFields != null)
-            {
-                writer.WriteStartElement("custom_fields");
-                writer.WriteAttributeString("type", "array");
-                foreach (var cf in CustomFields)
-                {
-                    new XmlSerializer(cf.GetType()).Serialize(writer, cf);
-                }
-                writer.WriteEndElement();
-            }
+            writer.WriteArray(CustomFields, "custom_fields");
         }
 
         public bool Equals(User other)

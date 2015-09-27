@@ -198,7 +198,9 @@ namespace Redmine.Net.Api
 
         public void AddWatcher(int issueId, int userId)
         {
-            ExecuteUpload(string.Format(REQUEST_FORMAT, host, urls[typeof(Issue)], issueId + "/watchers", mimeFormat), POST, mimeFormat == MimeFormat.xml ? "<user_id>" + userId + "</user_id>" : "user_id:" + userId, "AddWatcher");
+            ExecuteUpload(string.Format(REQUEST_FORMAT, host, urls[typeof(Issue)], issueId + "/watchers", mimeFormat), POST, mimeFormat == MimeFormat.xml 
+                ? "<user_id>" + userId + "</user_id>" 
+                : "{\"user_id\":\"" + userId+"\"}", "AddWatcher");
         }
 
         public void RemoveWatcher(int issueId, int userId)
@@ -213,7 +215,9 @@ namespace Redmine.Net.Api
         /// <param name="userId">The user id.</param>
         public void AddUser(int groupId, int userId)
         {
-            ExecuteUpload(string.Format(REQUEST_FORMAT, host, urls[typeof(Group)], groupId + "/users", mimeFormat), POST, mimeFormat == MimeFormat.xml ? "<user_id>" + userId + "</user_id>" : "user_id:" + userId, "AddUser");
+            ExecuteUpload(string.Format(REQUEST_FORMAT, host, urls[typeof(Group)], groupId + "/users", mimeFormat), POST, mimeFormat == MimeFormat.xml 
+                ? "<user_id>" + userId + "</user_id>" 
+                : "{\"user_id\":\"" + userId+"\"}", "AddUser");
         }
 
         /// <summary>

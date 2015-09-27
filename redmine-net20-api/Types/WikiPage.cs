@@ -111,7 +111,7 @@ namespace Redmine.Net.Api.Types
         {
             writer.WriteElementString("text", Text);
             writer.WriteElementString("comments", Comments);
-            writer.WriteIfNotDefaultOrNull<int>(Version,"version");
+            writer.WriteValue<int>(Version,"version");
         }
 
         #endregion

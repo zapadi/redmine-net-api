@@ -114,7 +114,7 @@ namespace Redmine.Net.Api.Types
             writer.WriteElementString("issue_to_id", IssueToId.ToString());
             writer.WriteElementString("relation_type", Type.ToString());
             if (Type == IssueRelationType.precedes || Type == IssueRelationType.follows)
-                writer.WriteIfNotDefaultOrNull(Delay, "delay");
+                writer.WriteValue(Delay, "delay");
         }
 
         public bool Equals(IssueRelation other)

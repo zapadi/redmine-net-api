@@ -53,7 +53,7 @@ namespace Redmine.Net.Api.Types
         /// Gets or sets the due date.
         /// </summary>
         /// <value>The due date.</value>
-        [XmlElement("due_date",IsNullable = true)]
+        [XmlElement("due_date", IsNullable = true)]
         public DateTime? DueDate { get; set; }
 
         /// <summary>
@@ -128,8 +128,8 @@ namespace Redmine.Net.Api.Types
             writer.WriteElementString("name", Name);
             writer.WriteElementString("status", Status.ToString());
             writer.WriteElementString("sharing", Sharing.ToString());
-			if(DueDate != null)
-				writer.WriteElementString( "due_date", DueDate.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
+
+            writer.WriteDate(DueDate, "due_date");
             writer.WriteElementString("description", Description);
         }
 
@@ -140,13 +140,6 @@ namespace Redmine.Net.Api.Types
         }
     }
 
-    public enum VersionStatus
-    {
-        open = 1,
-        locked,
-        closed
-    }
-
     public enum VersionSharing
     {
         none = 1,
@@ -154,5 +147,12 @@ namespace Redmine.Net.Api.Types
         hierarchy,
         tree,
         system
+    }
+
+    public enum VersionStatus
+    {
+        open = 1,
+        locked,
+        closed
     }
 }
