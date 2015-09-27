@@ -37,7 +37,7 @@ namespace UnitTestRedmineNetApi
         }
 
         [TestMethod]
-        public void GetGroup_With_Users()
+        public void Should_Return_Group_With_Users()
         {
             var result = redmineManager.GetObject<Group>("9", new NameValueCollection() { { "include", "users" } });
 

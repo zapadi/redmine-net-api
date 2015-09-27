@@ -60,6 +60,9 @@
     <Compile Include="ProjectTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="NewsTests.cs" />
+    <Compile Include="UserTestsJson.cs" />
+    <Compile Include="WatcherTestsJson.cs" />
+    <Compile Include="WikiTestsJson.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\redmine-net40-api\redmine-net40-api.csproj">
