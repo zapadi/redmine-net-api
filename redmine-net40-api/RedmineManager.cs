@@ -361,7 +361,8 @@ namespace Redmine.Net.Api
             if (!urls.ContainsKey(typeof(T))) return null;
 
             var type = typeof(T);
-            string address;
+            string address = string.Empty;
+
             if (type == typeof(Version) || type == typeof(IssueCategory) || type == typeof(ProjectMembership))
             {
                 var projectId = GetOwnerId(parameters, "project_id");
@@ -370,15 +371,29 @@ namespace Redmine.Net.Api
                 address = string.Format(ENTITY_WITH_PARENT_FORMAT, host, "projects", projectId, urls[type], mimeFormat);
             }
             else
+            {
                 if (type == typeof(IssueRelation))
                 {
                     string issueId = GetOwnerId(parameters, "issue_id");
-                    if (string.IsNullOrEmpty(issueId)) throw new RedmineException("The issue id is mandatory! \nCheck if you have included the parameter issue_id to parameters");
+                    if (string.IsNullOrEmpty(issueId))
+                        throw new RedmineException("The issue id is mandatory! \nCheck if you have included the parameter issue_id to parameters");
 
                     address = string.Format(ENTITY_WITH_PARENT_FORMAT, host, "issues", issueId, urls[type], mimeFormat);
                 }
                 else
+                {
+                    if (type == typeof(News))
+                    {
+                        var projectId = GetOwnerId(parameters, "project_id");
+                        if (!string.IsNullOrEmpty(projectId))
+                        {
+                            address = string.Format(ENTITY_WITH_PARENT_FORMAT, host, "projects", projectId, urls[type], mimeFormat);
+                        }
+                    }
+                    if(string.IsNullOrWhiteSpace(address))
                     address = string.Format(FORMAT, host, urls[type], mimeFormat);
+                }
+            }
 
             return ExecuteDownloadList<T>(address, "GetObjectList<" + type.Name + ">", urls[type], out totalCount, parameters);
         }
@@ -477,12 +492,12 @@ namespace Redmine.Net.Api
             }
             else
                 if (type == typeof(IssueRelation))
-                {
-                    if (string.IsNullOrEmpty(ownerId)) throw new RedmineException("The owner id(issue id) is mandatory!");
-                    address = string.Format(ENTITY_WITH_PARENT_FORMAT, host, "issues", ownerId, urls[type], mimeFormat);
-                }
-                else
-                    address = string.Format(FORMAT, host, urls[type], mimeFormat);
+            {
+                if (string.IsNullOrEmpty(ownerId)) throw new RedmineException("The owner id(issue id) is mandatory!");
+                address = string.Format(ENTITY_WITH_PARENT_FORMAT, host, "issues", ownerId, urls[type], mimeFormat);
+            }
+            else
+                address = string.Format(FORMAT, host, urls[type], mimeFormat);
 
             return ExecuteUpload<T>(address, POST, result, "CreateObject<" + type.Name + ">");
         }
@@ -563,7 +578,7 @@ namespace Redmine.Net.Api
         protected WebClient CreateWebClient(NameValueCollection parameters)
         {
             var webClient = new RedmineWebClient();
-            
+
             if (parameters != null) webClient.QueryString = parameters;
 
             if (!string.IsNullOrEmpty(apiKey))
@@ -770,7 +785,7 @@ namespace Redmine.Net.Api
             }
         }
 
-        private T ExecuteUpload<T>(string address, string actionType, string data, string methodName) where T : class , new()
+        private T ExecuteUpload<T>(string address, string actionType, string data, string methodName) where T : class, new()
         {
             using (var wc = CreateWebClient(null))
             {

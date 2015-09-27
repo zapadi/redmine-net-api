@@ -104,14 +104,12 @@ namespace Redmine.Net.Api.Types
         [XmlArrayItem("issue_category")]
         public IList<ProjectIssueCategory> IssueCategories { get; set; }
 
+        /// <summary>
+        /// since 2.6.0
+        /// </summary>
         [XmlArray("enabled_modules")]
         [XmlArrayItem("enabled_module")]
         public IList<ProjectEnabledModule> EnabledModules { get; set; }
-
-        ///// <summary>
-        ///// enabled_module_names: (repeatable element) the module name: boards, calendar, documents, files, gantt, issue_tracking, news, repository, time_tracking, wiki
-        ///// </summary>
-        //public string EnabledModuleNames { get; set; }
 
         /// <summary>
         /// Generates an object from its XML representation.
