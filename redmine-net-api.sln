@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.40629.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "redmine-net20-api", "redmine-net20-api\redmine-net20-api.csproj", "{DA3E3C1B-2C01-4FB5-968B-3769BBF382BD}"
 EndProject
@@ -13,12 +13,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "redmine-net45-api-signed", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "redmine-net40-api-signed", "redmine-net40-api-signed\redmine-net40-api-signed.csproj", "{1E80FE6C-6607-42BD-B6E3-4FE68DBA8E5E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{FF16039A-D1B9-4680-A263-7E7520A36275}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestRedmineNetApi", "UnitTestRedmineNetApi\UnitTestRedmineNetApi.csproj", "{0DE30921-1273-41F6-91D6-AB17EC61E8F0}"
 EndProject
 Global
-	GlobalSection(CodealikeProperties) = postSolution
-		SolutionGuid = 74da85cc-5a0d-4590-a976-666d0b2d41cb
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|Mixed Platforms = Debug|Mixed Platforms
@@ -106,24 +103,30 @@ Global
 		{1E80FE6C-6607-42BD-B6E3-4FE68DBA8E5E}.RUNNING_ON_35_OR_ABOVE|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{1E80FE6C-6607-42BD-B6E3-4FE68DBA8E5E}.RUNNING_ON_35_OR_ABOVE|Mixed Platforms.Build.0 = Release|Any CPU
 		{1E80FE6C-6607-42BD-B6E3-4FE68DBA8E5E}.RUNNING_ON_35_OR_ABOVE|x86.ActiveCfg = Release|Any CPU
-		{FF16039A-D1B9-4680-A263-7E7520A36275}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FF16039A-D1B9-4680-A263-7E7520A36275}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FF16039A-D1B9-4680-A263-7E7520A36275}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{FF16039A-D1B9-4680-A263-7E7520A36275}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{FF16039A-D1B9-4680-A263-7E7520A36275}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{FF16039A-D1B9-4680-A263-7E7520A36275}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FF16039A-D1B9-4680-A263-7E7520A36275}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FF16039A-D1B9-4680-A263-7E7520A36275}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{FF16039A-D1B9-4680-A263-7E7520A36275}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{FF16039A-D1B9-4680-A263-7E7520A36275}.Release|x86.ActiveCfg = Release|Any CPU
-		{FF16039A-D1B9-4680-A263-7E7520A36275}.RUNNING_ON_35_OR_ABOVE|Any CPU.ActiveCfg = Release|Any CPU
-		{FF16039A-D1B9-4680-A263-7E7520A36275}.RUNNING_ON_35_OR_ABOVE|Any CPU.Build.0 = Release|Any CPU
-		{FF16039A-D1B9-4680-A263-7E7520A36275}.RUNNING_ON_35_OR_ABOVE|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{FF16039A-D1B9-4680-A263-7E7520A36275}.RUNNING_ON_35_OR_ABOVE|Mixed Platforms.Build.0 = Release|Any CPU
-		{FF16039A-D1B9-4680-A263-7E7520A36275}.RUNNING_ON_35_OR_ABOVE|x86.ActiveCfg = Release|Any CPU
+		{0DE30921-1273-41F6-91D6-AB17EC61E8F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0DE30921-1273-41F6-91D6-AB17EC61E8F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0DE30921-1273-41F6-91D6-AB17EC61E8F0}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{0DE30921-1273-41F6-91D6-AB17EC61E8F0}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{0DE30921-1273-41F6-91D6-AB17EC61E8F0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0DE30921-1273-41F6-91D6-AB17EC61E8F0}.Debug|x86.Build.0 = Debug|Any CPU
+		{0DE30921-1273-41F6-91D6-AB17EC61E8F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0DE30921-1273-41F6-91D6-AB17EC61E8F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0DE30921-1273-41F6-91D6-AB17EC61E8F0}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{0DE30921-1273-41F6-91D6-AB17EC61E8F0}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{0DE30921-1273-41F6-91D6-AB17EC61E8F0}.Release|x86.ActiveCfg = Release|Any CPU
+		{0DE30921-1273-41F6-91D6-AB17EC61E8F0}.Release|x86.Build.0 = Release|Any CPU
+		{0DE30921-1273-41F6-91D6-AB17EC61E8F0}.RUNNING_ON_35_OR_ABOVE|Any CPU.ActiveCfg = Release|Any CPU
+		{0DE30921-1273-41F6-91D6-AB17EC61E8F0}.RUNNING_ON_35_OR_ABOVE|Any CPU.Build.0 = Release|Any CPU
+		{0DE30921-1273-41F6-91D6-AB17EC61E8F0}.RUNNING_ON_35_OR_ABOVE|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{0DE30921-1273-41F6-91D6-AB17EC61E8F0}.RUNNING_ON_35_OR_ABOVE|Mixed Platforms.Build.0 = Release|Any CPU
+		{0DE30921-1273-41F6-91D6-AB17EC61E8F0}.RUNNING_ON_35_OR_ABOVE|x86.ActiveCfg = Release|Any CPU
+		{0DE30921-1273-41F6-91D6-AB17EC61E8F0}.RUNNING_ON_35_OR_ABOVE|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(CodealikeProperties) = postSolution
+		SolutionGuid = 74da85cc-5a0d-4590-a976-666d0b2d41cb
 	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = redmine-net-api.vsmdi
