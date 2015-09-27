@@ -390,8 +390,8 @@ namespace Redmine.Net.Api
                             address = string.Format(ENTITY_WITH_PARENT_FORMAT, host, "projects", projectId, urls[type], mimeFormat);
                         }
                     }
-                    if(string.IsNullOrWhiteSpace(address))
-                    address = string.Format(FORMAT, host, urls[type], mimeFormat);
+                    if (string.IsNullOrWhiteSpace(address))
+                        address = string.Format(FORMAT, host, urls[type], mimeFormat);
                 }
             }
 
@@ -537,17 +537,7 @@ namespace Redmine.Net.Api
 
             request = Regex.Replace(request, @"\r\n|\r|\n", "\r\n", RegexOptions.Compiled);
 
-            string address;
-
-            if (type == typeof(ProjectMembership))
-            {
-                if (string.IsNullOrEmpty(projectId)) throw new RedmineException("The project owner id is mandatory!");
-                address = string.Format(ENTITY_WITH_PARENT_FORMAT, host, "projects", projectId, urls[type], mimeFormat);
-            }
-            else
-            {
-                address = string.Format(REQUEST_FORMAT, host, urls[type], id, mimeFormat);
-            }
+            string address = string.Format(REQUEST_FORMAT, host, urls[type], id, mimeFormat);
 
             ExecuteUpload(address, PUT, request, "UpdateObject<" + type.Name + ">");
         }
