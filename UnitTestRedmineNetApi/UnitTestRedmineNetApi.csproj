@@ -61,13 +61,18 @@
     <Compile Include="ProjectTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="NewsTests.cs" />
+    <Compile Include="UserTestsJson.cs" />
     <Compile Include="WatcherTestsJson.cs" />
+    <Compile Include="WikiTestsJson.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\redmine-net40-api\redmine-net40-api.csproj">
       <Project>{0D9B763C-A16B-463B-BDDD-0A0467DCD32E}</Project>
       <Name>redmine-net40-api</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
