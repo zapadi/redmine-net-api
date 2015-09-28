@@ -191,7 +191,7 @@ namespace Redmine.Net.Api
 
             if (!string.IsNullOrWhiteSpace(name)) filters.Add("name", name);
 
-            if (groupId > 0) filters.Add("groupId", groupId.ToString(CultureInfo.InvariantCulture));
+            if (groupId > 0) filters.Add("group_id", groupId.ToString(CultureInfo.InvariantCulture));
 
             return GetTotalObjectList<User>(filters);
         }
