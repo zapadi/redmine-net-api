@@ -198,9 +198,9 @@ namespace Redmine.Net.Api
 
         public void AddWatcher(int issueId, int userId)
         {
-            ExecuteUpload(string.Format(REQUEST_FORMAT, host, urls[typeof(Issue)], issueId + "/watchers", mimeFormat), POST, mimeFormat == MimeFormat.xml
-                ? "<user_id>" + userId + "</user_id>"
-                : "{\"user_id\":\"" + userId + "\"}", "AddWatcher");
+            ExecuteUpload(string.Format(REQUEST_FORMAT, host, urls[typeof(Issue)], issueId + "/watchers", mimeFormat), POST, mimeFormat == MimeFormat.xml 
+                ? "<user_id>" + userId + "</user_id>" 
+                : "{\"user_id\":\"" + userId+"\"}", "AddWatcher");
         }
 
         public void RemoveWatcher(int issueId, int userId)
@@ -215,9 +215,9 @@ namespace Redmine.Net.Api
         /// <param name="userId">The user id.</param>
         public void AddUser(int groupId, int userId)
         {
-            ExecuteUpload(string.Format(REQUEST_FORMAT, host, urls[typeof(Group)], groupId + "/users", mimeFormat), POST, mimeFormat == MimeFormat.xml
-                ? "<user_id>" + userId + "</user_id>"
-                : "{\"user_id\":\"" + userId + "\"}", "AddUser");
+            ExecuteUpload(string.Format(REQUEST_FORMAT, host, urls[typeof(Group)], groupId + "/users", mimeFormat), POST, mimeFormat == MimeFormat.xml 
+                ? "<user_id>" + userId + "</user_id>" 
+                : "{\"user_id\":\"" + userId+"\"}", "AddUser");
         }
 
         /// <summary>
@@ -496,12 +496,12 @@ namespace Redmine.Net.Api
             }
             else
                 if (type == typeof(IssueRelation))
-                {
-                    if (string.IsNullOrEmpty(ownerId)) throw new RedmineException("The owner id(issue id) is mandatory!");
-                    address = string.Format(ENTITY_WITH_PARENT_FORMAT, host, "issues", ownerId, urls[type], mimeFormat);
-                }
-                else
-                    address = string.Format(FORMAT, host, urls[type], mimeFormat);
+            {
+                if (string.IsNullOrEmpty(ownerId)) throw new RedmineException("The owner id(issue id) is mandatory!");
+                address = string.Format(ENTITY_WITH_PARENT_FORMAT, host, "issues", ownerId, urls[type], mimeFormat);
+            }
+            else
+                address = string.Format(FORMAT, host, urls[type], mimeFormat);
 
             return ExecuteUpload<T>(address, POST, result, "CreateObject<" + type.Name + ">");
         }
@@ -729,7 +729,8 @@ namespace Redmine.Net.Api
                 if (type == typeof(IssueCategory)) jsonRoot = "issue_category";
                 if (type == typeof(IssueRelation)) jsonRoot = "relation";
                 if (type == typeof(TimeEntry)) jsonRoot = "time_entry";
-                if (type == typeof(WikiPage)) jsonRoot = "wiki_page";
+                if (type == typeof(ProjectMembership)) jsonRoot = "membership";
+                if (type == typeof (WikiPage)) jsonRoot = "wiki_page";
 
                 return RedmineSerialization.JsonDeserialize<T>(response, jsonRoot);
             }
@@ -789,8 +790,8 @@ namespace Redmine.Net.Api
                     if (actionType == POST || actionType == DELETE || actionType == PUT)
                     {
                         var response = wc.UploadString(address, actionType, data);
-                        if (!string.IsNullOrWhiteSpace(response))
-                            return Deserialize<T>(response);
+
+                        return Deserialize<T>(response);
                     }
                 }
                 catch (WebException webException)
