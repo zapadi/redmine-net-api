@@ -77,7 +77,7 @@ namespace Redmine.Net.Api
         };
 
         private readonly string host, apiKey, basicAuthorization;
-        
+
         private readonly CredentialCache cache;
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace Redmine.Net.Api
                 throw new RedmineException("The host is not valid!");
 
             this.host = host;
-           
+
             if (!verifyServerCert)
                 ServicePointManager.ServerCertificateValidationCallback += RemoteCertValidate;
         }
@@ -197,7 +197,7 @@ namespace Redmine.Net.Api
 
         public void AddWatcher(int issueId, int userId)
         {
-            ExecuteUpload(string.Format(REQUEST_FORMAT, host, urls[typeof(Issue)], issueId + "/watchers"), POST, "<user_id>" + userId + "</user_id>" , "AddWatcher");
+            ExecuteUpload(string.Format(REQUEST_FORMAT, host, urls[typeof(Issue)], issueId + "/watchers"), POST, "<user_id>" + userId + "</user_id>", "AddWatcher");
         }
 
         public void RemoveWatcher(int issueId, int userId)
@@ -259,7 +259,7 @@ namespace Redmine.Net.Api
         public IList<WikiPage> GetAllWikiPages(string projectId)
         {
             int totalCount;
-            return ExecuteDownloadList<WikiPage>(string.Format(WIKI_INDEX_FORMAT, host, projectId),"GetAllWikiPages", "wiki", out totalCount);
+            return ExecuteDownloadList<WikiPage>(string.Format(WIKI_INDEX_FORMAT, host, projectId), "GetAllWikiPages", "wiki", out totalCount);
         }
 
         /// <summary>
@@ -786,7 +786,8 @@ namespace Redmine.Net.Api
                 try
                 {
                     var response = wc.DownloadString(address);
-                    return Deserialize<T>(response);
+                    if (!string.IsNullOrEmpty(response))
+                        return Deserialize<T>(response);
                 }
                 catch (WebException webException)
                 {
@@ -796,7 +797,7 @@ namespace Redmine.Net.Api
             }
         }
 
-        private IList<T> ExecuteDownloadList<T>(string address, string methodName, string jsonRoot,out int totalCount, NameValueCollection parameters = null) where T : class, new()
+        private IList<T> ExecuteDownloadList<T>(string address, string methodName, string jsonRoot, out int totalCount, NameValueCollection parameters = null) where T : class, new()
         {
             totalCount = -1;
             using (var wc = CreateWebClient(parameters))

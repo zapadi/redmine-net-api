@@ -16,7 +16,7 @@ namespace UnitTestRedmineNetApi
         {
             var uri = ConfigurationManager.AppSettings["uri"];
             var apiKey = ConfigurationManager.AppSettings["apiKey"];
-            redmineManager = new RedmineManager(uri, apiKey, MimeFormat.json);
+            redmineManager = new RedmineManager(uri, apiKey, MimeFormat.xml);
         }
 
         [TestMethod]
@@ -44,10 +44,7 @@ namespace UnitTestRedmineNetApi
             wiki.Comments = "comments updated";
             wiki.Title = "am schimbat titlul";
            
-
             redmineManager.CreateOrUpdateWikiPage("9", "Wiki", wiki);
-
-
 
             Assert.Inconclusive();
         }
