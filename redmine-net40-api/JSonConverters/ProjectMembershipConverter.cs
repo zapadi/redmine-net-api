@@ -15,6 +15,7 @@
 */
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Web.Script.Serialization;
 using Redmine.Net.Api.Types;
@@ -52,7 +53,7 @@ namespace Redmine.Net.Api.JSonConverters
             {
                 if (entity.User != null)
                     result.Add("user_id", entity.User.Id);
-                result.Add("role_ids", entity.Roles.ToArray());
+                result.Add("role_ids", entity.Roles.Select(x => x.Id).ToArray());
 
                 root["membership"] = result;
                 return root;
