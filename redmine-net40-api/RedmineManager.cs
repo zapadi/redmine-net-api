@@ -729,7 +729,8 @@ namespace Redmine.Net.Api
                 if (type == typeof(IssueCategory)) jsonRoot = "issue_category";
                 if (type == typeof(IssueRelation)) jsonRoot = "relation";
                 if (type == typeof(TimeEntry)) jsonRoot = "time_entry";
-                if (type == typeof(WikiPage)) jsonRoot = "wiki_page";
+                if (type == typeof(ProjectMembership)) jsonRoot = "membership";
+                if (type == typeof (WikiPage)) jsonRoot = "wiki_page";
 
                 return RedmineSerialization.JsonDeserialize<T>(response, jsonRoot);
             }
