@@ -5,7 +5,7 @@ using Redmine.Net.Api;
 namespace UnitTestRedmineNetApi
 {
     [TestClass]
-    public class WatcherTestsJson
+    public class UserTestsJson
     {
         private RedmineManager redmineManager;
 
@@ -16,17 +16,32 @@ namespace UnitTestRedmineNetApi
             var apiKey = ConfigurationManager.AppSettings["apiKey"];
             redmineManager = new RedmineManager(uri, apiKey, MimeFormat.json);
         }
-        
-        public void Should_Add_Watcher()
+
+        [TestMethod]
+        public void Should_Add_User()
         {
-            redmineManager.AddWatcher(44, 8);
+            redmineManager.AddUser(44, 8);
             Assert.Inconclusive();
         }
 
         [TestMethod]
-        public void Should_Remove_Watcher()
+        public void Should_Remove_User()
         {
-            redmineManager.RemoveWatcher(44, 8);
+            redmineManager.DeleteUser(44, 8);
+            Assert.Inconclusive();
+        }
+
+        [TestMethod]
+        public void Should_Return_Current_User()
+        {
+            var result = redmineManager.GetCurrentUser();
+            Assert.Inconclusive();
+        }
+
+        [TestMethod]
+        public void Should_Return_All_Users()
+        {
+            var result = redmineManager.GetUsers();
             Assert.Inconclusive();
         }
     }

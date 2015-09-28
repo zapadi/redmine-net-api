@@ -264,7 +264,7 @@ namespace Redmine.Net.Api
         public IList<WikiPage> GetAllWikiPages(string projectId)
         {
             int totalCount;
-            return ExecuteDownloadList<WikiPage>(string.Format(WIKI_INDEX_FORMAT, host, projectId, mimeFormat), "GetAllWikiPages", "wiki", out totalCount);
+            return ExecuteDownloadList<WikiPage>(string.Format(WIKI_INDEX_FORMAT, host, projectId, mimeFormat), "GetAllWikiPages", "wiki_pages", out totalCount);
         }
 
         /// <summary>
@@ -729,6 +729,7 @@ namespace Redmine.Net.Api
                 if (type == typeof(IssueCategory)) jsonRoot = "issue_category";
                 if (type == typeof(IssueRelation)) jsonRoot = "relation";
                 if (type == typeof(TimeEntry)) jsonRoot = "time_entry";
+                if (type == typeof (WikiPage)) jsonRoot = "wiki_page";
 
                 return RedmineSerialization.JsonDeserialize<T>(response, jsonRoot);
             }
