@@ -112,7 +112,11 @@ namespace Redmine.Net.Api.JSonConverters
                 if(entity.DoneRatio != null)
                     result.Add("done_ratio", entity.DoneRatio);
 
-                if (entity.Uploads != null) result.Add("uploads", entity.Uploads.ToArray());
+                if (entity.Uploads != null)
+                {
+                    serializer.RegisterConverters(new[] { new UploadConverter() });
+                    result.Add("uploads", entity.Uploads.ToArray());
+                }
 
                 if (entity.CustomFields != null)
                 {
