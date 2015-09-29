@@ -301,6 +301,10 @@ namespace Redmine.Net.Api.Types
                         PrivateNotes = reader.ReadElementContentAsBoolean();
                         break;
 
+                    case "is_private":
+                        IsPrivate = reader.ReadContentAsBoolean();
+                        break;
+
                     case "subject": Subject = reader.ReadElementContentAsString(); break;
 
                     case "notes": Notes = reader.ReadElementContentAsString(); break;
@@ -371,17 +375,15 @@ namespace Redmine.Net.Api.Types
             writer.WriteArray(Uploads, "uploads");
             writer.WriteArray(CustomFields, "custom_fields");
 
-        // writer.WriteArray(Watchers, "watcher_user_ids");
-
             if (Watchers != null)
             {
-                writer.WriteStartElement("watcher_user_ids");
-                writer.WriteAttributeString("type", "array");
+                var watchersIds = string.Empty;
                 foreach (var watcher in Watchers)
                 {
-                    new XmlSerializer(typeof(int)).Serialize(writer, watcher.Id);
+                    watchersIds += watcher.Id + ",";
                 }
-                writer.WriteEndElement();
+
+                writer.WriteElementString("watcher_user_ids", watchersIds.TrimEnd(new[] { ',' }));
             }
         }
 
