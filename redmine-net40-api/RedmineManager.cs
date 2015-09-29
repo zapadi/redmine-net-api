@@ -324,6 +324,8 @@ namespace Redmine.Net.Api
             {
                 try
                 {
+                    wc.Headers.Add(HttpRequestHeader.Accept, "application/octet-stream");
+                    
                     return wc.DownloadData(address);
                 }
                 catch (WebException webException)
@@ -552,7 +554,7 @@ namespace Redmine.Net.Api
         /// <typeparam name="T">The type of objects to delete.</typeparam>
         /// <param name="id">The id of the object to delete</param>
         /// <param name="parameters">Optional filters and/or optional fetched data.</param>
-        /// <exception cref="Redmine.Net.Api.RedmineException"></exception>
+        /// <exception cref="RedmineException"></exception>
         /// <code></code>
         public void DeleteObject<T>(string id, NameValueCollection parameters) where T : class
         {
