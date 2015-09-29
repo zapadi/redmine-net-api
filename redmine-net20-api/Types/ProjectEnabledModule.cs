@@ -42,9 +42,6 @@ namespace Redmine.Net.Api.Types
             return Id + ", " + Name;
         }
 
-        public override void WriteXml(XmlWriter writer)
-        {
-            writer.WriteElementString("enabled_module_names", Name);
-        }
+       
     }
 }
