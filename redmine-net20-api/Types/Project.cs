@@ -172,18 +172,20 @@ namespace Redmine.Net.Api.Types
             writer.WriteIdIfNotNull(Parent, "parent_id");
             writer.WriteElementString("homepage", HomePage);
 
+            if(Trackers != null)
+            {
+                foreach (var item in Trackers)
+                {
+                    new XmlSerializer(item.GetType()).Serialize(writer, item);
+                }
+            }
+
             if (EnabledModules != null)
             {
-                var enabledModuleNames = "";
-                foreach (var projectEnabledModule in EnabledModules)
+                foreach (var item in EnabledModules)
                 {
-                    if (!string.IsNullOrEmpty(projectEnabledModule.Name))
-                    {
-                        enabledModuleNames += projectEnabledModule.Name;
-                    }
+                    new XmlSerializer(item.GetType()).Serialize(writer, item);
                 }
-
-                writer.WriteElementString("enabled_module_names", enabledModuleNames);
             }
 
             if (Id == 0) return;
