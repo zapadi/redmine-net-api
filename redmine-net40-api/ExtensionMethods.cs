@@ -246,7 +246,14 @@ namespace Redmine.Net.Api
                 writer.WriteElementString(tag, string.Format(NumberFormatInfo.InvariantInfo, "{0}", val.Value));
         }
 
-        public static void WriteDate(this XmlWriter writer, DateTime? val, String tag) 
+        public static void WriteIfNotDefaultOrNull<T>(this XmlWriter writer, T? val, String tag) where T : struct
+        {
+            if (!val.HasValue) return;
+            if (!EqualityComparer<T>.Default.Equals(val.Value, default(T)))
+                writer.WriteElementString(tag, string.Format(NumberFormatInfo.InvariantInfo, "{0}", val.Value));
+        }
+
+        public static void WriteDate(this XmlWriter writer, DateTime? val, String tag)
         {
             if (!val.HasValue || val.Value.Equals(default(DateTime)))
                 writer.WriteElementString(tag, string.Empty);
@@ -256,7 +263,7 @@ namespace Redmine.Net.Api
 
         public static void WriteArray(this XmlWriter writer, IEnumerable col, string elementName)
         {
-            
+
             writer.WriteStartElement(elementName);
             writer.WriteAttributeString("type", "array");
             if (col != null)
@@ -310,7 +317,7 @@ namespace Redmine.Net.Api
             var result = ser.ConvertToType<IdentifiableName>(val);
             return result;
         }
-        
+
         /// <summary>
         /// For Json
         /// </summary>
@@ -346,9 +353,9 @@ namespace Redmine.Net.Api
                     foreach (var pair in dict)
                     {
                         var type = ser.ConvertToType<T>(pair.Value);
-                        list.Add(type);    
+                        list.Add(type);
                     }
-                    
+
                 }
             }
             return list;
