@@ -226,6 +226,13 @@ namespace Redmine.Net.Api
             if (ident != null) writer.WriteElementString(tag, ident.Id.ToString(CultureInfo.InvariantCulture));
         }
 
+        public static void WriteIdOrEmpty(this XmlWriter writer, IdentifiableName ident, String tag)
+        {
+            if (ident != null) writer.WriteElementString(tag, ident.Id.ToString(CultureInfo.InvariantCulture));
+            else
+                writer.WriteElementString(tag, string.Empty);
+        }
+
         public static void WriteIdIfNotNull(this Dictionary<string, object> dictionary, IdentifiableName ident, String key)
         {
             if (ident != null) dictionary.Add(key, ident.Id);
