@@ -169,7 +169,7 @@ namespace Redmine.Net.Api.Types
             writer.WriteElementString("description", Description);
             writer.WriteElementString("inherit_members", InheritMembers.ToString());
             writer.WriteElementString("is_public", IsPublic.ToString());
-            writer.WriteIdIfNotNull(Parent, "parent_id");
+            writer.WriteIdOrEmpty(Parent, "parent_id");
             writer.WriteElementString("homepage", HomePage);
 
             if(Trackers != null)

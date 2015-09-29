@@ -363,7 +363,7 @@ namespace Redmine.Net.Api.Types
             writer.WriteIdIfNotNull(FixedVersion, "fixed_version_id");
 
             writer.WriteValue(EstimatedHours, "estimated_hours");
-            writer.WriteValue(DoneRatio, "done_ratio");
+            writer.WriteIfNotDefaultOrNull(DoneRatio, "done_ratio");
             writer.WriteDate(StartDate, "start_date");
             writer.WriteDate(DueDate, "due_date");
             writer.WriteDate(UpdatedOn, "updated_on");

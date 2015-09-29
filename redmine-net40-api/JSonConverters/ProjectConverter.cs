@@ -69,6 +69,8 @@ namespace Redmine.Net.Api.JSonConverters
 
                 if (entity.Parent != null)
                     result.Add("parent_id", entity.Parent.Id);
+                else
+                    result.Add("parent_id", string.Empty);
                 
                 if (entity.CustomFields != null)
                 {
