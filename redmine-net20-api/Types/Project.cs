@@ -176,7 +176,7 @@ namespace Redmine.Net.Api.Types
             {
                 foreach (var item in Trackers)
                 {
-                    new XmlSerializer(item.GetType()).Serialize(writer, item);
+                    writer.WriteElementString("tracker_ids", Id.ToString());
                 }
             }
 
@@ -184,7 +184,7 @@ namespace Redmine.Net.Api.Types
             {
                 foreach (var item in EnabledModules)
                 {
-                    new XmlSerializer(item.GetType()).Serialize(writer, item);
+                    writer.WriteElementString("enabled_module_names", item.Name);
                 }
             }
 

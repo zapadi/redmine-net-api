@@ -41,11 +41,5 @@ namespace Redmine.Net.Api.Types
         {
             return Id + ", " + Name;
         }
-
-
-        public override void WriteXml(XmlWriter writer)
-        {
-            writer.WriteElementString("tracker_ids", Id.ToString());
-        }
     }
 }
