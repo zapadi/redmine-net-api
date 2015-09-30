@@ -87,12 +87,7 @@ namespace Redmine.Net.Api.JSonConverters
                 }
 
                 if (entity.EnabledModules != null)
-                {
-                    foreach (var item in entity.EnabledModules)
-                    {
-                        result.Add("enabled_module_names", item.Name);
-                    }
-                }
+                    result.Add("enabled_module_names", entity.EnabledModules.Select(e=> e.Name).ToArray());
 
 
                 root["project"] = result;
