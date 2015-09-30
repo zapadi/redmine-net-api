@@ -53,8 +53,6 @@ namespace Redmine.Net.Api.JSonConverters
                 result.Add("filename", entity.FileName);
                 result.Add("token", entity.Token);
                 result.Add("description", entity.Description);
-                root["upload"] = result;
-                return root;
             }
 
             return result;
