@@ -176,7 +176,7 @@ namespace Redmine.Net.Api.Types
             {
                 foreach (var item in Trackers)
                 {
-                    writer.WriteElementString("tracker_ids", Id.ToString());
+                    writer.WriteElementString("tracker_ids", item.Id.ToString());
                 }
             }
 
