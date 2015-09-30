@@ -78,13 +78,8 @@ namespace Redmine.Net.Api.JSonConverters
                     result.Add("custom_fields", entity.CustomFields.ToArray());
                 }
 
-                if (entity.Trackers != null)
-                {
-                    foreach (var item in entity.Trackers)
-                    {
-                        result.Add("tracker_ids", item.Id.ToString());
-                    }
-                }
+                if (entity.Trackers != null)              
+                    result.Add("tracker_ids", entity.Trackers.Select(t => t.Id).ToArray());      
 
                 if (entity.EnabledModules != null)
                     result.Add("enabled_module_names", entity.EnabledModules.Select(e=> e.Name).ToArray());
