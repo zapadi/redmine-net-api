@@ -380,14 +380,12 @@ namespace Redmine.Net.Api.Types
 
             if (Watchers != null)
             {
-                var watchersIds = string.Empty;
-                foreach (var watcher in Watchers)
+                foreach (var item in Watchers)
                 {
-                    watchersIds += watcher.Id + ",";
+                    writer.WriteElementString("watcher_user_ids", item.Id.ToString());
                 }
-
-                writer.WriteElementString("watcher_user_ids", watchersIds.TrimEnd(new[] { ',' }));
             }
+           
         }
 
         public object Clone()
