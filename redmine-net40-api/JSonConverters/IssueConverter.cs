@@ -125,14 +125,7 @@ namespace Redmine.Net.Api.JSonConverters
                 }
 
                 if (entity.Watchers != null)
-                {
-                    var watchersIds = string.Empty;
-                    foreach (var watcher in entity.Watchers)
-                    {
-                        watchersIds += watcher.Id + ",";
-                    }
-                    result.Add("watcher_user_ids", watchersIds);
-                }
+                    result.Add("watcher_user_ids", entity.Watchers.Select(t => t.Id).ToArray());    
 
                 root["issue"] = result;
                 return root;
