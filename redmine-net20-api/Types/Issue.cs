@@ -355,7 +355,10 @@ namespace Redmine.Net.Api.Types
                 writer.WriteElementString("private_notes", PrivateNotes.ToString());
             }
             writer.WriteElementString("description", Description);
-            writer.WriteElementString("is_private", IsPrivate.ToString());
+
+            writer.WriteStartElement("is_private");
+            writer.WriteValue(IsPrivate);
+            writer.WriteEndElement();
 
             writer.WriteIdIfNotNull(Project, "project_id");
             writer.WriteIdIfNotNull(Priority, "priority_id");
