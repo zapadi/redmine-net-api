@@ -646,8 +646,8 @@ namespace Redmine.Net.Api
 
             switch (exception.Status)
             {
-                case WebExceptionStatus.Timeout: throw new RedmineException("Timeout!");
-                case WebExceptionStatus.NameResolutionFailure: throw new RedmineException("Bad domain name!");
+                case WebExceptionStatus.Timeout: throw new RedmineException("Timeout!", exception);
+                case WebExceptionStatus.NameResolutionFailure: throw new RedmineException("Bad domain name!", exception);
                 case WebExceptionStatus.ProtocolError:
                     {
                         var response = (HttpWebResponse)exception.Response;
@@ -657,10 +657,10 @@ namespace Redmine.Net.Api
                             case (int)HttpStatusCode.Unauthorized:
                             case (int)HttpStatusCode.NotFound:
                             case (int)HttpStatusCode.Forbidden:
-                                throw new RedmineException(response.StatusDescription);
+                                throw new RedmineException(response.StatusDescription, exception);
 
                             case (int)HttpStatusCode.Conflict:
-                                throw new RedmineException("The page that you are trying to update is staled!");
+                                throw new RedmineException("The page that you are trying to update is staled!", exception);
 
                             case 422:
                                 var errors = ReadWebExceptionResponse(exception.Response);
@@ -669,14 +669,14 @@ namespace Redmine.Net.Api
                                 {
                                     message = errors.Aggregate(message, (current, error) => current + (error.Info + "\n"));
                                 }
-                                throw new RedmineException(method + " has invalid or missing attribute parameters: " + message);
+                                throw new RedmineException(method + " has invalid or missing attribute parameters: " + message, exception);
 
-                            case (int)HttpStatusCode.NotAcceptable: throw new RedmineException(response.StatusDescription);
+                            case (int)HttpStatusCode.NotAcceptable: throw new RedmineException(response.StatusDescription, exception);
                         }
                     }
                     break;
 
-                default: throw new RedmineException(exception.Message);
+                default: throw new RedmineException(exception.Message, exception);
             }
         }
 
