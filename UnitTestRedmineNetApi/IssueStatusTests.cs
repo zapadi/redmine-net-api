@@ -1,14 +1,17 @@
-﻿using System;
-using System.Configuration;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Types;
-using System.Collections.Specialized;
+using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace UnitTestRedmineNetApi
 {
     [TestClass]
-    public class NewsTests
+    public class IssueStatusTests
     {
         private RedmineManager redmineManager;
 
@@ -21,23 +24,12 @@ namespace UnitTestRedmineNetApi
             redmineManager = new RedmineManager(uri, apiKey, mimeFormat);
         }
 
-
         [TestMethod]
-        public void GetAllNews()
+        public void RedmineIssueStatuses_ShouldGetAllIssueStatuses()
         {
-            var result = redmineManager.GetObjectList<News>(null);
+            var issueStatuses = redmineManager.GetObjectList<IssueStatus>(null);
 
-            Assert.IsNotNull(result);
-        }
-
-        [TestMethod]
-        public void RedmineNews_ShouldGetSpecificProjectNews()
-        {
-            int projectId = 6;
-
-            var news = redmineManager.GetObjectList<News>(new NameValueCollection { { "project_id", projectId.ToString() } });
-
-            Assert.IsNotNull(news);
+            Assert.IsTrue(issueStatuses.Count == 7);
         }
     }
 }

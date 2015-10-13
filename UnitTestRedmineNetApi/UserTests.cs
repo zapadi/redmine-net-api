@@ -21,7 +21,8 @@ namespace UnitTestRedmineNetApi
         {
             var uri = ConfigurationManager.AppSettings["uri"];
             var apiKey = ConfigurationManager.AppSettings["apiKey"];
-            redmineManager = new RedmineManager(uri, apiKey);
+            var mimeFormat = (ConfigurationManager.AppSettings["mimeFormat"].Equals("xml")) ? MimeFormat.xml : MimeFormat.json;
+            redmineManager = new RedmineManager(uri, apiKey, mimeFormat);
         }
 
         [TestMethod]
