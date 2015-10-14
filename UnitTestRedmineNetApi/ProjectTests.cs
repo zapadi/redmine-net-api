@@ -58,5 +58,75 @@ namespace UnitTestRedmineNetApi
 
             Assert.IsNotNull(result);
         }
+
+        [TestMethod]
+        public void RedmineProjects_ShouldCreateProject()
+        {
+            Project project = new Project();
+            project.Name = "Project created using API";
+            project.Identifier = "redmine-net-testxyz";
+            project.Description = "Test project description";
+            project.HomePage = "http://RedmineTests.ro";
+            project.IsPublic = true;
+            project.Parent = new IdentifiableName { Id = 9 };
+            project.InheritMembers = true;
+            project.Trackers = new List<ProjectTracker> { new ProjectTracker { Id = 3 } };
+
+            project.EnabledModules = new List<ProjectEnabledModule>();
+            project.EnabledModules.Add(new ProjectEnabledModule { Name = "news" });
+            project.EnabledModules.Add(new ProjectEnabledModule { Name = "issue_tracking" });
+
+            Project savedProject = redmineManager.CreateObject<Project>(project);
+
+            Assert.AreEqual(project.Name, savedProject.Name);
+        }
+
+        [TestMethod]
+        public void RedmineProjects_ShouldUpdateProject()
+        {
+            var projectId = "redmine-net-testxyz";
+
+            var project = redmineManager.GetObject<Project>(projectId, new NameValueCollection { { "include", "trackers,issue_categories,enabled_modules" } });
+            project.Name = "Project created using API updated";
+            project.Description = "Test project description updated";
+            project.HomePage = "http://redmineTestsUpdated.ro";
+            project.IsPublic = true;
+            project.Parent = null;
+            project.InheritMembers = false;
+            project.Trackers = null;
+
+            redmineManager.UpdateObject<Project>(projectId, project);
+
+            var updatedProject = redmineManager.GetObject<Project>(projectId,  new NameValueCollection { { "include", "trackers,issue_categories,enabled_modules" } });
+
+            Assert.AreEqual(project.Name, updatedProject.Name);
+        }
+
+        [TestMethod]
+        public void RedmineProjects_ShouldDeleteProject()
+        {
+            var projectId = "redmine-net-testxyz";
+
+            try
+            {
+                redmineManager.DeleteObject<Project>(projectId, null);
+            }
+            catch (RedmineException exc)
+            {
+                Assert.Fail("Project could not be deleted.");
+                return;
+            }
+
+            try
+            {
+                Project project = redmineManager.GetObject<Project>(projectId, null);
+            }
+            catch (RedmineException exc)
+            {
+                StringAssert.Contains(exc.Message, "Not Found");
+                return;
+            }
+            Assert.Fail("Test failed");
+        }
     }
 }
