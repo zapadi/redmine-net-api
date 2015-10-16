@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Configuration;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,14 +16,29 @@ namespace UnitTestRedmineNetApi
     public class UserTests
     {
         private RedmineManager redmineManager;
+        private string uri;
+        private string apiKey;
 
         [TestInitialize]
         public void Initialize()
         {
-            var uri = ConfigurationManager.AppSettings["uri"];
-            var apiKey = ConfigurationManager.AppSettings["apiKey"];
-            var mimeFormat = (ConfigurationManager.AppSettings["mimeFormat"].Equals("xml")) ? MimeFormat.xml : MimeFormat.json;
-            redmineManager = new RedmineManager(uri, apiKey, mimeFormat);
+            uri = ConfigurationManager.AppSettings["uri"];
+            apiKey = ConfigurationManager.AppSettings["apiKey"];
+
+            SetMimeTypeJSON();
+            SetMimeTypeXML();
+        }
+
+        [Conditional("JSON")]
+        private void SetMimeTypeJSON()
+        {
+            redmineManager = new RedmineManager(uri, apiKey, MimeFormat.json);
+        }
+
+        [Conditional("XML")]
+        private void SetMimeTypeXML()
+        {
+            redmineManager = new RedmineManager(uri, apiKey, MimeFormat.xml);
         }
 
         [TestMethod]

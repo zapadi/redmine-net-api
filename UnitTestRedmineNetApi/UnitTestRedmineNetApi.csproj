@@ -23,7 +23,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;JSON</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -58,13 +58,11 @@
     <Compile Include="AttachmentTests.cs" />
     <Compile Include="CustomFieldTests.cs" />
     <Compile Include="GroupTests.cs" />
-    <Compile Include="IssueCategoriesTests.cs" />
     <Compile Include="IssueCategoryTests.cs" />
     <Compile Include="IssuePriorityTests.cs" />
     <Compile Include="IssueRelationTests.cs" />
     <Compile Include="IssueStatusTests.cs" />
     <Compile Include="IssueTests.cs" />
-    <Compile Include="MembershipTests.cs" />
     <Compile Include="ProjectMembershipTests.cs" />
     <Compile Include="ProjectTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -75,11 +73,8 @@
     <Compile Include="TimeEntryTests.cs" />
     <Compile Include="TrackerTests.cs" />
     <Compile Include="UserTests.cs" />
-    <Compile Include="UserTestsJson.cs" />
     <Compile Include="VersionTests.cs" />
-    <Compile Include="WatcherTestsJson.cs" />
     <Compile Include="WikiPageTests.cs" />
-    <Compile Include="WikiTestsJson.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\redmine-net40-api\redmine-net40-api.csproj">
