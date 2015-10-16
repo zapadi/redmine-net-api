@@ -4,6 +4,7 @@ using System.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Types;
+using System.Diagnostics;
 
 namespace UnitTestRedmineNetApi
 {
@@ -11,14 +12,29 @@ namespace UnitTestRedmineNetApi
     public class GroupTests
     {
         private RedmineManager redmineManager;
+        private string uri;
+        private string apiKey;
 
         [TestInitialize]
         public void Initialize()
         {
-            var uri = ConfigurationManager.AppSettings["uri"];
-            var apiKey = ConfigurationManager.AppSettings["apiKey"];
-            var mimeFormat = (ConfigurationManager.AppSettings["mimeFormat"].Equals("xml")) ? MimeFormat.xml : MimeFormat.json;
-            redmineManager = new RedmineManager(uri, apiKey, mimeFormat);
+            uri = ConfigurationManager.AppSettings["uri"];
+            apiKey = ConfigurationManager.AppSettings["apiKey"];
+
+            SetMimeTypeJSON();
+            SetMimeTypeXML();
+        }
+
+        [Conditional("JSON")]
+        private void SetMimeTypeJSON()
+        {
+            redmineManager = new RedmineManager(uri, apiKey, MimeFormat.json);
+        }
+
+        [Conditional("XML")]
+        private void SetMimeTypeXML()
+        {
+            redmineManager = new RedmineManager(uri, apiKey, MimeFormat.xml);
         }
 
         [TestMethod]
