@@ -282,5 +282,19 @@ namespace Redmine.Net.Api
             else
                 dictionary.Add(tag, val.Value);
         }
+
+        public static void WriteIdOrEmpty(this XmlWriter writer, IdentifiableName ident, String tag)
+        {
+            if (ident != null) writer.WriteElementString(tag, ident.Id.ToString(CultureInfo.InvariantCulture));
+            else
+                writer.WriteElementString(tag, string.Empty);
+        }
+
+        public static void WriteIfNotDefaultOrNull<T>(this XmlWriter writer, T? val, String tag) where T : struct
+        {
+            if (!val.HasValue) return;
+            if (!EqualityComparer<T>.Default.Equals(val.Value, default(T)))
+                writer.WriteElementString(tag, string.Format(NumberFormatInfo.InvariantInfo, "{0}", val.Value));
+        }
     }
 }

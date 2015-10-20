@@ -301,6 +301,10 @@ namespace Redmine.Net.Api.Types
                         PrivateNotes = reader.ReadElementContentAsBoolean();
                         break;
 
+                    case "is_private":
+                        IsPrivate = reader.ReadContentAsBoolean();
+                        break;
+
                     case "subject": Subject = reader.ReadElementContentAsString(); break;
 
                     case "notes": Notes = reader.ReadElementContentAsString(); break;
@@ -351,7 +355,10 @@ namespace Redmine.Net.Api.Types
                 writer.WriteElementString("private_notes", PrivateNotes.ToString());
             }
             writer.WriteElementString("description", Description);
-            writer.WriteElementString("is_private", IsPrivate.ToString());
+
+            writer.WriteStartElement("is_private");
+            writer.WriteValue(IsPrivate);
+            writer.WriteEndElement();
 
             writer.WriteIdIfNotNull(Project, "project_id");
             writer.WriteIdIfNotNull(Priority, "priority_id");
@@ -363,7 +370,7 @@ namespace Redmine.Net.Api.Types
             writer.WriteIdIfNotNull(FixedVersion, "fixed_version_id");
 
             writer.WriteValue(EstimatedHours, "estimated_hours");
-            writer.WriteValue(DoneRatio, "done_ratio");
+            writer.WriteIfNotDefaultOrNull(DoneRatio, "done_ratio");
             writer.WriteDate(StartDate, "start_date");
             writer.WriteDate(DueDate, "due_date");
             writer.WriteDate(UpdatedOn, "updated_on");
@@ -371,18 +378,14 @@ namespace Redmine.Net.Api.Types
             writer.WriteArray(Uploads, "uploads");
             writer.WriteArray(CustomFields, "custom_fields");
 
-        // writer.WriteArray(Watchers, "watcher_user_ids");
-
             if (Watchers != null)
             {
-                writer.WriteStartElement("watcher_user_ids");
-                writer.WriteAttributeString("type", "array");
-                foreach (var watcher in Watchers)
+                foreach (var item in Watchers)
                 {
-                    new XmlSerializer(typeof(int)).Serialize(writer, watcher.Id);
+                    writer.WriteElementString("watcher_user_ids", item.Id.ToString());
                 }
-                writer.WriteEndElement();
             }
+           
         }
 
         public object Clone()

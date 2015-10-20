@@ -91,6 +91,7 @@ namespace Redmine.Net.Api
         /// </summary>
         public string ImpersonateUser { get; set; }
 
+
         /// <summary>
         /// Initializes a new instance of the <see cref="RedmineManager"/> class.
         /// </summary>
@@ -191,7 +192,7 @@ namespace Redmine.Net.Api
 
             if (!string.IsNullOrWhiteSpace(name)) filters.Add("name", name);
 
-            if (groupId > 0) filters.Add("groupId", groupId.ToString(CultureInfo.InvariantCulture));
+            if (groupId > 0) filters.Add("group_id", groupId.ToString(CultureInfo.InvariantCulture));
 
             return GetTotalObjectList<User>(filters);
         }
@@ -324,6 +325,8 @@ namespace Redmine.Net.Api
             {
                 try
                 {
+                    wc.Headers.Add(HttpRequestHeader.Accept, "application/octet-stream");
+                    
                     return wc.DownloadData(address);
                 }
                 catch (WebException webException)
@@ -552,7 +555,7 @@ namespace Redmine.Net.Api
         /// <typeparam name="T">The type of objects to delete.</typeparam>
         /// <param name="id">The id of the object to delete</param>
         /// <param name="parameters">Optional filters and/or optional fetched data.</param>
-        /// <exception cref="Redmine.Net.Api.RedmineException"></exception>
+        /// <exception cref="RedmineException"></exception>
         /// <code></code>
         public void DeleteObject<T>(string id, NameValueCollection parameters) where T : class
         {
@@ -569,7 +572,7 @@ namespace Redmine.Net.Api
         /// <param name="parameters">The parameters.</param>
         /// <returns></returns>
         /// <code></code>
-        protected WebClient CreateWebClient(NameValueCollection parameters)
+        protected virtual WebClient CreateWebClient(NameValueCollection parameters)
         {
             var webClient = new RedmineWebClient();
 
@@ -634,7 +637,7 @@ namespace Redmine.Net.Api
         /// <param name="error">The error.</param>
         /// <returns></returns>
         /// <code></code>
-        protected bool RemoteCertValidate(object sender, X509Certificate cert, X509Chain chain, SslPolicyErrors error)
+        protected virtual bool RemoteCertValidate(object sender, X509Certificate cert, X509Chain chain, SslPolicyErrors error)
         {
             //Cert Validation Logic
             return true;
@@ -643,6 +646,9 @@ namespace Redmine.Net.Api
         private void HandleWebException(WebException exception, string method)
         {
             if (exception == null) return;
+
+            //custom handle exception
+            OnHandleException(new ErrorEventArgs(exception));
 
             switch (exception.Status)
             {
@@ -729,7 +735,8 @@ namespace Redmine.Net.Api
                 if (type == typeof(IssueCategory)) jsonRoot = "issue_category";
                 if (type == typeof(IssueRelation)) jsonRoot = "relation";
                 if (type == typeof(TimeEntry)) jsonRoot = "time_entry";
-                if (type == typeof(WikiPage)) jsonRoot = "wiki_page";
+                if (type == typeof(ProjectMembership)) jsonRoot = "membership";
+                if (type == typeof (WikiPage)) jsonRoot = "wiki_page";
 
                 return RedmineSerialization.JsonDeserialize<T>(response, jsonRoot);
             }
@@ -740,30 +747,51 @@ namespace Redmine.Net.Api
         private IList<T> DeserializeList<T>(string response, string jsonRoot, out int totalCount) where T : class, new()
         {
             Type type = typeof(T);
-            if (mimeFormat == MimeFormat.json)
+            try
             {
-                if (type == typeof(IssuePriority)) jsonRoot = "issue_priorities";
-                if (type == typeof(TimeEntryActivity)) jsonRoot = "time_entry_activities";
-                return RedmineSerialization.JsonDeserializeToList<T>(response, jsonRoot, out totalCount);
-            }
-
-            using (var text = new StringReader(response))
-            {
-                using (var xmlReader = new XmlTextReader(text))
+                  
+                if (mimeFormat == MimeFormat.json)
                 {
-                    xmlReader.WhitespaceHandling = WhitespaceHandling.None;
-                    xmlReader.Read();
-                    xmlReader.Read();
-
-                    totalCount = xmlReader.ReadAttributeAsInt("total_count");
-
-                    return xmlReader.ReadElementContentAsCollection<T>();
+                    if (type == typeof(IssuePriority)) jsonRoot = "issue_priorities";
+                    if (type == typeof(TimeEntryActivity)) jsonRoot = "time_entry_activities";
+                    return RedmineSerialization.JsonDeserializeToList<T>(response, jsonRoot, out totalCount);
                 }
+
+                using (var text = new StringReader(response))
+                {
+                      using (var xmlReader = new XmlTextReader(text))
+                        {
+                            xmlReader.WhitespaceHandling = WhitespaceHandling.None;
+                            xmlReader.Read();
+                            xmlReader.Read();
+
+                            totalCount = xmlReader.ReadAttributeAsInt("total_count");
+
+                            return xmlReader.ReadElementContentAsCollection<T>();
+                        }
+                
+                }
+            }
+            catch (Exception ex)
+            {
+                OnLog(new LogEventArgs
+                {
+                    Content = response
+                });
+                OnError(new ErrorEventArgs(ex));
+                throw;
             }
         }
 
         private void ExecuteUpload(string address, string actionType, string data, string methodName)
         {
+            OnLog(new LogEventArgs
+            {
+                Address = address,
+                Method = actionType,
+                Content = data
+            });
+
             using (var wc = CreateWebClient(null))
             {
                 try
@@ -782,6 +810,13 @@ namespace Redmine.Net.Api
 
         private T ExecuteUpload<T>(string address, string actionType, string data, string methodName) where T : class, new()
         {
+            OnLog(new LogEventArgs
+            {
+                Address = address,
+                Method = actionType,
+                Content = data
+            });
+
             using (var wc = CreateWebClient(null))
             {
                 try
@@ -803,6 +838,13 @@ namespace Redmine.Net.Api
 
         private T ExecuteDownload<T>(string address, string methodName, NameValueCollection parameters = null) where T : class, new()
         {
+            OnLog(new LogEventArgs
+            {
+                Address = address,
+                Method = "GET",
+                Parameters = parameters
+            });
+
             using (var wc = CreateWebClient(parameters))
             {
                 try
@@ -820,12 +862,20 @@ namespace Redmine.Net.Api
 
         private IList<T> ExecuteDownloadList<T>(string address, string methodName, string jsonRoot, out int totalCount, NameValueCollection parameters = null) where T : class, new()
         {
+            OnLog(new LogEventArgs
+            {
+                Address = address,
+                Method = "GET",
+                Parameters = parameters
+            });
+
             totalCount = -1;
             using (var wc = CreateWebClient(parameters))
             {
                 try
                 {
-                    var response = wc.DownloadString(address);
+                    
+                    var response = wc.DownloadString(address);                    
                     return DeserializeList<T>(response, jsonRoot, out totalCount);
                 }
                 catch (WebException webException)
@@ -834,6 +884,34 @@ namespace Redmine.Net.Api
                 }
                 return null;
             }
+        }
+
+        //Events
+
+        public event EventHandler<LogEventArgs> Log;
+
+        protected virtual void OnLog(LogEventArgs e)
+        {
+            var handler = Log;
+            if (handler != null) handler(this, e);
+
+        }
+
+        public event EventHandler<ErrorEventArgs> Error;
+
+        protected virtual void OnError(ErrorEventArgs e)
+        {
+            var handler = Error;
+            if (handler != null) handler(this, e);
+        }
+
+
+        public event EventHandler<ErrorEventArgs> HandleException;
+
+        protected virtual void OnHandleException(ErrorEventArgs e)
+        {
+            var handler = HandleException;
+            if (handler != null) handler(this, e);
         }
     }
 }

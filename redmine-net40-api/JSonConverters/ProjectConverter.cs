@@ -69,6 +69,8 @@ namespace Redmine.Net.Api.JSonConverters
 
                 if (entity.Parent != null)
                     result.Add("parent_id", entity.Parent.Id);
+                else
+                    result.Add("parent_id", string.Empty);
                 
                 if (entity.CustomFields != null)
                 {
@@ -76,14 +78,12 @@ namespace Redmine.Net.Api.JSonConverters
                     result.Add("custom_fields", entity.CustomFields.ToArray());
                 }
 
-                if (entity.EnabledModules != null)
-                {
-                    var enabledModuleNames = entity.EnabledModules
-                        .Where(projectEnabledModule => !string.IsNullOrEmpty(projectEnabledModule.Name))
-                        .Aggregate("", (current, projectEnabledModule) => current + projectEnabledModule.Name);
+                if (entity.Trackers != null)              
+                    result.Add("tracker_ids", entity.Trackers.Select(t => t.Id).ToArray());      
 
-                    result.Add("enabled_module_names", enabledModuleNames);
-                }
+                if (entity.EnabledModules != null)
+                    result.Add("enabled_module_names", entity.EnabledModules.Select(e=> e.Name).ToArray());
+
 
                 root["project"] = result;
                 return root;

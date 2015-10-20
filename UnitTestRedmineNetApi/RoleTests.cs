@@ -1,15 +1,18 @@
-﻿using System;
-using System.Configuration;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Types;
-using System.Collections.Specialized;
+using System;
+using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace UnitTestRedmineNetApi
 {
     [TestClass]
-    public class NewsTests
+    public class RoleTests
     {
         private RedmineManager redmineManager;
         private string uri;
@@ -38,21 +41,21 @@ namespace UnitTestRedmineNetApi
         }
 
         [TestMethod]
-        public void GetAllNews()
+        public void RedmineRoles_ShouldGetAllRoles()
         {
-            var result = redmineManager.GetObjectList<News>(null);
+            var roles = redmineManager.GetObjectList<Role>(null);
 
-            Assert.IsNotNull(result);
+            Assert.IsTrue(roles.Count == 2);
         }
 
         [TestMethod]
-        public void RedmineNews_ShouldGetSpecificProjectNews()
+        public void RedmineRoles_ShouldGetRoleById()
         {
-            int projectId = 6;
+            var roleId = 4;
 
-            var news = redmineManager.GetObjectList<News>(new NameValueCollection { { "project_id", projectId.ToString() } });
+            Role adminRole = redmineManager.GetObject<Role>(roleId.ToString(), null);
 
-            Assert.IsNotNull(news);
+            Assert.AreEqual(adminRole.Name, "Admins");
         }
     }
 }

@@ -26,12 +26,13 @@ namespace Redmine.Net.Api
     public class RedmineWebClient :WebClient
     {
         private readonly CookieContainer container = new CookieContainer();
-       
+        
+
         protected override WebRequest GetWebRequest(Uri address)
         {
-
+            
             Headers.Add(HttpRequestHeader.Cookie, "redmineCookie");
-
+            
             var wr = base.GetWebRequest(address);
             var httpWebRequest = wr as HttpWebRequest;
 
