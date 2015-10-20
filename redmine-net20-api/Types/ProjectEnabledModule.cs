@@ -15,6 +15,7 @@
 */
 
 using System;
+using System.Xml;
 using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Types
@@ -25,6 +26,11 @@ namespace Redmine.Net.Api.Types
     [XmlRoot("enabled_module")]
     public class ProjectEnabledModule : IdentifiableName, IEquatable<ProjectEnabledModule>
     {
+        /// <summary>
+        /// the module name: boards, calendar, documents, files, gantt, issue_tracking, news, repository, time_tracking, wiki.
+        /// </summary>
+        new public string Name { get; set; }
+
         public bool Equals(ProjectEnabledModule other)
         {
             if (other == null) return false;
@@ -35,5 +41,7 @@ namespace Redmine.Net.Api.Types
         {
             return Id + ", " + Name;
         }
+
+       
     }
 }

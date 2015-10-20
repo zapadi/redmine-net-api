@@ -15,6 +15,7 @@
 */
 
 using System;
+using System.Xml;
 using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Types
@@ -25,6 +26,11 @@ namespace Redmine.Net.Api.Types
     [XmlRoot("tracker")]
     public class ProjectTracker : IdentifiableName, IEquatable<ProjectTracker>
     {
+        /// <summary>
+        /// the tracker id: 1 for Bug, etc.
+        /// </summary>
+        new public int Id { get; set; }
+
         public bool Equals(ProjectTracker other)
         {
             if (other == null) return false;

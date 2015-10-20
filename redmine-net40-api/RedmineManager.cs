@@ -191,7 +191,7 @@ namespace Redmine.Net.Api
 
             if (!string.IsNullOrWhiteSpace(name)) filters.Add("name", name);
 
-            if (groupId > 0) filters.Add("groupId", groupId.ToString(CultureInfo.InvariantCulture));
+            if (groupId > 0) filters.Add("group_id", groupId.ToString(CultureInfo.InvariantCulture));
 
             return GetTotalObjectList<User>(filters);
         }
@@ -324,6 +324,8 @@ namespace Redmine.Net.Api
             {
                 try
                 {
+                    wc.Headers.Add(HttpRequestHeader.Accept, "application/octet-stream");
+                    
                     return wc.DownloadData(address);
                 }
                 catch (WebException webException)
@@ -552,7 +554,7 @@ namespace Redmine.Net.Api
         /// <typeparam name="T">The type of objects to delete.</typeparam>
         /// <param name="id">The id of the object to delete</param>
         /// <param name="parameters">Optional filters and/or optional fetched data.</param>
-        /// <exception cref="Redmine.Net.Api.RedmineException"></exception>
+        /// <exception cref="RedmineException"></exception>
         /// <code></code>
         public void DeleteObject<T>(string id, NameValueCollection parameters) where T : class
         {
@@ -729,7 +731,8 @@ namespace Redmine.Net.Api
                 if (type == typeof(IssueCategory)) jsonRoot = "issue_category";
                 if (type == typeof(IssueRelation)) jsonRoot = "relation";
                 if (type == typeof(TimeEntry)) jsonRoot = "time_entry";
-                if (type == typeof(WikiPage)) jsonRoot = "wiki_page";
+                if (type == typeof(ProjectMembership)) jsonRoot = "membership";
+                if (type == typeof (WikiPage)) jsonRoot = "wiki_page";
 
                 return RedmineSerialization.JsonDeserialize<T>(response, jsonRoot);
             }

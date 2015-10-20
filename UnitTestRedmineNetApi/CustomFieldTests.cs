@@ -1,15 +1,18 @@
-﻿using System;
-using System.Configuration;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Types;
-using System.Collections.Specialized;
+using System;
+using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace UnitTestRedmineNetApi
 {
     [TestClass]
-    public class NewsTests
+    public class CustomFieldTests
     {
         private RedmineManager redmineManager;
         private string uri;
@@ -38,21 +41,11 @@ namespace UnitTestRedmineNetApi
         }
 
         [TestMethod]
-        public void GetAllNews()
+        public void RedmineCustomFields_ShouldGetAllCustomFields()
         {
-            var result = redmineManager.GetObjectList<News>(null);
+            var customFields = redmineManager.GetObjectList<CustomField>(null);
 
-            Assert.IsNotNull(result);
-        }
-
-        [TestMethod]
-        public void RedmineNews_ShouldGetSpecificProjectNews()
-        {
-            int projectId = 6;
-
-            var news = redmineManager.GetObjectList<News>(new NameValueCollection { { "project_id", projectId.ToString() } });
-
-            Assert.IsNotNull(news);
+            Assert.IsNotNull(customFields);
         }
     }
 }
