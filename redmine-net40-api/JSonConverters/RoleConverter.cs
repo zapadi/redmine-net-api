@@ -15,7 +15,9 @@
 */
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web.Script.Serialization;
 using Redmine.Net.Api.Types;
 
@@ -33,7 +35,18 @@ namespace Redmine.Net.Api.JSonConverters
 
                 role.Id = dictionary.GetValue<int>("id");
                 role.Name = dictionary.GetValue<string>("name");
-                role.Permissions = dictionary.GetValueAsCollection<Permission>("permissions");
+
+                var permissions = dictionary["permissions"] as ArrayList;
+                if (permissions != null)
+                {
+                    role.Permissions = new List<Permission>();
+                    foreach (var permission in permissions)
+                    {
+                        var perms = new Permission() { Info = permission.ToString() };
+                        role.Permissions.Add(perms);
+                    }
+
+                }
 
                 return role;
             }

@@ -74,7 +74,7 @@ namespace Redmine.Net.Api.Types
 
         [XmlArray("roles")]
         [XmlArrayItem("role")]
-        public IList<Role> Roles { get; set; }
+        public IList<CustomFieldRole> Roles { get; set; }
 
         public XmlSchema GetSchema() { return null; }
 
@@ -122,7 +122,7 @@ namespace Redmine.Net.Api.Types
                         break;
 
                     case "roles":
-                        Roles = reader.ReadElementContentAsCollection<Role>();
+                        Roles = reader.ReadElementContentAsCollection<CustomFieldRole>();
                         break;
                     case "possible_values": PossibleValues = reader.ReadElementContentAsCollection<CustomFieldPossibleValue>(); break;
 

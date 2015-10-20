@@ -61,7 +61,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The created on.
         /// </value>
-        [XmlElement("created_on")]
+        [XmlElement("created_on", IsNullable = true)]
         public DateTime? CreatedOn { get; set; }
 
         /// <summary>

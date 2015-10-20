@@ -59,6 +59,9 @@
     <Compile Include="..\redmine-net20-api\Types\CustomFieldPossibleValue.cs">
       <Link>Types\CustomFieldPossibleValue.cs</Link>
     </Compile>
+    <Compile Include="..\redmine-net20-api\Types\CustomFieldRole.cs">
+      <Link>Types\CustomFieldRole.cs</Link>
+    </Compile>
     <Compile Include="..\redmine-net20-api\Types\CustomFieldValue.cs">
       <Link>Types\CustomFieldValue.cs</Link>
     </Compile>
@@ -70,6 +73,9 @@
     </Compile>
     <Compile Include="..\redmine-net20-api\Types\Group.cs">
       <Link>Types\Group.cs</Link>
+    </Compile>
+    <Compile Include="..\redmine-net20-api\Types\GroupUser.cs">
+      <Link>Types\GroupUser.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net20-api\Types\Identifiable.cs">
       <Link>Types\Identifiable.cs</Link>
@@ -176,9 +182,13 @@
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="JSonConverters\AttachmentConverter.cs" />
     <Compile Include="JSonConverters\ChangeSetConverter.cs" />
+    <Compile Include="JSonConverters\CustomFieldConverter.cs" />
+    <Compile Include="JSonConverters\CustomFieldPossibleValueConverter.cs" />
+    <Compile Include="JSonConverters\CustomFieldRoleConverter.cs" />
     <Compile Include="JSonConverters\DetailConverter.cs" />
     <Compile Include="JSonConverters\ErrorConverter.cs" />
     <Compile Include="JSonConverters\GroupConverter.cs" />
+    <Compile Include="JSonConverters\GroupUserConverter.cs" />
     <Compile Include="JSonConverters\IdentifiableNameConverter.cs" />
     <Compile Include="JSonConverters\IssueCategoryConverter.cs" />
     <Compile Include="JSonConverters\IssueChildConverter.cs" />
@@ -202,6 +212,7 @@
     <Compile Include="JSonConverters\TimeEntryActivityConverter.cs" />
     <Compile Include="JSonConverters\TimeEntryConverter.cs" />
     <Compile Include="JSonConverters\TrackerConverter.cs" />
+    <Compile Include="JSonConverters\TrackerCustomFieldConverter.cs" />
     <Compile Include="JSonConverters\UploadConverter.cs" />
     <Compile Include="JSonConverters\UserConverter.cs" />
     <Compile Include="JSonConverters\UserGroupConverter.cs" />

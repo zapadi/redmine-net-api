@@ -52,7 +52,7 @@ namespace Redmine.Net.Api.Types
         /// Gets or sets the delay for a "precedes" or "follows" relation.
         /// </summary>
         /// <value>The delay.</value>
-        [XmlElement("delay")]
+        [XmlElement("delay", IsNullable = true)]
         public int? Delay { get; set; }
 
         public XmlSchema GetSchema() { return null; }
@@ -114,7 +114,7 @@ namespace Redmine.Net.Api.Types
             writer.WriteElementString("issue_to_id", IssueToId.ToString());
             writer.WriteElementString("relation_type", Type.ToString());
             if (Type == IssueRelationType.precedes || Type == IssueRelationType.follows)
-                writer.WriteIfNotDefaultOrNull(Delay, "delay");
+                writer.WriteValue(Delay, "delay");
         }
 
         public bool Equals(IssueRelation other)

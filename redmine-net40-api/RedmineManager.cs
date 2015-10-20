@@ -192,14 +192,16 @@ namespace Redmine.Net.Api
 
             if (!string.IsNullOrWhiteSpace(name)) filters.Add("name", name);
 
-            if (groupId > 0) filters.Add("groupId", groupId.ToString(CultureInfo.InvariantCulture));
+            if (groupId > 0) filters.Add("group_id", groupId.ToString(CultureInfo.InvariantCulture));
 
             return GetTotalObjectList<User>(filters);
         }
 
         public void AddWatcher(int issueId, int userId)
         {
-            ExecuteUpload(string.Format(REQUEST_FORMAT, host, urls[typeof(Issue)], issueId + "/watchers", mimeFormat), POST, mimeFormat == MimeFormat.xml ? "<user_id>" + userId + "</user_id>" : "user_id:" + userId, "AddWatcher");
+            ExecuteUpload(string.Format(REQUEST_FORMAT, host, urls[typeof(Issue)], issueId + "/watchers", mimeFormat), POST, mimeFormat == MimeFormat.xml
+                ? "<user_id>" + userId + "</user_id>"
+                : "{\"user_id\":\"" + userId + "\"}", "AddWatcher");
         }
 
         public void RemoveWatcher(int issueId, int userId)
@@ -214,7 +216,9 @@ namespace Redmine.Net.Api
         /// <param name="userId">The user id.</param>
         public void AddUser(int groupId, int userId)
         {
-            ExecuteUpload(string.Format(REQUEST_FORMAT, host, urls[typeof(Group)], groupId + "/users", mimeFormat), POST, mimeFormat == MimeFormat.xml ? "<user_id>" + userId + "</user_id>" : "user_id:" + userId, "AddUser");
+            ExecuteUpload(string.Format(REQUEST_FORMAT, host, urls[typeof(Group)], groupId + "/users", mimeFormat), POST, mimeFormat == MimeFormat.xml
+                ? "<user_id>" + userId + "</user_id>"
+                : "{\"user_id\":\"" + userId + "\"}", "AddUser");
         }
 
         /// <summary>
@@ -261,7 +265,7 @@ namespace Redmine.Net.Api
         public IList<WikiPage> GetAllWikiPages(string projectId)
         {
             int totalCount;
-            return ExecuteDownloadList<WikiPage>(string.Format(WIKI_INDEX_FORMAT, host, projectId, mimeFormat), "GetAllWikiPages", "wiki", out totalCount);
+            return ExecuteDownloadList<WikiPage>(string.Format(WIKI_INDEX_FORMAT, host, projectId, mimeFormat), "GetAllWikiPages", "wiki_pages", out totalCount);
         }
 
         /// <summary>
@@ -321,6 +325,8 @@ namespace Redmine.Net.Api
             {
                 try
                 {
+                    wc.Headers.Add(HttpRequestHeader.Accept, "application/octet-stream");
+                    
                     return wc.DownloadData(address);
                 }
                 catch (WebException webException)
@@ -362,7 +368,8 @@ namespace Redmine.Net.Api
             if (!urls.ContainsKey(typeof(T))) return null;
 
             var type = typeof(T);
-            string address;
+            string address = string.Empty;
+
             if (type == typeof(Version) || type == typeof(IssueCategory) || type == typeof(ProjectMembership))
             {
                 var projectId = GetOwnerId(parameters, "project_id");
@@ -371,15 +378,29 @@ namespace Redmine.Net.Api
                 address = string.Format(ENTITY_WITH_PARENT_FORMAT, host, "projects", projectId, urls[type], mimeFormat);
             }
             else
+            {
                 if (type == typeof(IssueRelation))
                 {
                     string issueId = GetOwnerId(parameters, "issue_id");
-                    if (string.IsNullOrEmpty(issueId)) throw new RedmineException("The issue id is mandatory! \nCheck if you have included the parameter issue_id to parameters");
+                    if (string.IsNullOrEmpty(issueId))
+                        throw new RedmineException("The issue id is mandatory! \nCheck if you have included the parameter issue_id to parameters");
 
                     address = string.Format(ENTITY_WITH_PARENT_FORMAT, host, "issues", issueId, urls[type], mimeFormat);
                 }
                 else
-                    address = string.Format(FORMAT, host, urls[type], mimeFormat);
+                {
+                    if (type == typeof(News))
+                    {
+                        var projectId = GetOwnerId(parameters, "project_id");
+                        if (!string.IsNullOrEmpty(projectId))
+                        {
+                            address = string.Format(ENTITY_WITH_PARENT_FORMAT, host, "projects", projectId, urls[type], mimeFormat);
+                        }
+                    }
+                    if (string.IsNullOrWhiteSpace(address))
+                        address = string.Format(FORMAT, host, urls[type], mimeFormat);
+                }
+            }
 
             return ExecuteDownloadList<T>(address, "GetObjectList<" + type.Name + ">", urls[type], out totalCount, parameters);
         }
@@ -523,17 +544,7 @@ namespace Redmine.Net.Api
 
             request = Regex.Replace(request, @"\r\n|\r|\n", "\r\n", RegexOptions.Compiled);
 
-            string address;
-
-            if (type == typeof(IssueCategory) || type == typeof(ProjectMembership))
-            {
-                if (string.IsNullOrEmpty(projectId)) throw new RedmineException("The project owner id is mandatory!");
-                address = string.Format(ENTITY_WITH_PARENT_FORMAT, host, "projects", projectId, urls[type], mimeFormat);
-            }
-            else
-            {
-                address = string.Format(REQUEST_FORMAT, host, urls[type], id, mimeFormat);
-            }
+            string address = string.Format(REQUEST_FORMAT, host, urls[type], id, mimeFormat);
 
             ExecuteUpload(address, PUT, request, "UpdateObject<" + type.Name + ">");
         }
@@ -544,7 +555,7 @@ namespace Redmine.Net.Api
         /// <typeparam name="T">The type of objects to delete.</typeparam>
         /// <param name="id">The id of the object to delete</param>
         /// <param name="parameters">Optional filters and/or optional fetched data.</param>
-        /// <exception cref="Redmine.Net.Api.RedmineException"></exception>
+        /// <exception cref="RedmineException"></exception>
         /// <code></code>
         public void DeleteObject<T>(string id, NameValueCollection parameters) where T : class
         {
@@ -578,8 +589,12 @@ namespace Redmine.Net.Api
 
             if (!string.IsNullOrWhiteSpace(ImpersonateUser)) webClient.Headers.Add("X-Redmine-Switch-User", ImpersonateUser);
 
+            webClient.UseDefaultCredentials = false;
+
             webClient.Headers.Add("Content-Type", mimeFormat == MimeFormat.json ? "application/json; charset=utf-8" : "application/xml; charset=utf-8");
             webClient.Encoding = Encoding.UTF8;
+            webClient.Headers.Add("Authorization", basicAuthorization);
+
             return webClient;
         }
 
@@ -720,6 +735,8 @@ namespace Redmine.Net.Api
                 if (type == typeof(IssueCategory)) jsonRoot = "issue_category";
                 if (type == typeof(IssueRelation)) jsonRoot = "relation";
                 if (type == typeof(TimeEntry)) jsonRoot = "time_entry";
+                if (type == typeof(ProjectMembership)) jsonRoot = "membership";
+                if (type == typeof (WikiPage)) jsonRoot = "wiki_page";
 
                 return RedmineSerialization.JsonDeserialize<T>(response, jsonRoot);
             }
@@ -791,7 +808,7 @@ namespace Redmine.Net.Api
             }
         }
 
-        private T ExecuteUpload<T>(string address, string actionType, string data, string methodName) where T : class , new()
+        private T ExecuteUpload<T>(string address, string actionType, string data, string methodName) where T : class, new()
         {
             OnLog(new LogEventArgs
             {
@@ -807,8 +824,8 @@ namespace Redmine.Net.Api
                     if (actionType == POST || actionType == DELETE || actionType == PUT)
                     {
                         var response = wc.UploadString(address, actionType, data);
-
-                        return Deserialize<T>(response);
+                        if (!string.IsNullOrWhiteSpace(response))
+                            return Deserialize<T>(response);
                     }
                 }
                 catch (WebException webException)

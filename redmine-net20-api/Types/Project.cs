@@ -60,14 +60,14 @@ namespace Redmine.Net.Api.Types
         /// Gets or sets the created on.
         /// </summary>
         /// <value>The created on.</value>
-        [XmlElement("created_on")]
+        [XmlElement("created_on", IsNullable = true)]
         public DateTime? CreatedOn { get; set; }
 
         /// <summary>
         /// Gets or sets the updated on.
         /// </summary>
         /// <value>The updated on.</value>
-        [XmlElement("updated_on")]
+        [XmlElement("updated_on", IsNullable = true)]
         public DateTime? UpdatedOn { get; set; }
 
         [XmlElement("status")]
@@ -104,14 +104,12 @@ namespace Redmine.Net.Api.Types
         [XmlArrayItem("issue_category")]
         public IList<ProjectIssueCategory> IssueCategories { get; set; }
 
+        /// <summary>
+        /// since 2.6.0
+        /// </summary>
         [XmlArray("enabled_modules")]
         [XmlArrayItem("enabled_module")]
         public IList<ProjectEnabledModule> EnabledModules { get; set; }
-
-        /// <summary>
-        // enabled_module_names: (repeatable element) the module name: boards, calendar, documents, files, gantt, issue_tracking, news, repository, time_tracking, wiki
-        /// </summary>
-        public string EnabledModuleNames { get; set; }
 
         /// <summary>
         /// Generates an object from its XML representation.
@@ -171,35 +169,28 @@ namespace Redmine.Net.Api.Types
             writer.WriteElementString("description", Description);
             writer.WriteElementString("inherit_members", InheritMembers.ToString());
             writer.WriteElementString("is_public", IsPublic.ToString());
-            writer.WriteIdIfNotNull(Parent, "parent_id");
+            writer.WriteIdOrEmpty(Parent, "parent_id");
             writer.WriteElementString("homepage", HomePage);
+
+            if(Trackers != null)
+            {
+                foreach (var item in Trackers)
+                {
+                    writer.WriteElementString("tracker_ids", item.Id.ToString());
+                }
+            }
 
             if (EnabledModules != null)
             {
-                var enabledModuleNames = "";
-                foreach (var projectEnabledModule in EnabledModules)
+                foreach (var item in EnabledModules)
                 {
-                    if (!string.IsNullOrEmpty(projectEnabledModule.Name))
-                    {
-                        enabledModuleNames += projectEnabledModule.Name;
-                    }
+                    writer.WriteElementString("enabled_module_names", item.Name);
                 }
-
-                writer.WriteElementString("enabled_module_names", enabledModuleNames);
             }
 
             if (Id == 0) return;
 
-            if (CustomFields != null)
-            {
-                writer.WriteStartElement("custom_fields");
-                writer.WriteAttributeString("type", "array");
-                foreach (var cf in CustomFields)
-                {
-                    new XmlSerializer(cf.GetType()).Serialize(writer, cf);
-                }
-                writer.WriteEndElement();
-            }
+            writer.WriteArray(CustomFields, "custom_fields");
         }
 
         public bool Equals(Project other)

@@ -103,13 +103,13 @@ namespace Redmine.Net.Api.Types
 
         public void WriteXml(XmlWriter writer)
         {
-            if (User != null) writer.WriteElementString("user_id", User.Id.ToString());
+            writer.WriteIdIfNotNull(User, "user_id");
 
             writer.WriteStartElement("role_ids");
             writer.WriteAttributeString("type", "array");
             foreach (var role in Roles)
             {
-                new XmlSerializer(role.GetType(),new XmlAttributeOverrides(),null,new XmlRootAttribute("role_id"),"").Serialize(writer, role);
+                new XmlSerializer(role.GetType(), new XmlAttributeOverrides(), null, new XmlRootAttribute("role_id"), "").Serialize(writer, role);
             }
             writer.WriteEndElement();
         }

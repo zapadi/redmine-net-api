@@ -38,6 +38,7 @@ namespace Redmine.Net.Api
 
             if (httpWebRequest != null)
             {
+                httpWebRequest.KeepAlive = true;
                 httpWebRequest.CookieContainer = container;
 
                 httpWebRequest.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;

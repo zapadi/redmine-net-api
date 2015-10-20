@@ -32,6 +32,7 @@ namespace Redmine.Net.Api
             {typeof (Issue), new IssueConverter()},
             {typeof (Project), new ProjectConverter()},
             {typeof (User), new UserConverter()},
+            {typeof (UserGroup), new UserGroupConverter()},
             {typeof (News), new NewsConverter()},
             {typeof (Query), new QueryConverter()},
             {typeof (Version), new VersionConverter()},
@@ -40,10 +41,12 @@ namespace Redmine.Net.Api
             {typeof (TimeEntry), new TimeEntryConverter()},
             {typeof (IssueStatus),new IssueStatusConverter()},
             {typeof (Tracker),new TrackerConverter()},
+            {typeof (TrackerCustomField),new TrackerCustomFieldConverter()},
             {typeof (IssueCategory), new IssueCategoryConverter()},
             {typeof (Role), new RoleConverter()},
             {typeof (ProjectMembership), new ProjectMembershipConverter()},
             {typeof (Group), new GroupConverter()},
+            {typeof (GroupUser), new GroupUserConverter()},
             {typeof (Error), new ErrorConverter()},
             {typeof (IssueCustomField), new IssueCustomFieldConverter()},
             {typeof (ProjectTracker), new ProjectTrackerConverter()},
@@ -55,18 +58,20 @@ namespace Redmine.Net.Api
             {typeof (ChangeSet), new ChangeSetConverter()},
             {typeof (Membership), new MembershipConverter()},
             {typeof (MembershipRole), new MembershipRoleConverter()},
-            {typeof (UserGroup), new UserGroupConverter()},
             {typeof (IdentifiableName), new IdentifiableNameConverter()},
             {typeof (Permission), new PermissionConverter()},
             {typeof (IssueChild), new IssueChildConverter()},
             {typeof (ProjectIssueCategory), new ProjectIssueCategoryConverter()},
             {typeof (Watcher), new WatcherConverter()},
             {typeof (Upload), new UploadConverter()},
-            {typeof (ProjectEnabledModule), new ProjectEnabledModuleConverter()}
+            {typeof (ProjectEnabledModule), new ProjectEnabledModuleConverter()},
+            {typeof (CustomField), new CustomFieldConverter()},
+            {typeof (CustomFieldRole), new CustomFieldRoleConverter()},
+            {typeof (CustomFieldPossibleValue), new CustomFieldPossibleValueConverter()}
         };
 
         public static Dictionary<Type, JavaScriptConverter> Converters { get { return converters; } }
- 
+
         public static string JsonSerializer<T>(T type) where T : new()
         {
             try

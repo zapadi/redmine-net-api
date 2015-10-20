@@ -226,18 +226,33 @@ namespace Redmine.Net.Api
             if (ident != null) writer.WriteElementString(tag, ident.Id.ToString(CultureInfo.InvariantCulture));
         }
 
+        public static void WriteIdOrEmpty(this XmlWriter writer, IdentifiableName ident, String tag)
+        {
+            if (ident != null) writer.WriteElementString(tag, ident.Id.ToString(CultureInfo.InvariantCulture));
+            else
+                writer.WriteElementString(tag, string.Empty);
+        }
+
         public static void WriteIdIfNotNull(this Dictionary<string, object> dictionary, IdentifiableName ident, String key)
         {
             if (ident != null) dictionary.Add(key, ident.Id);
         }
 
         /// <summary>
-        /// Writes if not default or null.
+        /// Writes string empty if T has default value or null.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="writer">The writer.</param>
         /// <param name="val">The value.</param>
         /// <param name="tag">The tag.</param>
+        public static void WriteValue<T>(this XmlWriter writer, T? val, String tag) where T : struct
+        {
+            if (!val.HasValue || EqualityComparer<T>.Default.Equals(val.Value, default(T)))
+                writer.WriteElementString(tag, string.Empty);
+            else
+                writer.WriteElementString(tag, string.Format(NumberFormatInfo.InvariantInfo, "{0}", val.Value));
+        }
+
         public static void WriteIfNotDefaultOrNull<T>(this XmlWriter writer, T? val, String tag) where T : struct
         {
             if (!val.HasValue) return;
@@ -245,10 +260,34 @@ namespace Redmine.Net.Api
                 writer.WriteElementString(tag, string.Format(NumberFormatInfo.InvariantInfo, "{0}", val.Value));
         }
 
+        public static void WriteDate(this XmlWriter writer, DateTime? val, String tag)
+        {
+            if (!val.HasValue || val.Value.Equals(default(DateTime)))
+                writer.WriteElementString(tag, string.Empty);
+            else
+                writer.WriteElementString(tag, string.Format(NumberFormatInfo.InvariantInfo, "{0}", val.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)));
+        }
+
+        public static void WriteArray(this XmlWriter writer, IEnumerable col, string elementName)
+        {
+
+            writer.WriteStartElement(elementName);
+            writer.WriteAttributeString("type", "array");
+            if (col != null)
+            {
+                foreach (var item in col)
+                {
+                    new XmlSerializer(item.GetType()).Serialize(writer, item);
+                }
+            }
+            writer.WriteEndElement();
+        }
+
         public static void WriteIfNotDefaultOrNull<T>(this Dictionary<string, object> dictionary, T? val, String tag) where T : struct
         {
-            if (!val.HasValue) return;
-            if (!EqualityComparer<T>.Default.Equals(val.Value, default(T)))
+            if (!val.HasValue || EqualityComparer<T>.Default.Equals(val.Value, default(T)))
+                dictionary.Add(tag, string.Empty);
+            else
                 dictionary.Add(tag, val.Value);
         }
 
@@ -285,7 +324,7 @@ namespace Redmine.Net.Api
             var result = ser.ConvertToType<IdentifiableName>(val);
             return result;
         }
-        
+
         /// <summary>
         /// For Json
         /// </summary>
@@ -302,7 +341,31 @@ namespace Redmine.Net.Api
             var ser = new JavaScriptSerializer();
             ser.RegisterConverters(new[] { RedmineSerialization.Converters[typeof(T)] });
 
-            return (from object item in (ArrayList)val select ser.ConvertToType<T>(item)).ToList();
+            List<T> list = new List<T>();
+
+            var arrayList = val as ArrayList;
+            if (arrayList != null)
+            {
+                foreach (var item in arrayList)
+                {
+                    var type = ser.ConvertToType<T>(item);
+                    list.Add(type);
+                }
+            }
+            else
+            {
+                var dict = val as Dictionary<string, object>;
+                if (dict != null)
+                {
+                    foreach (var pair in dict)
+                    {
+                        var type = ser.ConvertToType<T>(pair.Value);
+                        list.Add(type);
+                    }
+
+                }
+            }
+            return list;
         }
 
     }

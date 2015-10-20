@@ -138,21 +138,21 @@ namespace Redmine.Net.Api.Types
         /// Gets or sets the created on.
         /// </summary>
         /// <value>The created on.</value>
-        [XmlElement("created_on")]
+        [XmlElement("created_on", IsNullable = true)]
         public DateTime? CreatedOn { get; set; }
 
         /// <summary>
         /// Gets or sets the updated on.
         /// </summary>
         /// <value>The updated on.</value>
-        [XmlElement("updated_on")]
+        [XmlElement("updated_on", IsNullable = true)]
         public DateTime? UpdatedOn { get; set; }
 
         /// <summary>
         /// Gets or sets the closed on.
         /// </summary>
         /// <value>The closed on.</value>
-        [XmlElement("closed_on")]
+        [XmlElement("closed_on", IsNullable = true)]
         public DateTime? ClosedOn { get; set; }
 
         /// <summary>
@@ -301,6 +301,10 @@ namespace Redmine.Net.Api.Types
                         PrivateNotes = reader.ReadElementContentAsBoolean();
                         break;
 
+                    case "is_private":
+                        IsPrivate = reader.ReadContentAsBoolean();
+                        break;
+
                     case "subject": Subject = reader.ReadElementContentAsString(); break;
 
                     case "notes": Notes = reader.ReadElementContentAsString(); break;
@@ -351,63 +355,37 @@ namespace Redmine.Net.Api.Types
                 writer.WriteElementString("private_notes", PrivateNotes.ToString());
             }
             writer.WriteElementString("description", Description);
+
+            writer.WriteStartElement("is_private");
+            writer.WriteValue(IsPrivate);
+            writer.WriteEndElement();
+
             writer.WriteIdIfNotNull(Project, "project_id");
             writer.WriteIdIfNotNull(Priority, "priority_id");
             writer.WriteIdIfNotNull(Status, "status_id");
             writer.WriteIdIfNotNull(Category, "category_id");
             writer.WriteIdIfNotNull(Tracker, "tracker_id");
             writer.WriteIdIfNotNull(AssignedTo, "assigned_to_id");
-            writer.WriteElementString("is_private", IsPrivate.ToString());
-            writer.WriteElementString("parent_issue_id", ParentIssue == null ? null : ParentIssue.Id.ToString(CultureInfo.InvariantCulture));
+            writer.WriteIdIfNotNull(ParentIssue, "parent_issue_id");
             writer.WriteIdIfNotNull(FixedVersion, "fixed_version_id");
-            writer.WriteIfNotDefaultOrNull(EstimatedHours, "estimated_hours");
 
-            writer.WriteElementString("start_date",
-                StartDate != null ? StartDate.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture) : string.Empty);
+            writer.WriteValue(EstimatedHours, "estimated_hours");
+            writer.WriteIfNotDefaultOrNull(DoneRatio, "done_ratio");
+            writer.WriteDate(StartDate, "start_date");
+            writer.WriteDate(DueDate, "due_date");
+            writer.WriteDate(UpdatedOn, "updated_on");
 
-            writer.WriteElementString("due_date",
-                DueDate != null ? DueDate.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture) : string.Empty);
-
-            if (UpdatedOn != null)
-                writer.WriteElementString("updated_on", UpdatedOn.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
-
-            if (DoneRatio != null)
-                writer.WriteElementString("done_ratio", string.Format(NumberFormatInfo.InvariantInfo, "{0}", DoneRatio.Value));
-            
-            if (Uploads != null)
-            {
-                writer.WriteStartElement("uploads");
-                //ajout Pierre Labrie
-                writer.WriteAttributeString("type", "array");
-
-                foreach (var u in Uploads)
-                {
-                    new XmlSerializer(u.GetType()).Serialize(writer, u);
-                }
-                writer.WriteEndElement();
-            }
-
-            if (CustomFields != null)
-            {
-                writer.WriteStartElement("custom_fields");
-                writer.WriteAttributeString("type", "array");
-                foreach (var cf in CustomFields)
-                {
-                    new XmlSerializer(cf.GetType()).Serialize(writer, cf);
-                }
-                writer.WriteEndElement();
-            }
+            writer.WriteArray(Uploads, "uploads");
+            writer.WriteArray(CustomFields, "custom_fields");
 
             if (Watchers != null)
             {
-                writer.WriteStartElement("watcher_user_ids");
-                writer.WriteAttributeString("type", "array");
-                foreach (var watcher in Watchers)
+                foreach (var item in Watchers)
                 {
-                    new XmlSerializer(typeof(int)).Serialize(writer, watcher.Id);
+                    writer.WriteElementString("watcher_user_ids", item.Id.ToString());
                 }
-                writer.WriteEndElement();
             }
+           
         }
 
         public object Clone()
