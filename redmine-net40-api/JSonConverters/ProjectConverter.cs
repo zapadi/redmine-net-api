@@ -32,16 +32,16 @@ namespace Redmine.Net.Api.JSonConverters
             {
                 var project = new Project();
 
-                project.Id = dictionary.GetValue<int>("id");
+                project.Id = dictionary.GetValue<int>(RedmineKeys.ID);
                 project.Description = dictionary.GetValue<string>("description");
                 project.HomePage = dictionary.GetValue<string>("homepage");
-                project.Name = dictionary.GetValue<string>("name");
+                project.Name = dictionary.GetValue<string>(RedmineKeys.NAME);
                 project.Identifier = dictionary.GetValue<string>("identifier");
                 project.Status = dictionary.GetValue<ProjectStatus>("status");
-                project.CreatedOn = dictionary.GetValue<DateTime?>("created_on");
-                project.UpdatedOn = dictionary.GetValue<DateTime?>("updated_on");
+                project.CreatedOn = dictionary.GetValue<DateTime?>(RedmineKeys.CREATED_ON);
+                project.UpdatedOn = dictionary.GetValue<DateTime?>(RedmineKeys.UPDATED_ON);
                 project.Trackers = dictionary.GetValueAsCollection<ProjectTracker>("trackers");
-                project.CustomFields = dictionary.GetValueAsCollection<IssueCustomField>("custom_fields");
+                project.CustomFields = dictionary.GetValueAsCollection<IssueCustomField>(RedmineKeys.CUSTOM_FIELDS);
                 project.IsPublic = dictionary.GetValue<bool>("is_public");
                 project.Parent = dictionary.GetValueAsIdentifiableName("parent");
                 project.IssueCategories = dictionary.GetValueAsCollection<ProjectIssueCategory>("issue_categories");
@@ -60,7 +60,7 @@ namespace Redmine.Net.Api.JSonConverters
 
             if (entity != null)
             {
-                result.Add("name", entity.Name);
+                result.Add(RedmineKeys.NAME, entity.Name);
                 result.Add("identifier", entity.Identifier);
                 result.Add("description", entity.Description);
                 result.Add("homepage", entity.HomePage);
@@ -75,7 +75,7 @@ namespace Redmine.Net.Api.JSonConverters
                 if (entity.CustomFields != null)
                 {
                     serializer.RegisterConverters(new[] { new IssueCustomFieldConverter() });
-                    result.Add("custom_fields", entity.CustomFields.ToArray());
+                    result.Add(RedmineKeys.CUSTOM_FIELDS, entity.CustomFields.ToArray());
                 }
 
                 if (entity.Trackers != null)              

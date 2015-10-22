@@ -29,14 +29,14 @@ namespace Redmine.Net.Api.Types
     /// PUT - Updates the membership of given :id. Only the roles can be updated, the project and the user of a membership are read-only.
     /// DELETE - Deletes a memberships. Memberships inherited from a group membership can not be deleted. You must delete the group membership.
     /// </summary>
-    [XmlRoot("membership")]
+    [XmlRoot(RedmineKeys.MEMBERSHIP)]
     public class ProjectMembership : Identifiable<ProjectMembership>, IEquatable<ProjectMembership>, IXmlSerializable
     {
         /// <summary>
         /// Gets or sets the project.
         /// </summary>
         /// <value>The project.</value>
-        [XmlElement("project")]
+        [XmlElement(RedmineKeys.PROJECT)]
         public IdentifiableName Project { get; set; }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The user.
         /// </value>
-        [XmlElement("user")]
+        [XmlElement(RedmineKeys.USER)]
         public IdentifiableName User { get; set; }
 
         /// <summary>
@@ -54,15 +54,15 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The group.
         /// </value>
-        [XmlElement("group")]
+        [XmlElement(RedmineKeys.GROUP)]
         public IdentifiableName Group { get; set; }
 
         /// <summary>
         /// Gets or sets the type.
         /// </summary>
         /// <value>The type.</value>
-        [XmlArray("roles")]
-        [XmlArrayItem("role")]
+        [XmlArray(RedmineKeys.ROLES)]
+        [XmlArrayItem(RedmineKeys.ROLE)]
         public List<MembershipRole> Roles { get; set; }
 
         public bool Equals(ProjectMembership other)
@@ -86,15 +86,15 @@ namespace Redmine.Net.Api.Types
 
                 switch (reader.Name)
                 {
-                    case "id": Id = reader.ReadElementContentAsInt(); break;
+                    case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
 
-                    case "project": Project = new IdentifiableName(reader); break;
+                    case RedmineKeys.PROJECT: Project = new IdentifiableName(reader); break;
 
-                    case "user": User = new IdentifiableName(reader); break;
+                    case RedmineKeys.USER: User = new IdentifiableName(reader); break;
 
-                    case "group": Group = new IdentifiableName(reader); break;
+                    case RedmineKeys.GROUP: Group = new IdentifiableName(reader); break;
 
-                    case "roles": Roles = reader.ReadElementContentAsCollection<MembershipRole>(); break;
+                    case RedmineKeys.ROLES: Roles = reader.ReadElementContentAsCollection<MembershipRole>(); break;
 
                     default: reader.Read(); break;
                 }
@@ -103,13 +103,13 @@ namespace Redmine.Net.Api.Types
 
         public void WriteXml(XmlWriter writer)
         {
-            writer.WriteIdIfNotNull(User, "user_id");
+            writer.WriteIdIfNotNull(User, RedmineKeys.USER_ID);
 
-            writer.WriteStartElement("role_ids");
+            writer.WriteStartElement(RedmineKeys.ROLE_IDS);
             writer.WriteAttributeString("type", "array");
             foreach (var role in Roles)
             {
-                new XmlSerializer(role.GetType(), new XmlAttributeOverrides(), null, new XmlRootAttribute("role_id"), "").Serialize(writer, role);
+                new XmlSerializer(role.GetType(), new XmlAttributeOverrides(), null, new XmlRootAttribute(RedmineKeys.ROLE_ID), string.Empty).Serialize(writer, role);
             }
             writer.WriteEndElement();
         }

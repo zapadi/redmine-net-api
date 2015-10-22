@@ -14,15 +14,31 @@
    limitations under the License.
 */
 
+using System;
 using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
-    [XmlRoot("permission")]
-    public class Permission
+    [XmlRoot(RedmineKeys.PERMISSION)]
+    public class Permission : IEquatable<Permission>
     {
         [XmlText]
         public string Info { get; set; }
+
+        public bool Equals(Permission other)
+        {
+            return Info == other.Info;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return base.Equals(obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
 
         public override string ToString()
         {

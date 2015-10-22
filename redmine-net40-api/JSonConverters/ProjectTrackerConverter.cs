@@ -30,8 +30,8 @@ namespace Redmine.Net.Api.JSonConverters
             if ((dictionary != null))
             {
                 var projectTracker = new ProjectTracker();
-                projectTracker.Id = dictionary.GetValue<int>("id");
-                projectTracker.Name = dictionary.GetValue<string>("name");
+                projectTracker.Id = dictionary.GetValue<int>(RedmineKeys.ID);
+                projectTracker.Name = dictionary.GetValue<string>(RedmineKeys.NAME);
                 return projectTracker;
             }
             return null;

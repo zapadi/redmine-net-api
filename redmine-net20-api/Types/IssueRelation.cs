@@ -24,35 +24,35 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// Availability 1.3
     /// </summary>
-    [XmlRoot("relation")]
+    [XmlRoot(RedmineKeys.RELATION)]
     public class IssueRelation : Identifiable<IssueRelation>, IXmlSerializable, IEquatable<IssueRelation>
     {
         /// <summary>
         /// Gets or sets the issue id.
         /// </summary>
         /// <value>The issue id.</value>
-        [XmlElement("issue_id")]
+        [XmlElement(RedmineKeys.ISSUE_ID)]
         public int IssueId { get; set; }
 
         /// <summary>
         /// Gets or sets the related issue id.
         /// </summary>
         /// <value>The issue to id.</value>
-        [XmlElement("issue_to_id")]
+        [XmlElement(RedmineKeys.ISSUE_TO_ID)]
         public int IssueToId { get; set; }
 
         /// <summary>
         /// Gets or sets the type of relation.
         /// </summary>
         /// <value>The type.</value>
-        [XmlElement("relation_type")]
+        [XmlElement(RedmineKeys.RELATION_TYPE)]
         public IssueRelationType Type { get; set; }
 
         /// <summary>
         /// Gets or sets the delay for a "precedes" or "follows" relation.
         /// </summary>
         /// <value>The delay.</value>
-        [XmlElement("delay", IsNullable = true)]
+        [XmlElement(RedmineKeys.DELAY, IsNullable = true)]
         public int? Delay { get; set; }
 
         public XmlSchema GetSchema() { return null; }
@@ -75,17 +75,17 @@ namespace Redmine.Net.Api.Types
                         var attributeName = reader.Name;
                         switch (reader.Name)
                         {
-                            case "id": Id = reader.ReadAttributeAsInt(attributeName); break;
-                            case "issue_id": IssueId = reader.ReadAttributeAsInt(attributeName); break;
-                            case "issue_to_id": IssueToId = reader.ReadAttributeAsInt(attributeName); break;
-                            case "relation_type":
+                            case RedmineKeys.ID: Id = reader.ReadAttributeAsInt(attributeName); break;
+                            case RedmineKeys.ISSUE_ID: IssueId = reader.ReadAttributeAsInt(attributeName); break;
+                            case RedmineKeys.ISSUE_TO_ID: IssueToId = reader.ReadAttributeAsInt(attributeName); break;
+                            case RedmineKeys.RELATION_TYPE:
                                 var rt = reader.GetAttribute(attributeName);
                                 if (!string.IsNullOrEmpty(rt))
                                 {
                                     Type = (IssueRelationType)Enum.Parse(typeof(IssueRelationType), rt, true);
                                 }
                                 break;
-                            case "delay": Delay = reader.ReadAttributeAsNullableInt(attributeName); break;
+                            case RedmineKeys.DELAY: Delay = reader.ReadAttributeAsNullableInt(attributeName); break;
                         }
                     }
                     return;
@@ -93,17 +93,17 @@ namespace Redmine.Net.Api.Types
 
                 switch (reader.Name)
                 {
-                    case "id": Id = reader.ReadElementContentAsInt(); break;
-                    case "issue_id": IssueId = reader.ReadElementContentAsInt(); break;
-                    case "issue_to_id": IssueToId = reader.ReadElementContentAsInt(); break;
-                    case "relation_type":
+                    case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
+                    case RedmineKeys.ISSUE_ID: IssueId = reader.ReadElementContentAsInt(); break;
+                    case RedmineKeys.ISSUE_TO_ID: IssueToId = reader.ReadElementContentAsInt(); break;
+                    case RedmineKeys.RELATION_TYPE:
                         var rt = reader.ReadElementContentAsString();
                         if (!string.IsNullOrEmpty(rt))
                         {
                             Type = (IssueRelationType)Enum.Parse(typeof(IssueRelationType), rt, true);
                         }
                         break;
-                    case "delay": Delay = reader.ReadElementContentAsNullableInt(); break;
+                    case RedmineKeys.DELAY: Delay = reader.ReadElementContentAsNullableInt(); break;
                     default: reader.Read(); break;
                 }
             }
@@ -111,10 +111,10 @@ namespace Redmine.Net.Api.Types
 
         public void WriteXml(XmlWriter writer)
         {
-            writer.WriteElementString("issue_to_id", IssueToId.ToString());
-            writer.WriteElementString("relation_type", Type.ToString());
+            writer.WriteElementString(RedmineKeys.ISSUE_TO_ID, IssueToId.ToString());
+            writer.WriteElementString(RedmineKeys.RELATION_TYPE, Type.ToString());
             if (Type == IssueRelationType.precedes || Type == IssueRelationType.follows)
-                writer.WriteValue(Delay, "delay");
+                writer.WriteValue(Delay, RedmineKeys.DELAY);
         }
 
         public bool Equals(IssueRelation other)

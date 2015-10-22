@@ -25,42 +25,42 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// Availability 1.1
     /// </summary>
-    [XmlRoot("user")]
+    [XmlRoot(RedmineKeys.USER)]
     public class User : Identifiable<User>, IXmlSerializable, IEquatable<User>
     {
         /// <summary>
         /// Gets or sets the user login.
         /// </summary>
         /// <value>The login.</value>
-        [XmlElement("login")]
+        [XmlElement(RedmineKeys.LOGIN)]
         public String Login { get; set; }
 
         /// <summary>
         /// Gets or sets the user password.
         /// </summary>
         /// <value>The password.</value>
-        [XmlElement("password")]
+        [XmlElement(RedmineKeys.PASSWORD)]
         public string Password { get; set; }
 
         /// <summary>
         /// Gets or sets the first name.
         /// </summary>
         /// <value>The first name.</value>
-        [XmlElement("firstname")]
+        [XmlElement(RedmineKeys.FIRSTNAME)]
         public String FirstName { get; set; }
 
         /// <summary>
         /// Gets or sets the last name.
         /// </summary>
         /// <value>The last name.</value>
-        [XmlElement("lastname")]
+        [XmlElement(RedmineKeys.LASTNAME)]
         public String LastName { get; set; }
 
         /// <summary>
         /// Gets or sets the email.
         /// </summary>
         /// <value>The email.</value>
-        [XmlElement("mail")]
+        [XmlElement(RedmineKeys.MAIL)]
         public String Email { get; set; }
 
         /// <summary>
@@ -69,44 +69,44 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The authentication mode id.
         /// </value>
-        [XmlElement("auth_source_id", IsNullable = true)]
+        [XmlElement(RedmineKeys.AUTH_SOURCE_ID, IsNullable = true)]
         public Int32? AuthenticationModeId { get; set; }
 
         /// <summary>
         /// Gets or sets the created on.
         /// </summary>
         /// <value>The created on.</value>
-        [XmlElement("created_on", IsNullable = true)]
+        [XmlElement(RedmineKeys.CREATED_ON, IsNullable = true)]
         public DateTime? CreatedOn { get; set; }
 
         /// <summary>
         /// Gets or sets the last login on.
         /// </summary>
         /// <value>The last login on.</value>
-        [XmlElement("last_login_on", IsNullable = true)]
+        [XmlElement(RedmineKeys.LAST_LOGIN_ON, IsNullable = true)]
         public DateTime? LastLoginOn { get; set; }
 
         /// <summary>
         /// Gets the API key of the user, visible for admins and for yourself (added in 2.3.0)
         /// </summary>
-        [XmlElement("api_key", IsNullable = true)]
+        [XmlElement(RedmineKeys.API_KEY, IsNullable = true)]
         public string ApiKey { get; set; }
 
         /// <summary>
         /// Gets the status of the user, visible for admins only (added in 2.4.0)
         /// </summary>
-        [XmlElement("status", IsNullable = true)]
+        [XmlElement(RedmineKeys.STATUS, IsNullable = true)]
         public UserStatus Status { get; set; }
 
-        [XmlElement("must_change_passwd", IsNullable = true)]
+        [XmlElement(RedmineKeys.MUST_CHANGE_PASSWD, IsNullable = true)]
         public bool MustChangePassword { get; set; }
 
         /// <summary>
         /// Gets or sets the custom fields.
         /// </summary>
         /// <value>The custom fields.</value>
-        [XmlArray("custom_fields")]
-        [XmlArrayItem("custom_field")]
+        [XmlArray(RedmineKeys.CUSTOM_FIELDS)]
+        [XmlArrayItem(RedmineKeys.CUSTOM_FIELD)]
         public List<IssueCustomField> CustomFields { get; set; }
 
         /// <summary>
@@ -115,8 +115,8 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The memberships.
         /// </value>
-        [XmlArray("memberships")]
-        [XmlArrayItem("membership")]
+        [XmlArray(RedmineKeys.MEMBERSHIPS)]
+        [XmlArrayItem(RedmineKeys.MEMBERSHIP)]
         public List<Membership> Memberships { get; set; }
 
         /// <summary>
@@ -125,8 +125,8 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The groups.
         /// </value>
-        [XmlArray("groups")]
-        [XmlArrayItem("group")]
+        [XmlArray(RedmineKeys.GROUPS)]
+        [XmlArrayItem(RedmineKeys.GROUP)]
         public List<UserGroup> Groups { get; set; }
 
         public XmlSchema GetSchema()
@@ -147,33 +147,33 @@ namespace Redmine.Net.Api.Types
 
                 switch (reader.Name)
                 {
-                    case "id": Id = reader.ReadElementContentAsInt(); break;
+                    case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
 
-                    case "login": Login = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.LOGIN: Login = reader.ReadElementContentAsString(); break;
 
-                    case "firstname": FirstName = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.FIRSTNAME: FirstName = reader.ReadElementContentAsString(); break;
 
-                    case "lastname": LastName = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.LASTNAME: LastName = reader.ReadElementContentAsString(); break;
 
-                    case "mail": Email = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.MAIL: Email = reader.ReadElementContentAsString(); break;
 
-                    case "must_change_passwd": MustChangePassword = reader.ReadElementContentAsBoolean(); break;
+                    case RedmineKeys.MUST_CHANGE_PASSWD: MustChangePassword = reader.ReadElementContentAsBoolean(); break;
 
-                    case "auth_source_id": AuthenticationModeId = reader.ReadElementContentAsNullableInt(); break;
+                    case RedmineKeys.AUTH_SOURCE_ID: AuthenticationModeId = reader.ReadElementContentAsNullableInt(); break;
 
-                    case "last_login_on": LastLoginOn = reader.ReadElementContentAsNullableDateTime(); break;
+                    case RedmineKeys.LAST_LOGIN_ON: LastLoginOn = reader.ReadElementContentAsNullableDateTime(); break;
 
-                    case "created_on": CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
+                    case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
 
-                    case "api_key": ApiKey = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.API_KEY: ApiKey = reader.ReadElementContentAsString(); break;
 
-                    case "status": Status = (UserStatus)reader.ReadElementContentAsInt(); break;
+                    case RedmineKeys.STATUS: Status = (UserStatus)reader.ReadElementContentAsInt(); break;
 
-                    case "custom_fields": CustomFields = reader.ReadElementContentAsCollection<IssueCustomField>(); break;
+                    case RedmineKeys.CUSTOM_FIELDS: CustomFields = reader.ReadElementContentAsCollection<IssueCustomField>(); break;
 
-                    case "memberships": Memberships = reader.ReadElementContentAsCollection<Membership>(); break;
+                    case RedmineKeys.MEMBERSHIPS: Memberships = reader.ReadElementContentAsCollection<Membership>(); break;
 
-                    case "groups": Groups = reader.ReadElementContentAsCollection<UserGroup>(); break;
+                    case RedmineKeys.GROUPS: Groups = reader.ReadElementContentAsCollection<UserGroup>(); break;
 
                     default: reader.Read(); break;
                 }
@@ -182,35 +182,21 @@ namespace Redmine.Net.Api.Types
 
         public void WriteXml(XmlWriter writer)
         {
-            writer.WriteElementString("login", Login);
-            writer.WriteElementString("firstname", FirstName);
-            writer.WriteElementString("lastname", LastName);
-            writer.WriteElementString("mail", Email);
-            writer.WriteElementString("password", Password);
-            writer.WriteValue(AuthenticationModeId, "auth_source_id");
-            writer.WriteElementString("must_change_passwd", MustChangePassword.ToString());
+            writer.WriteElementString(RedmineKeys.LOGIN, Login);
+            writer.WriteElementString(RedmineKeys.FIRSTNAME, FirstName);
+            writer.WriteElementString(RedmineKeys.LASTNAME, LastName);
+            writer.WriteElementString(RedmineKeys.MAIL, Email);
+            writer.WriteElementString(RedmineKeys.PASSWORD, Password);
+            writer.WriteValue(AuthenticationModeId, RedmineKeys.AUTH_SOURCE_ID);
+            writer.WriteElementString(RedmineKeys.MUST_CHANGE_PASSWD, MustChangePassword.ToString());
 
-            writer.WriteArray(CustomFields, "custom_fields");
+            writer.WriteArray(CustomFields, RedmineKeys.CUSTOM_FIELDS);
         }
 
         public bool Equals(User other)
         {
             if (other == null) return false;
-            return (Id == other.Id
-                && AuthenticationModeId == other.AuthenticationModeId
-                && Login == other.Login
-                && Password == other.Password
-                && FirstName == other.FirstName
-                && LastName == other.LastName
-                && Email == other.Email
-                && MustChangePassword == other.MustChangePassword
-                && CreatedOn == other.CreatedOn
-                && LastLoginOn == other.LastLoginOn
-                && CustomFields == other.CustomFields
-                && Memberships == other.Memberships
-                && Status == other.Status
-                && Groups == other.Groups
-                && ApiKey == other.ApiKey);
+            return ( Login == other.Login);
         }
     }
 }

@@ -24,7 +24,7 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// 
     /// </summary>
-    [XmlRoot("detail")]
+    [XmlRoot(RedmineKeys.DETAIL)]
     public class Detail : IXmlSerializable, IEquatable<Detail>
     {
         /// <summary>
@@ -33,7 +33,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The property.
         /// </value>
-        [XmlAttribute("property")]
+        [XmlAttribute(RedmineKeys.PROPERTY)]
         public string Property { get; set; }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The status id.
         /// </value>
-        [XmlAttribute("name")]
+        [XmlAttribute(RedmineKeys.NAME)]
         public string StatusId { get; set; }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The old value.
         /// </value>
-        [XmlElement("old_value")]
+        [XmlElement(RedmineKeys.OLD_VALUE)]
         public string OldValue { get; set; }
 
         /// <summary>
@@ -60,15 +60,15 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The new value.
         /// </value>
-        [XmlElement("new_value")]
+        [XmlElement(RedmineKeys.NEW_VALUE)]
         public string NewValue { get; set; }
 
         public XmlSchema GetSchema() { return null; }
 
         public void ReadXml(XmlReader reader)
         {
-            Property = reader.GetAttribute("property");
-            StatusId = reader.GetAttribute("name");
+            Property = reader.GetAttribute(RedmineKeys.PROPERTY);
+            StatusId = reader.GetAttribute(RedmineKeys.NAME);
 
             reader.Read();
 
@@ -82,9 +82,9 @@ namespace Redmine.Net.Api.Types
 
                 switch (reader.Name)
                 {
-                    case "old_value": OldValue = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.OLD_VALUE: OldValue = reader.ReadElementContentAsString(); break;
 
-                    case "new_value": NewValue = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.NEW_VALUE: NewValue = reader.ReadElementContentAsString(); break;
 
                     default: reader.Read(); break;
                 }
@@ -97,6 +97,11 @@ namespace Redmine.Net.Api.Types
         {
             if (other == null) return false;
             return Property == other.Property && StatusId == other.StatusId && OldValue == other.OldValue && NewValue == other.NewValue;
+        }
+
+        public override string ToString()
+        {
+            return base.ToString();
         }
     }
 }

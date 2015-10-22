@@ -15,8 +15,8 @@ namespace Redmine.Net.Api.JSonConverters
             {
                 var entity = new TrackerCustomField();
 
-                entity.Id = dictionary.GetValue<int>("id");
-                entity.Name = dictionary.GetValue<string>("name");
+                entity.Id = dictionary.GetValue<int>(RedmineKeys.ID);
+                entity.Name = dictionary.GetValue<string>(RedmineKeys.NAME);
 
                 return entity;
             }

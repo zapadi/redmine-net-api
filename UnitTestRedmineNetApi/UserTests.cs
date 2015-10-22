@@ -18,27 +18,32 @@ namespace UnitTestRedmineNetApi
         private RedmineManager redmineManager;
         private string uri;
         private string apiKey;
+        private string username;
+        private string password;
 
         [TestInitialize]
         public void Initialize()
         {
             uri = ConfigurationManager.AppSettings["uri"];
-            apiKey = ConfigurationManager.AppSettings["apiKey"];
+            // apiKey = ConfigurationManager.AppSettings["apiKey"];
 
-            SetMimeTypeJSON();
+            username = ConfigurationManager.AppSettings["username"];
+            password = ConfigurationManager.AppSettings["password"];
+
             SetMimeTypeXML();
+            SetMimeTypeJSON();
         }
 
         [Conditional("JSON")]
         private void SetMimeTypeJSON()
         {
-            redmineManager = new RedmineManager(uri, apiKey, MimeFormat.json);
+            redmineManager = new RedmineManager(uri, username, password, MimeFormat.json);
         }
 
         [Conditional("XML")]
         private void SetMimeTypeXML()
         {
-            redmineManager = new RedmineManager(uri, apiKey, MimeFormat.xml);
+            redmineManager = new RedmineManager(uri, username, password);
         }
 
         [TestMethod]
@@ -47,7 +52,7 @@ namespace UnitTestRedmineNetApi
             User currentUser = redmineManager.GetCurrentUser();
 
             Assert.AreEqual(currentUser.ApiKey, ConfigurationManager.AppSettings["apiKey"]);
-        }    
+        }
 
         [TestMethod]
         public void RedmineUser_ShouldGetUserById()
@@ -55,7 +60,7 @@ namespace UnitTestRedmineNetApi
             var id = 8;
 
             User user = redmineManager.GetObject<User>(id.ToString(), new NameValueCollection { { "include", "groups" }, { "include", "memberships" } });
-            
+
             Assert.AreEqual(user.Login, "alinac");
         }
 
@@ -66,7 +71,7 @@ namespace UnitTestRedmineNetApi
 
             try
             {
-               redmineManager.CreateObject<User>(redmineUser);
+                redmineManager.CreateObject<User>(redmineUser);
             }
             catch (RedmineException exc)
             {

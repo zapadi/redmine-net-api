@@ -16,7 +16,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
@@ -26,7 +25,7 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// Availability 1.1
     /// </summary>
-    [XmlRoot("time_entry")]
+    [XmlRoot(RedmineKeys.TIME_ENTRY)]
     public class TimeEntry : Identifiable<TimeEntry>, ICloneable, IEquatable<TimeEntry>, IXmlSerializable
     {
         private string comments;
@@ -35,35 +34,35 @@ namespace Redmine.Net.Api.Types
         /// Gets or sets the issue id to log time on.
         /// </summary>
         /// <value>The issue id.</value>
-        [XmlAttribute("issue")]
+        [XmlAttribute(RedmineKeys.ISSUE)]
         public IdentifiableName Issue { get; set; }
 
         /// <summary>
         /// Gets or sets the project id to log time on.
         /// </summary>
         /// <value>The project id.</value>
-        [XmlAttribute("project")]
+        [XmlAttribute(RedmineKeys.PROJECT)]
         public IdentifiableName Project { get; set; }
 
         /// <summary>
         /// Gets or sets the date the time was spent (default to the current date).
         /// </summary>
         /// <value>The spent on.</value>
-        [XmlAttribute("spent_on")]
+        [XmlAttribute(RedmineKeys.SPENT_ON)]
         public DateTime? SpentOn { get; set; }
 
         /// <summary>
         /// Gets or sets the number of spent hours.
         /// </summary>
         /// <value>The hours.</value>
-        [XmlAttribute("hours")]
+        [XmlAttribute(RedmineKeys.HOURS)]
         public decimal Hours { get; set; }
 
         /// <summary>
         /// Gets or sets the activity id of the time activity. This parameter is required unless a default activity is defined in Redmine..
         /// </summary>
         /// <value>The activity id.</value>
-        [XmlAttribute("activity")]
+        [XmlAttribute(RedmineKeys.ACTIVITY)]
         public IdentifiableName Activity { get; set; }
 
         /// <summary>
@@ -72,14 +71,14 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The user.
         /// </value>
-        [XmlAttribute("user")]
+        [XmlAttribute(RedmineKeys.USER)]
         public IdentifiableName User { get; set; }
 
         /// <summary>
         /// Gets or sets the short description for the entry (255 characters max).
         /// </summary>
         /// <value>The comments.</value>
-        [XmlAttribute("comments")]
+        [XmlAttribute(RedmineKeys.COMMENTS)]
         public String Comments
         {
             get { return comments; }
@@ -100,22 +99,22 @@ namespace Redmine.Net.Api.Types
         /// Gets or sets the created on.
         /// </summary>
         /// <value>The created on.</value>
-        [XmlElement("created_on")]
+        [XmlElement(RedmineKeys.CREATED_ON)]
         public DateTime? CreatedOn { get; set; }
 
         /// <summary>
         /// Gets or sets the updated on.
         /// </summary>
         /// <value>The updated on.</value>
-        [XmlElement("updated_on")]
+        [XmlElement(RedmineKeys.UPDATED_ON)]
         public DateTime? UpdatedOn { get; set; }
 
         /// <summary>
         /// Gets or sets the custom fields.
         /// </summary>
         /// <value>The custom fields.</value>
-        [XmlArray("custom_fields")]
-        [XmlArrayItem("custom_field")]
+        [XmlArray(RedmineKeys.CUSTOM_FIELDS)]
+        [XmlArrayItem(RedmineKeys.CUSTOM_FIELD)]
         public IList<IssueCustomField> CustomFields { get; set; }
 
         public object Clone()
@@ -139,30 +138,33 @@ namespace Redmine.Net.Api.Types
 
                 switch (reader.Name)
                 {
-                    case "id": Id = reader.ReadElementContentAsInt(); break;
+                    case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
 
-                    case "issue_id": Issue = new IdentifiableName(reader); break;
-                    case "issue": Issue = new IdentifiableName(reader); break;
+                    case RedmineKeys.ISSUE_ID: Issue = new IdentifiableName(reader); break;
 
-                    case "project_id": Project = new IdentifiableName(reader); break;
-                    case "project": Project = new IdentifiableName(reader); break;
+                    case RedmineKeys.ISSUE: Issue = new IdentifiableName(reader); break;
 
-                    case "spent_on": SpentOn = reader.ReadElementContentAsNullableDateTime(); break;
+                    case RedmineKeys.PROJECT_ID: Project = new IdentifiableName(reader); break;
 
-                    case "user": User = new IdentifiableName(reader); break;
+                    case RedmineKeys.PROJECT: Project = new IdentifiableName(reader); break;
 
-                    case "hours": Hours = reader.ReadElementContentAsDecimal(); break;
+                    case RedmineKeys.SPENT_ON: SpentOn = reader.ReadElementContentAsNullableDateTime(); break;
 
-                    case "activity_id": Activity = new IdentifiableName(reader); break;
-                    case "activity": Activity = new IdentifiableName(reader); break;
+                    case RedmineKeys.USER: User = new IdentifiableName(reader); break;
 
-                    case "comments": Comments = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.HOURS: Hours = reader.ReadElementContentAsDecimal(); break;
 
-                    case "created_on": CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
+                    case RedmineKeys.ACTIVITY_ID: Activity = new IdentifiableName(reader); break;
 
-                    case "updated_on": UpdatedOn = reader.ReadElementContentAsNullableDateTime(); break;
+                    case RedmineKeys.ACTIVITY: Activity = new IdentifiableName(reader); break;
 
-                    case "custom_fields": CustomFields = reader.ReadElementContentAsCollection<IssueCustomField>(); break;
+                    case RedmineKeys.COMMENTS: Comments = reader.ReadElementContentAsString(); break;
+
+                    case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
+
+                    case RedmineKeys.UPDATED_ON: UpdatedOn = reader.ReadElementContentAsNullableDateTime(); break;
+
+                    case RedmineKeys.CUSTOM_FIELDS: CustomFields = reader.ReadElementContentAsCollection<IssueCustomField>(); break;
 
                     default: reader.Read(); break;
                 }
@@ -171,20 +173,29 @@ namespace Redmine.Net.Api.Types
 
         public void WriteXml(XmlWriter writer)
         {
-            writer.WriteIdIfNotNull(Issue, "issue_id");
-            writer.WriteIdIfNotNull(Project, "project_id");
+            writer.WriteIdIfNotNull(Issue, RedmineKeys.ISSUE_ID);
+            writer.WriteIdIfNotNull(Project, RedmineKeys.PROJECT_ID);
             if (!SpentOn.HasValue) SpentOn = DateTime.Now;
-            writer.WriteDate(SpentOn, "spent_on");
-            writer.WriteValue<decimal>(Hours, "hours");
-            writer.WriteIdIfNotNull(Activity, "activity_id");
-            writer.WriteElementString("comments", Comments);
+            writer.WriteDate(SpentOn, RedmineKeys.SPENT_ON);
+            writer.WriteValue<decimal>(Hours, RedmineKeys.HOURS);
+            writer.WriteIdIfNotNull(Activity, RedmineKeys.ACTIVITY_ID);
+            writer.WriteElementString(RedmineKeys.COMMENTS, Comments);
         }
 
         public bool Equals(TimeEntry other)
         {
             if (other == null) return false;
-            return (Id == other.Id && Issue == other.Issue && Project == other.Project && SpentOn == other.SpentOn && Hours == other.Hours
-                && Activity == other.Activity && Comments == other.Comments && User == other.User && CreatedOn == other.CreatedOn && UpdatedOn == other.UpdatedOn && CustomFields == other.CustomFields);
+            return (Id == other.Id
+                && Issue == other.Issue
+                && Project == other.Project
+                && SpentOn == other.SpentOn
+                && Hours == other.Hours
+                && Activity == other.Activity
+                && Comments == other.Comments
+                && User == other.User
+                && CreatedOn == other.CreatedOn
+                && UpdatedOn == other.UpdatedOn
+                && Equals(CustomFields, other.CustomFields));
         }
     }
 }

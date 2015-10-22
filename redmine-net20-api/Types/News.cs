@@ -24,49 +24,49 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// Availability 1.1
     /// </summary>
-    [XmlRoot("news")]
+    [XmlRoot(RedmineKeys.NEWS)]
     public class News : Identifiable<News>, IEquatable<News>, IXmlSerializable
     {
         /// <summary>
         /// Gets or sets the project.
         /// </summary>
         /// <value>The project.</value>
-        [XmlElement("project")]
+        [XmlElement(RedmineKeys.PROJECT)]
         public IdentifiableName Project { get; set; }
 
         /// <summary>
         /// Gets or sets the author.
         /// </summary>
         /// <value>The author.</value>
-        [XmlElement("author")]
+        [XmlElement(RedmineKeys.AUTHOR)]
         public IdentifiableName Author { get; set; }
 
         /// <summary>
         /// Gets or sets the title.
         /// </summary>
         /// <value>The title.</value>
-        [XmlElement("title")]
+        [XmlElement(RedmineKeys.TITLE)]
         public String Title { get; set; }
 
         /// <summary>
         /// Gets or sets the summary.
         /// </summary>
         /// <value>The summary.</value>
-        [XmlElement("summary")]
+        [XmlElement(RedmineKeys.SUMMARY)]
         public String Summary { get; set; }
 
         /// <summary>
         /// Gets or sets the description.
         /// </summary>
         /// <value>The description.</value>
-        [XmlElement("description")]
+        [XmlElement(RedmineKeys.DESCRIPTION)]
         public String Description { get; set; }
 
         /// <summary>
         /// Gets or sets the created on.
         /// </summary>
         /// <value>The created on.</value>
-        [XmlElement("created_on", IsNullable = true)]
+        [XmlElement(RedmineKeys.CREATED_ON, IsNullable = true)]
         public DateTime? CreatedOn { get; set; }
 
         public XmlSchema GetSchema() { return null; }
@@ -84,19 +84,19 @@ namespace Redmine.Net.Api.Types
 
                 switch (reader.Name)
                 {
-                    case "id": Id = reader.ReadElementContentAsInt(); break;
+                    case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
 
-                    case "project": Project = new IdentifiableName(reader); break;
+                    case RedmineKeys.PROJECT: Project = new IdentifiableName(reader); break;
 
-                    case "author": Author = new IdentifiableName(reader); break;
+                    case RedmineKeys.AUTHOR: Author = new IdentifiableName(reader); break;
 
-                    case "title": Title = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.TITLE: Title = reader.ReadElementContentAsString(); break;
 
-                    case "summary": Summary = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.SUMMARY: Summary = reader.ReadElementContentAsString(); break;
 
-                    case "description": Description = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.DESCRIPTION: Description = reader.ReadElementContentAsString(); break;
 
-                    case "created_on": CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
+                    case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
 
                     default: reader.Read(); break;
                 }
@@ -108,7 +108,13 @@ namespace Redmine.Net.Api.Types
         public bool Equals(News other)
         {
             if (other == null) return false;
-            return (Id == other.Id && Project == other.Project && Author == other.Author && Title == other.Title && Summary == other.Summary && Description == other.Description && CreatedOn == other.CreatedOn);
+            return (Id == other.Id
+                && Project == other.Project
+                && Author == other.Author
+                && Title == other.Title
+                && Summary == other.Summary
+                && Description == other.Description
+                && CreatedOn == other.CreatedOn);
         }
     }
 }

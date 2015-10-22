@@ -23,7 +23,7 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// Availability 1.3
     /// </summary>
-    [XmlRoot("issue_status")]
+    [XmlRoot(RedmineKeys.ISSUE_STATUS)]
     public class IssueStatus : IdentifiableName, IEquatable<IssueStatus>
     {
         /// <summary>
@@ -32,14 +32,14 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// 	<c>true</c> if IssueStatus is default; otherwise, <c>false</c>.
         /// </value>
-        [XmlElement("is_default")]
+        [XmlElement(RedmineKeys.IS_DEFAULT)]
         public bool IsDefault { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether IssueStatus is closed.
         /// </summary>
         /// <value><c>true</c> if IssueStatus is closed; otherwise, <c>false</c>.</value>
-        [XmlElement("is_closed")]
+        [XmlElement(RedmineKeys.IS_CLOSED)]
         public bool IsClosed { get; set; }
 
         public override void ReadXml(XmlReader reader)
@@ -55,13 +55,13 @@ namespace Redmine.Net.Api.Types
 
                 switch (reader.Name)
                 {
-                    case "id": Id = reader.ReadElementContentAsInt(); break;
+                    case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
 
-                    case "name": Name = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.NAME: Name = reader.ReadElementContentAsString(); break;
 
-                    case "is_default": IsDefault = reader.ReadElementContentAsBoolean(); break;
+                    case RedmineKeys.IS_DEFAULT: IsDefault = reader.ReadElementContentAsBoolean(); break;
 
-                    case "is_closed": IsClosed = reader.ReadElementContentAsBoolean(); break;
+                    case RedmineKeys.IS_CLOSED: IsClosed = reader.ReadElementContentAsBoolean(); break;
 
                     default: reader.Read(); break;
                 }
@@ -74,6 +74,21 @@ namespace Redmine.Net.Api.Types
         {
             if (other == null) return false;
             return (Id == other.Id && Name == other.Name && IsClosed == other.IsClosed && IsDefault == other.IsDefault);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return base.Equals(obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return string.Format("{0}, {1}, {2}, {3}", Id, Name, IsDefault, IsClosed);
         }
     }
 }

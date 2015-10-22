@@ -27,7 +27,7 @@ namespace Redmine.Net.Api.JSonConverters
         {
             if (dictionary != null)
             {
-                var timeEntryActivity = new TimeEntryActivity { Id = dictionary.GetValue<int>("id"), Name = dictionary.GetValue<string>("name"), IsDefault = dictionary.GetValue<bool>("is_default") };
+                var timeEntryActivity = new TimeEntryActivity { Id = dictionary.GetValue<int>(RedmineKeys.ID), Name = dictionary.GetValue<string>(RedmineKeys.NAME), IsDefault = dictionary.GetValue<bool>("is_default") };
                 return timeEntryActivity;
             }
 

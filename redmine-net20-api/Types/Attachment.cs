@@ -24,56 +24,56 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// Availability 1.3
     /// </summary>
-    [XmlRoot("attachment")]
+    [XmlRoot(RedmineKeys.ATTACHMENT)]
     public class Attachment : Identifiable<Attachment>, IXmlSerializable, IEquatable<Attachment>
     {
         /// <summary>
         /// Gets or sets the name of the file.
         /// </summary>
         /// <value>The name of the file.</value>
-        [XmlElement("filename")]
+        [XmlElement(RedmineKeys.FILENAME)]
         public String FileName { get; set; }
 
         /// <summary>
         /// Gets or sets the size of the file.
         /// </summary>
         /// <value>The size of the file.</value>
-        [XmlElement("filesize")]
+        [XmlElement(RedmineKeys.FILESIZE)]
         public int FileSize { get; set; }
 
         /// <summary>
         /// Gets or sets the type of the content.
         /// </summary>
         /// <value>The type of the content.</value>
-        [XmlElement("content_type")]
+        [XmlElement(RedmineKeys.CONTENT_TYPE)]
         public String ContentType { get; set; }
 
         /// <summary>
         /// Gets or sets the description.
         /// </summary>
         /// <value>The description.</value>
-        [XmlElement("description")]
+        [XmlElement(RedmineKeys.DESCRIPTION)]
         public String Description { get; set; }
 
         /// <summary>
         /// Gets or sets the content URL.
         /// </summary>
         /// <value>The content URL.</value>
-        [XmlElement("content_url")]
+        [XmlElement(RedmineKeys.CONTENT_URL)]
         public String ContentUrl { get; set; }
 
         /// <summary>
         /// Gets or sets the author.
         /// </summary>
         /// <value>The author.</value>
-        [XmlElement("author")]
+        [XmlElement(RedmineKeys.AUTHOR)]
         public IdentifiableName Author { get; set; }
 
         /// <summary>
         /// Gets or sets the created on.
         /// </summary>
         /// <value>The created on.</value>
-        [XmlElement("created_on")]
+        [XmlElement(RedmineKeys.CREATED_ON)]
         public DateTime? CreatedOn { get; set; }
 
         public XmlSchema GetSchema() { return null; }
@@ -91,21 +91,21 @@ namespace Redmine.Net.Api.Types
 
                 switch (reader.Name)
                 {
-                    case "id": Id = reader.ReadElementContentAsInt(); break;
+                    case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
 
-                    case "filename": FileName = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.FILENAME: FileName = reader.ReadElementContentAsString(); break;
 
-                    case "filesize": FileSize = reader.ReadElementContentAsInt(); break;
+                    case RedmineKeys.FILESIZE: FileSize = reader.ReadElementContentAsInt(); break;
 
-                    case "content_type": ContentType = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.CONTENT_TYPE: ContentType = reader.ReadElementContentAsString(); break;
 
-                    case "author": Author = new IdentifiableName(reader); break;
+                    case RedmineKeys.AUTHOR: Author = new IdentifiableName(reader); break;
 
-                    case "created_on": CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
+                    case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
 
-                    case "description": Description = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.DESCRIPTION: Description = reader.ReadElementContentAsString(); break;
 
-                    case "content_url": ContentUrl = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.CONTENT_URL: ContentUrl = reader.ReadElementContentAsString(); break;
 
                     default: reader.Read(); break;
                 }
@@ -113,11 +113,10 @@ namespace Redmine.Net.Api.Types
         }
 
         public void WriteXml(XmlWriter writer) { }
-
         public bool Equals(Attachment other)
         {
-            if (other == null) return false;
-            return (Id == other.Id && FileName == other.FileName && FileSize == other.FileSize && ContentType == other.ContentType && Description == other.Description && ContentUrl == other.ContentUrl && Author == other.Author && CreatedOn == other.CreatedOn);
+            //todo de terminat
+            return false;
         }
     }
 }

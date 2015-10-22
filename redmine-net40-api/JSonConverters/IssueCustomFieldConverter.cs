@@ -33,8 +33,8 @@ namespace Redmine.Net.Api.JSonConverters
             {
                 var customField = new IssueCustomField();
 
-                customField.Id = dictionary.GetValue<int>("id");
-                customField.Name = dictionary.GetValue<string>("name");
+                customField.Id = dictionary.GetValue<int>(RedmineKeys.ID);
+                customField.Name = dictionary.GetValue<string>(RedmineKeys.NAME);
                 customField.Multiple = dictionary.GetValue<bool>("multiple");
 
                 var val = dictionary.GetValue<object>("value");
@@ -71,7 +71,7 @@ namespace Redmine.Net.Api.JSonConverters
             if (entity.Values == null) return null;
             var itemsCount = entity.Values.Count;
 
-            result.Add("id", entity.Id);
+            result.Add(RedmineKeys.ID, entity.Id);
             if (itemsCount > 1)
             {
                 result.Add("value", entity.Values.Select(x => x.Info).ToArray());

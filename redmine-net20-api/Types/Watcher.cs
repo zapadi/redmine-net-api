@@ -18,7 +18,7 @@ using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
-    [XmlRoot("user")]
+    [XmlRoot(RedmineKeys.USER)]
     public class Watcher : IdentifiableName
     {
         

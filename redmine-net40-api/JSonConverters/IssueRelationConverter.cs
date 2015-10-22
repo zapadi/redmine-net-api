@@ -31,7 +31,7 @@ namespace Redmine.Net.Api.JSonConverters
             {
                 var issueRelation = new IssueRelation();
 
-                issueRelation.Id = dictionary.GetValue<int>("id");
+                issueRelation.Id = dictionary.GetValue<int>(RedmineKeys.ID);
                 issueRelation.IssueId = dictionary.GetValue<int>("issue_id");
                 issueRelation.IssueToId = dictionary.GetValue<int>("issue_to_id");
                 issueRelation.Type = dictionary.GetValue<IssueRelationType>("relation_type");

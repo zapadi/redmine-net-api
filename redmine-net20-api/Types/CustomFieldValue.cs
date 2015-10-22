@@ -14,15 +14,21 @@
    limitations under the License.
 */
 
+using System;
 using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
-    [XmlRoot("value")]
-    public class CustomFieldValue
+    [XmlRoot(RedmineKeys.VALUE)]
+    public class CustomFieldValue : IEquatable<CustomFieldValue>
     {
         [XmlText]
         public string Info { get; set; }
+
+        public bool Equals(CustomFieldValue other)
+        {
+            return Info.Equals(other.Info);
+        }
 
         public override string ToString()
         {

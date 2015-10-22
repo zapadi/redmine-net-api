@@ -25,7 +25,7 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// 
     /// </summary>
-    [XmlRoot("journal")]
+    [XmlRoot(RedmineKeys.JOURNAL)]
     public class Journal : IXmlSerializable, IEquatable<Journal>
     {
         /// <summary>
@@ -34,7 +34,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The id.
         /// </value>
-        [XmlAttribute("id")]
+        [XmlAttribute(RedmineKeys.ID)]
         public int Id { get; set; }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The user.
         /// </value>
-        [XmlElement("user")]
+        [XmlElement(RedmineKeys.USER)]
         public IdentifiableName User { get; set; }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The notes.
         /// </value>
-        [XmlElement("notes")]
+        [XmlElement(RedmineKeys.NOTES)]
         public string Notes { get; set; }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The created on.
         /// </value>
-        [XmlElement("created_on", IsNullable = true)]
+        [XmlElement(RedmineKeys.CREATED_ON, IsNullable = true)]
         public DateTime? CreatedOn { get; set; }
 
         /// <summary>
@@ -70,15 +70,15 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The details.
         /// </value>
-        [XmlArray("details")]
-        [XmlArrayItem("detail")]
+        [XmlArray(RedmineKeys.DETAILS)]
+        [XmlArrayItem(RedmineKeys.DETAIL)]
         public IList<Detail> Details { get; set; }
 
         public XmlSchema GetSchema() { return null; }
 
         public void ReadXml(XmlReader reader)
         {
-            Id = reader.ReadAttributeAsInt("id");
+            Id = reader.ReadAttributeAsInt(RedmineKeys.ID);
             reader.Read();
 
             while (!reader.EOF)
@@ -91,13 +91,13 @@ namespace Redmine.Net.Api.Types
 
                 switch (reader.Name)
                 {
-                    case "user": User = new IdentifiableName(reader); break;
+                    case RedmineKeys.USER: User = new IdentifiableName(reader); break;
 
-                    case "notes": Notes = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.NOTES: Notes = reader.ReadElementContentAsString(); break;
 
-                    case "created_on": CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
+                    case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
 
-                    case "details": Details = reader.ReadElementContentAsCollection<Detail>(); break;
+                    case RedmineKeys.DETAILS: Details = reader.ReadElementContentAsCollection<Detail>(); break;
 
                     default: reader.Read(); break;
                 }
@@ -109,7 +109,7 @@ namespace Redmine.Net.Api.Types
         public bool Equals(Journal other)
         {
             if (other == null) return false;
-            return Id == other.Id && User == other.User && Notes == other.Notes && CreatedOn == other.CreatedOn && Details == other.Details;
+            return Id == other.Id && User == other.User && Notes == other.Notes && CreatedOn == other.CreatedOn && Equals(Details, other.Details);
         }
     }
 }

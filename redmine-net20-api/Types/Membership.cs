@@ -25,22 +25,22 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// Only the roles can be updated, the project and the user of a membership are read-only.
     /// </summary>
-    [XmlRoot("membership")]
+    [XmlRoot(RedmineKeys.MEMBERSHIP)]
     public class Membership : Identifiable<Membership>, IEquatable<Membership>, IXmlSerializable
     {
         /// <summary>
         /// Gets or sets the project.
         /// </summary>
         /// <value>The project.</value>
-        [XmlElement("project")]
+        [XmlElement(RedmineKeys.PROJECT)]
         public IdentifiableName Project { get; set; }
 
         /// <summary>
         /// Gets or sets the type.
         /// </summary>
         /// <value>The type.</value>
-        [XmlArray("roles")]
-        [XmlArrayItem("role")]
+        [XmlArray(RedmineKeys.ROLES)]
+        [XmlArrayItem(RedmineKeys.ROLE)]
         public List<MembershipRole> Roles { get; set; }
 
         public XmlSchema GetSchema() { return null; }
@@ -58,13 +58,13 @@ namespace Redmine.Net.Api.Types
 
                 switch (reader.Name)
                 {
-                    case "id": Id = reader.ReadElementContentAsInt();break;
+                    case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
 
-                    case "project": Project = new IdentifiableName(reader); break;
+                    case RedmineKeys.PROJECT: Project = new IdentifiableName(reader); break;
 
-                    case "roles": Roles = reader.ReadElementContentAsCollection<MembershipRole>();break;
-                    
-                    default: reader.Read();break;
+                    case RedmineKeys.ROLES: Roles = reader.ReadElementContentAsCollection<MembershipRole>(); break;
+
+                    default: reader.Read(); break;
                 }
             }
         }

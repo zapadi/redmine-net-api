@@ -19,13 +19,13 @@ using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
-    [XmlRoot("tracker")]
+    [XmlRoot(RedmineKeys.TRACKER)]
     public class TrackerCustomField : Tracker
     {
         public override void ReadXml(XmlReader reader)
         {
-            Id = reader.ReadAttributeAsInt("id");
-            Name = reader.GetAttribute("name");
+            Id = reader.ReadAttributeAsInt(RedmineKeys.ID);
+            Name = reader.GetAttribute(RedmineKeys.NAME);
             reader.Read();
         }
     }

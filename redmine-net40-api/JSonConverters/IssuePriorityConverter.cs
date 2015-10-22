@@ -29,8 +29,8 @@ namespace Redmine.Net.Api.JSonConverters
             {
                 var issuePriority = new IssuePriority();
 
-                issuePriority.Id = dictionary.GetValue<int>("id");
-                issuePriority.Name = dictionary.GetValue<string>("name");
+                issuePriority.Id = dictionary.GetValue<int>(RedmineKeys.ID);
+                issuePriority.Name = dictionary.GetValue<string>(RedmineKeys.NAME);
                 issuePriority.IsDefault = dictionary.GetValue<bool>("is_default");
 
                 return issuePriority;

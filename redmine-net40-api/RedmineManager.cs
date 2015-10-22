@@ -72,8 +72,8 @@ namespace Redmine.Net.Api
             {typeof (TimeEntryActivity), "enumerations/time_entry_activities"},
             {typeof (IssuePriority), "enumerations/issue_priorities"},
             {typeof (Watcher), "watchers"},
-            {typeof (IssueCustomField), "custom_fields"},
-            {typeof (CustomField), "custom_fields"}
+            {typeof (IssueCustomField), RedmineKeys.CUSTOM_FIELDS},
+            {typeof (CustomField), RedmineKeys.CUSTOM_FIELDS}
         };
 
         private readonly string host, apiKey, basicAuthorization;
@@ -182,14 +182,14 @@ namespace Redmine.Net.Api
         /// Returns a list of users.
         /// </summary>
         /// <param name="userStatus">get only users with the given status. Default is 1 (active users)</param>
-        /// <param name="name"> filter users on their login, firstname, lastname and mail ; if the pattern contains a space, it will also return users whose firstname match the first word or lastname match the second word.</param>
+        /// <param name=RedmineKeys.NAME> filter users on their login, firstname, lastname and mail ; if the pattern contains a space, it will also return users whose firstname match the first word or lastname match the second word.</param>
         /// <param name="groupId">get only users who are members of the given group</param>
         /// <returns></returns>
         public IList<User> GetUsers(UserStatus userStatus = UserStatus.STATUS_ACTIVE, string name = null, int groupId = 0)
         {
             var filters = new NameValueCollection { { "status", ((int)userStatus).ToString(CultureInfo.InvariantCulture) } };
 
-            if (!string.IsNullOrWhiteSpace(name)) filters.Add("name", name);
+            if (!string.IsNullOrWhiteSpace(name)) filters.Add(RedmineKeys.NAME, name);
 
             if (groupId > 0) filters.Add("group_id", groupId.ToString(CultureInfo.InvariantCulture));
 
@@ -371,7 +371,7 @@ namespace Redmine.Net.Api
 
             if (type == typeof(Version) || type == typeof(IssueCategory) || type == typeof(ProjectMembership))
             {
-                var projectId = GetOwnerId(parameters, "project_id");
+                var projectId = GetOwnerId(parameters, RedmineKeys.PROJECT_ID);
                 if (string.IsNullOrEmpty(projectId)) throw new RedmineException("The project id is mandatory! \nCheck if you have included the parameter project_id to parameters.");
 
                 address = string.Format(ENTITY_WITH_PARENT_FORMAT, host, "projects", projectId, urls[type], mimeFormat);
@@ -380,7 +380,7 @@ namespace Redmine.Net.Api
             {
                 if (type == typeof(IssueRelation))
                 {
-                    string issueId = GetOwnerId(parameters, "issue_id");
+                    string issueId = GetOwnerId(parameters, RedmineKeys.ISSUE_ID);
                     if (string.IsNullOrEmpty(issueId))
                         throw new RedmineException("The issue id is mandatory! \nCheck if you have included the parameter issue_id to parameters");
 
@@ -390,7 +390,7 @@ namespace Redmine.Net.Api
                 {
                     if (type == typeof(News))
                     {
-                        var projectId = GetOwnerId(parameters, "project_id");
+                        var projectId = GetOwnerId(parameters, RedmineKeys.PROJECT_ID);
                         if (!string.IsNullOrEmpty(projectId))
                         {
                             address = string.Format(ENTITY_WITH_PARENT_FORMAT, host, "projects", projectId, urls[type], mimeFormat);
@@ -575,6 +575,9 @@ namespace Redmine.Net.Api
         {
             var webClient = new RedmineWebClient();
 
+            webClient.Headers.Add(HttpRequestHeader.ContentType, mimeFormat == MimeFormat.json ? "application/json" : "application/xml");
+            webClient.Encoding = Encoding.UTF8;
+
             if (parameters != null) webClient.QueryString = parameters;
 
             if (!string.IsNullOrEmpty(apiKey))
@@ -584,16 +587,15 @@ namespace Redmine.Net.Api
             else
             {
                 if (credentialCache != null) webClient.Credentials = credentialCache;
+                webClient.UseDefaultCredentials = true;
+                webClient.Headers["Authorization"] = basicAuthorization;
+                webClient.Headers[HttpRequestHeader.UserAgent] = ": Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.3) Gecko/20090824 Firefox/3.5.3 (.NET CLR 4.0.20506)";
+                //.Add(HttpRequestHeader.Authorization, basicAuthorization);
+
             }
 
             if (!string.IsNullOrWhiteSpace(ImpersonateUser)) webClient.Headers.Add("X-Redmine-Switch-User", ImpersonateUser);
-
-            webClient.UseDefaultCredentials = false;
-
-            webClient.Headers.Add("Content-Type", mimeFormat == MimeFormat.json ? "application/json; charset=utf-8" : "application/xml; charset=utf-8");
-            webClient.Encoding = Encoding.UTF8;
-            webClient.Headers.Add("Authorization", basicAuthorization);
-
+          
             return webClient;
         }
 
@@ -620,9 +622,9 @@ namespace Redmine.Net.Api
 
             webClient.UseDefaultCredentials = false;
 
-            webClient.Headers.Add("Content-Type", "application/octet-stream");
+            webClient.Headers.Add(HttpRequestHeader.ContentType, "application/octet-stream");
             // Workaround - it seems that WebClient doesn't send credentials in each POST request
-            webClient.Headers.Add("Authorization", basicAuthorization);
+            webClient.Headers.Add(HttpRequestHeader.Authorization, basicAuthorization);
 
             return webClient;
         }
@@ -728,11 +730,11 @@ namespace Redmine.Net.Api
             if (mimeFormat == MimeFormat.json)
             {
                 var jsonRoot = (string)null;
-                if (type == typeof(IssueCategory)) jsonRoot = "issue_category";
-                if (type == typeof(IssueRelation)) jsonRoot = "relation";
-                if (type == typeof(TimeEntry)) jsonRoot = "time_entry";
-                if (type == typeof(ProjectMembership)) jsonRoot = "membership";
-                if (type == typeof (WikiPage)) jsonRoot = "wiki_page";
+                if (type == typeof(IssueCategory)) jsonRoot = RedmineKeys.ISSUE_CATEGORY;
+                if (type == typeof(IssueRelation)) jsonRoot = RedmineKeys.RELATION;
+                if (type == typeof(TimeEntry)) jsonRoot = RedmineKeys.TIME_ENTRY;
+                if (type == typeof(ProjectMembership)) jsonRoot = RedmineKeys.MEMBERSHIP;
+                if (type == typeof (WikiPage)) jsonRoot = RedmineKeys.WIKI_PAGE;
 
                 return RedmineSerialization.JsonDeserialize<T>(response, jsonRoot);
             }
@@ -745,8 +747,8 @@ namespace Redmine.Net.Api
             Type type = typeof(T);
             if (mimeFormat == MimeFormat.json)
             {
-                if (type == typeof(IssuePriority)) jsonRoot = "issue_priorities";
-                if (type == typeof(TimeEntryActivity)) jsonRoot = "time_entry_activities";
+                if (type == typeof(IssuePriority)) jsonRoot = RedmineKeys.ISSUE_PRIORITIES;
+                if (type == typeof(TimeEntryActivity)) jsonRoot = RedmineKeys.TIME_ENTRY_ACTIVITIES;
                 return RedmineSerialization.JsonDeserializeToList<T>(response, jsonRoot, out totalCount);
             }
 
