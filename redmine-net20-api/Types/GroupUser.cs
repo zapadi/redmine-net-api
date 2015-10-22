@@ -19,18 +19,18 @@ using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
-    [XmlRoot("user")]
-    public class GroupUser : IdentifiableName, IEquatable<GroupUser>
+    [XmlRoot(RedmineKeys.USER)]
+    public class GroupUser : IdentifiableName//, IEquatable<GroupUser>
     {
-        public bool Equals(GroupUser other)
-        {
-            if (other == null) return false;
-            return Id == other.Id && Name == other.Name;
-        }
+        //public bool Equals(GroupUser other)
+        //{
+        //    if (other == null) return false;
+        //    return Id == other.Id && Name == other.Name;
+        //}
 
-        public override string ToString()
-        {
-            return Id + ", " + Name;
-        }
+        //public override string ToString()
+        //{
+        //    return Id + ", " + Name;
+        //}
     }
 }

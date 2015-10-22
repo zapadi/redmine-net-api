@@ -24,7 +24,7 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// Availability 2.2
     /// </summary>
-    [XmlRoot("issue_priority")]
+    [XmlRoot(RedmineKeys.ISSUE_PRIORITY)]
     public class IssuePriority : IXmlSerializable, IEquatable<IssuePriority>
     {
         /// <summary>
@@ -33,7 +33,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The id.
         /// </value>
-        [XmlElement("id")]
+        [XmlElement(RedmineKeys.ID)]
         public int Id { get; set; }
 
         /// <summary>
@@ -42,12 +42,12 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The name.
         /// </value>
-        [XmlElement("name")]
+        [XmlElement(RedmineKeys.NAME)]
         public string Name { get; set; }
-       
-        [XmlElement("is_default")]
+
+        [XmlElement(RedmineKeys.is_default)]
         public bool IsDefault { get; set; }
-       
+
         #region Implementation of IXmlSerializable
 
         public XmlSchema GetSchema() { return null; }
@@ -69,11 +69,11 @@ namespace Redmine.Net.Api.Types
 
                 switch (reader.Name)
                 {
-                    case "id": Id = reader.ReadElementContentAsInt(); break;
+                    case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
 
-                    case "name": Name = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.NAME: Name = reader.ReadElementContentAsString(); break;
 
-                    case "is_default": IsDefault = reader.ReadElementContentAsBoolean(); break;
+                    case RedmineKeys.is_default: IsDefault = reader.ReadElementContentAsBoolean(); break;
 
                     default: reader.Read(); break;
                 }

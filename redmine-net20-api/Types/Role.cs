@@ -25,7 +25,7 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// Availability 1.4
     /// </summary>
-    [XmlRoot("role")]
+    [XmlRoot(RedmineKeys.ROLE)]
     public class Role : IXmlSerializable, IEquatable<Role>
     {
         /// <summary>
@@ -34,7 +34,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The id.
         /// </value>
-        [XmlElement("id")]
+        [XmlElement(RedmineKeys.ID)]
         public int Id { get; set; }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The name.
         /// </value>
-        [XmlElement("name")]
+        [XmlElement(RedmineKeys.NAME)]
         public string Name { get; set; }
 
         /// <summary>
@@ -52,11 +52,11 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The issue relations.
         /// </value>
-        [XmlArray("permissions")]
-        [XmlArrayItem("permission")]
+        [XmlArray(RedmineKeys.PERMISSIONS)]
+        [XmlArrayItem(RedmineKeys.PERMISSION)]
         public IList<Permission> Permissions { get; set; }
 
-        public XmlSchema GetSchema(){return null;}
+        public XmlSchema GetSchema() { return null; }
 
         public void ReadXml(XmlReader reader)
         {
@@ -71,18 +71,18 @@ namespace Redmine.Net.Api.Types
 
                 switch (reader.Name)
                 {
-                    case "id": Id = reader.ReadElementContentAsInt(); break;
+                    case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
 
-                    case "name": Name = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.NAME: Name = reader.ReadElementContentAsString(); break;
 
-                    case "permissions": Permissions = reader.ReadElementContentAsCollection<Permission>(); break;
+                    case RedmineKeys.PERMISSIONS: Permissions = reader.ReadElementContentAsCollection<Permission>(); break;
 
                     default: reader.Read(); break;
                 }
             }
         }
 
-        public void WriteXml(XmlWriter writer){}
+        public void WriteXml(XmlWriter writer) { }
 
         public bool Equals(Role other)
         {

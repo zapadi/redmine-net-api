@@ -24,7 +24,7 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// Availability 1.3
     /// </summary>
-    [XmlRoot("tracker")]
+    [XmlRoot(RedmineKeys.TRACKER)]
     public class Tracker : IXmlSerializable, IEquatable<Tracker>
     {
         /// <summary>
@@ -33,7 +33,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The id.
         /// </value>
-        [XmlElement("id")]
+        [XmlElement(RedmineKeys.ID)]
         public int Id { get; set; }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The name.
         /// </value>
-        [XmlElement("name")]
+        [XmlElement(RedmineKeys.NAME)]
         public string Name { get; set; }
 
         public void WriteXml(XmlWriter writer) { }
@@ -66,9 +66,9 @@ namespace Redmine.Net.Api.Types
 
                 switch (reader.Name)
                 {
-                    case "id": Id = reader.ReadElementContentAsInt(); break;
+                    case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
 
-                    case "name": Name = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.NAME: Name = reader.ReadElementContentAsString(); break;
 
                     default: reader.Read(); break;
                 }

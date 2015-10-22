@@ -32,10 +32,10 @@ namespace Redmine.Net.Api.JSonConverters
             {
                 var group = new Group();
 
-                group.Id = dictionary.GetValue<int>("id");
-                group.Name = dictionary.GetValue<string>("name");
+                group.Id = dictionary.GetValue<int>(RedmineKeys.ID);
+                group.Name = dictionary.GetValue<string>(RedmineKeys.NAME);
                 group.Users = dictionary.GetValueAsCollection<GroupUser>("users");
-                group.CustomFields = dictionary.GetValueAsCollection<IssueCustomField>("custom_fields");
+                group.CustomFields = dictionary.GetValueAsCollection<IssueCustomField>(RedmineKeys.CUSTOM_FIELDS);
                 group.Memberships = dictionary.GetValueAsCollection<Membership>("memberships");
 
                 return group;
@@ -52,7 +52,7 @@ namespace Redmine.Net.Api.JSonConverters
 
             if (entity != null)
             {
-                result.Add("name", entity.Name);
+                result.Add(RedmineKeys.NAME, entity.Name);
                 if (entity.Users != null)
                     result.Add("user_ids", entity.Users.Select(x => x.Id).ToArray());
 

@@ -25,25 +25,25 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// 
     /// </summary>
-    [XmlRoot("custom_field")]
+    [XmlRoot(RedmineKeys.CUSTOM_FIELD)]
     public class IssueCustomField : IdentifiableName, IEquatable<IssueCustomField>
     {
         /// <summary>
         /// Gets or sets the value.
         /// </summary>
         /// <value>The value.</value>
-        [XmlArray("value")]
-        [XmlArrayItem("value")]
+        [XmlArray(RedmineKeys.VALUE)]
+        [XmlArrayItem(RedmineKeys.VALUE)]
         public IList<CustomFieldValue> Values { get; set; }
 
-        [XmlAttribute("multiple")]
+        [XmlAttribute(RedmineKeys.MULTIPLE)]
         public bool Multiple { get; set; }
 
         public override void ReadXml(XmlReader reader)
         {
-            Id = reader.ReadAttributeAsInt("id");
-            Name = reader.GetAttribute("name");
-            Multiple = reader.ReadAttributeAsBoolean("multiple");
+            base.ReadXml(reader);
+
+            Multiple = reader.ReadAttributeAsBoolean(RedmineKeys.MULTIPLE);
             reader.Read();
 
             if (string.IsNullOrEmpty(reader.GetAttribute("type")))
@@ -62,19 +62,19 @@ namespace Redmine.Net.Api.Types
             if (Values == null) return;
             var itemsCount = Values.Count;
 
-            writer.WriteAttributeString("id", Id.ToString(CultureInfo.InvariantCulture));
+            writer.WriteAttributeString(RedmineKeys.ID, Id.ToString(CultureInfo.InvariantCulture));
             if (itemsCount > 1)
             {
-                writer.WriteStartElement("value");
+                writer.WriteStartElement(RedmineKeys.VALUE);
                 writer.WriteAttributeString("type", "array");
 
-                foreach (var v in Values) writer.WriteElementString("value", v.Info);
+                foreach (var v in Values) writer.WriteElementString(RedmineKeys.VALUE, v.Info);
 
                 writer.WriteEndElement();
             }
             else
             {
-                writer.WriteElementString("value", itemsCount > 0 ? Values[0].Info : null);
+                writer.WriteElementString(RedmineKeys.VALUE, itemsCount > 0 ? Values[0].Info : null);
             }
         }
 

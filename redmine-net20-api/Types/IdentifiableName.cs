@@ -40,6 +40,11 @@ namespace Redmine.Net.Api.Types
         /// <param name="reader">The reader.</param>
         public IdentifiableName(XmlReader reader)
         {
+            Initialize(reader);
+        }
+
+        private void Initialize(XmlReader reader)
+        {
             ReadXml(reader);
         }
 
@@ -47,33 +52,44 @@ namespace Redmine.Net.Api.Types
         /// Gets or sets the name.
         /// </summary>
         /// <value>The name.</value>
-        [XmlAttribute("name")]
+        [XmlAttribute(RedmineKeys.NAME)]
         public String Name { get; set; }
 
         public XmlSchema GetSchema() { return null; }
 
         public virtual void ReadXml(XmlReader reader)
         {
-            Id = Convert.ToInt32(reader.GetAttribute("id"));
-            Name = reader.GetAttribute("name");
+            Id = Convert.ToInt32(reader.GetAttribute(RedmineKeys.ID));
+            Name = reader.GetAttribute(RedmineKeys.NAME);
             reader.Read();
         }
 
         public virtual void WriteXml(XmlWriter writer)
         {
-            writer.WriteAttributeString("id", Id.ToString(CultureInfo.InvariantCulture));
-            writer.WriteAttributeString("name", Name);
+            writer.WriteAttributeString(RedmineKeys.ID, Id.ToString(CultureInfo.InvariantCulture));
+            writer.WriteAttributeString(RedmineKeys.NAME, Name);
         }
 
         public override string ToString()
         {
-            return Id + ", " + Name;
+            return string.Format("{0}, {1}", Id, Name);
         }
 
         public bool Equals(IdentifiableName other)
         {
             if (other == null) return false;
             return (Id == other.Id && Name == other.Name);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = base.GetHashCode();
+                var nameStrHashCode = !string.IsNullOrEmpty(Name) ? Name.GetHashCode() : 0;
+                hashCode = (hashCode * 397) ^ nameStrHashCode;
+                return hashCode;
+            }
         }
     }
 }

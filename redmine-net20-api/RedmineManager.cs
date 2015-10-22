@@ -72,8 +72,8 @@ namespace Redmine.Net.Api
             {typeof (TimeEntryActivity), "enumerations/time_entry_activities"},
             {typeof (IssuePriority), "enumerations/issue_priorities"},
             {typeof (Watcher), "watchers"},
-            {typeof (IssueCustomField), "custom_fields"},
-            {typeof (CustomField), "custom_fields"}
+            {typeof (IssueCustomField), RedmineKeys.CUSTOM_FIELDS},
+            {typeof (CustomField), RedmineKeys.CUSTOM_FIELDS}
         };
 
         private readonly string host, apiKey, basicAuthorization;
@@ -181,14 +181,14 @@ namespace Redmine.Net.Api
         /// Returns a list of users.
         /// </summary>
         /// <param name="userStatus">get only users with the given status. Default is 1 (active users)</param>
-        /// <param name="name"> filter users on their login, firstname, lastname and mail ; if the pattern contains a space, it will also return users whose firstname match the first word or lastname match the second word.</param>
+        /// <param name=RedmineKeys.NAME> filter users on their login, firstname, lastname and mail ; if the pattern contains a space, it will also return users whose firstname match the first word or lastname match the second word.</param>
         /// <param name="groupId">get only users who are members of the given group</param>
         /// <returns></returns>
         public IList<User> GetUsers(UserStatus userStatus = UserStatus.STATUS_ACTIVE, string name = null, int groupId = 0)
         {
             var filters = new NameValueCollection { { "status", ((int)userStatus).ToString(CultureInfo.InvariantCulture) } };
 
-            if (!string.IsNullOrEmpty(name)) filters.Add("name", name);
+            if (!string.IsNullOrEmpty(name)) filters.Add(RedmineKeys.NAME, name);
 
             if (groupId > 0) filters.Add("groupId", groupId.ToString(CultureInfo.InvariantCulture));
 
@@ -420,7 +420,7 @@ namespace Redmine.Net.Api
         /// Returns a Redmine object.
         /// </summary>
         /// <typeparam name="T">The type of objects to retrieve.</typeparam>
-        /// <param name="id">The id of the object.</param>
+        /// <param name=RedmineKeys.ID>The id of the object.</param>
         /// <param name="parameters">Optional filters and/or optional fetched data.</param>
         /// <returns>Returns the object of type T.</returns>
         /// <exception cref="Redmine.Net.Api.RedmineException"></exception>
@@ -502,7 +502,7 @@ namespace Redmine.Net.Api
         /// Updates a Redmine object.
         /// </summary>
         /// <typeparam name="T">The type of object to be update.</typeparam>
-        /// <param name="id">The id of the object to be update.</param>
+        /// <param name=RedmineKeys.ID>The id of the object to be update.</param>
         /// <param name="obj">The object to be update.</param>
         /// <remarks>When trying to update an object with invalid or missing attribute parameters, you will get a 422 Unprocessable Entity response. That means that the object could not be updated.</remarks>
         /// <exception cref="Redmine.Net.Api.RedmineException"></exception>
@@ -516,7 +516,7 @@ namespace Redmine.Net.Api
         /// Updates a Redmine object.
         /// </summary>
         /// <typeparam name="T">The type of object to be update.</typeparam>
-        /// <param name="id">The id of the object to be update.</param>
+        /// <param name=RedmineKeys.ID>The id of the object to be update.</param>
         /// <param name="obj">The object to be update.</param>
         /// <param name="projectId"></param>
         /// <remarks>When trying to update an object with invalid or missing attribute parameters, you will get a 422 Unprocessable Entity response. That means that the object could not be updated.</remarks>
@@ -552,7 +552,7 @@ namespace Redmine.Net.Api
         /// Deletes the Redmine object.
         /// </summary>
         /// <typeparam name="T">The type of objects to delete.</typeparam>
-        /// <param name="id">The id of the object to delete</param>
+        /// <param name=RedmineKeys.ID>The id of the object to delete</param>
         /// <param name="parameters">Optional filters and/or optional fetched data.</param>
         /// <exception cref="Redmine.Net.Api.RedmineException"></exception>
         /// <code></code>

@@ -31,17 +31,17 @@ namespace Redmine.Net.Api.JSonConverters
             {
                 User user = new User();
                 user.Login = dictionary.GetValue<string>("login");
-                user.Id = dictionary.GetValue<int>("id");
+                user.Id = dictionary.GetValue<int>(RedmineKeys.ID);
                 user.FirstName = dictionary.GetValue<string>("firstname");
                 user.LastName = dictionary.GetValue<string>("lastname");
                 user.Email = dictionary.GetValue<string>("mail");
                 user.AuthenticationModeId = dictionary.GetValue<int?>("auth_source_id");
-                user.CreatedOn = dictionary.GetValue<DateTime?>("created_on");
+                user.CreatedOn = dictionary.GetValue<DateTime?>(RedmineKeys.CREATED_ON);
                 user.LastLoginOn = dictionary.GetValue<DateTime?>("last_login_on");
                 user.ApiKey = dictionary.GetValue<string>("api_key");
                 user.Status = dictionary.GetValue<UserStatus>("status");
                 user.MustChangePassword = dictionary.GetValue<bool>("must_change_passwd");
-                user.CustomFields = dictionary.GetValueAsCollection<IssueCustomField>("custom_fields");
+                user.CustomFields = dictionary.GetValueAsCollection<IssueCustomField>(RedmineKeys.CUSTOM_FIELDS);
                 user.Memberships = dictionary.GetValueAsCollection<Membership>("memberships");
                 user.Groups = dictionary.GetValueAsCollection<UserGroup>("groups");
 
@@ -69,7 +69,7 @@ namespace Redmine.Net.Api.JSonConverters
                 if (entity.CustomFields != null)
                 {
                     serializer.RegisterConverters(new[] { new IssueCustomFieldConverter() });
-                    result.Add("custom_fields", entity.CustomFields.ToArray());
+                    result.Add(RedmineKeys.CUSTOM_FIELDS, entity.CustomFields.ToArray());
                 }
 
                 root["user"] = result;

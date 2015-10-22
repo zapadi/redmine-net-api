@@ -19,10 +19,10 @@ using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
-    [XmlRoot("possible_value")]
+    [XmlRoot(RedmineKeys.POSSIBLE_VALUE)]
     public class CustomFieldPossibleValue : IEquatable<CustomFieldPossibleValue>
     {
-        [XmlElement("value")]
+        [XmlElement(RedmineKeys.VALUE)]
         public string Value { get; set; }
 
         public bool Equals(CustomFieldPossibleValue other)

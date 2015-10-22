@@ -30,8 +30,8 @@ namespace Redmine.Net.Api.JSonConverters
             if ((dictionary != null))
             {
                 var projectEnableModule = new ProjectEnabledModule();
-                projectEnableModule.Id = dictionary.GetValue<int>("id");
-                projectEnableModule.Name = dictionary.GetValue<string>("name");
+                projectEnableModule.Id = dictionary.GetValue<int>(RedmineKeys.ID);
+                projectEnableModule.Name = dictionary.GetValue<string>(RedmineKeys.NAME);
                 return projectEnableModule;
             }
             return null;

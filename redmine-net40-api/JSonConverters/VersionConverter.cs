@@ -33,16 +33,16 @@ namespace Redmine.Net.Api.JSonConverters
             {
                 var version = new Version();
 
-                version.Id = dictionary.GetValue<int>("id");
+                version.Id = dictionary.GetValue<int>(RedmineKeys.ID);
                 version.Description = dictionary.GetValue<string>("description");
-                version.Name = dictionary.GetValue<string>("name");
-                version.CreatedOn = dictionary.GetValue<DateTime?>("created_on");
-                version.UpdatedOn = dictionary.GetValue<DateTime?>("updated_on");
+                version.Name = dictionary.GetValue<string>(RedmineKeys.NAME);
+                version.CreatedOn = dictionary.GetValue<DateTime?>(RedmineKeys.CREATED_ON);
+                version.UpdatedOn = dictionary.GetValue<DateTime?>(RedmineKeys.UPDATED_ON);
                 version.DueDate = dictionary.GetValue<DateTime?>("due_date");
                 version.Project = dictionary.GetValueAsIdentifiableName("project");
                 version.Sharing = dictionary.GetValue<VersionSharing>("sharing");
                 version.Status = dictionary.GetValue<VersionStatus>("status");
-                version.CustomFields = dictionary.GetValueAsCollection<IssueCustomField>("custom_fields");
+                version.CustomFields = dictionary.GetValueAsCollection<IssueCustomField>(RedmineKeys.CUSTOM_FIELDS);
 
                 return version;
             }
@@ -58,7 +58,7 @@ namespace Redmine.Net.Api.JSonConverters
 
             if (entity != null)
             {
-                result.Add("name", entity.Name);
+                result.Add(RedmineKeys.NAME, entity.Name);
                 result.Add("status", entity.Status.ToString());
                 result.Add("sharing", entity.Sharing.ToString());
                 result.Add("description", entity.Description);

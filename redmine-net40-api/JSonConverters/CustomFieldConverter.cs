@@ -15,8 +15,8 @@ namespace Redmine.Net.Api.JSonConverters
             {
                 var customField = new CustomField();
 
-                customField.Id = dictionary.GetValue<int>("id");
-                customField.Name = dictionary.GetValue<string>("name");
+                customField.Id = dictionary.GetValue<int>(RedmineKeys.ID);
+                customField.Name = dictionary.GetValue<string>(RedmineKeys.NAME);
                 customField.CustomizedType = dictionary.GetValue<string>("customized_type");
                 customField.FieldFormat = dictionary.GetValue<string>("field_format");
                 customField.Regexp = dictionary.GetValue<string>("regexp");

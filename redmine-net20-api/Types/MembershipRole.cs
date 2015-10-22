@@ -23,7 +23,7 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// 
     /// </summary>
-    [XmlRoot("role")]
+    [XmlRoot(RedmineKeys.ROLE)]
     public class MembershipRole : IdentifiableName, IEquatable<MembershipRole>
     {
         /// <summary>
@@ -32,7 +32,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         ///   <c>true</c> if inherited; otherwise, <c>false</c>.
         /// </value>
-        [XmlAttribute("inherited")]
+        [XmlAttribute(RedmineKeys.INHERITED)]
         public bool Inherited { get; set; }
 
         /// <summary>
@@ -41,9 +41,8 @@ namespace Redmine.Net.Api.Types
         /// <param name="reader">The reader.</param>
         public override void ReadXml(XmlReader reader)
         {
-            Id = Convert.ToInt32(reader.GetAttribute("id"));
-            Name = reader.GetAttribute("name");
-            Inherited = reader.ReadAttributeAsBoolean("inherited");
+            base.ReadXml(reader);
+            Inherited = reader.ReadAttributeAsBoolean(RedmineKeys.INHERITED);
             reader.Read();
         }
 
@@ -60,7 +59,7 @@ namespace Redmine.Net.Api.Types
 
         public override string ToString()
         {
-            return Id + ", " + Name + ", " + Inherited;
+            return base.ToString() + Inherited;
         }
     }
 }

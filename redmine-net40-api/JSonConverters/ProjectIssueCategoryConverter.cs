@@ -30,8 +30,8 @@ namespace Redmine.Net.Api.JSonConverters
             if ((dictionary != null))
             {
                 var projectTracker = new ProjectIssueCategory();
-                projectTracker.Id = dictionary.GetValue<int>("id");
-                projectTracker.Name = dictionary.GetValue<string>("name");
+                projectTracker.Id = dictionary.GetValue<int>(RedmineKeys.ID);
+                projectTracker.Name = dictionary.GetValue<string>(RedmineKeys.NAME);
                 return projectTracker;
             }
             return null;
@@ -45,8 +45,8 @@ namespace Redmine.Net.Api.JSonConverters
 
             if (entity != null)
             {
-                result.Add("id", entity.Id);
-                result.Add("name", entity.Name);
+                result.Add(RedmineKeys.ID, entity.Id);
+                result.Add(RedmineKeys.NAME, entity.Name);
 
                 root["issue_category"] = result;
                 return root;

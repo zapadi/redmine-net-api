@@ -25,7 +25,7 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// Availability 2.1
     /// </summary>
-    [XmlRoot("group")]
+    [XmlRoot(RedmineKeys.GROUP)]
     public class Group : IXmlSerializable, IEquatable<Group>
     {
         /// <summary>
@@ -34,7 +34,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The id.
         /// </value>
-        [XmlElement("id")]
+        [XmlElement(RedmineKeys.ID)]
         public int Id { get; set; }
 
         /// <summary>
@@ -43,30 +43,30 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The name.
         /// </value>
-        [XmlElement("name")]
+        [XmlElement(RedmineKeys.NAME)]
         public string Name { get; set; }
 
         /// <summary>
         /// Represents the group's users.
         /// </summary>
-        [XmlArray("users")]
-        [XmlArrayItem("user")]
+        [XmlArray(RedmineKeys.USERS)]
+        [XmlArrayItem(RedmineKeys.USER)]
         public List<GroupUser> Users { get; set; }
 
         /// <summary>
         /// Gets or sets the custom fields.
         /// </summary>
         /// <value>The custom fields.</value>
-        [XmlArray("custom_fields")]
-        [XmlArrayItem("custom_field")]
+        [XmlArray(RedmineKeys.CUSTOM_FIELDS)]
+        [XmlArrayItem(RedmineKeys.CUSTOM_FIELD)]
         public IList<IssueCustomField> CustomFields { get; set; }
 
         /// <summary>
         /// Gets or sets the custom fields.
         /// </summary>
         /// <value>The custom fields.</value>
-        [XmlArray("memberships")]
-        [XmlArrayItem("membership")]
+        [XmlArray(RedmineKeys.MEMBERSHIPS)]
+        [XmlArrayItem(RedmineKeys.MEMBERSHIP)]
         public IList<Membership> Memberships { get; set; }
 
         #region Implementation of IXmlSerializable
@@ -96,15 +96,15 @@ namespace Redmine.Net.Api.Types
 
                 switch (reader.Name)
                 {
-                    case "id": Id = reader.ReadElementContentAsInt(); break;
+                    case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
 
-                    case "name": Name = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.NAME: Name = reader.ReadElementContentAsString(); break;
 
-                    case "users": Users = reader.ReadElementContentAsCollection<GroupUser>(); break;
+                    case RedmineKeys.USERS: Users = reader.ReadElementContentAsCollection<GroupUser>(); break;
 
-                    case "custom_fields": CustomFields = reader.ReadElementContentAsCollection<IssueCustomField>(); break;
+                    case RedmineKeys.CUSTOM_FIELDS: CustomFields = reader.ReadElementContentAsCollection<IssueCustomField>(); break;
 
-                    case "memberships": Memberships = reader.ReadElementContentAsCollection<Membership>(); break;
+                    case RedmineKeys.MEMBERSHIPS: Memberships = reader.ReadElementContentAsCollection<Membership>(); break;
 
                     default: reader.Read(); break;
                 }
@@ -117,11 +117,11 @@ namespace Redmine.Net.Api.Types
         /// <param name="writer">The <see cref="T:System.Xml.XmlWriter"/> stream to which the object is serialized. </param>
         public void WriteXml(XmlWriter writer)
         {
-            writer.WriteElementString("name", Name);
+            writer.WriteElementString(RedmineKeys.NAME, Name);
 
             if (Users == null) return;
-            
-            writer.WriteStartElement("user_ids");
+
+            writer.WriteStartElement(RedmineKeys.USER_IDS);
             writer.WriteAttributeString("type", "array");
             foreach (var userId in Users)
             {
@@ -144,7 +144,7 @@ namespace Redmine.Net.Api.Types
         public bool Equals(Group other)
         {
             if (other == null) return false;
-            return Id == other.Id && Name == other.Name && Users == other.Users && CustomFields == other.CustomFields && Memberships == other.Memberships;
+            return Id == other.Id && Name == other.Name && Users == other.Users && Equals(CustomFields, other.CustomFields) && Equals(Memberships, other.Memberships);
         }
 
         #endregion

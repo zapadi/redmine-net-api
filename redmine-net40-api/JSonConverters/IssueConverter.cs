@@ -33,13 +33,13 @@ namespace Redmine.Net.Api.JSonConverters
             {
                 var issue = new Issue();
 
-                issue.Id = dictionary.GetValue<int>("id");
+                issue.Id = dictionary.GetValue<int>(RedmineKeys.ID);
                 issue.Description = dictionary.GetValue<string>("description");
                 issue.Project = dictionary.GetValueAsIdentifiableName("project");
                 issue.Tracker = dictionary.GetValueAsIdentifiableName("tracker");
                 issue.Status = dictionary.GetValueAsIdentifiableName("status");
-                issue.CreatedOn = dictionary.GetValue<DateTime?>("created_on");
-                issue.UpdatedOn = dictionary.GetValue<DateTime?>("updated_on");
+                issue.CreatedOn = dictionary.GetValue<DateTime?>(RedmineKeys.CREATED_ON);
+                issue.UpdatedOn = dictionary.GetValue<DateTime?>(RedmineKeys.UPDATED_ON);
                 issue.ClosedOn = dictionary.GetValue<DateTime?>("closed_on");
                 issue.Priority = dictionary.GetValueAsIdentifiableName("priority");
                 issue.Author = dictionary.GetValueAsIdentifiableName("author");
@@ -55,7 +55,7 @@ namespace Redmine.Net.Api.JSonConverters
                 issue.EstimatedHours = dictionary.GetValue<float>("estimated_hours");
                 issue.ParentIssue = dictionary.GetValueAsIdentifiableName("parent");
 
-                issue.CustomFields = dictionary.GetValueAsCollection<IssueCustomField>("custom_fields");
+                issue.CustomFields = dictionary.GetValueAsCollection<IssueCustomField>(RedmineKeys.CUSTOM_FIELDS);
                 issue.Attachments = dictionary.GetValueAsCollection<Attachment>("attachments");
                 issue.Relations = dictionary.GetValueAsCollection<IssueRelation>("relations");
                 issue.Journals = dictionary.GetValueAsCollection<Journal>("journals");
@@ -107,7 +107,7 @@ namespace Redmine.Net.Api.JSonConverters
                     result.Add("due_date", entity.DueDate.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
                 
                 if (entity.UpdatedOn != null)
-                    result.Add("updated_on", entity.UpdatedOn.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
+                    result.Add(RedmineKeys.UPDATED_ON, entity.UpdatedOn.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
 
                 if(entity.DoneRatio != null)
                     result.Add("done_ratio", entity.DoneRatio);
@@ -121,7 +121,7 @@ namespace Redmine.Net.Api.JSonConverters
                 if (entity.CustomFields != null)
                 {
                     serializer.RegisterConverters(new[] { new IssueCustomFieldConverter() });
-                    result.Add("custom_fields", entity.CustomFields.ToArray());
+                    result.Add(RedmineKeys.CUSTOM_FIELDS, entity.CustomFields.ToArray());
                 }
 
                 if (entity.Watchers != null)

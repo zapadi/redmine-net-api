@@ -21,28 +21,28 @@ using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
-    [XmlRoot("issue")]
-    public class IssueChild : Identifiable<IssueChild>, IXmlSerializable, IEquatable<Issue>, ICloneable
+    [XmlRoot(RedmineKeys.ISSUE)]
+    public class IssueChild : Identifiable<IssueChild>, IXmlSerializable, IEquatable<IssueChild>, ICloneable
     {
         /// <summary>
         /// Gets or sets the tracker.
         /// </summary>
         /// <value>The tracker.</value>
-        [XmlElement("tracker")]
+        [XmlElement(RedmineKeys.TRACKER)]
         public IdentifiableName Tracker { get; set; }
 
         /// <summary>
         /// Gets or sets the subject.
         /// </summary>
         /// <value>The subject.</value>
-        [XmlElement("subject")]
+        [XmlElement(RedmineKeys.SUBJECT)]
         public String Subject { get; set; }
 
         public XmlSchema GetSchema() { return null; }
 
         public void ReadXml(XmlReader reader)
         {
-            Id = Convert.ToInt32(reader.GetAttribute("id"));
+            Id = Convert.ToInt32(reader.GetAttribute(RedmineKeys.ID));
             reader.Read();
 
             while (!reader.EOF)
@@ -55,9 +55,9 @@ namespace Redmine.Net.Api.Types
 
                 switch (reader.Name)
                 {
-                    case "tracker": Tracker = new IdentifiableName(reader); break;
+                    case RedmineKeys.TRACKER: Tracker = new IdentifiableName(reader); break;
 
-                    case "subject": Subject = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.SUBJECT: Subject = reader.ReadElementContentAsString(); break;
 
                     default: reader.Read(); break;
                 }
@@ -72,10 +72,35 @@ namespace Redmine.Net.Api.Types
             return issueChild;
         }
 
-        public bool Equals(Issue other)
+        public bool Equals(IssueChild other)
         {
             if (other == null) return false;
             return (Id == other.Id && Tracker == other.Tracker && Subject == other.Subject);
+        }
+
+        public override bool Equals(object other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            if (other.GetType() != GetType()) return false;
+            return Equals(other as IssueChild);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = 13;
+                hashCode = (hashCode * 397) ^ Id.GetHashCode();
+                hashCode = (hashCode * 397) ^ Tracker.GetHashCode();
+                hashCode = (hashCode * 397) ^ (string.IsNullOrEmpty(Subject) ? 0 : Subject.GetHashCode());
+                return hashCode;
+            }
+        }
+
+        public override string ToString()
+        {
+            return base.ToString() + ", " + Subject + ", " + Tracker;
         }
     }
 }

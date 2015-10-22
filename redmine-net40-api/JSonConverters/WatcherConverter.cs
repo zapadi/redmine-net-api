@@ -29,8 +29,8 @@ namespace Redmine.Net.Api.JSonConverters
             {
                 var watcher = new Watcher();
 
-                watcher.Id = dictionary.GetValue<int>("id");
-                watcher.Name = dictionary.GetValue<string>("name");
+                watcher.Id = dictionary.GetValue<int>(RedmineKeys.ID);
+                watcher.Name = dictionary.GetValue<string>(RedmineKeys.NAME);
 
                 return watcher;
             }
@@ -45,7 +45,7 @@ namespace Redmine.Net.Api.JSonConverters
 
             if (entity != null)
             {
-                result.Add("id", entity.Id);
+                result.Add(RedmineKeys.ID, entity.Id);
             }
 
             return result;

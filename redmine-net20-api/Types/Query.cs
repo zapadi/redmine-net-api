@@ -23,21 +23,21 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// Availability 1.3
     /// </summary>
-    [XmlRoot("query")]
+    [XmlRoot(RedmineKeys.QUERY)]
     public class Query : IdentifiableName, IEquatable<Query>
     {
         /// <summary>
         /// Gets or sets a value indicating whether this instance is public.
         /// </summary>
         /// <value><c>true</c> if this instance is public; otherwise, <c>false</c>.</value>
-        [XmlElement("is_public")]
+        [XmlElement(RedmineKeys.IS_PUBLIC)]
         public bool IsPublic { get; set; }
 
         /// <summary>
         /// Gets or sets the project id.
         /// </summary>
         /// <value>The project id.</value>
-        [XmlElement("project_id")]
+        [XmlElement(RedmineKeys.PROJECT_ID)]
         public int? ProjectId { get; set; }
 
         public override void ReadXml(XmlReader reader)
@@ -53,13 +53,13 @@ namespace Redmine.Net.Api.Types
 
                 switch (reader.Name)
                 {
-                    case "id": Id = reader.ReadElementContentAsInt(); break;
+                    case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
 
-                    case "name": Name = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.NAME: Name = reader.ReadElementContentAsString(); break;
 
-                    case "is_public": IsPublic = reader.ReadElementContentAsBoolean(); break;
+                    case RedmineKeys.IS_PUBLIC: IsPublic = reader.ReadElementContentAsBoolean(); break;
 
-                    case "project_id": ProjectId = reader.ReadElementContentAsNullableInt(); break;
+                    case RedmineKeys.PROJECT_ID: ProjectId = reader.ReadElementContentAsNullableInt(); break;
 
                     default: reader.Read(); break;
                 }

@@ -22,58 +22,58 @@ using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
-    [XmlRoot("custom_field")]
-    public class CustomField : IXmlSerializable, IEquatable<CustomField>
+    [XmlRoot(RedmineKeys.CUSTOM_FIELD)]
+    public class CustomField : IXmlSerializable
     {
-        [XmlElement("id")]
+        [XmlElement(RedmineKeys.ID)]
         public int Id { get; set; }
 
-        [XmlElement("name")]
+        [XmlElement(RedmineKeys.NAME)]
         public string Name { get; set; }
 
-        [XmlElement("customized_type")]
+        [XmlElement(RedmineKeys.CUSTOMIZED_TYPE)]
         public string CustomizedType { get; set; }
 
-        [XmlElement("field_format")]
+        [XmlElement(RedmineKeys.FIELD_FORMAT)]
         public string FieldFormat { get; set; }
 
-        [XmlElement("regexp")]
+        [XmlElement(RedmineKeys.REGEXP)]
         public string Regexp { get; set; }
 
-        [XmlElement("min_length")]
+        [XmlElement(RedmineKeys.MIN_LENGTH)]
         public int? MinLength { get; set; }
 
-        [XmlElement("max_length")]
+        [XmlElement(RedmineKeys.MAX_LENGTH)]
         public int? MaxLength { get; set; }
 
-        [XmlElement("is_required")]
+        [XmlElement(RedmineKeys.IS_REQUIRED)]
         public bool IsRequired { get; set; }
 
-        [XmlElement("is_filter")]
+        [XmlElement(RedmineKeys.IS_FILTER)]
         public bool IsFilter { get; set; }
 
-        [XmlElement("searchable")]
+        [XmlElement(RedmineKeys.SEARCHABLE)]
         public bool Searchable { get; set; }
 
-        [XmlElement("multiple")]
+        [XmlElement(RedmineKeys.MULTIPLE)]
         public bool Multiple { get; set; }
 
-        [XmlElement("default_value")]
+        [XmlElement(RedmineKeys.DEFAULT_VALUE)]
         public string DefaultValue { get; set; }
 
-        [XmlElement("visible")]
+        [XmlElement(RedmineKeys.VISIBLE)]
         public bool Visible { get; set; }
 
-        [XmlArray("possible_values")]
-        [XmlArrayItem("possible_value")]
+        [XmlArray(RedmineKeys.POSSIBLE_VALUES)]
+        [XmlArrayItem(RedmineKeys.POSSIBLE_VALUE)]
         public IList<CustomFieldPossibleValue> PossibleValues { get; set; }
 
-        [XmlArray("trackers")]
-        [XmlArrayItem("tracker")]
+        [XmlArray(RedmineKeys.TRACKERS)]
+        [XmlArrayItem(RedmineKeys.TRACKER)]
         public IList<TrackerCustomField> Trackers { get; set; }
 
-        [XmlArray("roles")]
-        [XmlArrayItem("role")]
+        [XmlArray(RedmineKeys.ROLES)]
+        [XmlArrayItem(RedmineKeys.ROLE)]
         public IList<CustomFieldRole> Roles { get; set; }
 
         public XmlSchema GetSchema() { return null; }
@@ -91,40 +91,37 @@ namespace Redmine.Net.Api.Types
 
                 switch (reader.Name)
                 {
-                    case "id": Id = reader.ReadElementContentAsInt(); break;
+                    case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
 
-                    case "name": Name = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.NAME: Name = reader.ReadElementContentAsString(); break;
 
-                    case "customized_type": CustomizedType = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.CUSTOMIZED_TYPE: CustomizedType = reader.ReadElementContentAsString(); break;
 
-                    case "field_format": FieldFormat = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.FIELD_FORMAT: FieldFormat = reader.ReadElementContentAsString(); break;
 
-                    case "regexp": Regexp = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.REGEXP: Regexp = reader.ReadElementContentAsString(); break;
 
-                    case "min_length": MinLength = reader.ReadElementContentAsNullableInt(); break;
+                    case RedmineKeys.MIN_LENGTH: MinLength = reader.ReadElementContentAsNullableInt(); break;
 
-                    case "max_length": MaxLength = reader.ReadElementContentAsNullableInt(); break;
+                    case RedmineKeys.MAX_LENGTH: MaxLength = reader.ReadElementContentAsNullableInt(); break;
 
-                    case "is_required": IsRequired = reader.ReadElementContentAsBoolean(); break;
+                    case RedmineKeys.IS_REQUIRED: IsRequired = reader.ReadElementContentAsBoolean(); break;
 
-                    case "is_filter": IsFilter = reader.ReadElementContentAsBoolean(); break;
+                    case RedmineKeys.IS_FILTER: IsFilter = reader.ReadElementContentAsBoolean(); break;
 
-                    case "searchable": Searchable = reader.ReadElementContentAsBoolean(); break;
+                    case RedmineKeys.SEARCHABLE: Searchable = reader.ReadElementContentAsBoolean(); break;
 
-                    case "visible": Visible = reader.ReadElementContentAsBoolean(); break;
+                    case RedmineKeys.VISIBLE: Visible = reader.ReadElementContentAsBoolean(); break;
 
-                    case "default_value": DefaultValue = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.DEFAULT_VALUE: DefaultValue = reader.ReadElementContentAsString(); break;
 
-                    case "multiple": Multiple = reader.ReadElementContentAsBoolean(); break;
+                    case RedmineKeys.MULTIPLE: Multiple = reader.ReadElementContentAsBoolean(); break;
 
-                    case "trackers":
-                        Trackers = reader.ReadElementContentAsCollection<TrackerCustomField>();
-                        break;
+                    case RedmineKeys.TRACKERS: Trackers = reader.ReadElementContentAsCollection<TrackerCustomField>(); break;
 
-                    case "roles":
-                        Roles = reader.ReadElementContentAsCollection<CustomFieldRole>();
-                        break;
-                    case "possible_values": PossibleValues = reader.ReadElementContentAsCollection<CustomFieldPossibleValue>(); break;
+                    case RedmineKeys.ROLES: Roles = reader.ReadElementContentAsCollection<CustomFieldRole>(); break;
+
+                    case RedmineKeys.POSSIBLE_VALUES: PossibleValues = reader.ReadElementContentAsCollection<CustomFieldPossibleValue>(); break;
 
                     default: reader.Read(); break;
                 }
@@ -132,17 +129,5 @@ namespace Redmine.Net.Api.Types
         }
 
         public void WriteXml(XmlWriter writer) { }
-
-        public bool Equals(CustomField other)
-        {
-            if (other == null) return false;
-            return (Id == other.Id && Name == other.Name && Multiple == other.Multiple && IsFilter == other.IsFilter && IsRequired == other.IsRequired
-                && Searchable == other.Searchable && Visible == other.Visible
-                && CustomizedType == other.CustomizedType && DefaultValue == other.DefaultValue
-                && FieldFormat == other.FieldFormat && MaxLength == other.MaxLength && MinLength == other.MinLength && Regexp == other.Regexp
-                && Equals(Roles, other.Roles)
-                && Equals(Trackers, other.Trackers)
-                && Equals(PossibleValues, other.PossibleValues));
-        }
     }
 }

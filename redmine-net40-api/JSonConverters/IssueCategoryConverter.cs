@@ -31,10 +31,10 @@ namespace Redmine.Net.Api.JSonConverters
             {
                 var issueCategory = new IssueCategory();
 
-                issueCategory.Id = dictionary.GetValue<int>("id");
+                issueCategory.Id = dictionary.GetValue<int>(RedmineKeys.ID);
                 issueCategory.Project = dictionary.GetValueAsIdentifiableName("project");
                 issueCategory.AsignTo = dictionary.GetValueAsIdentifiableName("assigned_to");
-                issueCategory.Name = dictionary.GetValue<string>("name");
+                issueCategory.Name = dictionary.GetValue<string>(RedmineKeys.NAME);
 
                 return issueCategory;
             }
@@ -50,7 +50,7 @@ namespace Redmine.Net.Api.JSonConverters
 
             if (entity != null)
             {
-                result.Add("name", entity.Name);
+                result.Add(RedmineKeys.NAME, entity.Name);
                 result.WriteIdIfNotNull(entity.Project, "project_id");
                 result.WriteIdIfNotNull(entity.AsignTo, "assigned_to_id");
 

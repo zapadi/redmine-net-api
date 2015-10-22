@@ -20,7 +20,7 @@ using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
-    [XmlRoot("error")]
+    [XmlRoot(RedmineKeys.ERROR)]
     public class Error: IXmlSerializable
     {
         [XmlText]
@@ -35,7 +35,6 @@ namespace Redmine.Net.Api.Types
 
         public void ReadXml(XmlReader reader)
         {
-            //reader.Read();
             while (!reader.EOF)
             {
                 if (reader.IsEmptyElement && !reader.HasAttributes)
@@ -46,7 +45,7 @@ namespace Redmine.Net.Api.Types
 
                 switch (reader.Name)
                 {
-                    case "error": Info = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.ERROR: Info = reader.ReadElementContentAsString(); break;
 
                     default: reader.Read(); break;
                 }

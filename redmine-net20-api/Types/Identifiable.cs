@@ -14,6 +14,7 @@
    limitations under the License.
 */
 
+using System;
 using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Types
@@ -22,43 +23,41 @@ namespace Redmine.Net.Api.Types
     /// 
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract class Identifiable<T> where T : Identifiable<T>
+    public abstract class Identifiable<T> where T : Identifiable<T>, IEquatable<T>
     {
-        private int? oldHashCode;
 
         /// <summary>
         /// Gets or sets the id.
         /// </summary>
         /// <value>The id.</value>
-        [XmlAttribute("id")]
+        [XmlAttribute(RedmineKeys.ID)]
         public int Id { get; set; }
+
+
+        public bool Equals(Identifiable<T> other)
+        {
+            if (other == null) return false;
+
+            return Id == other.Id;
+        }
 
         public override bool Equals(object obj)
         {
-            var other = obj as T;
-            if (other == null) return false;
-
-            var thisIsNew = Equals(Id, default(int));
-            var otherIsNew = Equals(other.Id, default(int));
-
-            if (thisIsNew && otherIsNew)
-                return ReferenceEquals(this, other);
-
-            return Id.Equals(other.Id);
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as Identifiable<T>);
         }
 
         public override int GetHashCode()
         {
-            if (oldHashCode.HasValue)
-                return oldHashCode.Value;
-
-            var thisIsNew = Equals(Id, default(int));
-            if (thisIsNew)
+            unchecked
             {
-                oldHashCode = base.GetHashCode();
-                return oldHashCode.Value;
+                var hashCode = 13;
+                hashCode = (hashCode * 397) ^ Id.GetHashCode();
+
+                return hashCode;
             }
-            return Id.GetHashCode();
         }
 
         public static bool operator ==(Identifiable<T> left, Identifiable<T> right)

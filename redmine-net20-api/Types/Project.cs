@@ -24,53 +24,52 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// Availability 1.0
     /// </summary>
-    [XmlRoot("project")]
-    // [DataContract(Name = "project")]
+    [XmlRoot(RedmineKeys.PROJECT)]
     public class Project : IdentifiableName, IEquatable<Project>
     {
         /// <summary>
         /// Gets or sets the identifier.
         /// </summary>
         /// <value>The identifier.</value>
-        [XmlElement("identifier")]
+        [XmlElement(RedmineKeys.IDENTIFIER)]
         public String Identifier { get; set; }
 
         /// <summary>
         /// Gets or sets the description.
         /// </summary>
         /// <value>The description.</value>
-        [XmlElement("description")]
+        [XmlElement(RedmineKeys.DESCRIPTION)]
         public String Description { get; set; }
 
         /// <summary>
         /// Gets or sets the parent.
         /// </summary>
         /// <value>The parent.</value>
-        [XmlElement("parent")]
+        [XmlElement(RedmineKeys.PARENT)]
         public IdentifiableName Parent { get; set; }
 
         /// <summary>
         /// Gets or sets the home page.
         /// </summary>
         /// <value>The home page.</value>
-        [XmlElement("homepage")]
+        [XmlElement(RedmineKeys.HOMEPAGE)]
         public String HomePage { get; set; }
 
         /// <summary>
         /// Gets or sets the created on.
         /// </summary>
         /// <value>The created on.</value>
-        [XmlElement("created_on", IsNullable = true)]
+        [XmlElement(RedmineKeys.CREATED_ON, IsNullable = true)]
         public DateTime? CreatedOn { get; set; }
 
         /// <summary>
         /// Gets or sets the updated on.
         /// </summary>
         /// <value>The updated on.</value>
-        [XmlElement("updated_on", IsNullable = true)]
+        [XmlElement(RedmineKeys.UPDATED_ON, IsNullable = true)]
         public DateTime? UpdatedOn { get; set; }
 
-        [XmlElement("status")]
+        [XmlElement(RedmineKeys.STATUS)]
         public ProjectStatus Status { get; set; }
 
         /// <summary>
@@ -80,10 +79,10 @@ namespace Redmine.Net.Api.Types
         ///   <c>true</c> if this project is public; otherwise, <c>false</c>.
         /// </value>
         /// <remarks> is exposed since 2.6.0</remarks>
-        [XmlElement("is_public")]
+        [XmlElement(RedmineKeys.IS_PUBLIC)]
         public bool IsPublic { get; set; }
 
-        [XmlElement("inherit_members")]
+        [XmlElement(RedmineKeys.INHERIT_MEMBERS)]
         public bool InheritMembers { get; set; }
 
         /// <summary>
@@ -92,23 +91,23 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The trackers.
         /// </value>
-        [XmlArray("trackers")]
-        [XmlArrayItem("tracker")]
+        [XmlArray(RedmineKeys.TRACKERS)]
+        [XmlArrayItem(RedmineKeys.TRACKER)]
         public IList<ProjectTracker> Trackers { get; set; }
 
-        [XmlArray("custom_fields")]
-        [XmlArrayItem("custom_field")]
+        [XmlArray(RedmineKeys.CUSTOM_FIELDS)]
+        [XmlArrayItem(RedmineKeys.CUSTOM_FIELD)]
         public IList<IssueCustomField> CustomFields { get; set; }
 
-        [XmlArray("issue_categories")]
-        [XmlArrayItem("issue_category")]
+        [XmlArray(RedmineKeys.ISSUE_CATEGORIES)]
+        [XmlArrayItem(RedmineKeys.ISSUE_CATEGORY)]
         public IList<ProjectIssueCategory> IssueCategories { get; set; }
 
         /// <summary>
         /// since 2.6.0
         /// </summary>
-        [XmlArray("enabled_modules")]
-        [XmlArrayItem("enabled_module")]
+        [XmlArray(RedmineKeys.ENABLED_MODULES)]
+        [XmlArrayItem(RedmineKeys.ENABLED_MODULE)]
         public IList<ProjectEnabledModule> EnabledModules { get; set; }
 
         /// <summary>
@@ -128,35 +127,36 @@ namespace Redmine.Net.Api.Types
 
                 switch (reader.Name)
                 {
-                    case "id": Id = reader.ReadElementContentAsInt(); break;
+                    case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
 
-                    case "name": Name = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.NAME: Name = reader.ReadElementContentAsString(); break;
 
-                    case "identifier": Identifier = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.IDENTIFIER: Identifier = reader.ReadElementContentAsString(); break;
 
-                    case "description": Description = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.DESCRIPTION: Description = reader.ReadElementContentAsString(); break;
 
-                    case "status": Status = (ProjectStatus)reader.ReadElementContentAsInt(); break;
+                    case RedmineKeys.STATUS: Status = (ProjectStatus)reader.ReadElementContentAsInt(); break;
 
-                    case "parent": Parent = new IdentifiableName(reader); break;
+                    case RedmineKeys.PARENT: Parent = new IdentifiableName(reader); break;
 
-                    case "homepage": HomePage = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.HOMEPAGE: HomePage = reader.ReadElementContentAsString(); break;
 
-                    case "is_public": IsPublic = reader.ReadElementContentAsBoolean(); break;
+                    case RedmineKeys.IS_PUBLIC: IsPublic = reader.ReadElementContentAsBoolean(); break;
 
-                    case "inherit_members": InheritMembers = reader.ReadElementContentAsBoolean(); break;
+                    case RedmineKeys.INHERIT_MEMBERS: InheritMembers = reader.ReadElementContentAsBoolean(); break;
 
-                    case "created_on": CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
+                    case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
 
-                    case "updated_on": UpdatedOn = reader.ReadElementContentAsNullableDateTime(); break;
+                    case RedmineKeys.UPDATED_ON: UpdatedOn = reader.ReadElementContentAsNullableDateTime(); break;
 
-                    case "trackers": Trackers = reader.ReadElementContentAsCollection<ProjectTracker>(); break;
+                    case RedmineKeys.TRACKERS: Trackers = reader.ReadElementContentAsCollection<ProjectTracker>(); break;
 
-                    case "custom_fields": CustomFields = reader.ReadElementContentAsCollection<IssueCustomField>(); break;
+                    case RedmineKeys.CUSTOM_FIELDS: CustomFields = reader.ReadElementContentAsCollection<IssueCustomField>(); break;
 
-                    case "issue_categories": IssueCategories = reader.ReadElementContentAsCollection<ProjectIssueCategory>(); break;
+                    case RedmineKeys.ISSUE_CATEGORIES: IssueCategories = reader.ReadElementContentAsCollection<ProjectIssueCategory>(); break;
 
-                    case "enabled_modules": EnabledModules = reader.ReadElementContentAsCollection<ProjectEnabledModule>(); break;
+                    case RedmineKeys.ENABLED_MODULES: EnabledModules = reader.ReadElementContentAsCollection<ProjectEnabledModule>(); break;
+
                     default: reader.Read(); break;
                 }
             }
@@ -164,19 +164,19 @@ namespace Redmine.Net.Api.Types
 
         public override void WriteXml(XmlWriter writer)
         {
-            writer.WriteElementString("name", Name);
-            writer.WriteElementString("identifier", Identifier);
-            writer.WriteElementString("description", Description);
-            writer.WriteElementString("inherit_members", InheritMembers.ToString());
-            writer.WriteElementString("is_public", IsPublic.ToString());
-            writer.WriteIdOrEmpty(Parent, "parent_id");
-            writer.WriteElementString("homepage", HomePage);
+            writer.WriteElementString(RedmineKeys.NAME, Name);
+            writer.WriteElementString(RedmineKeys.IDENTIFIER, Identifier);
+            writer.WriteElementString(RedmineKeys.DESCRIPTION, Description);
+            writer.WriteElementString(RedmineKeys.INHERIT_MEMBERS, InheritMembers.ToString());
+            writer.WriteElementString(RedmineKeys.IS_PUBLIC, IsPublic.ToString());
+            writer.WriteIdOrEmpty(Parent, RedmineKeys.PARENT_ID);
+            writer.WriteElementString(RedmineKeys.HOMEPAGE, HomePage);
 
-            if(Trackers != null)
+            if (Trackers != null)
             {
                 foreach (var item in Trackers)
                 {
-                    writer.WriteElementString("tracker_ids", item.Id.ToString());
+                    writer.WriteElementString(RedmineKeys.TRACKER_IDS, item.Id.ToString());
                 }
             }
 
@@ -184,19 +184,25 @@ namespace Redmine.Net.Api.Types
             {
                 foreach (var item in EnabledModules)
                 {
-                    writer.WriteElementString("enabled_module_names", item.Name);
+                    writer.WriteElementString(RedmineKeys.ENABLED_MODULE_NAMES, item.Name);
                 }
             }
 
             if (Id == 0) return;
 
-            writer.WriteArray(CustomFields, "custom_fields");
+            writer.WriteArray(CustomFields, RedmineKeys.CUSTOM_FIELDS);
         }
 
         public bool Equals(Project other)
         {
             if (other == null) return false;
-            return (Id == other.Id && Identifier == other.Identifier);
+            return (Identifier == other.Identifier);
+        }
+
+        public override int GetHashCode()
+        {
+            var hashCode = !string.IsNullOrEmpty(Identifier) ? Identifier.GetHashCode() : 0;
+            return hashCode;
         }
     }
 }

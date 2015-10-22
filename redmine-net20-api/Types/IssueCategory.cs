@@ -24,7 +24,7 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// Availability 1.3
     /// </summary>
-    [XmlRoot("issue_category")]
+    [XmlRoot(RedmineKeys.ISSUE_CATEGORY)]
     public class IssueCategory : Identifiable<IssueCategory>, IEquatable<IssueCategory>, IXmlSerializable
     {
         /// <summary>
@@ -33,7 +33,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The project.
         /// </value>
-        [XmlElement("project ")]
+        [XmlElement(RedmineKeys.PROJECT)]
         public IdentifiableName Project { get; set; }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The asign to.
         /// </value>
-        [XmlElement("assigned_to")]
+        [XmlElement(RedmineKeys.ASSIGNED_TO)]
         public IdentifiableName AsignTo { get; set; }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The name.
         /// </value>
-        [XmlElement("name")]
+        [XmlElement(RedmineKeys.NAME)]
         public string Name { get; set; }
 
         public bool Equals(IssueCategory other)
@@ -75,13 +75,13 @@ namespace Redmine.Net.Api.Types
 
                 switch (reader.Name)
                 {
-                    case "id": Id = reader.ReadElementContentAsInt(); break;
+                    case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
 
-                    case "project": Project = new IdentifiableName(reader); break;
+                    case RedmineKeys.PROJECT: Project = new IdentifiableName(reader); break;
 
-                    case "assigned_to": AsignTo = new IdentifiableName(reader); break;
+                    case RedmineKeys.ASSIGNED_TO: AsignTo = new IdentifiableName(reader); break;
 
-                    case "name": Name = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.NAME: Name = reader.ReadElementContentAsString(); break;
 
                     default: reader.Read(); break;
                 }
@@ -90,9 +90,9 @@ namespace Redmine.Net.Api.Types
 
         public void WriteXml(XmlWriter writer)
         {
-            writer.WriteIdIfNotNull(Project, "project_id");
-            writer.WriteElementString("name", Name);
-            writer.WriteIdIfNotNull(AsignTo, "assigned_to_id");
+            writer.WriteIdIfNotNull(Project, RedmineKeys.PROJECT_ID);
+            writer.WriteElementString(RedmineKeys.NAME, Name);
+            writer.WriteIdIfNotNull(AsignTo, RedmineKeys.ASSIGNED_TO_ID);
         }
     }
 }

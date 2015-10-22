@@ -15,8 +15,8 @@ namespace Redmine.Net.Api.JSonConverters
             {
                 var userGroup = new GroupUser();
 
-                userGroup.Id = dictionary.GetValue<int>("id");
-                userGroup.Name = dictionary.GetValue<string>("name");
+                userGroup.Id = dictionary.GetValue<int>(RedmineKeys.ID);
+                userGroup.Name = dictionary.GetValue<string>(RedmineKeys.NAME);
 
                 return userGroup;
             }

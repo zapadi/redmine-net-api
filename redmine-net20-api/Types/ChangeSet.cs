@@ -24,31 +24,31 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// 
     /// </summary>
-    [XmlRoot("changeset")]
+    [XmlRoot(RedmineKeys.CHANGESET)]
     public class ChangeSet : IXmlSerializable, IEquatable<ChangeSet>
     {
         /// <summary>
         /// 
         /// </summary>
-        [XmlAttribute("revision")]
+        [XmlAttribute(RedmineKeys.REVISION)]
         public int Revision { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
-        [XmlElement("user")]
+        [XmlElement(RedmineKeys.USER)]
         public IdentifiableName User { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
-        [XmlElement("comments")]
+        [XmlElement(RedmineKeys.COMMENTS)]
         public string Comments { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
-        [XmlElement("committed_on", IsNullable = true)]
+        [XmlElement(RedmineKeys.COMMITTED_ON, IsNullable = true)]
         public DateTime? CommittedOn { get; set; }
 
         public XmlSchema GetSchema() { return null; }
@@ -64,15 +64,15 @@ namespace Redmine.Net.Api.Types
                     continue;
                 }
 
-                Revision = reader.ReadAttributeAsInt("revision");
+                Revision = reader.ReadAttributeAsInt(RedmineKeys.REVISION);
 
                 switch (reader.Name)
                 {
-                    case "user": User = new IdentifiableName(reader); break;
+                    case RedmineKeys.USER: User = new IdentifiableName(reader); break;
 
-                    case "comments": Comments = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.COMMENTS: Comments = reader.ReadElementContentAsString(); break;
 
-                    case "committed_on": CommittedOn = reader.ReadElementContentAsNullableDateTime(); break;
+                    case RedmineKeys.COMMITTED_ON: CommittedOn = reader.ReadElementContentAsNullableDateTime(); break;
 
                     default: reader.Read(); break;
                 }

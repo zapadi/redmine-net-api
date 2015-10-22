@@ -31,9 +31,9 @@ namespace Redmine.Net.Api.JSonConverters
             {
                 var membershipRole = new MembershipRole();
 
-                membershipRole.Id = dictionary.GetValue<int>("id");
+                membershipRole.Id = dictionary.GetValue<int>(RedmineKeys.ID);
                 membershipRole.Inherited = dictionary.GetValue<bool>("inherited");
-                membershipRole.Name = dictionary.GetValue<string>("name");
+                membershipRole.Name = dictionary.GetValue<string>(RedmineKeys.NAME);
 
                 return membershipRole;
             }

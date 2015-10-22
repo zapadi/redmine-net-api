@@ -25,36 +25,36 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// Availability 2.2
     /// </summary>
-    [XmlRoot("wiki_page")]
+    [XmlRoot(RedmineKeys.WIKI_PAGE)]
     public class WikiPage : Identifiable<WikiPage>, IXmlSerializable, IEquatable<WikiPage>
     {
-        [XmlElement("title")]
+        [XmlElement(RedmineKeys.TITLE)]
         public string Title { get; set; }
 
-        [XmlElement("text")]
+        [XmlElement(RedmineKeys.TEXT)]
         public string Text { get; set; }
 
-        [XmlElement("comments")]
+        [XmlElement(RedmineKeys.COMMENTS)]
         public string Comments { get; set; }
 
-        [XmlElement("version")]
+        [XmlElement(RedmineKeys.VERSION)]
         public int Version { get; set; }
 
-        [XmlElement("author")]
+        [XmlElement(RedmineKeys.AUTHOR)]
         public IdentifiableName Author { get; set; }
 
         /// <summary>
         /// Gets or sets the created on.
         /// </summary>
         /// <value>The created on.</value>
-        [XmlElement("created_on")]
+        [XmlElement(RedmineKeys.CREATED_ON)]
         public DateTime? CreatedOn { get; set; }
 
         /// <summary>
         /// Gets or sets the updated on.
         /// </summary>
         /// <value>The updated on.</value>
-        [XmlElement("updated_on")]
+        [XmlElement(RedmineKeys.UPDATED_ON)]
         public DateTime? UpdatedOn { get; set; }
 
         /// <summary>
@@ -63,8 +63,8 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The attachments.
         /// </value>
-        [XmlArray("attachments")]
-        [XmlArrayItem("attachment")]
+        [XmlArray(RedmineKeys.ATTACHMENTS)]
+        [XmlArrayItem(RedmineKeys.ATTACHMENT)]
         public IList<Attachment> Attachments { get; set; }
 
         #region Implementation of IXmlSerializable
@@ -84,23 +84,23 @@ namespace Redmine.Net.Api.Types
 
                 switch (reader.Name)
                 {
-                    case "id": Id = reader.ReadElementContentAsInt(); break;
+                    case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
 
-                    case "title": Title = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.TITLE: Title = reader.ReadElementContentAsString(); break;
 
-                    case "text": Text = reader.ReadElementContentAsString(); break;
-                    
-                    case "comments": Comments = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.TEXT: Text = reader.ReadElementContentAsString(); break;
 
-                    case "version": Version = reader.ReadElementContentAsInt(); break;
+                    case RedmineKeys.COMMENTS: Comments = reader.ReadElementContentAsString(); break;
 
-                    case "author": Author = new IdentifiableName(reader); break;
+                    case RedmineKeys.VERSION: Version = reader.ReadElementContentAsInt(); break;
 
-                    case "created_on": CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
+                    case RedmineKeys.AUTHOR: Author = new IdentifiableName(reader); break;
 
-                    case "updated_on": UpdatedOn = reader.ReadElementContentAsNullableDateTime(); break;
+                    case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
 
-                    case "attachments": Attachments = reader.ReadElementContentAsCollection<Attachment>(); break;
+                    case RedmineKeys.UPDATED_ON: UpdatedOn = reader.ReadElementContentAsNullableDateTime(); break;
+
+                    case RedmineKeys.ATTACHMENTS: Attachments = reader.ReadElementContentAsCollection<Attachment>(); break;
 
                     default: reader.Read(); break;
                 }
@@ -109,9 +109,9 @@ namespace Redmine.Net.Api.Types
 
         public void WriteXml(XmlWriter writer)
         {
-            writer.WriteElementString("text", Text);
-            writer.WriteElementString("comments", Comments);
-            writer.WriteValue<int>(Version,"version");
+            writer.WriteElementString(RedmineKeys.TEXT, Text);
+            writer.WriteElementString(RedmineKeys.COMMENTS, Comments);
+            writer.WriteValue<int>(Version, RedmineKeys.VERSION);
         }
 
         #endregion
@@ -122,7 +122,14 @@ namespace Redmine.Net.Api.Types
         {
             if (other == null) return false;
 
-            return Id == other.Id && Title == other.Title && Text == other.Text && Comments == other.Comments && Version == other.Version && Author == other.Author && CreatedOn == other.CreatedOn && UpdatedOn == other.UpdatedOn;
+            return Id == other.Id
+                && Title == other.Title
+                && Text == other.Text
+                && Comments == other.Comments
+                && Version == other.Version
+                && Author == other.Author
+                && CreatedOn == other.CreatedOn
+                && UpdatedOn == other.UpdatedOn;
         }
 
         #endregion

@@ -34,7 +34,7 @@ namespace Redmine.Net.Api.JSonConverters
                 detail.NewValue = dictionary.GetValue<string>("new_value");
                 detail.OldValue = dictionary.GetValue<string>("old_value");
                 detail.Property = dictionary.GetValue<string>("property");
-                detail.StatusId = dictionary.GetValue<string>("name");
+                detail.StatusId = dictionary.GetValue<string>(RedmineKeys.NAME);
 
                 return detail;
             }

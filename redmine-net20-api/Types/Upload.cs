@@ -23,14 +23,14 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// Support for adding attachments through the REST API is added in Redmine 1.4.0.
     /// </summary>
-    [XmlRoot("upload")]
+    [XmlRoot(RedmineKeys.UPLOAD)]
     public class Upload : IEquatable<Upload>
     {
         /// <summary>
         /// Gets or sets the uploaded token.
         /// </summary>
         /// <value>The name of the file.</value>
-        [XmlElement("token")]
+        [XmlElement(RedmineKeys.TOKEN)]
         public string Token { get; set; }
 
         /// <summary>
@@ -38,21 +38,21 @@ namespace Redmine.Net.Api.Types
         /// Maximum allowed file size (1024000).
         /// </summary>
         /// <value>The name of the file.</value>
-        [XmlElement("filename")]
+        [XmlElement(RedmineKeys.FILENAME)]
         public string FileName { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the file.
         /// </summary>
         /// <value>The name of the file.</value>
-        [XmlElement("content_type")]
+        [XmlElement(RedmineKeys.CONTENT_TYPE)]
         public string ContentType { get; set; }
 
         /// <summary>
         /// Gets or sets the file description. (Undocumented feature)
         /// </summary>
         /// <value>The file descroütopm.</value>
-        [XmlElement("description")]
+        [XmlElement(RedmineKeys.DESCRIPTION)]
         public string Description { get; set; }
 
         public XmlSchema GetSchema() { return null; }

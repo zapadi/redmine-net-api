@@ -46,6 +46,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\redmine-net20-api\RedmineKeys.cs">
+      <Link>RedmineKeys.cs</Link>
+    </Compile>
     <Compile Include="..\redmine-net20-api\Types\Attachment.cs">
       <Link>Types\Attachment.cs</Link>
     </Compile>

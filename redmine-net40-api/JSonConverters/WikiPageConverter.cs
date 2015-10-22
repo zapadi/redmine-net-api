@@ -29,13 +29,13 @@ namespace Redmine.Net.Api.JSonConverters
             {
                 var tracker = new WikiPage();
 
-                tracker.Id = dictionary.GetValue<int>("id");
+                tracker.Id = dictionary.GetValue<int>(RedmineKeys.ID);
                 tracker.Author = dictionary.GetValueAsIdentifiableName("author");
                 tracker.Comments = dictionary.GetValue<string>("comments");
-                tracker.CreatedOn = dictionary.GetValue<DateTime?>("created_on");
+                tracker.CreatedOn = dictionary.GetValue<DateTime?>(RedmineKeys.CREATED_ON);
                 tracker.Text = dictionary.GetValue<string>("text");
                 tracker.Title = dictionary.GetValue<string>("title");
-                tracker.UpdatedOn = dictionary.GetValue<DateTime?>("updated_on");
+                tracker.UpdatedOn = dictionary.GetValue<DateTime?>(RedmineKeys.UPDATED_ON);
                 tracker.Version = dictionary.GetValue<int>("version");
                 tracker.Attachments = dictionary.GetValueAsCollection<Attachment>("attachments");
 

@@ -170,7 +170,7 @@ namespace Redmine.Net.Api
         /// Gets a Redmine object. This method does not block the calling thread.
         /// </summary>
         /// <typeparam name="T">The type of objects to retrieve.</typeparam>
-        /// <param name="id">The id of the object.</param>
+        /// <param name=RedmineKeys.ID>The id of the object.</param>
         /// <param name="parameters">Optional filters and/or optional fetched data.</param>
         /// <returns>Returns the Guid associated with the async request.</returns>
         public async Task<T> GetObjectAsync<T>(string id, NameValueCollection parameters) where T : class
@@ -219,7 +219,7 @@ namespace Redmine.Net.Api
         /// Updates a Redmine object. This method does not block the calling thread.
         /// </summary>
         /// <typeparam name="T">The type of object to be update.</typeparam>
-        /// <param name="id">The id of the object to be update.</param>
+        /// <param name=RedmineKeys.ID>The id of the object to be update.</param>
         /// <param name="obj">The object to be update.</param>
         /// <param name="projectId"></param>
         /// <returns>Returns the Guid associated with the async request.</returns>
@@ -253,7 +253,7 @@ namespace Redmine.Net.Api
         /// Deletes the Redmine object. This method does not block the calling thread.
         /// </summary>
         /// <typeparam name="T">The type of objects to delete.</typeparam>
-        /// <param name="id">The id of the object to delete</param>
+        /// <param name=RedmineKeys.ID>The id of the object to delete</param>
         /// <param name="parameters">Optional filters and/or optional fetched data.</param>
         /// <returns>Returns the Guid associated with the async request.</returns>
         public Guid DeleteObjectAsync<T>(string id, NameValueCollection parameters) where T : class
