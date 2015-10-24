@@ -33,8 +33,8 @@ namespace Redmine.Net.Api.JSonConverters
 
                 issueStatus.Id = dictionary.GetValue<int>(RedmineKeys.ID);
                 issueStatus.Name = dictionary.GetValue<string>(RedmineKeys.NAME);
-                issueStatus.IsClosed = dictionary.GetValue<bool>("is_closed");
-                issueStatus.IsDefault = dictionary.GetValue<bool>("is_default");
+                issueStatus.IsClosed = dictionary.GetValue<bool>(RedmineKeys.IS_CLOSED);
+                issueStatus.IsDefault = dictionary.GetValue<bool>(RedmineKeys.IS_DEFAULT);
                 return issueStatus;
             }
 

@@ -30,8 +30,8 @@ namespace Redmine.Net.Api.JSonConverters
                 var issueChild = new IssueChild
                 {
                     Id = dictionary.GetValue<int>(RedmineKeys.ID),
-                    Tracker = dictionary.GetValueAsIdentifiableName("tracker"),
-                    Subject = dictionary.GetValue<string>("subject")
+                    Tracker = dictionary.GetValueAsIdentifiableName(RedmineKeys.TRACKER),
+                    Subject = dictionary.GetValue<string>(RedmineKeys.SUBJECT)
                 };
                 
                 return issueChild;

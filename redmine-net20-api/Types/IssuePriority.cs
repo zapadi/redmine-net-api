@@ -45,7 +45,7 @@ namespace Redmine.Net.Api.Types
         [XmlElement(RedmineKeys.NAME)]
         public string Name { get; set; }
 
-        [XmlElement(RedmineKeys.is_default)]
+        [XmlElement(RedmineKeys.IS_DEFAULT)]
         public bool IsDefault { get; set; }
 
         #region Implementation of IXmlSerializable
@@ -73,7 +73,7 @@ namespace Redmine.Net.Api.Types
 
                     case RedmineKeys.NAME: Name = reader.ReadElementContentAsString(); break;
 
-                    case RedmineKeys.is_default: IsDefault = reader.ReadElementContentAsBoolean(); break;
+                    case RedmineKeys.IS_DEFAULT: IsDefault = reader.ReadElementContentAsBoolean(); break;
 
                     default: reader.Read(); break;
                 }

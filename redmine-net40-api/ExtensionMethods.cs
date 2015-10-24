@@ -238,6 +238,12 @@ namespace Redmine.Net.Api
             if (ident != null) dictionary.Add(key, ident.Id);
         }
 
+        public static void WriteIdOrEmpty(this Dictionary<string, object> dictionary, IdentifiableName ident, String key, String emptyValue = null)
+        {
+            if (ident != null) dictionary.Add(key, ident.Id);
+            else dictionary.Add(key, emptyValue);
+        }
+
         /// <summary>
         /// Writes string empty if T has default value or null.
         /// </summary>
@@ -245,7 +251,7 @@ namespace Redmine.Net.Api
         /// <param name="writer">The writer.</param>
         /// <param name="val">The value.</param>
         /// <param name="tag">The tag.</param>
-        public static void WriteValue<T>(this XmlWriter writer, T? val, String tag) where T : struct
+        public static void WriteValueOrEmpty<T>(this XmlWriter writer, T? val, String tag) where T : struct
         {
             if (!val.HasValue || EqualityComparer<T>.Default.Equals(val.Value, default(T)))
                 writer.WriteElementString(tag, string.Empty);
@@ -260,7 +266,7 @@ namespace Redmine.Net.Api
                 writer.WriteElementString(tag, string.Format(NumberFormatInfo.InvariantInfo, "{0}", val.Value));
         }
 
-        public static void WriteDate(this XmlWriter writer, DateTime? val, String tag)
+        public static void WriteDateOrEmpty(this XmlWriter writer, DateTime? val, String tag)
         {
             if (!val.HasValue || val.Value.Equals(default(DateTime)))
                 writer.WriteElementString(tag, string.Empty);
@@ -283,7 +289,15 @@ namespace Redmine.Net.Api
             writer.WriteEndElement();
         }
 
-        public static void WriteIfNotDefaultOrNull<T>(this Dictionary<string, object> dictionary, T? val, String tag) where T : struct
+        public static void WriteDateOrEmpty(this Dictionary<string, object> dictionary, DateTime? val, String tag)
+        {
+            if (!val.HasValue || val.Value.Equals(default(DateTime)))
+                dictionary.Add(tag, string.Empty);
+            else
+                dictionary.Add(tag, string.Format(NumberFormatInfo.InvariantInfo, "{0}", val.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)));
+        }
+
+        public static void WriteValueOrEmpty<T>(this Dictionary<string, object> dictionary, T? val, String tag) where T : struct
         {
             if (!val.HasValue || EqualityComparer<T>.Default.Equals(val.Value, default(T)))
                 dictionary.Add(tag, string.Empty);

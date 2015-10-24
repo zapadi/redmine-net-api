@@ -32,10 +32,10 @@ namespace Redmine.Net.Api.JSonConverters
                 var journal = new Journal();
 
                 journal.Id = dictionary.GetValue<int>(RedmineKeys.ID);
-                journal.Notes = dictionary.GetValue<string>("notes");
-                journal.User = dictionary.GetValueAsIdentifiableName("user");
+                journal.Notes = dictionary.GetValue<string>(RedmineKeys.NOTES);
+                journal.User = dictionary.GetValueAsIdentifiableName(RedmineKeys.USER);
                 journal.CreatedOn = dictionary.GetValue<DateTime?>(RedmineKeys.CREATED_ON);
-                journal.Details = dictionary.GetValueAsCollection<Detail>("details");
+                journal.Details = dictionary.GetValueAsCollection<Detail>(RedmineKeys.DETAILS);
 
                 return journal;
             }

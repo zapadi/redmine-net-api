@@ -32,12 +32,12 @@ namespace Redmine.Net.Api.JSonConverters
                 var news = new News();
 
                 news.Id = dictionary.GetValue<int>(RedmineKeys.ID);
-                news.Author = dictionary.GetValueAsIdentifiableName("author");
+                news.Author = dictionary.GetValueAsIdentifiableName(RedmineKeys.AUTHOR);
                 news.CreatedOn = dictionary.GetValue<DateTime?>(RedmineKeys.CREATED_ON);
-                news.Description = dictionary.GetValue<string>("description");
-                news.Project = dictionary.GetValueAsIdentifiableName("project");
-                news.Summary = dictionary.GetValue<string>("summary");
-                news.Title = dictionary.GetValue<string>("title");
+                news.Description = dictionary.GetValue<string>(RedmineKeys.DESCRIPTION);
+                news.Project = dictionary.GetValueAsIdentifiableName(RedmineKeys.PROJECT);
+                news.Summary = dictionary.GetValue<string>(RedmineKeys.SUMMARY);
+                news.Title = dictionary.GetValue<string>(RedmineKeys.TITLE);
 
                 return news;
             }

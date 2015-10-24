@@ -32,8 +32,8 @@ namespace Redmine.Net.Api.JSonConverters
                 var query = new Query();
 
                 query.Id = dictionary.GetValue<int>(RedmineKeys.ID);
-                query.IsPublic = dictionary.GetValue<bool>("is_public");
-                query.ProjectId = dictionary.GetValue<int>("project_id");
+                query.IsPublic = dictionary.GetValue<bool>(RedmineKeys.IS_PUBLIC);
+                query.ProjectId = dictionary.GetValue<int>(RedmineKeys.PROJECT_ID);
                 query.Name = dictionary.GetValue<string>(RedmineKeys.NAME);
 
                 return query;

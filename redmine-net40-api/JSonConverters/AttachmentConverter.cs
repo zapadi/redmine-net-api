@@ -32,13 +32,13 @@ namespace Redmine.Net.Api.JSonConverters
                 var attachment = new Attachment();
 
                 attachment.Id = dictionary.GetValue<int>(RedmineKeys.ID);
-                attachment.Description = dictionary.GetValue<string>("description");
-                attachment.Author = dictionary.GetValueAsIdentifiableName("author");
-                attachment.ContentType = dictionary.GetValue<string>("content_type");
-                attachment.ContentUrl = dictionary.GetValue<string>("content_url");
+                attachment.Description = dictionary.GetValue<string>(RedmineKeys.DESCRIPTION);
+                attachment.Author = dictionary.GetValueAsIdentifiableName(RedmineKeys.AUTHOR);
+                attachment.ContentType = dictionary.GetValue<string>(RedmineKeys.CONTENT_TYPE);
+                attachment.ContentUrl = dictionary.GetValue<string>(RedmineKeys.CONTENT_URL);
                 attachment.CreatedOn = dictionary.GetValue<DateTime?>(RedmineKeys.CREATED_ON);
-                attachment.FileName = dictionary.GetValue<string>("filename");
-                attachment.FileSize = dictionary.GetValue<int>("filesize");
+                attachment.FileName = dictionary.GetValue<string>(RedmineKeys.FILENAME);
+                attachment.FileSize = dictionary.GetValue<int>(RedmineKeys.FILESIZE);
 
                 return attachment;
             }

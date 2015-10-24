@@ -36,7 +36,7 @@ namespace Redmine.Net.Api.JSonConverters
                 role.Id = dictionary.GetValue<int>(RedmineKeys.ID);
                 role.Name = dictionary.GetValue<string>(RedmineKeys.NAME);
 
-                var permissions = dictionary["permissions"] as ArrayList;
+                var permissions = dictionary.GetValue<ArrayList>(RedmineKeys.PERMISSIONS);
                 if (permissions != null)
                 {
                     role.Permissions = new List<Permission>();

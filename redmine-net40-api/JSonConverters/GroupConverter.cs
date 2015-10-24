@@ -34,9 +34,9 @@ namespace Redmine.Net.Api.JSonConverters
 
                 group.Id = dictionary.GetValue<int>(RedmineKeys.ID);
                 group.Name = dictionary.GetValue<string>(RedmineKeys.NAME);
-                group.Users = dictionary.GetValueAsCollection<GroupUser>("users");
+                group.Users = dictionary.GetValueAsCollection<GroupUser>(RedmineKeys.USERS);
                 group.CustomFields = dictionary.GetValueAsCollection<IssueCustomField>(RedmineKeys.CUSTOM_FIELDS);
-                group.Memberships = dictionary.GetValueAsCollection<Membership>("memberships");
+                group.Memberships = dictionary.GetValueAsCollection<Membership>(RedmineKeys.MEMBERSHIPS);
 
                 return group;
             }
@@ -47,16 +47,17 @@ namespace Redmine.Net.Api.JSonConverters
         public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer)
         {
             var entity = obj as Group;
-            var root = new Dictionary<string, object>();
+           
             var result = new Dictionary<string, object>();
 
             if (entity != null)
             {
                 result.Add(RedmineKeys.NAME, entity.Name);
                 if (entity.Users != null)
-                    result.Add("user_ids", entity.Users.Select(x => x.Id).ToArray());
+                    result.Add(RedmineKeys.USER_IDS, entity.Users.Select(x => x.Id).ToArray());
 
-                root["group"] = result;
+                var root = new Dictionary<string, object>();
+                root[RedmineKeys.GROUP] = result;
                 return root;
             }
 

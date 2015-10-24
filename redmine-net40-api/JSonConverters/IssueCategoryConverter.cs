@@ -32,8 +32,8 @@ namespace Redmine.Net.Api.JSonConverters
                 var issueCategory = new IssueCategory();
 
                 issueCategory.Id = dictionary.GetValue<int>(RedmineKeys.ID);
-                issueCategory.Project = dictionary.GetValueAsIdentifiableName("project");
-                issueCategory.AsignTo = dictionary.GetValueAsIdentifiableName("assigned_to");
+                issueCategory.Project = dictionary.GetValueAsIdentifiableName(RedmineKeys.PROJECT);
+                issueCategory.AsignTo = dictionary.GetValueAsIdentifiableName(RedmineKeys.ASSIGNED_TO);
                 issueCategory.Name = dictionary.GetValue<string>(RedmineKeys.NAME);
 
                 return issueCategory;
@@ -45,16 +45,17 @@ namespace Redmine.Net.Api.JSonConverters
         public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer)
         {
             var entity = obj as IssueCategory;
-            var root = new Dictionary<string, object>();
             var result = new Dictionary<string, object>();
 
             if (entity != null)
             {
                 result.Add(RedmineKeys.NAME, entity.Name);
-                result.WriteIdIfNotNull(entity.Project, "project_id");
-                result.WriteIdIfNotNull(entity.AsignTo, "assigned_to_id");
+                result.WriteIdIfNotNull(entity.Project,RedmineKeys.PROJECT_ID);
+                result.WriteIdIfNotNull(entity.AsignTo,RedmineKeys.ASSIGNED_TO_ID);
 
-                root["issue_category"] = result;
+                var root = new Dictionary<string, object>();
+
+                root[RedmineKeys.ISSUE_CATEGORY] = result;
                 return root;
             }
 

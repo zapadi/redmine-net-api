@@ -31,10 +31,10 @@ namespace Redmine.Net.Api.JSonConverters
             {
                 var changeSet = new ChangeSet
                 {
-                    Revision = dictionary.GetValue<int>("revision"),
-                    Comments = dictionary.GetValue<string>("comments"),
-                    User = dictionary.GetValueAsIdentifiableName("user"),
-                    CommittedOn = dictionary.GetValue<DateTime?>("committed_on")
+                    Revision = dictionary.GetValue<int>(RedmineKeys.REVISION),
+                    Comments = dictionary.GetValue<string>(RedmineKeys.COMMENTS),
+                    User = dictionary.GetValueAsIdentifiableName(RedmineKeys.USER),
+                    CommittedOn = dictionary.GetValue<DateTime?>(RedmineKeys.COMMITTED_ON)
                 };
 
 

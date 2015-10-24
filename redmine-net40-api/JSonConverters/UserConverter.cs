@@ -30,20 +30,20 @@ namespace Redmine.Net.Api.JSonConverters
             if (dictionary != null)
             {
                 User user = new User();
-                user.Login = dictionary.GetValue<string>("login");
+                user.Login = dictionary.GetValue<string>(RedmineKeys.LOGIN);
                 user.Id = dictionary.GetValue<int>(RedmineKeys.ID);
-                user.FirstName = dictionary.GetValue<string>("firstname");
-                user.LastName = dictionary.GetValue<string>("lastname");
-                user.Email = dictionary.GetValue<string>("mail");
-                user.AuthenticationModeId = dictionary.GetValue<int?>("auth_source_id");
+                user.FirstName = dictionary.GetValue<string>(RedmineKeys.FIRSTNAME);
+                user.LastName = dictionary.GetValue<string>(RedmineKeys.LASTNAME);
+                user.Email = dictionary.GetValue<string>(RedmineKeys.MAIL);
+                user.AuthenticationModeId = dictionary.GetValue<int?>(RedmineKeys.AUTH_SOURCE_ID);
                 user.CreatedOn = dictionary.GetValue<DateTime?>(RedmineKeys.CREATED_ON);
-                user.LastLoginOn = dictionary.GetValue<DateTime?>("last_login_on");
-                user.ApiKey = dictionary.GetValue<string>("api_key");
-                user.Status = dictionary.GetValue<UserStatus>("status");
-                user.MustChangePassword = dictionary.GetValue<bool>("must_change_passwd");
+                user.LastLoginOn = dictionary.GetValue<DateTime?>(RedmineKeys.LAST_LOGIN_ON);
+                user.ApiKey = dictionary.GetValue<string>(RedmineKeys.API_KEY);
+                user.Status = dictionary.GetValue<UserStatus>(RedmineKeys.STATUS);
+                user.MustChangePassword = dictionary.GetValue<bool>(RedmineKeys.MUST_CHANGE_PASSWD);
                 user.CustomFields = dictionary.GetValueAsCollection<IssueCustomField>(RedmineKeys.CUSTOM_FIELDS);
-                user.Memberships = dictionary.GetValueAsCollection<Membership>("memberships");
-                user.Groups = dictionary.GetValueAsCollection<UserGroup>("groups");
+                user.Memberships = dictionary.GetValueAsCollection<Membership>(RedmineKeys.MEMBERSHIPS);
+                user.Groups = dictionary.GetValueAsCollection<UserGroup>(RedmineKeys.GROUPS);
 
                 return user;
             }
@@ -53,18 +53,18 @@ namespace Redmine.Net.Api.JSonConverters
         public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer)
         {
             var entity = obj as User;
-            var root = new Dictionary<string, object>();
+            
             var result = new Dictionary<string, object>();
 
             if (entity != null)
             {
-                result.Add("login", entity.Login);
-                result.Add("firstname", entity.FirstName);
-                result.Add("lastname", entity.LastName);
-                result.Add("mail", entity.Email);
-                result.Add("password", entity.Password);
-                result.Add("must_change_passwd", entity.MustChangePassword);
-                result.WriteIfNotDefaultOrNull(entity.AuthenticationModeId, "auth_source_id");
+                result.Add(RedmineKeys.LOGIN, entity.Login);
+                result.Add(RedmineKeys.FIRSTNAME, entity.FirstName);
+                result.Add(RedmineKeys.LASTNAME, entity.LastName);
+                result.Add(RedmineKeys.MAIL, entity.Email);
+                result.Add(RedmineKeys.PASSWORD, entity.Password);
+                result.Add(RedmineKeys.MUST_CHANGE_PASSWD, entity.MustChangePassword);
+                result.WriteValueOrEmpty(entity.AuthenticationModeId, RedmineKeys.AUTH_SOURCE_ID);
 
                 if (entity.CustomFields != null)
                 {
@@ -72,7 +72,8 @@ namespace Redmine.Net.Api.JSonConverters
                     result.Add(RedmineKeys.CUSTOM_FIELDS, entity.CustomFields.ToArray());
                 }
 
-                root["user"] = result;
+                var root = new Dictionary<string, object>();
+                root[RedmineKeys.USER] = result;
                 return root;
             }
             return result;

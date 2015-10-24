@@ -29,7 +29,11 @@ namespace Redmine.Net.Api.JSonConverters
         {
             if (dictionary != null)
             {
-                var tracker = new Tracker { Id = dictionary.GetValue<int>(RedmineKeys.ID), Name = dictionary.GetValue<string>(RedmineKeys.NAME) };
+                var tracker = new Tracker
+                {
+                    Id = dictionary.GetValue<int>(RedmineKeys.ID),
+                    Name = dictionary.GetValue<string>(RedmineKeys.NAME)
+                };
                 return tracker;
             }
 
