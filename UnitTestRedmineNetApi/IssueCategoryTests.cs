@@ -99,7 +99,7 @@ namespace UnitTestRedmineNetApi
             {
                 redmineManager.DeleteObject<IssueCategory>(issueCategoryId, null);
             }
-            catch (RedmineException exc)
+            catch (RedmineException)
             {
                 Assert.Fail("Issue category could not be deleted.");
                 return;

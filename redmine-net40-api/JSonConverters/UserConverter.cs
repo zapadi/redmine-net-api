@@ -65,12 +65,7 @@ namespace Redmine.Net.Api.JSonConverters
                 result.Add(RedmineKeys.PASSWORD, entity.Password);
                 result.Add(RedmineKeys.MUST_CHANGE_PASSWD, entity.MustChangePassword);
                 result.WriteValueOrEmpty(entity.AuthenticationModeId, RedmineKeys.AUTH_SOURCE_ID);
-
-                if (entity.CustomFields != null)
-                {
-                    serializer.RegisterConverters(new[] { new IssueCustomFieldConverter() });
-                    result.Add(RedmineKeys.CUSTOM_FIELDS, entity.CustomFields.ToArray());
-                }
+                result.WriteArray(RedmineKeys.CUSTOM_FIELDS, entity.CustomFields, new IssueCustomFieldConverter(), serializer);
 
                 var root = new Dictionary<string, object>();
                 root[RedmineKeys.USER] = result;

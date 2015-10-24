@@ -129,7 +129,7 @@ namespace Redmine.Net.Api.Types
             writer.WriteElementString(RedmineKeys.STATUS, Status.ToString());
             writer.WriteElementString(RedmineKeys.SHARING, Sharing.ToString());
 
-            writer.WriteDate(DueDate, RedmineKeys.DUE_DATE);
+            writer.WriteDateOrEmpty(DueDate, RedmineKeys.DUE_DATE);
             writer.WriteElementString(RedmineKeys.DESCRIPTION, Description);
         }
 

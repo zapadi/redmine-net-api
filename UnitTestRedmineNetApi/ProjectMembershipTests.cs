@@ -98,7 +98,7 @@ namespace UnitTestRedmineNetApi
             {
                 redmineManager.DeleteObject<ProjectMembership>(pmId, null);
             }
-            catch (RedmineException exc)
+            catch (RedmineException)
             {
                 Assert.Fail("Project membership could not be deleted.");
                 return;

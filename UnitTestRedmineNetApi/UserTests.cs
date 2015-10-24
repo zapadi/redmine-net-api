@@ -1,14 +1,12 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Types;
-using System;
+
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Configuration;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace UnitTestRedmineNetApi
 {
@@ -100,7 +98,7 @@ namespace UnitTestRedmineNetApi
             {
                 savedRedmineUser = redmineManager.CreateObject<User>(redmineUser);
             }
-            catch (RedmineException exc)
+            catch (RedmineException)
             {
                 Assert.Fail("Create user failed.");
                 return;
@@ -133,7 +131,7 @@ namespace UnitTestRedmineNetApi
             {
                 user = redmineManager.GetObject<User>(id.ToString(), null);
             }
-            catch (RedmineException exc)
+            catch (RedmineException)
             {
 
                 Assert.Fail("User not found.");
@@ -146,7 +144,7 @@ namespace UnitTestRedmineNetApi
                 {
                     redmineManager.DeleteObject<User>(id.ToString(), null);
                 }
-                catch (RedmineException exc)
+                catch (RedmineException)
                 {
                     Assert.Fail("User could not be deleted.");
                     return;

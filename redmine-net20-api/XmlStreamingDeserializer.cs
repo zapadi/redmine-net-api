@@ -12,7 +12,7 @@ namespace Redmine.Net.Api
     public class XmlStreamingDeserializer<T>
     {
         static XmlSerializerNamespaces ns;
-        XmlSerializer serializer = new XmlSerializer(typeof(T));
+        XmlSerializer serializer;
         XmlReader reader;
 
         static XmlStreamingDeserializer()

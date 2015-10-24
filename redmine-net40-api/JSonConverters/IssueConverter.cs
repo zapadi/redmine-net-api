@@ -98,23 +98,12 @@ namespace Redmine.Net.Api.JSonConverters
                 result.WriteDateOrEmpty(entity.DueDate, RedmineKeys.UPDATED_ON);
                 result.WriteValueOrEmpty(entity.DoneRatio, RedmineKeys.DONE_RATIO);
 
-                if (entity.Uploads != null)
-                {
-                    serializer.RegisterConverters(new[] { new UploadConverter() });
-                    result.Add(RedmineKeys.UPLOADS, entity.Uploads.ToArray());
-                }
+                result.WriteArray(RedmineKeys.UPLOADS, entity.Uploads, new UploadConverter(), serializer);
+                result.WriteArray(RedmineKeys.CUSTOM_FIELDS, entity.CustomFields, new IssueCustomFieldConverter(), serializer);
 
-                if (entity.CustomFields != null)
-                {
-                    serializer.RegisterConverters(new[] { new IssueCustomFieldConverter() });
-                    result.Add(RedmineKeys.CUSTOM_FIELDS, entity.CustomFields.ToArray());
-                }
-
-                if (entity.Watchers != null)
-                    result.Add(RedmineKeys.WATCHER_USER_IDS, entity.Watchers.Select(t => t.Id).ToArray());
-
+                result.WriteIdsArray(RedmineKeys.WATCHER_USER_IDS, entity.Watchers);
+                
                 var root = new Dictionary<string, object>();
-
                 root[RedmineKeys.ISSUE] = result;
                 return root;
             }

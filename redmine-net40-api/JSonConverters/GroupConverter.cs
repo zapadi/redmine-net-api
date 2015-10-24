@@ -53,8 +53,7 @@ namespace Redmine.Net.Api.JSonConverters
             if (entity != null)
             {
                 result.Add(RedmineKeys.NAME, entity.Name);
-                if (entity.Users != null)
-                    result.Add(RedmineKeys.USER_IDS, entity.Users.Select(x => x.Id).ToArray());
+                result.WriteIdsArray(RedmineKeys.USER_IDS, entity.Users);
 
                 var root = new Dictionary<string, object>();
                 root[RedmineKeys.GROUP] = result;
