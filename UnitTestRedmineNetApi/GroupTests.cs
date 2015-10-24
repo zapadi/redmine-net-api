@@ -112,7 +112,7 @@ namespace UnitTestRedmineNetApi
             {
                 savedGroup = redmineManager.CreateObject<Group>(group);
             }
-            catch (RedmineException exc)
+            catch (RedmineException)
             {
                 Assert.Fail("Create group failed.");
                 return;
@@ -146,7 +146,7 @@ namespace UnitTestRedmineNetApi
             {
                 redmineManager.DeleteObject<Group>(groupId.ToString(), null);
             }
-            catch (RedmineException exc)
+            catch (RedmineException)
             {
                 Assert.Fail("Group could not be deleted.");
                 return;

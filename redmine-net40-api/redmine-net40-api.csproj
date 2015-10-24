@@ -216,6 +216,7 @@
     <Compile Include="JSonConverters\VersionConverter.cs" />
     <Compile Include="JSonConverters\WatcherConverter.cs" />
     <Compile Include="JSonConverters\WikiPageConverter.cs" />
+    <Compile Include="JsonExtensions.cs" />
     <Compile Include="MimeFormat.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RedmineException.cs" />

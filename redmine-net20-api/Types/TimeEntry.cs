@@ -20,6 +20,7 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 
+
 namespace Redmine.Net.Api.Types
 {
     /// <summary>
@@ -176,8 +177,8 @@ namespace Redmine.Net.Api.Types
             writer.WriteIdIfNotNull(Issue, RedmineKeys.ISSUE_ID);
             writer.WriteIdIfNotNull(Project, RedmineKeys.PROJECT_ID);
             if (!SpentOn.HasValue) SpentOn = DateTime.Now;
-            writer.WriteDate(SpentOn, RedmineKeys.SPENT_ON);
-            writer.WriteValue<decimal>(Hours, RedmineKeys.HOURS);
+            writer.WriteDateOrEmpty(SpentOn, RedmineKeys.SPENT_ON);
+            writer.WriteValueOrEmpty<decimal>(Hours, RedmineKeys.HOURS);
             writer.WriteIdIfNotNull(Activity, RedmineKeys.ACTIVITY_ID);
             writer.WriteElementString(RedmineKeys.COMMENTS, Comments);
         }

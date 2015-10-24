@@ -104,7 +104,7 @@ namespace UnitTestRedmineNetApi
             {
                 redmineManager.DeleteObject<Redmine.Net.Api.Types.Version>(versionId, null);
             }
-            catch (RedmineException exc)
+            catch (RedmineException)
             {
                 Assert.Fail("Version could not be deleted.");
                 return;

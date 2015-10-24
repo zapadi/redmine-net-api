@@ -61,17 +61,13 @@ namespace Redmine.Net.Api.JSonConverters
                 result.WriteIdIfNotNull(entity.Issue, RedmineKeys.ISSUE_ID);
                 result.WriteIdIfNotNull(entity.Project, RedmineKeys.PROJECT_ID);
                 result.WriteIdIfNotNull(entity.Activity, RedmineKeys.ACTIVITY_ID);
+               
                 if (!entity.SpentOn.HasValue) entity.SpentOn = DateTime.Now;
 
-                result.Add(RedmineKeys.SPENT_ON, entity.SpentOn.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
+                result.WriteDateOrEmpty(entity.SpentOn, RedmineKeys.SPENT_ON);
                 result.Add(RedmineKeys.HOURS, entity.Hours);
                 result.Add(RedmineKeys.COMMENTS, entity.Comments);
-
-                if (entity.CustomFields != null)
-                {
-                    serializer.RegisterConverters(new[] { new IssueCustomFieldConverter() });
-                    result.Add(RedmineKeys.CUSTOM_FIELDS, entity.CustomFields.ToArray());
-                }
+                result.WriteArray(RedmineKeys.CUSTOM_FIELDS, entity.CustomFields, new IssueCustomFieldConverter(), serializer);
 
                 var root = new Dictionary<string, object>();
                 root[RedmineKeys.TIME_ENTRY] = result;

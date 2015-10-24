@@ -81,7 +81,7 @@ namespace UnitTestRedmineNetApi
             {
                 redmineManager.DeleteObject<IssueRelation>(relationId, null);
             }
-            catch (RedmineException exc)
+            catch (RedmineException)
             {
                 Assert.Fail("Relation could not be deleted.");
                 return;

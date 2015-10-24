@@ -127,7 +127,7 @@ namespace UnitTestRedmineNetApi
             {
                 redmineManager.DeleteObject<Project>(projectId, null);
             }
-            catch (RedmineException exc)
+            catch (RedmineException)
             {
                 Assert.Fail("Project could not be deleted.");
                 return;

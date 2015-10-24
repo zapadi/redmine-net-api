@@ -365,11 +365,11 @@ namespace Redmine.Net.Api.Types
             writer.WriteIdIfNotNull(ParentIssue, RedmineKeys.PARENT_ISSUE_ID);
             writer.WriteIdIfNotNull(FixedVersion, RedmineKeys.FIXED_VERSION_ID);
 
-            writer.WriteValue(EstimatedHours, RedmineKeys.ESTIMATED_HOURS);
+            writer.WriteValueOrEmpty(EstimatedHours, RedmineKeys.ESTIMATED_HOURS);
             writer.WriteIfNotDefaultOrNull(DoneRatio, RedmineKeys.DONE_RATIO);
-            writer.WriteDate(StartDate, RedmineKeys.START_DATE);
-            writer.WriteDate(DueDate, RedmineKeys.DUE_DATE);
-            writer.WriteDate(UpdatedOn, RedmineKeys.UPDATED_ON);
+            writer.WriteDateOrEmpty(StartDate, RedmineKeys.START_DATE);
+            writer.WriteDateOrEmpty(DueDate, RedmineKeys.DUE_DATE);
+            writer.WriteDateOrEmpty(UpdatedOn, RedmineKeys.UPDATED_ON);
 
             writer.WriteArray(Uploads, RedmineKeys.UPLOADS);
             writer.WriteArray(CustomFields, RedmineKeys.CUSTOM_FIELDS);

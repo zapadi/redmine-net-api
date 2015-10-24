@@ -103,7 +103,7 @@ namespace UnitTestRedmineNetApi
             {
                 redmineManager.DeleteObject<TimeEntry>(timeEntryId, null);
             }
-            catch (RedmineException exc)
+            catch (RedmineException)
             {
                 Assert.Fail("Time entry could not be deleted.");
                 return;

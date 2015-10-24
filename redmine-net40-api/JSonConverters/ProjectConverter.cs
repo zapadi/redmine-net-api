@@ -16,7 +16,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Web.Script.Serialization;
 using Redmine.Net.Api.Types;
 
@@ -67,21 +66,12 @@ namespace Redmine.Net.Api.JSonConverters
                 result.Add(RedmineKeys.IS_PUBLIC, entity.IsPublic);
 
                 result.WriteIdOrEmpty(entity.Parent, RedmineKeys.PARENT_ID, string.Empty);
+                result.WriteArray(RedmineKeys.CUSTOM_FIELDS, entity.CustomFields, new IssueCustomFieldConverter(), serializer);
 
-                if (entity.CustomFields != null)
-                {
-                    serializer.RegisterConverters(new[] { new IssueCustomFieldConverter() });
-                    result.Add(RedmineKeys.CUSTOM_FIELDS, entity.CustomFields.ToArray());
-                }
-
-                if (entity.Trackers != null)              
-                    result.Add(RedmineKeys.TRACKER_IDS, entity.Trackers.Select(t => t.Id).ToArray());      
-
-                if (entity.EnabledModules != null)
-                    result.Add(RedmineKeys.ENABLED_MODULE_NAMES, entity.EnabledModules.Select(e=> e.Name).ToArray());
-
+                result.WriteIdsArray(RedmineKeys.TRACKER_IDS, entity.Trackers);
+                result.WriteNamesArray(RedmineKeys.ENABLED_MODULE_NAMES, entity.EnabledModules);
+              
                 var root = new Dictionary<string, object>();
-
                 root[RedmineKeys.PROJECT] = result;
                 return root;
             }

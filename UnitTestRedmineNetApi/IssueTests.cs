@@ -198,7 +198,7 @@ namespace UnitTestRedmineNetApi
             {
                 redmineManager.DeleteObject<Issue>(issueId, null);
             }
-            catch (RedmineException exc)
+            catch (RedmineException)
             {
                 Assert.Fail("Issue could not be deleted.");
                 return;

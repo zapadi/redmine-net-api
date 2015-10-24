@@ -15,7 +15,6 @@
 */
 
 using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.Web.Script.Serialization;
 using Redmine.Net.Api.Types;
@@ -51,8 +50,7 @@ namespace Redmine.Net.Api.JSonConverters
             if (entity != null)
             {
                 result.WriteIdIfNotNull(entity.User, RedmineKeys.USER_ID);
-
-                result.Add(RedmineKeys.ROLE_IDS, entity.Roles.Select(x => x.Id).ToArray());
+                result.WriteIdsArray(RedmineKeys.ROLE_IDS, entity.Roles);
 
                 var root = new Dictionary<string, object>();
                 root[RedmineKeys.MEMBERSHIP] = result;

@@ -301,6 +301,9 @@
     <Compile Include="..\redmine-net40-api\JSonConverters\WikiPageConverter.cs">
       <Link>JsonConverters\WikiPageConverter.cs</Link>
     </Compile>
+    <Compile Include="..\redmine-net40-api\JsonExtensions.cs">
+      <Link>JsonExtensions.cs</Link>
+    </Compile>
     <Compile Include="..\redmine-net40-api\MimeFormat.cs">
       <Link>MimeFormat.cs</Link>
     </Compile>

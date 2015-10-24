@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2015 Adrian Popescu, Dorin Huzum., Dorin Huzum.
+   Copyright 2011 - 2015 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ using Redmine.Net.Api.Types;
 
 namespace Redmine.Net.Api
 {
-    public static class ExtensionMethods
+    public static class XmlReaderExtensions
     {
         /// <summary>
         /// Reads the attribute as int.
@@ -233,11 +233,6 @@ namespace Redmine.Net.Api
             if (ident != null) writer.WriteElementString(tag, ident.Id.ToString(CultureInfo.InvariantCulture));
         }
 
-        public static void WriteIdIfNotNull(this Dictionary<string, object> dictionary, IdentifiableName ident, String key)
-        {
-            if (ident != null) dictionary.Add(key, ident.Id);
-        }
-
         /// <summary>
         /// Writes string empty if T has default value or null.
         /// </summary>
@@ -245,22 +240,7 @@ namespace Redmine.Net.Api
         /// <param name="writer">The writer.</param>
         /// <param name="val">The value.</param>
         /// <param name="tag">The tag.</param>
-        public static void WriteValue<T>(this XmlWriter writer, T? val, String tag) where T : struct
-        {
-            if (!val.HasValue || EqualityComparer<T>.Default.Equals(val.Value, default(T)))
-                writer.WriteElementString(tag, string.Empty);
-            else
-                writer.WriteElementString(tag, string.Format(NumberFormatInfo.InvariantInfo, "{0}", val.Value));
-        }
-
-        public static void WriteDate(this XmlWriter writer, DateTime? val, String tag)
-        {
-            if (!val.HasValue || val.Value.Equals(default(DateTime)))
-                writer.WriteElementString(tag, string.Empty);
-            else
-                writer.WriteElementString(tag, string.Format(NumberFormatInfo.InvariantInfo, "{0}", val.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)));
-        }
-
+       
         public static void WriteArray(this XmlWriter writer, IEnumerable col, string elementName)
         {
             writer.WriteStartElement(elementName);
@@ -274,15 +254,7 @@ namespace Redmine.Net.Api
             }
             writer.WriteEndElement();
         }
-
-        public static void WriteIfNotDefaultOrNull<T>(this Dictionary<string, object> dictionary, T? val, String tag) where T : struct
-        {
-            if (!val.HasValue || EqualityComparer<T>.Default.Equals(val.Value, default(T)))
-                dictionary.Add(tag, string.Empty);
-            else
-                dictionary.Add(tag, val.Value);
-        }
-
+        
         public static void WriteIdOrEmpty(this XmlWriter writer, IdentifiableName ident, String tag)
         {
             if (ident != null) writer.WriteElementString(tag, ident.Id.ToString(CultureInfo.InvariantCulture));
@@ -295,6 +267,29 @@ namespace Redmine.Net.Api
             if (!val.HasValue) return;
             if (!EqualityComparer<T>.Default.Equals(val.Value, default(T)))
                 writer.WriteElementString(tag, string.Format(NumberFormatInfo.InvariantInfo, "{0}", val.Value));
+        }
+        
+        /// <summary>
+        /// Writes string empty if T has default value or null.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="writer">The writer.</param>
+        /// <param name="val">The value.</param>
+        /// <param name="tag">The tag.</param>
+        public static void WriteValueOrEmpty<T>(this XmlWriter writer, T? val, String tag) where T : struct
+        {
+            if (!val.HasValue || EqualityComparer<T>.Default.Equals(val.Value, default(T)))
+                writer.WriteElementString(tag, string.Empty);
+            else
+                writer.WriteElementString(tag, string.Format(NumberFormatInfo.InvariantInfo, "{0}", val.Value));
+        }
+
+        public static void WriteDateOrEmpty(this XmlWriter writer, DateTime? val, String tag)
+        {
+            if (!val.HasValue || val.Value.Equals(default(DateTime)))
+                writer.WriteElementString(tag, string.Empty);
+            else
+                writer.WriteElementString(tag, string.Format(NumberFormatInfo.InvariantInfo, "{0}", val.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)));
         }
     }
 }
