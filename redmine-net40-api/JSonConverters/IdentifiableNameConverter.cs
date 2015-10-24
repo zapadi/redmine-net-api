@@ -47,6 +47,7 @@ namespace Redmine.Net.Api.JSonConverters
             if (entity != null)
             {
                 result.WriteIdIfNotNull(entity, RedmineKeys.ID);
+                
                 if (!string.IsNullOrEmpty(entity.Name))
                     result.Add(RedmineKeys.NAME, entity.Name);
                 return result;

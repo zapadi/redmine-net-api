@@ -93,7 +93,7 @@ namespace Redmine.Net.Api
         public const string CONTENT_TYPE = "content_type";
 
         public const string TIME_ENTRY_ACTIVITY = "time_entry_activity";
-        public const string is_default = "is_default";
+        
 
         public const string TIME_ENTRY = "time_entry";
         public const string SPENT_ON = "spent_on";

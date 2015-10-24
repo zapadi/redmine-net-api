@@ -40,7 +40,6 @@ namespace Redmine.Net.Api.JSonConverters
         public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer)
         {
             var entity = obj as ProjectIssueCategory;
-            var root = new Dictionary<string, object>();
             var result = new Dictionary<string, object>();
 
             if (entity != null)
@@ -48,7 +47,8 @@ namespace Redmine.Net.Api.JSonConverters
                 result.Add(RedmineKeys.ID, entity.Id);
                 result.Add(RedmineKeys.NAME, entity.Name);
 
-                root["issue_category"] = result;
+                var root = new Dictionary<string, object>();
+                root[RedmineKeys.ISSUE_CATEGORY] = result;
                 return root;
             }
             return result;

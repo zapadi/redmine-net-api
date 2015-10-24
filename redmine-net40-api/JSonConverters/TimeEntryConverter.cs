@@ -34,13 +34,13 @@ namespace Redmine.Net.Api.JSonConverters
                 var timeEntry = new TimeEntry();
 
                 timeEntry.Id = dictionary.GetValue<int>(RedmineKeys.ID);
-                timeEntry.Activity = dictionary.GetValueAsIdentifiableName(dictionary.ContainsKey("activity") ? "activity" : "activity_id");
-                timeEntry.Comments = dictionary.GetValue<string>("comments");
-                timeEntry.Hours = dictionary.GetValue<decimal>("hours");
-                timeEntry.Issue = dictionary.GetValueAsIdentifiableName(dictionary.ContainsKey("issue") ? "issue" : "issue_id");
-                timeEntry.Project = dictionary.GetValueAsIdentifiableName(dictionary.ContainsKey("project") ? "project" : "project_id");
-                timeEntry.SpentOn = dictionary.GetValue<DateTime?>("spent_on");
-                timeEntry.User = dictionary.GetValueAsIdentifiableName("user");
+                timeEntry.Activity = dictionary.GetValueAsIdentifiableName(dictionary.ContainsKey(RedmineKeys.ACTIVITY) ? RedmineKeys.ACTIVITY : RedmineKeys.ACTIVITY_ID);
+                timeEntry.Comments = dictionary.GetValue<string>(RedmineKeys.COMMENTS);
+                timeEntry.Hours = dictionary.GetValue<decimal>(RedmineKeys.HOURS);
+                timeEntry.Issue = dictionary.GetValueAsIdentifiableName(dictionary.ContainsKey(RedmineKeys.ISSUE) ? RedmineKeys.ISSUE : RedmineKeys.ISSUE_ID);
+                timeEntry.Project = dictionary.GetValueAsIdentifiableName(dictionary.ContainsKey(RedmineKeys.PROJECT) ? RedmineKeys.PROJECT : RedmineKeys.PROJECT_ID);
+                timeEntry.SpentOn = dictionary.GetValue<DateTime?>(RedmineKeys.SPENT_ON);
+                timeEntry.User = dictionary.GetValueAsIdentifiableName(RedmineKeys.USER);
                 timeEntry.CustomFields = dictionary.GetValueAsCollection<IssueCustomField>(RedmineKeys.CUSTOM_FIELDS);
                 timeEntry.CreatedOn = dictionary.GetValue<DateTime?>(RedmineKeys.CREATED_ON);
                 timeEntry.UpdatedOn = dictionary.GetValue<DateTime?>(RedmineKeys.UPDATED_ON);
@@ -54,18 +54,18 @@ namespace Redmine.Net.Api.JSonConverters
         public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer)
         {
             var entity = obj as TimeEntry;
-            var root = new Dictionary<string, object>();
             var result = new Dictionary<string, object>();
 
             if (entity != null)
             {
-                result.WriteIdIfNotNull(entity.Issue, "issue_id");
-                result.WriteIdIfNotNull(entity.Project, "project_id");
-                result.WriteIdIfNotNull(entity.Activity, "activity_id");
+                result.WriteIdIfNotNull(entity.Issue, RedmineKeys.ISSUE_ID);
+                result.WriteIdIfNotNull(entity.Project, RedmineKeys.PROJECT_ID);
+                result.WriteIdIfNotNull(entity.Activity, RedmineKeys.ACTIVITY_ID);
                 if (!entity.SpentOn.HasValue) entity.SpentOn = DateTime.Now;
-                result.Add("spent_on", entity.SpentOn.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
-                result.Add("hours", entity.Hours);
-                result.Add("comments", entity.Comments);
+
+                result.Add(RedmineKeys.SPENT_ON, entity.SpentOn.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
+                result.Add(RedmineKeys.HOURS, entity.Hours);
+                result.Add(RedmineKeys.COMMENTS, entity.Comments);
 
                 if (entity.CustomFields != null)
                 {
@@ -73,7 +73,8 @@ namespace Redmine.Net.Api.JSonConverters
                     result.Add(RedmineKeys.CUSTOM_FIELDS, entity.CustomFields.ToArray());
                 }
 
-                root["time_entry"] = result;
+                var root = new Dictionary<string, object>();
+                root[RedmineKeys.TIME_ENTRY] = result;
                 return root;
             }
 

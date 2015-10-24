@@ -31,10 +31,10 @@ namespace Redmine.Net.Api.JSonConverters
             {
                 var upload = new Upload();
 
-                upload.ContentType = dictionary.GetValue<string>("content_type");
-                upload.FileName = dictionary.GetValue<string>("filename");
-                upload.Token = dictionary.GetValue<string>("token");
-                upload.Description = dictionary.GetValue<string>("description");
+                upload.ContentType = dictionary.GetValue<string>(RedmineKeys.CONTENT_TYPE);
+                upload.FileName = dictionary.GetValue<string>(RedmineKeys.FILENAME);
+                upload.Token = dictionary.GetValue<string>(RedmineKeys.TOKEN);
+                upload.Description = dictionary.GetValue<string>(RedmineKeys.DESCRIPTION);
                 return upload;
             }
 
@@ -44,15 +44,14 @@ namespace Redmine.Net.Api.JSonConverters
         public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer)
         {
             var entity = obj as Upload;
-            var root = new Dictionary<string, object>();
             var result = new Dictionary<string, object>();
 
             if (entity != null)
             {
-                result.Add("content_type", entity.ContentType);
-                result.Add("filename", entity.FileName);
-                result.Add("token", entity.Token);
-                result.Add("description", entity.Description);
+                result.Add(RedmineKeys.CONTENT_TYPE, entity.ContentType);
+                result.Add(RedmineKeys.FILENAME, entity.FileName);
+                result.Add(RedmineKeys.TOKEN, entity.Token);
+                result.Add(RedmineKeys.DESCRIPTION, entity.Description);
             }
 
             return result;

@@ -29,7 +29,7 @@ namespace Redmine.Net.Api.JSonConverters
         {
             if (dictionary != null)
             {
-                var error = new Error { Info = dictionary.GetValue<string>("error") };
+                var error = new Error { Info = dictionary.GetValue<string>(RedmineKeys.ERROR) };
                 return error;
             }
 

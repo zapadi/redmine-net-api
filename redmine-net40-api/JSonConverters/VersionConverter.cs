@@ -34,14 +34,14 @@ namespace Redmine.Net.Api.JSonConverters
                 var version = new Version();
 
                 version.Id = dictionary.GetValue<int>(RedmineKeys.ID);
-                version.Description = dictionary.GetValue<string>("description");
+                version.Description = dictionary.GetValue<string>(RedmineKeys.DESCRIPTION);
                 version.Name = dictionary.GetValue<string>(RedmineKeys.NAME);
                 version.CreatedOn = dictionary.GetValue<DateTime?>(RedmineKeys.CREATED_ON);
                 version.UpdatedOn = dictionary.GetValue<DateTime?>(RedmineKeys.UPDATED_ON);
-                version.DueDate = dictionary.GetValue<DateTime?>("due_date");
-                version.Project = dictionary.GetValueAsIdentifiableName("project");
-                version.Sharing = dictionary.GetValue<VersionSharing>("sharing");
-                version.Status = dictionary.GetValue<VersionStatus>("status");
+                version.DueDate = dictionary.GetValue<DateTime?>(RedmineKeys.DUE_DATE);
+                version.Project = dictionary.GetValueAsIdentifiableName(RedmineKeys.PROJECT);
+                version.Sharing = dictionary.GetValue<VersionSharing>(RedmineKeys.SHARING);
+                version.Status = dictionary.GetValue<VersionStatus>(RedmineKeys.STATUS);
                 version.CustomFields = dictionary.GetValueAsCollection<IssueCustomField>(RedmineKeys.CUSTOM_FIELDS);
 
                 return version;
@@ -53,19 +53,19 @@ namespace Redmine.Net.Api.JSonConverters
         public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer)
         {
             var entity = obj as Version;
-            var root = new Dictionary<string, object>();
+           
             var result = new Dictionary<string, object>();
 
             if (entity != null)
             {
                 result.Add(RedmineKeys.NAME, entity.Name);
-                result.Add("status", entity.Status.ToString());
-                result.Add("sharing", entity.Sharing.ToString());
-                result.Add("description", entity.Description);
-				if (entity.DueDate != null)
-					result.Add("due_date", entity.DueDate.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
+                result.Add(RedmineKeys.STATUS, entity.Status.ToString());
+                result.Add(RedmineKeys.SHARING, entity.Sharing.ToString());
+                result.Add(RedmineKeys.DESCRIPTION, entity.Description);
 
-                root["version"] = result;
+                var root = new Dictionary<string, object>();
+                result.WriteDateOrEmpty(entity.DueDate, RedmineKeys.DUE_DATE);
+				root[RedmineKeys.VERSION] = result;
                 return root;
             }
 

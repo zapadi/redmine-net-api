@@ -34,34 +34,34 @@ namespace Redmine.Net.Api.JSonConverters
                 var issue = new Issue();
 
                 issue.Id = dictionary.GetValue<int>(RedmineKeys.ID);
-                issue.Description = dictionary.GetValue<string>("description");
-                issue.Project = dictionary.GetValueAsIdentifiableName("project");
-                issue.Tracker = dictionary.GetValueAsIdentifiableName("tracker");
-                issue.Status = dictionary.GetValueAsIdentifiableName("status");
+                issue.Description = dictionary.GetValue<string>(RedmineKeys.DESCRIPTION);
+                issue.Project = dictionary.GetValueAsIdentifiableName(RedmineKeys.PROJECT);
+                issue.Tracker = dictionary.GetValueAsIdentifiableName(RedmineKeys.TRACKER);
+                issue.Status = dictionary.GetValueAsIdentifiableName(RedmineKeys.STATUS);
                 issue.CreatedOn = dictionary.GetValue<DateTime?>(RedmineKeys.CREATED_ON);
                 issue.UpdatedOn = dictionary.GetValue<DateTime?>(RedmineKeys.UPDATED_ON);
-                issue.ClosedOn = dictionary.GetValue<DateTime?>("closed_on");
-                issue.Priority = dictionary.GetValueAsIdentifiableName("priority");
-                issue.Author = dictionary.GetValueAsIdentifiableName("author");
-                issue.AssignedTo = dictionary.GetValueAsIdentifiableName("assigned_to");
-                issue.Category = dictionary.GetValueAsIdentifiableName("category");
-                issue.FixedVersion = dictionary.GetValueAsIdentifiableName("fixed_version");
-                issue.Subject = dictionary.GetValue<string>("subject");
-                issue.Notes = dictionary.GetValue<string>("notes");
-                issue.IsPrivate = dictionary.GetValue<bool>("is_private");
-                issue.StartDate = dictionary.GetValue<DateTime?>("start_date");
-                issue.DueDate = dictionary.GetValue<DateTime?>("due_date");
-                issue.DoneRatio = dictionary.GetValue<float>("done_ratio");
-                issue.EstimatedHours = dictionary.GetValue<float>("estimated_hours");
-                issue.ParentIssue = dictionary.GetValueAsIdentifiableName("parent");
+                issue.ClosedOn = dictionary.GetValue<DateTime?>(RedmineKeys.CLOSED_ON);
+                issue.Priority = dictionary.GetValueAsIdentifiableName(RedmineKeys.PRIORITY);
+                issue.Author = dictionary.GetValueAsIdentifiableName(RedmineKeys.AUTHOR);
+                issue.AssignedTo = dictionary.GetValueAsIdentifiableName(RedmineKeys.ASSIGNED_TO);
+                issue.Category = dictionary.GetValueAsIdentifiableName(RedmineKeys.CATEGORY);
+                issue.FixedVersion = dictionary.GetValueAsIdentifiableName(RedmineKeys.FIXED_VERSION);
+                issue.Subject = dictionary.GetValue<string>(RedmineKeys.SUBJECT);
+                issue.Notes = dictionary.GetValue<string>(RedmineKeys.NOTES);
+                issue.IsPrivate = dictionary.GetValue<bool>(RedmineKeys.IS_PRIVATE);
+                issue.StartDate = dictionary.GetValue<DateTime?>(RedmineKeys.START_DATE);
+                issue.DueDate = dictionary.GetValue<DateTime?>(RedmineKeys.DUE_DATE);
+                issue.DoneRatio = dictionary.GetValue<float>(RedmineKeys.DONE_RATIO);
+                issue.EstimatedHours = dictionary.GetValue<float>(RedmineKeys.ESTIMATED_HOURS);
+                issue.ParentIssue = dictionary.GetValueAsIdentifiableName(RedmineKeys.PARENT);
 
                 issue.CustomFields = dictionary.GetValueAsCollection<IssueCustomField>(RedmineKeys.CUSTOM_FIELDS);
-                issue.Attachments = dictionary.GetValueAsCollection<Attachment>("attachments");
-                issue.Relations = dictionary.GetValueAsCollection<IssueRelation>("relations");
-                issue.Journals = dictionary.GetValueAsCollection<Journal>("journals");
-                issue.Changesets = dictionary.GetValueAsCollection<ChangeSet>("changesets");
-                issue.Watchers = dictionary.GetValueAsCollection<Watcher>("watchers");
-                issue.Children = dictionary.GetValueAsCollection<IssueChild>("children");
+                issue.Attachments = dictionary.GetValueAsCollection<Attachment>(RedmineKeys.ATTACHMENTS);
+                issue.Relations = dictionary.GetValueAsCollection<IssueRelation>(RedmineKeys.RELATIONS);
+                issue.Journals = dictionary.GetValueAsCollection<Journal>(RedmineKeys.JOURNALS);
+                issue.Changesets = dictionary.GetValueAsCollection<ChangeSet>(RedmineKeys.CHANGESETS);
+                issue.Watchers = dictionary.GetValueAsCollection<Watcher>(RedmineKeys.WATCHERS);
+                issue.Children = dictionary.GetValueAsCollection<IssueChild>(RedmineKeys.CHILDREN);
                 return issue;
             }
 
@@ -71,51 +71,37 @@ namespace Redmine.Net.Api.JSonConverters
         public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer)
         {
             var entity = obj as Issue;
-            var root = new Dictionary<string, object>();
             var result = new Dictionary<string, object>();
 
             if (entity != null)
             {
-                result.Add("subject", entity.Subject);
-                result.Add("description", entity.Description);
-                result.Add("notes", entity.Notes);
+                result.Add(RedmineKeys.SUBJECT, entity.Subject);
+                result.Add(RedmineKeys.DESCRIPTION, entity.Description);
+                result.Add(RedmineKeys.NOTES, entity.Notes);
                 if (entity.Id != 0)
                 {
-                    result.Add("private_notes", entity.IsPrivate);
+                    result.Add(RedmineKeys.PRIVATE_NOTES, entity.IsPrivate);
                 }
-                result.Add("is_private", entity.IsPrivate);
-                result.WriteIdIfNotNull(entity.Project, "project_id");
-                result.WriteIdIfNotNull(entity.Priority, "priority_id");
-                result.WriteIdIfNotNull(entity.Status, "status_id");
-                result.WriteIdIfNotNull(entity.Category, "category_id");
-                result.WriteIdIfNotNull(entity.Tracker, "tracker_id");
-                result.WriteIdIfNotNull(entity.AssignedTo, "assigned_to_id");
-                result.WriteIdIfNotNull(entity.FixedVersion, "fixed_version_id");
-               // result.WriteIdIfNotNull(entity.ParentIssue, "parent_issue_id");
-                result.WriteIfNotDefaultOrNull(entity.EstimatedHours, "estimated_hours");
+                result.Add(RedmineKeys.IS_PRIVATE, entity.IsPrivate);
+                result.WriteIdIfNotNull(entity.Project, RedmineKeys.PROJECT_ID);
+                result.WriteIdIfNotNull(entity.Priority, RedmineKeys.PRIORITY_ID);
+                result.WriteIdIfNotNull(entity.Status, RedmineKeys.STATUS_ID);
+                result.WriteIdIfNotNull(entity.Category, RedmineKeys.CATEGORY_ID);
+                result.WriteIdIfNotNull(entity.Tracker, RedmineKeys.TRACKER_ID);
+                result.WriteIdIfNotNull(entity.AssignedTo, RedmineKeys.ASSIGNED_TO_ID);
+                result.WriteIdIfNotNull(entity.FixedVersion, RedmineKeys.FIXED_VERSION_ID);
+                result.WriteValueOrEmpty(entity.EstimatedHours, RedmineKeys.ESTIMATED_HOURS);
 
-                if(entity.ParentIssue == null)
-                    result.Add("parent_issue_id", null);
-                else
-                {
-                    result.Add("parent_issue_id", entity.ParentIssue.Id);
-                }
-                if (entity.StartDate != null)
-                    result.Add("start_date", entity.StartDate.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
-                
-                if (entity.DueDate != null)
-                    result.Add("due_date", entity.DueDate.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
-                
-                if (entity.UpdatedOn != null)
-                    result.Add(RedmineKeys.UPDATED_ON, entity.UpdatedOn.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
-
-                if(entity.DoneRatio != null)
-                    result.Add("done_ratio", entity.DoneRatio);
+                result.WriteIdOrEmpty(entity.ParentIssue, RedmineKeys.PARENT_ISSUE_ID);
+                result.WriteDateOrEmpty(entity.StartDate, RedmineKeys.START_DATE);
+                result.WriteDateOrEmpty(entity.DueDate, RedmineKeys.DUE_DATE);
+                result.WriteDateOrEmpty(entity.DueDate, RedmineKeys.UPDATED_ON);
+                result.WriteValueOrEmpty(entity.DoneRatio, RedmineKeys.DONE_RATIO);
 
                 if (entity.Uploads != null)
                 {
                     serializer.RegisterConverters(new[] { new UploadConverter() });
-                    result.Add("uploads", entity.Uploads.ToArray());
+                    result.Add(RedmineKeys.UPLOADS, entity.Uploads.ToArray());
                 }
 
                 if (entity.CustomFields != null)
@@ -125,9 +111,11 @@ namespace Redmine.Net.Api.JSonConverters
                 }
 
                 if (entity.Watchers != null)
-                    result.Add("watcher_user_ids", entity.Watchers.Select(t => t.Id).ToArray());    
+                    result.Add(RedmineKeys.WATCHER_USER_IDS, entity.Watchers.Select(t => t.Id).ToArray());
 
-                root["issue"] = result;
+                var root = new Dictionary<string, object>();
+
+                root[RedmineKeys.ISSUE] = result;
                 return root;
             }
 

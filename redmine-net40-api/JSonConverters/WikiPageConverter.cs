@@ -30,14 +30,14 @@ namespace Redmine.Net.Api.JSonConverters
                 var tracker = new WikiPage();
 
                 tracker.Id = dictionary.GetValue<int>(RedmineKeys.ID);
-                tracker.Author = dictionary.GetValueAsIdentifiableName("author");
-                tracker.Comments = dictionary.GetValue<string>("comments");
+                tracker.Author = dictionary.GetValueAsIdentifiableName(RedmineKeys.AUTHOR);
+                tracker.Comments = dictionary.GetValue<string>(RedmineKeys.COMMENTS);
                 tracker.CreatedOn = dictionary.GetValue<DateTime?>(RedmineKeys.CREATED_ON);
-                tracker.Text = dictionary.GetValue<string>("text");
-                tracker.Title = dictionary.GetValue<string>("title");
+                tracker.Text = dictionary.GetValue<string>(RedmineKeys.TEXT);
+                tracker.Title = dictionary.GetValue<string>(RedmineKeys.TITLE);
                 tracker.UpdatedOn = dictionary.GetValue<DateTime?>(RedmineKeys.UPDATED_ON);
-                tracker.Version = dictionary.GetValue<int>("version");
-                tracker.Attachments = dictionary.GetValueAsCollection<Attachment>("attachments");
+                tracker.Version = dictionary.GetValue<int>(RedmineKeys.VERSION);
+                tracker.Attachments = dictionary.GetValueAsCollection<Attachment>(RedmineKeys.ATTACHMENTS);
 
                 return tracker;
             }
@@ -48,16 +48,16 @@ namespace Redmine.Net.Api.JSonConverters
         public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer)
         {
             var entity = obj as WikiPage;
-            var root = new Dictionary<string, object>();
             var result = new Dictionary<string, object>();
 
             if (entity != null)
             {
-                result.Add("text", entity.Text);
-                result.Add("comments", entity.Comments);
-                result.WriteIfNotDefaultOrNull<int>(entity.Version, "version");
+                result.Add(RedmineKeys.TEXT, entity.Text);
+                result.Add(RedmineKeys.COMMENTS, entity.Comments);
+                result.WriteValueOrEmpty<int>(entity.Version, RedmineKeys.VERSION);
 
-                root["wiki_page"] = result;
+                var root = new Dictionary<string, object>();
+                root[RedmineKeys.WIKI_PAGE] = result;
                 return root;
             }
 

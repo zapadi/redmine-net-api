@@ -31,10 +31,10 @@ namespace Redmine.Net.Api.JSonConverters
             {
                 var detail = new Detail();
 
-                detail.NewValue = dictionary.GetValue<string>("new_value");
-                detail.OldValue = dictionary.GetValue<string>("old_value");
-                detail.Property = dictionary.GetValue<string>("property");
-                detail.StatusId = dictionary.GetValue<string>(RedmineKeys.NAME);
+                detail.NewValue = dictionary.GetValue<string>(RedmineKeys.NEW_VALUE);
+                detail.OldValue = dictionary.GetValue<string>(RedmineKeys.OLD_VALUE);
+                detail.Property = dictionary.GetValue<string>(RedmineKeys.PROPERTY);
+                detail.StatusId = dictionary.GetValue<string>(RedmineKeys.STATUS_ID);
 
                 return detail;
             }

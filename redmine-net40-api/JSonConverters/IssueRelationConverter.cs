@@ -32,10 +32,10 @@ namespace Redmine.Net.Api.JSonConverters
                 var issueRelation = new IssueRelation();
 
                 issueRelation.Id = dictionary.GetValue<int>(RedmineKeys.ID);
-                issueRelation.IssueId = dictionary.GetValue<int>("issue_id");
-                issueRelation.IssueToId = dictionary.GetValue<int>("issue_to_id");
-                issueRelation.Type = dictionary.GetValue<IssueRelationType>("relation_type");
-                issueRelation.Delay = dictionary.GetValue<int?>("delay");
+                issueRelation.IssueId = dictionary.GetValue<int>(RedmineKeys.ISSUE_ID);
+                issueRelation.IssueToId = dictionary.GetValue<int>(RedmineKeys.ISSUE_TO_ID);
+                issueRelation.Type = dictionary.GetValue<IssueRelationType>(RedmineKeys.RELATION_TYPE);
+                issueRelation.Delay = dictionary.GetValue<int?>(RedmineKeys.DELAY);
 
                 return issueRelation;
             }
@@ -46,17 +46,18 @@ namespace Redmine.Net.Api.JSonConverters
         public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer)
         {
             var entity = obj as IssueRelation;
-            var root = new Dictionary<string, object>();
+         
             var result = new Dictionary<string, object>();
 
             if (entity != null)
             {
-                result.Add("issue_to_id", entity.IssueToId);
-                result.Add("relation_type", entity.Type.ToString());
+                result.Add(RedmineKeys.ISSUE_TO_ID, entity.IssueToId);
+                result.Add(RedmineKeys.RELATION_TYPE, entity.Type.ToString());
                 if (entity.Type == IssueRelationType.precedes || entity.Type == IssueRelationType.follows)
-                    result.WriteIfNotDefaultOrNull(entity.Delay, "delay");
+                    result.WriteValueOrEmpty(entity.Delay, RedmineKeys.DELAY);
 
-                root["relation"] = result;
+                var root = new Dictionary<string, object>();
+                root[RedmineKeys.RELATION] = result;
                 return root;
             }
 

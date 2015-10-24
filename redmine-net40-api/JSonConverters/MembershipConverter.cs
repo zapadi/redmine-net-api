@@ -32,8 +32,8 @@ namespace Redmine.Net.Api.JSonConverters
                 var membership = new Membership();
 
                 membership.Id = dictionary.GetValue<int>(RedmineKeys.ID);
-                membership.Project = dictionary.GetValueAsIdentifiableName("project");
-                membership.Roles = dictionary.GetValueAsCollection<MembershipRole>("roles");
+                membership.Project = dictionary.GetValueAsIdentifiableName(RedmineKeys.PROJECT);
+                membership.Roles = dictionary.GetValueAsCollection<MembershipRole>(RedmineKeys.ROLES);
 
                 return membership;
             }

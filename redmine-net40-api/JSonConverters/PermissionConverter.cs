@@ -27,7 +27,7 @@ namespace Redmine.Net.Api.JSonConverters
         {
             if (dictionary != null)
             {
-                var permission = new Permission { Info = dictionary.GetValue<string>("permission") };
+                var permission = new Permission { Info = dictionary.GetValue<string>(RedmineKeys.PERMISSION) };
                 return permission;
             }
 

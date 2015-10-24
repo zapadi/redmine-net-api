@@ -31,7 +31,7 @@ namespace Redmine.Net.Api.JSonConverters
 
                 issuePriority.Id = dictionary.GetValue<int>(RedmineKeys.ID);
                 issuePriority.Name = dictionary.GetValue<string>(RedmineKeys.NAME);
-                issuePriority.IsDefault = dictionary.GetValue<bool>("is_default");
+                issuePriority.IsDefault = dictionary.GetValue<bool>(RedmineKeys.IS_DEFAULT);
 
                 return issuePriority;
             }
