@@ -1,5 +1,5 @@
 /*
-   Copyright 2011 - 2015 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2015 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ using System.Xml.Serialization;
 namespace Redmine.Net.Api.Types
 {
     [XmlRoot(RedmineKeys.CUSTOM_FIELD)]
-    public class CustomField : IXmlSerializable
+    public class CustomField : IXmlSerializable, IEquatable<CustomField>
     {
         [XmlElement(RedmineKeys.ID)]
         public int Id { get; set; }
@@ -129,5 +129,60 @@ namespace Redmine.Net.Api.Types
         }
 
         public void WriteXml(XmlWriter writer) { }
+
+        public bool Equals(CustomField other)
+        {
+            if (other == null) return false;
+
+            return Id == other.Id
+                && IsFilter == other.IsFilter
+                && IsRequired == other.IsRequired
+                && Multiple == other.Multiple
+                && Searchable == other.Searchable
+                && Visible == other.Visible
+                && CustomizedType.Equals(other.CustomizedType)
+                && DefaultValue.Equals(other.DefaultValue)
+                && FieldFormat.Equals(other.FieldFormat)
+                && MaxLength == other.MaxLength
+                && MinLength == other.MinLength
+                && Name.Equals(other.Name)
+                && Regexp.Equals(other.Regexp)
+                && PossibleValues.Equals(other.PossibleValues)
+                && Roles.Equals(other.Roles)
+                && Trackers.Equals(other.Trackers);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as CustomField);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = 13;
+                hashCode = Utils.GetHashCode(Id, hashCode);
+                hashCode = Utils.GetHashCode(IsFilter, hashCode);
+                hashCode = Utils.GetHashCode(IsRequired, hashCode);
+                hashCode = Utils.GetHashCode(Multiple, hashCode);
+                hashCode = Utils.GetHashCode(Searchable, hashCode);
+                hashCode = Utils.GetHashCode(Visible, hashCode);
+                hashCode = Utils.GetHashCode(CustomizedType, hashCode);
+                hashCode = Utils.GetHashCode(DefaultValue, hashCode);
+                hashCode = Utils.GetHashCode(FieldFormat, hashCode);
+                hashCode = Utils.GetHashCode(MaxLength, hashCode);
+                hashCode = Utils.GetHashCode(MinLength, hashCode);
+                hashCode = Utils.GetHashCode(Name, hashCode);
+                hashCode = Utils.GetHashCode(Regexp, hashCode);
+                hashCode = Utils.GetCollectionHashCode(PossibleValues, hashCode);
+                hashCode = Utils.GetCollectionHashCode(Roles, hashCode);
+                hashCode = Utils.GetCollectionHashCode(Trackers, hashCode);
+                return hashCode;
+            }
+        }
     }
 }

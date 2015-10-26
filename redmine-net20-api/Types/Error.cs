@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2015 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2015 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
    limitations under the License.
 */
 
+using System;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
@@ -21,10 +22,17 @@ using System.Xml.Serialization;
 namespace Redmine.Net.Api.Types
 {
     [XmlRoot(RedmineKeys.ERROR)]
-    public class Error: IXmlSerializable
+    public class Error : IXmlSerializable, IEquatable<Error>
     {
         [XmlText]
         public string Info { get; set; }
+
+        public bool Equals(Error other)
+        {
+            if (other == null) return false;
+
+            return Info.Equals(other.Info);
+        }
 
         public override string ToString()
         {
@@ -53,5 +61,24 @@ namespace Redmine.Net.Api.Types
         }
 
         public void WriteXml(XmlWriter writer) { }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as Error);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = 13;
+                hashCode = (hashCode * 397) ^ (string.IsNullOrEmpty(Info) ? 0 : Info.GetHashCode());
+
+                return hashCode;
+            }
+        }
     }
 }

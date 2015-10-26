@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2015 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2015 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -76,7 +76,7 @@ namespace Redmine.Net.Api
         {
             try
             {
-                var ser = new JavaScriptSerializer();
+                var ser = new JavaScriptSerializer() { MaxJsonLength = int.MaxValue };
                 ser.RegisterConverters(new[] { converters[typeof(T)] });
                 var jsonString = ser.Serialize(type);
                 return jsonString;

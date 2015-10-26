@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2015 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2015 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -109,7 +109,35 @@ namespace Redmine.Net.Api.Types
         public bool Equals(Journal other)
         {
             if (other == null) return false;
-            return Id == other.Id && User == other.User && Notes == other.Notes && CreatedOn == other.CreatedOn && Equals(Details, other.Details);
+            return Id == other.Id 
+                && User == other.User 
+                && Notes == other.Notes 
+                && CreatedOn == other.CreatedOn 
+                && Equals(Details, other.Details);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as Journal);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = 13;
+                hashCode = (hashCode * 397) ^ Id.GetHashCode();
+
+                return hashCode;
+            }
+        }
+
+        public override string ToString()
+        {
+            return base.ToString();
         }
     }
 }

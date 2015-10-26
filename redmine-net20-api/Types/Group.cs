@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2015 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2015 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -144,14 +144,40 @@ namespace Redmine.Net.Api.Types
         public bool Equals(Group other)
         {
             if (other == null) return false;
-            return Id == other.Id && Name == other.Name && Users == other.Users && Equals(CustomFields, other.CustomFields) && Equals(Memberships, other.Memberships);
+            return Id == other.Id
+                && Name == other.Name
+                && Users == other.Users
+                && Equals(CustomFields, other.CustomFields)
+                && Equals(Memberships, other.Memberships);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as Group);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = 13;
+                hashCode = (hashCode * 397) ^ Id.GetHashCode();
+                hashCode = (hashCode * 397) ^ (string.IsNullOrEmpty(Name) ? 0 : Name.GetHashCode());
+                hashCode = (hashCode * 397) ^ Utils.GetCollectionHashCode(Users, hashCode);
+                hashCode = (hashCode * 397) ^ Utils.GetCollectionHashCode(CustomFields, hashCode);
+                hashCode = (hashCode * 397) ^ Utils.GetCollectionHashCode(Memberships, hashCode);
+                return hashCode;
+            }
         }
 
         #endregion
 
         public override string ToString()
         {
-            return Id + ", " + Name;
+            return string.Format("Id: {0}, Name: {1}", Id, Name);
         }
     }
 }

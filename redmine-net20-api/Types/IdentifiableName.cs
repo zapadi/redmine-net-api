@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2015 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2015 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -72,7 +72,7 @@ namespace Redmine.Net.Api.Types
 
         public override string ToString()
         {
-            return string.Format("{0}, {1}", Id, Name);
+            return string.Format("Id: {0}, Name: '{1}'", Id, Name);
         }
 
         public bool Equals(IdentifiableName other)

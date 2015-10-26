@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2015 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2015 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The status id.
         /// </value>
-        [XmlAttribute(RedmineKeys.NAME)]
+        [XmlAttribute(RedmineKeys.STATUS_ID)]
         public string StatusId { get; set; }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace Redmine.Net.Api.Types
         public void ReadXml(XmlReader reader)
         {
             Property = reader.GetAttribute(RedmineKeys.PROPERTY);
-            StatusId = reader.GetAttribute(RedmineKeys.NAME);
+            StatusId = reader.GetAttribute(RedmineKeys.STATUS_ID);
 
             reader.Read();
 
@@ -96,12 +96,37 @@ namespace Redmine.Net.Api.Types
         public bool Equals(Detail other)
         {
             if (other == null) return false;
-            return Property == other.Property && StatusId == other.StatusId && OldValue == other.OldValue && NewValue == other.NewValue;
+            return Property.Equals(other.Property)
+                && StatusId.Equals(other.StatusId)
+                && OldValue.Equals(other.OldValue)
+                && NewValue.Equals(other.NewValue);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as Detail);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = 13;
+                hashCode = Utils.GetHashCode(Property, hashCode);
+                hashCode = Utils.GetHashCode(StatusId, hashCode);
+                hashCode = Utils.GetHashCode(OldValue, hashCode);
+                hashCode = Utils.GetHashCode(NewValue, hashCode);
+
+                return hashCode;
+            }
         }
 
         public override string ToString()
         {
-            return base.ToString();
+            return string.Format("Property: {0}, StatusId: {1}, OldValue: {2}, NewValue: {3}", Property, StatusId, OldValue, NewValue);
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2015 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2015 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -85,7 +85,36 @@ namespace Redmine.Net.Api.Types
         {
             if (other == null) return false;
 
-            return Revision == other.Revision && User == other.User && Comments == other.Comments && CommittedOn == other.CommittedOn;
+            return Revision == other.Revision 
+                && User == other.User 
+                && Comments == other.Comments 
+                && CommittedOn == other.CommittedOn;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as ChangeSet);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = 13;
+                hashCode = (hashCode * 397) ^ Revision.GetHashCode();
+                hashCode = (hashCode * 397) ^ (User == null ? 0 : User.GetHashCode());
+                hashCode = (hashCode * 397) ^ (string.IsNullOrEmpty(Comments) ? 0 : Comments.GetHashCode());
+                hashCode = (hashCode * 397) ^ (CommittedOn == null ? 0 : CommittedOn.Value.GetHashCode());
+                return hashCode;
+            }
+        }
+
+        public override string ToString()
+        {
+            return string.Format("Revision: {0}, User: '{1}', CommitedOn: {2}, Comments: '{3}'", Revision, User, CommittedOn, Comments);
         }
     }
 }

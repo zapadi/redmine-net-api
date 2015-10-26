@@ -1,5 +1,5 @@
 /*
-   Copyright 2011 - 2015 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2015 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,17 +20,8 @@ using System.Xml.Serialization;
 namespace Redmine.Net.Api.Types
 {
     [XmlRoot(RedmineKeys.USER)]
-    public class GroupUser : IdentifiableName//, IEquatable<GroupUser>
+    public class GroupUser : IdentifiableName
     {
-        //public bool Equals(GroupUser other)
-        //{
-        //    if (other == null) return false;
-        //    return Id == other.Id && Name == other.Name;
-        //}
-
-        //public override string ToString()
-        //{
-        //    return Id + ", " + Name;
-        //}
+        
     }
 }

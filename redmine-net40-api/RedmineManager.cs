@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2015 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2015 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -72,8 +72,8 @@ namespace Redmine.Net.Api
             {typeof (TimeEntryActivity), "enumerations/time_entry_activities"},
             {typeof (IssuePriority), "enumerations/issue_priorities"},
             {typeof (Watcher), "watchers"},
-            {typeof (IssueCustomField), RedmineKeys.CUSTOM_FIELDS},
-            {typeof (CustomField), RedmineKeys.CUSTOM_FIELDS}
+            {typeof (IssueCustomField), "custom_fields"},
+            {typeof (CustomField), "custom_fields"}
         };
 
         private readonly string host, apiKey, basicAuthorization;
@@ -182,7 +182,7 @@ namespace Redmine.Net.Api
         /// Returns a list of users.
         /// </summary>
         /// <param name="userStatus">get only users with the given status. Default is 1 (active users)</param>
-        /// <param name=RedmineKeys.NAME> filter users on their login, firstname, lastname and mail ; if the pattern contains a space, it will also return users whose firstname match the first word or lastname match the second word.</param>
+        /// <param name="name"> filter users on their login, firstname, lastname and mail ; if the pattern contains a space, it will also return users whose firstname match the first word or lastname match the second word.</param>
         /// <param name="groupId">get only users who are members of the given group</param>
         /// <returns></returns>
         public IList<User> GetUsers(UserStatus userStatus = UserStatus.STATUS_ACTIVE, string name = null, int groupId = 0)
@@ -590,8 +590,6 @@ namespace Redmine.Net.Api
                 webClient.UseDefaultCredentials = true;
                 webClient.Headers["Authorization"] = basicAuthorization;
                 webClient.Headers[HttpRequestHeader.UserAgent] = ": Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.3) Gecko/20090824 Firefox/3.5.3 (.NET CLR 4.0.20506)";
-                //.Add(HttpRequestHeader.Authorization, basicAuthorization);
-
             }
 
             if (!string.IsNullOrWhiteSpace(ImpersonateUser)) webClient.Headers.Add("X-Redmine-Switch-User", ImpersonateUser);
@@ -638,13 +636,13 @@ namespace Redmine.Net.Api
         /// <param name="error">The error.</param>
         /// <returns></returns>
         /// <code></code>
-        protected bool RemoteCertValidate(object sender, X509Certificate cert, X509Chain chain, SslPolicyErrors error)
+        public virtual bool RemoteCertValidate(object sender, X509Certificate cert, X509Chain chain, SslPolicyErrors error)
         {
             //Cert Validation Logic
             return true;
         }
 
-        private void HandleWebException(WebException exception, string method)
+        public virtual void HandleWebException(WebException exception, string method)
         {
             if (exception == null) return;
 
@@ -682,13 +680,6 @@ namespace Redmine.Net.Api
 
                 default: throw new RedmineException(exception.Message, exception);
             }
-        }
-
-        private static string GetOwnerId(NameValueCollection parameters, string parameterName)
-        {
-            if (parameters == null) return null;
-            string ownerId = parameters.Get(parameterName);
-            return string.IsNullOrEmpty(ownerId) ? null : ownerId;
         }
 
         private IEnumerable<Error> ReadWebExceptionResponse(WebResponse webResponse)
@@ -839,6 +830,13 @@ namespace Redmine.Net.Api
                 }
                 return null;
             }
+        }
+
+        private static string GetOwnerId(NameValueCollection parameters, string parameterName)
+        {
+            if (parameters == null) return null;
+            string ownerId = parameters.Get(parameterName);
+            return string.IsNullOrEmpty(ownerId) ? null : ownerId;
         }
     }
 }
