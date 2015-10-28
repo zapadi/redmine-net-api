@@ -444,6 +444,7 @@ namespace Redmine.Net.Api
         /// <typeparam name="T">The type of objects to retrieve.</typeparam>
         /// <param name="id">The id of the object.</param>
         /// <param name="parameters">Optional filters and/or optional fetched data.</param>
+        /// <param name="includeParams">Optional parameters for "include".</param>
         /// <returns>Returns the object of type T.</returns>
         /// <exception cref="Redmine.Net.Api.RedmineException"></exception>
         /// <exception cref="System.InvalidOperationException"> An error occurred during deserialization. The original exception is available
@@ -455,10 +456,25 @@ namespace Redmine.Net.Api
         ///     Issue issue = redmineManager.GetObject&lt;Issue&gt;(issueId, parameters);
         /// </example>
         /// </code>
-        public T GetObject<T>(string id, NameValueCollection parameters) where T : class, new()
+        public T GetObject<T>(string id, NameValueCollection parameters, IncludeParameters includeParams = IncludeParameters.none) where T : class, new()
         {
             var type = typeof(T);
 
+            if (type == typeof(Issue))
+            {
+                if (!parameters.AllKeys.Contains("include") && (includeParams > IncludeParameters.none))
+                {
+                    StringBuilder buider = new StringBuilder();
+                    if (includeParams.IsSet(IncludeParameters.children)) { buider.Append(IncludeParameters.children.ToString() + ","); }
+                    if (includeParams.IsSet(IncludeParameters.attachments)) { buider.Append(IncludeParameters.attachments.ToString() + ","); }
+                    if (includeParams.IsSet(IncludeParameters.relations)) { buider.Append(IncludeParameters.relations.ToString() + ","); }
+                    if (includeParams.IsSet(IncludeParameters.changesets)) { buider.Append(IncludeParameters.changesets.ToString() + ","); }
+                    if (includeParams.IsSet(IncludeParameters.journals)) { buider.Append(IncludeParameters.journals.ToString() + ","); }
+                    if (includeParams.IsSet(IncludeParameters.watchers)) { buider.Append(IncludeParameters.watchers.ToString() + ","); }
+
+                    parameters.Add("include", buider.ToString().Trim(','));
+                }
+            }
             return !urls.ContainsKey(type) ? null : ExecuteDownload<T>(string.Format(REQUEST_FORMAT, host, urls[type], id, mimeFormat), "GetObject<" + type.Name + ">", parameters);
         }
 
