@@ -58,6 +58,7 @@
     <Compile Include="Types\GroupUser.cs" />
     <Compile Include="Types\Identifiable.cs" />
     <Compile Include="Types\IdentifiableName.cs" />
+    <Compile Include="Types\IncludeParameters.cs" />
     <Compile Include="Types\Issue.cs" />
     <Compile Include="Types\IssueCategory.cs" />
     <Compile Include="Types\IssueChild.cs" />
