@@ -13,17 +13,39 @@ namespace UnitTestRedmineNetApi
     [TestClass]
     public class UserTests
     {
+        #region Constants
+        private const string userId = "8";
+        private const int groupId = 17;
+        private const string userLogin = "alinac";
+
+        //user data - used for create
+        private const string login = "ioanaM";
+        private const string firstName = "Ioana";
+        private const string lastName = "Manea";
+        private const string email = "ioanam@mail.com";
+        private const string userPassword = "123456";
+        private const int customFieldId = 4;
+        private const string customFieldValue = "User custom field completed";
+
+        private const string userIdToModify = "23";
+        private const string userFirstNameUpdate = "Ioana G.";
+
+        #endregion Constants
+
+        #region Properties
         private RedmineManager redmineManager;
         private string uri;
         private string apiKey;
         private string username;
         private string password;
+        #endregion Properties
 
+        #region Initialize
         [TestInitialize]
         public void Initialize()
         {
             uri = ConfigurationManager.AppSettings["uri"];
-            // apiKey = ConfigurationManager.AppSettings["apiKey"];
+            apiKey = ConfigurationManager.AppSettings["apiKey"];
 
             username = ConfigurationManager.AppSettings["username"];
             password = ConfigurationManager.AppSettings["password"];
@@ -35,15 +57,17 @@ namespace UnitTestRedmineNetApi
         [Conditional("JSON")]
         private void SetMimeTypeJSON()
         {
-            redmineManager = new RedmineManager(uri, username, password, MimeFormat.json);
+            redmineManager = new RedmineManager(uri, apiKey, MimeFormat.json);
         }
 
         [Conditional("XML")]
         private void SetMimeTypeXML()
         {
-            redmineManager = new RedmineManager(uri, username, password);
+            redmineManager = new RedmineManager(uri, apiKey);
         }
+        #endregion Initialize
 
+        #region Tests
         [TestMethod]
         public void RedmineUser_ShouldReturnCurrentUser()
         {
@@ -55,11 +79,9 @@ namespace UnitTestRedmineNetApi
         [TestMethod]
         public void RedmineUser_ShouldGetUserById()
         {
-            var id = 8;
+            User user = redmineManager.GetObject<User>(userId, new NameValueCollection { { "include", "groups,memberships" }});
 
-            User user = redmineManager.GetObject<User>(id.ToString(), new NameValueCollection { { "include", "groups" }, { "include", "memberships" } });
-
-            Assert.AreEqual(user.Login, "alinac");
+            Assert.AreEqual(user.Login, userLogin);
         }
 
         [TestMethod]
@@ -83,15 +105,15 @@ namespace UnitTestRedmineNetApi
         public void RedmineUser_ShouldCreateUser()
         {
             User redmineUser = new User();
-            redmineUser.Login = "ioanap";
-            redmineUser.FirstName = "Ioana";
-            redmineUser.LastName = "Popa";
-            redmineUser.Email = "ioanap@mail.com";
-            redmineUser.Password = "123456";
+            redmineUser.Login = login;
+            redmineUser.FirstName = firstName;
+            redmineUser.LastName = lastName;
+            redmineUser.Email =email;
+            redmineUser.Password = userPassword;
             redmineUser.AuthenticationModeId = null;
             redmineUser.MustChangePassword = false;
             redmineUser.CustomFields = new List<IssueCustomField>();
-            redmineUser.CustomFields.Add(new IssueCustomField { Id = 4, Values = new List<CustomFieldValue> { new CustomFieldValue { Info = "User custom field completed" } } });
+            redmineUser.CustomFields.Add(new IssueCustomField { Id = customFieldId, Values = new List<CustomFieldValue> { new CustomFieldValue { Info = customFieldValue} } });
 
             User savedRedmineUser = null;
             try
@@ -110,13 +132,11 @@ namespace UnitTestRedmineNetApi
         [TestMethod]
         public void RedmineUser_ShouldUpdateUser()
         {
-            var id = 14;
+            User user = redmineManager.GetObject<User>(userIdToModify, null);
+            user.FirstName = userFirstNameUpdate;
+            redmineManager.UpdateObject<User>(userIdToModify, user);
 
-            User user = redmineManager.GetObject<User>(id.ToString(), null);
-            user.FirstName = "Ioana M.";
-            redmineManager.UpdateObject<User>(id.ToString(), user);
-
-            User updatedUser = redmineManager.GetObject<User>(id.ToString(), null);
+            User updatedUser = redmineManager.GetObject<User>(userIdToModify, null);
 
             Assert.AreEqual(user.FirstName, updatedUser.FirstName);
         }
@@ -124,12 +144,11 @@ namespace UnitTestRedmineNetApi
         [TestMethod]
         public void RedmineUser_ShouldDeleteUser()
         {
-            var id = 14;
 
             User user = null;
             try
             {
-                user = redmineManager.GetObject<User>(id.ToString(), null);
+                user = redmineManager.GetObject<User>(userIdToModify, null);
             }
             catch (RedmineException)
             {
@@ -142,7 +161,7 @@ namespace UnitTestRedmineNetApi
             {
                 try
                 {
-                    redmineManager.DeleteObject<User>(id.ToString(), null);
+                    redmineManager.DeleteObject<User>(userIdToModify, null);
                 }
                 catch (RedmineException)
                 {
@@ -152,7 +171,7 @@ namespace UnitTestRedmineNetApi
 
                 try
                 {
-                    user = redmineManager.GetObject<User>(id.ToString(), null);
+                    user = redmineManager.GetObject<User>(userIdToModify, null);
                 }
                 catch (RedmineException exc)
                 {
@@ -168,10 +187,7 @@ namespace UnitTestRedmineNetApi
         [TestMethod]
         public void RedmineUser_ShouldAddUserToGroup()
         {
-            var groupId = 9;
-            var userId = 14;
-
-            redmineManager.AddUser(groupId, userId);
+            redmineManager.AddUser(groupId, int.Parse(userId));
 
             User user = redmineManager.GetObject<User>(userId.ToString(), new NameValueCollection { { "include", "groups" } });
 
@@ -181,10 +197,7 @@ namespace UnitTestRedmineNetApi
         [TestMethod]
         public void RedmineUser_ShouldDeleteUserFromGroup()
         {
-            var groupId = 9;
-            var userId = 14;
-
-            redmineManager.DeleteUser(groupId, userId);
+            redmineManager.DeleteUser(groupId, int.Parse(userId));
 
             User user = redmineManager.GetObject<User>(userId.ToString(), new NameValueCollection { { "include", "groups" } });
 
@@ -194,17 +207,35 @@ namespace UnitTestRedmineNetApi
         [TestMethod]
         public void RedmineUser_ShouldReturnAllUsers()
         {
-            IList<User> users = redmineManager.GetObjectList<User>(new NameValueCollection { { "include", "groups" }, { "include", "memberships" } });
+            IList<User> users = redmineManager.GetObjectList<User>(new NameValueCollection { { "include", "groups,memberships" } });
 
-            Assert.IsTrue(users.Count == 3);
+            Assert.IsNotNull(users);
         }
 
         [TestMethod]
         public void RedmineUser_ShouldGetUserByGroup()
         {
-            var users = redmineManager.GetUsers(UserStatus.STATUS_ACTIVE, null, 17);
+            var users = redmineManager.GetUsers(UserStatus.STATUS_ACTIVE, null, groupId);
 
-            Assert.IsTrue(users.Count == 2);
+            Assert.IsNotNull(users);
         }
+
+        [TestMethod]
+        public void RedmineUser_ShouldCompareUsers()
+        {
+            RedmineManager redmineSecondManager;
+
+            #if JSON
+                redmineSecondManager = new RedmineManager(uri, apiKey, MimeFormat.xml);
+            #else
+                redmineSecondManager = new RedmineManager(uri, apiKey, MimeFormat.json);
+            #endif
+
+            User user = redmineManager.GetObject<User>(userId, new NameValueCollection { { "include", "groups,memberships" } });
+            User secondUser = redmineSecondManager.GetObject<User>(userId, new NameValueCollection { { "include", "groups,memberships" } });
+
+            Assert.IsTrue(user.Equals(secondUser));
+        }
+        #endregion Tests
     }
 }
