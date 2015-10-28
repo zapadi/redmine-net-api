@@ -80,6 +80,9 @@
     <Compile Include="..\redmine-net20-api\Types\IdentifiableName.cs">
       <Link>Types\IdentifiableName.cs</Link>
     </Compile>
+    <Compile Include="..\redmine-net20-api\Types\IncludeParameters.cs">
+      <Link>Types\IncludeParameters.cs</Link>
+    </Compile>
     <Compile Include="..\redmine-net20-api\Types\Issue.cs">
       <Link>Types\Issue.cs</Link>
     </Compile>
