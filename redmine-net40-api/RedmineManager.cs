@@ -163,7 +163,9 @@ namespace Redmine.Net.Api
                 throw new RedmineException("The host is not valid!");
 
             credentialCache = new CredentialCache { { uriResult, "Basic", new NetworkCredential(login, password) } };
-            basicAuthorization = "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(login + ":" + password));
+            
+            string token = Convert.ToBase64String(Encoding.UTF8.GetBytes(string.Format("{0}:{1}", login, password)));
+            basicAuthorization = string.Format("Basic {0}", token);
         }
 
         /// <summary>
@@ -586,10 +588,10 @@ namespace Redmine.Net.Api
             }
             else
             {
-                if (credentialCache != null) webClient.Credentials = credentialCache;
-                webClient.UseDefaultCredentials = true;
-                webClient.Headers["Authorization"] = basicAuthorization;
-                webClient.Headers[HttpRequestHeader.UserAgent] = ": Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.3) Gecko/20090824 Firefox/3.5.3 (.NET CLR 4.0.20506)";
+               // if (credentialCache != null) webClient.Credentials = credentialCache;
+               // webClient.UseDefaultCredentials = true;
+               
+                webClient.Headers[HttpRequestHeader.Authorization] = basicAuthorization;
             }
 
             if (!string.IsNullOrWhiteSpace(ImpersonateUser)) webClient.Headers.Add("X-Redmine-Switch-User", ImpersonateUser);
@@ -639,7 +641,7 @@ namespace Redmine.Net.Api
         public virtual bool RemoteCertValidate(object sender, X509Certificate cert, X509Chain chain, SslPolicyErrors error)
         {
             //Cert Validation Logic
-            return true;
+            return false;
         }
 
         public virtual void HandleWebException(WebException exception, string method)
