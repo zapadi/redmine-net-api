@@ -198,16 +198,13 @@ namespace Redmine.Net.Api.Types
             if (other == null) return false;
             return ( Login == other.Login);
         }
-
-      
-
+        
         public override int GetHashCode()
         {
             unchecked
             {
                 var hashCode = 13;
-                hashCode = (hashCode * 397) ^ Id.GetHashCode();
-
+                hashCode = Utils.GetHashCode(Login, hashCode);
                 return hashCode;
             }
         }
