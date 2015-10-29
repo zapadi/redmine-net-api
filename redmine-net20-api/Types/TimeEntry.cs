@@ -176,7 +176,10 @@ namespace Redmine.Net.Api.Types
         {
             writer.WriteIdIfNotNull(Issue, RedmineKeys.ISSUE_ID);
             writer.WriteIdIfNotNull(Project, RedmineKeys.PROJECT_ID);
-            if (!SpentOn.HasValue) SpentOn = DateTime.Now;
+            
+            if (!SpentOn.HasValue) 
+                SpentOn = DateTime.Now;
+            
             writer.WriteDateOrEmpty(SpentOn, RedmineKeys.SPENT_ON);
             writer.WriteValueOrEmpty<decimal>(Hours, RedmineKeys.HOURS);
             writer.WriteIdIfNotNull(Activity, RedmineKeys.ACTIVITY_ID);
@@ -198,16 +201,13 @@ namespace Redmine.Net.Api.Types
                 && UpdatedOn == other.UpdatedOn
                 && Equals(CustomFields, other.CustomFields));
         }
-
-       
-
+        
         public override int GetHashCode()
         {
             unchecked
             {
                 var hashCode = 13;
                 hashCode = (hashCode * 397) ^ Id.GetHashCode();
-
                 return hashCode;
             }
         }

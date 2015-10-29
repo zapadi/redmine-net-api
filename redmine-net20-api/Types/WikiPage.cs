@@ -132,17 +132,19 @@ namespace Redmine.Net.Api.Types
                 && UpdatedOn == other.UpdatedOn;
         }
 
-     
-
         public override int GetHashCode()
         {
             unchecked
             {
                 var hashCode = 13;
                 hashCode = (hashCode * 397) ^ Id.GetHashCode();
-
                 return hashCode;
             }
+        }
+
+        public override string ToString()
+        {
+            return string.Format("title:'{0}', version:{1}, createdOn:{2}, updatedOn:{3}", Title, Version, CreatedOn, UpdatedOn);
         }
 
         #endregion
