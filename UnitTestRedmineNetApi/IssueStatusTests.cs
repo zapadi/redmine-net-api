@@ -14,10 +14,13 @@ namespace UnitTestRedmineNetApi
     [TestClass]
     public class IssueStatusTests
     {
+        #region Properties
         private RedmineManager redmineManager;
         private string uri;
         private string apiKey;
+        #endregion Properties
 
+        #region Initialize
         [TestInitialize]
         public void Initialize()
         {
@@ -39,13 +42,16 @@ namespace UnitTestRedmineNetApi
         {
             redmineManager = new RedmineManager(uri, apiKey, MimeFormat.xml);
         }
+        #endregion Initialize
 
+        #region Tests
         [TestMethod]
         public void RedmineIssueStatuses_ShouldGetAllIssueStatuses()
         {
             var issueStatuses = redmineManager.GetObjectList<IssueStatus>(null);
 
-            Assert.IsTrue(issueStatuses.Count == 7);
+            Assert.IsNotNull(issueStatuses);
         }
+        #endregion Tests
     }
 }

@@ -14,10 +14,17 @@ namespace UnitTestRedmineNetApi
     [TestClass]
     public class TrackerTests
     {
+        #region Constants
+        private const int numberOfTrackers = 2;
+        #endregion Constants
+
+        #region Properties
         private RedmineManager redmineManager;
         private string uri;
         private string apiKey;
+        #endregion Properties
 
+        #region Initialize
         [TestInitialize]
         public void Initialize()
         {
@@ -39,13 +46,16 @@ namespace UnitTestRedmineNetApi
         {
             redmineManager = new RedmineManager(uri, apiKey, MimeFormat.xml);
         }
+        #endregion Initialize
 
+        #region Tests
         [TestMethod]
         public void RedmineTrackers_ShouldGetAllTrackers()
         {
             var trackers = redmineManager.GetObjectList<Tracker>(null);
 
-            Assert.IsTrue(trackers.Count == 2);
+            Assert.IsTrue(trackers.Count == numberOfTrackers);
         }
+        #endregion Tests
     }
 }

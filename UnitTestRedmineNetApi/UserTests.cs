@@ -30,6 +30,7 @@ namespace UnitTestRedmineNetApi
         private const string userIdToModify = "23";
         private const string userFirstNameUpdate = "Ioana G.";
 
+        private const string userIdToDelete = "23";
         #endregion Constants
 
         #region Properties
@@ -148,7 +149,7 @@ namespace UnitTestRedmineNetApi
             User user = null;
             try
             {
-                user = redmineManager.GetObject<User>(userIdToModify, null);
+                user = redmineManager.GetObject<User>(userIdToDelete, null);
             }
             catch (RedmineException)
             {
@@ -161,7 +162,7 @@ namespace UnitTestRedmineNetApi
             {
                 try
                 {
-                    redmineManager.DeleteObject<User>(userIdToModify, null);
+                    redmineManager.DeleteObject<User>(userIdToDelete, null);
                 }
                 catch (RedmineException)
                 {
@@ -171,7 +172,7 @@ namespace UnitTestRedmineNetApi
 
                 try
                 {
-                    user = redmineManager.GetObject<User>(userIdToModify, null);
+                    user = redmineManager.GetObject<User>(userIdToDelete, null);
                 }
                 catch (RedmineException exc)
                 {

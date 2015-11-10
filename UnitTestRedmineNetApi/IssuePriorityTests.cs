@@ -14,10 +14,13 @@ namespace UnitTestRedmineNetApi
     [TestClass]
     public class IssuePriorityTests
     {
+        #region Properties
         private RedmineManager redmineManager;
         private string uri;
         private string apiKey;
+        #endregion Properties
 
+        #region Initialize
         [TestInitialize]
         public void Initialize()
         {
@@ -39,13 +42,16 @@ namespace UnitTestRedmineNetApi
         {
             redmineManager = new RedmineManager(uri, apiKey, MimeFormat.xml);
         }
+        #endregion Initialize
 
+        #region Tests
         [TestMethod]
         public void RedmineIssuePriorities_ShouldGetAllIssuePriorities()
         {
             var issuePriorities = redmineManager.GetObjectList<IssuePriority>(null);
 
-            Assert.IsTrue(issuePriorities.Count == 4);
+            Assert.IsNotNull(issuePriorities); ;
         }
+        #endregion Tests
     }
 }
