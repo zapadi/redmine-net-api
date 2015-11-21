@@ -22,7 +22,7 @@ namespace UnitTestRedmineNetApi
         private const int newPMUserId = 2;
         private const int newPMRoleId = 4;
 
-        private const string projectMembershipId = "111";
+        private const string projectMembershipId = "118";
 
         //PM data - used for update
         private const string updatedPMId = "111";
@@ -127,6 +127,15 @@ namespace UnitTestRedmineNetApi
                 return;
             }
             Assert.Fail("Test failed");
+        }
+
+        [TestMethod]
+        public void RedmineProjectMembership_ShouldCompare()
+        {
+            var projectMembership = redmineManager.GetObject<ProjectMembership>(projectMembershipId, null);
+            var projectMembershipToCompare = redmineManager.GetObject<ProjectMembership>(projectMembershipId, null);
+
+            Assert.IsTrue(projectMembership.Equals(projectMembershipToCompare));
         }
         #endregion Tests
     }

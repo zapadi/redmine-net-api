@@ -160,7 +160,14 @@ namespace UnitTestRedmineNetApi
             Assert.Fail("Test failed");
         }
 
-        //TODO: equals
+        [TestMethod]
+        public void RedmineGroups_ShouldCompareGroups()
+        {
+            var firstGroup = redmineManager.GetObject<Group>(groupId, new NameValueCollection() { { "include", "memberships, users" } });
+            var secondGroup = redmineManager.GetObject<Group>(groupId, new NameValueCollection() { { "include", "memberships, users" } });
+
+            Assert.IsTrue(firstGroup.Equals(secondGroup));
+        }
         #endregion Tests
     }
 }

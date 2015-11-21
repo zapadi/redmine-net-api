@@ -106,6 +106,15 @@ namespace UnitTestRedmineNetApi
             Assert.Fail("Test failed");
 
         }
+
+        [TestMethod]
+        public void RedmineWikiPages_ShouldCompare()
+        {
+            WikiPage page = redmineManager.GetWikiPage(projectId, new NameValueCollection { { "include", "attachments" } }, wikiPageName);
+            WikiPage pageToCompare = redmineManager.GetWikiPage(projectId, new NameValueCollection { { "include", "attachments" } }, wikiPageName);
+
+            Assert.IsTrue(page.Equals(pageToCompare));
+        }
         #endregion Tests
     }
 }

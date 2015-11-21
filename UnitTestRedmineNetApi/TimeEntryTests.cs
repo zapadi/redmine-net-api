@@ -142,6 +142,15 @@ namespace UnitTestRedmineNetApi
             }
             Assert.Fail("Test failed");
         }
+
+        [TestMethod]
+        public void RedmineTimeEntries_ShouldCompare()
+        {
+            var timeEntry = redmineManager.GetObject<TimeEntry>(timeEntryId, null);
+            var timeEntryToCompare = redmineManager.GetObject<TimeEntry>(timeEntryId, null);
+
+            Assert.IsTrue(timeEntry.Equals(timeEntryToCompare));
+        }
         #endregion Tests
     }
 }

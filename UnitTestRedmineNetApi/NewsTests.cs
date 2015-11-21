@@ -62,7 +62,20 @@ namespace UnitTestRedmineNetApi
             Assert.IsNotNull(news);
         }
 
-        //TO DO: equals
+        [TestMethod]
+        public void RedmineNews_ShouldCompare()
+        {
+            var projectNews = redmineManager.GetObjectList<News>(new NameValueCollection { { "project_id", projectId } });
+            if (projectNews != null)
+            {
+               var news = projectNews[0];
+               var newsToCompare = projectNews[0];
+
+                Assert.IsTrue(news.Equals(newsToCompare));
+            }
+            else
+                Assert.Inconclusive();
+        }
         #endregion Tests
     }
 }

@@ -26,7 +26,7 @@ namespace UnitTestRedmineNetApi
         private DateTime newVersionDueDate = DateTime.Now.AddDays(7);
         private const string newVersionDescription = "Version description";
 
-        private const string versionId = "14";
+        private const string versionId = "15";
 
         //version data - used for update 
         private const string updatedVersionId = "14";
@@ -142,6 +142,15 @@ namespace UnitTestRedmineNetApi
             }
             Assert.Fail("Test failed");
 
+        }
+
+        [TestMethod]
+        public void RedmineProjectVersion_ShouldCompare()
+        {
+            Redmine.Net.Api.Types.Version version = redmineManager.GetObject<Redmine.Net.Api.Types.Version>(versionId, null);
+            Redmine.Net.Api.Types.Version versionToCompare = redmineManager.GetObject<Redmine.Net.Api.Types.Version>(versionId, null);
+
+            Assert.IsTrue(version.Equals(versionToCompare));
         }
         #endregion Tests
     }

@@ -171,6 +171,15 @@ namespace UnitTestRedmineNetApi
             }
             Assert.Fail("Test failed");
         }
+
+        [TestMethod]
+        public void RedmineProjects_ShouldCompare()
+        {
+            var project = redmineManager.GetObject<Project>(projectId, new NameValueCollection(){{"include","trackers, issue_categories, enabled_modules" }});
+            var projectToCompare = redmineManager.GetObject<Project>(projectId, new NameValueCollection() { { "include", "trackers, issue_categories, enabled_modules" } });
+
+            Assert.IsTrue(project.Equals(projectToCompare));
+        }
         #endregion Tests
     }
 }

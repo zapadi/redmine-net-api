@@ -284,6 +284,15 @@ namespace UnitTestRedmineNetApi
 
             Assert.IsTrue(issue.Watchers == null || ((List<Watcher>)issue.Watchers).Find(w => w.Id == watcherUserId) == null);
         }
+
+        [TestMethod]
+        public void RedmineIssues_ShouldCompare()
+        {
+            var issue = redmineManager.GetObject<Issue>(issueId, new NameValueCollection { { "include", "children,attachments,relations,changesets,journals,watchers" } });
+            var issueToCompare = redmineManager.GetObject<Issue>(issueId, new NameValueCollection { { "include", "children,attachments,relations,changesets,journals,watchers" } });
+
+            Assert.IsTrue(issue.Equals(issueToCompare));
+        }
         #endregion Tests
 
     }
