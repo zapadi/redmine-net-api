@@ -29,7 +29,7 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// the module name: boards, calendar, documents, files, gantt, issue_tracking, news, repository, time_tracking, wiki.
         /// </summary>
-        new public string Name { get; set; }
+       // new public string Name { get; set; }
 
         public bool Equals(ProjectEnabledModule other)
         {
