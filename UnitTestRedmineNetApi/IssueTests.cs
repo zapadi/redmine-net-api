@@ -71,6 +71,13 @@ namespace UnitTestRedmineNetApi
         //watcher
         private  const int watcherIssueId = 19;
         private const int watcherUserId = 2;
+
+        //issue data - for clone
+        private const string issueToCloneSubject = "Issue to clone";
+        private const int issueToCloneCustomFieldId = 13;
+        private const string issueToCloneCustomFieldValue = "Issue to clone custom field value";
+        private const int clonedIssueCustomFieldId = 14;
+        private const string clonedIssueCustomFieldValue = "Cloned issue custom field value";
         #endregion Constants
 
         #region Properties
@@ -292,6 +299,30 @@ namespace UnitTestRedmineNetApi
             var issueToCompare = redmineManager.GetObject<Issue>(issueId, new NameValueCollection { { "include", "children,attachments,relations,changesets,journals,watchers" } });
 
             Assert.IsTrue(issue.Equals(issueToCompare));
+        }
+
+        [TestMethod]
+        public void RedmineIssues_ShouldClone()
+        {
+            Issue issueToClone, clonedIssue;
+            issueToClone = new Issue();
+            issueToClone.Subject = issueToCloneSubject;
+            issueToClone.CustomFields = new List<IssueCustomField>();
+            
+            issueToClone.CustomFields.Add(new IssueCustomField
+            {
+                Id = issueToCloneCustomFieldId,
+                Values = new List<CustomFieldValue> {new CustomFieldValue { Info = issueToCloneCustomFieldValue }}
+            });
+           
+            clonedIssue = (Issue)issueToClone.Clone();
+            clonedIssue.CustomFields.Add(new IssueCustomField
+            {
+                Id = clonedIssueCustomFieldId,
+                Values = new List<CustomFieldValue> {new CustomFieldValue { Info = clonedIssueCustomFieldValue }}
+            });
+
+            Assert.IsTrue(issueToClone.CustomFields.Count != clonedIssue.CustomFields.Count);
         }
         #endregion Tests
 

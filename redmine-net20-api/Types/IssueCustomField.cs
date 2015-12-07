@@ -26,7 +26,7 @@ namespace Redmine.Net.Api.Types
     /// 
     /// </summary>
     [XmlRoot(RedmineKeys.CUSTOM_FIELD)]
-    public class IssueCustomField : IdentifiableName, IEquatable<IssueCustomField>
+    public class IssueCustomField : IdentifiableName, IEquatable<IssueCustomField>, ICloneable
     {
         /// <summary>
         /// Gets or sets the value.
@@ -84,6 +84,12 @@ namespace Redmine.Net.Api.Types
         {
             if (other == null) return false;
             return (Id == other.Id && Name == other.Name && Multiple == other.Multiple && Values == other.Values);
+        }
+
+        public object Clone()
+        {
+            var issueCustomField = new IssueCustomField { Multiple = Multiple, Values = Values.Clone<CustomFieldValue>() };
+            return issueCustomField;
         }
     }
 }
