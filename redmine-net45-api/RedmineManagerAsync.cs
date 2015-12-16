@@ -36,7 +36,7 @@ namespace Redmine.Net.Api
         public async Task<User> GetCurrentUserAsync(NameValueCollection parameters = null)
         {
             string uri = string.Format(REQUEST_FORMAT, host, urls[typeof(User)], CURRENT_USER_URI, mimeFormat);
-            var result = await new RedmineAsyncWebClient().DownloadStringAsync(uri);
+            var result = await new RedmineAsyncWebClient(apiKey).DownloadStringAsync(uri);
 
             return DeserializeResult<User>(result);
         }

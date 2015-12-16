@@ -72,8 +72,8 @@ namespace UnitTestRedmineNetApi
         [TestMethod]
         public void RedmineUser_ShouldReturnCurrentUser()
         {
-            User currentUser = redmineManager.GetCurrentUser();
-
+           // User currentUser = redmineManager.GetCurrentUser();
+            User currentUser = redmineManager.GetCurrentUserAsync().Result;
             Assert.AreEqual(currentUser.ApiKey, ConfigurationManager.AppSettings["apiKey"]);
         }
 
