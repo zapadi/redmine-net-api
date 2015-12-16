@@ -16,10 +16,13 @@ namespace UnitTestRedmineNetApi
     [TestClass]
     public class AttachmentTests
     {
+        #region Properties
         private RedmineManager redmineManager;
         private string uri;
         private string apiKey;
+        #endregion Properties
 
+        #region Initializes
         [TestInitialize]
         public void Initialize()
         {
@@ -41,11 +44,15 @@ namespace UnitTestRedmineNetApi
         {
             redmineManager = new RedmineManager(uri, apiKey, MimeFormat.xml);
         }
+        #endregion Initializes
 
+        #region Tests
         [TestMethod]
         public void RedmineAttachments_ShouldGetById()
         {
-            var attachment = redmineManager.GetObject<Attachment>("10", null);
+            string attachmentId = "10";
+
+            var attachment = redmineManager.GetObject<Attachment>(attachmentId, null);
 
             Assert.IsNotNull(attachment);
         }
@@ -111,5 +118,6 @@ namespace UnitTestRedmineNetApi
 
             Assert.IsTrue(issue.Attachments.Count == 2 && issue.Attachments[0].FileName == attachment.FileName);
         }
+        #endregion Tests
     }
 }

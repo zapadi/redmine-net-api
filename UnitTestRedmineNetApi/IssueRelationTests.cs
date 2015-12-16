@@ -15,10 +15,27 @@ namespace UnitTestRedmineNetApi
     [TestClass]
     public class IssueRelationTests
     {
+        #region Constants
+        private const string issueId = "19";
+
+        private const int relatedIssueId = 18;
+        private const IssueRelationType relationType = IssueRelationType.follows;
+        private const int relationDelay = 2;
+
+        private const string relationIdToGet = "23";
+
+        private const string relationIdToDelete = "23";
+
+        private const string relationIdToCompare = "12";
+        #endregion Constants
+
+        #region Properties
         private RedmineManager redmineManager;
         private string uri;
         private string apiKey;
+        #endregion Properties
 
+        #region Initialize
         [TestInitialize]
         public void Initialize()
         {
@@ -40,11 +57,13 @@ namespace UnitTestRedmineNetApi
         {
             redmineManager = new RedmineManager(uri, apiKey, MimeFormat.xml);
         }
+        #endregion Initialize
 
+        #region Tests
         [TestMethod]
         public void RedmineIssueRelation_ShouldReturnRelationsByIssueId()
         {
-            var relations = redmineManager.GetObjectList<IssueRelation>(new NameValueCollection { { "issue_id", "19" } });
+            var relations = redmineManager.GetObjectList<IssueRelation>(new NameValueCollection { { "issue_id", issueId } });
 
             Assert.IsNotNull(relations);
         }
@@ -53,11 +72,11 @@ namespace UnitTestRedmineNetApi
         public void RedmineIssueRelation_ShouldAddRelation()
         {
             IssueRelation relation = new IssueRelation();
-            relation.IssueToId = 18;
-            relation.Type = IssueRelationType.follows;
-            relation.Delay = 2;
+            relation.IssueToId = relatedIssueId;
+            relation.Type = relationType;
+            relation.Delay = relationDelay;
 
-            IssueRelation savedRelation = redmineManager.CreateObject<IssueRelation>(relation, "19");
+            IssueRelation savedRelation = redmineManager.CreateObject<IssueRelation>(relation, issueId);
 
             Assert.Inconclusive();
         }
@@ -65,9 +84,7 @@ namespace UnitTestRedmineNetApi
         [TestMethod]
         public void RedmineIssueRelation_ShouldGetRelationById()
         {
-            string relationId = "20";
-
-            var relation = redmineManager.GetObject<IssueRelation>(relationId, null);
+            var relation = redmineManager.GetObject<IssueRelation>(relationIdToGet, null);
 
             Assert.IsNotNull(relation);
         }
@@ -75,11 +92,9 @@ namespace UnitTestRedmineNetApi
         [TestMethod]
         public void RedmineIssueRelation_ShouldDeleteRelation()
         {
-            var relationId = "20";
-
-            try
+           try
             {
-                redmineManager.DeleteObject<IssueRelation>(relationId, null);
+                redmineManager.DeleteObject<IssueRelation>(relationIdToDelete, null);
             }
             catch (RedmineException)
             {
@@ -89,7 +104,7 @@ namespace UnitTestRedmineNetApi
 
             try
             {
-                IssueRelation issueRelation = redmineManager.GetObject<IssueRelation>(relationId, null);
+                IssueRelation issueRelation = redmineManager.GetObject<IssueRelation>(relationIdToDelete, null);
             }
             catch (RedmineException exc)
             {
@@ -98,5 +113,15 @@ namespace UnitTestRedmineNetApi
             }
             Assert.Fail("Test failed");
         }
+
+        [TestMethod]
+        public void RedmineIssueRelation_ShouldCompare()
+        {
+            var relation = redmineManager.GetObject<IssueRelation>(relationIdToCompare, null);
+            var relationToCompare = redmineManager.GetObject<IssueRelation>(relationIdToCompare, null);
+
+            Assert.IsTrue(relation.Equals(relationToCompare));
+        }
+        #endregion Tests
     }
 }

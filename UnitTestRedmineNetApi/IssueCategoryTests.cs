@@ -15,10 +15,33 @@ namespace UnitTestRedmineNetApi
     [TestClass]
     public class IssueCategoryTests
     {
+        #region Constants
+        private const string projectId = "9";
+
+        //issueCategory data for insert
+        private const string newIssueCategoryName = "New category";
+        private const int newIssueCategoryAsigneeId = 8;
+
+        private const string issueCategoryIdToGet = "11";
+        private const string issueCategoryAsigneeNameToGet = "Alina";
+
+        private const string issueCategoryIdToUpdate = "15";
+        private const string issueCategoryNameToUpdate = "New category updated";
+        private const int issueCategoryAsigneeIdToUpdate = 2;
+
+        private const string issueCategoryIdToDelete = "15";
+
+        private const string issueCategoryIdToCompare = "11";
+        private const string issueCategoryNameToCompare = "Issue compared";
+        #endregion Constants
+
+        #region Properties
         private RedmineManager redmineManager;
         private string uri;
         private string apiKey;
+        #endregion Properties
 
+        #region Initialize
         [TestInitialize]
         public void Initialize()
         {
@@ -40,25 +63,25 @@ namespace UnitTestRedmineNetApi
         {
             redmineManager = new RedmineManager(uri, apiKey, MimeFormat.xml);
         }
+        #endregion Initialize
 
+        #region Tests
         [TestMethod]
         public void RedmineIssueCategories_ShouldGetAllIssueCategories()
         {
-            string projectId = "9";
-
             var issueCategories = redmineManager.GetObjectList<IssueCategory>(new NameValueCollection { { "project_id", projectId } });
 
-            Assert.IsTrue(issueCategories.Count == 1);
+            Assert.IsNotNull(issueCategories);
         }
 
         [TestMethod]
         public void RedmineIssueCategories_ShouldCreateIssueCategory()
         {
             IssueCategory issueCategory = new IssueCategory();
-            issueCategory.Name = "Feature";
-            issueCategory.AsignTo = new IdentifiableName { Id = 8 };
+            issueCategory.Name = newIssueCategoryName;
+            issueCategory.AsignTo = new IdentifiableName { Id = newIssueCategoryAsigneeId };
 
-            IssueCategory savedIssueCategory = redmineManager.CreateObject<IssueCategory>(issueCategory, "9");
+            IssueCategory savedIssueCategory = redmineManager.CreateObject<IssueCategory>(issueCategory, projectId);
 
             Assert.AreEqual(issueCategory.Name, savedIssueCategory.Name);
         }
@@ -66,38 +89,32 @@ namespace UnitTestRedmineNetApi
         [TestMethod]
         public void RedmineIssueCategory_ShouldGetIssueCategoryById()
         {
-            var issueCategoryId = "12";
-
-            IssueCategory issueCategory = redmineManager.GetObject<IssueCategory>(issueCategoryId, null);
+            IssueCategory issueCategory = redmineManager.GetObject<IssueCategory>(issueCategoryIdToGet, null);
 
             Assert.IsNotNull(issueCategory);
-            Assert.IsTrue(issueCategory.AsignTo.Name.Contains("Alina"));
+            Assert.IsTrue(issueCategory.AsignTo.Name.Contains(issueCategoryAsigneeNameToGet));
         }
 
         [TestMethod]
         public void RedmineIssueCategories_ShouldUpdateIssueCategory()
         {
-            var issueCategoryId = "12";
+            IssueCategory issueCategory = redmineManager.GetObject<IssueCategory>(issueCategoryIdToUpdate, null);
+            issueCategory.Name = issueCategoryNameToUpdate;
+            issueCategory.AsignTo = new IdentifiableName { Id = issueCategoryAsigneeIdToUpdate };
 
-            IssueCategory issueCategory = redmineManager.GetObject<IssueCategory>(issueCategoryId, null);
-            issueCategory.Name = "Feature updated";
-            issueCategory.AsignTo = new IdentifiableName { Id = 2 };
+            redmineManager.UpdateObject<IssueCategory>(issueCategoryIdToUpdate, issueCategory);
 
-            redmineManager.UpdateObject<IssueCategory>(issueCategoryId, issueCategory);
-
-            IssueCategory updatedIssueCategory = redmineManager.GetObject<IssueCategory>(issueCategoryId, null);
+            IssueCategory updatedIssueCategory = redmineManager.GetObject<IssueCategory>(issueCategoryIdToUpdate, null);
 
             Assert.AreEqual(issueCategory.Name, updatedIssueCategory.Name);
         }
 
         [TestMethod]
-        public void RedmineIssueCAtegory_ShouldDeleteIssueCategory()
+        public void RedmineIssueCategory_ShouldDeleteIssueCategory()
         {
-            var issueCategoryId = "12";
-
             try
             {
-                redmineManager.DeleteObject<IssueCategory>(issueCategoryId, null);
+                redmineManager.DeleteObject<IssueCategory>(issueCategoryIdToDelete, null);
             }
             catch (RedmineException)
             {
@@ -107,7 +124,7 @@ namespace UnitTestRedmineNetApi
 
             try
             {
-                IssueCategory issueCategory = redmineManager.GetObject<IssueCategory>(issueCategoryId, null);
+                IssueCategory issueCategory = redmineManager.GetObject<IssueCategory>(issueCategoryIdToDelete, null);
             }
             catch (RedmineException exc)
             {
@@ -116,5 +133,18 @@ namespace UnitTestRedmineNetApi
             }
             Assert.Fail("Test failed");
         }
+
+        [TestMethod]
+        public void RedmineIssueCategory_ShouldCompare()
+        {
+            IssueCategory issueCategory = redmineManager.GetObject<IssueCategory>(issueCategoryIdToCompare, null);
+            IssueCategory issueCategoryToCompare = redmineManager.GetObject<IssueCategory>(issueCategoryIdToCompare, null);
+
+            Assert.IsTrue(issueCategory.Equals(issueCategoryToCompare));
+
+            issueCategoryToCompare.Name = issueCategoryNameToCompare;
+            Assert.IsFalse(issueCategory.Equals(issueCategoryToCompare));
+        }
+        #endregion Tests
     }
 }

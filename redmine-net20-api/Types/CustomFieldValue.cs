@@ -20,7 +20,7 @@ using System.Xml.Serialization;
 namespace Redmine.Net.Api.Types
 {
     [XmlRoot(RedmineKeys.VALUE)]
-    public class CustomFieldValue : IEquatable<CustomFieldValue>
+    public class CustomFieldValue : IEquatable<CustomFieldValue>, ICloneable
     {
         [XmlText]
         public string Info { get; set; }
@@ -33,6 +33,12 @@ namespace Redmine.Net.Api.Types
         public override string ToString()
         {
             return Info;
+        }
+
+        public object Clone()
+        {
+            var customFieldValue = new CustomFieldValue { Info = Info };
+            return customFieldValue;
         }
     }
 }

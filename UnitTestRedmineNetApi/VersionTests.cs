@@ -15,10 +15,37 @@ namespace UnitTestRedmineNetApi
     [TestClass]
     public class VersionTests
     {
+        #region Constants
+        private const string projectId = "6";
+        private const int numberOfVersions = 3;
+
+        //version data - used for create
+        private const string newVersionName = "Test version";
+        private const VersionStatus newVersionStatus = VersionStatus.locked;
+        private const VersionSharing newVersionSharing = VersionSharing.hierarchy;
+        private DateTime newVersionDueDate = DateTime.Now.AddDays(7);
+        private const string newVersionDescription = "Version description";
+
+        private const string versionId = "15";
+
+        //version data - used for update 
+        private const string updatedVersionId = "14";
+        private const string updatedVersionName = "Updated version";
+        private const VersionStatus updatedVersionStatus = VersionStatus.closed;
+        private const VersionSharing updatedVersionSharing = VersionSharing.system;
+        private DateTime updatedVersionDueDate = DateTime.Now.AddMonths(1);
+        private const string updatedVersionDescription = "Updated description";
+
+        private const string deletedVersionId = "14";
+        #endregion Constants
+
+        #region Properties
         private RedmineManager redmineManager;
         private string uri;
         private string apiKey;
+        #endregion Properties
 
+        #region Initialize
         [TestInitialize]
         public void Initialize()
         {
@@ -40,28 +67,28 @@ namespace UnitTestRedmineNetApi
         {
             redmineManager = new RedmineManager(uri, apiKey, MimeFormat.xml);
         }
+        #endregion Initialize
 
+        #region Tests
         [TestMethod]
         public void RedmineProjectVersions_ShouldGetSpecificProjectVersions()
         {
-            int projectId = 6;
-
-            var versions = redmineManager.GetObjectList<Redmine.Net.Api.Types.Version>(new NameValueCollection { { "project_id", projectId.ToString() } });
+            var versions = redmineManager.GetObjectList<Redmine.Net.Api.Types.Version>(new NameValueCollection { { "project_id", projectId } });
         
-            Assert.IsTrue(versions.Count == 3);
+            Assert.IsTrue(versions.Count == numberOfVersions);
         }
 
         [TestMethod]
         public void RedmineProjectVersion_ShouldCreateNewVersion()
         {
             Redmine.Net.Api.Types.Version version = new Redmine.Net.Api.Types.Version();
-            version.Name = "Test version";
-            version.Status = VersionStatus.locked;
-            version.Sharing = VersionSharing.hierarchy;
-            version.DueDate = DateTime.Now.AddDays(7);
-            version.Description = "Version description";
+            version.Name = newVersionName;
+            version.Status = newVersionStatus;
+            version.Sharing = newVersionSharing;
+            version.DueDate = newVersionDueDate;
+            version.Description = newVersionDescription;
 
-            Redmine.Net.Api.Types.Version savedVersion = redmineManager.CreateObject<Redmine.Net.Api.Types.Version>(version, "6");
+            Redmine.Net.Api.Types.Version savedVersion = redmineManager.CreateObject<Redmine.Net.Api.Types.Version>(version, projectId);
 
             Assert.AreEqual(version.Name, savedVersion.Name);
         }
@@ -69,8 +96,6 @@ namespace UnitTestRedmineNetApi
         [TestMethod]
         public void RedmineProjectVersion_ShouldGetVersionById()
         {
-            var versionId = "12";
-
             Redmine.Net.Api.Types.Version version = redmineManager.GetObject<Redmine.Net.Api.Types.Version>(versionId, null);
 
             Assert.IsNotNull(version);
@@ -79,18 +104,16 @@ namespace UnitTestRedmineNetApi
         [TestMethod]
         public void RedmineProjectVersion_ShouldUpdateVersion()
         {
-            var versionId = "12";
+            Redmine.Net.Api.Types.Version version = redmineManager.GetObject<Redmine.Net.Api.Types.Version>(updatedVersionId, null);
+            version.Name = updatedVersionName;
+            version.Status = updatedVersionStatus;
+            version.Sharing = updatedVersionSharing;
+            version.DueDate = updatedVersionDueDate;
+            version.Description = updatedVersionDescription;
 
-            Redmine.Net.Api.Types.Version version = redmineManager.GetObject<Redmine.Net.Api.Types.Version>(versionId, null);
-            version.Name = "Updated version";
-            version.Status = VersionStatus.closed;
-            version.Sharing = VersionSharing.system;
-            version.DueDate = DateTime.Now.AddMonths(1);
-            version.Description = "Updated description";
+            redmineManager.UpdateObject<Redmine.Net.Api.Types.Version>(updatedVersionId, version);
 
-            redmineManager.UpdateObject<Redmine.Net.Api.Types.Version>(versionId, version);
-
-            Redmine.Net.Api.Types.Version updatedVersion = redmineManager.GetObject<Redmine.Net.Api.Types.Version>(versionId, null);
+            Redmine.Net.Api.Types.Version updatedVersion = redmineManager.GetObject<Redmine.Net.Api.Types.Version>(updatedVersionId, null);
 
             Assert.AreEqual(version.Name, updatedVersion.Name);
         }
@@ -98,11 +121,9 @@ namespace UnitTestRedmineNetApi
         [TestMethod]
         public void RedmineProjectVersion_ShouldDeleteVersion()
         {
-            var versionId = "12";
-
             try
             {
-                redmineManager.DeleteObject<Redmine.Net.Api.Types.Version>(versionId, null);
+                redmineManager.DeleteObject<Redmine.Net.Api.Types.Version>(deletedVersionId, null);
             }
             catch (RedmineException)
             {
@@ -112,7 +133,7 @@ namespace UnitTestRedmineNetApi
 
             try
             {
-                Redmine.Net.Api.Types.Version version = redmineManager.GetObject<Redmine.Net.Api.Types.Version>(versionId, null);
+                Redmine.Net.Api.Types.Version version = redmineManager.GetObject<Redmine.Net.Api.Types.Version>(deletedVersionId, null);
             }
             catch (RedmineException exc)
             {
@@ -123,5 +144,14 @@ namespace UnitTestRedmineNetApi
 
         }
 
+        [TestMethod]
+        public void RedmineProjectVersion_ShouldCompare()
+        {
+            Redmine.Net.Api.Types.Version version = redmineManager.GetObject<Redmine.Net.Api.Types.Version>(versionId, null);
+            Redmine.Net.Api.Types.Version versionToCompare = redmineManager.GetObject<Redmine.Net.Api.Types.Version>(versionId, null);
+
+            Assert.IsTrue(version.Equals(versionToCompare));
+        }
+        #endregion Tests
     }
 }

@@ -14,10 +14,13 @@ namespace UnitTestRedmineNetApi
     [TestClass]
     public class CustomFieldTests
     {
+        #region Properties
         private RedmineManager redmineManager;
         private string uri;
         private string apiKey;
+        #endregion Properties
 
+        #region Initialize
         [TestInitialize]
         public void Initialize()
         {
@@ -39,7 +42,9 @@ namespace UnitTestRedmineNetApi
         {
             redmineManager = new RedmineManager(uri, apiKey, MimeFormat.xml);
         }
+        #endregion Initialize
 
+        #region Tests
         [TestMethod]
         public void RedmineCustomFields_ShouldGetAllCustomFields()
         {
@@ -47,5 +52,6 @@ namespace UnitTestRedmineNetApi
 
             Assert.IsNotNull(customFields);
         }
+        #endregion Tests
     }
 }

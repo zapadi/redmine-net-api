@@ -15,10 +15,23 @@ namespace UnitTestRedmineNetApi
     [TestClass]
     public class WikiPageTests
     {
+        #region Constants
+        private const string projectId = "9";
+        private const string wikiPageName = "Wiki";
+        private const int noOfWikiPages = 1;
+        private const int wikiPageVersion = 1;
+
+        private const string wikiPageUpdatedText = "Updated again and again wiki page";
+        private const string wikiPageComment = "I did it through code";
+        #endregion Constants
+
+        #region Properties
         private RedmineManager redmineManager;
         private string uri;
         private string apiKey;
+        #endregion Properties
 
+        #region Initialize
         [TestInitialize]
         public void Initialize()
         {
@@ -40,48 +53,50 @@ namespace UnitTestRedmineNetApi
         {
             redmineManager = new RedmineManager(uri, apiKey, MimeFormat.xml);
         }
+        #endregion Initialize
+
+        #region Tests
+        [TestMethod]
+        public void RedmineWikiPages_ShouldAddOrUpdatePage()
+        {
+            WikiPage page = redmineManager.CreateOrUpdateWikiPage(projectId, wikiPageName, new WikiPage { Text = wikiPageUpdatedText, Comments = wikiPageComment });
+
+            Assert.IsTrue(page.Title == wikiPageName);
+        }
 
         [TestMethod]
         public void RedmineWikiPages_ShouldGetAllPages()
         {
-            List<WikiPage> pages = (List<WikiPage>)redmineManager.GetAllWikiPages("9");
+            List<WikiPage> pages = (List<WikiPage>)redmineManager.GetAllWikiPages(projectId);
 
-            Assert.IsTrue(pages.Count == 1 && pages[0].Title.Equals("Wiki"));
+            Assert.IsTrue(pages.Count == noOfWikiPages && pages[0].Title.Equals(wikiPageName));
         }
 
         [TestMethod]
         public void RedmineWikiPages_ShouldReturnWikiPage()
         {
-            WikiPage page = redmineManager.GetWikiPage("9", new NameValueCollection { { "include", "attachments" } }, "Wiki");
+            WikiPage page = redmineManager.GetWikiPage(projectId, new NameValueCollection { { "include", "attachments" } }, wikiPageName);
 
-            Assert.IsTrue(page.Title == "Wiki");
+            Assert.IsTrue(page.Title == wikiPageName);
         }
 
         [TestMethod]
         public void RedmineWikiPages_ShouldReturnOldVersion()
         {
-            WikiPage oldPage = redmineManager.GetWikiPage("9", new NameValueCollection { { "include", "attachments" } }, "Wiki", 1);
+            WikiPage oldPage = redmineManager.GetWikiPage(projectId, new NameValueCollection { { "include", "attachments" } }, wikiPageName, wikiPageVersion);
 
-            Assert.IsTrue(oldPage.Title == "Wiki");
-            Assert.IsTrue(oldPage.Version == 1);
-        }
-
-        [TestMethod]
-        public void RedmineWikiPages_ShouldAddOrUpdatePage()
-        {
-            WikiPage page = redmineManager.CreateOrUpdateWikiPage("9", "Wiki", new WikiPage { Text = "Updated again and again wiki page", Comments = "I did it through code" });
-
-            Assert.IsTrue(page.Title == "Wiki");
+            Assert.IsTrue(oldPage.Title == wikiPageName);
+            Assert.IsTrue(oldPage.Version == wikiPageVersion);
         }
 
         [TestMethod]
         public void RedmineWikiPages_ShouldDelete()
         {
-            redmineManager.DeleteWikiPage("9", "Wiki");
+            redmineManager.DeleteWikiPage(projectId, wikiPageName);
 
             try
             {
-                WikiPage page = redmineManager.GetWikiPage("9", null, "Wiki");
+                WikiPage page = redmineManager.GetWikiPage(projectId, null, wikiPageName);
             }
             catch (RedmineException exc)
             {
@@ -91,5 +106,15 @@ namespace UnitTestRedmineNetApi
             Assert.Fail("Test failed");
 
         }
+
+        [TestMethod]
+        public void RedmineWikiPages_ShouldCompare()
+        {
+            WikiPage page = redmineManager.GetWikiPage(projectId, new NameValueCollection { { "include", "attachments" } }, wikiPageName);
+            WikiPage pageToCompare = redmineManager.GetWikiPage(projectId, new NameValueCollection { { "include", "attachments" } }, wikiPageName);
+
+            Assert.IsTrue(page.Equals(pageToCompare));
+        }
+        #endregion Tests
     }
 }

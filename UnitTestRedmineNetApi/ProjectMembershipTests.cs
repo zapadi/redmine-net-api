@@ -15,10 +15,29 @@ namespace UnitTestRedmineNetApi
     [TestClass]
     public class ProjectMembershipTests
     {
+        #region Constants
+        private const string projectId = "9";
+
+        //PM data - used for create
+        private const int newPMUserId = 2;
+        private const int newPMRoleId = 4;
+
+        private const string projectMembershipId = "118";
+
+        //PM data - used for update
+        private const string updatedPMId = "111";
+        private const int updatedPMRoleId = 5;
+
+        private const string deletedPMId = "111";
+        #endregion Constants
+
+        #region Properties
         private RedmineManager redmineManager;
         private string uri;
         private string apiKey;
+        #endregion Properties
 
+        #region Initialize
         [TestInitialize]
         public void Initialize()
         {
@@ -40,12 +59,12 @@ namespace UnitTestRedmineNetApi
         {
             redmineManager = new RedmineManager(uri, apiKey, MimeFormat.xml);
         }
+        #endregion Initialize
 
+        #region Tests
         [TestMethod]
         public void RedmineProjectMembership_ShouldGetAllByProject()
         {
-            string projectId = "9";
-
             var projectMemberships = redmineManager.GetObjectList<ProjectMembership>(new NameValueCollection { { "project_id", projectId } });
 
             Assert.IsNotNull(projectMemberships);
@@ -55,11 +74,11 @@ namespace UnitTestRedmineNetApi
         public void RedmineProjectMembership_ShouldAdd()
         {
             ProjectMembership pm = new ProjectMembership();
-            pm.User = new IdentifiableName { Id = 17 };
+            pm.User = new IdentifiableName { Id = newPMUserId };
             pm.Roles = new List<MembershipRole>();
-            pm.Roles.Add(new MembershipRole { Id = 4 });
+            pm.Roles.Add(new MembershipRole { Id = newPMRoleId });
 
-            ProjectMembership updatedPM = redmineManager.CreateObject<ProjectMembership>(pm, "9");
+            ProjectMembership updatedPM = redmineManager.CreateObject<ProjectMembership>(pm, projectId);
 
             Assert.IsNotNull(updatedPM);
         }
@@ -67,9 +86,7 @@ namespace UnitTestRedmineNetApi
         [TestMethod]
         public void RedmineProjectMembership_ShouldGetById()
         {
-            string pmId = "104";
-
-            var projectMembership = redmineManager.GetObject<ProjectMembership>(pmId, null);
+            var projectMembership = redmineManager.GetObject<ProjectMembership>(projectMembershipId, null);
 
             Assert.IsNotNull(projectMembership);
         }
@@ -77,26 +94,22 @@ namespace UnitTestRedmineNetApi
         [TestMethod]
         public void RedmineProjectMembership_ShouldUpdate()
         {
-            var pmId = "104";
+            var pm = redmineManager.GetObject<ProjectMembership>(updatedPMId, null);
+            pm.Roles.Add(new MembershipRole { Id = updatedPMRoleId });
 
-            var pm = redmineManager.GetObject<ProjectMembership>(pmId, null);
-            pm.Roles.Add(new MembershipRole { Id = 4 });
+            redmineManager.UpdateObject<ProjectMembership>(updatedPMId, pm);
 
-            redmineManager.UpdateObject<ProjectMembership>(pmId, pm);
+            var updatedPM = redmineManager.GetObject<ProjectMembership>(updatedPMId, null);
 
-            var updatedPM = redmineManager.GetObject<ProjectMembership>(pmId, null);
-
-            Assert.IsTrue(updatedPM.Roles.Find(r => r.Id == 4) != null);
+            Assert.IsTrue(updatedPM.Roles.Find(r => r.Id == updatedPMRoleId) != null);
         }
 
         [TestMethod]
         public void RedmineProjectMembership_ShouldDelete()
         {
-            var pmId = "104";
-
             try
             {
-                redmineManager.DeleteObject<ProjectMembership>(pmId, null);
+                redmineManager.DeleteObject<ProjectMembership>(deletedPMId, null);
             }
             catch (RedmineException)
             {
@@ -106,7 +119,7 @@ namespace UnitTestRedmineNetApi
 
             try
             {
-                ProjectMembership projectMembership = redmineManager.GetObject<ProjectMembership>(pmId, null);
+                ProjectMembership projectMembership = redmineManager.GetObject<ProjectMembership>(deletedPMId, null);
             }
             catch (RedmineException exc)
             {
@@ -115,5 +128,15 @@ namespace UnitTestRedmineNetApi
             }
             Assert.Fail("Test failed");
         }
+
+        [TestMethod]
+        public void RedmineProjectMembership_ShouldCompare()
+        {
+            var projectMembership = redmineManager.GetObject<ProjectMembership>(projectMembershipId, null);
+            var projectMembershipToCompare = redmineManager.GetObject<ProjectMembership>(projectMembershipId, null);
+
+            Assert.IsTrue(projectMembership.Equals(projectMembershipToCompare));
+        }
+        #endregion Tests
     }
 }

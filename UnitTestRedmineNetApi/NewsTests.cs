@@ -11,10 +11,17 @@ namespace UnitTestRedmineNetApi
     [TestClass]
     public class NewsTests
     {
+        #region Constants
+        private const string projectId = "6";
+        #endregion Constants
+
+        #region Properties
         private RedmineManager redmineManager;
         private string uri;
         private string apiKey;
+        #endregion Properties
 
+        #region Initialize
         [TestInitialize]
         public void Initialize()
         {
@@ -36,7 +43,9 @@ namespace UnitTestRedmineNetApi
         {
             redmineManager = new RedmineManager(uri, apiKey, MimeFormat.xml);
         }
+        #endregion Initialize
 
+        #region Tests
         [TestMethod]
         public void GetAllNews()
         {
@@ -48,11 +57,25 @@ namespace UnitTestRedmineNetApi
         [TestMethod]
         public void RedmineNews_ShouldGetSpecificProjectNews()
         {
-            int projectId = 6;
-
-            var news = redmineManager.GetObjectList<News>(new NameValueCollection { { "project_id", projectId.ToString() } });
+            var news = redmineManager.GetObjectList<News>(new NameValueCollection { { "project_id", projectId } });
 
             Assert.IsNotNull(news);
         }
+
+        [TestMethod]
+        public void RedmineNews_ShouldCompare()
+        {
+            var projectNews = redmineManager.GetObjectList<News>(new NameValueCollection { { "project_id", projectId } });
+            if (projectNews != null)
+            {
+               var news = projectNews[0];
+               var newsToCompare = projectNews[0];
+
+                Assert.IsTrue(news.Equals(newsToCompare));
+            }
+            else
+                Assert.Inconclusive();
+        }
+        #endregion Tests
     }
 }

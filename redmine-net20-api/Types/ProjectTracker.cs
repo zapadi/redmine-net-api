@@ -29,7 +29,7 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// the tracker id: 1 for Bug, etc.
         /// </summary>
-        new public int Id { get; set; }
+       // new public int Id { get; set; }
 
         public bool Equals(ProjectTracker other)
         {
