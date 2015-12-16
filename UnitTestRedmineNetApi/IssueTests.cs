@@ -244,7 +244,7 @@ namespace UnitTestRedmineNetApi
 
             var updatedIssue = redmineManager.GetObject<Issue>(updatedIssueId, new NameValueCollection { { "include", "children,attachments,relations,changesets,journals,watchers" } });
 
-            Assert.AreEqual(issue.Subject, issue.Subject);
+            Assert.AreEqual(issue.Subject, updatedIssue.Subject);
         }
 
         [TestMethod]
