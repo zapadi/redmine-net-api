@@ -14,10 +14,20 @@ namespace UnitTestRedmineNetApi
     [TestClass]
     public class RoleTests
     {
+        #region Constants
+        private const int numberOfRoles = 3;
+
+        private const string roleId = "4";
+        private const string roleName = "Admins";
+        #endregion Constants
+
+        #region Properties
         private RedmineManager redmineManager;
         private string uri;
         private string apiKey;
+        #endregion Properties
 
+        #region Initialize
         [TestInitialize]
         public void Initialize()
         {
@@ -39,23 +49,24 @@ namespace UnitTestRedmineNetApi
         {
             redmineManager = new RedmineManager(uri, apiKey, MimeFormat.xml);
         }
+        #endregion Initialize
 
+        #region Tests
         [TestMethod]
         public void RedmineRoles_ShouldGetAllRoles()
         {
             var roles = redmineManager.GetObjectList<Role>(null);
 
-            Assert.IsTrue(roles.Count == 2);
+            Assert.IsTrue(roles.Count == numberOfRoles);
         }
 
         [TestMethod]
         public void RedmineRoles_ShouldGetRoleById()
         {
-            var roleId = 4;
+            Role adminRole = redmineManager.GetObject<Role>(roleId, null);
 
-            Role adminRole = redmineManager.GetObject<Role>(roleId.ToString(), null);
-
-            Assert.AreEqual(adminRole.Name, "Admins");
+            Assert.AreEqual(adminRole.Name, roleName);
         }
+        #endregion Tests
     }
 }

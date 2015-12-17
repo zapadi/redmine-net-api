@@ -14,10 +14,17 @@ namespace UnitTestRedmineNetApi
     [TestClass]
     public class TimeEntryActivityTests
     {
+        #region Constants
+        private const int numberOfTimeEntryActivities = 3;
+        #endregion Constants
+
+        #region Properties
         private RedmineManager redmineManager;
         private string uri;
         private string apiKey;
+        #endregion Properties
 
+        #region Initialize
         [TestInitialize]
         public void Initialize()
         {
@@ -39,13 +46,16 @@ namespace UnitTestRedmineNetApi
         {
             redmineManager = new RedmineManager(uri, apiKey, MimeFormat.xml);
         }
+        #endregion Initialize
 
+        #region Tests
         [TestMethod]
         public void RedmineTimeEntryActivities_ShouldGetAllTimeEntryActivities()
         {
             var timeEntryActivities = redmineManager.GetObjectList<TimeEntryActivity>(null);
 
-            Assert.IsTrue(timeEntryActivities.Count == 3);
+            Assert.IsTrue(timeEntryActivities.Count == numberOfTimeEntryActivities);
         }
+        #endregion Tests
     }
 }

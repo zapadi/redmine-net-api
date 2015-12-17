@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2015 Adrian Popescu.
+   Copyright 2011 - 2015 Adrian Popescu, Dorin Huzum.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -381,31 +381,12 @@ namespace Redmine.Net.Api.Types
                     writer.WriteElementString(RedmineKeys.WATCHER_USER_IDS, item.Id.ToString());
                 }
             }
+
         }
 
         public object Clone()
         {
-            var issue = new Issue
-            {
-                AssignedTo = AssignedTo,
-                Author = Author,
-                Category = Category,
-                CustomFields = CustomFields,
-                Description = Description,
-                DoneRatio = DoneRatio,
-                DueDate = DueDate,
-                SpentHours = SpentHours,
-                EstimatedHours = EstimatedHours,
-                Priority = Priority,
-                StartDate = StartDate,
-                Status = Status,
-                Subject = Subject,
-                Tracker = Tracker,
-                Project = Project,
-                FixedVersion = FixedVersion,
-                Notes = Notes,
-                Watchers = Watchers
-            };
+            var issue = new Issue { AssignedTo = AssignedTo, Author = Author, Category = Category, CustomFields = CustomFields.Clone<IssueCustomField>(), Description = Description, DoneRatio = DoneRatio, DueDate = DueDate, SpentHours = SpentHours, EstimatedHours = EstimatedHours, Priority = Priority, StartDate = StartDate, Status = Status, Subject = Subject, Tracker = Tracker, Project = Project, FixedVersion = FixedVersion, Notes = Notes, Watchers = Watchers };
             return issue;
         }
 
@@ -419,11 +400,6 @@ namespace Redmine.Net.Api.Types
                 && Notes == other.Notes && Equals(Watchers, other.Watchers) && ClosedOn == other.ClosedOn && SpentHours == other.SpentHours
                 && PrivateNotes == other.PrivateNotes
                 );
-        }
-
-        public override string ToString()
-        {
-            return base.ToString();
         }
     }
 }

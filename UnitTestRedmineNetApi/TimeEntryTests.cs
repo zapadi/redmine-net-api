@@ -14,10 +14,36 @@ namespace UnitTestRedmineNetApi
     [TestClass]
     public class TimeEntryTests
     {
+        #region Constants
+        private const string timeEntryId = "19";
+
+        //timeEntryData - used for create
+        private const int newTimeEntryIssueId = 19;
+        private const int newTimeEntryProjectId = 10;
+        private DateTime newTimeEntryDate = DateTime.Now;
+        private const int newTimeEntryHours = 1;
+        private const int newTimeEntryActivityId = 16;
+        private const string newTimeEntryComments = "Added time entry on project";
+
+        //timeEntryData - used for update
+        private const string updatedTimeEntryId = "28";
+        private const int updatedTimeEntryIssueId = 20;
+        private const int updatedTimeEntryProjectId = 10;
+        private DateTime updatedTimeEntryDate = DateTime.Now.AddDays(-2);
+        private const int updatedTimeEntryHours = 3;
+        private const int updatedTimeEntryActivityId = 17;
+        private const string updatedTimeEntryComments = "Time entry updated";
+
+        private const string deletedTimeEntryId = "28";
+        #endregion Constants
+
+        #region Properties
         private RedmineManager redmineManager;
         private string uri;
         private string apiKey;
+        #endregion Properties
 
+        #region Initialize
         [TestInitialize]
         public void Initialize()
         {
@@ -39,7 +65,9 @@ namespace UnitTestRedmineNetApi
         {
             redmineManager = new RedmineManager(uri, apiKey, MimeFormat.xml);
         }
+        #endregion Initialize
 
+        #region Tests
         [TestMethod]
         public void RedmineTimeEntries_ShouldGetAll()
         {
@@ -51,8 +79,6 @@ namespace UnitTestRedmineNetApi
         [TestMethod]
         public void RedmineTimeEntries_ShouldGetEntityById()
         {
-            var timeEntryId = "19";
-
             var timeEntry = redmineManager.GetObject<TimeEntry>(timeEntryId, null);
 
             Assert.IsNotNull(timeEntry);
@@ -62,12 +88,12 @@ namespace UnitTestRedmineNetApi
         public void RedmineTimeEntries_ShouldAdd()
         {
             TimeEntry timeEntry = new TimeEntry();
-            timeEntry.Issue = new IdentifiableName { Id = 19 };
-            timeEntry.Project = new IdentifiableName { Id = 10 };
-            timeEntry.SpentOn = DateTime.Now;
-            timeEntry.Hours = 1;
-            timeEntry.Activity = new IdentifiableName { Id = 16 };
-            timeEntry.Comments = "Added time entry on project";
+            timeEntry.Issue = new IdentifiableName { Id = newTimeEntryIssueId };
+            timeEntry.Project = new IdentifiableName { Id = newTimeEntryProjectId };
+            timeEntry.SpentOn = newTimeEntryDate;
+            timeEntry.Hours = newTimeEntryHours;
+            timeEntry.Activity = new IdentifiableName { Id = newTimeEntryActivityId };
+            timeEntry.Comments = newTimeEntryComments;
 
             TimeEntry savedTimeEntry = redmineManager.CreateObject<TimeEntry>(timeEntry);
 
@@ -77,19 +103,17 @@ namespace UnitTestRedmineNetApi
         [TestMethod]
         public void RedmineTimeEntries_ShouldUpdate()
         {
-            var timeEntryId = "26";
+            var timeEntry = redmineManager.GetObject<TimeEntry>(updatedTimeEntryId, null);
+            timeEntry.Project.Id = updatedTimeEntryProjectId;
+            timeEntry.Issue.Id = updatedTimeEntryIssueId;
+            timeEntry.SpentOn = updatedTimeEntryDate;
+            timeEntry.Hours = updatedTimeEntryHours;
+            timeEntry.Comments = updatedTimeEntryComments;
+            timeEntry.Activity.Id = updatedTimeEntryActivityId;
 
-            var timeEntry = redmineManager.GetObject<TimeEntry>(timeEntryId, null);
-            timeEntry.Project.Id = 10;
-            timeEntry.Issue.Id = 20;
-            timeEntry.SpentOn = DateTime.Now.AddDays(-2);
-            timeEntry.Hours = 3;
-            timeEntry.Comments = "Time entry updated";
-            timeEntry.Activity.Id = 17;
+            redmineManager.UpdateObject<TimeEntry>(updatedTimeEntryId, timeEntry);
 
-            redmineManager.UpdateObject<TimeEntry>(timeEntryId, timeEntry);
-
-            var updatedTimeEntry = redmineManager.GetObject<TimeEntry>(timeEntryId, null);
+            var updatedTimeEntry = redmineManager.GetObject<TimeEntry>(updatedTimeEntryId, null);
 
             Assert.AreEqual<TimeEntry>(timeEntry, updatedTimeEntry);
         }
@@ -97,11 +121,9 @@ namespace UnitTestRedmineNetApi
         [TestMethod]
         public void RedmineTimeEntries_ShouldDelete()
         {
-            var timeEntryId = "26";
-
             try
             {
-                redmineManager.DeleteObject<TimeEntry>(timeEntryId, null);
+                redmineManager.DeleteObject<TimeEntry>(deletedTimeEntryId, null);
             }
             catch (RedmineException)
             {
@@ -111,7 +133,7 @@ namespace UnitTestRedmineNetApi
 
             try
             {
-                TimeEntry timeEntry = redmineManager.GetObject<TimeEntry>(timeEntryId, null);
+                TimeEntry timeEntry = redmineManager.GetObject<TimeEntry>(deletedTimeEntryId, null);
             }
             catch (RedmineException exc)
             {
@@ -120,5 +142,15 @@ namespace UnitTestRedmineNetApi
             }
             Assert.Fail("Test failed");
         }
+
+        [TestMethod]
+        public void RedmineTimeEntries_ShouldCompare()
+        {
+            var timeEntry = redmineManager.GetObject<TimeEntry>(timeEntryId, null);
+            var timeEntryToCompare = redmineManager.GetObject<TimeEntry>(timeEntryId, null);
+
+            Assert.IsTrue(timeEntry.Equals(timeEntryToCompare));
+        }
+        #endregion Tests
     }
 }

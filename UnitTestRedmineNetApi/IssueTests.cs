@@ -15,10 +15,78 @@ namespace UnitTestRedmineNetApi
     [TestClass]
     public class IssueTests
     {
+        #region Constants
+        //filters
+        private const int numberOfPaginatedIssues = 3;
+        private const string projectId = "9";
+        private const string subprojectId = "10";
+        private const string allSubprojects = "!*";
+        private const string trackerId = "4";
+        private const string status_id = "*";
+        private const string assigned_to_id = "me";
+        private const string customFieldName = "cf_13";
+        private const string customFieldValue = "xxx";
+        private const string issueId = "19";
+
+        //issue data - used for create
+        private const int newIssueProjectId = 10;
+        private const int newIssueTrackerId = 4;
+        private const int newIssueStatusId = 5;
+        private const int newIssuePriorityId = 8;
+        private const string newIssueSubject = "Issue created using Rest API";
+        private const string newIssueDescription = "Issue description...";
+        private const int newIssueCategoryId = 11;
+        private const int newIssueFixedVersionId = 9;
+        private const int newIssueAssignedToId = 8;
+        private const int newIssueParentIssueId = 19;
+        private const int newIssueCustomFieldId = 13;
+        private const string newIssueCustomFieldValue = "Issue custom field completed";
+        private const bool newIssueIsPrivate = true;
+        private const int newIssueEstimatedHours = 12;
+        private DateTime newIssueStartDate = DateTime.Now;
+        private DateTime newIssueDueDate = DateTime.Now.AddDays(10);
+        private const int newIssueFirstWatcherId = 2;
+        private const int newIssueSecondWatcherId = 8;
+
+        //issue data - used for update
+        private const string updatedIssueId = "76";
+        private const string updatedIssueSubject = "Issue updated subject";
+        private const string updatedIssueDescription = null;
+        private DateTime? updatedIssueStartDate = null;
+        private DateTime updatedIssueDueDate = DateTime.Now.AddMonths(1);
+        private const int updatedIssueProjectId = 10;
+        private const int updatedIssueTrackerId = 3;
+        private const int updatedIssuePriorityId = 9;
+        private const int updatedIssueCategoryId = 10;
+        private const int updatedIssueAssignedToId = 2;
+        private const int updatedIssueParentIssueId = 20;
+        private const int updatedIssueCustomFieldId = 13;
+        private const string updatedIssueCustomFieldValue = "Another custom field completed";
+        private const int updatedIssueEstimatedHours = 23;
+        private const string updatedIssueNotes = "A lot is changed";
+        private const bool updatedIssuePrivateNotes = true;
+
+        private const string deletedIssueId = "76";
+
+        //watcher
+        private  const int watcherIssueId = 19;
+        private const int watcherUserId = 2;
+
+        //issue data - for clone
+        private const string issueToCloneSubject = "Issue to clone";
+        private const int issueToCloneCustomFieldId = 13;
+        private const string issueToCloneCustomFieldValue = "Issue to clone custom field value";
+        private const int clonedIssueCustomFieldId = 14;
+        private const string clonedIssueCustomFieldValue = "Cloned issue custom field value";
+        #endregion Constants
+
+        #region Properties
         private RedmineManager redmineManager;
         private string uri;
         private string apiKey;
+        #endregion Properties
 
+        #region Initializes
         [TestInitialize]
         public void Initialize()
         {
@@ -40,7 +108,9 @@ namespace UnitTestRedmineNetApi
         {
             redmineManager = new RedmineManager(uri, apiKey, MimeFormat.xml);
         }
+        #endregion Initialize
 
+        #region Tests
         [TestMethod]
         public void RedmineIssues_ShouldReturnAllIssues()
         {
@@ -52,16 +122,15 @@ namespace UnitTestRedmineNetApi
         [TestMethod]
         public void RedmineIssues_ShouldReturnPaginatedIssues()
         {
-            var issues = redmineManager.GetObjectList<Issue>(new NameValueCollection { { "offset", "1" }, { "limit", "3" }, { "sort", "id:desc" } });
+            var issues = redmineManager.GetObjectList<Issue>(new NameValueCollection { { "offset", "1" }, { "limit", numberOfPaginatedIssues.ToString() }, { "sort", "id:desc" } });
 
             Assert.IsNotNull(issues);
-            Assert.IsTrue(issues.Count <= 3, "number of issues <= 3");
+            Assert.IsTrue(issues.Count <= numberOfPaginatedIssues, "number of issues <= "+ numberOfPaginatedIssues.ToString());
         }
 
         [TestMethod]
         public void RedmineIssues_ShouldReturnFilteredIssuesByProjectId()
         {
-            var projectId = "9";
             var issues = redmineManager.GetObjectList<Issue>(new NameValueCollection { { "project_id", projectId } });
             Assert.IsNotNull(issues);
         }
@@ -69,7 +138,6 @@ namespace UnitTestRedmineNetApi
         [TestMethod]
         public void RedmineIssues_ShouldReturnFilteredIssuesBySubprojectId()
         {
-            var subprojectId = "10";
             var issues = redmineManager.GetObjectList<Issue>(new NameValueCollection { { "subproject_id", subprojectId } });
             Assert.IsNotNull(issues);
         }
@@ -77,9 +145,7 @@ namespace UnitTestRedmineNetApi
         [TestMethod]
         public void RedmineIssues_ShouldReturnFilteredIssues_ByProjectWithoutSubprojects()
         {
-            var projectId = "9";
-            var subprojectId = "!*";
-            var issues = redmineManager.GetObjectList<Issue>(new NameValueCollection { { "project_id", projectId }, { "subproject_id", subprojectId } });
+            var issues = redmineManager.GetObjectList<Issue>(new NameValueCollection { { "project_id", projectId }, { "subproject_id", allSubprojects } });
             
             Assert.IsNotNull(issues);
         }
@@ -87,7 +153,6 @@ namespace UnitTestRedmineNetApi
         [TestMethod]
         public void RedmineIssues_ShouldReturnFilteredIssuesByTracker()
         {
-            var trackerId = "4";
             var issues = redmineManager.GetObjectList<Issue>(new NameValueCollection { { "tracker_id", trackerId } });
            
             Assert.IsNotNull(issues);
@@ -96,7 +161,6 @@ namespace UnitTestRedmineNetApi
         [TestMethod]
         public void RedmineIssues_ShouldReturnFilteredIssuesByStatus()
         {
-            var status_id = "*";
             var issues = redmineManager.GetObjectList<Issue>(new NameValueCollection { { "status_id", status_id } });
             Assert.IsNotNull(issues);
         }
@@ -104,7 +168,6 @@ namespace UnitTestRedmineNetApi
         [TestMethod]
         public void RedmineIssues_ShouldReturnFilteredIssuesByAsignee()
         {
-            var assigned_to_id = "me";
             var issues = redmineManager.GetObjectList<Issue>(new NameValueCollection { { "assigned_to_id", assigned_to_id } });
           
             Assert.IsNotNull(issues);
@@ -113,8 +176,7 @@ namespace UnitTestRedmineNetApi
         [TestMethod]
         public void RedmineIssues_ShouldReturnFilteredIssuesByCustomField()
         {
-            var cf_13 = "xxx";
-            var issues = redmineManager.GetObjectList<Issue>(new NameValueCollection { { "cf_13", cf_13 } });
+            var issues = redmineManager.GetObjectList<Issue>(new NameValueCollection { { customFieldName, customFieldValue } });
 
             Assert.IsNotNull(issues);
         }
@@ -122,8 +184,6 @@ namespace UnitTestRedmineNetApi
         [TestMethod]
         public void RedmineIssues_ShouldReturnIssueById()
         {
-            var issueId = "19";
-
             var issue = redmineManager.GetObject<Issue>(issueId,  new NameValueCollection { { "include", "children,attachments,relations,changesets,journals,watchers" } });
 
             Assert.IsNotNull(issue);
@@ -134,27 +194,27 @@ namespace UnitTestRedmineNetApi
         public void RedmineIssues_ShouldCreateIssue()
         {
             Issue issue = new Issue();
-            issue.Project = new Project { Id = 10 };
-            issue.Tracker = new IdentifiableName { Id = 4 };
-            issue.Status = new IdentifiableName { Id = 5 };
-            issue.Priority = new IdentifiableName { Id = 8 };
-            issue.Subject = "Issue created using Rest API";
-            issue.Description = "Issue description...";
-            issue.Category = new IdentifiableName { Id = 11 };
-            issue.FixedVersion = new IdentifiableName { Id = 9 };
-            issue.AssignedTo = new IdentifiableName { Id = 8 };
-            issue.ParentIssue = new IdentifiableName { Id = 19 };
+            issue.Project = new Project { Id = newIssueProjectId };
+            issue.Tracker = new IdentifiableName { Id = newIssueTrackerId };
+            issue.Status = new IdentifiableName { Id = newIssueStatusId };
+            issue.Priority = new IdentifiableName { Id = newIssuePriorityId };
+            issue.Subject = newIssueSubject;
+            issue.Description = newIssueDescription;
+            issue.Category = new IdentifiableName { Id = newIssueCategoryId };
+            issue.FixedVersion = new IdentifiableName { Id = newIssueFixedVersionId };
+            issue.AssignedTo = new IdentifiableName { Id = newIssueAssignedToId };
+            issue.ParentIssue = new IdentifiableName { Id = newIssueParentIssueId };
             issue.CustomFields = new List<IssueCustomField>();
-            issue.CustomFields.Add(new IssueCustomField { Id = 13, Values = new List<CustomFieldValue> { new CustomFieldValue { Info = "Issue custom field completed" } } });
+            issue.CustomFields.Add(new IssueCustomField { Id = newIssueCustomFieldId, Values = new List<CustomFieldValue> { new CustomFieldValue { Info = newIssueCustomFieldValue } } });
 
-            issue.IsPrivate = true;
-            issue.EstimatedHours = 12;
-            issue.StartDate = DateTime.Now;
-            issue.DueDate = DateTime.Now.AddMonths(1);
+            issue.IsPrivate = newIssueIsPrivate;
+            issue.EstimatedHours = newIssueEstimatedHours;
+            issue.StartDate = newIssueStartDate;
+            issue.DueDate = newIssueDueDate;
             issue.Watchers = new List<Watcher>();
 
-            issue.Watchers.Add(new Watcher { Id = 8 });
-            issue.Watchers.Add(new Watcher { Id = 2 });
+            issue.Watchers.Add(new Watcher { Id = newIssueFirstWatcherId });
+            issue.Watchers.Add(new Watcher { Id = newIssueSecondWatcherId });
             Issue savedIssue = redmineManager.CreateObject<Issue>(issue);
 
             Assert.AreEqual(issue.Subject, savedIssue.Subject);
@@ -163,40 +223,36 @@ namespace UnitTestRedmineNetApi
         [TestMethod]
         public void RedmineIssues_ShouldUpdateIssue()
         {
-            var issueId = "75";
+            var issue = redmineManager.GetObject<Issue>(updatedIssueId, new NameValueCollection { { "include", "children,attachments,relations,changesets,journals,watchers" } });
+            issue.Subject = updatedIssueSubject;
+            issue.Description = updatedIssueDescription;
+            issue.StartDate = updatedIssueStartDate;
+            issue.DueDate = updatedIssueDueDate;
+            issue.Project.Id = updatedIssueProjectId;
+            issue.Tracker.Id = updatedIssueTrackerId;
+            issue.Priority.Id = updatedIssuePriorityId;
+            issue.Category.Id = updatedIssueCategoryId;
+            issue.AssignedTo.Id = updatedIssueAssignedToId;
+            issue.ParentIssue.Id = updatedIssueParentIssueId;
 
-            var issue = redmineManager.GetObject<Issue>(issueId, new NameValueCollection { { "include", "children,attachments,relations,changesets,journals,watchers" } });
-            issue.Subject = "Issue updated subject";
-            issue.Description = null;
-            issue.StartDate = null;
-            issue.DueDate = DateTime.Now.AddDays(10);
-            issue.Project.Id = 10;
-            issue.Tracker.Id = 3;
-            issue.Priority.Id = 9;
-            issue.Category.Id = 10;
-            issue.AssignedTo.Id = 2;
-            issue.ParentIssue.Id = 20;
+            issue.CustomFields.Add(new IssueCustomField { Id = updatedIssueCustomFieldId, Values = new List<CustomFieldValue> { new CustomFieldValue { Info = updatedIssueCustomFieldValue } } });
+            issue.EstimatedHours = updatedIssueEstimatedHours;
+            issue.Notes = updatedIssueNotes;
+            issue.PrivateNotes = updatedIssuePrivateNotes;
 
-            issue.CustomFields.Add(new IssueCustomField { Id = 13, Values = new List<CustomFieldValue> { new CustomFieldValue { Info = "Another custom field completed" } } });
-            issue.EstimatedHours = 22;
-            issue.Notes = "A lot is changed";
-            issue.PrivateNotes = true;
+            redmineManager.UpdateObject<Issue>(updatedIssueId, issue);
 
-            redmineManager.UpdateObject<Issue>(issueId, issue);
+            var updatedIssue = redmineManager.GetObject<Issue>(updatedIssueId, new NameValueCollection { { "include", "children,attachments,relations,changesets,journals,watchers" } });
 
-            var updatedIssue = redmineManager.GetObject<Issue>(issueId, new NameValueCollection { { "include", "children,attachments,relations,changesets,journals,watchers" } });
-
-            Assert.AreEqual(issue.Subject, issue.Subject);
+            Assert.AreEqual(issue.Subject, updatedIssue.Subject);
         }
 
         [TestMethod]
         public void RedmineIssues_ShouldDeleteIssue()
         {
-            var issueId = "75";
-
             try
             {
-                redmineManager.DeleteObject<Issue>(issueId, null);
+                redmineManager.DeleteObject<Issue>(deletedIssueId, null);
             }
             catch (RedmineException)
             {
@@ -206,7 +262,7 @@ namespace UnitTestRedmineNetApi
 
             try
             {
-                Issue issue = redmineManager.GetObject<Issue>(issueId, null);
+                Issue issue = redmineManager.GetObject<Issue>(deletedIssueId, null);
             }
             catch (RedmineException exc)
             {
@@ -219,22 +275,56 @@ namespace UnitTestRedmineNetApi
         [TestMethod]
         public void RedmineIssues_ShouldAddWatcher()
         {
-            redmineManager.AddWatcher(19, 2);
+            redmineManager.AddWatcher(watcherIssueId, watcherUserId);
 
-            Issue issue =  redmineManager.GetObject<Issue>("19", new NameValueCollection { { "include", "watchers" } });
+            Issue issue =  redmineManager.GetObject<Issue>(watcherIssueId.ToString(), new NameValueCollection { { "include", "watchers" } });
 
-            Assert.IsTrue(((List<Watcher>)issue.Watchers).Find(w => w.Id == 2) != null);
+            Assert.IsTrue(((List<Watcher>)issue.Watchers).Find(w => w.Id == watcherUserId) != null);
         }
 
         [TestMethod]
         public void RedmineIssues_ShouldRemoveWatcher()
         {
-            redmineManager.RemoveWatcher(19, 2);
+            redmineManager.RemoveWatcher(watcherIssueId, watcherUserId);
 
-            Issue issue = redmineManager.GetObject<Issue>("19",  new NameValueCollection { { "include", "watchers" } });
+            Issue issue = redmineManager.GetObject<Issue>(watcherIssueId.ToString(),  new NameValueCollection { { "include", "watchers" } });
 
-            Assert.IsTrue(issue.Watchers == null || ((List<Watcher>)issue.Watchers).Find(w => w.Id == 2) == null);
+            Assert.IsTrue(issue.Watchers == null || ((List<Watcher>)issue.Watchers).Find(w => w.Id == watcherUserId) == null);
         }
+
+        [TestMethod]
+        public void RedmineIssues_ShouldCompare()
+        {
+            var issue = redmineManager.GetObject<Issue>(issueId, new NameValueCollection { { "include", "children,attachments,relations,changesets,journals,watchers" } });
+            var issueToCompare = redmineManager.GetObject<Issue>(issueId, new NameValueCollection { { "include", "children,attachments,relations,changesets,journals,watchers" } });
+
+            Assert.IsTrue(issue.Equals(issueToCompare));
+        }
+
+        [TestMethod]
+        public void RedmineIssues_ShouldClone()
+        {
+            Issue issueToClone, clonedIssue;
+            issueToClone = new Issue();
+            issueToClone.Subject = issueToCloneSubject;
+            issueToClone.CustomFields = new List<IssueCustomField>();
+            
+            issueToClone.CustomFields.Add(new IssueCustomField
+            {
+                Id = issueToCloneCustomFieldId,
+                Values = new List<CustomFieldValue> {new CustomFieldValue { Info = issueToCloneCustomFieldValue }}
+            });
+           
+            clonedIssue = (Issue)issueToClone.Clone();
+            clonedIssue.CustomFields.Add(new IssueCustomField
+            {
+                Id = clonedIssueCustomFieldId,
+                Values = new List<CustomFieldValue> {new CustomFieldValue { Info = clonedIssueCustomFieldValue }}
+            });
+
+            Assert.IsTrue(issueToClone.CustomFields.Count != clonedIssue.CustomFields.Count);
+        }
+        #endregion Tests
 
     }
 }

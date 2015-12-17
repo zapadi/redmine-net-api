@@ -312,5 +312,13 @@ namespace Redmine.Net.Api
             else
                 writer.WriteElementString(tag, string.Format(NumberFormatInfo.InvariantInfo, "{0}", val.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)));
         }
+
+        public static IList<T> Clone<T>(this IList<T> listToClone) where T : ICloneable
+        {
+            IList<T> clonedList = new List<T>();
+            foreach (T item in listToClone)
+                clonedList.Add((T)item.Clone());
+            return clonedList;
+        }
     }
 }

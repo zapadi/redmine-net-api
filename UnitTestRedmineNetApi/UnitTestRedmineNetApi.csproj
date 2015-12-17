@@ -77,13 +77,13 @@
     <Compile Include="WikiPageTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\redmine-net40-api\redmine-net40-api.csproj">
-      <Project>{0D9B763C-A16B-463B-BDDD-0A0467DCD32E}</Project>
-      <Name>redmine-net40-api</Name>
-    </ProjectReference>
+    <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <ProjectReference Include="..\redmine-net45-api\redmine-net45-api.csproj">
+      <Project>{89433e6e-f3d4-4b66-ac9a-1b7f4345bba4}</Project>
+      <Name>redmine-net45-api</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

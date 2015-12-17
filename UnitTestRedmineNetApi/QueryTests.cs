@@ -14,10 +14,17 @@ namespace UnitTestRedmineNetApi
     [TestClass]
     public class QueryTests
     {
+        #region Constants
+        private const int numberOfQueries = 2;
+        #endregion Constants
+
+        #region Properties
         private RedmineManager redmineManager;
         private string uri;
         private string apiKey;
+        #endregion Properties
 
+        #region Initialize
         [TestInitialize]
         public void Initialize()
         {
@@ -39,13 +46,16 @@ namespace UnitTestRedmineNetApi
         {
             redmineManager = new RedmineManager(uri, apiKey, MimeFormat.xml);
         }
+        #endregion Initialize
 
+        #region Tests
         [TestMethod]
         public void RedmineQuery_ShouldGetAllQueries()
         {
             var queries = redmineManager.GetObjectList<Query>(null);
 
-            Assert.IsTrue(queries.Count == 3);
+            Assert.IsTrue(queries.Count == numberOfQueries);
         }
+        #endregion Tests
     }
 }

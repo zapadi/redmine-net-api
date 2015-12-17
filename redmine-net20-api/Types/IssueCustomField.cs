@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2015 Adrian Popescu.
+   Copyright 2011 - 2015 Adrian Popescu, Dorin Huzum.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ namespace Redmine.Net.Api.Types
     /// 
     /// </summary>
     [XmlRoot(RedmineKeys.CUSTOM_FIELD)]
-    public class IssueCustomField : IdentifiableName, IEquatable<IssueCustomField>
+    public class IssueCustomField : IdentifiableName, IEquatable<IssueCustomField>, ICloneable
     {
         /// <summary>
         /// Gets or sets the value.
@@ -41,7 +41,9 @@ namespace Redmine.Net.Api.Types
 
         public override void ReadXml(XmlReader reader)
         {
-            base.ReadXml(reader);
+            //base.ReadXml(reader);
+            Id = Convert.ToInt32(reader.GetAttribute(RedmineKeys.ID));
+            Name = reader.GetAttribute(RedmineKeys.NAME);
 
             Multiple = reader.ReadAttributeAsBoolean(RedmineKeys.MULTIPLE);
             reader.Read();
@@ -84,17 +86,10 @@ namespace Redmine.Net.Api.Types
             return (Id == other.Id && Name == other.Name && Multiple == other.Multiple && Values == other.Values);
         }
 
-     
-
-        public override int GetHashCode()
+        public object Clone()
         {
-            unchecked
-            {
-                var hashCode = 13;
-                hashCode = (hashCode * 397) ^ Id.GetHashCode();
-
-                return hashCode;
-            }
+            var issueCustomField = new IssueCustomField { Multiple = Multiple, Values = Values.Clone<CustomFieldValue>() };
+            return issueCustomField;
         }
     }
 }

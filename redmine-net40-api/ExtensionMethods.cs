@@ -22,6 +22,7 @@ using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
 using Redmine.Net.Api.Types;
+using System.Linq;
 
 namespace Redmine.Net.Api
 {
@@ -273,5 +274,11 @@ namespace Redmine.Net.Api
             }
             writer.WriteEndElement();
         }
+
+        public static IList<T> Clone<T>(this IList<T> listToClone) where T : ICloneable
+        {
+            return listToClone.Select(item => (T)item.Clone()).ToList();
+        }
+
     }
 }

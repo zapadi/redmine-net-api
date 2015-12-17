@@ -1,5 +1,5 @@
 /*
-   Copyright 2011 - 2015 Adrian Popescu.
+   Copyright 2011 - 2015 Adrian Popescu, Dorin Huzum.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -95,8 +95,9 @@ namespace Redmine.Net.Api.JSonConverters
                 result.WriteIdOrEmpty(entity.ParentIssue, RedmineKeys.PARENT_ISSUE_ID);
                 result.WriteDateOrEmpty(entity.StartDate, RedmineKeys.START_DATE);
                 result.WriteDateOrEmpty(entity.DueDate, RedmineKeys.DUE_DATE);
-                result.WriteDateOrEmpty(entity.UpdatedOn, RedmineKeys.UPDATED_ON);
-                result.WriteValueOrDefault(entity.DoneRatio, RedmineKeys.DONE_RATIO);
+                result.WriteDateOrEmpty(entity.DueDate, RedmineKeys.UPDATED_ON);
+                if (entity.DoneRatio != null)
+                    result.Add(RedmineKeys.DONE_RATIO, entity.DoneRatio.ToString());
 
                 result.WriteArray(RedmineKeys.UPLOADS, entity.Uploads, new UploadConverter(), serializer);
                 result.WriteArray(RedmineKeys.CUSTOM_FIELDS, entity.CustomFields, new IssueCustomFieldConverter(), serializer);
