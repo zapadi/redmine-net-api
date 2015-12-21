@@ -80,7 +80,7 @@ namespace Redmine.Net.Api.JSonConverters
                 result.Add(RedmineKeys.NOTES, entity.Notes);
                 if (entity.Id != 0)
                 {
-                    result.Add(RedmineKeys.PRIVATE_NOTES, entity.IsPrivate);
+                    result.Add(RedmineKeys.PRIVATE_NOTES, entity.PrivateNotes);
                 }
                 result.Add(RedmineKeys.IS_PRIVATE, entity.IsPrivate);
                 result.WriteIdIfNotNull(entity.Project, RedmineKeys.PROJECT_ID);
