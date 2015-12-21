@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2015 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2015 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -136,7 +136,28 @@ namespace Redmine.Net.Api.Types
         public bool Equals(Version other)
         {
             if (other == null) return false;
-            return (Id == other.Id && Name == other.Name && Project == other.Project && Description == other.Description && Status == other.Status && DueDate == other.DueDate && Sharing == other.Sharing && CreatedOn == other.CreatedOn && UpdatedOn == other.UpdatedOn && CustomFields == other.CustomFields);
+            return (Id == other.Id && Name == other.Name
+                && Project == other.Project
+                && Description == other.Description
+                && Status == other.Status
+                && DueDate == other.DueDate
+                && Sharing == other.Sharing
+                && CreatedOn == other.CreatedOn
+                && UpdatedOn == other.UpdatedOn
+                && CustomFields == other.CustomFields);
+        }
+
+      
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = 13;
+                hashCode = (hashCode * 397) ^ Id.GetHashCode();
+
+                return hashCode;
+            }
         }
     }
 

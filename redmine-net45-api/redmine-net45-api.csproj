@@ -175,6 +175,9 @@
     <Compile Include="..\redmine-net20-api\Types\WikiPage.cs">
       <Link>Types\WikiPage.cs</Link>
     </Compile>
+    <Compile Include="..\redmine-net20-api\Utils.cs">
+      <Link>Utils.cs</Link>
+    </Compile>
     <Compile Include="..\redmine-net40-api\ExtensionMethods.cs">
       <Link>ExtensionMethods.cs</Link>
     </Compile>

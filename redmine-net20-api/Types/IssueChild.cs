@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2015 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2015 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -76,14 +76,6 @@ namespace Redmine.Net.Api.Types
         {
             if (other == null) return false;
             return (Id == other.Id && Tracker == other.Tracker && Subject == other.Subject);
-        }
-
-        public override bool Equals(object other)
-        {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-            if (other.GetType() != GetType()) return false;
-            return Equals(other as IssueChild);
         }
 
         public override int GetHashCode()

@@ -1,5 +1,5 @@
 /*
-   Copyright 2011 - 2015 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2015 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -130,6 +130,21 @@ namespace Redmine.Net.Api.Types
                 && Author == other.Author
                 && CreatedOn == other.CreatedOn
                 && UpdatedOn == other.UpdatedOn;
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = 13;
+                hashCode = (hashCode * 397) ^ Id.GetHashCode();
+                return hashCode;
+            }
+        }
+
+        public override string ToString()
+        {
+            return string.Format("title:'{0}', version:{1}, createdOn:{2}, updatedOn:{3}", Title, Version, CreatedOn, UpdatedOn);
         }
 
         #endregion

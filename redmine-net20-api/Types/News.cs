@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2015 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2015 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -115,6 +115,24 @@ namespace Redmine.Net.Api.Types
                 && Summary == other.Summary
                 && Description == other.Description
                 && CreatedOn == other.CreatedOn);
+        }
+
+      
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = 13;
+                hashCode = (hashCode * 397) ^ Id.GetHashCode();
+
+                return hashCode;
+            }
+        }
+
+        public override string ToString()
+        {
+            return base.ToString();
         }
     }
 }

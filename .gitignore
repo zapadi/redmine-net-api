@@ -4,3 +4,5 @@ Test/RedmineManagerTest.cs
 Test/Test.csproj
 Test/UnitTestRedmine.cs
 Test/Properties/AssemblyInfo.cs
+
+UnitTestRedmineNetApi/App.config 

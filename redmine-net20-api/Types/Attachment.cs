@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2015 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2015 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -113,10 +113,41 @@ namespace Redmine.Net.Api.Types
         }
 
         public void WriteXml(XmlWriter writer) { }
+
         public bool Equals(Attachment other)
         {
-            //todo de terminat
-            return false;
+            if (other == null) return false;
+            return (Id == other.Id 
+                && FileName == other.FileName 
+                && FileSize == other.FileSize 
+                && ContentType == other.ContentType
+                && Author == other.Author
+                && CreatedOn == other.CreatedOn 
+                && Description == other.Description 
+                && ContentUrl == other.ContentUrl);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = base.GetHashCode();
+                hashCode = (hashCode * 397) ^ (string.IsNullOrEmpty(FileName) ? 0 : FileName.GetHashCode());
+                hashCode = (hashCode * 397) ^ FileSize.GetHashCode();
+                hashCode = (hashCode * 397) ^ (string.IsNullOrEmpty(ContentType) ? 0 : ContentType.GetHashCode());
+                hashCode = (hashCode * 397) ^ (Author == null ? 0 : Author.GetHashCode());
+                hashCode = (hashCode * 397) ^ (CreatedOn == null ? 0 : CreatedOn.Value.GetHashCode());
+                hashCode = (hashCode * 397) ^ (string.IsNullOrEmpty(Description) ? 0 : Description.GetHashCode());
+                hashCode = (hashCode * 397) ^ (string.IsNullOrEmpty(ContentUrl) ? 0 : ContentUrl.GetHashCode());
+
+                return hashCode;
+            }
+        }
+
+        public override string ToString()
+        {
+            return string.Format("Id: {0}, FileName: '{1}', FileSize: {2}, ContentType: '{3}', Author: {{{4}}}, CreatedOn: {5}, Description: '{6}', ContentUrl: '{7}'",
+                Id, FileName, FileSize, ContentType, Author, CreatedOn, Description, ContentUrl);
         }
     }
 }
