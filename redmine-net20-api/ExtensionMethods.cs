@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2015 Adrian Popescu.
+   Copyright 2011 - 2016 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -258,6 +258,15 @@ namespace Redmine.Net.Api
             }
             writer.WriteEndElement();
         }
+
+		public static void WriteListElements(this XmlWriter xmlWriter, IEnumerable<IValue> list, string elementName){
+			if (list == null)
+				return;
+
+			foreach (var item in list) {
+				xmlWriter.WriteElementString (elementName, item.Value);
+			}
+		}
 
         /// <summary>
         /// 
