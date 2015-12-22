@@ -114,9 +114,9 @@ namespace Redmine.Net.Api.Types
 
         #endregion
 
-        public override string ToString()
-        {
-            return Id + ", " + Name;
-        }
+		public override string ToString ()
+		{
+			return string.Format ("[TimeEntryActivity: Id={0}, Name={1}, IsDefault={2}]", Id, Name, IsDefault);
+		}
     }
 }

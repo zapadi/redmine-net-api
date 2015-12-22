@@ -112,10 +112,10 @@ namespace Redmine.Net.Api.Types
             }
         }
 
-        public override string ToString()
-        {
-            return base.ToString();
-        }
+        public override string ToString ()
+		{
+			return string.Format ("[IssuePriority: Id={0}, Name={1}, IsDefault={2}]", Id, Name, IsDefault);
+		}
 
         #endregion
     }

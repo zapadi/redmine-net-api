@@ -191,5 +191,11 @@ namespace Redmine.Net.Api.Types
             var hashCode = !string.IsNullOrEmpty(Identifier) ? Identifier.GetHashCode() : 0;
             return hashCode;
         }
+
+		public override string ToString ()
+		{
+			return string.Format ("[Project: {13}, Identifier={0}, Description={1}, Parent={2}, HomePage={3}, CreatedOn={4}, UpdatedOn={5}, Status={6}, IsPublic={7}, InheritMembers={8}, Trackers={9}, CustomFields={10}, IssueCategories={11}, EnabledModules={12}]",
+				Identifier, Description, Parent, HomePage, CreatedOn, UpdatedOn, Status, IsPublic, InheritMembers, Trackers, CustomFields, IssueCategories, EnabledModules, base.ToString());
+		}
     }
 }

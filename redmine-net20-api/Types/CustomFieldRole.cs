@@ -21,5 +21,9 @@ namespace Redmine.Net.Api.Types
     [XmlRoot(RedmineKeys.ROLE)]
     public class CustomFieldRole : IdentifiableName
     {
+		public override string ToString ()
+		{
+			return string.Format ("[CustomFieldRole: {0}]", base.ToString());
+		}
     }
 }

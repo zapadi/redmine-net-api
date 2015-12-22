@@ -135,9 +135,9 @@ namespace Redmine.Net.Api.Types
             }
         }
 
-        public override string ToString()
-        {
-            return base.ToString();
-        }
+		public override string ToString ()
+		{
+			return string.Format ("[Journal: Id={0}, User={1}, Notes={2}, CreatedOn={3}, Details={4}]", Id, User, Notes, CreatedOn, Details);
+		}
     }
 }

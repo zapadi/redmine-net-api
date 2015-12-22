@@ -106,9 +106,9 @@ namespace Redmine.Net.Api.Types
                 return hashCode;
             }
         }
-        public override string ToString()
-        {
-            return Id + ", " + Name;
-        }
+		public override string ToString ()
+		{
+			return string.Format ("[Tracker: Id={0}, Name={1}]", Id, Name);
+		}
     }
 }

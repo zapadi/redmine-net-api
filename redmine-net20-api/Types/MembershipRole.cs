@@ -70,9 +70,9 @@ namespace Redmine.Net.Api.Types
             }
         }
 
-        public override string ToString()
-        {
-            return base.ToString() + Inherited;
-        }
+		public override string ToString ()
+		{
+			return string.Format ("[MembershipRole: {1}, Inherited={0}]", Inherited, base.ToString());
+		}
     }
 }

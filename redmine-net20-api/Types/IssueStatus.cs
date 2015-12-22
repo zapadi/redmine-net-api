@@ -75,8 +75,7 @@ namespace Redmine.Net.Api.Types
             if (other == null) return false;
             return (Id == other.Id && Name == other.Name && IsClosed == other.IsClosed && IsDefault == other.IsDefault);
         }
-
-
+			
         public override int GetHashCode()
         {
             unchecked
@@ -88,9 +87,9 @@ namespace Redmine.Net.Api.Types
             }
         }
 
-        public override string ToString()
-        {
-            return string.Format("{0}, {1}, {2}, {3}", Id, Name, IsDefault, IsClosed);
-        }
+		public override string ToString ()
+		{
+			return string.Format ("[IssueStatus: {2}, IsDefault={0}, IsClosed={1}]", IsDefault, IsClosed, base.ToString());
+		}
     }
 }

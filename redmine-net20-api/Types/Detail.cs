@@ -124,9 +124,9 @@ namespace Redmine.Net.Api.Types
             }
         }
 
-        public override string ToString()
-        {
-            return string.Format("Property: {0}, StatusId: {1}, OldValue: {2}, NewValue: {3}", Property, StatusId, OldValue, NewValue);
-        }
+        public override string ToString ()
+		{
+			return string.Format ("[Detail: Property={0}, StatusId={1}, OldValue={2}, NewValue={3}]", Property, StatusId, OldValue, NewValue);
+		}
     }
 }

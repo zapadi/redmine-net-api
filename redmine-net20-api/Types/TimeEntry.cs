@@ -211,5 +211,11 @@ namespace Redmine.Net.Api.Types
                 return hashCode;
             }
         }
+
+		public override string ToString ()
+		{
+			return string.Format ("[TimeEntry: {10}, Issue={0}, Project={1}, SpentOn={2}, Hours={3}, Activity={4}, User={5}, Comments={6}, CreatedOn={7}, UpdatedOn={8}, CustomFields={9}]", 
+				Issue, Project, SpentOn, Hours, Activity, User, Comments, CreatedOn, UpdatedOn, CustomFields, base.ToString());
+		}
     }
 }

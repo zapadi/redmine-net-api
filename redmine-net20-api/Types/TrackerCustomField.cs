@@ -28,5 +28,10 @@ namespace Redmine.Net.Api.Types
             Name = reader.GetAttribute(RedmineKeys.NAME);
             reader.Read();
         }
+
+		public override string ToString ()
+		{
+			return string.Format ("[TrackerCustomField: {0}]", base.ToString());
+		}
     }
 }

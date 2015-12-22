@@ -94,8 +94,7 @@ namespace Redmine.Net.Api.Types
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != GetType()) return false;
-            return Equals(obj as Role
-                );
+            return Equals(obj as Role);
         }
 
         public override int GetHashCode()
@@ -108,9 +107,10 @@ namespace Redmine.Net.Api.Types
                 return hashCode;
             }
         }
-        public override string ToString()
-        {
-            return Id + ", " + Name;
-        }
+
+		public override string ToString ()
+		{
+			return string.Format ("[Role: Id={0}, Name={1}, Permissions={2}]", Id, Name, Permissions);
+		}
     }
 }

@@ -90,5 +90,10 @@ namespace Redmine.Net.Api.Types
             var issueCustomField = new IssueCustomField { Multiple = Multiple, Values = Values.Clone<CustomFieldValue>() };
             return issueCustomField;
         }
+
+		public override string ToString ()
+		{
+			return string.Format ("[IssueCustomField: {2} Values={0}, Multiple={1}]", Values, Multiple, base.ToString());
+		}
     }
 }

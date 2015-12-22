@@ -69,5 +69,10 @@ namespace Redmine.Net.Api.Types
         {
             return !Equals(left, right);
         }
+
+		public override string ToString ()
+		{
+			return string.Format ("[Identifiable: Id={0}]", Id);
+		}
     }
 }

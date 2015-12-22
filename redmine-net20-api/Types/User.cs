@@ -208,5 +208,11 @@ namespace Redmine.Net.Api.Types
                 return hashCode;
             }
         }
+
+		public override string ToString ()
+		{
+			return string.Format ("[User: {14}, Login={0}, Password={1}, FirstName={2}, LastName={3}, Email={4}, AuthenticationModeId={5}, CreatedOn={6}, LastLoginOn={7}, ApiKey={8}, Status={9}, MustChangePassword={10}, CustomFields={11}, Memberships={12}, Groups={13}]", 
+				Login, Password, FirstName, LastName, Email, AuthenticationModeId, CreatedOn, LastLoginOn, ApiKey, Status, MustChangePassword, CustomFields, Memberships, Groups, base.ToString());
+		}
     }
 }

@@ -159,6 +159,12 @@ namespace Redmine.Net.Api.Types
                 return hashCode;
             }
         }
+
+		public override string ToString ()
+		{
+			return string.Format ("[Version: {8}, Project={0}, Description={1}, Status={2}, DueDate={3}, Sharing={4}, CreatedOn={5}, UpdatedOn={6}, CustomFields={7}]", 
+				Project, Description, Status, DueDate, Sharing, CreatedOn, UpdatedOn, CustomFields, base.ToString());
+		}
     }
 
     public enum VersionSharing

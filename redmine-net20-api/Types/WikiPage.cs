@@ -142,10 +142,11 @@ namespace Redmine.Net.Api.Types
             }
         }
 
-        public override string ToString()
-        {
-            return string.Format("title:'{0}', version:{1}, createdOn:{2}, updatedOn:{3}", Title, Version, CreatedOn, UpdatedOn);
-        }
+		public override string ToString ()
+		{
+			return string.Format ("[WikiPage: {8}, Title={0}, Text={1}, Comments={2}, Version={3}, Author={4}, CreatedOn={5}, UpdatedOn={6}, Attachments={7}]",
+				Title, Text, Comments, Version, Author, CreatedOn, UpdatedOn, Attachments, base.ToString());
+		}
 
         #endregion
     }

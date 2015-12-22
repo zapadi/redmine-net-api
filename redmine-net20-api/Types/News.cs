@@ -130,9 +130,10 @@ namespace Redmine.Net.Api.Types
             }
         }
 
-        public override string ToString()
-        {
-            return base.ToString();
-        }
+		public override string ToString ()
+		{
+			return string.Format ("[News: {6}, Project={0}, Author={1}, Title={2}, Summary={3}, Description={4}, CreatedOn={5}]", 
+				Project, Author, Title, Summary, Description, CreatedOn, base.ToString());
+		}
     }
 }

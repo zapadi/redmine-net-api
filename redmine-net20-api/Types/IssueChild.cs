@@ -90,9 +90,9 @@ namespace Redmine.Net.Api.Types
             }
         }
 
-        public override string ToString()
-        {
-            return base.ToString() + ", " + Subject + ", " + Tracker;
-        }
+		public override string ToString ()
+		{
+			return string.Format ("[IssueChild: {0}, Tracker={1}, Subject={2}]", base.ToString(), Tracker, Subject);
+		}
     }
 }

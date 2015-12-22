@@ -48,10 +48,10 @@ namespace Redmine.Net.Api.Types
             }
         }
 
-        public override string ToString()
-        {
-            return Info;
-        }
+		public override string ToString ()
+		{
+			return string.Format ("[CustomFieldValue: Info={0}]", Info);
+		}
 
         public object Clone()
         {

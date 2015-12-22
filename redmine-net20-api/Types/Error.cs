@@ -34,10 +34,10 @@ namespace Redmine.Net.Api.Types
             return Info.Equals(other.Info);
         }
 
-        public override string ToString()
-        {
-            return Info;
-        }
+		public override string ToString ()
+		{
+			return string.Format ("[Error: Info={0}]", Info);
+		}
 
         public XmlSchema GetSchema() { return null; }
 

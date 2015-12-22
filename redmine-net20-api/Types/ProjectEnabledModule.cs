@@ -46,5 +46,10 @@ namespace Redmine.Net.Api.Types
             if (other == null) return false;
             return Id == other.Id && Name == other.Name;
         }
+
+		public override string ToString ()
+		{
+			return string.Format ("[ProjectEnabledModule: {0}]", base.ToString());
+		}
     }
 }

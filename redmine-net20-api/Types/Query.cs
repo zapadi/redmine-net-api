@@ -86,5 +86,10 @@ namespace Redmine.Net.Api.Types
                 return hashCode;
             }
         }
+
+		public override string ToString ()
+		{
+			return string.Format ("[Query: {2}, IsPublic={0}, ProjectId={1}]", IsPublic, ProjectId, base.ToString());
+		}
     }
 }

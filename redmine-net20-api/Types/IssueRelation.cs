@@ -135,5 +135,10 @@ namespace Redmine.Net.Api.Types
                 return hashCode;
             }
         }
+
+		public override string ToString ()
+		{
+			return string.Format ("[IssueRelation: {4}, IssueId={0}, IssueToId={1}, Type={2}, Delay={3}]", IssueId, IssueToId, Type, Delay,base.ToString());
+		}
     }
 }

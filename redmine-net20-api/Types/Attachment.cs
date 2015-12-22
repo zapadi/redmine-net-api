@@ -144,10 +144,10 @@ namespace Redmine.Net.Api.Types
             }
         }
 
-        public override string ToString()
-        {
-            return string.Format("Id: {0}, FileName: '{1}', FileSize: {2}, ContentType: '{3}', Author: {{{4}}}, CreatedOn: {5}, Description: '{6}', ContentUrl: '{7}'",
-                Id, FileName, FileSize, ContentType, Author, CreatedOn, Description, ContentUrl);
-        }
+		public override string ToString ()
+		{
+			return string.Format ("[Attachment: {7}, FileName={0}, FileSize={1}, ContentType={2}, Description={3}, ContentUrl={4}, Author={5}, CreatedOn={6}]",
+				FileName, FileSize, ContentType, Description, ContentUrl, Author, CreatedOn, base.ToString());
+		}
     }
 }

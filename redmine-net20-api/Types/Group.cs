@@ -175,9 +175,9 @@ namespace Redmine.Net.Api.Types
 
         #endregion
 
-        public override string ToString()
-        {
-            return string.Format("Id: {0}, Name: {1}", Id, Name);
-        }
+		public override string ToString ()
+		{
+			return string.Format ("[Group: Id={0}, Name={1}, Users={2}, CustomFields={3}, Memberships={4}]", Id, Name, Users, CustomFields, Memberships);
+		}
     }
 }

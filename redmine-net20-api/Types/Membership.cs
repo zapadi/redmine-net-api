@@ -76,9 +76,7 @@ namespace Redmine.Net.Api.Types
             if (other == null) return false;
             return (Id == other.Id && Project == other.Project && Roles == other.Roles);
         }
-
-     
-
+			
         public override int GetHashCode()
         {
             unchecked
@@ -89,5 +87,10 @@ namespace Redmine.Net.Api.Types
                 return hashCode;
             }
         }
+
+		public override string ToString ()
+		{
+			return string.Format ("[Membership: {2}, Project={0}, Roles={1}]", Project, Roles, base.ToString());
+		}
     }
 }

@@ -21,6 +21,9 @@ namespace Redmine.Net.Api.Types
     [XmlRoot(RedmineKeys.USER)]
     public class Watcher : IdentifiableName
     {
-        
+		public override string ToString ()
+		{
+			return string.Format ("[Watcher: {0}]", base.ToString());
+		}
     }
 }
