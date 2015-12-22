@@ -165,22 +165,22 @@ namespace Redmine.Net.Api.Types
             unchecked
             {
                 var hashCode = 13;
-                hashCode = Utils.GetHashCode(Id, hashCode);
-                hashCode = Utils.GetHashCode(IsFilter, hashCode);
-                hashCode = Utils.GetHashCode(IsRequired, hashCode);
-                hashCode = Utils.GetHashCode(Multiple, hashCode);
-                hashCode = Utils.GetHashCode(Searchable, hashCode);
-                hashCode = Utils.GetHashCode(Visible, hashCode);
-                hashCode = Utils.GetHashCode(CustomizedType, hashCode);
-                hashCode = Utils.GetHashCode(DefaultValue, hashCode);
-                hashCode = Utils.GetHashCode(FieldFormat, hashCode);
-                hashCode = Utils.GetHashCode(MaxLength, hashCode);
-                hashCode = Utils.GetHashCode(MinLength, hashCode);
-                hashCode = Utils.GetHashCode(Name, hashCode);
-                hashCode = Utils.GetHashCode(Regexp, hashCode);
-                hashCode = Utils.GetCollectionHashCode(PossibleValues, hashCode);
-                hashCode = Utils.GetCollectionHashCode(Roles, hashCode);
-                hashCode = Utils.GetCollectionHashCode(Trackers, hashCode);
+                hashCode = Id.GetHashCode(hashCode);
+				hashCode = IsFilter.GetHashCode(hashCode);
+				hashCode = IsRequired.GetHashCode(hashCode);
+				hashCode = Multiple.GetHashCode(hashCode);
+				hashCode = Searchable.GetHashCode(hashCode);
+				hashCode = Visible.GetHashCode(hashCode);
+				hashCode = CustomizedType.GetHashCode(hashCode);
+				hashCode = DefaultValue.GetHashCode(hashCode);
+				hashCode = FieldFormat.GetHashCode(hashCode);
+				hashCode = MaxLength.GetHashCode(hashCode);
+				hashCode = MinLength.GetHashCode(hashCode);
+				hashCode = Name.GetHashCode(hashCode);
+				hashCode = Regexp.GetHashCode(hashCode);
+				hashCode = PossibleValues.GetCollectionHashCode(hashCode);
+				hashCode = Roles.GetCollectionHashCode(hashCode);
+				hashCode = Trackers.GetCollectionHashCode(hashCode);
                 return hashCode;
             }
         }
