@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2015 Adrian Popescu.
+   Copyright 2011 - 2016 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -172,21 +172,8 @@ namespace Redmine.Net.Api.Types
             writer.WriteIdOrEmpty(Parent, RedmineKeys.PARENT_ID);
             writer.WriteElementString(RedmineKeys.HOMEPAGE, HomePage);
 
-            if (Trackers != null)
-            {
-                foreach (var item in Trackers)
-                {
-                    writer.WriteElementString(RedmineKeys.TRACKER_IDS, item.Id.ToString());
-                }
-            }
-
-            if (EnabledModules != null)
-            {
-                foreach (var item in EnabledModules)
-                {
-                    writer.WriteElementString(RedmineKeys.ENABLED_MODULE_NAMES, item.Name);
-                }
-            }
+			writer.WriteListElements (Trackers as List<IValue>, RedmineKeys.TRACKER_IDS);
+			writer.WriteListElements (EnabledModules as List<IValue>, RedmineKeys.ENABLED_MODULE_NAMES);
 
             if (Id == 0) return;
 
@@ -196,7 +183,7 @@ namespace Redmine.Net.Api.Types
         public bool Equals(Project other)
         {
             if (other == null) return false;
-            return (Identifier == other.Identifier);
+			return (Identifier == other.Identifier);
         }
 
         public override int GetHashCode()
