@@ -24,12 +24,9 @@ namespace Redmine.Net.Api.Types
     /// 
     /// </summary>
     [XmlRoot(RedmineKeys.TRACKER)]
-    public class ProjectTracker : IdentifiableName, IEquatable<ProjectTracker>
+	public class ProjectTracker : IdentifiableName, IEquatable<ProjectTracker>, IValue
     {
-        /// <summary>
-        /// the tracker id: 1 for Bug, etc.
-        /// </summary>
-       // new public int Id { get; set; }
+		public string Value{get{return Id.ToString ();}}
 
         public bool Equals(ProjectTracker other)
         {
@@ -48,4 +45,5 @@ namespace Redmine.Net.Api.Types
             }
         }
     }
+
 }

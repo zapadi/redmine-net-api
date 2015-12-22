@@ -24,8 +24,18 @@ namespace Redmine.Net.Api.Types
     /// 
     /// </summary>
     [XmlRoot(RedmineKeys.ENABLED_MODULE)]
-    public class ProjectEnabledModule : IdentifiableName, IEquatable<ProjectEnabledModule>
+	public class ProjectEnabledModule : IdentifiableName, IEquatable<ProjectEnabledModule>, IValue
     {
+		#region IValue implementation
+
+		public string Value {
+			get {
+				return Name;
+			}
+		}
+
+		#endregion
+
         /// <summary>
         /// the module name: boards, calendar, documents, files, gantt, issue_tracking, news, repository, time_tracking, wiki.
         /// </summary>
