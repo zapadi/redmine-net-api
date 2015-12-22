@@ -5,7 +5,7 @@ namespace Redmine.Net.Api
 {
     public static class Utils
     {
-        public static int GetCollectionHashCode<T>(this IList<T> list, int hash)
+        public static int GetHashCode<T>(this IList<T> list, int hash)
         {
             unchecked
             {

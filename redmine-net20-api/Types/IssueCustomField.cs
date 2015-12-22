@@ -95,5 +95,18 @@ namespace Redmine.Net.Api.Types
 		{
 			return string.Format ("[IssueCustomField: {2} Values={0}, Multiple={1}]", Values, Multiple, base.ToString());
 		}
+
+		public override int GetHashCode ()
+		{
+			unchecked
+			{
+				var hashCode = 13;
+				hashCode =  Id.GetHashCode(hashCode);
+				hashCode =  Name.GetHashCode(hashCode);
+				hashCode =  Values.GetHashCode(hashCode);
+				hashCode =  Multiple.GetHashCode(hashCode);
+				return hashCode;
+			}
+		}
     }
 }

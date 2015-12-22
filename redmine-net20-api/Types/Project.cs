@@ -183,12 +183,41 @@ namespace Redmine.Net.Api.Types
         public bool Equals(Project other)
         {
             if (other == null) return false;
-			return (Identifier == other.Identifier);
+			return (
+				Id == other.Id
+				&& Identifier.Equals(other.Identifier)
+				&& Description.Equals(other.Description)
+				&& Parent.Equals(other.Parent)
+				&& HomePage.Equals(other.HomePage)
+				&& CreatedOn==other.CreatedOn
+				&& UpdatedOn==other.UpdatedOn
+				&& Status==other.Status
+				&& IsPublic==other.IsPublic
+				&& InheritMembers==other.InheritMembers
+				&& Trackers.Equals(other.Trackers)
+				&& CustomFields.Equals(other.CustomFields)
+				&& IssueCategories.Equals(other.IssueCategories)
+				&& EnabledModules.Equals(other.EnabledModules)
+			);
         }
 
         public override int GetHashCode()
         {
-            var hashCode = !string.IsNullOrEmpty(Identifier) ? Identifier.GetHashCode() : 0;
+			var hashCode = base.GetHashCode();
+			hashCode = Identifier.GetHashCode(hashCode);
+			hashCode = Description.GetHashCode(hashCode);
+			hashCode = Parent.GetHashCode(hashCode);
+			hashCode = HomePage.GetHashCode(hashCode);
+			hashCode = CreatedOn.GetHashCode(hashCode);
+			hashCode = UpdatedOn.GetHashCode(hashCode);
+			hashCode = Status.GetHashCode(hashCode);
+			hashCode = IsPublic.GetHashCode(hashCode);
+			hashCode = InheritMembers.GetHashCode(hashCode);
+			hashCode = Trackers.GetHashCode(hashCode);
+			hashCode = CustomFields.GetHashCode(hashCode);
+			hashCode = IssueCategories.GetHashCode(hashCode);
+			hashCode = EnabledModules.GetHashCode(hashCode);
+
             return hashCode;
         }
 

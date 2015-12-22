@@ -196,15 +196,44 @@ namespace Redmine.Net.Api.Types
         public bool Equals(User other)
         {
             if (other == null) return false;
-            return ( Login == other.Login);
+			return ( 
+				Id == other.Id 
+				&& Login.Equals(other.Login)
+				&& Password.Equals(other.Password)
+				&& FirstName.Equals(other.FirstName)
+				&& LastName.Equals(other.LastName)
+				&& Email.Equals(other.Email)
+				&& ApiKey.Equals(other.ApiKey)
+				&& AuthenticationModeId == other.AuthenticationModeId
+				&& CreatedOn == other.CreatedOn
+				&& LastLoginOn == other.LastLoginOn
+				&& Status == other.Status
+				&& MustChangePassword == other.MustChangePassword
+				&& CustomFields.Equals(other.CustomFields) 
+				&& Memberships.Equals(other.Memberships)
+				&& Groups.Equals(other.Groups)
+			);
         }
         
         public override int GetHashCode()
         {
             unchecked
             {
-                var hashCode = 13;
-                hashCode = Utils.GetHashCode(Login, hashCode);
+				var hashCode = base.GetHashCode();
+				hashCode = Login.GetHashCode(hashCode);
+				hashCode = Password.GetHashCode(hashCode);
+				hashCode = FirstName.GetHashCode(hashCode);
+				hashCode = LastName.GetHashCode(hashCode);
+				hashCode = Email.GetHashCode(hashCode);
+				hashCode = AuthenticationModeId.GetHashCode(hashCode);
+				hashCode = CreatedOn.GetHashCode(hashCode);
+				hashCode = LastLoginOn.GetHashCode(hashCode);
+				hashCode = ApiKey.GetHashCode(hashCode);
+				hashCode = Status.GetHashCode(hashCode);
+				hashCode = MustChangePassword.GetHashCode(hashCode);
+				hashCode = CustomFields.GetHashCode(hashCode);
+				hashCode = Memberships.GetHashCode(hashCode);
+				hashCode = Groups.GetHashCode(hashCode);
                 return hashCode;
             }
         }

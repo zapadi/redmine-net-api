@@ -20,11 +20,12 @@ using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
-    /// <summary>
-    /// 
-    /// </summary>
+    
     [XmlRoot(RedmineKeys.ENABLED_MODULE)]
-	public class ProjectEnabledModule : IdentifiableName, IEquatable<ProjectEnabledModule>, IValue
+	/// <summary>
+	/// the module name: boards, calendar, documents, files, gantt, issue_tracking, news, repository, time_tracking, wiki.
+	/// </summary>
+	public class ProjectEnabledModule : IdentifiableName, IValue
     {
 		#region IValue implementation
 
@@ -35,17 +36,6 @@ namespace Redmine.Net.Api.Types
 		}
 
 		#endregion
-
-        /// <summary>
-        /// the module name: boards, calendar, documents, files, gantt, issue_tracking, news, repository, time_tracking, wiki.
-        /// </summary>
-       // new public string Name { get; set; }
-
-        public bool Equals(ProjectEnabledModule other)
-        {
-            if (other == null) return false;
-            return Id == other.Id && Name == other.Name;
-        }
 
 		public override string ToString ()
 		{

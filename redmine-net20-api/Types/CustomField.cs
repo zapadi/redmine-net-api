@@ -178,9 +178,9 @@ namespace Redmine.Net.Api.Types
 				hashCode = MinLength.GetHashCode(hashCode);
 				hashCode = Name.GetHashCode(hashCode);
 				hashCode = Regexp.GetHashCode(hashCode);
-				hashCode = PossibleValues.GetCollectionHashCode(hashCode);
-				hashCode = Roles.GetCollectionHashCode(hashCode);
-				hashCode = Trackers.GetCollectionHashCode(hashCode);
+				hashCode = PossibleValues.GetHashCode(hashCode);
+				hashCode = Roles.GetHashCode(hashCode);
+				hashCode = Trackers.GetHashCode(hashCode);
                 return hashCode;
             }
         }

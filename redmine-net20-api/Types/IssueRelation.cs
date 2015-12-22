@@ -123,16 +123,17 @@ namespace Redmine.Net.Api.Types
             return (Id == other.Id && IssueId == other.IssueId && IssueToId == other.IssueToId && Type == other.Type && Delay == other.Delay);
         }
 
-      
-
         public override int GetHashCode()
         {
             unchecked
             {
-                var hashCode = 13;
-                hashCode = (hashCode * 397) ^ Id.GetHashCode();
-
-                return hashCode;
+				var hashCode = 13;
+				hashCode =  Id.GetHashCode(hashCode);
+				hashCode =  IssueId.GetHashCode(hashCode);
+				hashCode =  IssueToId.GetHashCode(hashCode);
+				hashCode =  Type.GetHashCode(hashCode);
+				hashCode =  Delay.GetHashCode(hashCode);
+				return hashCode;
             }
         }
 

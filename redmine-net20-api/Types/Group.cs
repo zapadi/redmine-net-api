@@ -164,11 +164,11 @@ namespace Redmine.Net.Api.Types
             unchecked
             {
                 var hashCode = 13;
-                hashCode = (hashCode * 397) ^ Id.GetHashCode();
-                hashCode = (hashCode * 397) ^ (string.IsNullOrEmpty(Name) ? 0 : Name.GetHashCode());
-                hashCode = (hashCode * 397) ^ Utils.GetCollectionHashCode(Users, hashCode);
-                hashCode = (hashCode * 397) ^ Utils.GetCollectionHashCode(CustomFields, hashCode);
-                hashCode = (hashCode * 397) ^ Utils.GetCollectionHashCode(Memberships, hashCode);
+				hashCode = Id.GetHashCode(hashCode);
+				hashCode = Name.GetHashCode(hashCode);
+				hashCode = Users.GetHashCode(hashCode);
+				hashCode = CustomFields.GetHashCode(hashCode);
+				hashCode = Memberships.GetHashCode(hashCode);
                 return hashCode;
             }
         }

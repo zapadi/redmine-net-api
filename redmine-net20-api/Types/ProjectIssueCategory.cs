@@ -23,14 +23,9 @@ namespace Redmine.Net.Api.Types
     /// 
     /// </summary>
     [XmlRoot(RedmineKeys.ISSUE_CATEGORY)]
-    public class ProjectIssueCategory : IdentifiableName//, IEquatable<ProjectTracker>
+    public class ProjectIssueCategory : IdentifiableName
     {
-        //public bool Equals(ProjectTracker other)
-        //{
-        //    if (other == null) return false;
-        //    return Id == other.Id && Name == other.Name;
-        //}
-
+        
 		public override string ToString ()
 		{
 			return string.Format ("[ProjectIssueCategory: {0}]", base.ToString());

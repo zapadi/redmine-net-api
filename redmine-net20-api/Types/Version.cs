@@ -146,17 +146,21 @@ namespace Redmine.Net.Api.Types
                 && UpdatedOn == other.UpdatedOn
                 && CustomFields == other.CustomFields);
         }
-
-      
-
+				
         public override int GetHashCode()
         {
             unchecked
             {
-                var hashCode = 13;
-                hashCode = (hashCode * 397) ^ Id.GetHashCode();
-
-                return hashCode;
+				var hashCode = base.GetHashCode();
+				hashCode =  Project.GetHashCode(hashCode);
+				hashCode =  Description.GetHashCode(hashCode);
+				hashCode =  Status.GetHashCode(hashCode);
+				hashCode =  DueDate.GetHashCode(hashCode);
+				hashCode =  Sharing.GetHashCode(hashCode);
+				hashCode =  CreatedOn.GetHashCode(hashCode);
+				hashCode =  UpdatedOn.GetHashCode(hashCode);
+				hashCode =  CustomFields.GetHashCode(hashCode);
+				return hashCode;
             }
         }
 

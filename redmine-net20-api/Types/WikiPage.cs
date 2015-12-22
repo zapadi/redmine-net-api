@@ -136,9 +136,16 @@ namespace Redmine.Net.Api.Types
         {
             unchecked
             {
-                var hashCode = 13;
-                hashCode = (hashCode * 397) ^ Id.GetHashCode();
-                return hashCode;
+				var hashCode = base.GetHashCode();
+				hashCode =  Title.GetHashCode(hashCode);
+				hashCode =  Text.GetHashCode(hashCode);
+				hashCode =  Comments.GetHashCode(hashCode);
+				hashCode =  Version.GetHashCode(hashCode);
+				hashCode =  Author.GetHashCode(hashCode);
+				hashCode =  CreatedOn.GetHashCode(hashCode);
+				hashCode =  UpdatedOn.GetHashCode(hashCode);
+				hashCode =  Attachments.GetHashCode(hashCode);
+				return hashCode;
             }
         }
 

@@ -20,14 +20,8 @@ using System.Xml.Serialization;
 namespace Redmine.Net.Api.Types
 {
     [XmlRoot(RedmineKeys.GROUP)]
-    public class UserGroup : IdentifiableName//, IEquatable<UserGroup>
+    public class UserGroup : IdentifiableName
     {
-        //public bool Equals(UserGroup other)
-        //{
-        //    if (other == null) return false;
-        //    return Id == other.Id && Name == other.Name;
-        //}
-
 		public override string ToString ()
 		{
 			return string.Format ("[UserGroup: {0}]", base.ToString());

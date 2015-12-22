@@ -123,10 +123,14 @@ namespace Redmine.Net.Api.Types
         {
             unchecked
             {
-                var hashCode = 13;
-                hashCode = (hashCode * 397) ^ Id.GetHashCode();
-
-                return hashCode;
+				var hashCode = base.GetHashCode();
+				hashCode =  Project.GetHashCode(hashCode);
+				hashCode =  Author.GetHashCode(hashCode);
+				hashCode =  Title.GetHashCode(hashCode);
+				hashCode =  Summary.GetHashCode(hashCode);
+				hashCode =  Description.GetHashCode(hashCode);
+				hashCode =  CreatedOn.GetHashCode(hashCode);
+				return hashCode;
             }
         }
 

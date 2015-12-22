@@ -57,16 +57,15 @@ namespace Redmine.Net.Api.Types
             return Id == other.Id && Name == other.Name && Inherited == other.Inherited;
         }
 
-       
-
-        public override int GetHashCode()
+		public override int GetHashCode()
         {
             unchecked
             {
-                var hashCode = 13;
-                hashCode = (hashCode * 397) ^ Id.GetHashCode();
-
-                return hashCode;
+				var hashCode = 13;
+				hashCode =  Id.GetHashCode(hashCode);
+				hashCode =  Name.GetHashCode(hashCode);
+				hashCode =  Inherited.GetHashCode(hashCode);
+				return hashCode;
             }
         }
 

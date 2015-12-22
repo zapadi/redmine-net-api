@@ -24,31 +24,13 @@ namespace Redmine.Net.Api.Types
     /// 
     /// </summary>
     [XmlRoot(RedmineKeys.TRACKER)]
-	public class ProjectTracker : IdentifiableName, IEquatable<ProjectTracker>, IValue
+	public class ProjectTracker : IdentifiableName,  IValue
     {
 		public string Value{get{return Id.ToString ();}}
-
-        public bool Equals(ProjectTracker other)
-        {
-            if (other == null) return false;
-            return Id == other.Id && Name == other.Name;
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                var hashCode = 13;
-                hashCode = (hashCode * 397) ^ Id.GetHashCode();
-
-                return hashCode;
-            }
-        }
 
 		public override string ToString ()
 		{
 			return string.Format ("[ProjectTracker: {0}]", base.ToString());
 		}
     }
-
 }
