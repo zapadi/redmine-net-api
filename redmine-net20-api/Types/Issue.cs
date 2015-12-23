@@ -410,12 +410,12 @@ namespace Redmine.Net.Api.Types
 			writer.WriteElementString (RedmineKeys.SUBJECT, Subject);
 			writer.WriteElementString (RedmineKeys.NOTES, Notes);
 			if (Id != 0) {
-				writer.WriteElementString (RedmineKeys.PRIVATE_NOTES, PrivateNotes.ToString (CultureInfo.InvariantCulture).ToLowerInvariant());
+				writer.WriteElementString (RedmineKeys.PRIVATE_NOTES, PrivateNotes);
 			}
 			writer.WriteElementString (RedmineKeys.DESCRIPTION, Description);
 
 			writer.WriteStartElement (RedmineKeys.IS_PRIVATE);
-			writer.WriteValue (IsPrivate);
+			writer.WriteValue (IsPrivate.ToString().ToLowerInvariant());
 			writer.WriteEndElement ();
 
 			writer.WriteIdIfNotNull (Project, RedmineKeys.PROJECT_ID);
