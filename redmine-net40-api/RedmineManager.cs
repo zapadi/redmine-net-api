@@ -154,15 +154,7 @@ namespace Redmine.Net.Api
         public RedmineManager(string host, string login, string password, MimeFormat mimeFormat = MimeFormat.xml, bool verifyServerCert = true)
             : this(host, mimeFormat, verifyServerCert)
         {
-            PageSize = 25;
-            Uri uriResult;
-            if (!Uri.TryCreate(host, UriKind.Absolute, out uriResult) || !(uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps))
-                host = "http://" + host;
-
-            if (!Uri.TryCreate(host, UriKind.Absolute, out uriResult))
-                throw new RedmineException("The host is not valid!");
-
-            credentialCache = new CredentialCache { { uriResult, "Basic", new NetworkCredential(login, password) } };
+			credentialCache = new CredentialCache { { new Uri(host), "Basic", new NetworkCredential(login, password) } };
             
             string token = Convert.ToBase64String(Encoding.UTF8.GetBytes(string.Format("{0}:{1}", login, password)));
             basicAuthorization = string.Format("Basic {0}", token);
@@ -373,7 +365,7 @@ namespace Redmine.Net.Api
 
             if (type == typeof(Version) || type == typeof(IssueCategory) || type == typeof(ProjectMembership))
             {
-                var projectId = GetOwnerId(parameters, RedmineKeys.PROJECT_ID);
+				var projectId = parameters.GetParameterValue(RedmineKeys.PROJECT_ID);
                 if (string.IsNullOrEmpty(projectId)) throw new RedmineException("The project id is mandatory! \nCheck if you have included the parameter project_id to parameters.");
 
                 address = string.Format(ENTITY_WITH_PARENT_FORMAT, host, "projects", projectId, urls[type], mimeFormat);
@@ -382,7 +374,7 @@ namespace Redmine.Net.Api
             {
                 if (type == typeof(IssueRelation))
                 {
-                    string issueId = GetOwnerId(parameters, RedmineKeys.ISSUE_ID);
+					string issueId = parameters.GetParameterValue(RedmineKeys.ISSUE_ID);
                     if (string.IsNullOrEmpty(issueId))
                         throw new RedmineException("The issue id is mandatory! \nCheck if you have included the parameter issue_id to parameters");
 
@@ -392,7 +384,7 @@ namespace Redmine.Net.Api
                 {
                     if (type == typeof(News))
                     {
-                        var projectId = GetOwnerId(parameters, RedmineKeys.PROJECT_ID);
+						var projectId = parameters.GetParameterValue(RedmineKeys.PROJECT_ID);
                         if (!string.IsNullOrEmpty(projectId))
                         {
                             address = string.Format(ENTITY_WITH_PARENT_FORMAT, host, "projects", projectId, urls[type], mimeFormat);
@@ -689,22 +681,23 @@ namespace Redmine.Net.Api
             using (var dataStream = webResponse.GetResponseStream())
             {
                 if (dataStream == null) return null;
-                var reader = new StreamReader(dataStream);
+				using (var reader = new StreamReader (dataStream)) 
+				{
+					var responseFromServer = reader.ReadToEnd ();
 
-                var responseFromServer = reader.ReadToEnd();
-
-                if (responseFromServer.Trim().Length > 0)
-                {
-                    try
-                    {
-                        int totalCount;
-                        return DeserializeList<Error>(responseFromServer, "errors", out totalCount);
-                    }
-                    catch (Exception ex)
-                    {
-                        Trace.TraceError(ex.Message);
-                    }
-                }
+					if (responseFromServer.Trim ().Length > 0) 
+					{
+						try 
+						{
+							int totalCount;
+							return DeserializeList<Error> (responseFromServer, "errors", out totalCount);
+						} 
+						catch (Exception ex) 
+						{
+							Trace.TraceError (ex.Message);
+						}
+					}
+				}
                 return null;
             }
         }
@@ -834,11 +827,6 @@ namespace Redmine.Net.Api
             }
         }
 
-        private static string GetOwnerId(NameValueCollection parameters, string parameterName)
-        {
-            if (parameters == null) return null;
-            string ownerId = parameters.Get(parameterName);
-            return string.IsNullOrEmpty(ownerId) ? null : ownerId;
-        }
+       
     }
 }

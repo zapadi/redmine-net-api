@@ -23,6 +23,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using Redmine.Net.Api.Types;
 using System.Linq;
+using System.Collections.Specialized;
 
 namespace Redmine.Net.Api
 {
@@ -36,32 +37,18 @@ namespace Redmine.Net.Api
         /// <returns></returns>
         public static int ReadAttributeAsInt(this XmlReader reader, string attributeName)
         {
-            try
-            {
-                var attribute = reader.GetAttribute(attributeName);
-                int result;
-                if (String.IsNullOrWhiteSpace(attribute) || !Int32.TryParse(attribute, NumberStyles.Any, NumberFormatInfo.InvariantInfo, out result)) return default(int);
-                return result;
-            }
-            catch
-            {
-                return -1;
-            }
+            var attribute = reader.GetAttribute(attributeName);
+            int result;
+            if (String.IsNullOrWhiteSpace(attribute) || !Int32.TryParse(attribute, NumberStyles.Any, NumberFormatInfo.InvariantInfo, out result)) return default(int);
+            return result;
         }
 
         public static int? ReadAttributeAsNullableInt(this XmlReader reader, string attributeName)
         {
-            try
-            {
-                var attribute = reader.GetAttribute(attributeName);
-                int result;
-                if (String.IsNullOrWhiteSpace(attribute) || !Int32.TryParse(attribute, NumberStyles.Any, NumberFormatInfo.InvariantInfo, out result)) return null;
-                return result;
-            }
-            catch
-            {
-                return null;
-            }
+            var attribute = reader.GetAttribute(attributeName);
+            int result;
+            if (String.IsNullOrWhiteSpace(attribute) || !Int32.TryParse(attribute, NumberStyles.Any, NumberFormatInfo.InvariantInfo, out result)) return null;
+            return result;
         }
 
         /// <summary>
@@ -72,18 +59,11 @@ namespace Redmine.Net.Api
         /// <returns></returns>
         public static bool ReadAttributeAsBoolean(this XmlReader reader, string attributeName)
         {
-            try
-            {
-                var attribute = reader.GetAttribute(attributeName);
-                bool result;
-                if (String.IsNullOrWhiteSpace(attribute) || !Boolean.TryParse(attribute, out result)) return false;
+            var attribute = reader.GetAttribute(attributeName);
+            bool result;
+            if (String.IsNullOrWhiteSpace(attribute) || !Boolean.TryParse(attribute, out result)) return false;
 
-                return result;
-            }
-            catch
-            {
-                return false;
-            }
+            return result;
         }
 
         /// <summary>
@@ -275,10 +255,71 @@ namespace Redmine.Net.Api
             writer.WriteEndElement();
         }
 
+		public static void WriteArrayIds(this XmlWriter writer, IEnumerable col, string elementName, Type type, func f)
+		{
+			writer.WriteStartElement(elementName);
+			writer.WriteAttributeString("type", "array");
+			if (col != null)
+			{	
+				var serializer = new XmlSerializer (type);
+				foreach (var item in col)
+				{
+					serializer.Serialize(writer, f.Invoke(item));
+				}
+			}
+			writer.WriteEndElement();
+		}
+
+		public static void WriteArray(this XmlWriter writer, IEnumerable list, string elementName, Type type, string root,string defaultNamespace = null)
+		{
+			writer.WriteStartElement(elementName);
+			writer.WriteAttributeString("type", "array");
+			if (list != null)
+			{
+				var  serializer =new XmlSerializer (type, new XmlAttributeOverrides (), null, new XmlRootAttribute (root), defaultNamespace);
+				foreach (var item in list)
+				{
+					serializer.Serialize(writer, item);
+				}
+			}
+			writer.WriteEndElement();
+		}
+
+		public static void WriteArrayStringElement(this XmlWriter writer, IEnumerable col, string elementName, GetValueFunc f)
+		{
+			writer.WriteStartElement(elementName);
+			writer.WriteAttributeString("type", "array");
+			if (col != null)
+			{	
+				foreach (var item in col)
+				{
+					writer.WriteElementString(elementName, f.Invoke(item));
+				}
+			}
+			writer.WriteEndElement();
+		}
+
+		public static void WriteListElements(this XmlWriter xmlWriter, IEnumerable<IValue> list, string elementName){
+			if (list == null)
+				return;
+
+			foreach (var item in list) {
+				xmlWriter.WriteElementString (elementName, item.Value);
+			}
+		}
+
         public static IList<T> Clone<T>(this IList<T> listToClone) where T : ICloneable
         {
             return listToClone.Select(item => (T)item.Clone()).ToList();
         }
+
+		public static string GetParameterValue(this NameValueCollection parameters, string parameterName)
+		{
+			if (parameters == null) return null;
+			string value = parameters.Get(parameterName);
+			return string.IsNullOrEmpty(value) ? null : value;
+		}
+
 
     }
 }

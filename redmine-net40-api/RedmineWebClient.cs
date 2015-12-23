@@ -14,7 +14,6 @@
    limitations under the License.
 */
 
-
 using System;
 using System.Net;
 
@@ -23,29 +22,29 @@ namespace Redmine.Net.Api
     /// <summary>
     /// 
     /// </summary>
-    public class RedmineWebClient :WebClient
+    public class RedmineWebClient : WebClient
     {
         private readonly CookieContainer container = new CookieContainer();
        
         protected override WebRequest GetWebRequest(Uri address)
         {
-
-            Headers.Add(HttpRequestHeader.Cookie, "redmineCookie");
+			Headers.Add(HttpRequestHeader.Cookie, "redmineCookie");
 
             var wr = base.GetWebRequest(address);
             var httpWebRequest = wr as HttpWebRequest;
 
             if (httpWebRequest != null)
             {
-                httpWebRequest.KeepAlive = true;
-                httpWebRequest.CookieContainer = container;
+				httpWebRequest.CookieContainer = container;
 
-                httpWebRequest.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
+				httpWebRequest.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate | DecompressionMethods.None;
+
+				httpWebRequest.Proxy = Proxy;
 
                 return httpWebRequest;
             }
 
-            return wr;
+			return base.GetWebRequest(address);
         }
     }
 }

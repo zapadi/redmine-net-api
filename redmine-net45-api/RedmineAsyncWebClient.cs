@@ -1,68 +1,94 @@
 ﻿using System;
+using System.Collections.Specialized;
 using System.Net;
 using System.Net.Cache;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Net.Http;
+using System.Net.Http.Headers;
 
 namespace Redmine.Net.Api
 {
-    public class RedmineAsyncWebClient
+    public class RedmineWebClientAsync
     {
-        public string BaseAddress { get; set; }
-        public RequestCachePolicy CachePolicy { get; set; }
+        public Uri BaseAddress { get; set; }
+     
         public bool UseDefaultCredentials { get; set; }
         public ICredentials Credentials { get; set; }
-        public WebHeaderCollection Headers { get; set; }
+        public NameValueCollection Headers { get; set; }
         public IWebProxy Proxy { get; set; }
+		public bool UseProxy { get; set; }
+		public bool UseCookies{ get; set;}
+
+        public TimeSpan Timeout { get; set; }
+        public CookieContainer CookieContainer { get; set; }
+        public bool PreAuthenticate { get; set; }
+        public ClientCertificateOption ClientCertificateOptions { get; set; }
 
         private string ApiKey { get; set; }
 
-        public RedmineAsyncWebClient()
+		        public RedmineWebClientAsync()
         {
-            //var defaultClient = new WebClient();
-            //BaseAddress = defaultClient.BaseAddress;
-            //Headers = defaultClient.Headers;
-            //Proxy = defaultClient.Proxy;
+           
         }
 
-        public RedmineAsyncWebClient(string apiKey)
+		        public RedmineWebClientAsync(string apiKey)
         {
             ApiKey = apiKey;
         }
-
-        public async Task<string> DownloadStringAsync(string uri, CancellationToken cancelToken = default (CancellationToken), IProgress<DownloadProgressChangedEventArgs> progress = null)
+//
+		public async Task<HttpResponseMessage> DownloadStringAsync(string uri, CancellationToken cancelToken = default (CancellationToken), IProgress<DownloadProgressChangedEventArgs> progress = null)
         {
-            return await Task.Run(() => GetWebClient(cancelToken, progress).DownloadStringTaskAsync(uri)).ConfigureAwait(false);
+			return await Task.Run(() => GetWebClient(cancelToken, progress).GetAsync(uri)).ConfigureAwait(false);
         }
 
         public async Task<byte[]> DownloadDataAsync(string uri, CancellationToken cancelToken = default (CancellationToken), IProgress<DownloadProgressChangedEventArgs> progress = null)
         {
-            return await Task.Run(() => GetWebClient(cancelToken, progress).DownloadDataTaskAsync(uri)).ConfigureAwait(false);
+			return await Task.Run(() => GetWebClient(cancelToken, progress).GetByteArrayAsync(uri)).ConfigureAwait(false);
         }
 
-        public async Task DownloadFileAsync(string uri, string fileName, CancellationToken cancelToken = default (CancellationToken), IProgress<DownloadProgressChangedEventArgs> progress = null)
-        {
-            await Task.Run(() => GetWebClient(cancelToken, progress).DownloadFileTaskAsync(uri, fileName)).ConfigureAwait(false);
-        }
+//        public async Task DownloadFileAsync(string uri, string fileName, CancellationToken cancelToken = default (CancellationToken), IProgress<DownloadProgressChangedEventArgs> progress = null)
+//        {
+//			await Task.Run(() => GetWebClient(cancelToken, progress).GetStreamAsync(uri, fileName)).ConfigureAwait(false);
+//        }
 
-        private WebClient GetWebClient(CancellationToken cancelToken, IProgress<DownloadProgressChangedEventArgs> progress)
+		public async Task<HttpResponseMessage> Delete(string uri, CancellationToken cancelToken = default (CancellationToken)){
+			return await Task.Run (() => GetWebClient (cancelToken, null).DeleteAsync(uri)).ConfigureAwait(false);
+		}
+
+		public async Task<HttpResponseMessage> Create(string uri, CancellationToken cancelToken = default (CancellationToken)){
+			return await Task.Run (() => GetWebClient (cancelToken, null).PostAsync(uri,null)).ConfigureAwait(false);
+		}
+
+		private HttpClient GetWebClient(CancellationToken cancelToken, IProgress<DownloadProgressChangedEventArgs> progress)
         {
-            var wc = new WebClient
+			var hch = new HttpClientHandler
                      {
-                         BaseAddress = BaseAddress,
-                         CachePolicy = CachePolicy,
                          UseDefaultCredentials = UseDefaultCredentials,
                          Credentials = Credentials,
-                         Headers = Headers,
-                         Proxy = Proxy
+                         Proxy = Proxy,
+                         UseCookies = UseCookies,
+                         UseProxy = UseProxy,
+                         CookieContainer = CookieContainer,
+						AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip | DecompressionMethods.None,
+                         ClientCertificateOptions  = ClientCertificateOptions,
+                         PreAuthenticate = PreAuthenticate
                      };
 
-            if (!string.IsNullOrEmpty(ApiKey)) wc.QueryString["key"] = ApiKey;
+            var hc = new HttpClient(hch,false)
+            {
+                BaseAddress = BaseAddress,
+                Timeout = Timeout
+            };
 
-            if (cancelToken != CancellationToken.None) cancelToken.Register(() => wc.CancelAsync());
-            if (progress != null) wc.DownloadProgressChanged += (sender, args) => progress.Report(args);
+		    foreach (NameValueHeaderValue header in Headers)
+		    {
+		        hc.DefaultRequestHeaders.Add(header.Name, header.Value);
+		    }
 
-            return wc;
+            if (!string.IsNullOrEmpty(ApiKey)) hc.DefaultRequestHeaders.Add("key", ApiKey);
+
+            return hc;
         }
     }
 }
