@@ -259,6 +259,50 @@ namespace Redmine.Net.Api
             writer.WriteEndElement();
         }
 
+		public static void WriteArrayIds(this XmlWriter writer, IEnumerable col, string elementName, Type type, func f)
+		{
+			writer.WriteStartElement(elementName);
+			writer.WriteAttributeString("type", "array");
+			if (col != null)
+			{	
+				foreach (var item in col)
+				{
+					new XmlSerializer(type).Serialize(writer, f.Invoke(item));
+				}
+			}
+			writer.WriteEndElement();
+		}
+
+
+		public static void WriteArray(this XmlWriter writer, IEnumerable list, string elementName, Type type, string root,string defaultNamespace = null)
+		{
+			writer.WriteStartElement(elementName);
+			writer.WriteAttributeString("type", "array");
+			if (list != null)
+			{
+				foreach (var item in list)
+				{
+					new XmlSerializer(type,new XmlAttributeOverrides(),null,new XmlRootAttribute(root),defaultNamespace).Serialize(writer, item);
+				}
+			}
+			writer.WriteEndElement();
+		}
+
+		public static void WriteArrayStringElement(this XmlWriter writer, IEnumerable col, string elementName, GetValueFunc f)
+		{
+			writer.WriteStartElement(elementName);
+			writer.WriteAttributeString("type", "array");
+			if (col != null)
+			{	
+				foreach (var item in col)
+				{
+					writer.WriteElementString(elementName, f.Invoke(item));
+				}
+			}
+			writer.WriteEndElement();
+		}
+
+
 		public static void WriteListElements(this XmlWriter xmlWriter, IEnumerable<IValue> list, string elementName){
 			if (list == null)
 				return;

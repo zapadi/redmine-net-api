@@ -66,12 +66,13 @@ namespace Redmine.Net.Api.Types
             writer.WriteAttributeString(RedmineKeys.ID, Id.ToString(CultureInfo.InvariantCulture));
             if (itemsCount > 1)
             {
-                writer.WriteStartElement(RedmineKeys.VALUE);
-                writer.WriteAttributeString("type", "array");
-
-                foreach (var v in Values) writer.WriteElementString(RedmineKeys.VALUE, v.Info);
-
-                writer.WriteEndElement();
+				writer.WriteArrayStringElement (Values,RedmineKeys.VALUE,GetValue);
+//                writer.WriteStartElement(RedmineKeys.VALUE);
+//                writer.WriteAttributeString("type", "array");
+//
+//                foreach (var v in Values) writer.WriteElementString(RedmineKeys.VALUE, v.Info);
+//
+//                writer.WriteEndElement();
             }
             else
             {
@@ -108,5 +109,11 @@ namespace Redmine.Net.Api.Types
 				return hashCode;
 			}
 		}
+
+		public string GetValue(object item){
+			return ((CustomFieldValue)item).Info;
+		}
     }
+
+	public delegate string GetValueFunc(object obj);
 }

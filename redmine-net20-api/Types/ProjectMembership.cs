@@ -104,14 +104,16 @@ namespace Redmine.Net.Api.Types
         public void WriteXml(XmlWriter writer)
         {
             writer.WriteIdIfNotNull(User, RedmineKeys.USER_ID);
-
-            writer.WriteStartElement(RedmineKeys.ROLE_IDS);
-            writer.WriteAttributeString("type", "array");
-            foreach (var role in Roles)
-            {
-                new XmlSerializer(role.GetType(), new XmlAttributeOverrides(), null, new XmlRootAttribute(RedmineKeys.ROLE_ID), string.Empty).Serialize(writer, role);
-            }
-            writer.WriteEndElement();
+			writer.WriteArray (Roles, RedmineKeys.ROLE_IDS, typeof(MembershipRole), RedmineKeys.ROLE_ID);
+			//
+//            writer.WriteStartElement(RedmineKeys.ROLE_IDS);
+//            writer.WriteAttributeString("type", "array");
+//            foreach (var role in Roles)
+//            {
+//                new XmlSerializer(role.GetType(), new XmlAttributeOverrides(), null, new XmlRootAttribute(RedmineKeys.ROLE_ID), string.Empty)
+//					.Serialize(writer, role);
+//            }
+//            writer.WriteEndElement();
         }
 			
         public override int GetHashCode()

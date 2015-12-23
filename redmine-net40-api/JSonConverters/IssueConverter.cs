@@ -96,7 +96,8 @@ namespace Redmine.Net.Api.JSonConverters
                 result.WriteDateOrEmpty(entity.StartDate, RedmineKeys.START_DATE);
                 result.WriteDateOrEmpty(entity.DueDate, RedmineKeys.DUE_DATE);
                 result.WriteDateOrEmpty(entity.DueDate, RedmineKeys.UPDATED_ON);
-                if (entity.DoneRatio != null)
+                
+				if (entity.DoneRatio != null)
                     result.Add(RedmineKeys.DONE_RATIO, entity.DoneRatio.ToString());
 
                 result.WriteArray(RedmineKeys.UPLOADS, entity.Uploads, new UploadConverter(), serializer);

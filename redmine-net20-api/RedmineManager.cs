@@ -129,7 +129,7 @@ namespace Redmine.Net.Api
         public RedmineManager(string host, string apiKey, bool verifyServerCert = true)
             : this(host, verifyServerCert)
         {
-            PageSize = 25;
+           // PageSize = 25;
             this.apiKey = apiKey;
         }
 
@@ -150,15 +150,8 @@ namespace Redmine.Net.Api
         public RedmineManager(string host, string login, string password, bool verifyServerCert = true)
             : this(host, verifyServerCert)
         {
-            PageSize = 25;
-            Uri uriResult;
-            if (!Uri.TryCreate(host, UriKind.Absolute, out uriResult) || !(uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps))
-                host = "http://" + host;
+			cache = new CredentialCache {{ new Uri(host), "Basic", new NetworkCredential(login, password) } };
 
-            if (!Uri.TryCreate(host, UriKind.Absolute, out uriResult))
-                throw new RedmineException("The host is not valid!");
-
-            cache = new CredentialCache { { uriResult, "Basic", new NetworkCredential(login, password) } };
             basicAuthorization = "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(login + ":" + password));
         }
 
@@ -590,8 +583,9 @@ namespace Redmine.Net.Api
 
             if (!string.IsNullOrEmpty(ImpersonateUser)) webClient.Headers.Add("X-Redmine-Switch-User", ImpersonateUser);
 
-            webClient.Headers.Add("Content-Type", "application/xml; charset=utf-8");
+			webClient.Headers.Add(HttpRequestHeader.ContentType, "application/xml; charset=utf-8");
             webClient.Encoding = Encoding.UTF8;
+
             return webClient;
         }
 
@@ -618,9 +612,9 @@ namespace Redmine.Net.Api
 
             webClient.UseDefaultCredentials = false;
 
-            webClient.Headers.Add("Content-Type", "application/octet-stream");
+			webClient.Headers.Add(HttpRequestHeader.ContentType, "application/octet-stream");
             // Workaround - it seems that WebClient doesn't send credentials in each POST request
-            webClient.Headers.Add("Authorization", basicAuthorization);
+			webClient.Headers.Add(HttpRequestHeader.Authorization, basicAuthorization);
 
             return webClient;
         }

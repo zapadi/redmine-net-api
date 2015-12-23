@@ -23,7 +23,7 @@ namespace Redmine.Net.Api.Types
     /// 
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract class Identifiable<T> where T : Identifiable<T>, IEquatable<T>
+	public abstract class Identifiable<T> where T : Identifiable<T>, IEquatable<T>
     {
 
         /// <summary>
@@ -74,4 +74,8 @@ namespace Redmine.Net.Api.Types
 			return string.Format ("[Identifiable: Id={0}]", Id);
 		}
     }
+
+	public interface Identifiable{
+		int Id{get;set;}
+	}
 }

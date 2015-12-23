@@ -118,16 +118,16 @@ namespace Redmine.Net.Api.Types
         public void WriteXml(XmlWriter writer)
         {
             writer.WriteElementString(RedmineKeys.NAME, Name);
-
-            if (Users == null) return;
-
-            writer.WriteStartElement(RedmineKeys.USER_IDS);
-            writer.WriteAttributeString("type", "array");
-            foreach (var userId in Users)
-            {
-                new XmlSerializer(typeof(int)).Serialize(writer, userId.Id);
-            }
-            writer.WriteEndElement();
+			writer.WriteArrayIds(Users, RedmineKeys.USER_IDS, typeof(int), GetGroupUserId);
+//            if (Users == null) return;
+//
+//            writer.WriteStartElement(RedmineKeys.USER_IDS);
+//            writer.WriteAttributeString("type", "array");
+//            foreach (var userId in Users)
+//            {
+//                new XmlSerializer(typeof(int)).Serialize(writer, userId.Id);
+//            }
+//            writer.WriteEndElement();
         }
 
         #endregion
@@ -179,5 +179,11 @@ namespace Redmine.Net.Api.Types
 		{
 			return string.Format ("[Group: Id={0}, Name={1}, Users={2}, CustomFields={3}, Memberships={4}]", Id, Name, Users, CustomFields, Memberships);
 		}
+
+		public int GetGroupUserId(object gu){
+			return ((GroupUser)gu).Id;
+		}
     }
+
+	public delegate int func(object o);
 }
