@@ -147,7 +147,7 @@ namespace Redmine.Net.Api
 
                 if (type == typeof(Version) || type == typeof(IssueCategory) || type == typeof(ProjectMembership))
                 {
-                    string projectId = GetOwnerId(parameters, "project_id");
+                    string projectId = parameters.GetParameterValue("project_id");
                     if (string.IsNullOrEmpty(projectId)) throw new RedmineException("The project id is mandatory! \nCheck if you have included the parameter project_id to parameters.");
 
                     wc.DownloadStringAsync(new Uri(string.Format(ENTITY_WITH_PARENT_FORMAT, host, "projects", projectId, urls[type], mimeFormat)), asyncToken);
@@ -155,7 +155,7 @@ namespace Redmine.Net.Api
                 else
                     if (type == typeof(IssueRelation))
                     {
-                        string issueId = GetOwnerId(parameters, "issue_id");
+                        string issueId = parameters.GetParameterValue("issue_id");
                         if (string.IsNullOrEmpty(issueId)) throw new RedmineException("The issue id is mandatory! \nCheck if you have included the parameter issue_id to parameters");
                         wc.DownloadStringAsync(new Uri(string.Format(ENTITY_WITH_PARENT_FORMAT, host, "issues", issueId, urls[type], mimeFormat)), asyncToken);
                     }

@@ -17,6 +17,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Globalization;
 using System.IO;
 using System.Xml;
@@ -372,6 +373,13 @@ namespace Redmine.Net.Api
             foreach (T item in listToClone)
                 clonedList.Add((T)item.Clone());
             return clonedList;
+        }
+
+        public static string GetParameterValue(this NameValueCollection parameters, string parameterName)
+        {
+            if (parameters == null) return null;
+            string value = parameters.Get(parameterName);
+            return string.IsNullOrEmpty(value) ? null : value;
         }
     }
 }

@@ -36,7 +36,7 @@ namespace Redmine.Net.Api
     /// <summary>
     /// The main class to access Redmine API.
     /// </summary>
-    public partial class RedmineManager
+    public class RedmineManager
     {
         private const string REQUEST_FORMAT = "{0}/{1}/{2}.xml";
         private const string FORMAT = "{0}/{1}.xml";
@@ -52,7 +52,7 @@ namespace Redmine.Net.Api
         private const string POST = "POST";
         private const string DELETE = "DELETE";
 
-        private readonly Dictionary<Type, String> urls = new Dictionary<Type, string>
+        private static readonly Dictionary<Type, string> urls = new Dictionary<Type, string>
         {
             {typeof (Issue), "issues"},
             {typeof (Project), "projects"},
@@ -353,7 +353,7 @@ namespace Redmine.Net.Api
             string address;
             if (type == typeof(Version) || type == typeof(IssueCategory) || type == typeof(ProjectMembership))
             {
-                var projectId = GetOwnerId(parameters, RedmineKeys.PROJECT_ID);
+                var projectId = parameters.GetParameterValue(RedmineKeys.PROJECT_ID);
                 if (string.IsNullOrEmpty(projectId)) 
                     throw new RedmineException("The project id is mandatory! \nCheck if you have included the parameter project_id to parameters.");
 
@@ -362,7 +362,7 @@ namespace Redmine.Net.Api
             else
                 if (type == typeof(IssueRelation))
                 {
-                    string issueId = GetOwnerId(parameters, RedmineKeys.ISSUE_ID);
+                    string issueId = parameters.GetParameterValue(RedmineKeys.ISSUE_ID);
                     if (string.IsNullOrEmpty(issueId)) 
                         throw new RedmineException("The issue id is mandatory! \nCheck if you have included the parameter issue_id to parameters");
 
@@ -682,23 +682,24 @@ namespace Redmine.Net.Api
             using (var dataStream = webResponse.GetResponseStream())
             {
                 if (dataStream == null) return null;
-                var reader = new StreamReader(dataStream);
-
-                var responseFromServer = reader.ReadToEnd();
-
-                if (responseFromServer.Trim().Length > 0)
+                using (var reader = new StreamReader(dataStream))
                 {
-                    try
+                    var responseFromServer = reader.ReadToEnd();
+
+                    if (responseFromServer.Trim().Length > 0)
                     {
-                        int totalCount;
-                        return DeserializeList<Error>(responseFromServer, out totalCount);
+                        try
+                        {
+                            int totalCount;
+                            return DeserializeList<Error>(responseFromServer, out totalCount);
+                        }
+                        catch (Exception ex)
+                        {
+                            Trace.TraceError(ex.Message);
+                        }
                     }
-                    catch (Exception ex)
-                    {
-                        Trace.TraceError(ex.Message);
-                    }
+                    return null;
                 }
-                return null;
             }
         }
 
@@ -777,12 +778,12 @@ namespace Redmine.Net.Api
             }
         }
 
-        private static string GetOwnerId(NameValueCollection parameters, string parameterName)
-        {
-            if (parameters == null) return null;
-            string ownerId = parameters.Get(parameterName);
-            return string.IsNullOrEmpty(ownerId) ? null : ownerId;
-        }
+        //private static string GetOwnerId(NameValueCollection parameters, string parameterName)
+        //{
+        //    if (parameters == null) return null;
+        //    string ownerId = parameters.Get(parameterName);
+        //    return string.IsNullOrEmpty(ownerId) ? null : ownerId;
+        //}
 
         private static string Serialize<T>(T obj) where T : class, new()
         {
@@ -808,6 +809,15 @@ namespace Redmine.Net.Api
 
                     return xmlReader.ReadElementContentAsCollection<T>();
                 }
+            }
+        }
+
+        public void AddUrls(Dictionary<Type, string> urlsDictionary)
+        {
+            foreach (KeyValuePair<Type, string> pair in urlsDictionary)
+            {
+                if(!urls.ContainsKey(pair.Key))
+                    urls.Add(pair.Key,pair.Value);
             }
         }
     }
