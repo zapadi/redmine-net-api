@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2015 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2016 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -41,7 +41,6 @@ namespace Redmine.Net.Api.Types
 
         public override void ReadXml(XmlReader reader)
         {
-            //base.ReadXml(reader);
             Id = Convert.ToInt32(reader.GetAttribute(RedmineKeys.ID));
             Name = reader.GetAttribute(RedmineKeys.NAME);
 
@@ -91,5 +90,23 @@ namespace Redmine.Net.Api.Types
             var issueCustomField = new IssueCustomField { Multiple = Multiple, Values = Values.Clone<CustomFieldValue>() };
             return issueCustomField;
         }
+
+		public override string ToString ()
+		{
+			return string.Format ("[IssueCustomField: {2} Values={0}, Multiple={1}]", Values, Multiple, base.ToString());
+		}
+
+		public override int GetHashCode ()
+		{
+			unchecked
+			{
+				var hashCode = 13;
+				hashCode =  Id.GetHashCode(hashCode);
+				hashCode =  Name.GetHashCode(hashCode);
+				hashCode =  Values.GetHashCode(hashCode);
+				hashCode =  Multiple.GetHashCode(hashCode);
+				return hashCode;
+			}
+		}
     }
 }

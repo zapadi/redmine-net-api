@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2015 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2016 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -75,20 +75,23 @@ namespace Redmine.Net.Api.Types
             if (other == null) return false;
             return (Id == other.Id && Name == other.Name && IsClosed == other.IsClosed && IsDefault == other.IsDefault);
         }
-
-        public override bool Equals(object obj)
-        {
-            return base.Equals(obj);
-        }
-
+			
         public override int GetHashCode()
         {
-            return base.GetHashCode();
+            unchecked
+            {
+				var hashCode = 13;
+				hashCode =  Id.GetHashCode(hashCode);
+				hashCode =  Name.GetHashCode(hashCode);
+				hashCode =  IsClosed.GetHashCode(hashCode);
+				hashCode =  IsDefault.GetHashCode(hashCode);
+				return hashCode;
+            }
         }
 
-        public override string ToString()
-        {
-            return string.Format("{0}, {1}, {2}, {3}", Id, Name, IsDefault, IsClosed);
-        }
+		public override string ToString ()
+		{
+			return string.Format ("[IssueStatus: {2}, IsDefault={0}, IsClosed={1}]", IsDefault, IsClosed, base.ToString());
+		}
     }
 }

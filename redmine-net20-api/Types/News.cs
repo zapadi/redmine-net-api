@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2015 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2016 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -116,5 +116,28 @@ namespace Redmine.Net.Api.Types
                 && Description == other.Description
                 && CreatedOn == other.CreatedOn);
         }
+
+      
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+				var hashCode = base.GetHashCode();
+				hashCode =  Project.GetHashCode(hashCode);
+				hashCode =  Author.GetHashCode(hashCode);
+				hashCode =  Title.GetHashCode(hashCode);
+				hashCode =  Summary.GetHashCode(hashCode);
+				hashCode =  Description.GetHashCode(hashCode);
+				hashCode =  CreatedOn.GetHashCode(hashCode);
+				return hashCode;
+            }
+        }
+
+		public override string ToString ()
+		{
+			return string.Format ("[News: {6}, Project={0}, Author={1}, Title={2}, Summary={3}, Description={4}, CreatedOn={5}]", 
+				Project, Author, Title, Summary, Description, CreatedOn, base.ToString());
+		}
     }
 }

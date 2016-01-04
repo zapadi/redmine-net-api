@@ -1,5 +1,5 @@
 /*
-   Copyright 2011 - 2015 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2016 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -131,6 +131,29 @@ namespace Redmine.Net.Api.Types
                 && CreatedOn == other.CreatedOn
                 && UpdatedOn == other.UpdatedOn;
         }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+				var hashCode = base.GetHashCode();
+				hashCode =  Title.GetHashCode(hashCode);
+				hashCode =  Text.GetHashCode(hashCode);
+				hashCode =  Comments.GetHashCode(hashCode);
+				hashCode =  Version.GetHashCode(hashCode);
+				hashCode =  Author.GetHashCode(hashCode);
+				hashCode =  CreatedOn.GetHashCode(hashCode);
+				hashCode =  UpdatedOn.GetHashCode(hashCode);
+				hashCode =  Attachments.GetHashCode(hashCode);
+				return hashCode;
+            }
+        }
+
+		public override string ToString ()
+		{
+			return string.Format ("[WikiPage: {8}, Title={0}, Text={1}, Comments={2}, Version={3}, Author={4}, CreatedOn={5}, UpdatedOn={6}, Attachments={7}]",
+				Title, Text, Comments, Version, Author, CreatedOn, UpdatedOn, Attachments, base.ToString());
+		}
 
         #endregion
     }

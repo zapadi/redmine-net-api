@@ -1,5 +1,5 @@
 /*
-   Copyright 2011 - 2015 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2016 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -28,5 +28,10 @@ namespace Redmine.Net.Api.Types
             Name = reader.GetAttribute(RedmineKeys.NAME);
             reader.Read();
         }
+
+		public override string ToString ()
+		{
+			return string.Format ("[TrackerCustomField: {0}]", base.ToString());
+		}
     }
 }

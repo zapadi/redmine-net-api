@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2015 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2016 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -136,8 +136,39 @@ namespace Redmine.Net.Api.Types
         public bool Equals(Version other)
         {
             if (other == null) return false;
-            return (Id == other.Id && Name == other.Name && Project == other.Project && Description == other.Description && Status == other.Status && DueDate == other.DueDate && Sharing == other.Sharing && CreatedOn == other.CreatedOn && UpdatedOn == other.UpdatedOn && CustomFields == other.CustomFields);
+            return (Id == other.Id && Name == other.Name
+                && Project == other.Project
+                && Description == other.Description
+                && Status == other.Status
+                && DueDate == other.DueDate
+                && Sharing == other.Sharing
+                && CreatedOn == other.CreatedOn
+                && UpdatedOn == other.UpdatedOn
+                && CustomFields == other.CustomFields);
         }
+				
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+				var hashCode = base.GetHashCode();
+				hashCode =  Project.GetHashCode(hashCode);
+				hashCode =  Description.GetHashCode(hashCode);
+				hashCode =  Status.GetHashCode(hashCode);
+				hashCode =  DueDate.GetHashCode(hashCode);
+				hashCode =  Sharing.GetHashCode(hashCode);
+				hashCode =  CreatedOn.GetHashCode(hashCode);
+				hashCode =  UpdatedOn.GetHashCode(hashCode);
+				hashCode =  CustomFields.GetHashCode(hashCode);
+				return hashCode;
+            }
+        }
+
+		public override string ToString ()
+		{
+			return string.Format ("[Version: {8}, Project={0}, Description={1}, Status={2}, DueDate={3}, Sharing={4}, CreatedOn={5}, UpdatedOn={6}, CustomFields={7}]", 
+				Project, Description, Status, DueDate, Sharing, CreatedOn, UpdatedOn, CustomFields, base.ToString());
+		}
     }
 
     public enum VersionSharing

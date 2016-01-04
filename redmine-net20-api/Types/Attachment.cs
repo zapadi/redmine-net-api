@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2015 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2016 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -113,10 +113,41 @@ namespace Redmine.Net.Api.Types
         }
 
         public void WriteXml(XmlWriter writer) { }
+
         public bool Equals(Attachment other)
         {
-            //todo de terminat
-            return false;
+            if (other == null) return false;
+            return (Id == other.Id 
+                && FileName == other.FileName 
+                && FileSize == other.FileSize 
+                && ContentType == other.ContentType
+                && Author == other.Author
+                && CreatedOn == other.CreatedOn 
+                && Description == other.Description 
+                && ContentUrl == other.ContentUrl);
         }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = base.GetHashCode();
+				hashCode = FileName.GetHashCode(hashCode);
+                hashCode = FileSize.GetHashCode();
+				hashCode = ContentType.GetHashCode(hashCode);
+				hashCode = Author.GetHashCode(hashCode);
+				hashCode = CreatedOn.GetHashCode(hashCode);
+				hashCode = Description.GetHashCode(hashCode);
+				hashCode = ContentUrl.GetHashCode(hashCode);
+
+                return hashCode;
+            }
+        }
+
+		public override string ToString ()
+		{
+			return string.Format ("[Attachment: {7}, FileName={0}, FileSize={1}, ContentType={2}, Description={3}, ContentUrl={4}, Author={5}, CreatedOn={6}]",
+				FileName, FileSize, ContentType, Description, ContentUrl, Author, CreatedOn, base.ToString());
+		}
     }
 }

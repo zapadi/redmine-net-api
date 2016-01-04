@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2015 Adrian Popescu.
+   Copyright 2011 - 2016 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -196,6 +196,12 @@ namespace Redmine.Net.Api
             return result;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
         public static ArrayList ReadElementContentAsCollection(this XmlReader reader, Type type)
         {
             var result = new ArrayList();
@@ -234,13 +240,11 @@ namespace Redmine.Net.Api
         }
 
         /// <summary>
-        /// Writes string empty if T has default value or null.
+        /// 
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="writer">The writer.</param>
-        /// <param name="val">The value.</param>
-        /// <param name="tag">The tag.</param>
-       
+        /// <param name="writer"></param>
+        /// <param name="col"></param>
+        /// <param name="elementName"></param>
         public static void WriteArray(this XmlWriter writer, IEnumerable col, string elementName)
         {
             writer.WriteStartElement(elementName);
@@ -254,21 +258,41 @@ namespace Redmine.Net.Api
             }
             writer.WriteEndElement();
         }
-        
+
+		public static void WriteListElements(this XmlWriter xmlWriter, IEnumerable<IValue> list, string elementName){
+			if (list == null)
+				return;
+
+			foreach (var item in list) {
+				xmlWriter.WriteElementString (elementName, item.Value);
+			}
+		}
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+        /// <param name="ident"></param>
+        /// <param name="tag"></param>
         public static void WriteIdOrEmpty(this XmlWriter writer, IdentifiableName ident, String tag)
         {
-            if (ident != null) writer.WriteElementString(tag, ident.Id.ToString(CultureInfo.InvariantCulture));
-            else
-                writer.WriteElementString(tag, string.Empty);
+            writer.WriteElementString(tag, ident != null ? ident.Id.ToString(CultureInfo.InvariantCulture) : string.Empty);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="writer"></param>
+        /// <param name="val"></param>
+        /// <param name="tag"></param>
         public static void WriteIfNotDefaultOrNull<T>(this XmlWriter writer, T? val, String tag) where T : struct
         {
             if (!val.HasValue) return;
             if (!EqualityComparer<T>.Default.Equals(val.Value, default(T)))
                 writer.WriteElementString(tag, string.Format(NumberFormatInfo.InvariantInfo, "{0}", val.Value));
         }
-        
+
         /// <summary>
         /// Writes string empty if T has default value or null.
         /// </summary>
@@ -284,6 +308,12 @@ namespace Redmine.Net.Api
                 writer.WriteElementString(tag, string.Format(NumberFormatInfo.InvariantInfo, "{0}", val.Value));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+        /// <param name="val"></param>
+        /// <param name="tag"></param>
         public static void WriteDateOrEmpty(this XmlWriter writer, DateTime? val, String tag)
         {
             if (!val.HasValue || val.Value.Equals(default(DateTime)))

@@ -1,5 +1,5 @@
 /*
-   Copyright 2011 - 2015 Adrian Popescu, Dorin Huzum., Dorin Huzum.
+   Copyright 2011 - 2016 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -14,7 +14,6 @@
    limitations under the License.
 */
 
-
 using System;
 using System.Net;
 
@@ -23,7 +22,7 @@ namespace Redmine.Net.Api
     /// <summary>
     /// 
     /// </summary>
-    public class RedmineWebClient :WebClient
+    public class RedmineWebClient : WebClient
     {
         private readonly CookieContainer container = new CookieContainer();
 
@@ -38,7 +37,9 @@ namespace Redmine.Net.Api
             {
                 httpWebRequest.CookieContainer = container;
 
-                httpWebRequest.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
+                httpWebRequest.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate | DecompressionMethods.None;
+
+				httpWebRequest.Proxy = Proxy;
 
                 return httpWebRequest;
             }

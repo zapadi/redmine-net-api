@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2015 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2016 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -54,8 +54,7 @@ namespace Redmine.Net.Api.Types
             unchecked
             {
                 var hashCode = 13;
-                hashCode = (hashCode * 397) ^ Id.GetHashCode();
-
+				hashCode = Id.GetHashCode(hashCode);
                 return hashCode;
             }
         }
@@ -69,5 +68,10 @@ namespace Redmine.Net.Api.Types
         {
             return !Equals(left, right);
         }
+
+		public override string ToString ()
+		{
+			return string.Format ("[Identifiable: Id={0}]", Id);
+		}
     }
 }

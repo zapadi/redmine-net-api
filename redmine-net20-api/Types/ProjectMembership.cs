@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2015 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2016 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -113,5 +113,23 @@ namespace Redmine.Net.Api.Types
             }
             writer.WriteEndElement();
         }
+			
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+				var hashCode = base.GetHashCode();
+				hashCode =  Project.GetHashCode(hashCode);
+				hashCode =  User.GetHashCode(hashCode);
+				hashCode =  Group.GetHashCode(hashCode);
+				hashCode =  Roles.GetHashCode(hashCode);
+				return hashCode;
+            }
+        }
+
+		public override string ToString ()
+		{
+			return string.Format ("[ProjectMembership: {4}, Project={0}, User={1}, Group={2}, Roles={3}]", Project, User, Group, Roles, base.ToString());
+		}
     }
 }

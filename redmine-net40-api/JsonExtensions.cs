@@ -16,14 +16,6 @@ namespace Redmine.Net.Api
             if (ident != null) dictionary.Add(key, ident.Id);
         }
 
-        public static void WriteIfNotDefaultOrNull<T>(this Dictionary<string, object> dictionary, T? val, String tag) where T : struct
-        {
-            if (!val.HasValue || EqualityComparer<T>.Default.Equals(val.Value, default(T)))
-                dictionary.Add(tag, string.Empty);
-            else
-                dictionary.Add(tag, val.Value);
-        }
-
         public static void WriteIdOrEmpty(this Dictionary<string, object> dictionary, IdentifiableName ident, String key, String emptyValue = null)
         {
             if (ident != null) dictionary.Add(key, ident.Id);
@@ -68,6 +60,11 @@ namespace Redmine.Net.Api
                 dictionary.Add(tag, string.Empty);
             else
                 dictionary.Add(tag, val.Value);
+        }
+
+        public static void WriteValueOrDefault<T>(this Dictionary<string, object> dictionary, T? val, String tag) where T : struct
+        {
+            dictionary.Add(tag, val ?? default(T));
         }
 
         public static T GetValue<T>(this IDictionary<string, object> dictionary, string key)

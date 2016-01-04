@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2015 Adrian Popescu, Dorin Huzum., Dorin Huzum.
+   Copyright 2011 - 2016 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -72,8 +72,8 @@ namespace Redmine.Net.Api
             {typeof (TimeEntryActivity), "enumerations/time_entry_activities"},
             {typeof (IssuePriority), "enumerations/issue_priorities"},
             {typeof (Watcher), "watchers"},
-            {typeof (IssueCustomField), RedmineKeys.CUSTOM_FIELDS},
-            {typeof (CustomField), RedmineKeys.CUSTOM_FIELDS}
+            {typeof (IssueCustomField), "custom_fields"},
+            {typeof (CustomField), "custom_fields"}
         };
 
         private readonly string host, apiKey, basicAuthorization;
@@ -95,7 +95,6 @@ namespace Redmine.Net.Api
         /// Initializes a new instance of the <see cref="RedmineManager"/> class.
         /// </summary>
         /// <param name="host">The host.</param>
-        /// <param name="mimeFormat"></param>
         /// <param name="verifyServerCert">if set to <c>true</c> [verify server cert].</param>
         public RedmineManager(string host, bool verifyServerCert = true)
         {
@@ -126,7 +125,6 @@ namespace Redmine.Net.Api
         /// </summary>
         /// <param name="host">The host.</param>
         /// <param name="apiKey">The API key.</param>
-        /// <param name="mimeFormat">The Mime format.</param>
         /// <param name="verifyServerCert">if set to <c>true</c> [verify server cert].</param>
         public RedmineManager(string host, string apiKey, bool verifyServerCert = true)
             : this(host, verifyServerCert)
@@ -148,7 +146,6 @@ namespace Redmine.Net.Api
         /// <param name="host">The host.</param>
         /// <param name="login">The login.</param>
         /// <param name="password">The password.</param>
-        /// <param name="mimeFormat">The Mime format.</param>
         /// <param name="verifyServerCert">if set to <c>true</c> [verify server cert].</param>
         public RedmineManager(string host, string login, string password, bool verifyServerCert = true)
             : this(host, verifyServerCert)
@@ -181,7 +178,7 @@ namespace Redmine.Net.Api
         /// Returns a list of users.
         /// </summary>
         /// <param name="userStatus">get only users with the given status. Default is 1 (active users)</param>
-        /// <param name=RedmineKeys.NAME> filter users on their login, firstname, lastname and mail ; if the pattern contains a space, it will also return users whose firstname match the first word or lastname match the second word.</param>
+        /// <param name="name"> filter users on their login, firstname, lastname and mail ; if the pattern contains a space, it will also return users whose firstname match the first word or lastname match the second word.</param>
         /// <param name="groupId">get only users who are members of the given group</param>
         /// <returns></returns>
         public IList<User> GetUsers(UserStatus userStatus = UserStatus.STATUS_ACTIVE, string name = null, int groupId = 0)
@@ -259,7 +256,7 @@ namespace Redmine.Net.Api
         public IList<WikiPage> GetAllWikiPages(string projectId)
         {
             int totalCount;
-            return ExecuteDownloadList<WikiPage>(string.Format(WIKI_INDEX_FORMAT, host, projectId), "GetAllWikiPages", "wiki", out totalCount);
+            return ExecuteDownloadList<WikiPage>(string.Format(WIKI_INDEX_FORMAT, host, projectId), "GetAllWikiPages", out totalCount);
         }
 
         /// <summary>
@@ -363,23 +360,25 @@ namespace Redmine.Net.Api
             string address;
             if (type == typeof(Version) || type == typeof(IssueCategory) || type == typeof(ProjectMembership))
             {
-                var projectId = GetOwnerId(parameters, "project_id");
-                if (string.IsNullOrEmpty(projectId)) throw new RedmineException("The project id is mandatory! \nCheck if you have included the parameter project_id to parameters.");
+                var projectId = GetOwnerId(parameters, RedmineKeys.PROJECT_ID);
+                if (string.IsNullOrEmpty(projectId)) 
+                    throw new RedmineException("The project id is mandatory! \nCheck if you have included the parameter project_id to parameters.");
 
-                address = string.Format(ENTITY_WITH_PARENT_FORMAT, host, "projects", projectId, urls[type]);
+                address = string.Format(ENTITY_WITH_PARENT_FORMAT, host, RedmineKeys.PROJECTS, projectId, urls[type]);
             }
             else
                 if (type == typeof(IssueRelation))
                 {
-                    string issueId = GetOwnerId(parameters, "issue_id");
-                    if (string.IsNullOrEmpty(issueId)) throw new RedmineException("The issue id is mandatory! \nCheck if you have included the parameter issue_id to parameters");
+                    string issueId = GetOwnerId(parameters, RedmineKeys.ISSUE_ID);
+                    if (string.IsNullOrEmpty(issueId)) 
+                        throw new RedmineException("The issue id is mandatory! \nCheck if you have included the parameter issue_id to parameters");
 
-                    address = string.Format(ENTITY_WITH_PARENT_FORMAT, host, "issues", issueId, urls[type]);
+                    address = string.Format(ENTITY_WITH_PARENT_FORMAT, host, RedmineKeys.ISSUES, issueId, urls[type]);
                 }
                 else
                     address = string.Format(FORMAT, host, urls[type]);
 
-            return ExecuteDownloadList<T>(address, "GetObjectList<" + type.Name + ">", urls[type], out totalCount, parameters);
+            return ExecuteDownloadList<T>(address, "GetObjectList<" + type.Name + ">", out totalCount, parameters);
         }
 
         /// <summary>
@@ -420,7 +419,7 @@ namespace Redmine.Net.Api
         /// Returns a Redmine object.
         /// </summary>
         /// <typeparam name="T">The type of objects to retrieve.</typeparam>
-        /// <param name=RedmineKeys.ID>The id of the object.</param>
+        /// <param name="id">The id of the object.</param>
         /// <param name="parameters">Optional filters and/or optional fetched data.</param>
         /// <returns>Returns the object of type T.</returns>
         /// <exception cref="Redmine.Net.Api.RedmineException"></exception>
@@ -483,14 +482,16 @@ namespace Redmine.Net.Api
 
             if (type == typeof(Version) || type == typeof(IssueCategory) || type == typeof(ProjectMembership))
             {
-                if (string.IsNullOrEmpty(ownerId)) throw new RedmineException("The owner id(project id) is mandatory!");
-                address = string.Format(ENTITY_WITH_PARENT_FORMAT, host, "projects", ownerId, urls[type]);
+                if (string.IsNullOrEmpty(ownerId)) 
+                    throw new RedmineException("The owner id(project id) is mandatory!");
+                address = string.Format(ENTITY_WITH_PARENT_FORMAT, host, RedmineKeys.PROJECTS, ownerId, urls[type]);
             }
             else
                 if (type == typeof(IssueRelation))
                 {
-                    if (string.IsNullOrEmpty(ownerId)) throw new RedmineException("The owner id(issue id) is mandatory!");
-                    address = string.Format(ENTITY_WITH_PARENT_FORMAT, host, "issues", ownerId, urls[type]);
+                    if (string.IsNullOrEmpty(ownerId)) 
+                        throw new RedmineException("The owner id(issue id) is mandatory!");
+                    address = string.Format(ENTITY_WITH_PARENT_FORMAT, host, RedmineKeys.ISSUES, ownerId, urls[type]);
                 }
                 else
                     address = string.Format(FORMAT, host, urls[type]);
@@ -502,7 +503,7 @@ namespace Redmine.Net.Api
         /// Updates a Redmine object.
         /// </summary>
         /// <typeparam name="T">The type of object to be update.</typeparam>
-        /// <param name=RedmineKeys.ID>The id of the object to be update.</param>
+        /// <param name="id">The id of the object to be update.</param>
         /// <param name="obj">The object to be update.</param>
         /// <remarks>When trying to update an object with invalid or missing attribute parameters, you will get a 422 Unprocessable Entity response. That means that the object could not be updated.</remarks>
         /// <exception cref="Redmine.Net.Api.RedmineException"></exception>
@@ -516,7 +517,7 @@ namespace Redmine.Net.Api
         /// Updates a Redmine object.
         /// </summary>
         /// <typeparam name="T">The type of object to be update.</typeparam>
-        /// <param name=RedmineKeys.ID>The id of the object to be update.</param>
+        /// <param name="id">The id of the object to be update.</param>
         /// <param name="obj">The object to be update.</param>
         /// <param name="projectId"></param>
         /// <remarks>When trying to update an object with invalid or missing attribute parameters, you will get a 422 Unprocessable Entity response. That means that the object could not be updated.</remarks>
@@ -537,8 +538,9 @@ namespace Redmine.Net.Api
 
             if (type == typeof(IssueCategory) || type == typeof(ProjectMembership))
             {
-                if (string.IsNullOrEmpty(projectId)) throw new RedmineException("The project owner id is mandatory!");
-                address = string.Format(ENTITY_WITH_PARENT_FORMAT, host, "projects", projectId, urls[type]);
+                if (string.IsNullOrEmpty(projectId)) 
+                    throw new RedmineException("The project owner id is mandatory!");
+                address = string.Format(ENTITY_WITH_PARENT_FORMAT, host, RedmineKeys.PROJECTS, projectId, urls[type]);
             }
             else
             {
@@ -552,7 +554,7 @@ namespace Redmine.Net.Api
         /// Deletes the Redmine object.
         /// </summary>
         /// <typeparam name="T">The type of objects to delete.</typeparam>
-        /// <param name=RedmineKeys.ID>The id of the object to delete</param>
+        /// <param name="id">The id of the object to delete</param>
         /// <param name="parameters">Optional filters and/or optional fetched data.</param>
         /// <exception cref="Redmine.Net.Api.RedmineException"></exception>
         /// <code></code>
@@ -632,13 +634,13 @@ namespace Redmine.Net.Api
         /// <param name="error">The error.</param>
         /// <returns></returns>
         /// <code></code>
-        protected bool RemoteCertValidate(object sender, X509Certificate cert, X509Chain chain, SslPolicyErrors error)
+        public virtual bool RemoteCertValidate(object sender, X509Certificate cert, X509Chain chain, SslPolicyErrors error)
         {
             //Cert Validation Logic
             return true;
         }
 
-        private void HandleWebException(WebException exception, string method)
+        public virtual void HandleWebException(WebException exception, string method)
         {
             if (exception == null) return;
 
@@ -680,14 +682,7 @@ namespace Redmine.Net.Api
                 default: throw new RedmineException(exception.Message, exception);
             }
         }
-
-        private static string GetOwnerId(NameValueCollection parameters, string parameterName)
-        {
-            if (parameters == null) return null;
-            string ownerId = parameters.Get(parameterName);
-            return string.IsNullOrEmpty(ownerId) ? null : ownerId;
-        }
-
+        
         private IEnumerable<Error> ReadWebExceptionResponse(WebResponse webResponse)
         {
             using (var dataStream = webResponse.GetResponseStream())
@@ -702,7 +697,7 @@ namespace Redmine.Net.Api
                     try
                     {
                         int totalCount;
-                        return DeserializeList<Error>(responseFromServer, "errors", out totalCount);
+                        return DeserializeList<Error>(responseFromServer, out totalCount);
                     }
                     catch (Exception ex)
                     {
@@ -710,33 +705,6 @@ namespace Redmine.Net.Api
                     }
                 }
                 return null;
-            }
-        }
-
-        private string Serialize<T>(T obj) where T : class, new()
-        {
-            return RedmineSerialization.ToXML(obj);
-        }
-
-        private T Deserialize<T>(string response) where T : class, new()
-        {
-            return RedmineSerialization.FromXML<T>(response);
-        }
-
-        private IList<T> DeserializeList<T>(string response, string jsonRoot, out int totalCount) where T : class, new()
-        {
-            using (var text = new StringReader(response))
-            {
-                using (var xmlReader = new XmlTextReader(text))
-                {
-                    xmlReader.WhitespaceHandling = WhitespaceHandling.None;
-                    xmlReader.Read();
-                    xmlReader.Read();
-
-                    totalCount = xmlReader.ReadAttributeAsInt("total_count");
-
-                    return xmlReader.ReadElementContentAsCollection<T>();
-                }
             }
         }
 
@@ -797,7 +765,7 @@ namespace Redmine.Net.Api
             }
         }
 
-        private IList<T> ExecuteDownloadList<T>(string address, string methodName, string jsonRoot, out int totalCount, NameValueCollection parameters = null) where T : class, new()
+        private IList<T> ExecuteDownloadList<T>(string address, string methodName, out int totalCount, NameValueCollection parameters = null) where T : class, new()
         {
             totalCount = -1;
             using (var wc = CreateWebClient(parameters))
@@ -805,13 +773,47 @@ namespace Redmine.Net.Api
                 try
                 {
                     var response = wc.DownloadString(address);
-                    return DeserializeList<T>(response, jsonRoot, out totalCount);
+                    return DeserializeList<T>(response, out totalCount);
                 }
                 catch (WebException webException)
                 {
                     HandleWebException(webException, methodName);
                 }
                 return null;
+            }
+        }
+
+        private static string GetOwnerId(NameValueCollection parameters, string parameterName)
+        {
+            if (parameters == null) return null;
+            string ownerId = parameters.Get(parameterName);
+            return string.IsNullOrEmpty(ownerId) ? null : ownerId;
+        }
+
+        private static string Serialize<T>(T obj) where T : class, new()
+        {
+            return RedmineSerialization.ToXML(obj);
+        }
+
+        private static T Deserialize<T>(string response) where T : class, new()
+        {
+            return RedmineSerialization.FromXML<T>(response);
+        }
+
+        private static IList<T> DeserializeList<T>(string response, out int totalCount) where T : class, new()
+        {
+            using (var text = new StringReader(response))
+            {
+                using (var xmlReader = new XmlTextReader(text))
+                {
+                    xmlReader.WhitespaceHandling = WhitespaceHandling.None;
+                    xmlReader.Read();
+                    xmlReader.Read();
+
+                    totalCount = xmlReader.ReadAttributeAsInt("total_count");
+
+                    return xmlReader.ReadElementContentAsCollection<T>();
+                }
             }
         }
     }

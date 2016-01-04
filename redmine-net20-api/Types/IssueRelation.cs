@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2015 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2016 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -122,5 +122,24 @@ namespace Redmine.Net.Api.Types
             if (other == null) return false;
             return (Id == other.Id && IssueId == other.IssueId && IssueToId == other.IssueToId && Type == other.Type && Delay == other.Delay);
         }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+				var hashCode = 13;
+				hashCode =  Id.GetHashCode(hashCode);
+				hashCode =  IssueId.GetHashCode(hashCode);
+				hashCode =  IssueToId.GetHashCode(hashCode);
+				hashCode =  Type.GetHashCode(hashCode);
+				hashCode =  Delay.GetHashCode(hashCode);
+				return hashCode;
+            }
+        }
+
+		public override string ToString ()
+		{
+			return string.Format ("[IssueRelation: {4}, IssueId={0}, IssueToId={1}, Type={2}, Delay={3}]", IssueId, IssueToId, Type, Delay,base.ToString());
+		}
     }
 }

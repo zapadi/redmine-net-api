@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2015 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2016 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -144,14 +144,40 @@ namespace Redmine.Net.Api.Types
         public bool Equals(Group other)
         {
             if (other == null) return false;
-            return Id == other.Id && Name == other.Name && Users == other.Users && Equals(CustomFields, other.CustomFields) && Equals(Memberships, other.Memberships);
+            return Id == other.Id
+                && Name == other.Name
+                && Users == other.Users
+                && Equals(CustomFields, other.CustomFields)
+                && Equals(Memberships, other.Memberships);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as Group);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = 13;
+				hashCode = Id.GetHashCode(hashCode);
+				hashCode = Name.GetHashCode(hashCode);
+				hashCode = Users.GetHashCode(hashCode);
+				hashCode = CustomFields.GetHashCode(hashCode);
+				hashCode = Memberships.GetHashCode(hashCode);
+                return hashCode;
+            }
         }
 
         #endregion
 
-        public override string ToString()
-        {
-            return Id + ", " + Name;
-        }
+		public override string ToString ()
+		{
+			return string.Format ("[Group: Id={0}, Name={1}, Users={2}, CustomFields={3}, Memberships={4}]", Id, Name, Users, CustomFields, Memberships);
+		}
     }
 }

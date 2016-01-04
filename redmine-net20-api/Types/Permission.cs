@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2015 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2016 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -32,17 +32,25 @@ namespace Redmine.Net.Api.Types
 
         public override bool Equals(object obj)
         {
-            return base.Equals(obj);
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as Permission);
         }
 
         public override int GetHashCode()
         {
-            return base.GetHashCode();
+            unchecked
+            {
+				var hashCode = 13;
+				hashCode =  Info.GetHashCode(hashCode);
+				return hashCode;
+            }
         }
 
-        public override string ToString()
-        {
-            return Info;
-        }
+		public override string ToString ()
+		{
+			return string.Format ("[Permission: Info={0}]", Info);
+		}
     }
 }

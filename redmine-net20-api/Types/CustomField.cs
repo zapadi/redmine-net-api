@@ -1,5 +1,5 @@
 /*
-   Copyright 2011 - 2015 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2016 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ using System.Xml.Serialization;
 namespace Redmine.Net.Api.Types
 {
     [XmlRoot(RedmineKeys.CUSTOM_FIELD)]
-    public class CustomField : IXmlSerializable
+    public class CustomField : IXmlSerializable, IEquatable<CustomField>
     {
         [XmlElement(RedmineKeys.ID)]
         public int Id { get; set; }
@@ -129,5 +129,66 @@ namespace Redmine.Net.Api.Types
         }
 
         public void WriteXml(XmlWriter writer) { }
+
+        public bool Equals(CustomField other)
+        {
+            if (other == null) return false;
+
+            return Id == other.Id
+                && IsFilter == other.IsFilter
+                && IsRequired == other.IsRequired
+                && Multiple == other.Multiple
+                && Searchable == other.Searchable
+                && Visible == other.Visible
+                && CustomizedType.Equals(other.CustomizedType)
+                && DefaultValue.Equals(other.DefaultValue)
+                && FieldFormat.Equals(other.FieldFormat)
+                && MaxLength == other.MaxLength
+                && MinLength == other.MinLength
+                && Name.Equals(other.Name)
+                && Regexp.Equals(other.Regexp)
+                && PossibleValues.Equals(other.PossibleValues)
+                && Roles.Equals(other.Roles)
+                && Trackers.Equals(other.Trackers);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as CustomField);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = 13;
+                hashCode = Id.GetHashCode(hashCode);
+				hashCode = IsFilter.GetHashCode(hashCode);
+				hashCode = IsRequired.GetHashCode(hashCode);
+				hashCode = Multiple.GetHashCode(hashCode);
+				hashCode = Searchable.GetHashCode(hashCode);
+				hashCode = Visible.GetHashCode(hashCode);
+				hashCode = CustomizedType.GetHashCode(hashCode);
+				hashCode = DefaultValue.GetHashCode(hashCode);
+				hashCode = FieldFormat.GetHashCode(hashCode);
+				hashCode = MaxLength.GetHashCode(hashCode);
+				hashCode = MinLength.GetHashCode(hashCode);
+				hashCode = Name.GetHashCode(hashCode);
+				hashCode = Regexp.GetHashCode(hashCode);
+				hashCode = PossibleValues.GetHashCode(hashCode);
+				hashCode = Roles.GetHashCode(hashCode);
+				hashCode = Trackers.GetHashCode(hashCode);
+                return hashCode;
+            }
+        }
+
+		public override string ToString ()
+		{
+			return string.Format ("[CustomField: Id={0}, Name={1}, CustomizedType={2}, FieldFormat={3}, Regexp={4}, MinLength={5}, MaxLength={6}, IsRequired={7}, IsFilter={8}, Searchable={9}, Multiple={10}, DefaultValue={11}, Visible={12}, PossibleValues={13}, Trackers={14}, Roles={15}]",
+				Id, Name, CustomizedType, FieldFormat, Regexp, MinLength, MaxLength, IsRequired, IsFilter, Searchable, Multiple, DefaultValue, Visible, PossibleValues, Trackers, Roles);
+		}
     }
 }

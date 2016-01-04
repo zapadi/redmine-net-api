@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2015 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2016 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -57,9 +57,21 @@ namespace Redmine.Net.Api.Types
             return Id == other.Id && Name == other.Name && Inherited == other.Inherited;
         }
 
-        public override string ToString()
+		public override int GetHashCode()
         {
-            return base.ToString() + Inherited;
+            unchecked
+            {
+				var hashCode = 13;
+				hashCode =  Id.GetHashCode(hashCode);
+				hashCode =  Name.GetHashCode(hashCode);
+				hashCode =  Inherited.GetHashCode(hashCode);
+				return hashCode;
+            }
         }
+
+		public override string ToString ()
+		{
+			return string.Format ("[MembershipRole: {1}, Inherited={0}]", Inherited, base.ToString());
+		}
     }
 }

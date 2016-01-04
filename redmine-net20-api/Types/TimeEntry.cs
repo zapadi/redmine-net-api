@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2015 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2016 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -176,7 +176,10 @@ namespace Redmine.Net.Api.Types
         {
             writer.WriteIdIfNotNull(Issue, RedmineKeys.ISSUE_ID);
             writer.WriteIdIfNotNull(Project, RedmineKeys.PROJECT_ID);
-            if (!SpentOn.HasValue) SpentOn = DateTime.Now;
+            
+            if (!SpentOn.HasValue) 
+                SpentOn = DateTime.Now;
+            
             writer.WriteDateOrEmpty(SpentOn, RedmineKeys.SPENT_ON);
             writer.WriteValueOrEmpty<decimal>(Hours, RedmineKeys.HOURS);
             writer.WriteIdIfNotNull(Activity, RedmineKeys.ACTIVITY_ID);
@@ -198,5 +201,30 @@ namespace Redmine.Net.Api.Types
                 && UpdatedOn == other.UpdatedOn
                 && Equals(CustomFields, other.CustomFields));
         }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+				var hashCode = base.GetHashCode();
+				hashCode =  Issue.GetHashCode(hashCode);
+				hashCode =  Project.GetHashCode(hashCode);
+				hashCode =  SpentOn.GetHashCode(hashCode);
+				hashCode =  Hours.GetHashCode(hashCode);
+				hashCode =  Activity.GetHashCode(hashCode);
+				hashCode =  User.GetHashCode(hashCode);
+				hashCode =  Comments.GetHashCode(hashCode);
+				hashCode =  CreatedOn.GetHashCode(hashCode);
+				hashCode =  UpdatedOn.GetHashCode(hashCode);
+				hashCode =  CustomFields.GetHashCode(hashCode);
+				return hashCode;
+            }
+        }
+
+		public override string ToString ()
+		{
+			return string.Format ("[TimeEntry: {10}, Issue={0}, Project={1}, SpentOn={2}, Hours={3}, Activity={4}, User={5}, Comments={6}, CreatedOn={7}, UpdatedOn={8}, CustomFields={9}]", 
+				Issue, Project, SpentOn, Hours, Activity, User, Comments, CreatedOn, UpdatedOn, CustomFields, base.ToString());
+		}
     }
 }

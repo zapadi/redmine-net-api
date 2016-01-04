@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2015 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2016 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -74,5 +74,24 @@ namespace Redmine.Net.Api.Types
 
             return (other.Id == Id && other.Name == Name && other.IsPublic == IsPublic && other.ProjectId == ProjectId);
         }
+
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+				var hashCode = 13;
+				hashCode =  Id.GetHashCode(hashCode);
+				hashCode =  Name.GetHashCode(hashCode);
+				hashCode =  IsPublic.GetHashCode(hashCode);
+				hashCode =  ProjectId.GetHashCode(hashCode);
+				return hashCode;
+            }
+        }
+
+		public override string ToString ()
+		{
+			return string.Format ("[Query: {2}, IsPublic={0}, ProjectId={1}]", IsPublic, ProjectId, base.ToString());
+		}
     }
 }

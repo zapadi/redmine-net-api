@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2015 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2016 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -69,11 +69,10 @@ namespace Redmine.Net.Api.Types
             writer.WriteAttributeString(RedmineKeys.ID, Id.ToString(CultureInfo.InvariantCulture));
             writer.WriteAttributeString(RedmineKeys.NAME, Name);
         }
-
-        public override string ToString()
-        {
-            return string.Format("{0}, {1}", Id, Name);
-        }
+		public override string ToString ()
+		{
+			return string.Format ("[IdentifiableName: Id={0}, Name={1}]", Id, Name);
+		}
 
         public bool Equals(IdentifiableName other)
         {
@@ -86,8 +85,7 @@ namespace Redmine.Net.Api.Types
             unchecked
             {
                 var hashCode = base.GetHashCode();
-                var nameStrHashCode = !string.IsNullOrEmpty(Name) ? Name.GetHashCode() : 0;
-                hashCode = (hashCode * 397) ^ nameStrHashCode;
+				hashCode = Name.GetHashCode(hashCode);
                 return hashCode;
             }
         }

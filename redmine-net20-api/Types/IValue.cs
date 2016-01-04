@@ -14,16 +14,14 @@
    limitations under the License.
 */
 
+using System;
+using System.Xml;
 using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
-    [XmlRoot(RedmineKeys.ROLE)]
-    public class CustomFieldRole : IdentifiableName
-    {
-		public override string ToString ()
-		{
-			return string.Format ("[CustomFieldRole: {0}]", base.ToString());
-		}
-    }
+
+	public interface IValue{
+		string Value{ get;}
+	}
 }

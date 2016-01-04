@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2015 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2016 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -78,29 +78,21 @@ namespace Redmine.Net.Api.Types
             return (Id == other.Id && Tracker == other.Tracker && Subject == other.Subject);
         }
 
-        public override bool Equals(object other)
-        {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-            if (other.GetType() != GetType()) return false;
-            return Equals(other as IssueChild);
-        }
-
         public override int GetHashCode()
         {
             unchecked
             {
                 var hashCode = 13;
-                hashCode = (hashCode * 397) ^ Id.GetHashCode();
-                hashCode = (hashCode * 397) ^ Tracker.GetHashCode();
-                hashCode = (hashCode * 397) ^ (string.IsNullOrEmpty(Subject) ? 0 : Subject.GetHashCode());
+				hashCode = Id.GetHashCode(hashCode);
+				hashCode = Tracker.GetHashCode(hashCode);
+				hashCode = Subject.GetHashCode(hashCode);
                 return hashCode;
             }
         }
 
-        public override string ToString()
-        {
-            return base.ToString() + ", " + Subject + ", " + Tracker;
-        }
+		public override string ToString ()
+		{
+			return string.Format ("[IssueChild: {0}, Tracker={1}, Subject={2}]", base.ToString(), Tracker, Subject);
+		}
     }
 }
