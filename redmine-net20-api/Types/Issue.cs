@@ -323,7 +323,7 @@ namespace Redmine.Net.Api.Types
 					break;
 
 				case RedmineKeys.IS_PRIVATE:
-					IsPrivate = reader.ReadContentAsBoolean ();
+					IsPrivate = reader.ReadElementContentAsBoolean ();
 					break;
 
 				case RedmineKeys.SUBJECT:
