@@ -15,7 +15,6 @@
 */
 
 using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.Web.Script.Serialization;
 using Redmine.Net.Api.Types;
