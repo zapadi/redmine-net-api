@@ -34,10 +34,10 @@ namespace Redmine.Net.Api.Types
             return Info.Equals(other.Info);
         }
 
-		public override string ToString ()
-		{
-			return string.Format ("[Error: Info={0}]", Info);
-		}
+        public override string ToString()
+        {
+            return string.Format("[Error: Info={0}]", Info);
+        }
 
         public XmlSchema GetSchema() { return null; }
 
@@ -75,7 +75,7 @@ namespace Redmine.Net.Api.Types
             unchecked
             {
                 var hashCode = 13;
-				hashCode = Info.GetHashCode(hashCode);
+                hashCode = Utils.GetHashCode(Info, hashCode);
                 return hashCode;
             }
         }

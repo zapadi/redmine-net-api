@@ -16,7 +16,7 @@
 
 namespace Redmine.Net.Api
 {
-    public static class RedmineKeys
+	public static class RedmineKeys
     {
         public const string ISSUE_PRIORITIES = "issue_priorities";
         public const string TIME_ENTRY_ACTIVITIES = "time_entry_activities";
@@ -68,7 +68,9 @@ namespace Redmine.Net.Api
         public const string PERMISSIONS = "permissions";
 
         public const string ERROR = "error";
+        public const string ERRORS = "errors";
 
+		public const string WIKI_PAGES = "wiki_pages";
         public const string WIKI_PAGE = "wiki_page";
         public const string TITLE = "title";
         public const string TEXT = "text";
@@ -87,6 +89,7 @@ namespace Redmine.Net.Api
         public const string SHARING = "sharing";
 
         public const string GROUP = "group";
+		public const string GROUP_ID = "group_id";
 
         public const string LOGIN = "login";
         public const string PASSWORD = "password";
@@ -202,5 +205,11 @@ namespace Redmine.Net.Api
 
         public const string PROJECTS = "projects";
         public const string ISSUES = "issues";
+
+		public const string LIMIT = "limit";
+        public const string INCLUDE = "include";
+        public const string OFFSET = "offset";
+		public const string KEY = "key";
+		public const string TOTAL_COUNT = "total_count";
     }
 }

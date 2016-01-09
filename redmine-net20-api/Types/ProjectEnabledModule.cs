@@ -14,32 +14,29 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System;
-using System.Xml;
 using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
-    
+
     [XmlRoot(RedmineKeys.ENABLED_MODULE)]
-	/// <summary>
-	/// the module name: boards, calendar, documents, files, gantt, issue_tracking, news, repository, time_tracking, wiki.
-	/// </summary>
-	public class ProjectEnabledModule : IdentifiableName, IValue
+    /// <summary>
+    /// the module name: boards, calendar, documents, files, gantt, issue_tracking, news, repository, time_tracking, wiki.
+    /// </summary>
+    public class ProjectEnabledModule : IdentifiableName, IValue
     {
-		#region IValue implementation
+        #region IValue implementation
 
-		public string Value {
-			get {
-				return Name;
-			}
-		}
+        public string Value
+        {
+            get { return Name; }
+        }
 
-		#endregion
+        #endregion
 
-		public override string ToString ()
-		{
-			return string.Format ("[ProjectEnabledModule: {0}]", base.ToString());
-		}
+        public override string ToString()
+        {
+            return string.Format("[ProjectEnabledModule: {0}]", base.ToString());
+        }
     }
 }

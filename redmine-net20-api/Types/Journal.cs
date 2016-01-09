@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using Redmine.Net.Api.Extensions;
 
 namespace Redmine.Net.Api.Types
 {
@@ -109,10 +110,10 @@ namespace Redmine.Net.Api.Types
         public bool Equals(Journal other)
         {
             if (other == null) return false;
-            return Id == other.Id 
-                && User == other.User 
-                && Notes == other.Notes 
-                && CreatedOn == other.CreatedOn 
+            return Id == other.Id
+                && User == other.User
+                && Notes == other.Notes
+                && CreatedOn == other.CreatedOn
                 && Equals(Details, other.Details);
         }
 
@@ -128,19 +129,19 @@ namespace Redmine.Net.Api.Types
         {
             unchecked
             {
-				var hashCode = 13;
-				hashCode =  Id.GetHashCode(hashCode);
-				hashCode =  User.GetHashCode(hashCode);
-				hashCode =  Notes.GetHashCode(hashCode);
-				hashCode =  CreatedOn.GetHashCode(hashCode);
-				hashCode =  Details.GetHashCode(hashCode);
-				return hashCode;
+                var hashCode = 13;
+                hashCode = Utils.GetHashCode(Id, hashCode);
+                hashCode = Utils.GetHashCode(User, hashCode);
+                hashCode = Utils.GetHashCode(Notes, hashCode);
+                hashCode = Utils.GetHashCode(CreatedOn, hashCode);
+                hashCode = Utils.GetHashCode(Details, hashCode);
+                return hashCode;
             }
         }
 
-		public override string ToString ()
-		{
-			return string.Format ("[Journal: Id={0}, User={1}, Notes={2}, CreatedOn={3}, Details={4}]", Id, User, Notes, CreatedOn, Details);
-		}
+        public override string ToString()
+        {
+            return string.Format("[Journal: Id={0}, User={1}, Notes={2}, CreatedOn={3}, Details={4}]", Id, User, Notes, CreatedOn, Details);
+        }
     }
 }

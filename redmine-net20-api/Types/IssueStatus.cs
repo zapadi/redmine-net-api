@@ -68,30 +68,30 @@ namespace Redmine.Net.Api.Types
             }
         }
 
-        public override void WriteXml(XmlWriter writer){}
+        public override void WriteXml(XmlWriter writer) { }
 
         public bool Equals(IssueStatus other)
         {
             if (other == null) return false;
             return (Id == other.Id && Name == other.Name && IsClosed == other.IsClosed && IsDefault == other.IsDefault);
         }
-			
+
         public override int GetHashCode()
         {
             unchecked
             {
-				var hashCode = 13;
-				hashCode =  Id.GetHashCode(hashCode);
-				hashCode =  Name.GetHashCode(hashCode);
-				hashCode =  IsClosed.GetHashCode(hashCode);
-				hashCode =  IsDefault.GetHashCode(hashCode);
-				return hashCode;
+                var hashCode = 13;
+                hashCode = Utils.GetHashCode(Id, hashCode);
+                hashCode = Utils.GetHashCode(Name, hashCode);
+                hashCode = Utils.GetHashCode(IsClosed, hashCode);
+                hashCode = Utils.GetHashCode(IsDefault, hashCode);
+                return hashCode;
             }
         }
 
-		public override string ToString ()
-		{
-			return string.Format ("[IssueStatus: {2}, IsDefault={0}, IsClosed={1}]", IsDefault, IsClosed, base.ToString());
-		}
+        public override string ToString()
+        {
+            return string.Format("[IssueStatus: {2}, IsDefault={0}, IsClosed={1}]", IsDefault, IsClosed, base.ToString());
+        }
     }
 }

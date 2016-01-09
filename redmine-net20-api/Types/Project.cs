@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Serialization;
+using Redmine.Net.Api.Extensions;
 
 namespace Redmine.Net.Api.Types
 {
@@ -172,8 +173,8 @@ namespace Redmine.Net.Api.Types
             writer.WriteIdOrEmpty(Parent, RedmineKeys.PARENT_ID);
             writer.WriteElementString(RedmineKeys.HOMEPAGE, HomePage);
 
-			writer.WriteListElements (Trackers as List<IValue>, RedmineKeys.TRACKER_IDS);
-			writer.WriteListElements (EnabledModules as List<IValue>, RedmineKeys.ENABLED_MODULE_NAMES);
+            writer.WriteListElements(Trackers as List<IValue>, RedmineKeys.TRACKER_IDS);
+            writer.WriteListElements(EnabledModules as List<IValue>, RedmineKeys.ENABLED_MODULE_NAMES);
 
             if (Id == 0) return;
 
@@ -183,48 +184,48 @@ namespace Redmine.Net.Api.Types
         public bool Equals(Project other)
         {
             if (other == null) return false;
-			return (
-				Id == other.Id
-				&& Identifier.Equals(other.Identifier)
-				&& Description.Equals(other.Description)
-				&& Parent.Equals(other.Parent)
-				&& HomePage.Equals(other.HomePage)
-				&& CreatedOn==other.CreatedOn
-				&& UpdatedOn==other.UpdatedOn
-				&& Status==other.Status
-				&& IsPublic==other.IsPublic
-				&& InheritMembers==other.InheritMembers
-				&& Trackers.Equals(other.Trackers)
-				&& CustomFields.Equals(other.CustomFields)
-				&& IssueCategories.Equals(other.IssueCategories)
-				&& EnabledModules.Equals(other.EnabledModules)
-			);
+            return (
+                Id == other.Id
+                && Identifier.Equals(other.Identifier)
+                && Description.Equals(other.Description)
+                && Parent.Equals(other.Parent)
+                && HomePage.Equals(other.HomePage)
+                && CreatedOn == other.CreatedOn
+                && UpdatedOn == other.UpdatedOn
+                && Status == other.Status
+                && IsPublic == other.IsPublic
+                && InheritMembers == other.InheritMembers
+                && Trackers.Equals(other.Trackers)
+                && CustomFields.Equals(other.CustomFields)
+                && IssueCategories.Equals(other.IssueCategories)
+                && EnabledModules.Equals(other.EnabledModules)
+            );
         }
 
         public override int GetHashCode()
         {
-			var hashCode = base.GetHashCode();
-			hashCode = Identifier.GetHashCode(hashCode);
-			hashCode = Description.GetHashCode(hashCode);
-			hashCode = Parent.GetHashCode(hashCode);
-			hashCode = HomePage.GetHashCode(hashCode);
-			hashCode = CreatedOn.GetHashCode(hashCode);
-			hashCode = UpdatedOn.GetHashCode(hashCode);
-			hashCode = Status.GetHashCode(hashCode);
-			hashCode = IsPublic.GetHashCode(hashCode);
-			hashCode = InheritMembers.GetHashCode(hashCode);
-			hashCode = Trackers.GetHashCode(hashCode);
-			hashCode = CustomFields.GetHashCode(hashCode);
-			hashCode = IssueCategories.GetHashCode(hashCode);
-			hashCode = EnabledModules.GetHashCode(hashCode);
+            var hashCode = base.GetHashCode();
+            hashCode = Utils.GetHashCode(Identifier, hashCode);
+            hashCode = Utils.GetHashCode(Description, hashCode);
+            hashCode = Utils.GetHashCode(Parent, hashCode);
+            hashCode = Utils.GetHashCode(HomePage, hashCode);
+            hashCode = Utils.GetHashCode(CreatedOn, hashCode);
+            hashCode = Utils.GetHashCode(UpdatedOn, hashCode);
+            hashCode = Utils.GetHashCode(Status, hashCode);
+            hashCode = Utils.GetHashCode(IsPublic, hashCode);
+            hashCode = Utils.GetHashCode(InheritMembers, hashCode);
+            hashCode = Utils.GetHashCode(Trackers, hashCode);
+            hashCode = Utils.GetHashCode(CustomFields, hashCode);
+            hashCode = Utils.GetHashCode(IssueCategories, hashCode);
+            hashCode = Utils.GetHashCode(EnabledModules, hashCode);
 
             return hashCode;
         }
 
-		public override string ToString ()
-		{
-			return string.Format ("[Project: {13}, Identifier={0}, Description={1}, Parent={2}, HomePage={3}, CreatedOn={4}, UpdatedOn={5}, Status={6}, IsPublic={7}, InheritMembers={8}, Trackers={9}, CustomFields={10}, IssueCategories={11}, EnabledModules={12}]",
-				Identifier, Description, Parent, HomePage, CreatedOn, UpdatedOn, Status, IsPublic, InheritMembers, Trackers, CustomFields, IssueCategories, EnabledModules, base.ToString());
-		}
+        public override string ToString()
+        {
+            return string.Format("[Project: {13}, Identifier={0}, Description={1}, Parent={2}, HomePage={3}, CreatedOn={4}, UpdatedOn={5}, Status={6}, IsPublic={7}, InheritMembers={8}, Trackers={9}, CustomFields={10}, IssueCategories={11}, EnabledModules={12}]",
+                Identifier, Description, Parent, HomePage, CreatedOn, UpdatedOn, Status, IsPublic, InheritMembers, Trackers, CustomFields, IssueCategories, EnabledModules, base.ToString());
+        }
     }
 }

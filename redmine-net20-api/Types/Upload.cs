@@ -59,9 +59,9 @@ namespace Redmine.Net.Api.Types
 
         public bool Equals(Upload other)
         {
-            return other != null 
-                && Token.Equals(other.Token) 
-                && FileName.Equals(other.FileName) 
+            return other != null
+                && Token.Equals(other.Token)
+                && FileName.Equals(other.FileName)
                 && Description.Equals(other.Description)
                 && ContentType.Equals(other.ContentType);
         }
@@ -79,17 +79,17 @@ namespace Redmine.Net.Api.Types
             unchecked
             {
                 var hashCode = 13;
-				hashCode = Token.GetHashCode(hashCode);
-				hashCode = FileName.GetHashCode(hashCode);
-				hashCode = Description.GetHashCode(hashCode);
-				hashCode = ContentType.GetHashCode(hashCode);
+                hashCode = Utils.GetHashCode(Token, hashCode);
+                hashCode = Utils.GetHashCode(FileName, hashCode);
+                hashCode = Utils.GetHashCode(Description, hashCode);
+                hashCode = Utils.GetHashCode(ContentType, hashCode);
                 return hashCode;
             }
         }
 
-		public override string ToString ()
-		{
-			return string.Format ("[Upload: Token={0}, FileName={1}, ContentType={2}, Description={3}]", Token, FileName, ContentType, Description);
-		}
+        public override string ToString()
+        {
+            return string.Format("[Upload: Token={0}, FileName={1}, ContentType={2}, Description={3}]", Token, FileName, ContentType, Description);
+        }
     }
 }

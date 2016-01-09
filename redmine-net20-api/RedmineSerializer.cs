@@ -18,10 +18,11 @@ using System;
 using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
+using Redmine.Net.Api.Extensions;
 
 namespace Redmine.Net.Api
 {
-    public static partial class RedmineSerialization
+    public static class RedmineSerializer
     {
         /// <summary>
         /// Serializes the specified System.Object and writes the XML document to a string.
@@ -30,7 +31,8 @@ namespace Redmine.Net.Api
         /// <param name="obj">The object to serialize.</param>
         /// <returns>The System.String that contains the XML document.</returns>
         /// <exception cref="InvalidOperationException"></exception>
-        public static string ToXML<T>(T obj) where T : class
+        // ReSharper disable once InconsistentNaming
+        private static string ToXML<T>(T obj) where T : class
         {
             var xws = new XmlWriterSettings { OmitXmlDeclaration = true };
             using (var stringWriter = new StringWriter())
@@ -52,7 +54,8 @@ namespace Redmine.Net.Api
         /// <returns>The T object being deserialized.</returns>
         /// <exception cref="System.InvalidOperationException"> An error occurred during deserialization. The original exception is available
         /// using the System.Exception.InnerException property.</exception>
-        public static T FromXML<T>(string xml) where T : class
+        // ReSharper disable once InconsistentNaming
+        private static T FromXML<T>(string xml) where T : class
         {
             using (var text = new StringReader(xml))
             {
@@ -69,12 +72,63 @@ namespace Redmine.Net.Api
         /// <returns>The System.Object being deserialized.</returns>
         /// <exception cref="System.InvalidOperationException"> An error occurred during deserialization. The original exception is available
         /// using the System.Exception.InnerException property.</exception>
-        public static object FromXML(string xml, Type type)
+        // ReSharper disable once InconsistentNaming
+        private static object FromXML(string xml, Type type)
         {
             using (var text = new StringReader(xml))
             {
                 var sr = new XmlSerializer(type);
                 return sr.Deserialize(text);
+            }
+        }
+
+        public static string Serialize<T>(T obj, MimeFormat mimeFormat) where T : class, new()
+        {
+            return ToXML(obj);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="response"></param>
+        /// <param name="mimeFormat"></param>
+        /// <returns></returns>
+        public static T Deserialize<T>(string response, MimeFormat mimeFormat) where T : class, new()
+        {
+            if (string.IsNullOrEmpty(response)) throw new RedmineException("could not deserialize: " + response);
+
+            return FromXML<T>(response);
+        }
+
+        public static PaginatedObjects<T> DeserializeList<T>(string response, MimeFormat mimeFormat) where T : class, new()
+        {
+            if (string.IsNullOrEmpty(response)) throw new RedmineException("web response is null!");
+
+            return XmlDeserializeList<T>(response);
+        }
+
+        private static PaginatedObjects<T> XmlDeserializeList<T>(string response) where T : class, new()
+        {
+            if (string.IsNullOrEmpty(response)) throw new RedmineException("could not deserialize: " + response);
+
+            using (var stringReader = new StringReader(response))
+            {
+                using (var xmlReader = new XmlTextReader(stringReader))
+                {
+                    xmlReader.WhitespaceHandling = WhitespaceHandling.None;
+                    xmlReader.Read();
+                    xmlReader.Read();
+
+                    var totalItems = xmlReader.ReadAttributeAsInt(RedmineKeys.TOTAL_COUNT);
+
+                    var result = xmlReader.ReadElementContentAsCollection<T>();
+                    return new PaginatedObjects<T>()
+                    {
+                        TotalCount = totalItems,
+                        Objects = result
+                    };
+                }
             }
         }
     }

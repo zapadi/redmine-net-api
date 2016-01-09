@@ -83,16 +83,16 @@ namespace Redmine.Net.Api.Types
             unchecked
             {
                 var hashCode = 13;
-				hashCode = Id.GetHashCode(hashCode);
-				hashCode = Tracker.GetHashCode(hashCode);
-				hashCode = Subject.GetHashCode(hashCode);
+                hashCode = Utils.GetHashCode(Id, hashCode);
+                hashCode = Utils.GetHashCode(Tracker, hashCode);
+                hashCode = Utils.GetHashCode(Subject, hashCode);
                 return hashCode;
             }
         }
 
-		public override string ToString ()
-		{
-			return string.Format ("[IssueChild: {0}, Tracker={1}, Subject={2}]", base.ToString(), Tracker, Subject);
-		}
+        public override string ToString()
+        {
+            return string.Format("[IssueChild: {0}, Tracker={1}, Subject={2}]", base.ToString(), Tracker, Subject);
+        }
     }
 }

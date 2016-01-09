@@ -105,19 +105,19 @@ namespace Redmine.Net.Api.Types
         {
             unchecked
             {
-				var hashCode = 13;
-				hashCode =  Id.GetHashCode(hashCode);
-				hashCode =  Name.GetHashCode(hashCode);
-				hashCode =  IsDefault.GetHashCode(hashCode);
-				return hashCode;
+                var hashCode = 13;
+                hashCode = Utils.GetHashCode(Id, hashCode);
+                hashCode = Utils.GetHashCode(Name, hashCode);
+                hashCode = Utils.GetHashCode(IsDefault, hashCode);
+                return hashCode;
             }
         }
 
         #endregion
 
-		public override string ToString ()
-		{
-			return string.Format ("[TimeEntryActivity: Id={0}, Name={1}, IsDefault={2}]", Id, Name, IsDefault);
-		}
+        public override string ToString()
+        {
+            return string.Format("[TimeEntryActivity: Id={0}, Name={1}, IsDefault={2}]", Id, Name, IsDefault);
+        }
     }
 }

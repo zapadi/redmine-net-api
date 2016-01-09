@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using Redmine.Net.Api.Extensions;
 
 namespace Redmine.Net.Api.Types
 {
@@ -136,24 +137,24 @@ namespace Redmine.Net.Api.Types
         {
             unchecked
             {
-				var hashCode = base.GetHashCode();
-				hashCode =  Title.GetHashCode(hashCode);
-				hashCode =  Text.GetHashCode(hashCode);
-				hashCode =  Comments.GetHashCode(hashCode);
-				hashCode =  Version.GetHashCode(hashCode);
-				hashCode =  Author.GetHashCode(hashCode);
-				hashCode =  CreatedOn.GetHashCode(hashCode);
-				hashCode =  UpdatedOn.GetHashCode(hashCode);
-				hashCode =  Attachments.GetHashCode(hashCode);
-				return hashCode;
+                var hashCode = base.GetHashCode();
+                hashCode = Utils.GetHashCode(Title, hashCode);
+                hashCode = Utils.GetHashCode(Text, hashCode);
+                hashCode = Utils.GetHashCode(Comments, hashCode);
+                hashCode = Utils.GetHashCode(Version, hashCode);
+                hashCode = Utils.GetHashCode(Author, hashCode);
+                hashCode = Utils.GetHashCode(CreatedOn, hashCode);
+                hashCode = Utils.GetHashCode(UpdatedOn, hashCode);
+                hashCode = Utils.GetHashCode(Attachments, hashCode);
+                return hashCode;
             }
         }
 
-		public override string ToString ()
-		{
-			return string.Format ("[WikiPage: {8}, Title={0}, Text={1}, Comments={2}, Version={3}, Author={4}, CreatedOn={5}, UpdatedOn={6}, Attachments={7}]",
-				Title, Text, Comments, Version, Author, CreatedOn, UpdatedOn, Attachments, base.ToString());
-		}
+        public override string ToString()
+        {
+            return string.Format("[WikiPage: {8}, Title={0}, Text={1}, Comments={2}, Version={3}, Author={4}, CreatedOn={5}, UpdatedOn={6}, Attachments={7}]",
+                Title, Text, Comments, Version, Author, CreatedOn, UpdatedOn, Attachments, base.ToString());
+        }
 
         #endregion
     }

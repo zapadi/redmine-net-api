@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using Redmine.Net.Api.Extensions;
 
 namespace Redmine.Net.Api.Types
 {
@@ -101,17 +102,17 @@ namespace Redmine.Net.Api.Types
         {
             unchecked
             {
-				var hashCode = 13;
-				hashCode =  Id.GetHashCode(hashCode);
-				hashCode =  Name.GetHashCode(hashCode);
-				hashCode =  Permissions.GetHashCode(hashCode);
-				return hashCode;
+                var hashCode = 13;
+                hashCode = Utils.GetHashCode(Id, hashCode);
+                hashCode = Utils.GetHashCode(Name, hashCode);
+                hashCode = Utils.GetHashCode(Permissions, hashCode);
+                return hashCode;
             }
         }
 
-		public override string ToString ()
-		{
-			return string.Format ("[Role: Id={0}, Name={1}, Permissions={2}]", Id, Name, Permissions);
-		}
+        public override string ToString()
+        {
+            return string.Format("[Role: Id={0}, Name={1}, Permissions={2}]", Id, Name, Permissions);
+        }
     }
 }

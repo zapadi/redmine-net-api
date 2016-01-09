@@ -18,6 +18,7 @@ using System;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using Redmine.Net.Api.Extensions;
 
 namespace Redmine.Net.Api.Types
 {
@@ -100,17 +101,17 @@ namespace Redmine.Net.Api.Types
             unchecked
             {
                 var hashCode = 13;
-				hashCode = Id.GetHashCode(hashCode);
-				hashCode = Project.GetHashCode(hashCode);
-				hashCode = AsignTo.GetHashCode(hashCode);
-				hashCode = Name.GetHashCode(hashCode);
+                hashCode = Utils.GetHashCode(Id, hashCode);
+                hashCode = Utils.GetHashCode(Project, hashCode);
+                hashCode = Utils.GetHashCode(AsignTo, hashCode);
+                hashCode = Utils.GetHashCode(Name, hashCode);
                 return hashCode;
             }
         }
 
-		public override string ToString ()
-		{
-			return string.Format ("[IssueCategory: {3}, Project={0}, AsignTo={1}, Name={2}]", Project, AsignTo, Name, base.ToString());
-		}
+        public override string ToString()
+        {
+            return string.Format("[IssueCategory: {3}, Project={0}, AsignTo={1}, Name={2}]", Project, AsignTo, Name, base.ToString());
+        }
     }
 }

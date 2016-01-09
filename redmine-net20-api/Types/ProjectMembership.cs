@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using Redmine.Net.Api.Extensions;
 
 namespace Redmine.Net.Api.Types
 {
@@ -104,34 +105,34 @@ namespace Redmine.Net.Api.Types
         public void WriteXml(XmlWriter writer)
         {
             writer.WriteIdIfNotNull(User, RedmineKeys.USER_ID);
-			writer.WriteArray (Roles, RedmineKeys.ROLE_IDS, typeof(MembershipRole), RedmineKeys.ROLE_ID);
-			//
-//            writer.WriteStartElement(RedmineKeys.ROLE_IDS);
-//            writer.WriteAttributeString("type", "array");
-//            foreach (var role in Roles)
-//            {
-//                new XmlSerializer(role.GetType(), new XmlAttributeOverrides(), null, new XmlRootAttribute(RedmineKeys.ROLE_ID), string.Empty)
-//					.Serialize(writer, role);
-//            }
-//            writer.WriteEndElement();
+            writer.WriteArray(Roles, RedmineKeys.ROLE_IDS, typeof(MembershipRole), RedmineKeys.ROLE_ID);
+            //
+            //            writer.WriteStartElement(RedmineKeys.ROLE_IDS);
+            //            writer.WriteAttributeString("type", "array");
+            //            foreach (var role in Roles)
+            //            {
+            //                new XmlSerializer(role.GetType(), new XmlAttributeOverrides(), null, new XmlRootAttribute(RedmineKeys.ROLE_ID), string.Empty)
+            //					.Serialize(writer, role);
+            //            }
+            //            writer.WriteEndElement();
         }
-			
+
         public override int GetHashCode()
         {
             unchecked
             {
-				var hashCode = base.GetHashCode();
-				hashCode =  Project.GetHashCode(hashCode);
-				hashCode =  User.GetHashCode(hashCode);
-				hashCode =  Group.GetHashCode(hashCode);
-				hashCode =  Roles.GetHashCode(hashCode);
-				return hashCode;
+                var hashCode = base.GetHashCode();
+                hashCode = Utils.GetHashCode(Project, hashCode);
+                hashCode = Utils.GetHashCode(User, hashCode);
+                hashCode = Utils.GetHashCode(Group, hashCode);
+                hashCode = Utils.GetHashCode(Roles, hashCode);
+                return hashCode;
             }
         }
 
-		public override string ToString ()
-		{
-			return string.Format ("[ProjectMembership: {4}, Project={0}, User={1}, Group={2}, Roles={3}]", Project, User, Group, Roles, base.ToString());
-		}
+        public override string ToString()
+        {
+            return string.Format("[ProjectMembership: {4}, Project={0}, User={1}, Group={2}, Roles={3}]", Project, User, Group, Roles, base.ToString());
+        }
     }
 }

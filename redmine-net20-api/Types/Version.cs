@@ -16,9 +16,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Xml;
 using System.Xml.Serialization;
+using Redmine.Net.Api.Extensions;
 
 namespace Redmine.Net.Api.Types
 {
@@ -146,29 +146,29 @@ namespace Redmine.Net.Api.Types
                 && UpdatedOn == other.UpdatedOn
                 && CustomFields == other.CustomFields);
         }
-				
+
         public override int GetHashCode()
         {
             unchecked
             {
-				var hashCode = base.GetHashCode();
-				hashCode =  Project.GetHashCode(hashCode);
-				hashCode =  Description.GetHashCode(hashCode);
-				hashCode =  Status.GetHashCode(hashCode);
-				hashCode =  DueDate.GetHashCode(hashCode);
-				hashCode =  Sharing.GetHashCode(hashCode);
-				hashCode =  CreatedOn.GetHashCode(hashCode);
-				hashCode =  UpdatedOn.GetHashCode(hashCode);
-				hashCode =  CustomFields.GetHashCode(hashCode);
-				return hashCode;
+                var hashCode = base.GetHashCode();
+                hashCode = Utils.GetHashCode(Project, hashCode);
+                hashCode = Utils.GetHashCode(Description, hashCode);
+                hashCode = Utils.GetHashCode(Status, hashCode);
+                hashCode = Utils.GetHashCode(DueDate, hashCode);
+                hashCode = Utils.GetHashCode(Sharing, hashCode);
+                hashCode = Utils.GetHashCode(CreatedOn, hashCode);
+                hashCode = Utils.GetHashCode(UpdatedOn, hashCode);
+                hashCode = Utils.GetHashCode(CustomFields, hashCode);
+                return hashCode;
             }
         }
 
-		public override string ToString ()
-		{
-			return string.Format ("[Version: {8}, Project={0}, Description={1}, Status={2}, DueDate={3}, Sharing={4}, CreatedOn={5}, UpdatedOn={6}, CustomFields={7}]", 
-				Project, Description, Status, DueDate, Sharing, CreatedOn, UpdatedOn, CustomFields, base.ToString());
-		}
+        public override string ToString()
+        {
+            return string.Format("[Version: {8}, Project={0}, Description={1}, Status={2}, DueDate={3}, Sharing={4}, CreatedOn={5}, UpdatedOn={6}, CustomFields={7}]",
+                Project, Description, Status, DueDate, Sharing, CreatedOn, UpdatedOn, CustomFields, base.ToString());
+        }
     }
 
     public enum VersionSharing

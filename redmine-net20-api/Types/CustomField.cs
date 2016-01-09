@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using Redmine.Net.Api.Extensions;
 
 namespace Redmine.Net.Api.Types
 {
@@ -165,22 +166,22 @@ namespace Redmine.Net.Api.Types
             unchecked
             {
                 var hashCode = 13;
-                hashCode = Id.GetHashCode(hashCode);
-				hashCode = IsFilter.GetHashCode(hashCode);
-				hashCode = IsRequired.GetHashCode(hashCode);
-				hashCode = Multiple.GetHashCode(hashCode);
-				hashCode = Searchable.GetHashCode(hashCode);
-				hashCode = Visible.GetHashCode(hashCode);
-				hashCode = CustomizedType.GetHashCode(hashCode);
-				hashCode = DefaultValue.GetHashCode(hashCode);
-				hashCode = FieldFormat.GetHashCode(hashCode);
-				hashCode = MaxLength.GetHashCode(hashCode);
-				hashCode = MinLength.GetHashCode(hashCode);
-				hashCode = Name.GetHashCode(hashCode);
-				hashCode = Regexp.GetHashCode(hashCode);
-				hashCode = PossibleValues.GetHashCode(hashCode);
-				hashCode = Roles.GetHashCode(hashCode);
-				hashCode = Trackers.GetHashCode(hashCode);
+                hashCode = Utils.GetHashCode(Id,hashCode);
+				hashCode = Utils.GetHashCode(IsFilter,hashCode);
+				hashCode = Utils.GetHashCode(IsRequired,hashCode);
+				hashCode = Utils.GetHashCode(Multiple,hashCode);
+				hashCode = Utils.GetHashCode(Searchable,hashCode);
+				hashCode = Utils.GetHashCode(Visible,hashCode);
+				hashCode = Utils.GetHashCode(CustomizedType,hashCode);
+				hashCode = Utils.GetHashCode(DefaultValue,hashCode);
+				hashCode = Utils.GetHashCode(FieldFormat,hashCode);
+				hashCode = Utils.GetHashCode(MaxLength,hashCode);
+				hashCode = Utils.GetHashCode(MinLength,hashCode);
+				hashCode = Utils.GetHashCode(Name,hashCode);
+				hashCode = Utils.GetHashCode(Regexp,hashCode);
+				hashCode = Utils.GetHashCode(PossibleValues,hashCode);
+				hashCode = Utils.GetHashCode(Roles,hashCode);
+				hashCode = Utils.GetHashCode(Trackers,hashCode);
                 return hashCode;
             }
         }

@@ -18,6 +18,7 @@ using System;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using Redmine.Net.Api.Extensions;
 
 namespace Redmine.Net.Api.Types
 {
@@ -85,9 +86,9 @@ namespace Redmine.Net.Api.Types
         {
             if (other == null) return false;
 
-            return Revision == other.Revision 
-                && User == other.User 
-                && Comments == other.Comments 
+            return Revision == other.Revision
+                && User == other.User
+                && Comments == other.Comments
                 && CommittedOn == other.CommittedOn;
         }
 
@@ -104,10 +105,10 @@ namespace Redmine.Net.Api.Types
             unchecked
             {
                 var hashCode = 13;
-				hashCode = Revision.GetHashCode(hashCode);
-				hashCode = User.GetHashCode(hashCode);
-				hashCode = Comments.GetHashCode(hashCode);
-				hashCode = CommittedOn.GetHashCode(hashCode);
+                hashCode = Utils.GetHashCode(Revision, hashCode);
+                hashCode = Utils.GetHashCode(User, hashCode);
+                hashCode = Utils.GetHashCode(Comments, hashCode);
+                hashCode = Utils.GetHashCode(CommittedOn, hashCode);
                 return hashCode;
             }
         }

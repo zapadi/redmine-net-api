@@ -42,15 +42,15 @@ namespace Redmine.Net.Api.Types
         {
             unchecked
             {
-				var hashCode = 13;
-				hashCode =  Info.GetHashCode(hashCode);
-				return hashCode;
+                var hashCode = 13;
+                hashCode = Utils.GetHashCode(Info, hashCode);
+                return hashCode;
             }
         }
 
-		public override string ToString ()
-		{
-			return string.Format ("[Permission: Info={0}]", Info);
-		}
+        public override string ToString()
+        {
+            return string.Format("[Permission: Info={0}]", Info);
+        }
     }
 }

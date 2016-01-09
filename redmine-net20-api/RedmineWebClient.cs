@@ -39,7 +39,10 @@ namespace Redmine.Net.Api
 
                 httpWebRequest.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate | DecompressionMethods.None;
 
-				httpWebRequest.Proxy = Proxy;
+				var wp = WebRequest.DefaultWebProxy;
+				wp.Credentials = CredentialCache.DefaultCredentials;
+
+				httpWebRequest.Proxy = wp;
 
                 return httpWebRequest;
             }

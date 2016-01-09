@@ -14,10 +14,6 @@
    limitations under the License.
 */
 
-using System;
-using System.Xml;
-using System.Xml.Serialization;
-
 namespace Redmine.Net.Api.Types
 {
 
