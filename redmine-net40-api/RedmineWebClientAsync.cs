@@ -15,8 +15,6 @@ namespace Redmine.Net.Api
 		public WebHeaderCollection Headers { get; set; }
 		public IWebProxy Proxy { get; set; }
 
-		private string ApiKey { get; set; }
-
 //		public RedmineAsyncWebClient()
 //		{
 //			//var defaultClient = new WebClient();

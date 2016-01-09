@@ -35,6 +35,24 @@
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>redmine-net-api.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugXML|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\DebugXML\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugJSON|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\DebugJSON\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -46,6 +64,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\redmine-net20-api\Extensions\Extensions.cs">
+      <Link>Extensions\Extensions.cs</Link>
+    </Compile>
+    <Compile Include="..\redmine-net20-api\Extensions\XmlReaderExtensions.cs">
+      <Link>Extensions\XmlReaderExtensions.cs</Link>
+    </Compile>
     <Compile Include="..\redmine-net20-api\RedmineKeys.cs">
       <Link>RedmineKeys.cs</Link>
     </Compile>
@@ -84,6 +108,12 @@
     </Compile>
     <Compile Include="..\redmine-net20-api\Types\IdentifiableName.cs">
       <Link>Types\IdentifiableName.cs</Link>
+    </Compile>
+    <Compile Include="..\redmine-net20-api\Types\IRedmineManager.cs">
+      <Link>Types\IRedmineManager.cs</Link>
+    </Compile>
+    <Compile Include="..\redmine-net20-api\Types\IRedmineWebClient.cs">
+      <Link>Types\IRedmineWebClient.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net20-api\Types\Issue.cs">
       <Link>Types\Issue.cs</Link>
@@ -184,11 +214,14 @@
     <Compile Include="..\redmine-net20-api\Types\WikiPage.cs">
       <Link>Types\WikiPage.cs</Link>
     </Compile>
-    <Compile Include="..\redmine-net20-api\Utils.cs">
-      <Link>Utils.cs</Link>
+    <Compile Include="..\redmine-net20-api\UrlHelper.cs">
+      <Link>UrlHelper.cs</Link>
     </Compile>
-    <Compile Include="..\redmine-net40-api\ExtensionMethods.cs">
-      <Link>ExtensionMethods.cs</Link>
+    <Compile Include="..\redmine-net40-api\Extensions\JsonExtensions.cs">
+      <Link>Extensions\JsonExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\redmine-net40-api\Extensions\RedmineManagerAsyncExtensions.cs">
+      <Link>Extensions\RedmineManagerAsyncExtensions.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net40-api\JSonConverters\AttachmentConverter.cs">
       <Link>JsonConverters\AttachmentConverter.cs</Link>
@@ -307,20 +340,17 @@
     <Compile Include="..\redmine-net40-api\JSonConverters\WikiPageConverter.cs">
       <Link>JsonConverters\WikiPageConverter.cs</Link>
     </Compile>
-    <Compile Include="..\redmine-net40-api\JsonExtensions.cs">
-      <Link>JsonExtensions.cs</Link>
-    </Compile>
     <Compile Include="..\redmine-net40-api\MimeFormat.cs">
       <Link>MimeFormat.cs</Link>
+    </Compile>
+    <Compile Include="..\redmine-net40-api\PaginatedObjects.cs">
+      <Link>PaginatedObjects.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net40-api\RedmineException.cs">
       <Link>RedmineException.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net40-api\RedmineManager.cs">
       <Link>RedmineManager.cs</Link>
-    </Compile>
-    <Compile Include="..\redmine-net40-api\RedmineManagerAsync.cs">
-      <Link>RedmineManagerAsync.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net40-api\RedmineSerialization.cs">
       <Link>RedmineSerialization.cs</Link>
@@ -332,11 +362,18 @@
       <Link>RedmineWebClient.cs</Link>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="..\redmine-net40-api\Types\IRedmineManagerAsync.cs">
+      <Link>IRedmineManagerAsync.cs</Link>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="..\redmine-net40-api\Utils.cs">
+      <Link>Utils.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="redmine-net-api.snk" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

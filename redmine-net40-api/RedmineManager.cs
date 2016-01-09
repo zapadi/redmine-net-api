@@ -17,16 +17,12 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Diagnostics;
 using System.Globalization;
-using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Xml;
 using Redmine.Net.Api.Types;
 using Group = Redmine.Net.Api.Types.Group;
 using Version = Redmine.Net.Api.Types.Version;
@@ -36,58 +32,66 @@ namespace Redmine.Net.Api
     /// <summary>
     /// The main class to access Redmine API.
     /// </summary>
-    public partial class RedmineManager
+    public class RedmineManager : IRedmineManager
     {
-        private const string REQUEST_FORMAT = "{0}/{1}/{2}.{3}";
-        private const string FORMAT = "{0}/{1}.{2}";
+        public const string REQUEST_FORMAT = "{0}/{1}/{2}.{3}";
+        public const string FORMAT = "{0}/{1}.{2}";
 
-        private const string WIKI_INDEX_FORMAT = "{0}/projects/{1}/wiki/index.{2}";
-        private const string WIKI_PAGE_FORMAT = "{0}/projects/{1}/wiki/{2}.{3}";
-        private const string WIKI_VERSION_FORMAT = "{0}/projects/{1}/wiki/{2}/{3}.{4}";
+        public const string WIKI_INDEX_FORMAT = "{0}/projects/{1}/wiki/index.{2}";
+        public const string WIKI_PAGE_FORMAT = "{0}/projects/{1}/wiki/{2}.{3}";
+        public const string WIKI_VERSION_FORMAT = "{0}/projects/{1}/wiki/{2}/{3}.{4}";
 
-        private const string ENTITY_WITH_PARENT_FORMAT = "{0}/{1}/{2}/{3}.{4}";
+        public const string ENTITY_WITH_PARENT_FORMAT = "{0}/{1}/{2}/{3}.{4}";
 
-        private const string CURRENT_USER_URI = "current";
-        private const string PUT = "PUT";
-        private const string POST = "POST";
-        private const string DELETE = "DELETE";
+        public const string CURRENT_USER_URI = "current";
+        public const string PUT = "PUT";
+        public const string POST = "POST";
+        public const string DELETE = "DELETE";
 
-        private readonly Dictionary<Type, String> urls = new Dictionary<Type, string>
-        {
-            {typeof (Issue), "issues"},
-            {typeof (Project), "projects"},
-            {typeof (User), "users"},
-            {typeof (News), "news"},
-            {typeof (Query), "queries"},
-            {typeof (Version), "versions"},
-            {typeof (Attachment), "attachments"},
-            {typeof (IssueRelation), "relations"},
-            {typeof (TimeEntry), "time_entries"},
-            {typeof (IssueStatus), "issue_statuses"},
-            {typeof (Tracker), "trackers"},
-            {typeof (IssueCategory), "issue_categories"},
-            {typeof (Role), "roles"},
-            {typeof (ProjectMembership), "memberships"},
-            {typeof (Group), "groups"},
-            {typeof (TimeEntryActivity), "enumerations/time_entry_activities"},
-            {typeof (IssuePriority), "enumerations/issue_priorities"},
-            {typeof (Watcher), "watchers"},
-            {typeof (IssueCustomField), "custom_fields"},
-            {typeof (CustomField), "custom_fields"}
+        private static Dictionary<Type, string> sufixes = new Dictionary<Type, string> {
+            { typeof(Issue), "issues" },
+            { typeof(Project), "projects" },
+            { typeof(User), "users" },
+            { typeof(News), "news" },
+            { typeof(Query), "queries" },
+            { typeof(Version), "versions" },
+            { typeof(Attachment), "attachments" },
+            { typeof(IssueRelation), "relations" },
+            { typeof(TimeEntry), "time_entries" },
+            { typeof(IssueStatus), "issue_statuses" },
+            { typeof(Tracker), "trackers" },
+            { typeof(IssueCategory), "issue_categories" },
+            { typeof(Role), "roles" },
+            { typeof(ProjectMembership), "memberships" },
+            { typeof(Group), "groups" },
+            { typeof(TimeEntryActivity), "enumerations/time_entry_activities" },
+            { typeof(IssuePriority), "enumerations/issue_priorities" },
+            { typeof(Watcher), "watchers" },
+            { typeof(IssueCustomField), "custom_fields" },
+            { typeof(CustomField), "custom_fields" }
         };
 
         private readonly string host, apiKey, basicAuthorization;
         private readonly MimeFormat mimeFormat;
         private readonly CredentialCache credentialCache;
 
+        public static Dictionary<Type, string> Sufixes { get { return sufixes; } }
+
+        public string Host { get { return host; } }
+
+        public MimeFormat MimeFormat { get { return mimeFormat; } }
+
         /// <summary>
         /// Maximum page-size when retrieving complete object lists
-        /// <remarks>By default only 25 results can be retrieved per request. Maximum is 100. To change the maximum value set in your Settings -> General, "Objects per page options".By adding (for instance) 9999 there would make you able to get that many results per request.</remarks>
+        /// <remarks>By default only 25 results can be retrieved per request. Maximum is 100. 
+        /// To change the maximum value set in your Settings -> General, "Objects per page options". 
+        /// By adding (for instance) 9999 there would make you able to get that many results per request.</remarks>
         /// </summary>
         public int PageSize { get; set; }
 
         /// <summary>
-        /// As of Redmine 2.2.0 you can impersonate user setting user login (eg. jsmith). This only works when using the API with an administrator account, this header will be ignored when using the API with a regular user account.
+        /// As of Redmine 2.2.0 you can impersonate user setting user login (eg. jsmith). 
+        /// This only works when using the API with an administrator account, this header will be ignored when using the API with a regular user account.
         /// </summary>
         public string ImpersonateUser { get; set; }
 
@@ -97,12 +101,13 @@ namespace Redmine.Net.Api
         /// <param name="host">The host.</param>
         /// <param name="mimeFormat"></param>
         /// <param name="verifyServerCert">if set to <c>true</c> [verify server cert].</param>
-        public RedmineManager(string host, MimeFormat mimeFormat = MimeFormat.xml, bool verifyServerCert = true)
+        private RedmineManager(string host, MimeFormat mimeFormat = MimeFormat.xml, bool verifyServerCert = true)
         {
             PageSize = 25;
 
             Uri uriResult;
-            if (!Uri.TryCreate(host, UriKind.Absolute, out uriResult) || !(uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps))
+            if (!Uri.TryCreate(host, UriKind.Absolute, out uriResult)
+                || !(uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps))
                 host = "http://" + host;
 
             if (!Uri.TryCreate(host, UriKind.Absolute, out uriResult))
@@ -117,12 +122,7 @@ namespace Redmine.Net.Api
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RedmineManager"/> class.
-        /// Most of the time, the API requires authentication. To enable the API-style authentication, you have to check Enable REST API in Administration -> Settings -> Authentication. Then, authentication can be done in 2 different ways:
-        /// using your regular login/password via HTTP Basic authentication.
-        /// using your API key which is a handy way to avoid putting a password in a script. The API key may be attached to each request in one of the following way:
-        /// passed in as a "key" parameter
-        /// passed in as a username with a random password via HTTP Basic authentication
-        /// passed in as a "X-Redmine-API-Key" HTTP header (added in Redmine 1.1.0)
+        /// To enable the API-style authentication, you have to check Enable REST API in Administration -> Settings -> Authentication. 
         /// You can find your API key on your account page ( /my/account ) when logged in, on the right-hand pane of the default layout.
         /// </summary>
         /// <param name="host">The host.</param>
@@ -132,19 +132,13 @@ namespace Redmine.Net.Api
         public RedmineManager(string host, string apiKey, MimeFormat mimeFormat = MimeFormat.xml, bool verifyServerCert = true)
             : this(host, mimeFormat, verifyServerCert)
         {
-            PageSize = 25;
             this.apiKey = apiKey;
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RedmineManager"/> class.
-        /// Most of the time, the API requires authentication. To enable the API-style authentication, you have to check Enable REST API in Administration -> Settings -> Authentication. Then, authentication can be done in 2 different ways:
-        /// using your regular login/password via HTTP Basic authentication.
-        /// using your API key which is a handy way to avoid putting a password in a script. The API key may be attached to each request in one of the following way:
-        /// passed in as a "key" parameter
-        /// passed in as a username with a random password via HTTP Basic authentication
-        /// passed in as a "X-Redmine-API-Key" HTTP header (added in Redmine 1.1.0)
-        /// You can find your API key on your account page ( /my/account ) when logged in, on the right-hand pane of the default layout.
+        /// Most of the time, the API requires authentication. 
+        /// The authentication can be done using your regular login/password via HTTP Basic authentication.
         /// </summary>
         /// <param name="host">The host.</param>
         /// <param name="login">The login.</param>
@@ -154,8 +148,8 @@ namespace Redmine.Net.Api
         public RedmineManager(string host, string login, string password, MimeFormat mimeFormat = MimeFormat.xml, bool verifyServerCert = true)
             : this(host, mimeFormat, verifyServerCert)
         {
-			credentialCache = new CredentialCache { { new Uri(host), "Basic", new NetworkCredential(login, password) } };
-            
+            credentialCache = new CredentialCache { { new Uri(host), "Basic", new NetworkCredential(login, password) } };
+
             string token = Convert.ToBase64String(Encoding.UTF8.GetBytes(string.Format("{0}:{1}", login, password)));
             basicAuthorization = string.Format("Basic {0}", token);
         }
@@ -169,37 +163,34 @@ namespace Redmine.Net.Api
         /// using the System.Exception.InnerException property.</exception>
         public User GetCurrentUser(NameValueCollection parameters = null)
         {
-            return ExecuteDownload<User>(string.Format(REQUEST_FORMAT, host, urls[typeof(User)], CURRENT_USER_URI, mimeFormat), "GetCurrentUser", parameters);
+            var url = UrlHelper.GetCurrentUserUrl(this);
+            return ExecuteDownload<User>(url, "GetCurrentUser", parameters);
         }
 
-        /// <summary>
-        /// Returns a list of users.
-        /// </summary>
-        /// <param name="userStatus">get only users with the given status. Default is 1 (active users)</param>
-        /// <param name="name"> filter users on their login, firstname, lastname and mail ; if the pattern contains a space, it will also return users whose firstname match the first word or lastname match the second word.</param>
-        /// <param name="groupId">get only users who are members of the given group</param>
-        /// <returns></returns>
-        public IList<User> GetUsers(UserStatus userStatus = UserStatus.STATUS_ACTIVE, string name = null, int groupId = 0)
+        ///// <summary>
+        ///// Returns a list of users.
+        ///// </summary>
+        ///// <param name="userStatus">get only users with the given status. Default is 1 (active users)</param>
+        ///// <param name="name"> filter users on their login, firstname, lastname and mail ; if the pattern contains a space, it will also return users whose firstname match the first word or lastname match the second word.</param>
+        ///// <param name="groupId">get only users who are members of the given group</param>
+        ///// <returns></returns>
+        //public List<User> GetUsers(UserStatus userStatus = UserStatus.STATUS_ACTIVE, string name = null, int groupId = 0)
+        //{
+        //    return GetObjects<User>(UrlHelper.GetUserQuery(this, userStatus, name, groupId));
+        //}
+
+        public void AddWatcherToIssue(int issueId, int userId)
         {
-            var filters = new NameValueCollection { { "status", ((int)userStatus).ToString(CultureInfo.InvariantCulture) } };
-
-            if (!string.IsNullOrWhiteSpace(name)) filters.Add(RedmineKeys.NAME, name);
-
-            if (groupId > 0) filters.Add("group_id", groupId.ToString(CultureInfo.InvariantCulture));
-
-            return GetTotalObjectList<User>(filters);
-        }
-
-        public void AddWatcher(int issueId, int userId)
-        {
-            ExecuteUpload(string.Format(REQUEST_FORMAT, host, urls[typeof(Issue)], issueId + "/watchers", mimeFormat), POST, mimeFormat == MimeFormat.xml
+            var url = UrlHelper.GetAddWatcherUrl(this,issueId, userId);
+            ExecuteUpload(url, POST, mimeFormat == MimeFormat.xml
                 ? "<user_id>" + userId + "</user_id>"
                 : "{\"user_id\":\"" + userId + "\"}", "AddWatcher");
         }
 
-        public void RemoveWatcher(int issueId, int userId)
+        public void RemoveWatcherFromIssue(int issueId, int userId)
         {
-            ExecuteUpload(string.Format(REQUEST_FORMAT, host, urls[typeof(Issue)], issueId + "/watchers/" + userId, mimeFormat), DELETE, string.Empty, "RemoveWatcher");
+            var url = UrlHelper.GetRemoveWatcherUrl(this, issueId, userId);
+            ExecuteUpload(url, DELETE, string.Empty, "RemoveWatcher");
         }
 
         /// <summary>
@@ -207,9 +198,10 @@ namespace Redmine.Net.Api
         /// </summary>
         /// <param name="groupId">The group id.</param>
         /// <param name="userId">The user id.</param>
-        public void AddUser(int groupId, int userId)
+        public void AddUserToGroup(int groupId, int userId)
         {
-            ExecuteUpload(string.Format(REQUEST_FORMAT, host, urls[typeof(Group)], groupId + "/users", mimeFormat), POST, mimeFormat == MimeFormat.xml
+            var url = UrlHelper.GetAddUserToGroupUrl(this, groupId);
+            ExecuteUpload(url, POST, mimeFormat == MimeFormat.xml
                 ? "<user_id>" + userId + "</user_id>"
                 : "{\"user_id\":\"" + userId + "\"}", "AddUser");
         }
@@ -219,20 +211,17 @@ namespace Redmine.Net.Api
         /// </summary>
         /// <param name="groupId">The group id.</param>
         /// <param name="userId">The user id.</param>
-        public void DeleteUser(int groupId, int userId)
+        public void RemoveUserFromGroup(int groupId, int userId)
         {
-            ExecuteUpload(string.Format(REQUEST_FORMAT, host, urls[typeof(Group)], groupId + "/users/" + userId, mimeFormat), DELETE, string.Empty, "DeleteUser");
+            var url = UrlHelper.GetRemoveUserFromGroupUrl(this, groupId, userId);
+            ExecuteUpload(url, DELETE, string.Empty, "DeleteUser");
         }
 
         /// <summary>
-        /// Downloads the user whose credentials are used to access the API. This method does not block the calling thread.
-        /// </summary>
-        /// <returns>Returns the Guid associated with the async request.</returns>
-        /// <exception cref="System.InvalidOperationException"> An error occurred during deserialization. The original exception is available
-        /// using the System.Exception.InnerException property.</exception>
-        /// <summary>
         /// Returns the details of a wiki page or the details of an old version of a wiki page if the <b>version</b> parameter is set.
         /// </summary>
+        /// <exception cref="System.InvalidOperationException"> An error occurred during deserialization. The original exception is available
+        /// using the System.Exception.InnerException property.</exception>
         /// <param name="projectId">The project id or identifier.</param>
         /// <param name="parameters">
         ///     attachments
@@ -243,22 +232,19 @@ namespace Redmine.Net.Api
         /// <returns></returns>
         public WikiPage GetWikiPage(string projectId, NameValueCollection parameters, string pageName, uint version = 0)
         {
-            string address = version == 0
-                                 ? string.Format(WIKI_PAGE_FORMAT, host, projectId, pageName, mimeFormat)
-                                 : string.Format(WIKI_VERSION_FORMAT, host, projectId, pageName, version, mimeFormat);
-
-            return ExecuteDownload<WikiPage>(address, "GetWikiPage", parameters);
+            string url = UrlHelper.GetWikiPageUrl(this, projectId, parameters, pageName, version);
+            return ExecuteDownload<WikiPage>(url, "GetWikiPage", parameters);
         }
 
         /// <summary>
         /// Returns the list of all pages in a project wiki.
         /// </summary>
         /// <param name="projectId">The project id or identifier.</param>
-        /// <returns></returns>
         public IList<WikiPage> GetAllWikiPages(string projectId)
         {
-            int totalCount;
-            return ExecuteDownloadList<WikiPage>(string.Format(WIKI_INDEX_FORMAT, host, projectId, mimeFormat), "GetAllWikiPages", "wiki_pages", out totalCount);
+            var url = UrlHelper.GetWikisUrl(this, projectId);
+            var result = ExecuteDownloadList<WikiPage>(url, "GetAllWikiPages");
+            return result != null ? result.Objects : null;
         }
 
         /// <summary>
@@ -270,11 +256,11 @@ namespace Redmine.Net.Api
         /// <returns></returns>
         public WikiPage CreateOrUpdateWikiPage(string projectId, string pageName, WikiPage wikiPage)
         {
-            string result = Serialize(wikiPage);
+            if (wikiPage == null) throw new ArgumentNullException("wikiPage");
 
-            if (string.IsNullOrEmpty(result)) return null;
-
-            return ExecuteUpload<WikiPage>(string.Format(WIKI_PAGE_FORMAT, host, projectId, pageName, mimeFormat), PUT, result, "CreateOrUpdateWikiPage");
+            string data = RedmineSerializer.Serialize(wikiPage,MimeFormat);
+            var url = UrlHelper.GetWikiCreateOrUpdaterUrl(this, projectId, pageName);
+            return ExecuteUpload<WikiPage>(url, PUT, data, "CreateOrUpdateWikiPage");
         }
 
         /// <summary>
@@ -284,7 +270,8 @@ namespace Redmine.Net.Api
         /// <param name="pageName">The wiki page name.</param>
         public void DeleteWikiPage(string projectId, string pageName)
         {
-            ExecuteUpload(string.Format(WIKI_PAGE_FORMAT, host, projectId, pageName, mimeFormat), DELETE, string.Empty, "DeleteWikiPage");
+            var url = UrlHelper.GetDeleteWikirUrl(this, projectId, pageName);
+            ExecuteUpload(url, DELETE, string.Empty, "DeleteWikiPage");
         }
 
         /// <summary>
@@ -295,40 +282,26 @@ namespace Redmine.Net.Api
         /// <returns>Returns the token for uploaded file.</returns>
         public Upload UploadFile(byte[] data)
         {
-            using (var wc = CreateUploadWebClient())
+            using (var wc = CreateWebClient(null, true))
             {
-                try
-                {
-                    var response = wc.UploadData(string.Format(FORMAT, host, "uploads", mimeFormat), data);
-                    var responseString = Encoding.ASCII.GetString(response);
-                    return Deserialize<Upload>(responseString);
-                }
-                catch (WebException webException)
-                {
-                    HandleWebException(webException, "Upload");
-                }
+                var url = UrlHelper.GetUploadFileUrl(this);
+                var response = wc.UploadData(url, data);
+                var responseString = Encoding.ASCII.GetString(response);
+                return RedmineSerializer.Deserialize<Upload>(responseString, MimeFormat);
             }
-
-            return null;
         }
 
+        /// <summary>
+        /// Downloads the file.
+        /// </summary>
+        /// <returns>The file as byte array.</returns>
+        /// <param name="address">Address.</param>
         public byte[] DownloadFile(string address)
         {
-            using (var wc = CreateUploadWebClient())
+            using (var wc = CreateWebClient(null, true))
             {
-                try
-                {
-                    wc.Headers.Add(HttpRequestHeader.Accept, "application/octet-stream");
-                    
-                    return wc.DownloadData(address);
-                }
-                catch (WebException webException)
-                {
-                    HandleWebException(webException, "Download");
-                }
+                return wc.DownloadData(address);
             }
-
-            return null;
         }
 
         /// <summary>
@@ -337,12 +310,17 @@ namespace Redmine.Net.Api
         /// <typeparam name="T">The type of objects to retrieve.</typeparam>
         /// <param name="parameters">Optional filters and/or optional fetched data.</param>
         /// <returns>Returns a paginated list of objects.</returns>
-        /// <remarks>By default only 25 results can be retrieved by request. Maximum is 100. To change the maximum value set in your Settings -> General, "Objects per page options".By adding (for instance) 9999 there would make you able to get that many results per request.</remarks>
-        /// <exception cref="Redmine.Net.Api.RedmineException"></exception>
-        public IList<T> GetObjectList<T>(NameValueCollection parameters) where T : class, new()
+        /// <remarks>By default only 25 results can be retrieved by request. 
+        /// Maximum is 100. To change the maximum value set in your Settings -> General, "Objects per page options".By adding (for instance) 9999 there would make you able to get that many results per request.</remarks>
+        public List<T> GetObjectList<T>(NameValueCollection parameters) where T : class, new()
         {
-            int totalCount;
-            return GetObjectList<T>(parameters, out totalCount);
+            return GetObjects<T>(parameters);
+        }
+
+        public PaginatedObjects<T> GetPaginatedObjects<T>(NameValueCollection parameters) where T : class, new()
+        {
+            var url = UrlHelper.GetListUrl<T>(this, parameters);
+            return ExecuteDownloadList<T>(url, "GetObjectList", parameters);
         }
 
         /// <summary>
@@ -353,49 +331,18 @@ namespace Redmine.Net.Api
         /// <param name="totalCount">Provide information about the total object count available in Redmine.</param>
         /// <returns>Returns a paginated list of objects.</returns>
         /// <remarks>By default only 25 results can be retrieved by request. Maximum is 100. To change the maximum value set in your Settings -> General, "Objects per page options".By adding (for instance) 9999 there would make you able to get that many results per request.</remarks>
-        /// <exception cref="Redmine.Net.Api.RedmineException"></exception>
         /// <code></code>
-        public IList<T> GetObjectList<T>(NameValueCollection parameters, out int totalCount) where T : class, new()
+        [Obsolete("Use GetPaginatedObjects")]
+        public List<T> GetObjectList<T>(NameValueCollection parameters, out int totalCount) where T : class, new()
         {
             totalCount = -1;
-            if (!urls.ContainsKey(typeof(T))) return null;
-
-            var type = typeof(T);
-            string address = string.Empty;
-
-            if (type == typeof(Version) || type == typeof(IssueCategory) || type == typeof(ProjectMembership))
+            var result = GetPaginatedObjects<T>(parameters);
+            if (result != null)
             {
-				var projectId = parameters.GetParameterValue(RedmineKeys.PROJECT_ID);
-                if (string.IsNullOrEmpty(projectId)) throw new RedmineException("The project id is mandatory! \nCheck if you have included the parameter project_id to parameters.");
-
-                address = string.Format(ENTITY_WITH_PARENT_FORMAT, host, "projects", projectId, urls[type], mimeFormat);
+                totalCount = result.TotalCount;
+                return result.Objects;
             }
-            else
-            {
-                if (type == typeof(IssueRelation))
-                {
-					string issueId = parameters.GetParameterValue(RedmineKeys.ISSUE_ID);
-                    if (string.IsNullOrEmpty(issueId))
-                        throw new RedmineException("The issue id is mandatory! \nCheck if you have included the parameter issue_id to parameters");
-
-                    address = string.Format(ENTITY_WITH_PARENT_FORMAT, host, "issues", issueId, urls[type], mimeFormat);
-                }
-                else
-                {
-                    if (type == typeof(News))
-                    {
-						var projectId = parameters.GetParameterValue(RedmineKeys.PROJECT_ID);
-                        if (!string.IsNullOrEmpty(projectId))
-                        {
-                            address = string.Format(ENTITY_WITH_PARENT_FORMAT, host, "projects", projectId, urls[type], mimeFormat);
-                        }
-                    }
-                    if (string.IsNullOrWhiteSpace(address))
-                        address = string.Format(FORMAT, host, urls[type], mimeFormat);
-                }
-            }
-
-            return ExecuteDownloadList<T>(address, "GetObjectList<" + type.Name + ">", urls[type], out totalCount, parameters);
+            return null;
         }
 
         /// <summary>
@@ -404,42 +351,58 @@ namespace Redmine.Net.Api
         /// <typeparam name="T">The type of objects to retrieve.</typeparam>
         /// <param name="parameters">Optional filters and/or optional fetched data.</param>
         /// <returns>Returns a complete list of objects.</returns>
-        /// <remarks>By default only 25 results can be retrieved per request. Maximum is 100. To change the maximum value set in your Settings -> General, "Objects per page options".By adding (for instance) 9999 there would make you able to get that many results per request.</remarks>
-        /// <exception cref="Redmine.Net.Api.RedmineException"></exception>
-        public IList<T> GetTotalObjectList<T>(NameValueCollection parameters) where T : class, new()
+
+        public List<T> GetObjects<T>(NameValueCollection parameters) where T : class, new()
         {
-            int totalCount, pageSize;
+            int totalCount = 0, pageSize;
             List<T> resultList = null;
             if (parameters == null) parameters = new NameValueCollection();
             int offset = 0;
-            int.TryParse(parameters["limit"], out pageSize);
+            int.TryParse(parameters[RedmineKeys.LIMIT], out pageSize);
             if (pageSize == default(int))
             {
                 pageSize = PageSize > 0 ? PageSize : 25;
-                parameters.Set("limit", pageSize.ToString(CultureInfo.InvariantCulture));
+                parameters.Set(RedmineKeys.LIMIT, pageSize.ToString(CultureInfo.InvariantCulture));
             }
             do
             {
-                parameters.Set("offset", offset.ToString(CultureInfo.InvariantCulture));
-                var tempResult = (List<T>)GetObjectList<T>(parameters, out totalCount);
-                if (resultList == null)
-                    resultList = tempResult;
-                else
-                    resultList.AddRange(tempResult);
+                parameters.Set(RedmineKeys.OFFSET, offset.ToString(CultureInfo.InvariantCulture));
+                var tempResult = GetPaginatedObjects<T>(parameters);
+                if (tempResult != null)
+                {
+                    if (resultList == null)
+                    {
+                        resultList = tempResult.Objects;
+                        totalCount = tempResult.TotalCount;
+                    }
+                    else
+                        resultList.AddRange(tempResult.Objects);
+                }
                 offset += pageSize;
-            }
-            while (offset < totalCount);
+            } while (offset < totalCount);
             return resultList;
         }
 
         /// <summary>
-        /// Returns a Redmine object.
+        /// Returns the complete list of objects.
+        /// </summary>
+        /// <typeparam name="T">The type of objects to retrieve.</typeparam>
+        /// <param name="parameters">Optional filters and/or optional fetched data.</param>
+        /// <returns>Returns a complete list of objects.</returns>
+
+        [Obsolete("Use GetObjects")]
+        public List<T> GetTotalObjectList<T>(NameValueCollection parameters) where T : class, new()
+        {
+            return GetObjects<T>(parameters);
+        }
+
+        /// <summary>
+        /// Gets the redmine object based on id.
         /// </summary>
         /// <typeparam name="T">The type of objects to retrieve.</typeparam>
         /// <param name="id">The id of the object.</param>
         /// <param name="parameters">Optional filters and/or optional fetched data.</param>
         /// <returns>Returns the object of type T.</returns>
-        /// <exception cref="Redmine.Net.Api.RedmineException"></exception>
         /// <exception cref="System.InvalidOperationException"> An error occurred during deserialization. The original exception is available
         /// using the System.Exception.InnerException property.</exception>
         /// <code> 
@@ -451,9 +414,13 @@ namespace Redmine.Net.Api
         /// </code>
         public T GetObject<T>(string id, NameValueCollection parameters) where T : class, new()
         {
-            var type = typeof(T);
+            var url = UrlHelper.GetGetUrl<T>(this, id);
+            return ExecuteDownload<T>(url, "GetObject", parameters);
+        }
 
-            return !urls.ContainsKey(type) ? null : ExecuteDownload<T>(string.Format(REQUEST_FORMAT, host, urls[type], id, mimeFormat), "GetObject<" + type.Name + ">", parameters);
+        public T CreateObject<T>(T obj) where T : class, new()
+        {
+            return CreateObject<T>(obj, null);
         }
 
         /// <summary>
@@ -475,31 +442,12 @@ namespace Redmine.Net.Api
         /// </code>
         public T CreateObject<T>(T obj, string ownerId = null) where T : class, new()
         {
-            var type = typeof(T);
+            if (obj == null) throw new ArgumentNullException("obj");
 
-            if (!urls.ContainsKey(type)) return null;
+            var data = RedmineSerializer.Serialize(obj,MimeFormat);
 
-            var result = Serialize(obj);
-
-            if (string.IsNullOrEmpty(result)) return null;
-
-            string address;
-
-            if (type == typeof(Version) || type == typeof(IssueCategory) || type == typeof(ProjectMembership))
-            {
-                if (string.IsNullOrEmpty(ownerId)) throw new RedmineException("The owner id(project id) is mandatory!");
-                address = string.Format(ENTITY_WITH_PARENT_FORMAT, host, "projects", ownerId, urls[type], mimeFormat);
-            }
-            else
-                if (type == typeof(IssueRelation))
-                {
-                    if (string.IsNullOrEmpty(ownerId)) throw new RedmineException("The owner id(issue id) is mandatory!");
-                    address = string.Format(ENTITY_WITH_PARENT_FORMAT, host, "issues", ownerId, urls[type], mimeFormat);
-                }
-                else
-                    address = string.Format(FORMAT, host, urls[type], mimeFormat);
-
-            return ExecuteUpload<T>(address, POST, result, "CreateObject<" + type.Name + ">");
+            string url = UrlHelper.GetCreateUrl<T>(this, ownerId);
+            return ExecuteUpload<T>(url, POST, data, "CreateObject");
         }
 
         /// <summary>
@@ -528,18 +476,14 @@ namespace Redmine.Net.Api
         /// <code></code>
         public void UpdateObject<T>(string id, T obj, string projectId) where T : class, new()
         {
-            var type = typeof(T);
+            if (obj == null) throw new ArgumentNullException("obj");
 
-            if (!urls.ContainsKey(type)) return;
+            var data = RedmineSerializer.Serialize(obj,MimeFormat);
 
-            var request = Serialize(obj);
-            if (string.IsNullOrEmpty(request)) return;
+            data = Regex.Replace(data, @"\r\n|\r|\n", "\r\n", RegexOptions.Compiled);
 
-            request = Regex.Replace(request, @"\r\n|\r|\n", "\r\n", RegexOptions.Compiled);
-
-            string address = string.Format(REQUEST_FORMAT, host, urls[type], id, mimeFormat);
-
-            ExecuteUpload(address, PUT, request, "UpdateObject<" + type.Name + ">");
+            var url = UrlHelper.GetUploadUrl(this, id, obj, projectId);
+            ExecuteUpload(url, PUT, data, "UpdateObject");
         }
 
         /// <summary>
@@ -550,79 +494,63 @@ namespace Redmine.Net.Api
         /// <param name="parameters">Optional filters and/or optional fetched data.</param>
         /// <exception cref="RedmineException"></exception>
         /// <code></code>
-        public void DeleteObject<T>(string id, NameValueCollection parameters) where T : class
+        public void DeleteObject<T>(string id, NameValueCollection parameters) where T : class, new()
         {
-            var type = typeof(T);
-
-            if (!urls.ContainsKey(typeof(T))) return;
-
-            ExecuteUpload(string.Format(REQUEST_FORMAT, host, urls[type], id, mimeFormat), DELETE, string.Empty, "DeleteObject<" + type.Name + ">");
+            var url = UrlHelper.GetDeleteUrl<T>(this, id);
+            ExecuteUpload(url, DELETE, string.Empty, "DeleteObject");
         }
 
         /// <summary>
         /// Creates the Redmine web client.
         /// </summary>
         /// <param name="parameters">The parameters.</param>
+        /// <param name="uploadFile"></param>
         /// <returns></returns>
         /// <code></code>
-        protected WebClient CreateWebClient(NameValueCollection parameters)
+        public virtual RedmineWebClient CreateWebClient(NameValueCollection parameters, bool uploadFile = false)
         {
             var webClient = new RedmineWebClient();
-
-            webClient.Headers.Add(HttpRequestHeader.ContentType, mimeFormat == MimeFormat.json ? "application/json" : "application/xml");
-            webClient.Encoding = Encoding.UTF8;
-
-            if (parameters != null) webClient.QueryString = parameters;
-
-            if (!string.IsNullOrEmpty(apiKey))
+            
+            if (!uploadFile)
             {
-                webClient.QueryString["key"] = apiKey;
+                webClient.Headers.Add(HttpRequestHeader.ContentType, mimeFormat == MimeFormat.json ? "application/json" : "application/xml");
+                webClient.Encoding = Encoding.UTF8;
             }
             else
             {
-               // if (credentialCache != null) webClient.Credentials = credentialCache;
-               // webClient.UseDefaultCredentials = true;
-               
-                webClient.Headers[HttpRequestHeader.Authorization] = basicAuthorization;
+                webClient.Headers.Add(HttpRequestHeader.ContentType, "application/octet-stream");
             }
 
-            if (!string.IsNullOrWhiteSpace(ImpersonateUser)) webClient.Headers.Add("X-Redmine-Switch-User", ImpersonateUser);
-          
-            return webClient;
-        }
-
-        /// <summary>
-        /// Creates the Redmine web client.
-        /// </summary>
-        /// <param name="parameters">The parameters.</param>
-        /// <returns></returns>
-        /// <code></code>
-        protected WebClient CreateUploadWebClient(NameValueCollection parameters = null)
-        {
-            var webClient = new RedmineWebClient();
-
-            if (parameters != null) webClient.QueryString = parameters;
+            if (parameters != null)
+                webClient.QueryString = parameters;
 
             if (!string.IsNullOrEmpty(apiKey))
             {
-                webClient.QueryString["key"] = apiKey;
+                webClient.QueryString[RedmineKeys.KEY] = apiKey;
             }
             else
             {
-                if (credentialCache != null) webClient.Credentials = credentialCache;
+                if (credentialCache != null)
+                {
+                    webClient.PreAuthenticate = true;
+                    webClient.Credentials = credentialCache;
+                    webClient.Headers[HttpRequestHeader.Authorization] = basicAuthorization;
+                }
+                else
+                {
+                    webClient.UseDefaultCredentials = true;
+                    webClient.Credentials = CredentialCache.DefaultCredentials;
+                }
             }
 
-            webClient.UseDefaultCredentials = false;
-
-            webClient.Headers.Add(HttpRequestHeader.ContentType, "application/octet-stream");
-            // Workaround - it seems that WebClient doesn't send credentials in each POST request
-            webClient.Headers.Add(HttpRequestHeader.Authorization, basicAuthorization);
+            if (!string.IsNullOrWhiteSpace(ImpersonateUser))
+                webClient.Headers.Add("X-Redmine-Switch-User", ImpersonateUser);
 
             return webClient;
         }
 
         /// <summary>
-        /// This is to take care of SSL certification validation which are not issued by Trusted Root CA. Recommended for testing  only.
+        /// This is to take care of SSL certification validation which are not issued by Trusted Root CA.
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="cert">The cert.</param>
@@ -632,141 +560,20 @@ namespace Redmine.Net.Api
         /// <code></code>
         public virtual bool RemoteCertValidate(object sender, X509Certificate cert, X509Chain chain, SslPolicyErrors error)
         {
-            //Cert Validation Logic
+            if (error == SslPolicyErrors.None) return true;
+
+            Console.WriteLine("X509Certificate [{0}] Policy Error: '{1}'", cert.Subject, error);
+
             return false;
-        }
-
-        public virtual void HandleWebException(WebException exception, string method)
-        {
-            if (exception == null) return;
-
-            switch (exception.Status)
-            {
-                case WebExceptionStatus.Timeout: throw new RedmineException("Timeout!", exception);
-                case WebExceptionStatus.NameResolutionFailure: throw new RedmineException("Bad domain name!", exception);
-                case WebExceptionStatus.ProtocolError:
-                    {
-                        var response = (HttpWebResponse)exception.Response;
-                        switch ((int)response.StatusCode)
-                        {
-                            case (int)HttpStatusCode.InternalServerError:
-                            case (int)HttpStatusCode.Unauthorized:
-                            case (int)HttpStatusCode.NotFound:
-                            case (int)HttpStatusCode.Forbidden:
-                                throw new RedmineException(response.StatusDescription, exception);
-
-                            case (int)HttpStatusCode.Conflict:
-                                throw new RedmineException("The page that you are trying to update is staled!", exception);
-
-                            case 422:
-                                var errors = ReadWebExceptionResponse(exception.Response);
-                                string message = string.Empty;
-                                if (errors != null)
-                                {
-                                    message = errors.Aggregate(message, (current, error) => current + (error.Info + "\n"));
-                                }
-                                throw new RedmineException(method + " has invalid or missing attribute parameters: " + message, exception);
-
-                            case (int)HttpStatusCode.NotAcceptable: throw new RedmineException(response.StatusDescription, exception);
-                        }
-                    }
-                    break;
-
-                default: throw new RedmineException(exception.Message, exception);
-            }
-        }
-
-        private IEnumerable<Error> ReadWebExceptionResponse(WebResponse webResponse)
-        {
-            using (var dataStream = webResponse.GetResponseStream())
-            {
-                if (dataStream == null) return null;
-				using (var reader = new StreamReader (dataStream)) 
-				{
-					var responseFromServer = reader.ReadToEnd ();
-
-					if (responseFromServer.Trim ().Length > 0) 
-					{
-						try 
-						{
-							int totalCount;
-							return DeserializeList<Error> (responseFromServer, "errors", out totalCount);
-						} 
-						catch (Exception ex) 
-						{
-							Trace.TraceError (ex.Message);
-						}
-					}
-				}
-                return null;
-            }
-        }
-
-        private string Serialize<T>(T obj) where T : class, new()
-        {
-            if (mimeFormat == MimeFormat.json)
-                return RedmineSerialization.JsonSerializer(obj);
-            return RedmineSerialization.ToXML(obj);
-        }
-
-        private T Deserialize<T>(string response) where T : class, new()
-        {
-            Type type = typeof(T);
-
-            if (mimeFormat == MimeFormat.json)
-            {
-                var jsonRoot = (string)null;
-                if (type == typeof(IssueCategory)) jsonRoot = RedmineKeys.ISSUE_CATEGORY;
-                if (type == typeof(IssueRelation)) jsonRoot = RedmineKeys.RELATION;
-                if (type == typeof(TimeEntry)) jsonRoot = RedmineKeys.TIME_ENTRY;
-                if (type == typeof(ProjectMembership)) jsonRoot = RedmineKeys.MEMBERSHIP;
-                if (type == typeof (WikiPage)) jsonRoot = RedmineKeys.WIKI_PAGE;
-
-                return RedmineSerialization.JsonDeserialize<T>(response, jsonRoot);
-            }
-
-            return RedmineSerialization.FromXML<T>(response);
-        }
-
-        private IList<T> DeserializeList<T>(string response, string jsonRoot, out int totalCount) where T : class, new()
-        {
-            Type type = typeof(T);
-            if (mimeFormat == MimeFormat.json)
-            {
-                if (type == typeof(IssuePriority)) jsonRoot = RedmineKeys.ISSUE_PRIORITIES;
-                if (type == typeof(TimeEntryActivity)) jsonRoot = RedmineKeys.TIME_ENTRY_ACTIVITIES;
-                return RedmineSerialization.JsonDeserializeToList<T>(response, jsonRoot, out totalCount);
-            }
-
-            using (var text = new StringReader(response))
-            {
-                using (var xmlReader = new XmlTextReader(text))
-                {
-                    xmlReader.WhitespaceHandling = WhitespaceHandling.None;
-                    xmlReader.Read();
-                    xmlReader.Read();
-
-                    totalCount = xmlReader.ReadAttributeAsInt("total_count");
-
-                    return xmlReader.ReadElementContentAsCollection<T>();
-                }
-            }
         }
 
         private void ExecuteUpload(string address, string actionType, string data, string methodName)
         {
             using (var wc = CreateWebClient(null))
             {
-                try
+                if (actionType == POST || actionType == DELETE || actionType == PUT)
                 {
-                    if (actionType == POST || actionType == DELETE || actionType == PUT)
-                    {
-                        wc.UploadString(address, actionType, data);
-                    }
-                }
-                catch (WebException webException)
-                {
-                    HandleWebException(webException, methodName);
+                    wc.UploadString(address, actionType, data);
                 }
             }
         }
@@ -775,20 +582,13 @@ namespace Redmine.Net.Api
         {
             using (var wc = CreateWebClient(null))
             {
-                try
+                if (actionType == POST || actionType == DELETE || actionType == PUT)
                 {
-                    if (actionType == POST || actionType == DELETE || actionType == PUT)
-                    {
-                        var response = wc.UploadString(address, actionType, data);
-                        if (!string.IsNullOrWhiteSpace(response))
-                            return Deserialize<T>(response);
-                    }
+                    var response = wc.UploadString(address, actionType, data);
+                    if (!string.IsNullOrWhiteSpace(response))
+                        return RedmineSerializer.Deserialize<T>(response, MimeFormat);
                 }
-                catch (WebException webException)
-                {
-                    HandleWebException(webException, methodName);
-                }
-                return default(T);
+                return null;
             }
         }
 
@@ -796,37 +596,18 @@ namespace Redmine.Net.Api
         {
             using (var wc = CreateWebClient(parameters))
             {
-                try
-                {
-                    var response = wc.DownloadString(address);
-                    return Deserialize<T>(response);
-                }
-                catch (WebException webException)
-                {
-                    HandleWebException(webException, methodName);
-                }
-                return default(T);
+                var response = wc.DownloadString(address);
+                return RedmineSerializer.Deserialize<T>(response, MimeFormat);
             }
         }
 
-        private IList<T> ExecuteDownloadList<T>(string address, string methodName, string jsonRoot, out int totalCount, NameValueCollection parameters = null) where T : class, new()
+        private PaginatedObjects<T> ExecuteDownloadList<T>(string address, string methodName, NameValueCollection parameters = null) where T : class, new()
         {
-            totalCount = -1;
             using (var wc = CreateWebClient(parameters))
             {
-                try
-                {
-                    var response = wc.DownloadString(address);
-                    return DeserializeList<T>(response, jsonRoot, out totalCount);
-                }
-                catch (WebException webException)
-                {
-                    HandleWebException(webException, methodName);
-                }
-                return null;
+                var response = wc.DownloadString(address);
+                return RedmineSerializer.Deserialize<PaginatedObjects<T>>(response, MimeFormat);
             }
         }
-
-       
     }
 }

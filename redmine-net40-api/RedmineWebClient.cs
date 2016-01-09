@@ -15,6 +15,7 @@
 */
 
 using System;
+using System.Collections.Specialized;
 using System.Net;
 
 namespace Redmine.Net.Api
@@ -22,29 +23,54 @@ namespace Redmine.Net.Api
     /// <summary>
     /// 
     /// </summary>
-    public class RedmineWebClient : WebClient
+    public partial class RedmineWebClient : WebClient
     {
-        private readonly CookieContainer container = new CookieContainer();
-       
+        const string ua = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:8.0) Gecko/20100101 Firefox/8.0";
+        //  private readonly CookieContainer container = new CookieContainer();
+
         protected override WebRequest GetWebRequest(Uri address)
         {
-			Headers.Add(HttpRequestHeader.Cookie, "redmineCookie");
-
             var wr = base.GetWebRequest(address);
             var httpWebRequest = wr as HttpWebRequest;
 
             if (httpWebRequest != null)
             {
-				httpWebRequest.CookieContainer = container;
 
-				httpWebRequest.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate | DecompressionMethods.None;
+                if (UseCookies)
+                {
+                    httpWebRequest.Headers.Add(HttpRequestHeader.Cookie, "redmineCookie");
+                    httpWebRequest.CookieContainer = CookieContainer;
+                }
+                httpWebRequest.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate | DecompressionMethods.None;
 
-				httpWebRequest.Proxy = Proxy;
+                if (UseProxy)
+                    httpWebRequest.Proxy = Proxy;
 
+                httpWebRequest.PreAuthenticate = PreAuthenticate;
+
+                httpWebRequest.KeepAlive = KeepAlive;
+
+                httpWebRequest.Credentials = Credentials;
+                if(Timeout != null)
+                httpWebRequest.Timeout = Timeout.Value.Milliseconds;
+                httpWebRequest.UseDefaultCredentials = UseDefaultCredentials;
+                httpWebRequest.UserAgent = ua;
+                httpWebRequest.CachePolicy = CachePolicy;
                 return httpWebRequest;
             }
 
-			return base.GetWebRequest(address);
+            return base.GetWebRequest(address);
         }
+
+        public bool UseProxy { get; set; }
+        public bool UseCookies { get; set; }
+
+        /// <summary>
+        /// in miliseconds
+        /// </summary>
+        public TimeSpan? Timeout { get; set; }
+        public CookieContainer CookieContainer { get; set; }
+        public bool PreAuthenticate { get; set; }
+        public bool KeepAlive { get; set; }
     }
 }
