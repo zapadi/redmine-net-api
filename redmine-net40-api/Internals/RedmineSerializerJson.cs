@@ -23,11 +23,11 @@ using Redmine.Net.Api.JSonConverters;
 using Redmine.Net.Api.Types;
 using Version = Redmine.Net.Api.Types.Version;
 
-namespace Redmine.Net.Api
+namespace Redmine.Net.Api.Internals
 {
-    public static partial class RedmineSerializer
+    internal static partial class RedmineSerializer
     {
-        private static readonly Dictionary<Type, JavaScriptConverter> converters = new Dictionary<Type, JavaScriptConverter>
+        private static readonly Dictionary<Type, JavaScriptConverter> jsonConverters = new Dictionary<Type, JavaScriptConverter>
         {
             {typeof (Issue), new IssueConverter()},
             {typeof (Project), new ProjectConverter()},
@@ -70,12 +70,12 @@ namespace Redmine.Net.Api
             {typeof (CustomFieldPossibleValue), new CustomFieldPossibleValueConverter()}
         };
 
-        public static Dictionary<Type, JavaScriptConverter> Converters { get { return converters; } }
+        public static Dictionary<Type, JavaScriptConverter> JsonConverters { get { return jsonConverters; } }
 
         public static string JsonSerializer<T>(T type) where T : new()
         {
             var serializer = new JavaScriptSerializer() { MaxJsonLength = int.MaxValue };
-            serializer.RegisterConverters(new[] { converters[typeof(T)] });
+            serializer.RegisterConverters(new[] { jsonConverters[typeof(T)] });
             var jsonString = serializer.Serialize(type);
             return jsonString;
         }
@@ -113,7 +113,7 @@ namespace Redmine.Net.Api
             if (string.IsNullOrEmpty(jsonString)) return null;
 
             var serializer = new JavaScriptSerializer();
-            serializer.RegisterConverters(new[] { converters[type] });
+            serializer.RegisterConverters(new[] { jsonConverters[type] });
 
             var dic = serializer.Deserialize<Dictionary<string, object>>(jsonString);
             if (dic == null) return null;
@@ -150,7 +150,7 @@ namespace Redmine.Net.Api
             if (string.IsNullOrEmpty(jsonString)) return null;
 
             var serializer = new JavaScriptSerializer();
-            serializer.RegisterConverters(new[] { converters[type] });
+            serializer.RegisterConverters(new[] { jsonConverters[type] });
             var dic = serializer.Deserialize<Dictionary<string, object>>(jsonString);
             if (dic == null) return null;
 

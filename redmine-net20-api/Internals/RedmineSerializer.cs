@@ -19,6 +19,7 @@ using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
 using Redmine.Net.Api.Extensions;
+using Redmine.Net.Api.Types;
 
 namespace Redmine.Net.Api.Internals
 {

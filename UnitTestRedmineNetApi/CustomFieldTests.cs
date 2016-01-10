@@ -48,7 +48,7 @@ namespace UnitTestRedmineNetApi
         [TestMethod]
         public void RedmineCustomFields_ShouldGetAllCustomFields()
         {
-            var customFields = redmineManager.GetObjectList<CustomField>(null);
+            var customFields = redmineManager.GetObjects<CustomField>(null);
 
             Assert.IsNotNull(customFields);
         }

@@ -63,7 +63,7 @@ namespace UnitTestRedmineNetApi
         [TestMethod]
         public void RedmineIssueRelation_ShouldReturnRelationsByIssueId()
         {
-            var relations = redmineManager.GetObjectList<IssueRelation>(new NameValueCollection { { "issue_id", issueId } });
+            var relations = redmineManager.GetObjects<IssueRelation>(new NameValueCollection { { "issue_id", issueId } });
 
             Assert.IsNotNull(relations);
         }

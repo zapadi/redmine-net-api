@@ -40,14 +40,14 @@ namespace Redmine.Net.Api
     /// </summary>
 	public class RedmineManager : IRedmineManager
     {
-        public const string REQUEST_FORMAT = "{0}/{1}/{2}.xml";
-        public const string FORMAT = "{0}/{1}.xml";
+        public const string REQUEST_FORMAT = "{0}/{1}/{2}.{3}";
+        public const string FORMAT = "{0}/{1}.{2}";
 
-        public const string WIKI_INDEX_FORMAT = "{0}/projects/{1}/wiki/index.xml";
-        public const string WIKI_PAGE_FORMAT = "{0}/projects/{1}/wiki/{2}.xml";
-        public const string WIKI_VERSION_FORMAT = "{0}/projects/{1}/wiki/{2}/{3}.xml";
+        public const string WIKI_INDEX_FORMAT = "{0}/projects/{1}/wiki/index.{2}";
+        public const string WIKI_PAGE_FORMAT = "{0}/projects/{1}/wiki/{2}.{3}";
+        public const string WIKI_VERSION_FORMAT = "{0}/projects/{1}/wiki/{2}/{3}.{4}";
 
-        public const string ENTITY_WITH_PARENT_FORMAT = "{0}/{1}/{2}/{3}.xml";
+        public const string ENTITY_WITH_PARENT_FORMAT = "{0}/{1}/{2}/{3}.{4}";
 
         public const string CURRENT_USER_URI = "current";
         //Represents an HTTP PUT protocol method that is used to replace an entity identified by a URI.
@@ -87,7 +87,7 @@ namespace Redmine.Net.Api
 
         private readonly string host, apiKey, basicAuthorization;
         private readonly CredentialCache cache;
-        private MimeFormat mimeFormat = MimeFormat.xml;
+        private MimeFormat mimeFormat;
 
         public static Dictionary<Type, string> Sufixes { get { return routes; } }
 
@@ -110,8 +110,9 @@ namespace Redmine.Net.Api
         /// Initializes a new instance of the <see cref="RedmineManager"/> class.
         /// </summary>
         /// <param name="host">The host.</param>
+        /// <param name="mimeFormat"></param>
         /// <param name="verifyServerCert">if set to <c>true</c> [verify server cert].</param>
-        public RedmineManager(string host, bool verifyServerCert = true)
+        public RedmineManager(string host, MimeFormat mimeFormat = MimeFormat.xml,bool verifyServerCert = true)
         {
             PageSize = 25;
 
@@ -123,6 +124,7 @@ namespace Redmine.Net.Api
                 throw new RedmineException("The host is not valid!");
 
             this.host = host;
+            this.mimeFormat = mimeFormat;
 
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3;
             if (!verifyServerCert)
@@ -141,9 +143,10 @@ namespace Redmine.Net.Api
         /// </summary>
         /// <param name="host">The host.</param>
         /// <param name="apiKey">The API key.</param>
+        /// <param name="mimeFormat"></param>
         /// <param name="verifyServerCert">if set to <c>true</c> [verify server cert].</param>
-        public RedmineManager(string host, string apiKey, bool verifyServerCert = true)
-            : this(host, verifyServerCert)
+        public RedmineManager(string host, string apiKey, MimeFormat mimeFormat = MimeFormat.xml, bool verifyServerCert = true)
+            : this(host, mimeFormat, verifyServerCert)
         {
             this.apiKey = apiKey;
         }
@@ -161,9 +164,10 @@ namespace Redmine.Net.Api
         /// <param name="host">The host.</param>
         /// <param name="login">The login.</param>
         /// <param name="password">The password.</param>
+        /// <param name="mimeFormat"></param>
         /// <param name="verifyServerCert">if set to <c>true</c> [verify server cert].</param>
-        public RedmineManager(string host, string login, string password, bool verifyServerCert = true)
-            : this(host, verifyServerCert)
+        public RedmineManager(string host, string login, string password, MimeFormat mimeFormat = MimeFormat.xml, bool verifyServerCert = true)
+            : this(host, mimeFormat, verifyServerCert)
         {
             cache = new CredentialCache { { new Uri(host), "Basic", new NetworkCredential(login, password) } };
 
@@ -490,6 +494,7 @@ namespace Redmine.Net.Api
         /// Creates the Redmine web client.
         /// </summary>
         /// <param name="parameters">The parameters.</param>
+        /// <param name="uploadFile"></param>
         /// <returns></returns>
         /// <code></code>
         public virtual RedmineWebClient CreateWebClient(NameValueCollection parameters, bool uploadFile = false)

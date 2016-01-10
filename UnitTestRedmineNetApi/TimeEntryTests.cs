@@ -71,7 +71,7 @@ namespace UnitTestRedmineNetApi
         [TestMethod]
         public void RedmineTimeEntries_ShouldGetAll()
         {
-            var timeEntries = redmineManager.GetObjectList<TimeEntry>(null);
+            var timeEntries = redmineManager.GetObjects<TimeEntry>(null);
 
             Assert.IsNotNull(timeEntries);
         }

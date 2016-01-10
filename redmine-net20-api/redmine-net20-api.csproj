@@ -60,7 +60,7 @@
     <Compile Include="Extensions\XmlReaderExtensions.cs" />
     <Compile Include="Internals\Func.cs" />
     <Compile Include="MimeFormat.cs" />
-    <Compile Include="PaginatedObjects.cs" />
+    <Compile Include="Types\PaginatedObjects.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RedmineException.cs" />
     <Compile Include="RedmineKeys.cs" />

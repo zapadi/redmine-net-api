@@ -52,7 +52,7 @@ namespace UnitTestRedmineNetApi
         [TestMethod]
         public void RedmineQuery_ShouldGetAllQueries()
         {
-            var queries = redmineManager.GetObjectList<Query>(null);
+            var queries = redmineManager.GetObjects<Query>(null);
 
             Assert.IsTrue(queries.Count == numberOfQueries);
         }

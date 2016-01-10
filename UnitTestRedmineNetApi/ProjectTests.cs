@@ -88,7 +88,7 @@ namespace UnitTestRedmineNetApi
         [TestMethod]
         public void GetAllProjects_WithAll_AssociatedData()
         {
-            IList<Project> result = redmineManager.GetTotalObjectList<Project>(new NameValueCollection()
+            IList<Project> result = redmineManager.GetObjects<Project>(new NameValueCollection()
             {
                 {"include", "trackers, issue_categories, enabled_modules"}
             });
@@ -99,7 +99,7 @@ namespace UnitTestRedmineNetApi
         [TestMethod]
         public void GetProject_News()
         {
-            var result = redmineManager.GetObjectList<News>(new NameValueCollection()
+            var result = redmineManager.GetObjects<News>(new NameValueCollection()
             {
                 {"project_id",projectId }
             });

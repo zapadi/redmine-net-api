@@ -22,9 +22,9 @@ using System.Xml.Serialization;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Types;
 
-namespace Redmine.Net.Api
+namespace Redmine.Net.Api.Internals
 {
-    public static partial class RedmineSerializer
+    internal static partial class RedmineSerializer
     {
         /// <summary>
         /// Serializes the specified System.Object and writes the XML document to a string.

@@ -21,6 +21,7 @@ using System.Globalization;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Redmine.Net.Api.Internals;
 using Redmine.Net.Api.Types;
 
 namespace Redmine.Net.Api.Extensions

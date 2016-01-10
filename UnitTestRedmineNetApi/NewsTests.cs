@@ -49,7 +49,7 @@ namespace UnitTestRedmineNetApi
         [TestMethod]
         public void GetAllNews()
         {
-            var result = redmineManager.GetObjectList<News>(null);
+            var result = redmineManager.GetObjects<News>(null);
 
             Assert.IsNotNull(result);
         }
@@ -57,7 +57,7 @@ namespace UnitTestRedmineNetApi
         [TestMethod]
         public void RedmineNews_ShouldGetSpecificProjectNews()
         {
-            var news = redmineManager.GetObjectList<News>(new NameValueCollection { { "project_id", projectId } });
+            var news = redmineManager.GetObjects<News>(new NameValueCollection { { "project_id", projectId } });
 
             Assert.IsNotNull(news);
         }
@@ -65,7 +65,7 @@ namespace UnitTestRedmineNetApi
         [TestMethod]
         public void RedmineNews_ShouldCompare()
         {
-            var projectNews = redmineManager.GetObjectList<News>(new NameValueCollection { { "project_id", projectId } });
+            var projectNews = redmineManager.GetObjects<News>(new NameValueCollection { { "project_id", projectId } });
             if (projectNews != null)
             {
                var news = projectNews[0];

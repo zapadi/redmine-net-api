@@ -48,7 +48,7 @@ namespace UnitTestRedmineNetApi
         [TestMethod]
         public void RedmineIssueStatuses_ShouldGetAllIssueStatuses()
         {
-            var issueStatuses = redmineManager.GetObjectList<IssueStatus>(null);
+            var issueStatuses = redmineManager.GetObjects<IssueStatus>(null);
 
             Assert.IsNotNull(issueStatuses);
         }

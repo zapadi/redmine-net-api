@@ -251,7 +251,7 @@ namespace Redmine.Net.Api.Extensions
             writer.WriteEndElement();
         }
 
-        public static void WriteArrayIds(this XmlWriter writer, IEnumerable col, string elementName, Type type, func f)
+        public static void WriteArrayIds(this XmlWriter writer, IEnumerable col, string elementName, Type type, Func<object,int> f)
         {
             writer.WriteStartElement(elementName);
             writer.WriteAttributeString("type", "array");
@@ -281,7 +281,7 @@ namespace Redmine.Net.Api.Extensions
             writer.WriteEndElement();
         }
 
-        public static void WriteArrayStringElement(this XmlWriter writer, IEnumerable col, string elementName, GetValueFunc f)
+        public static void WriteArrayStringElement(this XmlWriter writer, IEnumerable col, string elementName, Func<object, string> f)
         {
             if (col == null) return;
             writer.WriteStartElement(elementName);
@@ -302,17 +302,5 @@ namespace Redmine.Net.Api.Extensions
                 xmlWriter.WriteElementString(elementName, item.Value);
             }
         }
-
-        //public static IList<T> Clone<T>(this IList<T> listToClone) where T : ICloneable
-        //{
-        //    return listToClone.Select(item => (T)item.Clone()).ToList();
-        //}
-
-        //public static string GetParameterValue(this NameValueCollection parameters, string parameterName)
-        //{
-        //    if (parameters == null) return null;
-        //    var value = parameters.Get(parameterName);
-        //    return string.IsNullOrEmpty(value) ? null : value;
-        //}
     }
 }

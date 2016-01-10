@@ -4,9 +4,10 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using Redmine.Net.Api.Internals;
 using Redmine.Net.Api.Types;
 
-namespace Redmine.Net.Api
+namespace Redmine.Net.Api.Extensions
 {
     public static class WebExtensions
     {

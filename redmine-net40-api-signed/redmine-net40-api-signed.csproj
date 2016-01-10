@@ -70,8 +70,24 @@
     <Compile Include="..\redmine-net20-api\Extensions\XmlReaderExtensions.cs">
       <Link>Extensions\XmlReaderExtensions.cs</Link>
     </Compile>
+    <Compile Include="..\redmine-net20-api\internals\UrlHelper.cs">
+      <Link>Internals\UrlHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\redmine-net20-api\internals\Utils.cs">
+      <Link>Internals\Utils.cs</Link>
+    </Compile>
+    <Compile Include="..\redmine-net20-api\RedmineException.cs">
+      <Link>RedmineException.cs</Link>
+    </Compile>
     <Compile Include="..\redmine-net20-api\RedmineKeys.cs">
       <Link>RedmineKeys.cs</Link>
+    </Compile>
+    <Compile Include="..\redmine-net20-api\RedmineManager.cs">
+      <Link>RedmineManager.cs</Link>
+    </Compile>
+    <Compile Include="..\redmine-net20-api\RedmineWebClient.cs">
+      <Link>RedmineWebClient.cs</Link>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="..\redmine-net20-api\Types\Attachment.cs">
       <Link>Types\Attachment.cs</Link>
@@ -154,6 +170,9 @@
     <Compile Include="..\redmine-net20-api\Types\News.cs">
       <Link>Types\News.cs</Link>
     </Compile>
+    <Compile Include="..\redmine-net20-api\Types\PaginatedObjects.cs">
+      <Link>Types\PaginatedObjects.cs</Link>
+    </Compile>
     <Compile Include="..\redmine-net20-api\Types\Permission.cs">
       <Link>Types\Permission.cs</Link>
     </Compile>
@@ -214,14 +233,20 @@
     <Compile Include="..\redmine-net20-api\Types\WikiPage.cs">
       <Link>Types\WikiPage.cs</Link>
     </Compile>
-    <Compile Include="..\redmine-net20-api\UrlHelper.cs">
-      <Link>UrlHelper.cs</Link>
+    <Compile Include="..\redmine-net40-api\Async\RedmineManagerAsyncExtensions.cs">
+      <Link>Async\RedmineManagerAsyncExtensions.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net40-api\Extensions\JsonExtensions.cs">
       <Link>Extensions\JsonExtensions.cs</Link>
     </Compile>
-    <Compile Include="..\redmine-net40-api\Extensions\RedmineManagerAsyncExtensions.cs">
-      <Link>Extensions\RedmineManagerAsyncExtensions.cs</Link>
+    <Compile Include="..\redmine-net40-api\Extensions\WebExtensions.cs">
+      <Link>Extensions\WebExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\redmine-net40-api\Internals\RedmineSerializer.cs">
+      <Link>Internals\RedmineSerializer.cs</Link>
+    </Compile>
+    <Compile Include="..\redmine-net40-api\Internals\RedmineSerializerJson.cs">
+      <Link>Internals\RedmineSerializerJson.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net40-api\JSonConverters\AttachmentConverter.cs">
       <Link>JsonConverters\AttachmentConverter.cs</Link>
@@ -343,32 +368,7 @@
     <Compile Include="..\redmine-net40-api\MimeFormat.cs">
       <Link>MimeFormat.cs</Link>
     </Compile>
-    <Compile Include="..\redmine-net40-api\PaginatedObjects.cs">
-      <Link>PaginatedObjects.cs</Link>
-    </Compile>
-    <Compile Include="..\redmine-net40-api\RedmineException.cs">
-      <Link>RedmineException.cs</Link>
-    </Compile>
-    <Compile Include="..\redmine-net40-api\RedmineManager.cs">
-      <Link>RedmineManager.cs</Link>
-    </Compile>
-    <Compile Include="..\redmine-net40-api\RedmineSerialization.cs">
-      <Link>RedmineSerialization.cs</Link>
-    </Compile>
-    <Compile Include="..\redmine-net40-api\RedmineSerializationJSON.cs">
-      <Link>RedmineSerializationJSON.cs</Link>
-    </Compile>
-    <Compile Include="..\redmine-net40-api\RedmineWebClient.cs">
-      <Link>RedmineWebClient.cs</Link>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="..\redmine-net40-api\Types\IRedmineManagerAsync.cs">
-      <Link>IRedmineManagerAsync.cs</Link>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="..\redmine-net40-api\Utils.cs">
-      <Link>Utils.cs</Link>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="redmine-net-api.snk" />

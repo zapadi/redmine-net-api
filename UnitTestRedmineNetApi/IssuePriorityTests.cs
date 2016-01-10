@@ -48,7 +48,7 @@ namespace UnitTestRedmineNetApi
         [TestMethod]
         public void RedmineIssuePriorities_ShouldGetAllIssuePriorities()
         {
-            var issuePriorities = redmineManager.GetObjectList<IssuePriority>(null);
+            var issuePriorities = redmineManager.GetObjects<IssuePriority>(null);
 
             Assert.IsNotNull(issuePriorities); ;
         }
