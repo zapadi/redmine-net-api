@@ -503,7 +503,7 @@ namespace Redmine.Net.Api
 
             if (!uploadFile)
             {
-                webClient.Headers.Add(HttpRequestHeader.ContentType, "application/xml");
+                webClient.Headers.Add(HttpRequestHeader.ContentType, mimeFormat == MimeFormat.xml ? "application/xml" : "application/json");
                 webClient.Encoding = Encoding.UTF8;
             }
             else
