@@ -4,7 +4,7 @@ using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Types;
 using Version = System.Version;
 
-namespace Redmine.Net.Api
+namespace Redmine.Net.Api.Internals
 {
     internal static class UrlHelper
     {

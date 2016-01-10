@@ -20,6 +20,7 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using Redmine.Net.Api.Extensions;
+using Redmine.Net.Api.Internals;
 
 namespace Redmine.Net.Api.Types
 {
@@ -187,5 +188,5 @@ namespace Redmine.Net.Api.Types
         }
     }
 
-    public delegate int func(object o);
+    
 }

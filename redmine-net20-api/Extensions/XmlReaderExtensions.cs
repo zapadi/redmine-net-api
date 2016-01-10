@@ -21,6 +21,7 @@ using System.Globalization;
 using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
+using Redmine.Net.Api.Internals;
 using Redmine.Net.Api.Types;
 
 namespace Redmine.Net.Api.Extensions
@@ -245,7 +246,7 @@ namespace Redmine.Net.Api.Extensions
             writer.WriteEndElement();
         }
 
-        public static void WriteArrayIds(this XmlWriter writer, IEnumerable col, string elementName, Type type, func f)
+        public static void WriteArrayIds(this XmlWriter writer, IEnumerable col, string elementName, Type type, Func<object, int> f)
         {
             writer.WriteStartElement(elementName);
             writer.WriteAttributeString("type", "array");
@@ -258,7 +259,7 @@ namespace Redmine.Net.Api.Extensions
             }
             writer.WriteEndElement();
         }
-        
+
         public static void WriteArray(this XmlWriter writer, IEnumerable list, string elementName, Type type, string root, string defaultNamespace = null)
         {
             writer.WriteStartElement(elementName);
@@ -267,13 +268,13 @@ namespace Redmine.Net.Api.Extensions
             {
                 foreach (var item in list)
                 {
-                    new XmlSerializer(type, new XmlAttributeOverrides(), new Type[] {}, new XmlRootAttribute(root), defaultNamespace).Serialize(writer, item);
+                    new XmlSerializer(type, new XmlAttributeOverrides(), new Type[] { }, new XmlRootAttribute(root), defaultNamespace).Serialize(writer, item);
                 }
             }
             writer.WriteEndElement();
         }
 
-        public static void WriteArrayStringElement(this XmlWriter writer, IEnumerable col, string elementName, GetValueFunc f)
+        public static void WriteArrayStringElement(this XmlWriter writer, IEnumerable col, string elementName, Func<object, string> f)
         {
             writer.WriteStartElement(elementName);
             writer.WriteAttributeString("type", "array");
@@ -286,7 +287,7 @@ namespace Redmine.Net.Api.Extensions
             }
             writer.WriteEndElement();
         }
-        
+
         public static void WriteListElements(this XmlWriter xmlWriter, IEnumerable<IValue> list, string elementName)
         {
             if (list == null)
@@ -351,5 +352,5 @@ namespace Redmine.Net.Api.Extensions
             else
                 writer.WriteElementString(tag, string.Format(NumberFormatInfo.InvariantInfo, "{0}", val.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)));
         }
-     }
+    }
 }

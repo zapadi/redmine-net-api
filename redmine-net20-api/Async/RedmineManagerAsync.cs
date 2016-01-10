@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Specialized;
 using System.Threading;
+using Redmine.Net.Api.Internals;
 using Redmine.Net.Api.Types;
 
-namespace Redmine.Net.Api
+namespace Redmine.Net.Api.Async
 {
     public delegate TRes Task<out TRes>();
 

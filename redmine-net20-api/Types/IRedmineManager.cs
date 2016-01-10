@@ -26,8 +26,8 @@ namespace Redmine.Net.Api.Types
 		List<T> GetObjects<T> (NameValueCollection parameters) where T: class, new();
 		PaginatedObjects<T> GetPaginatedObjects<T> (NameValueCollection parameters)where T : class, new();
         T GetObject<T>(string id, NameValueCollection parameters) where T : class, new();
-        T CreateObject<T>(T obj) where T : class, new();
-        T CreateObject<T>(T obj, string ownerId) where T : class, new();
+        
+        T CreateObject<T>(T obj, string ownerId = null) where T : class, new();
         void UpdateObject<T>(string id, T obj) where T : class, new();
         void UpdateObject<T>(string id, T obj, string projectId) where T : class, new();
 		void DeleteObject<T>(string id, NameValueCollection parameters) where T : class, new();

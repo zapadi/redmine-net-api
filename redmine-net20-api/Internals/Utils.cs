@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace Redmine.Net.Api
+namespace Redmine.Net.Api.Internals
 {
-    public static class Utils
+    internal static class Utils
     {
         public static int GetHashCode<T>(IList<T> list, int hash)
         {

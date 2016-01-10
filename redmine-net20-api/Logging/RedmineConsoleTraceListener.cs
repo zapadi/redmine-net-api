@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace Redmine.Net.Api
+namespace Redmine.Net.Api.Logging
 {
 	public class RedmineConsoleTraceListener : TraceListener
 	{

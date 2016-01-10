@@ -20,9 +20,9 @@ using System.Xml;
 using System.Xml.Serialization;
 using Redmine.Net.Api.Extensions;
 
-namespace Redmine.Net.Api
+namespace Redmine.Net.Api.Internals
 {
-    public static class RedmineSerializer
+    internal static class RedmineSerializer
     {
         /// <summary>
         /// Serializes the specified System.Object and writes the XML document to a string.
