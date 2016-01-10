@@ -17,6 +17,8 @@
 using System;
 using System.Xml;
 using System.Xml.Serialization;
+using Redmine.Net.Api.Extensions;
+using Redmine.Net.Api.Internals;
 
 namespace Redmine.Net.Api.Types
 {
@@ -80,18 +82,18 @@ namespace Redmine.Net.Api.Types
         {
             unchecked
             {
-				var hashCode = 13;
-				hashCode =  Id.GetHashCode(hashCode);
-				hashCode =  Name.GetHashCode(hashCode);
-				hashCode =  IsPublic.GetHashCode(hashCode);
-				hashCode =  ProjectId.GetHashCode(hashCode);
-				return hashCode;
+                var hashCode = 13;
+                hashCode = Utils.GetHashCode(Id, hashCode);
+                hashCode = Utils.GetHashCode(Name, hashCode);
+                hashCode = Utils.GetHashCode(IsPublic, hashCode);
+                hashCode = Utils.GetHashCode(ProjectId, hashCode);
+                return hashCode;
             }
         }
 
-		public override string ToString ()
-		{
-			return string.Format ("[Query: {2}, IsPublic={0}, ProjectId={1}]", IsPublic, ProjectId, base.ToString());
-		}
+        public override string ToString()
+        {
+            return string.Format("[Query: {2}, IsPublic={0}, ProjectId={1}]", IsPublic, ProjectId, base.ToString());
+        }
     }
 }

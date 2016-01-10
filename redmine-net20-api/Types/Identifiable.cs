@@ -16,6 +16,7 @@
 
 using System;
 using System.Xml.Serialization;
+using Redmine.Net.Api.Internals;
 
 namespace Redmine.Net.Api.Types
 {
@@ -23,7 +24,7 @@ namespace Redmine.Net.Api.Types
     /// 
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract class Identifiable<T> where T : Identifiable<T>, IEquatable<T>
+	public abstract class Identifiable<T> where T : Identifiable<T>, IEquatable<T>
     {
 
         /// <summary>
@@ -54,7 +55,7 @@ namespace Redmine.Net.Api.Types
             unchecked
             {
                 var hashCode = 13;
-				hashCode = Id.GetHashCode(hashCode);
+                hashCode = Utils.GetHashCode(Id, hashCode);
                 return hashCode;
             }
         }
@@ -69,9 +70,14 @@ namespace Redmine.Net.Api.Types
             return !Equals(left, right);
         }
 
-		public override string ToString ()
-		{
-			return string.Format ("[Identifiable: Id={0}]", Id);
-		}
+        public override string ToString()
+        {
+            return string.Format("[Identifiable: Id={0}]", Id);
+        }
+    }
+
+    public interface Identifiable
+    {
+        int Id { get; set; }
     }
 }

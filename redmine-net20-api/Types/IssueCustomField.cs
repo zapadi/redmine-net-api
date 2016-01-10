@@ -19,6 +19,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Xml;
 using System.Xml.Serialization;
+using Redmine.Net.Api.Extensions;
+using Redmine.Net.Api.Internals;
 
 namespace Redmine.Net.Api.Types
 {
@@ -66,12 +68,13 @@ namespace Redmine.Net.Api.Types
             writer.WriteAttributeString(RedmineKeys.ID, Id.ToString(CultureInfo.InvariantCulture));
             if (itemsCount > 1)
             {
-                writer.WriteStartElement(RedmineKeys.VALUE);
-                writer.WriteAttributeString("type", "array");
-
-                foreach (var v in Values) writer.WriteElementString(RedmineKeys.VALUE, v.Info);
-
-                writer.WriteEndElement();
+                writer.WriteArrayStringElement(Values, RedmineKeys.VALUE, GetValue);
+                //                writer.WriteStartElement(RedmineKeys.VALUE);
+                //                writer.WriteAttributeString("type", "array");
+                //
+                //                foreach (var v in Values) writer.WriteElementString(RedmineKeys.VALUE, v.Info);
+                //
+                //                writer.WriteEndElement();
             }
             else
             {
@@ -91,22 +94,27 @@ namespace Redmine.Net.Api.Types
             return issueCustomField;
         }
 
-		public override string ToString ()
-		{
-			return string.Format ("[IssueCustomField: {2} Values={0}, Multiple={1}]", Values, Multiple, base.ToString());
-		}
+        public override string ToString()
+        {
+            return string.Format("[IssueCustomField: {2} Values={0}, Multiple={1}]", Values, Multiple, base.ToString());
+        }
 
-		public override int GetHashCode ()
-		{
-			unchecked
-			{
-				var hashCode = 13;
-				hashCode =  Id.GetHashCode(hashCode);
-				hashCode =  Name.GetHashCode(hashCode);
-				hashCode =  Values.GetHashCode(hashCode);
-				hashCode =  Multiple.GetHashCode(hashCode);
-				return hashCode;
-			}
-		}
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = 13;
+                hashCode = Utils.GetHashCode(Id, hashCode);
+                hashCode = Utils.GetHashCode(Name, hashCode);
+                hashCode = Utils.GetHashCode(Values, hashCode);
+                hashCode = Utils.GetHashCode(Multiple, hashCode);
+                return hashCode;
+            }
+        }
+
+        public string GetValue(object item)
+        {
+            return ((CustomFieldValue)item).Info;
+        }
     }
 }

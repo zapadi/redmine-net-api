@@ -19,6 +19,8 @@ using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using Redmine.Net.Api.Extensions;
+using Redmine.Net.Api.Internals;
 
 
 namespace Redmine.Net.Api.Types
@@ -176,10 +178,10 @@ namespace Redmine.Net.Api.Types
         {
             writer.WriteIdIfNotNull(Issue, RedmineKeys.ISSUE_ID);
             writer.WriteIdIfNotNull(Project, RedmineKeys.PROJECT_ID);
-            
-            if (!SpentOn.HasValue) 
+
+            if (!SpentOn.HasValue)
                 SpentOn = DateTime.Now;
-            
+
             writer.WriteDateOrEmpty(SpentOn, RedmineKeys.SPENT_ON);
             writer.WriteValueOrEmpty<decimal>(Hours, RedmineKeys.HOURS);
             writer.WriteIdIfNotNull(Activity, RedmineKeys.ACTIVITY_ID);
@@ -201,30 +203,30 @@ namespace Redmine.Net.Api.Types
                 && UpdatedOn == other.UpdatedOn
                 && Equals(CustomFields, other.CustomFields));
         }
-        
+
         public override int GetHashCode()
         {
             unchecked
             {
-				var hashCode = base.GetHashCode();
-				hashCode =  Issue.GetHashCode(hashCode);
-				hashCode =  Project.GetHashCode(hashCode);
-				hashCode =  SpentOn.GetHashCode(hashCode);
-				hashCode =  Hours.GetHashCode(hashCode);
-				hashCode =  Activity.GetHashCode(hashCode);
-				hashCode =  User.GetHashCode(hashCode);
-				hashCode =  Comments.GetHashCode(hashCode);
-				hashCode =  CreatedOn.GetHashCode(hashCode);
-				hashCode =  UpdatedOn.GetHashCode(hashCode);
-				hashCode =  CustomFields.GetHashCode(hashCode);
-				return hashCode;
+                var hashCode = base.GetHashCode();
+                hashCode = Utils.GetHashCode(Issue, hashCode);
+                hashCode = Utils.GetHashCode(Project, hashCode);
+                hashCode = Utils.GetHashCode(SpentOn, hashCode);
+                hashCode = Utils.GetHashCode(Hours, hashCode);
+                hashCode = Utils.GetHashCode(Activity, hashCode);
+                hashCode = Utils.GetHashCode(User, hashCode);
+                hashCode = Utils.GetHashCode(Comments, hashCode);
+                hashCode = Utils.GetHashCode(CreatedOn, hashCode);
+                hashCode = Utils.GetHashCode(UpdatedOn, hashCode);
+                hashCode = Utils.GetHashCode(CustomFields, hashCode);
+                return hashCode;
             }
         }
 
-		public override string ToString ()
-		{
-			return string.Format ("[TimeEntry: {10}, Issue={0}, Project={1}, SpentOn={2}, Hours={3}, Activity={4}, User={5}, Comments={6}, CreatedOn={7}, UpdatedOn={8}, CustomFields={9}]", 
-				Issue, Project, SpentOn, Hours, Activity, User, Comments, CreatedOn, UpdatedOn, CustomFields, base.ToString());
-		}
+        public override string ToString()
+        {
+            return string.Format("[TimeEntry: {10}, Issue={0}, Project={1}, SpentOn={2}, Hours={3}, Activity={4}, User={5}, Comments={6}, CreatedOn={7}, UpdatedOn={8}, CustomFields={9}]",
+                Issue, Project, SpentOn, Hours, Activity, User, Comments, CreatedOn, UpdatedOn, CustomFields, base.ToString());
+        }
     }
 }

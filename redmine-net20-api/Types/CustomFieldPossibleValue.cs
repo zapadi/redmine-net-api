@@ -16,6 +16,7 @@
 
 using System;
 using System.Xml.Serialization;
+using Redmine.Net.Api.Internals;
 
 namespace Redmine.Net.Api.Types
 {
@@ -44,7 +45,7 @@ namespace Redmine.Net.Api.Types
             unchecked
             {
                 var hashCode = 13;
-				hashCode = Value.GetHashCode(hashCode);
+				hashCode = Utils.GetHashCode(Value,hashCode);
                 return hashCode;
             }
         }

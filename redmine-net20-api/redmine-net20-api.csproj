@@ -30,19 +30,43 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugXML|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\DebugXML\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugJSON|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\DebugJSON\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ExtensionAttribute.cs" />
-    <Compile Include="ExtensionMethods.cs" />
+    <Compile Include="Extensions\ExtensionAttribute.cs" />
+    <Compile Include="Extensions\Extensions.cs" />
+    <Compile Include="Extensions\WebExtensions.cs" />
+    <Compile Include="Extensions\XmlReaderExtensions.cs" />
+    <Compile Include="Internals\Func.cs" />
+    <Compile Include="MimeFormat.cs" />
+    <Compile Include="Types\PaginatedObjects.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RedmineException.cs" />
     <Compile Include="RedmineKeys.cs" />
     <Compile Include="RedmineManager.cs" />
-    <Compile Include="RedmineSerialization.cs" />
+    <Compile Include="Async\RedmineManagerAsync.cs" />
+    <Compile Include="Internals\RedmineSerializer.cs" />
     <Compile Include="RedmineWebClient.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -58,6 +82,7 @@
     <Compile Include="Types\GroupUser.cs" />
     <Compile Include="Types\Identifiable.cs" />
     <Compile Include="Types\IdentifiableName.cs" />
+    <Compile Include="Types\IRedmineManager.cs" />
     <Compile Include="Types\Issue.cs" />
     <Compile Include="Types\IssueCategory.cs" />
     <Compile Include="Types\IssueChild.cs" />
@@ -90,8 +115,10 @@
     <Compile Include="Types\Version.cs" />
     <Compile Include="Types\Watcher.cs" />
     <Compile Include="Types\WikiPage.cs" />
-    <Compile Include="Utils.cs" />
+    <Compile Include="Internals\UrlHelper.cs" />
+    <Compile Include="Internals\Utils.cs" />
     <Compile Include="Types\IValue.cs" />
+    <Compile Include="Logging\RedmineConsoleTraceListener.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -101,4 +128,5 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup />
 </Project>

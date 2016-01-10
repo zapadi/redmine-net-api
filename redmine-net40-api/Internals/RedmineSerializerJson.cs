@@ -23,11 +23,11 @@ using Redmine.Net.Api.JSonConverters;
 using Redmine.Net.Api.Types;
 using Version = Redmine.Net.Api.Types.Version;
 
-namespace Redmine.Net.Api
+namespace Redmine.Net.Api.Internals
 {
-    public static partial class RedmineSerialization
+    internal static partial class RedmineSerializer
     {
-        private static readonly Dictionary<Type, JavaScriptConverter> converters = new Dictionary<Type, JavaScriptConverter>
+        private static readonly Dictionary<Type, JavaScriptConverter> jsonConverters = new Dictionary<Type, JavaScriptConverter>
         {
             {typeof (Issue), new IssueConverter()},
             {typeof (Project), new ProjectConverter()},
@@ -70,21 +70,14 @@ namespace Redmine.Net.Api
             {typeof (CustomFieldPossibleValue), new CustomFieldPossibleValueConverter()}
         };
 
-        public static Dictionary<Type, JavaScriptConverter> Converters { get { return converters; } }
+        public static Dictionary<Type, JavaScriptConverter> JsonConverters { get { return jsonConverters; } }
 
         public static string JsonSerializer<T>(T type) where T : new()
         {
-            try
-            {
-                var ser = new JavaScriptSerializer() { MaxJsonLength = int.MaxValue };
-                ser.RegisterConverters(new[] { converters[typeof(T)] });
-                var jsonString = ser.Serialize(type);
-                return jsonString;
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+            var serializer = new JavaScriptSerializer() { MaxJsonLength = int.MaxValue };
+            serializer.RegisterConverters(new[] { jsonConverters[typeof(T)] });
+            var jsonString = serializer.Serialize(type);
+            return jsonString;
         }
 
         /// <summary>
@@ -96,48 +89,6 @@ namespace Redmine.Net.Api
             return JsonDeserializeToList<T>(jsonString, root, out totalCount);
         }
 
-        public static object JsonDeserializeToList(string jsonString, string root, Type type, out int totalCount)
-        {
-            totalCount = 0;
-            if (String.IsNullOrEmpty(jsonString)) return null;
-
-            var ser = new JavaScriptSerializer();
-            ser.RegisterConverters(new[] { converters[type] });
-            var dic = ser.Deserialize<Dictionary<string, object>>(jsonString);
-            if (dic == null) return null;
-
-            object obj, tc;
-
-            if (dic.TryGetValue("total_count", out tc)) totalCount = (int)tc;
-
-            if (dic.TryGetValue(root.ToLower(), out obj))
-            {
-                var list = new ArrayList();
-                if (type == typeof(Error))
-                {
-                    string info = null;
-                    foreach (var item in (ArrayList)obj)
-                    {
-                        var arrayList = item as ArrayList;
-                        if (arrayList != null)
-                        {
-                            foreach (var item2 in arrayList) info += item2 as string + " ";
-                        }
-                        else
-                            info += item as string + " ";
-                    }
-                    var err = new Error { Info = info };
-                    list.Add(err);
-                }
-                else
-                {
-                    AddToList(ser, list, type, obj);
-                }
-                return list;
-            }
-            return null;
-        }
-
         /// <summary>
         /// JSON Deserialization
         /// </summary>
@@ -146,22 +97,6 @@ namespace Redmine.Net.Api
             var result = JsonDeserializeToList(jsonString, root, typeof(T), out totalCount);
 
             return result == null ? null : ((ArrayList)result).OfType<T>().ToList();
-        }
-
-        private static void AddToList(JavaScriptSerializer ser, IList list, Type type, object obj)
-        {
-            foreach (var item in (ArrayList)obj)
-            {
-                if (item is ArrayList)
-                {
-                    AddToList(ser, list, type, item);
-                }
-                else
-                {
-                    var o = ser.ConvertToType(item, type);
-                    list.Add(o);
-                }
-            }
         }
 
         public static T JsonDeserialize<T>(string jsonString, string root) where T : new()
@@ -175,20 +110,78 @@ namespace Redmine.Net.Api
 
         public static object JsonDeserialize(string jsonString, Type type, string root)
         {
-            if (String.IsNullOrEmpty(jsonString)) return null;
+            if (string.IsNullOrEmpty(jsonString)) return null;
 
-            var ser = new JavaScriptSerializer();
-            ser.RegisterConverters(new[] { converters[type] });
+            var serializer = new JavaScriptSerializer();
+            serializer.RegisterConverters(new[] { jsonConverters[type] });
 
-            var dic = ser.Deserialize<Dictionary<string, object>>(jsonString);
+            var dic = serializer.Deserialize<Dictionary<string, object>>(jsonString);
             if (dic == null) return null;
 
             object obj;
-            if (dic.TryGetValue(root ?? type.Name.ToLower(), out obj))
+            if (dic.TryGetValue(root ?? type.Name.ToLowerInvariant(), out obj))
             {
-                var deserializedObject = ser.ConvertToType(obj, type);
+                var deserializedObject = serializer.ConvertToType(obj, type);
 
                 return deserializedObject;
+            }
+            return null;
+        }
+
+        private static void AddToList(JavaScriptSerializer serializer, IList list, Type type, object obj)
+        {
+            foreach (var item in (ArrayList)obj)
+            {
+                if (item is ArrayList)
+                {
+                    AddToList(serializer, list, type, item);
+                }
+                else
+                {
+                    var o = serializer.ConvertToType(item, type);
+                    list.Add(o);
+                }
+            }
+        }
+
+        private static object JsonDeserializeToList(string jsonString, string root, Type type, out int totalCount)
+        {
+            totalCount = 0;
+            if (string.IsNullOrEmpty(jsonString)) return null;
+
+            var serializer = new JavaScriptSerializer();
+            serializer.RegisterConverters(new[] { jsonConverters[type] });
+            var dic = serializer.Deserialize<Dictionary<string, object>>(jsonString);
+            if (dic == null) return null;
+
+            object obj, tc;
+
+            if (dic.TryGetValue(RedmineKeys.TOTAL_COUNT, out tc)) totalCount = (int)tc;
+
+            if (dic.TryGetValue(root.ToLowerInvariant(), out obj))
+            {
+                var arrayList = new ArrayList();
+                if (type == typeof(Error))
+                {
+                    string info = null;
+                    foreach (var item in (ArrayList)obj)
+                    {
+                        var innerArrayList = item as ArrayList;
+                        if (innerArrayList != null)
+                        {
+                            info = innerArrayList.Cast<object>().Aggregate(info, (current, item2) => current + (item2 as string + " "));
+                        }
+                        else
+                            info += item as string + " ";
+                    }
+                    var err = new Error { Info = info };
+                    arrayList.Add(err);
+                }
+                else
+                {
+                    AddToList(serializer, arrayList, type, obj);
+                }
+                return arrayList;
             }
             return null;
         }

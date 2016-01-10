@@ -114,7 +114,7 @@ namespace UnitTestRedmineNetApi
         [TestMethod]
         public void RedmineIssues_ShouldReturnAllIssues()
         {
-            var issues = redmineManager.GetObjectList<Issue>(null);
+            var issues = redmineManager.GetObjects<Issue>(null);
 
             Assert.IsNotNull(issues);
         }
@@ -122,7 +122,7 @@ namespace UnitTestRedmineNetApi
         [TestMethod]
         public void RedmineIssues_ShouldReturnPaginatedIssues()
         {
-            var issues = redmineManager.GetObjectList<Issue>(new NameValueCollection { { "offset", "1" }, { "limit", numberOfPaginatedIssues.ToString() }, { "sort", "id:desc" } });
+            var issues = redmineManager.GetObjects<Issue>(new NameValueCollection { { "offset", "1" }, { "limit", numberOfPaginatedIssues.ToString() }, { "sort", "id:desc" } });
 
             Assert.IsNotNull(issues);
             Assert.IsTrue(issues.Count <= numberOfPaginatedIssues, "number of issues <= "+ numberOfPaginatedIssues.ToString());
@@ -131,21 +131,21 @@ namespace UnitTestRedmineNetApi
         [TestMethod]
         public void RedmineIssues_ShouldReturnFilteredIssuesByProjectId()
         {
-            var issues = redmineManager.GetObjectList<Issue>(new NameValueCollection { { "project_id", projectId } });
+            var issues = redmineManager.GetObjects<Issue>(new NameValueCollection { { "project_id", projectId } });
             Assert.IsNotNull(issues);
         }
 
         [TestMethod]
         public void RedmineIssues_ShouldReturnFilteredIssuesBySubprojectId()
         {
-            var issues = redmineManager.GetObjectList<Issue>(new NameValueCollection { { "subproject_id", subprojectId } });
+            var issues = redmineManager.GetObjects<Issue>(new NameValueCollection { { "subproject_id", subprojectId } });
             Assert.IsNotNull(issues);
         }
 
         [TestMethod]
         public void RedmineIssues_ShouldReturnFilteredIssues_ByProjectWithoutSubprojects()
         {
-            var issues = redmineManager.GetObjectList<Issue>(new NameValueCollection { { "project_id", projectId }, { "subproject_id", allSubprojects } });
+            var issues = redmineManager.GetObjects<Issue>(new NameValueCollection { { "project_id", projectId }, { "subproject_id", allSubprojects } });
             
             Assert.IsNotNull(issues);
         }
@@ -153,7 +153,7 @@ namespace UnitTestRedmineNetApi
         [TestMethod]
         public void RedmineIssues_ShouldReturnFilteredIssuesByTracker()
         {
-            var issues = redmineManager.GetObjectList<Issue>(new NameValueCollection { { "tracker_id", trackerId } });
+            var issues = redmineManager.GetObjects<Issue>(new NameValueCollection { { "tracker_id", trackerId } });
            
             Assert.IsNotNull(issues);
         }
@@ -161,14 +161,14 @@ namespace UnitTestRedmineNetApi
         [TestMethod]
         public void RedmineIssues_ShouldReturnFilteredIssuesByStatus()
         {
-            var issues = redmineManager.GetObjectList<Issue>(new NameValueCollection { { "status_id", status_id } });
+            var issues = redmineManager.GetObjects<Issue>(new NameValueCollection { { "status_id", status_id } });
             Assert.IsNotNull(issues);
         }
 
         [TestMethod]
         public void RedmineIssues_ShouldReturnFilteredIssuesByAsignee()
         {
-            var issues = redmineManager.GetObjectList<Issue>(new NameValueCollection { { "assigned_to_id", assigned_to_id } });
+            var issues = redmineManager.GetObjects<Issue>(new NameValueCollection { { "assigned_to_id", assigned_to_id } });
           
             Assert.IsNotNull(issues);
         }
@@ -176,7 +176,7 @@ namespace UnitTestRedmineNetApi
         [TestMethod]
         public void RedmineIssues_ShouldReturnFilteredIssuesByCustomField()
         {
-            var issues = redmineManager.GetObjectList<Issue>(new NameValueCollection { { customFieldName, customFieldValue } });
+            var issues = redmineManager.GetObjects<Issue>(new NameValueCollection { { customFieldName, customFieldValue } });
 
             Assert.IsNotNull(issues);
         }
@@ -275,7 +275,7 @@ namespace UnitTestRedmineNetApi
         [TestMethod]
         public void RedmineIssues_ShouldAddWatcher()
         {
-            redmineManager.AddWatcher(watcherIssueId, watcherUserId);
+            redmineManager.AddWatcherToIssue(watcherIssueId, watcherUserId);
 
             Issue issue =  redmineManager.GetObject<Issue>(watcherIssueId.ToString(), new NameValueCollection { { "include", "watchers" } });
 
@@ -285,7 +285,7 @@ namespace UnitTestRedmineNetApi
         [TestMethod]
         public void RedmineIssues_ShouldRemoveWatcher()
         {
-            redmineManager.RemoveWatcher(watcherIssueId, watcherUserId);
+            redmineManager.RemoveWatcherFromIssue(watcherIssueId, watcherUserId);
 
             Issue issue = redmineManager.GetObject<Issue>(watcherIssueId.ToString(),  new NameValueCollection { { "include", "watchers" } });
 

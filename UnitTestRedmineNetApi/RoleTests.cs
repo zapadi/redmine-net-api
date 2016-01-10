@@ -55,7 +55,7 @@ namespace UnitTestRedmineNetApi
         [TestMethod]
         public void RedmineRoles_ShouldGetAllRoles()
         {
-            var roles = redmineManager.GetObjectList<Role>(null);
+            var roles = redmineManager.GetObjects<Role>(null);
 
             Assert.IsTrue(roles.Count == numberOfRoles);
         }

@@ -69,7 +69,7 @@ namespace UnitTestRedmineNetApi
         [TestMethod]
         public void RedmineIssueCategories_ShouldGetAllIssueCategories()
         {
-            var issueCategories = redmineManager.GetObjectList<IssueCategory>(new NameValueCollection { { "project_id", projectId } });
+            var issueCategories = redmineManager.GetObjects<IssueCategory>(new NameValueCollection { { "project_id", projectId } });
 
             Assert.IsNotNull(issueCategories);
         }

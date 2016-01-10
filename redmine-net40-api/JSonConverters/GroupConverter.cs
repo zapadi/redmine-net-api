@@ -15,9 +15,9 @@
 */
 
 using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.Web.Script.Serialization;
+using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Types;
 
 namespace Redmine.Net.Api.JSonConverters

@@ -65,7 +65,7 @@ namespace UnitTestRedmineNetApi
         [TestMethod]
         public void RedmineProjectMembership_ShouldGetAllByProject()
         {
-            var projectMemberships = redmineManager.GetObjectList<ProjectMembership>(new NameValueCollection { { "project_id", projectId } });
+            var projectMemberships = redmineManager.GetObjects<ProjectMembership>(new NameValueCollection { { "project_id", projectId } });
 
             Assert.IsNotNull(projectMemberships);
         }

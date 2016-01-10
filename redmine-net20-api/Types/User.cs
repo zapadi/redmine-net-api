@@ -19,6 +19,8 @@ using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using Redmine.Net.Api.Extensions;
+using Redmine.Net.Api.Internals;
 
 namespace Redmine.Net.Api.Types
 {
@@ -196,52 +198,52 @@ namespace Redmine.Net.Api.Types
         public bool Equals(User other)
         {
             if (other == null) return false;
-			return ( 
-				Id == other.Id 
-				&& Login.Equals(other.Login)
-				&& Password.Equals(other.Password)
-				&& FirstName.Equals(other.FirstName)
-				&& LastName.Equals(other.LastName)
-				&& Email.Equals(other.Email)
-				&& ApiKey.Equals(other.ApiKey)
-				&& AuthenticationModeId == other.AuthenticationModeId
-				&& CreatedOn == other.CreatedOn
-				&& LastLoginOn == other.LastLoginOn
-				&& Status == other.Status
-				&& MustChangePassword == other.MustChangePassword
-				&& CustomFields.Equals(other.CustomFields) 
-				&& Memberships.Equals(other.Memberships)
-				&& Groups.Equals(other.Groups)
-			);
+            return (
+                Id == other.Id
+                && Login.Equals(other.Login)
+                && Password.Equals(other.Password)
+                && FirstName.Equals(other.FirstName)
+                && LastName.Equals(other.LastName)
+                && Email.Equals(other.Email)
+                && ApiKey.Equals(other.ApiKey)
+                && AuthenticationModeId == other.AuthenticationModeId
+                && CreatedOn == other.CreatedOn
+                && LastLoginOn == other.LastLoginOn
+                && Status == other.Status
+                && MustChangePassword == other.MustChangePassword
+                && CustomFields.Equals(other.CustomFields)
+                && Memberships.Equals(other.Memberships)
+                && Groups.Equals(other.Groups)
+            );
         }
-        
+
         public override int GetHashCode()
         {
             unchecked
             {
-				var hashCode = base.GetHashCode();
-				hashCode = Login.GetHashCode(hashCode);
-				hashCode = Password.GetHashCode(hashCode);
-				hashCode = FirstName.GetHashCode(hashCode);
-				hashCode = LastName.GetHashCode(hashCode);
-				hashCode = Email.GetHashCode(hashCode);
-				hashCode = AuthenticationModeId.GetHashCode(hashCode);
-				hashCode = CreatedOn.GetHashCode(hashCode);
-				hashCode = LastLoginOn.GetHashCode(hashCode);
-				hashCode = ApiKey.GetHashCode(hashCode);
-				hashCode = Status.GetHashCode(hashCode);
-				hashCode = MustChangePassword.GetHashCode(hashCode);
-				hashCode = CustomFields.GetHashCode(hashCode);
-				hashCode = Memberships.GetHashCode(hashCode);
-				hashCode = Groups.GetHashCode(hashCode);
+                var hashCode = base.GetHashCode();
+                hashCode = Utils.GetHashCode(Login, hashCode);
+                hashCode = Utils.GetHashCode(Password, hashCode);
+                hashCode = Utils.GetHashCode(FirstName, hashCode);
+                hashCode = Utils.GetHashCode(LastName, hashCode);
+                hashCode = Utils.GetHashCode(Email, hashCode);
+                hashCode = Utils.GetHashCode(AuthenticationModeId, hashCode);
+                hashCode = Utils.GetHashCode(CreatedOn, hashCode);
+                hashCode = Utils.GetHashCode(LastLoginOn, hashCode);
+                hashCode = Utils.GetHashCode(ApiKey, hashCode);
+                hashCode = Utils.GetHashCode(Status, hashCode);
+                hashCode = Utils.GetHashCode(MustChangePassword, hashCode);
+                hashCode = Utils.GetHashCode(CustomFields, hashCode);
+                hashCode = Utils.GetHashCode(Memberships, hashCode);
+                hashCode = Utils.GetHashCode(Groups, hashCode);
                 return hashCode;
             }
         }
 
-		public override string ToString ()
-		{
-			return string.Format ("[User: {14}, Login={0}, Password={1}, FirstName={2}, LastName={3}, Email={4}, AuthenticationModeId={5}, CreatedOn={6}, LastLoginOn={7}, ApiKey={8}, Status={9}, MustChangePassword={10}, CustomFields={11}, Memberships={12}, Groups={13}]", 
-				Login, Password, FirstName, LastName, Email, AuthenticationModeId, CreatedOn, LastLoginOn, ApiKey, Status, MustChangePassword, CustomFields, Memberships, Groups, base.ToString());
-		}
+        public override string ToString()
+        {
+            return string.Format("[User: {14}, Login={0}, Password={1}, FirstName={2}, LastName={3}, Email={4}, AuthenticationModeId={5}, CreatedOn={6}, LastLoginOn={7}, ApiKey={8}, Status={9}, MustChangePassword={10}, CustomFields={11}, Memberships={12}, Groups={13}]",
+                Login, Password, FirstName, LastName, Email, AuthenticationModeId, CreatedOn, LastLoginOn, ApiKey, Status, MustChangePassword, CustomFields, Memberships, Groups, base.ToString());
+        }
     }
 }

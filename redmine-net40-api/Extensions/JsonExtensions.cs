@@ -4,19 +4,20 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Web.Script.Serialization;
+using Redmine.Net.Api.Internals;
 using Redmine.Net.Api.JSonConverters;
 using Redmine.Net.Api.Types;
 
-namespace Redmine.Net.Api
+namespace Redmine.Net.Api.Extensions
 {
     public static class JsonExtensions
     {
-        public static void WriteIdIfNotNull(this Dictionary<string, object> dictionary, IdentifiableName ident, String key)
+        public static void WriteIdIfNotNull(this Dictionary<string, object> dictionary, IdentifiableName ident, string key)
         {
             if (ident != null) dictionary.Add(key, ident.Id);
         }
 
-        public static void WriteIdOrEmpty(this Dictionary<string, object> dictionary, IdentifiableName ident, String key, String emptyValue = null)
+        public static void WriteIdOrEmpty(this Dictionary<string, object> dictionary, IdentifiableName ident, string key, string emptyValue = null)
         {
             if (ident != null) dictionary.Add(key, ident.Id);
             else dictionary.Add(key, emptyValue);
@@ -46,7 +47,7 @@ namespace Redmine.Net.Api
                 dictionary.Add(key, coll.Select(x => x.Name).ToArray());
         }
 
-        public static void WriteDateOrEmpty(this Dictionary<string, object> dictionary, DateTime? val, String tag)
+        public static void WriteDateOrEmpty(this Dictionary<string, object> dictionary, DateTime? val, string tag)
         {
             if (!val.HasValue || val.Value.Equals(default(DateTime)))
                 dictionary.Add(tag, string.Empty);
@@ -54,7 +55,7 @@ namespace Redmine.Net.Api
                 dictionary.Add(tag, string.Format(NumberFormatInfo.InvariantInfo, "{0}", val.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)));
         }
 
-        public static void WriteValueOrEmpty<T>(this Dictionary<string, object> dictionary, T? val, String tag) where T : struct
+        public static void WriteValueOrEmpty<T>(this Dictionary<string, object> dictionary, T? val, string tag) where T : struct
         {
             if (!val.HasValue || EqualityComparer<T>.Default.Equals(val.Value, default(T)))
                 dictionary.Add(tag, string.Empty);
@@ -62,7 +63,7 @@ namespace Redmine.Net.Api
                 dictionary.Add(tag, val.Value);
         }
 
-        public static void WriteValueOrDefault<T>(this Dictionary<string, object> dictionary, T? val, String tag) where T : struct
+        public static void WriteValueOrDefault<T>(this Dictionary<string, object> dictionary, T? val, string tag) where T : struct
         {
             dictionary.Add(tag, val ?? default(T));
         }
@@ -85,7 +86,7 @@ namespace Redmine.Net.Api
 
             if (type.IsEnum) val = Enum.Parse(type, val.ToString(), true);
 
-            return (T)Convert.ChangeType(val, type);
+            return (T)Convert.ChangeType(val, type, CultureInfo.InvariantCulture);
         }
 
         public static IdentifiableName GetValueAsIdentifiableName(this IDictionary<string, object> dictionary, string key)
@@ -115,9 +116,9 @@ namespace Redmine.Net.Api
             if (!dictionary.TryGetValue(key, out val)) return null;
 
             var ser = new JavaScriptSerializer();
-            ser.RegisterConverters(new[] { RedmineSerialization.Converters[typeof(T)] });
+            ser.RegisterConverters(new[] { RedmineSerializer.JsonConverters[typeof(T)] });
 
-            List<T> list = new List<T>();
+            var list = new List<T>();
 
             var arrayList = val as ArrayList;
             if (arrayList != null)

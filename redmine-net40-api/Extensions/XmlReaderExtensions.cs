@@ -22,11 +22,10 @@ using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
 using Redmine.Net.Api.Types;
-using System.Linq;
 
-namespace Redmine.Net.Api
+namespace Redmine.Net.Api.Extensions
 {
-    public static class ExtensionMethods
+    public static class XmlReaderExtensions
     {
         /// <summary>
         /// Reads the attribute as int.
@@ -36,32 +35,18 @@ namespace Redmine.Net.Api
         /// <returns></returns>
         public static int ReadAttributeAsInt(this XmlReader reader, string attributeName)
         {
-            try
-            {
-                var attribute = reader.GetAttribute(attributeName);
-                int result;
-                if (String.IsNullOrWhiteSpace(attribute) || !Int32.TryParse(attribute, NumberStyles.Any, NumberFormatInfo.InvariantInfo, out result)) return default(int);
-                return result;
-            }
-            catch
-            {
-                return -1;
-            }
+            var attribute = reader.GetAttribute(attributeName);
+            int result;
+            if (string.IsNullOrWhiteSpace(attribute) || !int.TryParse(attribute, NumberStyles.Any, NumberFormatInfo.InvariantInfo, out result)) return default(int);
+            return result;
         }
 
         public static int? ReadAttributeAsNullableInt(this XmlReader reader, string attributeName)
         {
-            try
-            {
-                var attribute = reader.GetAttribute(attributeName);
-                int result;
-                if (String.IsNullOrWhiteSpace(attribute) || !Int32.TryParse(attribute, NumberStyles.Any, NumberFormatInfo.InvariantInfo, out result)) return null;
-                return result;
-            }
-            catch
-            {
-                return null;
-            }
+            var attribute = reader.GetAttribute(attributeName);
+            int result;
+            if (string.IsNullOrWhiteSpace(attribute) || !int.TryParse(attribute, NumberStyles.Any, NumberFormatInfo.InvariantInfo, out result)) return null;
+            return result;
         }
 
         /// <summary>
@@ -72,18 +57,11 @@ namespace Redmine.Net.Api
         /// <returns></returns>
         public static bool ReadAttributeAsBoolean(this XmlReader reader, string attributeName)
         {
-            try
-            {
-                var attribute = reader.GetAttribute(attributeName);
-                bool result;
-                if (String.IsNullOrWhiteSpace(attribute) || !Boolean.TryParse(attribute, out result)) return false;
+            var attribute = reader.GetAttribute(attributeName);
+            bool result;
+            if (string.IsNullOrWhiteSpace(attribute) || !bool.TryParse(attribute, out result)) return false;
 
-                return result;
-            }
-            catch
-            {
-                return false;
-            }
+            return result;
         }
 
         /// <summary>
@@ -96,7 +74,7 @@ namespace Redmine.Net.Api
             var str = reader.ReadElementContentAsString();
 
             DateTime result;
-            if (String.IsNullOrWhiteSpace(str) || !DateTime.TryParse(str, out result)) return null;
+            if (string.IsNullOrWhiteSpace(str) || !DateTime.TryParse(str, out result)) return null;
 
             return result;
         }
@@ -111,7 +89,7 @@ namespace Redmine.Net.Api
             var str = reader.ReadElementContentAsString();
 
             float result;
-            if (String.IsNullOrWhiteSpace(str) || !float.TryParse(str, NumberStyles.Any, NumberFormatInfo.InvariantInfo, out result)) return null;
+            if (string.IsNullOrWhiteSpace(str) || !float.TryParse(str, NumberStyles.Any, NumberFormatInfo.InvariantInfo, out result)) return null;
 
             return result;
         }
@@ -126,7 +104,7 @@ namespace Redmine.Net.Api
             var str = reader.ReadElementContentAsString();
 
             int result;
-            if (String.IsNullOrWhiteSpace(str) || !int.TryParse(str, NumberStyles.Any, NumberFormatInfo.InvariantInfo, out result)) return null;
+            if (string.IsNullOrWhiteSpace(str) || !int.TryParse(str, NumberStyles.Any, NumberFormatInfo.InvariantInfo, out result)) return null;
 
             return result;
         }
@@ -141,7 +119,7 @@ namespace Redmine.Net.Api
             var str = reader.ReadElementContentAsString();
 
             decimal result;
-            if (String.IsNullOrWhiteSpace(str) || !decimal.TryParse(str, NumberStyles.Any, NumberFormatInfo.InvariantInfo, out result)) return null;
+            if (string.IsNullOrWhiteSpace(str) || !decimal.TryParse(str, NumberStyles.Any, NumberFormatInfo.InvariantInfo, out result)) return null;
             return result;
         }
 
@@ -180,8 +158,7 @@ namespace Redmine.Net.Api
                         temp = serializer.Deserialize(subTree) as T;
                     }
                     if (temp != null) result.Add(temp);
-                    if (!r.IsEmptyElement)
-                        r.Read();
+                    if (!r.IsEmptyElement) r.Read();
                 }
             }
             return result;
@@ -219,18 +196,17 @@ namespace Redmine.Net.Api
         /// <param name="writer">The writer.</param>
         /// <param name="ident">The ident.</param>
         /// <param name="tag">The tag.</param>
-        public static void WriteIdIfNotNull(this XmlWriter writer, IdentifiableName ident, String tag)
+        public static void WriteIdIfNotNull(this XmlWriter writer, IdentifiableName ident, string tag)
         {
             if (ident != null) writer.WriteElementString(tag, ident.Id.ToString(CultureInfo.InvariantCulture));
         }
 
-        public static void WriteIdOrEmpty(this XmlWriter writer, IdentifiableName ident, String tag)
+        public static void WriteIdOrEmpty(this XmlWriter writer, IdentifiableName ident, string tag)
         {
-            if (ident != null) writer.WriteElementString(tag, ident.Id.ToString(CultureInfo.InvariantCulture));
-            else
-                writer.WriteElementString(tag, string.Empty);
+            writer.WriteElementString(tag,
+                ident != null ? ident.Id.ToString(CultureInfo.InvariantCulture) : string.Empty);
         }
-        
+
         /// <summary>
         /// Writes string empty if T has default value or null.
         /// </summary>
@@ -238,7 +214,7 @@ namespace Redmine.Net.Api
         /// <param name="writer">The writer.</param>
         /// <param name="val">The value.</param>
         /// <param name="tag">The tag.</param>
-        public static void WriteValueOrEmpty<T>(this XmlWriter writer, T? val, String tag) where T : struct
+        public static void WriteValueOrEmpty<T>(this XmlWriter writer, T? val, string tag) where T : struct
         {
             if (!val.HasValue || EqualityComparer<T>.Default.Equals(val.Value, default(T)))
                 writer.WriteElementString(tag, string.Empty);
@@ -246,14 +222,14 @@ namespace Redmine.Net.Api
                 writer.WriteElementString(tag, string.Format(NumberFormatInfo.InvariantInfo, "{0}", val.Value));
         }
 
-        public static void WriteIfNotDefaultOrNull<T>(this XmlWriter writer, T? val, String tag) where T : struct
+        public static void WriteIfNotDefaultOrNull<T>(this XmlWriter writer, T? val, string tag) where T : struct
         {
             if (!val.HasValue) return;
             if (!EqualityComparer<T>.Default.Equals(val.Value, default(T)))
                 writer.WriteElementString(tag, string.Format(NumberFormatInfo.InvariantInfo, "{0}", val.Value));
         }
 
-        public static void WriteDateOrEmpty(this XmlWriter writer, DateTime? val, String tag)
+        public static void WriteDateOrEmpty(this XmlWriter writer, DateTime? val, string tag)
         {
             if (!val.HasValue || val.Value.Equals(default(DateTime)))
                 writer.WriteElementString(tag, string.Empty);
@@ -275,10 +251,56 @@ namespace Redmine.Net.Api
             writer.WriteEndElement();
         }
 
-        public static IList<T> Clone<T>(this IList<T> listToClone) where T : ICloneable
+        public static void WriteArrayIds(this XmlWriter writer, IEnumerable col, string elementName, Type type, Func<object,int> f)
         {
-            return listToClone.Select(item => (T)item.Clone()).ToList();
+            writer.WriteStartElement(elementName);
+            writer.WriteAttributeString("type", "array");
+            if (col != null)
+            {
+                var serializer = new XmlSerializer(type);
+                foreach (var item in col)
+                {
+                    serializer.Serialize(writer, f.Invoke(item));
+                }
+            }
+            writer.WriteEndElement();
         }
 
+        public static void WriteArray(this XmlWriter writer, IEnumerable list, string elementName, Type type, string root, string defaultNamespace = null)
+        {
+            writer.WriteStartElement(elementName);
+            writer.WriteAttributeString("type", "array");
+            if (list != null)
+            {
+                var serializer = new XmlSerializer(type, new XmlAttributeOverrides(), null, new XmlRootAttribute(root), defaultNamespace);
+                foreach (var item in list)
+                {
+                    serializer.Serialize(writer, item);
+                }
+            }
+            writer.WriteEndElement();
+        }
+
+        public static void WriteArrayStringElement(this XmlWriter writer, IEnumerable col, string elementName, Func<object, string> f)
+        {
+            if (col == null) return;
+            writer.WriteStartElement(elementName);
+            writer.WriteAttributeString("type", "array");
+            foreach (var item in col)
+            {
+                writer.WriteElementString(elementName, f.Invoke(item));
+            }
+            writer.WriteEndElement();
+        }
+
+        public static void WriteListElements(this XmlWriter xmlWriter, IEnumerable<IValue> list, string elementName)
+        {
+            if (list == null) return;
+
+            foreach (var item in list)
+            {
+                xmlWriter.WriteElementString(elementName, item.Value);
+            }
+        }
     }
 }

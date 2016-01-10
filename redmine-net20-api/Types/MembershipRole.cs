@@ -17,6 +17,8 @@
 using System;
 using System.Xml;
 using System.Xml.Serialization;
+using Redmine.Net.Api.Extensions;
+using Redmine.Net.Api.Internals;
 
 namespace Redmine.Net.Api.Types
 {
@@ -57,21 +59,21 @@ namespace Redmine.Net.Api.Types
             return Id == other.Id && Name == other.Name && Inherited == other.Inherited;
         }
 
-		public override int GetHashCode()
+        public override int GetHashCode()
         {
             unchecked
             {
-				var hashCode = 13;
-				hashCode =  Id.GetHashCode(hashCode);
-				hashCode =  Name.GetHashCode(hashCode);
-				hashCode =  Inherited.GetHashCode(hashCode);
-				return hashCode;
+                var hashCode = 13;
+                hashCode = Utils.GetHashCode(Id, hashCode);
+                hashCode = Utils.GetHashCode(Name, hashCode);
+                hashCode = Utils.GetHashCode(Inherited, hashCode);
+                return hashCode;
             }
         }
 
-		public override string ToString ()
-		{
-			return string.Format ("[MembershipRole: {1}, Inherited={0}]", Inherited, base.ToString());
-		}
+        public override string ToString()
+        {
+            return string.Format("[MembershipRole: {1}, Inherited={0}]", Inherited, base.ToString());
+        }
     }
 }

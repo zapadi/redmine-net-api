@@ -18,6 +18,8 @@ using System;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using Redmine.Net.Api.Extensions;
+using Redmine.Net.Api.Internals;
 
 namespace Redmine.Net.Api.Types
 {
@@ -117,27 +119,27 @@ namespace Redmine.Net.Api.Types
                 && CreatedOn == other.CreatedOn);
         }
 
-      
+
 
         public override int GetHashCode()
         {
             unchecked
             {
-				var hashCode = base.GetHashCode();
-				hashCode =  Project.GetHashCode(hashCode);
-				hashCode =  Author.GetHashCode(hashCode);
-				hashCode =  Title.GetHashCode(hashCode);
-				hashCode =  Summary.GetHashCode(hashCode);
-				hashCode =  Description.GetHashCode(hashCode);
-				hashCode =  CreatedOn.GetHashCode(hashCode);
-				return hashCode;
+                var hashCode = base.GetHashCode();
+                hashCode = Utils.GetHashCode(Project, hashCode);
+                hashCode = Utils.GetHashCode(Author, hashCode);
+                hashCode = Utils.GetHashCode(Title, hashCode);
+                hashCode = Utils.GetHashCode(Summary, hashCode);
+                hashCode = Utils.GetHashCode(Description, hashCode);
+                hashCode = Utils.GetHashCode(CreatedOn, hashCode);
+                return hashCode;
             }
         }
 
-		public override string ToString ()
-		{
-			return string.Format ("[News: {6}, Project={0}, Author={1}, Title={2}, Summary={3}, Description={4}, CreatedOn={5}]", 
-				Project, Author, Title, Summary, Description, CreatedOn, base.ToString());
-		}
+        public override string ToString()
+        {
+            return string.Format("[News: {6}, Project={0}, Author={1}, Title={2}, Summary={3}, Description={4}, CreatedOn={5}]",
+                Project, Author, Title, Summary, Description, CreatedOn, base.ToString());
+        }
     }
 }

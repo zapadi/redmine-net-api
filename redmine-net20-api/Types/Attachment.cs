@@ -18,6 +18,8 @@ using System;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using Redmine.Net.Api.Extensions;
+using Redmine.Net.Api.Internals;
 
 namespace Redmine.Net.Api.Types
 {
@@ -117,13 +119,13 @@ namespace Redmine.Net.Api.Types
         public bool Equals(Attachment other)
         {
             if (other == null) return false;
-            return (Id == other.Id 
-                && FileName == other.FileName 
-                && FileSize == other.FileSize 
+            return (Id == other.Id
+                && FileName == other.FileName
+                && FileSize == other.FileSize
                 && ContentType == other.ContentType
                 && Author == other.Author
-                && CreatedOn == other.CreatedOn 
-                && Description == other.Description 
+                && CreatedOn == other.CreatedOn
+                && Description == other.Description
                 && ContentUrl == other.ContentUrl);
         }
 
@@ -132,22 +134,22 @@ namespace Redmine.Net.Api.Types
             unchecked
             {
                 var hashCode = base.GetHashCode();
-				hashCode = FileName.GetHashCode(hashCode);
-                hashCode = FileSize.GetHashCode();
-				hashCode = ContentType.GetHashCode(hashCode);
-				hashCode = Author.GetHashCode(hashCode);
-				hashCode = CreatedOn.GetHashCode(hashCode);
-				hashCode = Description.GetHashCode(hashCode);
-				hashCode = ContentUrl.GetHashCode(hashCode);
+                hashCode = Utils.GetHashCode(FileName, hashCode);
+                hashCode = Utils.GetHashCode(FileSize, hashCode);
+                hashCode = Utils.GetHashCode(ContentType, hashCode);
+                hashCode = Utils.GetHashCode(Author, hashCode);
+                hashCode = Utils.GetHashCode(CreatedOn, hashCode);
+                hashCode = Utils.GetHashCode(Description, hashCode);
+                hashCode = Utils.GetHashCode(ContentUrl, hashCode);
 
                 return hashCode;
             }
         }
 
-		public override string ToString ()
-		{
-			return string.Format ("[Attachment: {7}, FileName={0}, FileSize={1}, ContentType={2}, Description={3}, ContentUrl={4}, Author={5}, CreatedOn={6}]",
-				FileName, FileSize, ContentType, Description, ContentUrl, Author, CreatedOn, base.ToString());
-		}
+        public override string ToString()
+        {
+            return string.Format("[Attachment: {7}, FileName={0}, FileSize={1}, ContentType={2}, Description={3}, ContentUrl={4}, Author={5}, CreatedOn={6}]",
+                FileName, FileSize, ContentType, Description, ContentUrl, Author, CreatedOn, base.ToString());
+        }
     }
 }

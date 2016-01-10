@@ -52,7 +52,7 @@ namespace UnitTestRedmineNetApi
         [TestMethod]
         public void RedmineTimeEntryActivities_ShouldGetAllTimeEntryActivities()
         {
-            var timeEntryActivities = redmineManager.GetObjectList<TimeEntryActivity>(null);
+            var timeEntryActivities = redmineManager.GetObjects<TimeEntryActivity>(null);
 
             Assert.IsTrue(timeEntryActivities.Count == numberOfTimeEntryActivities);
         }

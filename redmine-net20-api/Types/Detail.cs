@@ -18,6 +18,7 @@ using System;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using Redmine.Net.Api.Internals;
 
 namespace Redmine.Net.Api.Types
 {
@@ -115,18 +116,18 @@ namespace Redmine.Net.Api.Types
             unchecked
             {
                 var hashCode = 13;
-				hashCode = Property.GetHashCode(hashCode);
-				hashCode = StatusId.GetHashCode(hashCode);
-				hashCode = OldValue.GetHashCode(hashCode);
-				hashCode = NewValue.GetHashCode(hashCode);
+                hashCode = Utils.GetHashCode(Property, hashCode);
+                hashCode = Utils.GetHashCode(StatusId, hashCode);
+                hashCode = Utils.GetHashCode(OldValue, hashCode);
+                hashCode = Utils.GetHashCode(NewValue, hashCode);
 
                 return hashCode;
             }
         }
 
-        public override string ToString ()
-		{
-			return string.Format ("[Detail: Property={0}, StatusId={1}, OldValue={2}, NewValue={3}]", Property, StatusId, OldValue, NewValue);
-		}
+        public override string ToString()
+        {
+            return string.Format("[Detail: Property={0}, StatusId={1}, OldValue={2}, NewValue={3}]", Property, StatusId, OldValue, NewValue);
+        }
     }
 }

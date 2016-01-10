@@ -18,6 +18,7 @@ using System;
 using System.Xml;
 using System.Xml.Serialization;
 using System.Xml.Schema;
+using Redmine.Net.Api.Internals;
 
 namespace Redmine.Net.Api.Types
 {
@@ -100,15 +101,15 @@ namespace Redmine.Net.Api.Types
         {
             unchecked
             {
-				var hashCode = 13;
-				hashCode =  Id.GetHashCode(hashCode);
-				hashCode = Name.GetHashCode (hashCode);
-				return hashCode;
+                var hashCode = 13;
+                hashCode = Utils.GetHashCode(Id, hashCode);
+                hashCode = Utils.GetHashCode(Name, hashCode);
+                return hashCode;
             }
         }
-		public override string ToString ()
-		{
-			return string.Format ("[Tracker: Id={0}, Name={1}]", Id, Name);
-		}
+        public override string ToString()
+        {
+            return string.Format("[Tracker: Id={0}, Name={1}]", Id, Name);
+        }
     }
 }

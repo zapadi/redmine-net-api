@@ -19,6 +19,8 @@ using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using Redmine.Net.Api.Extensions;
+using Redmine.Net.Api.Internals;
 
 namespace Redmine.Net.Api.Types
 {
@@ -118,16 +120,16 @@ namespace Redmine.Net.Api.Types
         public void WriteXml(XmlWriter writer)
         {
             writer.WriteElementString(RedmineKeys.NAME, Name);
-
-            if (Users == null) return;
-
-            writer.WriteStartElement(RedmineKeys.USER_IDS);
-            writer.WriteAttributeString("type", "array");
-            foreach (var userId in Users)
-            {
-                new XmlSerializer(typeof(int)).Serialize(writer, userId.Id);
-            }
-            writer.WriteEndElement();
+            writer.WriteArrayIds(Users, RedmineKeys.USER_IDS, typeof(int), GetGroupUserId);
+            //            if (Users == null) return;
+            //
+            //            writer.WriteStartElement(RedmineKeys.USER_IDS);
+            //            writer.WriteAttributeString("type", "array");
+            //            foreach (var userId in Users)
+            //            {
+            //                new XmlSerializer(typeof(int)).Serialize(writer, userId.Id);
+            //            }
+            //            writer.WriteEndElement();
         }
 
         #endregion
@@ -164,20 +166,27 @@ namespace Redmine.Net.Api.Types
             unchecked
             {
                 var hashCode = 13;
-				hashCode = Id.GetHashCode(hashCode);
-				hashCode = Name.GetHashCode(hashCode);
-				hashCode = Users.GetHashCode(hashCode);
-				hashCode = CustomFields.GetHashCode(hashCode);
-				hashCode = Memberships.GetHashCode(hashCode);
+                hashCode = Utils.GetHashCode(Id, hashCode);
+                hashCode = Utils.GetHashCode(Name, hashCode);
+                hashCode = Utils.GetHashCode(Users, hashCode);
+                hashCode = Utils.GetHashCode(CustomFields, hashCode);
+                hashCode = Utils.GetHashCode(Memberships, hashCode);
                 return hashCode;
             }
         }
 
         #endregion
 
-		public override string ToString ()
-		{
-			return string.Format ("[Group: Id={0}, Name={1}, Users={2}, CustomFields={3}, Memberships={4}]", Id, Name, Users, CustomFields, Memberships);
-		}
+        public override string ToString()
+        {
+            return string.Format("[Group: Id={0}, Name={1}, Users={2}, CustomFields={3}, Memberships={4}]", Id, Name, Users, CustomFields, Memberships);
+        }
+
+        public int GetGroupUserId(object gu)
+        {
+            return ((GroupUser)gu).Id;
+        }
     }
+
+    
 }

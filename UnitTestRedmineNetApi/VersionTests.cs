@@ -73,7 +73,7 @@ namespace UnitTestRedmineNetApi
         [TestMethod]
         public void RedmineProjectVersions_ShouldGetSpecificProjectVersions()
         {
-            var versions = redmineManager.GetObjectList<Redmine.Net.Api.Types.Version>(new NameValueCollection { { "project_id", projectId } });
+            var versions = redmineManager.GetObjects<Redmine.Net.Api.Types.Version>(new NameValueCollection { { "project_id", projectId } });
         
             Assert.IsTrue(versions.Count == numberOfVersions);
         }

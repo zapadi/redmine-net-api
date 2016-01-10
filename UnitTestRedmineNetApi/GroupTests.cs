@@ -61,7 +61,7 @@ namespace UnitTestRedmineNetApi
         [TestMethod]
         public void GetAllGroups()
         {
-            var result = redmineManager.GetObjectList<Group>(null);
+            var result = redmineManager.GetObjects<Group>(null);
 
             Assert.IsNotNull(result);
         }

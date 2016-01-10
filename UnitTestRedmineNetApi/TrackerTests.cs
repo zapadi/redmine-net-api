@@ -52,7 +52,7 @@ namespace UnitTestRedmineNetApi
         [TestMethod]
         public void RedmineTrackers_ShouldGetAllTrackers()
         {
-            var trackers = redmineManager.GetObjectList<Tracker>(null);
+            var trackers = redmineManager.GetObjects<Tracker>(null);
 
             Assert.IsTrue(trackers.Count == numberOfTrackers);
         }
