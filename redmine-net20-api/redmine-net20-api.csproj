@@ -59,6 +59,14 @@
     <Compile Include="Extensions\WebExtensions.cs" />
     <Compile Include="Extensions\XmlReaderExtensions.cs" />
     <Compile Include="Internals\Func.cs" />
+    <Compile Include="Logging\ColorConsoleLogger.cs" />
+    <Compile Include="Logging\ConsoleLogger.cs" />
+    <Compile Include="Logging\ILogger.cs" />
+    <Compile Include="Logging\LogEntry.cs" />
+    <Compile Include="Logging\Logger.cs" />
+    <Compile Include="Logging\LoggerExtensions.cs" />
+    <Compile Include="Logging\LoggingEventType.cs" />
+    <Compile Include="Logging\TraceLogger.cs" />
     <Compile Include="MimeFormat.cs" />
     <Compile Include="Types\PaginatedObjects.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

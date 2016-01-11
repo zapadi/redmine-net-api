@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using Redmine.Net.Api.Logging;
 
 namespace Redmine.Net.Api.Extensions
 {
@@ -19,6 +20,21 @@ namespace Redmine.Net.Api.Extensions
             if (parameters == null) return null;
             string value = parameters.Get(parameterName);
             return string.IsNullOrEmpty(value) ? null : value;
+        }
+
+        public static void UseConsoleLog(this RedmineManager redmineManager)
+        {
+            Logging.Logger.UseLogger(new ConsoleLogger());
+        }
+
+        public static void UseColorConsoleLog(this RedmineManager redmineManager)
+        {
+            Logging.Logger.UseLogger(new ColorConsoleLogger());
+        }
+
+        public static void UseTraceLog(this RedmineManager redmineManager)
+        {
+            Logging.Logger.UseLogger(new TraceLogger());
         }
     }
 }

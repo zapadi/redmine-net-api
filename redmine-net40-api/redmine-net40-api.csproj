@@ -68,6 +68,33 @@
     <Compile Include="..\redmine-net20-api\Internals\Utils.cs">
       <Link>Internals\Utils.cs</Link>
     </Compile>
+    <Compile Include="..\redmine-net20-api\Logging\ColorConsoleLogger.cs">
+      <Link>Logging\ColorConsoleLogger.cs</Link>
+    </Compile>
+    <Compile Include="..\redmine-net20-api\Logging\ConsoleLogger.cs">
+      <Link>Logging\ConsoleLogger.cs</Link>
+    </Compile>
+    <Compile Include="..\redmine-net20-api\Logging\ILogger.cs">
+      <Link>Logging\ILogger.cs</Link>
+    </Compile>
+    <Compile Include="..\redmine-net20-api\Logging\LogEntry.cs">
+      <Link>Logging\LogEntry.cs</Link>
+    </Compile>
+    <Compile Include="..\redmine-net20-api\Logging\Logger.cs">
+      <Link>Logging\Logger.cs</Link>
+    </Compile>
+    <Compile Include="..\redmine-net20-api\Logging\LoggerExtensions.cs">
+      <Link>Logging\LoggerExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\redmine-net20-api\Logging\LoggingEventType.cs">
+      <Link>Logging\LoggingEventType.cs</Link>
+    </Compile>
+    <Compile Include="..\redmine-net20-api\Logging\RedmineConsoleTraceListener.cs">
+      <Link>Logging\RedmineConsoleTraceListener.cs</Link>
+    </Compile>
+    <Compile Include="..\redmine-net20-api\Logging\TraceLogger.cs">
+      <Link>Logging\TraceLogger.cs</Link>
+    </Compile>
     <Compile Include="..\redmine-net20-api\RedmineException.cs">
       <Link>RedmineException.cs</Link>
     </Compile>

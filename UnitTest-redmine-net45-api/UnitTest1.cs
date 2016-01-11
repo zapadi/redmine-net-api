@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Globalization;
+using Redmine.Net.Api.Extensions;
+using Redmine.Net.Api.Logging;
 
 namespace UnitTest_redmine_net45_api
 {
@@ -29,6 +31,7 @@ namespace UnitTest_redmine_net45_api
         private void SetMimeTypeJSON()
         {
             redmineManager = new RedmineManager(Helper.Uri, Helper.ApiKey, MimeFormat.json);
+            redmineManager.UseTraceLog();
         }
 
         [Conditional("XML")]
@@ -46,6 +49,7 @@ namespace UnitTest_redmine_net45_api
         }
 
         [TestMethod]
+        //  [ExpectedException(typeof(RedmineException))]
         public async Task Should_Get_User_By_Id()
         {
             var user = await redmineManager.GetObjectAsync<User>("8", null);
@@ -95,7 +99,7 @@ namespace UnitTest_redmine_net45_api
         }
 
         [TestMethod]
-        public async Task Should_Get_Active_Users()//_By_Group_Id()
+        public async Task Should_Get_Active_Users()
         {
             var users = await redmineManager.GetObjectsAsync<User>(new NameValueCollection()
             {

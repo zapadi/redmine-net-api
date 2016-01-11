@@ -36,12 +36,12 @@ namespace Redmine.Net.Api.Internals
         // ReSharper disable once InconsistentNaming
         private static string ToXML<T>(T obj) where T : class
         {
-            var xws = new XmlWriterSettings { OmitXmlDeclaration = true };
+            var xws = new XmlWriterSettings {OmitXmlDeclaration = true};
             using (var stringWriter = new StringWriter())
             {
                 using (var xmlWriter = XmlWriter.Create(stringWriter, xws))
                 {
-                    var sr = new XmlSerializer(typeof(T));
+                    var sr = new XmlSerializer(typeof (T));
                     sr.Serialize(xmlWriter, obj);
                     return stringWriter.ToString();
                 }
@@ -61,7 +61,7 @@ namespace Redmine.Net.Api.Internals
         {
             using (var text = new StringReader(xml))
             {
-                var sr = new XmlSerializer(typeof(T));
+                var sr = new XmlSerializer(typeof (T));
                 return sr.Deserialize(text) as T;
             }
         }
@@ -86,11 +86,18 @@ namespace Redmine.Net.Api.Internals
 
         public static string Serialize<T>(T obj, MimeFormat mimeFormat) where T : class, new()
         {
-            if (mimeFormat == MimeFormat.json)
+            try
             {
-                return JsonSerializer(obj);
+                if (mimeFormat == MimeFormat.json)
+                {
+                    return JsonSerializer(obj);
+                }
+                return ToXML(obj);
             }
-            return ToXML(obj);
+            catch (Exception ex)
+            {
+                throw new RedmineException("Serialization error");
+            }
         }
 
         /// <summary>
@@ -103,31 +110,65 @@ namespace Redmine.Net.Api.Internals
         public static T Deserialize<T>(string response, MimeFormat mimeFormat) where T : class, new()
         {
             if (string.IsNullOrEmpty(response)) throw new RedmineException("Could not deserialize null!");
-
-            if (mimeFormat == MimeFormat.json)
+            try
             {
-                var type = typeof(T);
-                var jsonRoot = (string)null;
-                if (type == typeof(IssueCategory)) jsonRoot = RedmineKeys.ISSUE_CATEGORY;
-                if (type == typeof(IssueRelation)) jsonRoot = RedmineKeys.RELATION;
-                if (type == typeof(TimeEntry)) jsonRoot = RedmineKeys.TIME_ENTRY;
-                if (type == typeof(ProjectMembership)) jsonRoot = RedmineKeys.MEMBERSHIP;
-                if (type == typeof(WikiPage)) jsonRoot = RedmineKeys.WIKI_PAGE;
-                return JsonDeserialize<T>(response, jsonRoot);
+                if (mimeFormat == MimeFormat.json)
+                {
+                    var type = typeof (T);
+                    var jsonRoot = (string) null;
+                    if (type == typeof (IssueCategory)) jsonRoot = RedmineKeys.ISSUE_CATEGORY;
+                    if (type == typeof (IssueRelation)) jsonRoot = RedmineKeys.RELATION;
+                    if (type == typeof (TimeEntry)) jsonRoot = RedmineKeys.TIME_ENTRY;
+                    if (type == typeof (ProjectMembership)) jsonRoot = RedmineKeys.MEMBERSHIP;
+                    if (type == typeof (WikiPage)) jsonRoot = RedmineKeys.WIKI_PAGE;
+                    return JsonDeserialize<T>(response, jsonRoot);
+                }
+
+                return FromXML<T>(response);
+            }
+            catch (Exception ex)
+            {
+                throw new RedmineException("Deserialization error");
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="response"></param>
+        /// <param name="mimeFormat"></param>
+        /// <returns></returns>
+        public static PaginatedObjects<T> DeserializeList<T>(string response, MimeFormat mimeFormat)
+            where T : class, new()
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(response)) throw new RedmineException("Could not deserialize null!");
+
+                if (mimeFormat == MimeFormat.json)
+                {
+                    return JSonDeserializeList<T>(response);
+                }
+
+                return XmlDeserializeList<T>(response);
             }
 
-            return FromXML<T>(response);
+            catch (Exception ex)
+            {
+                throw new RedmineException("Deserialization error");
+            }
         }
 
         private static PaginatedObjects<T> JSonDeserializeList<T>(string response) where T : class, new()
         {
             int totalItems;
-            var type = typeof(T);
-            var jsonRoot = (string)null;
-            if (type == typeof(Error)) jsonRoot = RedmineKeys.ERRORS;
-            if (type == typeof(WikiPage)) jsonRoot = RedmineKeys.WIKI_PAGES;
-            if (type == typeof(IssuePriority)) jsonRoot = RedmineKeys.ISSUE_PRIORITIES;
-            if (type == typeof(TimeEntryActivity)) jsonRoot = RedmineKeys.TIME_ENTRY_ACTIVITIES;
+            var type = typeof (T);
+            var jsonRoot = (string) null;
+            if (type == typeof (Error)) jsonRoot = RedmineKeys.ERRORS;
+            if (type == typeof (WikiPage)) jsonRoot = RedmineKeys.WIKI_PAGES;
+            if (type == typeof (IssuePriority)) jsonRoot = RedmineKeys.ISSUE_PRIORITIES;
+            if (type == typeof (TimeEntryActivity)) jsonRoot = RedmineKeys.TIME_ENTRY_ACTIVITIES;
             if (string.IsNullOrEmpty(jsonRoot))
                 jsonRoot = RedmineManager.Sufixes[type];
 
@@ -160,25 +201,6 @@ namespace Redmine.Net.Api.Internals
                     };
                 }
             }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="response"></param>
-        /// <param name="mimeFormat"></param>
-        /// <returns></returns>
-        public static PaginatedObjects<T> DeserializeList<T>(string response, MimeFormat mimeFormat) where T : class, new()
-        {
-            if (string.IsNullOrWhiteSpace(response)) throw new RedmineException("Could not deserialize null!");
-
-            if (mimeFormat == MimeFormat.json)
-            {
-                return JSonDeserializeList<T>(response);
-            }
-
-            return XmlDeserializeList<T>(response);
         }
     }
 }

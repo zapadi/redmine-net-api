@@ -20,31 +20,32 @@ namespace Redmine.Net.Api.Extensions
                 case WebExceptionStatus.Timeout: throw new RedmineException("Timeout!", exception);
                 case WebExceptionStatus.NameResolutionFailure: throw new RedmineException("Bad domain name!", exception);
                 case WebExceptionStatus.ProtocolError:
-                {
-                    var response = (HttpWebResponse)exception.Response;
-                    switch ((int)response.StatusCode)
                     {
-                        case (int)HttpStatusCode.InternalServerError:
-                        case (int)HttpStatusCode.Unauthorized:
-                        case (int)HttpStatusCode.NotFound:
-                        case (int)HttpStatusCode.Forbidden:
-                            throw new RedmineException(response.StatusDescription, exception);
+                        var response = (HttpWebResponse)exception.Response;
+                        switch ((int)response.StatusCode)
+                        {
+                            case (int)HttpStatusCode.InternalServerError:
+                            case (int)HttpStatusCode.Unauthorized:
+                            case (int)HttpStatusCode.NotFound:
+                            case (int)HttpStatusCode.Forbidden:
+                                throw new RedmineException(response.StatusDescription, exception);
 
-                        case (int)HttpStatusCode.Conflict:
-                            throw new RedmineException("The page that you are trying to update is staled!", exception);
+                            case (int)HttpStatusCode.Conflict:
+                                throw new RedmineException("The page that you are trying to update is staled!", exception);
 
-                        case 422:
-                            var errors = GetRedmineExceptions(exception.Response, mimeFormat);
-                            string message = string.Empty;
-                            if (errors != null)
-                            {
-                                message = errors.Aggregate(message, (current, error) => current + (error.Info + "\n"));
-                            }
-                            throw new RedmineException(method + " has invalid or missing attribute parameters: " + message, exception);
+                            case 422:
 
-                        case (int)HttpStatusCode.NotAcceptable: throw new RedmineException(response.StatusDescription, exception);
+                                var errors = GetRedmineExceptions(exception.Response, mimeFormat);
+                                string message = string.Empty;
+                                if (errors != null)
+                                {
+                                    message = errors.Aggregate(message, (current, error) => current + (error.Info + "\n"));
+                                }
+                                throw new RedmineException(method + " has invalid or missing attribute parameters: " + message, exception);
+
+                            case (int)HttpStatusCode.NotAcceptable: throw new RedmineException(response.StatusDescription, exception);
+                        }
                     }
-                }
                     break;
 
                 default: throw new RedmineException(exception.Message, exception);
@@ -62,14 +63,8 @@ namespace Redmine.Net.Api.Extensions
 
                     if (responseFromServer.Trim().Length > 0)
                     {
-                        try
-                        {
-                            return RedmineSerializer.Deserialize<List<Error>>(responseFromServer, mimeFormat);
-                        }
-                        catch (Exception ex)
-                        {
-                            Trace.TraceError(ex.Message);
-                        }
+                        var errors = RedmineSerializer.DeserializeList<Error>(responseFromServer, mimeFormat);
+                        return errors.Objects;
                     }
                 }
                 return null;
