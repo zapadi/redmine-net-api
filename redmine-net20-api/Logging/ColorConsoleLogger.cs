@@ -53,15 +53,15 @@ namespace Redmine.Net.Api.Logging
 
         private struct ConsoleColors
         {
-            public ConsoleColors(ConsoleColor? foreground, ConsoleColor? background)
+            public ConsoleColors(ConsoleColor? foreground, ConsoleColor? background): this()
             {
                 Foreground = foreground;
                 Background = background;
             }
 
-            public ConsoleColor? Foreground { get; }
+            public ConsoleColor? Foreground { get; private set; }
 
-            public ConsoleColor? Background { get; }
+            public ConsoleColor? Background { get; private set; }
         }
     }
 }
