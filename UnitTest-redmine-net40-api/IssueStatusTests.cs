@@ -9,10 +9,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UnitTestRedmineNetApi
+namespace UnitTest_redmine_net40_api
 {
     [TestClass]
-    public class IssuePriorityTests
+    public class IssueStatusTests
     {
         #region Properties
         private RedmineManager redmineManager;
@@ -46,11 +46,11 @@ namespace UnitTestRedmineNetApi
 
         #region Tests
         [TestMethod]
-        public void RedmineIssuePriorities_ShouldGetAllIssuePriorities()
+        public void RedmineIssueStatuses_ShouldGetAllIssueStatuses()
         {
-            var issuePriorities = redmineManager.GetObjects<IssuePriority>(null);
+            var issueStatuses = redmineManager.GetObjects<IssueStatus>(null);
 
-            Assert.IsNotNull(issuePriorities); ;
+            Assert.IsNotNull(issueStatuses);
         }
         #endregion Tests
     }

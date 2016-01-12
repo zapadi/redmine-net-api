@@ -9,13 +9,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UnitTestRedmineNetApi
+namespace UnitTest_redmine_net40_api
 {
     [TestClass]
-    public class TrackerTests
+    public class QueryTests
     {
         #region Constants
-        private const int numberOfTrackers = 2;
+        private const int numberOfQueries = 2;
         #endregion Constants
 
         #region Properties
@@ -50,11 +50,11 @@ namespace UnitTestRedmineNetApi
 
         #region Tests
         [TestMethod]
-        public void RedmineTrackers_ShouldGetAllTrackers()
+        public void RedmineQuery_ShouldGetAllQueries()
         {
-            var trackers = redmineManager.GetObjects<Tracker>(null);
+            var queries = redmineManager.GetObjects<Query>(null);
 
-            Assert.IsTrue(trackers.Count == numberOfTrackers);
+            Assert.IsTrue(queries.Count == numberOfQueries);
         }
         #endregion Tests
     }

@@ -9,11 +9,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UnitTestRedmineNetApi
+namespace UnitTest_redmine_net40_api
 {
     [TestClass]
-    public class CustomFieldTests
+    public class RoleTests
     {
+        #region Constants
+        private const int numberOfRoles = 3;
+
+        private const string roleId = "4";
+        private const string roleName = "Admins";
+        #endregion Constants
+
         #region Properties
         private RedmineManager redmineManager;
         private string uri;
@@ -46,11 +53,19 @@ namespace UnitTestRedmineNetApi
 
         #region Tests
         [TestMethod]
-        public void RedmineCustomFields_ShouldGetAllCustomFields()
+        public void RedmineRoles_ShouldGetAllRoles()
         {
-            var customFields = redmineManager.GetObjects<CustomField>(null);
+            var roles = redmineManager.GetObjects<Role>(null);
 
-            Assert.IsNotNull(customFields);
+            Assert.IsTrue(roles.Count == numberOfRoles);
+        }
+
+        [TestMethod]
+        public void RedmineRoles_ShouldGetRoleById()
+        {
+            Role adminRole = redmineManager.GetObject<Role>(roleId, null);
+
+            Assert.AreEqual(adminRole.Name, roleName);
         }
         #endregion Tests
     }

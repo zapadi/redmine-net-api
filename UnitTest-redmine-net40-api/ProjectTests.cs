@@ -7,7 +7,7 @@ using Redmine.Net.Api;
 using Redmine.Net.Api.Types;
 using System.Diagnostics;
 
-namespace UnitTestRedmineNetApi
+namespace UnitTest_redmine_net40_api
 {
     [TestClass]
     public class ProjectTests

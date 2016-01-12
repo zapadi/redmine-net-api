@@ -9,7 +9,7 @@ using System.Diagnostics;
 namespace UnitTestRedmineNetApi
 {
     [TestClass]
-    public class GroupTests
+    public class UnitTest_redmine_net40_api
     {
         #region Constants
         private const string groupId = "9";

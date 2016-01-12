@@ -6,8 +6,8 @@
     <ProjectGuid>{0DE30921-1273-41F6-91D6-AB17EC61E8F0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>UnitTestRedmineNetApi</RootNamespace>
-    <AssemblyName>UnitTestRedmineNetApi</AssemblyName>
+    <RootNamespace>UnitTest_redmine_net40_api</RootNamespace>
+    <AssemblyName>UnitTest-redmine-net40-api</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -95,9 +95,9 @@
     <Compile Include="WikiPageTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\redmine-net45-api\redmine-net45-api.csproj">
-      <Project>{89433e6e-f3d4-4b66-ac9a-1b7f4345bba4}</Project>
-      <Name>redmine-net45-api</Name>
+    <ProjectReference Include="..\redmine-net40-api\redmine-net40-api.csproj">
+      <Project>{0d9b763c-a16b-463b-bddd-0a0467dcd32e}</Project>
+      <Name>redmine-net40-api</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>

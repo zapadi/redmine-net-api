@@ -9,16 +9,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UnitTestRedmineNetApi
+namespace UnitTest_redmine_net40_api
 {
     [TestClass]
-    public class RoleTests
+    public class TimeEntryActivityTests
     {
         #region Constants
-        private const int numberOfRoles = 3;
-
-        private const string roleId = "4";
-        private const string roleName = "Admins";
+        private const int numberOfTimeEntryActivities = 3;
         #endregion Constants
 
         #region Properties
@@ -53,19 +50,11 @@ namespace UnitTestRedmineNetApi
 
         #region Tests
         [TestMethod]
-        public void RedmineRoles_ShouldGetAllRoles()
+        public void RedmineTimeEntryActivities_ShouldGetAllTimeEntryActivities()
         {
-            var roles = redmineManager.GetObjects<Role>(null);
+            var timeEntryActivities = redmineManager.GetObjects<TimeEntryActivity>(null);
 
-            Assert.IsTrue(roles.Count == numberOfRoles);
-        }
-
-        [TestMethod]
-        public void RedmineRoles_ShouldGetRoleById()
-        {
-            Role adminRole = redmineManager.GetObject<Role>(roleId, null);
-
-            Assert.AreEqual(adminRole.Name, roleName);
+            Assert.IsTrue(timeEntryActivities.Count == numberOfTimeEntryActivities);
         }
         #endregion Tests
     }

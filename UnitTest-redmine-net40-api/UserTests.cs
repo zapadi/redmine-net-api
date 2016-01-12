@@ -7,10 +7,9 @@ using System.Collections.Specialized;
 using System.Configuration;
 using System.Diagnostics;
 using System.Globalization;
-using Redmine.Net.Api.Async;
 
 
-namespace UnitTestRedmineNetApi
+namespace UnitTest_redmine_net40_api
 {
     [TestClass]
     public class UserTests

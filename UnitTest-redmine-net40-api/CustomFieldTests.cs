@@ -9,15 +9,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UnitTestRedmineNetApi
+namespace UnitTest_redmine_net40_api
 {
     [TestClass]
-    public class TimeEntryActivityTests
+    public class CustomFieldTests
     {
-        #region Constants
-        private const int numberOfTimeEntryActivities = 3;
-        #endregion Constants
-
         #region Properties
         private RedmineManager redmineManager;
         private string uri;
@@ -50,11 +46,11 @@ namespace UnitTestRedmineNetApi
 
         #region Tests
         [TestMethod]
-        public void RedmineTimeEntryActivities_ShouldGetAllTimeEntryActivities()
+        public void RedmineCustomFields_ShouldGetAllCustomFields()
         {
-            var timeEntryActivities = redmineManager.GetObjects<TimeEntryActivity>(null);
+            var customFields = redmineManager.GetObjects<CustomField>(null);
 
-            Assert.IsTrue(timeEntryActivities.Count == numberOfTimeEntryActivities);
+            Assert.IsNotNull(customFields);
         }
         #endregion Tests
     }
