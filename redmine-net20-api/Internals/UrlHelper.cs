@@ -2,7 +2,6 @@
 using System.Collections.Specialized;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Types;
-using Version = System.Version;
 
 namespace Redmine.Net.Api.Internals
 {
