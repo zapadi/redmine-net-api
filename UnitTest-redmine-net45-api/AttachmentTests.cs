@@ -19,6 +19,8 @@ namespace UnitTest_redmine_net45_api
     {
         private RedmineManager redmineManager;
 
+        private const string attachmentId = "10";
+
         [TestInitialize]
         public void Initialize()
         {
@@ -42,8 +44,6 @@ namespace UnitTest_redmine_net45_api
         [TestMethod]
         public async Task Should_Get_Attachment_By_Id()
         {
-            string attachmentId = "10";
-
             var attachment = await redmineManager.GetObjectAsync<Attachment>(attachmentId, null);
 
             Assert.IsNotNull(attachment, "Get attachment by id returned null.");
@@ -117,6 +117,16 @@ namespace UnitTest_redmine_net45_api
             CollectionAssert.AllItemsAreUnique(issue.Attachments.ToList(), "Attachments items are not unique.");
             Assert.IsTrue(issue.Attachments[0].FileName == attachment.FileName);
             Assert.IsTrue(issue.Attachments[1].FileName == attachment1.FileName);
+        }
+
+        [TestMethod]
+        public async Task Sould_Download_Attachment()
+        {
+            var attachment = await redmineManager.GetObjectAsync<Attachment>(attachmentId, null);
+
+            var document = await redmineManager.DownloadFileAsync(attachment.ContentUrl);
+
+            Assert.IsNotNull(document);
         }
     }
 }
