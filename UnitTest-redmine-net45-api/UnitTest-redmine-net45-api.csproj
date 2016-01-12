@@ -71,9 +71,12 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="AttachmentTests.cs" />
     <Compile Include="Helper.cs" />
-    <Compile Include="UnitTest1.cs" />
+    <Compile Include="IssueTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UserTests.cs" />
+    <Compile Include="WikiPageTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\redmine-net45-api\redmine-net45-api.csproj">

@@ -10,32 +10,36 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Globalization;
 using Redmine.Net.Api.Extensions;
-using Redmine.Net.Api.Logging;
+//using Redmine.Net.Api.Logging;
 
 namespace UnitTest_redmine_net45_api
 {
     [TestClass]
-    public class UnitTestUsers
+    public class UserTests
     {
         private RedmineManager redmineManager;
+
+        private const string userId = "8";
+        private const string limit = "2";
+        private const string offset = "1";
+        private const int groupId = 9;
+
 
         [TestInitialize]
         public void Initialize()
         {
             SetMimeTypeXML();
             SetMimeTypeJSON();
-        }
-
-        [Conditional("JSON")]
-        // ReSharper disable once InconsistentNaming
-        private void SetMimeTypeJSON()
-        {
-            redmineManager = new RedmineManager(Helper.Uri, Helper.ApiKey, MimeFormat.json);
             redmineManager.UseTraceLog();
         }
 
+        [Conditional("JSON")]
+        private void SetMimeTypeJSON()
+        {
+            redmineManager = new RedmineManager(Helper.Uri, Helper.ApiKey, MimeFormat.json);
+        }
+
         [Conditional("XML")]
-        // ReSharper disable once InconsistentNaming
         private void SetMimeTypeXML()
         {
             redmineManager = new RedmineManager(Helper.Uri, Helper.ApiKey);
@@ -52,40 +56,38 @@ namespace UnitTest_redmine_net45_api
         //  [ExpectedException(typeof(RedmineException))]
         public async Task Should_Get_User_By_Id()
         {
-            var user = await redmineManager.GetObjectAsync<User>("8", null);
+            var user = await redmineManager.GetObjectAsync<User>(userId, null);
             Assert.IsNotNull(user, "Get user by id returned null!");
         }
 
         [TestMethod]
         public async Task Should_Get_User_By_Id_Including_Groups_And_Memberships()
         {
-            var user = await redmineManager.GetObjectAsync<User>("8", new NameValueCollection() { { RedmineKeys.INCLUDE, "groups,memberships" } });
+            var user = await redmineManager.GetObjectAsync<User>(userId, new NameValueCollection() { { RedmineKeys.INCLUDE, "groups,memberships" } });
 
             Assert.IsNotNull(user, "Get user by id returned null!");
+
             CollectionAssert.AllItemsAreNotNull(user.Groups, "Groups contains null items.");
             CollectionAssert.AllItemsAreUnique(user.Groups, "Groups items are not unique.");
-
             Assert.IsTrue(user.Groups.Count == 1, "Group count != 1");
+
             CollectionAssert.AllItemsAreNotNull(user.Memberships, "Memberships contains null items.");
             CollectionAssert.AllItemsAreUnique(user.Memberships, "Memberships items are not unique.");
-
             Assert.IsTrue(user.Memberships.Count == 3, "Membership count != 3");
         }
-
 
         [TestMethod]
         public async Task Should_Get_X_Users_From_Offset_Y()
         {
             var result = await redmineManager.GetPaginatedObjectsAsync<User>(new NameValueCollection() {
                 { RedmineKeys.INCLUDE, "groups, memberships" },
-                {RedmineKeys.LIMIT,"2" },
-                {RedmineKeys.OFFSET,"1" }
+                {RedmineKeys.LIMIT,limit },
+                {RedmineKeys.OFFSET,offset }
             });
 
             Assert.IsNotNull(result);
             CollectionAssert.AllItemsAreNotNull(result.Objects, "contains null user!");
             CollectionAssert.AllItemsAreUnique(result.Objects, "users not unique!");
-
         }
 
         [TestMethod]
@@ -122,32 +124,61 @@ namespace UnitTest_redmine_net45_api
             });
 
             Assert.IsNotNull(users);
-            Assert.IsTrue(users.Count == 4);
+            Assert.IsTrue(users.Count == 0);
             CollectionAssert.AllItemsAreNotNull(users);
             CollectionAssert.AllItemsAreUnique(users);
             CollectionAssert.AllItemsAreInstancesOfType(users, typeof(User));
         }
 
-        //[TestMethod]
-        //public async Task Should_Add_Watcher_To_Issue()
-        //{
-        //    var issueId = 1;
-        //    await redmineManager.AddWatcherAsync(issueId, 8);
-        //}
+        [TestMethod]
+        public async Task Should_Get_Locked_Users()
+        {
+            var users = await redmineManager.GetObjectsAsync<User>(new NameValueCollection()
+            {
+                { RedmineKeys.STATUS, ((int)UserStatus.STATUS_LOCKED).ToString(CultureInfo.InvariantCulture) }
+            });
 
-        //[TestMethod]
-        //public async Task Should_Remove_Watcher_From_Issue()
-        //{
-        //    var issueId = 1;
-        //    await redmineManager.AddUserToGroupAsync(issueId, 8);
-        //}
+            Assert.IsNotNull(users);
+            Assert.IsTrue(users.Count == 1);
+            CollectionAssert.AllItemsAreNotNull(users);
+            CollectionAssert.AllItemsAreUnique(users);
+            CollectionAssert.AllItemsAreInstancesOfType(users, typeof(User));
+        }
+
+        [TestMethod]
+        public async Task Should_Get_Registered_Users()
+        {
+            var users = await redmineManager.GetObjectsAsync<User>(new NameValueCollection()
+            {
+                { RedmineKeys.STATUS, ((int)UserStatus.STATUS_REGISTERED).ToString(CultureInfo.InvariantCulture) }
+            });
+
+            Assert.IsNotNull(users);
+            Assert.IsTrue(users.Count == 1);
+            CollectionAssert.AllItemsAreNotNull(users);
+            CollectionAssert.AllItemsAreUnique(users);
+            CollectionAssert.AllItemsAreInstancesOfType(users, typeof(User));
+        }
+
+        [TestMethod]
+        public async Task Should_Get_Users_By_Group()
+        {
+            var users = await redmineManager.GetObjectsAsync<User>(new NameValueCollection()
+            {
+                {RedmineKeys.GROUP_ID, groupId.ToString(CultureInfo.InvariantCulture)}
+            });
+
+            Assert.IsNotNull(users);
+            Assert.IsTrue(users.Count == 3);
+            CollectionAssert.AllItemsAreNotNull(users);
+            CollectionAssert.AllItemsAreUnique(users);
+            CollectionAssert.AllItemsAreInstancesOfType(users, typeof(User));
+        }
 
         [TestMethod]
         public async Task Should_Add_User_To_Group()
         {
-            int groupId = 9;
-            int userId = 34;
-            await redmineManager.AddUserToGroupAsync(groupId, userId);
+            await redmineManager.AddUserToGroupAsync(groupId, int.Parse(userId));
 
             User user = redmineManager.GetObject<User>(userId.ToString(CultureInfo.InvariantCulture), new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.GROUPS } });
 
@@ -160,10 +191,7 @@ namespace UnitTest_redmine_net45_api
         [TestMethod]
         public async Task Should_Remove_User_From_Group()
         {
-            int groupId = 9;
-            int userId = 34;
-
-            await redmineManager.DeleteUserFromGroupAsync(groupId, userId);
+            await redmineManager.DeleteUserFromGroupAsync(groupId, int.Parse(userId));
 
             User user = await redmineManager.GetObjectAsync<User>(userId.ToString(CultureInfo.InvariantCulture), new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.GROUPS } });
 
@@ -174,10 +202,10 @@ namespace UnitTest_redmine_net45_api
         public async Task Should_Create_User()
         {
             User user = new User();
-            user.Login = "userTestLogin3";
+            user.Login = "userTestLogin4";
             user.FirstName = "userTestFirstName";
             user.LastName = "userTestLastName";
-            user.Email = "testTest3@redmineapi.com";
+            user.Email = "testTest4@redmineapi.com";
             user.Password = "123456";
             user.AuthenticationModeId = 1;
             user.MustChangePassword = false;
@@ -193,7 +221,7 @@ namespace UnitTest_redmine_net45_api
         [TestMethod]
         public async Task Should_Update_User()
         {
-            var userId = 37.ToString();
+            var userId = 44.ToString();
             User user = redmineManager.GetObject<User>(userId, null);
             user.FirstName = "modified first name";
             await redmineManager.UpdateObjectAsync(userId, user);
@@ -206,7 +234,7 @@ namespace UnitTest_redmine_net45_api
         [TestMethod]
         public async Task Should_Delete_User()
         {
-            var userId = 36.ToString();
+            var userId = 44.ToString();
             try
             {
                 await redmineManager.DeleteObjectAsync<User>(userId, null);
