@@ -668,7 +668,7 @@ namespace Redmine.Net.Api
                 try
                 {
                     var response = wc.DownloadString(address);
-                    return RedmineSerializer.Deserialize<PaginatedObjects<T>>(response, MimeFormat);
+                    return RedmineSerializer.DeserializeList<T>(response, MimeFormat);
                 }
                 catch (WebException webException)
                 {
