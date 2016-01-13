@@ -1,7 +1,11 @@
-![alt text](https://ci.appveyor.com/api/projects/status/github/zapadi/redmine-net-api?branch=master&svg=true)
-# redmine-net-api
+
+
+![](https://github.com/zapadi/redmine-net-api/blob/master/logo.png)
+# redmine-net-api 
 
 redmine-net-api is a library for communicating with a Redmine project management application
+
+![alt text](https://ci.appveyor.com/api/projects/status/github/zapadi/redmine-net-api?branch=master&svg=true)
 
 * Uses [Redmine's REST API.](http://www.redmine.org/projects/redmine/wiki/Rest_api/)
 * Supports both XML and JSON(requires .NET Framework 3.5 or higher) formats
