@@ -1,3 +1,4 @@
+https://ci.appveyor.com/api/projects/status/github/zapadi/redmine-net-api?branch=master&svg=true
 # redmine-net-api
 
 redmine-net-api is a library for communicating with a Redmine project management application
