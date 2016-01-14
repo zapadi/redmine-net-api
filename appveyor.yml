@@ -5,7 +5,9 @@ pull_requests:
 build_script:
   - Msbuild.exe redmine-net20-api/redmine-net20-api.csproj /verbosity:minimal /p:BuildNetFX20=true 
   - Msbuild.exe redmine-net40-api/redmine-net40-api.csproj /verbosity:minimal /p:BuildNetFX40=true 
+  - Msbuild.exe redmine-net40-api/redmine-net40-api-signed.csproj /verbosity:minimal /p:BuildNetFX40=true
   - Msbuild.exe redmine-net45-api/redmine-net45-api.csproj /verbosity:minimal /p:BuildNetFX45=true
+  - Msbuild.exe redmine-net45-api/redmine-net45-api-signed.csproj /verbosity:minimal /p:BuildNetFX45=true
 
 deploy: off
 
