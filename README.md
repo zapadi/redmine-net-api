@@ -48,6 +48,7 @@ A good way to get started (flow):
 
 ## License ## 
 [![redmine-net-api](https://img.shields.io/hexpm/l/plug.svg)]()
+
 The API is released under Apache 2 open-source license. You can use it for both personal and commercial purposes, build upon it and modify it.
 
 
