@@ -36,7 +36,7 @@ redmine-net40-api-signed | ![alt text](https://ci.appveyor.com/api/projects/stat
 redmine-net45-api | ![alt text](https://ci.appveyor.com/api/projects/status/github/zapadi/redmine-net-api?branch=master&svg=true) | [![NuGet package](https://img.shields.io/nuget/v/redmine-api.svg)](https://www.nuget.org/packages/redmine-api.Web)
 redmine-net45-api-signed | ![alt text](https://ci.appveyor.com/api/projects/status/github/zapadi/redmine-net-api?branch=master&svg=true) | [![NuGet package](https://img.shields.io/nuget/v/redmine-api.svg)](https://www.nuget.org/packages/redmine-api.Web)
 
-## Contributing ##
+## Contributing
 Contributions are really appreciated!
 
 A good way to get started (flow):
@@ -46,7 +46,7 @@ A good way to get started (flow):
 3. 'Check out' the code with Git or GitHub Desktop or SourceTree.
 4. Push commits and create a Pull Request (PR) to redmine-net-api.
 
-## License ## 
+## License
 [![redmine-net-api](https://img.shields.io/hexpm/l/plug.svg)]()
 
 The API is released under Apache 2 open-source license. You can use it for both personal and commercial purposes, build upon it and modify it.
