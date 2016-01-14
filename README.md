@@ -46,7 +46,8 @@ A good way to get started (flow):
 3. 'Check out' the code with Git or GitHub Desktop or SourceTree.
 4. Push commits and create a Pull Request (PR) to redmine-net-api.
 
-## License ##
+## License ## 
+[![redmine-net-api](https://img.shields.io/hexpm/l/plug.svg)]()
 The API is released under Apache 2 open-source license. You can use it for both personal and commercial purposes, build upon it and modify it.
 
 
