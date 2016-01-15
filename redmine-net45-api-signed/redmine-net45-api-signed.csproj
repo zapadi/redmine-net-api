@@ -402,6 +402,9 @@
     <Compile Include="..\redmine-net45-api\Extensions\FunctionalExtensions.cs">
       <Link>Extensions\FunctionalExtensions.cs</Link>
     </Compile>
+    <Compile Include="..\redmine-net45-api\Extensions\TaskExtensions.cs">
+      <Link>Extensions\TaskExtensions.cs</Link>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

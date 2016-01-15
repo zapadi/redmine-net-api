@@ -386,11 +386,9 @@
     </Compile>
     <Compile Include="Extensions\DisposableExtension.cs" />
     <Compile Include="Extensions\FunctionalExtensions.cs" />
+    <Compile Include="Extensions\TaskExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Async\RedmineManagerAsync.cs" />
-    <Compile Include="..\redmine-net40-api\TaskExtensions.cs">
-      <Link>Extensions\TaskExtensions.cs</Link>
-    </Compile>
     <Compile Include="..\redmine-net20-api\Types\IValue.cs">
       <Link>Types\IValue.cs</Link>
     </Compile>
