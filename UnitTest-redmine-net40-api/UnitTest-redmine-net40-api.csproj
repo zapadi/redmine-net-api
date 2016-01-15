@@ -76,6 +76,7 @@
     <Compile Include="AttachmentTests.cs" />
     <Compile Include="CustomFieldTests.cs" />
     <Compile Include="GroupTests.cs" />
+    <Compile Include="Helper.cs" />
     <Compile Include="IssueCategoryTests.cs" />
     <Compile Include="IssuePriorityTests.cs" />
     <Compile Include="IssueRelationTests.cs" />
