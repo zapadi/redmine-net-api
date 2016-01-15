@@ -239,45 +239,45 @@ namespace Redmine.Net.Api.Extensions
 
         public static void WriteArray(this XmlWriter writer, IEnumerable col, string elementName)
         {
+            if (col == null) return;
             writer.WriteStartElement(elementName);
             writer.WriteAttributeString("type", "array");
-            if (col != null)
+
+            foreach (var item in col)
             {
-                foreach (var item in col)
-                {
-                    new XmlSerializer(item.GetType()).Serialize(writer, item);
-                }
+                new XmlSerializer(item.GetType()).Serialize(writer, item);
             }
+
             writer.WriteEndElement();
         }
 
-        public static void WriteArrayIds(this XmlWriter writer, IEnumerable col, string elementName, Type type, Func<object,int> f)
+        public static void WriteArrayIds(this XmlWriter writer, IEnumerable col, string elementName, Type type, Func<object, int> f)
         {
+            if (col == null) return;
             writer.WriteStartElement(elementName);
             writer.WriteAttributeString("type", "array");
-            if (col != null)
+
+            var serializer = new XmlSerializer(type);
+            foreach (var item in col)
             {
-                var serializer = new XmlSerializer(type);
-                foreach (var item in col)
-                {
-                    serializer.Serialize(writer, f.Invoke(item));
-                }
+                serializer.Serialize(writer, f.Invoke(item));
             }
+
             writer.WriteEndElement();
         }
 
         public static void WriteArray(this XmlWriter writer, IEnumerable list, string elementName, Type type, string root, string defaultNamespace = null)
         {
+            if (list == null) return;
             writer.WriteStartElement(elementName);
             writer.WriteAttributeString("type", "array");
-            if (list != null)
+
+            var serializer = new XmlSerializer(type, new XmlAttributeOverrides(), null, new XmlRootAttribute(root), defaultNamespace);
+            foreach (var item in list)
             {
-                var serializer = new XmlSerializer(type, new XmlAttributeOverrides(), null, new XmlRootAttribute(root), defaultNamespace);
-                foreach (var item in list)
-                {
-                    serializer.Serialize(writer, item);
-                }
+                serializer.Serialize(writer, item);
             }
+
             writer.WriteEndElement();
         }
 
