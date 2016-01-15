@@ -442,7 +442,7 @@ namespace Redmine.Net.Api.Types
             writer.WriteArray(Uploads, RedmineKeys.UPLOADS);
             writer.WriteArray(CustomFields, RedmineKeys.CUSTOM_FIELDS);
 
-            writer.WriteListElements(Watchers as List<IValue>, RedmineKeys.WATCHER_USER_IDS);
+            writer.WriteListElements(Watchers as IList<IValue>, RedmineKeys.WATCHER_USER_IDS);
         }
 
         public object Clone()
