@@ -13,11 +13,6 @@ namespace Redmine.Net.Api.Internals
 
             if (!RedmineManager.Sufixes.ContainsKey(type)) throw new KeyNotFoundException(type.Name);
 
-            if (type == typeof(Version) || type == typeof(IssueCategory) || type == typeof(ProjectMembership))
-            {
-                if (string.IsNullOrEmpty(projectId)) throw new RedmineException("The project owner id is mandatory!");
-                return string.Format(RedmineManager.ENTITY_WITH_PARENT_FORMAT, redmineManager.Host, RedmineKeys.PROJECTS, projectId, RedmineManager.Sufixes[type], redmineManager.MimeFormat);
-            }
             return string.Format(RedmineManager.REQUEST_FORMAT, redmineManager.Host, RedmineManager.Sufixes[type], id, redmineManager.MimeFormat);
         }
 
