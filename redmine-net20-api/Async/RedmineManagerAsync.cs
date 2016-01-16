@@ -145,7 +145,9 @@ namespace Redmine.Net.Api.Async
 
         public static Task AddUserToGroupAsync(this RedmineManager redmineManager, int groupId, int userId)
         {
-            var data = "<user_id>" + userId + "</user_id>";
+            var data = redmineManager.MimeFormat == MimeFormat.xml
+                ? "<user_id>" + userId + "</user_id>"
+                : "{\"user_id\":\"" + userId + "\"}";
             Task task = delegate
             {
                 var uri = UrlHelper.GetAddUserToGroupUrl(redmineManager, groupId);
@@ -172,7 +174,9 @@ namespace Redmine.Net.Api.Async
 
         public static Task AddWatcherToIssueAsync(this RedmineManager redmineManager, int issueId, int userId)
         {
-            var data = "<user_id>" + userId + "</user_id>";
+            var data = redmineManager.MimeFormat == MimeFormat.xml
+                ? "<user_id>" + userId + "</user_id>"
+                : "{\"user_id\":\"" + userId + "\"}";
             Task task = delegate
             {
                 var uri = UrlHelper.GetAddWatcherUrl(redmineManager, issueId, userId);

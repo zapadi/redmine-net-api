@@ -192,7 +192,10 @@ namespace Redmine.Net.Api
         public void AddWatcherToIssue(int issueId, int userId)
         {
             var url = UrlHelper.GetAddWatcherUrl(this, issueId, userId);
-            ExecuteUpload(url, POST, "<user_id>" + userId + "</user_id>", "AddWatcher");
+            ExecuteUpload(url, POST,  MimeFormat == MimeFormat.xml
+                ? "<user_id>" + userId + "</user_id>"
+                : "{\"user_id\":\"" + userId + "\"}"
+                , "AddWatcher");
         }
 
         public void RemoveWatcherFromIssue(int issueId, int userId)
@@ -209,7 +212,9 @@ namespace Redmine.Net.Api
         public void AddUserToGroup(int groupId, int userId)
         {
             var url = UrlHelper.GetAddUserToGroupUrl(this, groupId);
-            ExecuteUpload(url, POST, "<user_id>" + userId + "</user_id>", "AddUser");
+            ExecuteUpload(url, POST, MimeFormat == MimeFormat.xml
+                ? "<user_id>" + userId + "</user_id>"
+                : "{\"user_id\":\"" + userId + "\"}", "AddUser");
         }
 
         /// <summary>
