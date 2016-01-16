@@ -43,7 +43,8 @@ namespace Redmine.Net.Api.Types
         /// <param name="reader">The reader.</param>
         public override void ReadXml(XmlReader reader)
         {
-            base.ReadXml(reader);
+            Id = Convert.ToInt32(reader.GetAttribute(RedmineKeys.ID));
+            Name = reader.GetAttribute(RedmineKeys.NAME);
             Inherited = reader.ReadAttributeAsBoolean(RedmineKeys.INHERITED);
             reader.Read();
         }
