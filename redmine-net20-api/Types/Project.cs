@@ -189,17 +189,17 @@ namespace Redmine.Net.Api.Types
                 Id == other.Id
                 && Identifier.Equals(other.Identifier)
                 && Description.Equals(other.Description)
-                && Parent != null ? Parent.Equals(other.Parent) : other.Parent == null
+                && (Parent != null ? Parent.Equals(other.Parent) : other.Parent == null)
                 && HomePage.Equals(other.HomePage)
                 && CreatedOn == other.CreatedOn
                 && UpdatedOn == other.UpdatedOn
                 && Status == other.Status
                 && IsPublic == other.IsPublic
                 && InheritMembers == other.InheritMembers
-                && Trackers != null ? Trackers.Equals(other.Trackers) : other.Trackers == null
-                && CustomFields != null ? CustomFields.Equals(other.CustomFields) : other.CustomFields == null
-                && IssueCategories != null ? IssueCategories.Equals(other.IssueCategories) : other.IssueCategories == null
-                && EnabledModules != null ? EnabledModules.Equals(other.EnabledModules) : other.EnabledModules == null
+                && (Trackers != null ? Trackers.Equals<ProjectTracker>(other.Trackers) : other.Trackers == null)
+                && (CustomFields != null ? CustomFields.Equals<IssueCustomField>(other.CustomFields) : other.CustomFields == null)
+                && (IssueCategories != null ? IssueCategories.Equals<ProjectIssueCategory>(other.IssueCategories) : other.IssueCategories == null)
+                && (EnabledModules != null ? EnabledModules.Equals<ProjectEnabledModule>(other.EnabledModules) : other.EnabledModules == null)
             );
         }
 
