@@ -249,6 +249,7 @@
     <Compile Include="..\redmine-net20-api\Types\WikiPage.cs">
       <Link>Types\WikiPage.cs</Link>
     </Compile>
+    <Compile Include="Extensions\CollectionExtensions.cs" />
     <Compile Include="Extensions\XmlReaderExtensions.cs" />
     <Compile Include="JSonConverters\AttachmentConverter.cs" />
     <Compile Include="JSonConverters\ChangeSetConverter.cs" />
