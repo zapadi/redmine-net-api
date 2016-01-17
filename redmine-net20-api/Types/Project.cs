@@ -189,17 +189,17 @@ namespace Redmine.Net.Api.Types
                 Id == other.Id
                 && Identifier.Equals(other.Identifier)
                 && Description.Equals(other.Description)
-                && Parent.Equals(other.Parent)
+                && Parent != null ? Parent.Equals(other.Parent) : other.Parent == null
                 && HomePage.Equals(other.HomePage)
                 && CreatedOn == other.CreatedOn
                 && UpdatedOn == other.UpdatedOn
                 && Status == other.Status
                 && IsPublic == other.IsPublic
                 && InheritMembers == other.InheritMembers
-                && Trackers.Equals(other.Trackers)
-                && CustomFields.Equals(other.CustomFields)
-                && IssueCategories.Equals(other.IssueCategories)
-                && EnabledModules.Equals(other.EnabledModules)
+                && Trackers != null ? Trackers.Equals(other.Trackers) : other.Trackers == null
+                && CustomFields != null ? CustomFields.Equals(other.CustomFields) : other.CustomFields == null
+                && IssueCategories != null ? IssueCategories.Equals(other.IssueCategories) : other.IssueCategories == null
+                && EnabledModules != null ? EnabledModules.Equals(other.EnabledModules) : other.EnabledModules == null
             );
         }
 
