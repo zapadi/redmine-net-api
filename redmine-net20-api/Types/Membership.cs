@@ -76,7 +76,9 @@ namespace Redmine.Net.Api.Types
         public bool Equals(Membership other)
         {
             if (other == null) return false;
-            return (Id == other.Id && Project == other.Project && Roles == other.Roles);
+            return (Id == other.Id && 
+                (Project != null ? Project.Equals(other.Project) : other.Project == null) && 
+                    (Roles != null ? Roles.Equals<MembershipRole>(other.Roles) : other.Roles == null));
         }
 
         public override int GetHashCode()
@@ -86,7 +88,7 @@ namespace Redmine.Net.Api.Types
                 var hashCode = 13;
                 hashCode = Utils.GetHashCode(Id, hashCode);
                 hashCode = Utils.GetHashCode(Project, hashCode);
-                hashCode = Utils.GetHashCode(Roles, hashCode);
+                //hashCode = Utils.GetHashCode(Roles, hashCode);
                 return hashCode;
             }
         }
