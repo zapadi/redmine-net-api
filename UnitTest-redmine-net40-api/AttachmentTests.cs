@@ -16,19 +16,21 @@ namespace UnitTest_redmine_net40_api
     [TestClass]
     public class AttachmentTests
     {
-        #region Properties
         private RedmineManager redmineManager;
-        private string uri;
-        private string apiKey;
-        #endregion Properties
 
-        #region Initializes
+        const string ATTACHMENT_LOCAL_PATH = "E:\\uploadAttachment.txt";
+        const string ATTACHMENT_NAME = "AttachmentUploaded.txt";
+        const string ATTACHMENT_DESCRIPTION = "File uploaded using REST API";
+        const string ATTACHMENT_CONTENT_TYPE = "text/plain";
+        const int PROJECT_ID = 1;
+        const string ISSUE_SUBJECT = "Issue with attachments";
+
+        const string ATTACHMENT_ID = "1";
+        const string ATTACHMENT_FILE_NAME = "AttachmentUploaded.txt";
+        
         [TestInitialize]
         public void Initialize()
         {
-            uri = ConfigurationManager.AppSettings["uri"];
-            apiKey = ConfigurationManager.AppSettings["apiKey"];
-
             SetMimeTypeJSON();
             SetMimeTypeXML();
         }
@@ -36,88 +38,71 @@ namespace UnitTest_redmine_net40_api
         [Conditional("JSON")]
         private void SetMimeTypeJSON()
         {
-            redmineManager = new RedmineManager(uri, apiKey, MimeFormat.json);
+            redmineManager = new RedmineManager(Helper.Uri, Helper.ApiKey, MimeFormat.json);
         }
 
         [Conditional("XML")]
         private void SetMimeTypeXML()
         {
-            redmineManager = new RedmineManager(uri, apiKey, MimeFormat.xml);
-        }
-        #endregion Initializes
-
-        #region Tests
-        [TestMethod]
-        public void RedmineAttachments_ShouldGetById()
-        {
-            string attachmentId = "10";
-
-            var attachment = redmineManager.GetObject<Attachment>(attachmentId, null);
-
-            Assert.IsNotNull(attachment);
+            redmineManager = new RedmineManager(Helper.Uri, Helper.ApiKey, MimeFormat.xml);
         }
 
         [TestMethod]
-        public void RedmineAttachments_ShouldUploadAttachment()
+        public void Should_Upload_Attachment()
         {
             //read document from specified path
-            string documentPath = "E:\\uploadAttachment.txt";
-            byte[] documentData = File.ReadAllBytes(documentPath);
+            byte[] documentData = File.ReadAllBytes(ATTACHMENT_LOCAL_PATH);
 
             //upload attachment to redmine
             Upload attachment = redmineManager.UploadFile(documentData);
 
             //set attachment properties
-            attachment.FileName = "AttachmentUploaded.txt";
-            attachment.Description = "File uploaded using REST API";
-            attachment.ContentType = "text/plain";
+            attachment.FileName = ATTACHMENT_NAME;
+            attachment.Description = ATTACHMENT_DESCRIPTION;
+            attachment.ContentType = ATTACHMENT_CONTENT_TYPE;
 
             //create list of attachments to be added to issue
             IList<Upload> attachments = new List<Upload>();
             attachments.Add(attachment);
 
-            //read document from specified path
-            documentPath = "E:\\uploadAttachment1.txt";
-            documentData = File.ReadAllBytes(documentPath);
-
-            //upload attachment to redmine
-            Upload attachment1 = redmineManager.UploadFile(documentData);
-
-            //set attachment properties
-            attachment1.FileName = "AttachmentUploaded1.txt";
-            attachment1.Description = "Second file uploaded";
-            attachment1.ContentType = "text/plain";
-            attachments.Add(attachment1);
-
             Issue issue = new Issue();
-            issue.Project = new Project { Id = 10 };
-            issue.Tracker = new IdentifiableName { Id = 4 };
-            issue.Status = new IdentifiableName { Id = 5 };
-            issue.Priority = new IdentifiableName { Id = 8 };
-            issue.Subject = "Issue with attachments";
-            issue.Description = "Issue description...";
-            issue.Category = new IdentifiableName { Id = 11 };
-            issue.FixedVersion = new IdentifiableName { Id = 9 };
-            issue.AssignedTo = new IdentifiableName { Id = 8 };
-            issue.ParentIssue = new IdentifiableName { Id = 19 };
-            issue.CustomFields = new List<IssueCustomField>();
-            issue.CustomFields.Add(new IssueCustomField { Id = 13, Values = new List<CustomFieldValue> { new CustomFieldValue { Info = "Issue custom field completed" } } });
-            issue.IsPrivate = true;
-            issue.EstimatedHours = 12;
-            issue.StartDate = DateTime.Now;
-            issue.DueDate = DateTime.Now.AddMonths(1);
+            issue.Project = new Project { Id = PROJECT_ID };
+            issue.Subject = ISSUE_SUBJECT;
             issue.Uploads = attachments;
-            issue.Watchers = new List<Watcher>();
-            issue.Watchers.Add(new Watcher { Id = 8 });
-            issue.Watchers.Add(new Watcher { Id = 2 });
-
+         
             //create issue and attach document
             Issue issueWithAttachment = redmineManager.CreateObject<Issue>(issue);
 
-            issue = redmineManager.GetObject<Issue>(issueWithAttachment.Id.ToString(), new NameValueCollection { { "include", "attachments" } });
+            issue = redmineManager.GetObject<Issue>(issueWithAttachment.Id.ToString(), new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.ATTACHMENTS } });
 
-            Assert.IsTrue(issue.Attachments.Count == 2 && issue.Attachments[0].FileName == attachment.FileName);
+            Assert.IsNotNull(issue, "Get created issue returned null.");
+            Assert.IsNotNull(issue.Attachments, "Attachments list is null.");
+            CollectionAssert.AllItemsAreNotNull(issue.Attachments.ToList(), "Attachments list contains null items.");
+            CollectionAssert.AllItemsAreInstancesOfType(issue.Attachments.ToList(), typeof(Attachment), "Attachments contains items of unexpected type.");
+            Assert.IsTrue(issue.Attachments.Count == 1, "Number of attachments != 1");
+            Assert.IsTrue(issue.Attachments[0].FileName == ATTACHMENT_NAME, "Attachment name is not correct.");
+            Assert.IsTrue(issue.Attachments[0].Description == ATTACHMENT_DESCRIPTION, "Attachment description is not correct.");
+            Assert.IsTrue(issue.Attachments[0].ContentType == ATTACHMENT_CONTENT_TYPE, "Attachment content type is not correct.");
         }
-        #endregion Tests
+
+        [TestMethod]
+        public void RedmineAttachments_ShouldGetById()
+        {
+            var attachment = redmineManager.GetObject<Attachment>(ATTACHMENT_ID, null);
+
+            Assert.IsNotNull(attachment, "Get attachment returned null.");
+            Assert.IsInstanceOfType(attachment, typeof(Attachment), "Downloaded object is not of type attachment.");
+            Assert.IsTrue(attachment.FileName == ATTACHMENT_FILE_NAME, "Attachment file name is not the expected one.");
+        }
+
+        [TestMethod]
+        public void Sould_Download_Attachment()
+        {
+            var url = Helper.Uri + "/attachments/download/" + ATTACHMENT_ID + "/" + ATTACHMENT_FILE_NAME;
+            
+            var document = redmineManager.DownloadFile(url);
+
+            Assert.IsNotNull(document, "Downloaded file is null.");
+        }
     }
 }
