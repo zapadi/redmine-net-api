@@ -14,19 +14,13 @@ namespace UnitTest_redmine_net40_api
     [TestClass]
     public class IssuePriorityTests
     {
-        #region Properties
         private RedmineManager redmineManager;
-        private string uri;
-        private string apiKey;
-        #endregion Properties
 
-        #region Initialize
+        private const int NUMBER_OF_ISSUE_PRIORITIES = 5;
+
         [TestInitialize]
         public void Initialize()
         {
-            uri = ConfigurationManager.AppSettings["uri"];
-            apiKey = ConfigurationManager.AppSettings["apiKey"];
-
             SetMimeTypeJSON();
             SetMimeTypeXML();
         }
@@ -34,24 +28,26 @@ namespace UnitTest_redmine_net40_api
         [Conditional("JSON")]
         private void SetMimeTypeJSON()
         {
-            redmineManager = new RedmineManager(uri, apiKey, MimeFormat.json);
+            redmineManager = new RedmineManager(Helper.Uri, Helper.ApiKey, MimeFormat.json);
         }
 
         [Conditional("XML")]
         private void SetMimeTypeXML()
         {
-            redmineManager = new RedmineManager(uri, apiKey, MimeFormat.xml);
+            redmineManager = new RedmineManager(Helper.Uri, Helper.ApiKey, MimeFormat.xml);
         }
-        #endregion Initialize
 
-        #region Tests
         [TestMethod]
-        public void RedmineIssuePriorities_ShouldGetAllIssuePriorities()
+        public void Should_Get_All_Issue_Priority()
         {
             var issuePriorities = redmineManager.GetObjects<IssuePriority>(null);
 
-            Assert.IsNotNull(issuePriorities); ;
+            Assert.IsNotNull(issuePriorities, "Get issue priorities returned null.");
+            Assert.IsTrue(issuePriorities.Count == NUMBER_OF_ISSUE_PRIORITIES, "Issue priorities count != " + NUMBER_OF_ISSUE_PRIORITIES);
+            CollectionAssert.AllItemsAreNotNull(issuePriorities, "Issue priorities list contains null items.");
+            CollectionAssert.AllItemsAreUnique(issuePriorities, "Issue priorities items are not unique.");
+            CollectionAssert.AllItemsAreInstancesOfType(issuePriorities, typeof(IssuePriority), "Not all items are of type IssuePriority.");
+            Assert.IsTrue(issuePriorities.Exists(ip => ip.IsDefault), "List does not contain a default issue priority.");
         }
-        #endregion Tests
     }
 }
