@@ -11,23 +11,15 @@ namespace UnitTest_redmine_net40_api
     [TestClass]
     public class NewsTests
     {
-        #region Constants
-        private const string projectId = "6";
-        #endregion Constants
-
-        #region Properties
         private RedmineManager redmineManager;
-        private string uri;
-        private string apiKey;
-        #endregion Properties
 
-        #region Initialize
+        private const int NUMBER_OF_NEWS = 5;
+        private const string PROJECT_ID = "redmine-test";
+        private const int NUMBER_OF_NEWS_BY_PROJECT_ID = 3;
+ 
         [TestInitialize]
         public void Initialize()
         {
-            uri = ConfigurationManager.AppSettings["uri"];
-            apiKey = ConfigurationManager.AppSettings["apiKey"];
-
             SetMimeTypeJSON();
             SetMimeTypeXML();
         }
@@ -35,47 +27,54 @@ namespace UnitTest_redmine_net40_api
         [Conditional("JSON")]
         private void SetMimeTypeJSON()
         {
-            redmineManager = new RedmineManager(uri, apiKey, MimeFormat.json);
+            redmineManager = new RedmineManager(Helper.Uri, Helper.ApiKey, MimeFormat.json);
         }
 
         [Conditional("XML")]
         private void SetMimeTypeXML()
         {
-            redmineManager = new RedmineManager(uri, apiKey, MimeFormat.xml);
+            redmineManager = new RedmineManager(Helper.Uri, Helper.ApiKey, MimeFormat.xml);
         }
-        #endregion Initialize
-
-        #region Tests
+   
         [TestMethod]
-        public void GetAllNews()
+        public void Should_Get_All_News()
         {
-            var result = redmineManager.GetObjects<News>(null);
+            var news = redmineManager.GetObjects<News>(null);
 
-            Assert.IsNotNull(result);
-        }
-
-        [TestMethod]
-        public void RedmineNews_ShouldGetSpecificProjectNews()
-        {
-            var news = redmineManager.GetObjects<News>(new NameValueCollection { { "project_id", projectId } });
-
-            Assert.IsNotNull(news);
+            Assert.IsNotNull(news, "Get all news returned null");
+            Assert.IsTrue(news.Count == NUMBER_OF_NEWS, "News count != " + NUMBER_OF_NEWS);
+            CollectionAssert.AllItemsAreNotNull(news, "News list contains null items.");
+            CollectionAssert.AllItemsAreUnique(news, "News items are not unique.");
+            CollectionAssert.AllItemsAreInstancesOfType(news, typeof(News), "Not all items are of type news.");
         }
 
         [TestMethod]
-        public void RedmineNews_ShouldCompare()
+        public void Should_Get_News_By_Project_Id()
         {
-            var projectNews = redmineManager.GetObjects<News>(new NameValueCollection { { "project_id", projectId } });
-            if (projectNews != null)
-            {
-               var news = projectNews[0];
-               var newsToCompare = projectNews[0];
+            var news = redmineManager.GetObjects<News>(new NameValueCollection { { RedmineKeys.PROJECT_ID, PROJECT_ID } });
 
-                Assert.IsTrue(news.Equals(newsToCompare));
-            }
-            else
-                Assert.Inconclusive();
+            Assert.IsNotNull(news, "Get all news returned null");
+            Assert.IsTrue(news.Count == NUMBER_OF_NEWS_BY_PROJECT_ID, "News count != " + NUMBER_OF_NEWS_BY_PROJECT_ID);
+            CollectionAssert.AllItemsAreNotNull(news, "News list contains null items.");
+            CollectionAssert.AllItemsAreUnique(news, "News items are not unique.");
+            CollectionAssert.AllItemsAreInstancesOfType(news, typeof(News), "Not all items are of type news.");
         }
-        #endregion Tests
+
+        [TestMethod]
+        public void Should_Compare_News()
+        {
+            var firstNews = redmineManager.GetPaginatedObjects<News>(new NameValueCollection() {{RedmineKeys.LIMIT, "1" },{RedmineKeys.OFFSET, "0" }});
+            var secondNews = redmineManager.GetPaginatedObjects<News>(new NameValueCollection() { { RedmineKeys.LIMIT, "1" }, { RedmineKeys.OFFSET, "0" } });
+
+            Assert.IsNotNull(firstNews, "Get first news returned null.");
+            Assert.IsNotNull(firstNews.Objects, "Get first news returned null objects list.");
+            Assert.IsTrue(firstNews.Objects.Count == 1, "First news objects list count != 1");
+
+            Assert.IsNotNull(secondNews, "Get second news returned null.");
+            Assert.IsNotNull(secondNews.Objects, "Get second news returned null objects list.");
+            Assert.IsTrue(secondNews.Objects.Count == 1, "Second news objects list count != 1");
+
+            Assert.IsTrue(firstNews.Objects[0].Equals(secondNews.Objects[0]), "Compared news are not equal.");
+        }
     }
 }
