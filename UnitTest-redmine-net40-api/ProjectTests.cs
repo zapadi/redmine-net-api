@@ -6,52 +6,48 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Types;
 using System.Diagnostics;
+using System.Linq;
 
 namespace UnitTest_redmine_net40_api
 {
     [TestClass]
     public class ProjectTests
     {
-        #region Constants
-        private const string projectId = "9";
+        private RedmineManager redmineManager;
+
+        private const string PROJECT_IDENTIFIER = "redmine-test";
+        private const int NUMBER_OF_TRACKERS = 3;
+        private const int NUMBER_OF_ISSUE_CATEGORIES = 2;
+        private const int NUMBER_OF_ENABLED_MODULES = 9;
+        private const int NUMBER_OF_NEWS_BY_PROJECT_ID = 3;
+        private const int NUMBER_OF_PROJECTS = 2;
 
         //project data - used for create
-        private const string newProjectName = "Project created using API";
-        private const string newProjectIdentifier = "redmine-net-testxyz";
-        private const string newProjectDescription = "Test project description";
-        private const string newProjectHomePage = "http://RedmineTests.ro";
-        private const bool newProjectIsPublic = true;
-        private const int newProjectParentId = 9;
-        private const bool newProjectInheritMembers = true;
-        private const int newProjectTrackerId = 3;
-        private const string newProjectEnableModuleName = "news";
+        private const string NEW_PROJECT_NAME = "Project created using API";
+        private const string NEW_PROJECT_IDENTIFIER = "redmine-net-testxyz";
+        private const string NEW_PROJECT_DESCRIPTION = "Test project description";
+        private const string NEW_PROJECT_HOMEPAGE = "http://RedmineTests.ro";
+        private const bool NEW_PROJECT_ISPUBLIC = true;
+        private const int NEW_PROJECT_PARENT_ID = 1;
+        private const bool NEW_PROJECT_INHERIT_MEMBERS = true;
+        private const int NEW_PROJECT_TRACKER_ID = 3;
+        private const string NEW_PROJECT_ENABLED_MODULE_NAME = "news";
 
         //project data - used for update
-        private const string updatedProjectIdentifier = "redmine-net-testxyz";
-        private const string updatedProjectName = "Project created using API updated";
-        private const string updatedProjectDescription = "Test project description updated";
-        private const string updatedProjectHomePage = "http://redmineTestsUpdated.ro";
-        private const bool updatedProjectIsPublic = true;
-        private const IdentifiableName updatedProjectParent = null;
-        private const bool updatedProjectInheritMembers = false;
-        private const List<ProjectTracker> updatedProjectTrackers = null;
+        private const string UPDATED_PROJECT_IDENTIFIER = "redmine-net-testxyz";
+        private const string UPDATED_PROJECT_NAME = "Project created using API updated";
+        private const string UPDATED_PROJECT_DESCRIPTION = "Test project description updated";
+        private const string UPDATED_PROJECT_HOMEPAGE = "http://redmineTestsUpdated.ro";
+        private const bool UPDATED_PROJECT_ISPUBLIC = true;
+        private const IdentifiableName UPDATED_PROJECT_PARENT = null;
+        private const bool UPDATED_PROJECT_INHERIT_MEMBERS = false;
+        private const List<ProjectTracker> UPDATED_PROJECT_TRACKERS = null;
 
-        private const string deletedProjectIdentifier = "redmine-net-testxyz";
-        #endregion Constants
+        private const string DELETED_PROJECT_IDENTIFIER = "redmine-net-testxyz";
 
-        #region Properties
-        private RedmineManager redmineManager;
-        private string uri;
-        private string apiKey;
-        #endregion Properties
-
-        #region Initialize
         [TestInitialize]
         public void Initialize()
         {
-            uri = ConfigurationManager.AppSettings["uri"];
-            apiKey = ConfigurationManager.AppSettings["apiKey"];
-
             SetMimeTypeJSON();
             SetMimeTypeXML();
         }
@@ -59,100 +55,204 @@ namespace UnitTest_redmine_net40_api
         [Conditional("JSON")]
         private void SetMimeTypeJSON()
         {
-            redmineManager = new RedmineManager(uri, apiKey, MimeFormat.json);
+            redmineManager = new RedmineManager(Helper.Uri, Helper.ApiKey, MimeFormat.json);
         }
 
         [Conditional("XML")]
         private void SetMimeTypeXML()
         {
-            redmineManager = new RedmineManager(uri, apiKey, MimeFormat.xml);
+            redmineManager = new RedmineManager(Helper.Uri, Helper.ApiKey, MimeFormat.xml);
         }
-        #endregion Initializes
 
-        #region Tests
         [TestMethod]
-        public void GetProject_WithAll_AssociatedData()
+        public void Should_Get_Project()
         {
-            var result = redmineManager.GetObject<Project>(projectId, new NameValueCollection()
+            var project = redmineManager.GetObject<Project>(PROJECT_IDENTIFIER, null);
+
+            Assert.IsNotNull(project, "Get project returned null.");
+            Assert.IsInstanceOfType(project, typeof(Project), "Entity is not of type project.");
+        }
+
+        [TestMethod]
+        public void Should_Get_Project_With_Trackers()
+        {
+            var project = redmineManager.GetObject<Project>(PROJECT_IDENTIFIER, new NameValueCollection()
             {
-                {"include","trackers, issue_categories, enabled_modules" }
+                {RedmineKeys.INCLUDE, RedmineKeys.TRACKERS}
             });
 
-            Assert.IsNotNull(result);
-            Assert.IsInstanceOfType(result, typeof(Project));
-            Assert.IsNotNull(result.Trackers, "result.Trackers != null");
-            Assert.IsNotNull(result.IssueCategories, "result.IssueCategories != null");
-            Assert.IsNotNull(result.EnabledModules,"result.EnabledModules != null");
-        }
+            Assert.IsNotNull(project, "Get project returned null.");
+            Assert.IsInstanceOfType(project, typeof(Project), "Entity is not of type project.");
+
+            Assert.IsNotNull(project.Trackers, "Trackers list is null.");
+            Assert.IsTrue(project.Trackers.Count == NUMBER_OF_TRACKERS, "Trackers count != " + NUMBER_OF_TRACKERS);
+            CollectionAssert.AllItemsAreNotNull(project.Trackers.ToList(), "Trackers list contains null items.");
+            CollectionAssert.AllItemsAreUnique(project.Trackers.ToList(), "Trackers items are not unique.");
+            CollectionAssert.AllItemsAreInstancesOfType(project.Trackers.ToList(), typeof(ProjectTracker), "Not all items are of type ProjectTracker.");
+         }
 
         [TestMethod]
-        public void GetAllProjects_WithAll_AssociatedData()
+        public void Should_Get_Project_With_IssueCategories()
         {
-            IList<Project> result = redmineManager.GetObjects<Project>(new NameValueCollection()
+            var project = redmineManager.GetObject<Project>(PROJECT_IDENTIFIER, new NameValueCollection()
             {
-                {"include", "trackers, issue_categories, enabled_modules"}
+                {RedmineKeys.INCLUDE, RedmineKeys.ISSUE_CATEGORIES}
             });
 
-            Assert.IsNotNull(result);
+            Assert.IsNotNull(project, "Get project returned null.");
+            Assert.IsInstanceOfType(project, typeof(Project), "Entity is not of type project.");
+
+            Assert.IsNotNull(project.IssueCategories, "Issue categories list is null.");
+            Assert.IsTrue(project.IssueCategories.Count == NUMBER_OF_ISSUE_CATEGORIES, "Issue categories count != " + NUMBER_OF_ISSUE_CATEGORIES);
+            CollectionAssert.AllItemsAreNotNull(project.IssueCategories.ToList(), "Issue categories list contains null items.");
+            CollectionAssert.AllItemsAreUnique(project.IssueCategories.ToList(), "Issue categories items are not unique.");
+            CollectionAssert.AllItemsAreInstancesOfType(project.IssueCategories.ToList(), typeof(ProjectIssueCategory), "Not all items are of type ProjectIssueCategory.");
         }
 
         [TestMethod]
-        public void GetProject_News()
+        public void Should_Get_Project_With_EnabledModules()
         {
-            var result = redmineManager.GetObjects<News>(new NameValueCollection()
+            var project = redmineManager.GetObject<Project>(PROJECT_IDENTIFIER, new NameValueCollection()
             {
-                {"project_id",projectId }
+                {RedmineKeys.INCLUDE, RedmineKeys.ENABLED_MODULES}
             });
 
-            Assert.IsNotNull(result);
+            Assert.IsNotNull(project, "Get project returned null.");
+            Assert.IsInstanceOfType(project, typeof(Project), "Entity is not of type project.");
+
+            Assert.IsNotNull(project.EnabledModules, "Enabled modules list is null.");
+            Assert.IsTrue(project.EnabledModules.Count == NUMBER_OF_ENABLED_MODULES, "Enabled modules count != " + NUMBER_OF_ENABLED_MODULES);
+            CollectionAssert.AllItemsAreNotNull(project.EnabledModules.ToList(), "Enabled modules list contains null items.");
+            CollectionAssert.AllItemsAreUnique(project.EnabledModules.ToList(), "Enabled modules items are not unique.");
+            CollectionAssert.AllItemsAreInstancesOfType(project.EnabledModules.ToList(), typeof(ProjectEnabledModule), "Not all items are of type ProjectEnabledModule.");
         }
 
         [TestMethod]
-        public void RedmineProjects_ShouldCreateProject()
+        public void Should_Get_Project_With_All_Data()
+        {
+            var project = redmineManager.GetObject<Project>(PROJECT_IDENTIFIER, new NameValueCollection()
+            {
+                {RedmineKeys.INCLUDE, RedmineKeys.TRACKERS+","+RedmineKeys.ISSUE_CATEGORIES+","+RedmineKeys.ENABLED_MODULES}
+            });
+
+            Assert.IsNotNull(project, "Get project returned null.");
+            Assert.IsInstanceOfType(project, typeof(Project), "Entity is not of type project.");
+
+            Assert.IsNotNull(project.Trackers, "Trackers list is null.");
+            Assert.IsTrue(project.Trackers.Count == NUMBER_OF_TRACKERS, "Trackers count != " + NUMBER_OF_TRACKERS);
+            CollectionAssert.AllItemsAreNotNull(project.Trackers.ToList(), "Trackers list contains null items.");
+            CollectionAssert.AllItemsAreUnique(project.Trackers.ToList(), "Trackers items are not unique.");
+            CollectionAssert.AllItemsAreInstancesOfType(project.Trackers.ToList(), typeof(ProjectTracker), "Not all items are of type ProjectTracker.");
+
+            Assert.IsNotNull(project.IssueCategories, "Issue categories list is null.");
+            Assert.IsTrue(project.IssueCategories.Count == NUMBER_OF_ISSUE_CATEGORIES, "Issue categories count != " + NUMBER_OF_ISSUE_CATEGORIES);
+            CollectionAssert.AllItemsAreNotNull(project.IssueCategories.ToList(), "Issue categories list contains null items.");
+            CollectionAssert.AllItemsAreUnique(project.IssueCategories.ToList(), "Issue categories items are not unique.");
+            CollectionAssert.AllItemsAreInstancesOfType(project.IssueCategories.ToList(), typeof(ProjectIssueCategory), "Not all items are of type ProjectIssueCategory.");
+
+            Assert.IsNotNull(project.EnabledModules, "Enabled modules list is null.");
+            Assert.IsTrue(project.EnabledModules.Count == NUMBER_OF_ENABLED_MODULES, "Enabled modules count != " + NUMBER_OF_ENABLED_MODULES);
+            CollectionAssert.AllItemsAreNotNull(project.EnabledModules.ToList(), "Enabled modules list contains null items.");
+            CollectionAssert.AllItemsAreUnique(project.EnabledModules.ToList(), "Enabled modules items are not unique.");
+            CollectionAssert.AllItemsAreInstancesOfType(project.EnabledModules.ToList(), typeof(ProjectEnabledModule), "Not all items are of type ProjectEnabledModule.");
+        }
+
+        [TestMethod]
+        public void Should_Get_All_Projects_With_All_Data()
+        {
+            IList<Project> projects = redmineManager.GetObjects<Project>(new NameValueCollection()
+            {
+                {RedmineKeys.INCLUDE, RedmineKeys.TRACKERS+","+RedmineKeys.ISSUE_CATEGORIES+","+RedmineKeys.ENABLED_MODULES}
+            });
+
+            Assert.IsNotNull(projects, "Get projects returned null.");
+            Assert.IsTrue(projects.Count == NUMBER_OF_PROJECTS, "Projects count != " + NUMBER_OF_PROJECTS);
+            CollectionAssert.AllItemsAreNotNull(projects.ToList(), "Projects list contains null items.");
+            CollectionAssert.AllItemsAreUnique(projects.ToList(), "Projects items are not unique.");
+            CollectionAssert.AllItemsAreInstancesOfType(projects.ToList(), typeof(Project), "Not all items are of type Project.");
+
+            var project = projects.ToList().Find(p => p.Identifier == PROJECT_IDENTIFIER);
+            Assert.IsNotNull(project, "Get project returned null.");
+            Assert.IsInstanceOfType(project, typeof(Project), "Entity is not of type project.");
+
+            Assert.IsNotNull(project.Trackers, "Trackers list is null.");
+            Assert.IsTrue(project.Trackers.Count == NUMBER_OF_TRACKERS, "Trackers count != " + NUMBER_OF_TRACKERS);
+            CollectionAssert.AllItemsAreNotNull(project.Trackers.ToList(), "Trackers list contains null items.");
+            CollectionAssert.AllItemsAreUnique(project.Trackers.ToList(), "Trackers items are not unique.");
+            CollectionAssert.AllItemsAreInstancesOfType(project.Trackers.ToList(), typeof(ProjectTracker), "Not all items are of type ProjectTracker.");
+
+            Assert.IsNotNull(project.IssueCategories, "Issue categories list is null.");
+            Assert.IsTrue(project.IssueCategories.Count == NUMBER_OF_ISSUE_CATEGORIES, "Issue categories count != " + NUMBER_OF_ISSUE_CATEGORIES);
+            CollectionAssert.AllItemsAreNotNull(project.IssueCategories.ToList(), "Issue categories list contains null items.");
+            CollectionAssert.AllItemsAreUnique(project.IssueCategories.ToList(), "Issue categories items are not unique.");
+            CollectionAssert.AllItemsAreInstancesOfType(project.IssueCategories.ToList(), typeof(ProjectIssueCategory), "Not all items are of type ProjectIssueCategory.");
+
+            Assert.IsNotNull(project.EnabledModules, "Enabled modules list is null.");
+            Assert.IsTrue(project.EnabledModules.Count == NUMBER_OF_ENABLED_MODULES, "Enabled modules count != " + NUMBER_OF_ENABLED_MODULES);
+            CollectionAssert.AllItemsAreNotNull(project.EnabledModules.ToList(), "Enabled modules list contains null items.");
+            CollectionAssert.AllItemsAreUnique(project.EnabledModules.ToList(), "Enabled modules items are not unique.");
+            CollectionAssert.AllItemsAreInstancesOfType(project.EnabledModules.ToList(), typeof(ProjectEnabledModule), "Not all items are of type ProjectEnabledModule.");
+        }
+
+        [TestMethod]
+        public void Should_Get_Project_News()
+        {
+            var news = redmineManager.GetObjects<News>(new NameValueCollection { { RedmineKeys.PROJECT_ID, PROJECT_IDENTIFIER } });
+
+            Assert.IsNotNull(news, "Get all news returned null");
+            Assert.IsTrue(news.Count == NUMBER_OF_NEWS_BY_PROJECT_ID, "News count != " + NUMBER_OF_NEWS_BY_PROJECT_ID);
+            CollectionAssert.AllItemsAreNotNull(news, "News list contains null items.");
+            CollectionAssert.AllItemsAreUnique(news, "News items are not unique.");
+            CollectionAssert.AllItemsAreInstancesOfType(news, typeof(News), "Not all items are of type news.");
+        }
+
+        [TestMethod]
+        public void Should_Create_Projects()
         {
             Project project = new Project();
-            project.Name = newProjectName;
-            project.Identifier = newProjectIdentifier;
-            project.Description = newProjectDescription;
-            project.HomePage = newProjectHomePage;
-            project.IsPublic = newProjectIsPublic;
-            project.Parent = new IdentifiableName { Id = newProjectParentId };
-            project.InheritMembers = newProjectInheritMembers;
-            project.Trackers = new List<ProjectTracker> { new ProjectTracker { Id = newProjectTrackerId } };
-
+            project.Name = NEW_PROJECT_NAME;
+            project.Identifier = NEW_PROJECT_IDENTIFIER;
+            project.Description = NEW_PROJECT_DESCRIPTION;
+            project.HomePage = NEW_PROJECT_HOMEPAGE;
+            project.IsPublic = NEW_PROJECT_ISPUBLIC;
+            project.Parent = new IdentifiableName { Id = NEW_PROJECT_PARENT_ID };
+            project.InheritMembers = NEW_PROJECT_INHERIT_MEMBERS;
+            project.Trackers = new List<ProjectTracker> { new ProjectTracker { Id = NEW_PROJECT_TRACKER_ID } };
             project.EnabledModules = new List<ProjectEnabledModule>();
-            project.EnabledModules.Add(new ProjectEnabledModule { Name = newProjectEnableModuleName });
+            project.EnabledModules.Add(new ProjectEnabledModule { Name = NEW_PROJECT_ENABLED_MODULE_NAME });
 
             Project savedProject = redmineManager.CreateObject<Project>(project);
 
-            Assert.AreEqual(project.Name, savedProject.Name);
+            Assert.IsNotNull(savedProject, "Create project returned null.");
+            Assert.AreEqual(savedProject.Identifier, NEW_PROJECT_IDENTIFIER, "Project identifier is invalid.");
         }
 
         [TestMethod]
-        public void RedmineProjects_ShouldUpdateProject()
+        public void Should_Update_Project()
         {
-            var project = redmineManager.GetObject<Project>(updatedProjectIdentifier, new NameValueCollection { { "include", "trackers,issue_categories,enabled_modules" } });
-            project.Name = updatedProjectName;
-            project.Description = updatedProjectDescription;
-            project.HomePage = updatedProjectHomePage;
-            project.IsPublic = updatedProjectIsPublic;
-            project.Parent = updatedProjectParent;
-            project.InheritMembers = updatedProjectInheritMembers;
-            project.Trackers = updatedProjectTrackers;
+            var project = redmineManager.GetObject<Project>(UPDATED_PROJECT_IDENTIFIER, new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.TRACKERS + "," + RedmineKeys.ISSUE_CATEGORIES + "," + RedmineKeys.ENABLED_MODULES } });
+            project.Name = UPDATED_PROJECT_NAME;
+            project.Description = UPDATED_PROJECT_DESCRIPTION;
+            project.HomePage = UPDATED_PROJECT_HOMEPAGE;
+            project.IsPublic = UPDATED_PROJECT_ISPUBLIC;
+            project.Parent = UPDATED_PROJECT_PARENT;
+            project.InheritMembers = UPDATED_PROJECT_INHERIT_MEMBERS;
+            project.Trackers = UPDATED_PROJECT_TRACKERS;
 
-            redmineManager.UpdateObject<Project>(updatedProjectIdentifier, project);
+            redmineManager.UpdateObject<Project>(UPDATED_PROJECT_IDENTIFIER, project);
 
-            var updatedProject = redmineManager.GetObject<Project>(updatedProjectIdentifier, new NameValueCollection { { "include", "trackers,issue_categories,enabled_modules" } });
+            var updatedProject = redmineManager.GetObject<Project>(UPDATED_PROJECT_IDENTIFIER, new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.TRACKERS + "," + RedmineKeys.ISSUE_CATEGORIES + "," + RedmineKeys.ENABLED_MODULES } });
 
-            Assert.AreEqual(project.Name, updatedProject.Name);
+            Assert.IsNotNull(updatedProject, "Updated project is null.");
+            Assert.AreEqual(updatedProject.Name, UPDATED_PROJECT_NAME, "Project name was not updated.");
         }
 
         [TestMethod]
-        public void RedmineProjects_ShouldDeleteProject()
+        public void Should_Delete_Project()
         {
             try
             {
-                redmineManager.DeleteObject<Project>(deletedProjectIdentifier, null);
+                redmineManager.DeleteObject<Project>(DELETED_PROJECT_IDENTIFIER, null);
             }
             catch (RedmineException)
             {
@@ -162,7 +262,7 @@ namespace UnitTest_redmine_net40_api
 
             try
             {
-                Project project = redmineManager.GetObject<Project>(deletedProjectIdentifier, null);
+                Project project = redmineManager.GetObject<Project>(DELETED_PROJECT_IDENTIFIER, null);
             }
             catch (RedmineException exc)
             {
@@ -173,13 +273,13 @@ namespace UnitTest_redmine_net40_api
         }
 
         [TestMethod]
-        public void RedmineProjects_ShouldCompare()
+        public void Should_Compare_Projects()
         {
-            var project = redmineManager.GetObject<Project>(projectId, new NameValueCollection(){{"include","trackers, issue_categories, enabled_modules" }});
-            var projectToCompare = redmineManager.GetObject<Project>(projectId, new NameValueCollection() { { "include", "trackers, issue_categories, enabled_modules" } });
+            var project = redmineManager.GetObject<Project>(PROJECT_IDENTIFIER, new NameValueCollection() { { RedmineKeys.INCLUDE, RedmineKeys.TRACKERS + "," + RedmineKeys.ISSUE_CATEGORIES + "," + RedmineKeys.ENABLED_MODULES } });
+            var projectToCompare = redmineManager.GetObject<Project>(PROJECT_IDENTIFIER, new NameValueCollection() { { RedmineKeys.INCLUDE, RedmineKeys.TRACKERS + "," + RedmineKeys.ISSUE_CATEGORIES + "," + RedmineKeys.ENABLED_MODULES } });
 
-            Assert.IsTrue(project.Equals(projectToCompare));
+            Assert.IsNotNull(project, "Project is null.");
+            Assert.IsTrue(project.Equals(projectToCompare), "Compared projects are not equal.");
         }
-        #endregion Tests
     }
 }
