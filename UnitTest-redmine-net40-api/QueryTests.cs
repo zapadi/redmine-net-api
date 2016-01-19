@@ -14,23 +14,14 @@ namespace UnitTest_redmine_net40_api
     [TestClass]
     public class QueryTests
     {
-        #region Constants
-        private const int numberOfQueries = 2;
-        #endregion Constants
-
-        #region Properties
         private RedmineManager redmineManager;
-        private string uri;
-        private string apiKey;
-        #endregion Properties
-
-        #region Initialize
+        
+        private const int NUMBER_OF_QUERIES = 3;
+        private const bool EXISTS_PUBLIC_QUERY = true;
+ 
         [TestInitialize]
         public void Initialize()
         {
-            uri = ConfigurationManager.AppSettings["uri"];
-            apiKey = ConfigurationManager.AppSettings["apiKey"];
-
             SetMimeTypeJSON();
             SetMimeTypeXML();
         }
@@ -38,24 +29,27 @@ namespace UnitTest_redmine_net40_api
         [Conditional("JSON")]
         private void SetMimeTypeJSON()
         {
-            redmineManager = new RedmineManager(uri, apiKey, MimeFormat.json);
+            redmineManager = new RedmineManager(Helper.Uri, Helper.ApiKey, MimeFormat.json);
         }
 
         [Conditional("XML")]
         private void SetMimeTypeXML()
         {
-            redmineManager = new RedmineManager(uri, apiKey, MimeFormat.xml);
+            redmineManager = new RedmineManager(Helper.Uri, Helper.ApiKey, MimeFormat.xml);
         }
-        #endregion Initialize
-
-        #region Tests
+   
         [TestMethod]
-        public void RedmineQuery_ShouldGetAllQueries()
+        public void Should_Get_All_Queries()
         {
             var queries = redmineManager.GetObjects<Query>(null);
 
-            Assert.IsTrue(queries.Count == numberOfQueries);
+            Assert.IsNotNull(queries, "Get all queries returned null");
+            Assert.IsTrue(queries.Count == NUMBER_OF_QUERIES, "Queries count != " + NUMBER_OF_QUERIES);
+            CollectionAssert.AllItemsAreNotNull(queries, "Queries list contains null items.");
+            CollectionAssert.AllItemsAreUnique(queries, "Queries items are not unique.");
+            CollectionAssert.AllItemsAreInstancesOfType(queries, typeof(Query), "Not all items are of type query.");
+
+            Assert.IsTrue(queries.Exists(q => q.IsPublic) == EXISTS_PUBLIC_QUERY, EXISTS_PUBLIC_QUERY ? "Public query should exist." : "Public query should not exist.");
         }
-        #endregion Tests
     }
 }
