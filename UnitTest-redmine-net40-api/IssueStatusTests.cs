@@ -14,19 +14,15 @@ namespace UnitTest_redmine_net40_api
     [TestClass]
     public class IssueStatusTests
     {
-        #region Properties
         private RedmineManager redmineManager;
-        private string uri;
-        private string apiKey;
-        #endregion Properties
 
-        #region Initialize
+        private const int NUMBER_OF_ISSUE_STATUSES = 6;
+        private const bool EXISTS_CLOSED_ISSUE_STATUSES = true;
+        private const bool EXISTS_DEFAULT_ISSUE_STATUSES = false;
+
         [TestInitialize]
         public void Initialize()
         {
-            uri = ConfigurationManager.AppSettings["uri"];
-            apiKey = ConfigurationManager.AppSettings["apiKey"];
-
             SetMimeTypeJSON();
             SetMimeTypeXML();
         }
@@ -34,24 +30,28 @@ namespace UnitTest_redmine_net40_api
         [Conditional("JSON")]
         private void SetMimeTypeJSON()
         {
-            redmineManager = new RedmineManager(uri, apiKey, MimeFormat.json);
+            redmineManager = new RedmineManager(Helper.Uri, Helper.ApiKey, MimeFormat.json);
         }
 
         [Conditional("XML")]
         private void SetMimeTypeXML()
         {
-            redmineManager = new RedmineManager(uri, apiKey, MimeFormat.xml);
+            redmineManager = new RedmineManager(Helper.Uri, Helper.ApiKey, MimeFormat.xml);
         }
-        #endregion Initialize
-
-        #region Tests
+   
         [TestMethod]
-        public void RedmineIssueStatuses_ShouldGetAllIssueStatuses()
+        public void Should_Get_All_Issue_Statuses()
         {
             var issueStatuses = redmineManager.GetObjects<IssueStatus>(null);
 
-            Assert.IsNotNull(issueStatuses);
+            Assert.IsNotNull(issueStatuses, "Get issue statuses returned null.");
+            Assert.IsTrue(issueStatuses.Count == NUMBER_OF_ISSUE_STATUSES, "Issue statuses count != " + NUMBER_OF_ISSUE_STATUSES);
+            CollectionAssert.AllItemsAreNotNull(issueStatuses, "Issue statuses list contains null items.");
+            CollectionAssert.AllItemsAreUnique(issueStatuses, "Issue statuses items are not unique.");
+            CollectionAssert.AllItemsAreInstancesOfType(issueStatuses, typeof(IssueStatus), "Not all items are of type IssueStatus.");
+
+            Assert.IsTrue(issueStatuses.Exists(i => i.IsClosed) == EXISTS_CLOSED_ISSUE_STATUSES, EXISTS_CLOSED_ISSUE_STATUSES ? "Closed issue statuses were expected to exist." : "Closed issue statuses were not expected to exist.");
+            Assert.IsTrue(issueStatuses.Exists(i => i.IsDefault) == EXISTS_DEFAULT_ISSUE_STATUSES, EXISTS_DEFAULT_ISSUE_STATUSES ? "Default issue statuses were expected to exist." : "Default issue statuses were not expected to exist.");
         }
-        #endregion Tests
     }
 }
