@@ -145,7 +145,7 @@ namespace Redmine.Net.Api.Types
                 && Sharing == other.Sharing
                 && CreatedOn == other.CreatedOn
                 && UpdatedOn == other.UpdatedOn
-                && CustomFields == other.CustomFields);
+                && (CustomFields != null ? CustomFields.Equals<IssueCustomField>(other.CustomFields) : other.CustomFields == null));
         }
 
         public override int GetHashCode()
