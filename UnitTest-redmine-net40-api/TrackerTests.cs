@@ -14,23 +14,13 @@ namespace UnitTest_redmine_net40_api
     [TestClass]
     public class TrackerTests
     {
-        #region Constants
-        private const int numberOfTrackers = 2;
-        #endregion Constants
-
-        #region Properties
         private RedmineManager redmineManager;
-        private string uri;
-        private string apiKey;
-        #endregion Properties
 
-        #region Initialize
+        private const int NUMBER_OF_TRACKERS = 3;
+
         [TestInitialize]
         public void Initialize()
         {
-            uri = ConfigurationManager.AppSettings["uri"];
-            apiKey = ConfigurationManager.AppSettings["apiKey"];
-
             SetMimeTypeJSON();
             SetMimeTypeXML();
         }
@@ -38,24 +28,26 @@ namespace UnitTest_redmine_net40_api
         [Conditional("JSON")]
         private void SetMimeTypeJSON()
         {
-            redmineManager = new RedmineManager(uri, apiKey, MimeFormat.json);
+            redmineManager = new RedmineManager(Helper.Uri, Helper.ApiKey, MimeFormat.json);
         }
 
         [Conditional("XML")]
         private void SetMimeTypeXML()
         {
-            redmineManager = new RedmineManager(uri, apiKey, MimeFormat.xml);
+            redmineManager = new RedmineManager(Helper.Uri, Helper.ApiKey, MimeFormat.xml);
         }
-        #endregion Initialize
 
-        #region Tests
         [TestMethod]
         public void RedmineTrackers_ShouldGetAllTrackers()
         {
             var trackers = redmineManager.GetObjects<Tracker>(null);
 
-            Assert.IsTrue(trackers.Count == numberOfTrackers);
+            Assert.IsNotNull(trackers, "Get all trackers returned null");
+            Assert.IsTrue(trackers.Count == NUMBER_OF_TRACKERS, "Trackers count != " + NUMBER_OF_TRACKERS);
+            CollectionAssert.AllItemsAreNotNull(trackers, "Trackers list contains null items.");
+            CollectionAssert.AllItemsAreUnique(trackers, "Trackers items are not unique.");
+            CollectionAssert.AllItemsAreInstancesOfType(trackers, typeof(Tracker), "Not all items are of type Tracker.");
+ 
         }
-        #endregion Tests
     }
 }
