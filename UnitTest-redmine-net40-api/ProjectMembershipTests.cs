@@ -15,35 +15,26 @@ namespace UnitTest_redmine_net40_api
     [TestClass]
     public class ProjectMembershipTests
     {
-        #region Constants
-        private const string projectId = "9";
+        private RedmineManager redmineManager;
+
+        private const string PROJECT_IDENTIFIER = "redmine-test";
+        private const int NUMBER_OF_PROJECT_MEMBERSHIPS = 3;
 
         //PM data - used for create
-        private const int newPMUserId = 2;
-        private const int newPMRoleId = 4;
+        private const int NEW_PROJECT_MEMBERSHIP_USER_ID = 5;
+        private const int NEW_PROJECT_MEMBERSHIP_ROLE_ID = 34;
 
-        private const string projectMembershipId = "118";
+        private const string PROJECT_MEMBERSHIP_ID = "17";
 
         //PM data - used for update
-        private const string updatedPMId = "111";
-        private const int updatedPMRoleId = 5;
+        private const string UPDATED_PROJECT_MEMBERSHIP_ID = "17";
+        private const int UPDATED_PROJECT_MEMBERSHIP_ROLE_ID = 35;
 
-        private const string deletedPMId = "111";
-        #endregion Constants
+        private const string DELETED_PROJECT_MEMBERSHIP_ID = "17";
 
-        #region Properties
-        private RedmineManager redmineManager;
-        private string uri;
-        private string apiKey;
-        #endregion Properties
-
-        #region Initialize
         [TestInitialize]
         public void Initialize()
         {
-            uri = ConfigurationManager.AppSettings["uri"];
-            apiKey = ConfigurationManager.AppSettings["apiKey"];
-
             SetMimeTypeJSON();
             SetMimeTypeXML();
         }
@@ -51,65 +42,92 @@ namespace UnitTest_redmine_net40_api
         [Conditional("JSON")]
         private void SetMimeTypeJSON()
         {
-            redmineManager = new RedmineManager(uri, apiKey, MimeFormat.json);
+            redmineManager = new RedmineManager(Helper.Uri, Helper.ApiKey, MimeFormat.json);
         }
 
         [Conditional("XML")]
         private void SetMimeTypeXML()
         {
-            redmineManager = new RedmineManager(uri, apiKey, MimeFormat.xml);
+            redmineManager = new RedmineManager(Helper.Uri, Helper.ApiKey, MimeFormat.xml);
         }
-        #endregion Initialize
-
-        #region Tests
+     
         [TestMethod]
-        public void RedmineProjectMembership_ShouldGetAllByProject()
+        public void Should_Get_Memberships_By_Project_Identifier()
         {
-            var projectMemberships = redmineManager.GetObjects<ProjectMembership>(new NameValueCollection { { "project_id", projectId } });
+            var projectMemberships = redmineManager.GetObjects<ProjectMembership>(new NameValueCollection { { RedmineKeys.PROJECT_ID, PROJECT_IDENTIFIER } });
 
-            Assert.IsNotNull(projectMemberships);
+            Assert.IsNotNull(projectMemberships, "Get project memberships by project id returned null.");
+            Assert.AreEqual(projectMemberships.Count, NUMBER_OF_PROJECT_MEMBERSHIPS, "Project memberships count != " + NUMBER_OF_PROJECT_MEMBERSHIPS);
+            CollectionAssert.AllItemsAreNotNull(projectMemberships, "Project memberships list contains null items.");
+            CollectionAssert.AllItemsAreUnique(projectMemberships, "Project memberships items are not unique.");
+            CollectionAssert.AllItemsAreInstancesOfType(projectMemberships, typeof(ProjectMembership), "Not all items are of type ProjectMembership.");
         }
 
         [TestMethod]
-        public void RedmineProjectMembership_ShouldAdd()
+        public void Should_Add_Project_Membership()
         {
             ProjectMembership pm = new ProjectMembership();
-            pm.User = new IdentifiableName { Id = newPMUserId };
+            pm.User = new IdentifiableName { Id = NEW_PROJECT_MEMBERSHIP_USER_ID };
             pm.Roles = new List<MembershipRole>();
-            pm.Roles.Add(new MembershipRole { Id = newPMRoleId });
+            pm.Roles.Add(new MembershipRole { Id = NEW_PROJECT_MEMBERSHIP_ROLE_ID });
 
-            ProjectMembership updatedPM = redmineManager.CreateObject<ProjectMembership>(pm, projectId);
+            ProjectMembership createdPM = redmineManager.CreateObject<ProjectMembership>(pm, PROJECT_IDENTIFIER);
 
-            Assert.IsNotNull(updatedPM);
+            Assert.IsNotNull(createdPM, "Project membership is null.");
+            Assert.AreEqual(createdPM.User.Id, NEW_PROJECT_MEMBERSHIP_USER_ID, "User is invalid.");
+            Assert.IsNotNull(createdPM.Roles, "Project membership roles list is null.");
+            Assert.IsTrue(createdPM.Roles.Exists(r => r.Id == NEW_PROJECT_MEMBERSHIP_ROLE_ID), string.Format("Role id {0} does not exist.", NEW_PROJECT_MEMBERSHIP_ROLE_ID));
         }
 
         [TestMethod]
-        public void RedmineProjectMembership_ShouldGetById()
+        public void Should_Get_Project_Membership_By_Id()
         {
-            var projectMembership = redmineManager.GetObject<ProjectMembership>(projectMembershipId, null);
+            var projectMembership = redmineManager.GetObject<ProjectMembership>(PROJECT_MEMBERSHIP_ID, null);
 
-            Assert.IsNotNull(projectMembership);
+            Assert.IsNotNull(projectMembership, "Get project membership returned null.");
+            Assert.IsNotNull(projectMembership.Project, "Project is null.");
+            Assert.IsTrue(projectMembership.User != null || projectMembership.Group != null, "User and group are both null.");
+            Assert.IsNotNull(projectMembership.Roles, "Project membership roles list is null.");
+            CollectionAssert.AllItemsAreNotNull(projectMembership.Roles, "Project membership roles list contains null items.");
+            CollectionAssert.AllItemsAreUnique(projectMembership.Roles, "Project membership roles items are not unique.");
+            CollectionAssert.AllItemsAreInstancesOfType(projectMembership.Roles, typeof(MembershipRole), "Not all items are of type MembershipRole.");
         }
 
         [TestMethod]
-        public void RedmineProjectMembership_ShouldUpdate()
+        public void Should_Compare_Project_Memberships()
         {
-            var pm = redmineManager.GetObject<ProjectMembership>(updatedPMId, null);
-            pm.Roles.Add(new MembershipRole { Id = updatedPMRoleId });
+            var projectMembership = redmineManager.GetObject<ProjectMembership>(PROJECT_MEMBERSHIP_ID, null);
+            var projectMembershipToCompare = redmineManager.GetObject<ProjectMembership>(PROJECT_MEMBERSHIP_ID, null);
 
-            redmineManager.UpdateObject<ProjectMembership>(updatedPMId, pm);
-
-            var updatedPM = redmineManager.GetObject<ProjectMembership>(updatedPMId, null);
-
-            Assert.IsTrue(updatedPM.Roles.Find(r => r.Id == updatedPMRoleId) != null);
+            Assert.IsNotNull(projectMembership, "Project membership is null.");
+            Assert.IsTrue(projectMembership.Equals(projectMembershipToCompare), "Project memberships are not equal.");
         }
 
         [TestMethod]
-        public void RedmineProjectMembership_ShouldDelete()
+        public void Should_Update_Project_Membership()
+        {
+            var pm = redmineManager.GetObject<ProjectMembership>(UPDATED_PROJECT_MEMBERSHIP_ID, null);
+            pm.Roles.Add(new MembershipRole { Id = UPDATED_PROJECT_MEMBERSHIP_ROLE_ID });
+
+            redmineManager.UpdateObject<ProjectMembership>(UPDATED_PROJECT_MEMBERSHIP_ID, pm);
+
+            var updatedPM = redmineManager.GetObject<ProjectMembership>(UPDATED_PROJECT_MEMBERSHIP_ID, null);
+
+            Assert.IsNotNull(updatedPM, "Get updated project membership returned null.");
+            Assert.IsNotNull(updatedPM.Roles, "Project membership roles list is null.");
+            CollectionAssert.AllItemsAreNotNull(updatedPM.Roles, "Project membership roles list contains null items.");
+            CollectionAssert.AllItemsAreUnique(updatedPM.Roles, "Project membership roles items are not unique.");
+            CollectionAssert.AllItemsAreInstancesOfType(updatedPM.Roles, typeof(MembershipRole), "Not all items are of type MembershipRole.");
+       
+            Assert.IsTrue(updatedPM.Roles.Find(r => r.Id == UPDATED_PROJECT_MEMBERSHIP_ROLE_ID) != null, string.Format("Role with id {0} was not found in roles list.", UPDATED_PROJECT_MEMBERSHIP_ROLE_ID));
+        }
+
+        [TestMethod]
+        public void Should_Delete_Project_Membership()
         {
             try
             {
-                redmineManager.DeleteObject<ProjectMembership>(deletedPMId, null);
+                redmineManager.DeleteObject<ProjectMembership>(DELETED_PROJECT_MEMBERSHIP_ID, null);
             }
             catch (RedmineException)
             {
@@ -119,7 +137,7 @@ namespace UnitTest_redmine_net40_api
 
             try
             {
-                ProjectMembership projectMembership = redmineManager.GetObject<ProjectMembership>(deletedPMId, null);
+                ProjectMembership projectMembership = redmineManager.GetObject<ProjectMembership>(DELETED_PROJECT_MEMBERSHIP_ID, null);
             }
             catch (RedmineException exc)
             {
@@ -129,14 +147,6 @@ namespace UnitTest_redmine_net40_api
             Assert.Fail("Test failed");
         }
 
-        [TestMethod]
-        public void RedmineProjectMembership_ShouldCompare()
-        {
-            var projectMembership = redmineManager.GetObject<ProjectMembership>(projectMembershipId, null);
-            var projectMembershipToCompare = redmineManager.GetObject<ProjectMembership>(projectMembershipId, null);
-
-            Assert.IsTrue(projectMembership.Equals(projectMembershipToCompare));
-        }
-        #endregion Tests
+      
     }
 }
