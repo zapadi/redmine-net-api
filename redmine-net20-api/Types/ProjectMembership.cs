@@ -70,7 +70,11 @@ namespace Redmine.Net.Api.Types
         public bool Equals(ProjectMembership other)
         {
             if (other == null) return false;
-            return (Id == other.Id && Project == other.Project && Roles == other.Roles && User == other.User && Group == other.Group);
+            return (Id == other.Id 
+                && Project.Equals(other.Project) 
+                && Roles.Equals<MembershipRole>(other.Roles )
+                && (User != null ? User.Equals(other.User) : other.User == null)
+                && (Group != null ? Group.Equals(other.Group) : other.Group == null));
         }
 
         public XmlSchema GetSchema() { return null; }
