@@ -201,7 +201,7 @@ namespace Redmine.Net.Api.Types
                 && User == other.User
                 && CreatedOn == other.CreatedOn
                 && UpdatedOn == other.UpdatedOn
-                && Equals(CustomFields, other.CustomFields));
+                && (CustomFields!= null ? CustomFields.Equals<IssueCustomField>(other.CustomFields) : other.CustomFields== null));
         }
 
         public override int GetHashCode()
