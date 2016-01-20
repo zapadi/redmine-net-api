@@ -14,23 +14,14 @@ namespace UnitTest_redmine_net40_api
     [TestClass]
     public class TimeEntryActivityTests
     {
-        #region Constants
-        private const int numberOfTimeEntryActivities = 3;
-        #endregion Constants
-
-        #region Properties
         private RedmineManager redmineManager;
-        private string uri;
-        private string apiKey;
-        #endregion Properties
 
-        #region Initialize
+        private const int NUMBER_OF_TIME_ENTRY_ACTIVITIES = 4;
+        private const bool EXISTS_DEFAULT_TIME_ENTRY_ACTIVITIES = true;
+
         [TestInitialize]
         public void Initialize()
         {
-            uri = ConfigurationManager.AppSettings["uri"];
-            apiKey = ConfigurationManager.AppSettings["apiKey"];
-
             SetMimeTypeJSON();
             SetMimeTypeXML();
         }
@@ -38,24 +29,26 @@ namespace UnitTest_redmine_net40_api
         [Conditional("JSON")]
         private void SetMimeTypeJSON()
         {
-            redmineManager = new RedmineManager(uri, apiKey, MimeFormat.json);
+            redmineManager = new RedmineManager(Helper.Uri, Helper.ApiKey, MimeFormat.json);
         }
 
         [Conditional("XML")]
         private void SetMimeTypeXML()
         {
-            redmineManager = new RedmineManager(uri, apiKey, MimeFormat.xml);
+            redmineManager = new RedmineManager(Helper.Uri, Helper.ApiKey, MimeFormat.xml);
         }
-        #endregion Initialize
 
-        #region Tests
         [TestMethod]
-        public void RedmineTimeEntryActivities_ShouldGetAllTimeEntryActivities()
+        public void Should_Get_All_TimeEntryActivities()
         {
             var timeEntryActivities = redmineManager.GetObjects<TimeEntryActivity>(null);
 
-            Assert.IsTrue(timeEntryActivities.Count == numberOfTimeEntryActivities);
+            Assert.IsNotNull(timeEntryActivities, "Get all time entry activities returned null");
+            Assert.IsTrue(timeEntryActivities.Count == NUMBER_OF_TIME_ENTRY_ACTIVITIES, "Time entry activities count != " + NUMBER_OF_TIME_ENTRY_ACTIVITIES);
+            CollectionAssert.AllItemsAreNotNull(timeEntryActivities, "Time entry activities list contains null items.");
+            CollectionAssert.AllItemsAreUnique(timeEntryActivities, "Time entry activities items are not unique.");
+            CollectionAssert.AllItemsAreInstancesOfType(timeEntryActivities, typeof(TimeEntryActivity), "Not all items are of type TimeEntryActivity.");
+            Assert.IsTrue(timeEntryActivities.Exists(tea => tea.IsDefault) == EXISTS_DEFAULT_TIME_ENTRY_ACTIVITIES, EXISTS_DEFAULT_TIME_ENTRY_ACTIVITIES ? "Default time entry activity was expected to exist." : "Default time entry antivity was not expected to exist.");
         }
-        #endregion Tests
     }
 }
