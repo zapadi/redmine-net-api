@@ -210,7 +210,7 @@ namespace Redmine.Net.Api.Extensions
                using (var wc = redmineManager.CreateWebClient(parameters))
                {
                    var response = wc.DownloadString(url);
-                   return RedmineSerializer.Deserialize<PaginatedObjects<T>>(response, redmineManager.MimeFormat);
+                   return RedmineSerializer.DeserializeList<T>(response, redmineManager.MimeFormat);
                }
            }, TaskCreationOptions.LongRunning);
             return task;
