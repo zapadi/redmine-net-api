@@ -86,7 +86,7 @@ namespace Redmine.Net.Api.Extensions
             return task;
         }
 
-        public static Task<List<WikiPage>> GetAllWikiPagesAsync(this RedmineManager redmineManager, NameValueCollection parameters, string projectId)
+        public static Task<PaginatedObjects<WikiPage>> GetAllWikiPagesAsync(this RedmineManager redmineManager, NameValueCollection parameters, string projectId)
         {
             var task = Task.Factory.StartNew(() =>
             {
@@ -94,7 +94,7 @@ namespace Redmine.Net.Api.Extensions
                 using (var wc = redmineManager.CreateWebClient(parameters))
                 {
                     var response = wc.DownloadString(uri);
-                    return RedmineSerializer.Deserialize<List<WikiPage>>(response, redmineManager.MimeFormat);
+                    return RedmineSerializer.DeserializeList<WikiPage>(response, redmineManager.MimeFormat);
                 }
             }, TaskCreationOptions.LongRunning);
             return task;
