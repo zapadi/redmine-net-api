@@ -211,5 +211,7 @@ namespace Redmine.Net.Api
         public const string OFFSET = "offset";
 		public const string KEY = "key";
 		public const string TOTAL_COUNT = "total_count";
+
+        public const string SUBPROJECT_ID = "subproject_id";
     }
 }
