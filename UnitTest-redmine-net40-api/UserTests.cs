@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Types;
-
+using System.Linq;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Configuration;
@@ -14,112 +14,129 @@ namespace UnitTest_redmine_net40_api
     [TestClass]
     public class UserTests
     {
-        #region Constants
-        private const string userId = "8";
-        private const int groupId = 17;
-        private const string userLogin = "alinac";
-
-        //user data - used for create
-        private const string login = "ioanaM";
-        private const string firstName = "Ioana";
-        private const string lastName = "Manea";
-        private const string email = "ioanam@mail.com";
-        private const string userPassword = "123456";
-        private const int customFieldId = 4;
-        private const string customFieldValue = "User custom field completed";
-
-        private const string userIdToModify = "23";
-        private const string userFirstNameUpdate = "Ioana G.";
-
-        private const string userIdToDelete = "23";
-        #endregion Constants
-
-        #region Properties
         private RedmineManager redmineManager;
-        private string uri;
-        private string apiKey;
-        private string username;
-        private string password;
-        #endregion Properties
 
-        #region Initialize
+        private const string USER_ID = "5";
+        private const int NUMBER_OF_GROUPS = 1;
+        private const int NUMBER_OF_MEMBERSHIPS = 2;
+        private const string LIMIT = "2";
+        private const string OFFSET = "1";
+        private const UserStatus USER_STATE = UserStatus.STATUS_ACTIVE;
+       
+        //user data - used for create
+        private const string USER_LOGIN = "user1";
+        private const string USER_FIRST_NAME = "User";
+        private const string USER_LAST_NAME = "One";
+        private const string USER_EMAIL = "user1@mail.com";
+        private const string USER_PASSWORD = "12345678";
+        private const int USER_CUSTOM_FIELD_ID = 9;
+        private const string USER_CUSTOM_FIELD_VALUE = "User custom field completed";
+
+        private const string USER_ID_TO_UPDATE = "37";
+        private const string USER_FIRST_NAME_UPDATED = "Updated first name";
+
+        private const string USER_ID_TO_DELETE = "37";
+
+        private const int GROUP_ID = 35;
+    
         [TestInitialize]
         public void Initialize()
         {
-            uri = ConfigurationManager.AppSettings["uri"];
-            apiKey = ConfigurationManager.AppSettings["apiKey"];
-
-            username = ConfigurationManager.AppSettings["username"];
-            password = ConfigurationManager.AppSettings["password"];
-
             SetMimeTypeXML();
-            //  SetMimeTypeJSON();
+            SetMimeTypeJSON();
         }
 
         [Conditional("JSON")]
         private void SetMimeTypeJSON()
         {
-            //  redmineManager = new RedmineManager(uri, apiKey, MimeFormat.json);
+            redmineManager = new RedmineManager(Helper.Uri, Helper.ApiKey, MimeFormat.json);
         }
 
-        // [Conditional("XML")]
+        [Conditional("XML")]
         private void SetMimeTypeXML()
         {
-            redmineManager = new RedmineManager(uri, apiKey);
+            redmineManager = new RedmineManager(Helper.Uri, Helper.ApiKey);
         }
-        #endregion Initialize
-
-        #region Tests
+      
         [TestMethod]
-        public void RedmineUser_ShouldReturnCurrentUser()
+        public void Should_Get_Current_User()
         {
             User currentUser = redmineManager.GetCurrentUser();
-            Assert.AreEqual(currentUser.ApiKey, apiKey);
+
+            Assert.IsNotNull(currentUser, "Current user is null.");
+            Assert.AreEqual(currentUser.ApiKey, Helper.ApiKey, "Current user api key is invalid.");
         }
 
         [TestMethod]
-        public void RedmineUser_ShouldGetUserById()
+        public void Should_Get_User_By_Id()
         {
-            User user = redmineManager.GetObject<User>(userId, new NameValueCollection { { "include", "groups,memberships" } });
+            User user = redmineManager.GetObject<User>(USER_ID, null);
 
-            Assert.AreEqual(user.Login, userLogin);
+            Assert.IsNotNull(user, "Get user by id returned null!");
         }
 
         [TestMethod]
-        public void RedmineUser_CreateUser_ShouldReturnInvalidEntity()
+        public void Should_Get_User_By_Id_Including_Groups_And_Memberships()
         {
-            User redmineUser = new User();
+            var user = redmineManager.GetObject<User>(USER_ID, new NameValueCollection() { { RedmineKeys.INCLUDE, RedmineKeys.GROUPS+","+RedmineKeys.MEMBERSHIPS } });
 
-            try
+            Assert.IsNotNull(user, "Get user by id returned null!");
+
+            CollectionAssert.AllItemsAreNotNull(user.Groups, "Groups contains null items.");
+            CollectionAssert.AllItemsAreUnique(user.Groups, "Groups items are not unique.");
+            Assert.IsTrue(user.Groups.Count == NUMBER_OF_GROUPS, "Group count != "+NUMBER_OF_GROUPS);
+
+            CollectionAssert.AllItemsAreNotNull(user.Memberships, "Memberships contains null items.");
+            CollectionAssert.AllItemsAreUnique(user.Memberships, "Memberships items are not unique.");
+            Assert.IsTrue(user.Memberships.Count == NUMBER_OF_MEMBERSHIPS, "Membership count != "+NUMBER_OF_MEMBERSHIPS);
+        }
+
+        [TestMethod]
+        public void Should_Get_X_Users_From_Offset_Y()
+        {
+            var result = redmineManager.GetPaginatedObjects<User>(new NameValueCollection() {
+                { RedmineKeys.INCLUDE, RedmineKeys.GROUPS+","+RedmineKeys.MEMBERSHIPS },
+                {RedmineKeys.LIMIT,LIMIT },
+                {RedmineKeys.OFFSET,OFFSET }
+            });
+
+            Assert.IsNotNull(result, "Users list is null.");
+            CollectionAssert.AllItemsAreNotNull(result.Objects, "List contains null user!");
+            CollectionAssert.AllItemsAreUnique(result.Objects, "Users not unique!");
+        }
+
+        [TestMethod]
+        public void Should_Get_Users_By_State()
+        {
+            var users = redmineManager.GetObjects<User>(new NameValueCollection()
             {
-                redmineManager.CreateObject<User>(redmineUser);
-            }
-            catch (RedmineException exc)
-            {
-                StringAssert.Contains(exc.Message, "invalid or missing attribute parameters");
-                return;
-            }
-            Assert.Fail("No exception was thrown.");
+                { RedmineKeys.STATUS, ((int)USER_STATE).ToString(CultureInfo.InvariantCulture) }
+            });
+
+            Assert.IsNotNull(users, "Users list is null.");
+            CollectionAssert.AllItemsAreNotNull(users, "Users contains null items.");
+            CollectionAssert.AllItemsAreUnique(users, "Users items are not unique.");
+            CollectionAssert.AllItemsAreInstancesOfType(users, typeof(User), "Not all items are of type User.");
         }
 
         [TestMethod]
-        public void RedmineUser_ShouldCreateUser()
+        public void Should_Add_User()
         {
-            User redmineUser = new User();
-            redmineUser.Login = login;
-            redmineUser.FirstName = firstName;
-            redmineUser.LastName = lastName;
-            redmineUser.Email = email;
-            redmineUser.Password = userPassword;
-            redmineUser.AuthenticationModeId = null;
-            redmineUser.MustChangePassword = false;
-            redmineUser.CustomFields = new List<IssueCustomField>();
-            redmineUser.CustomFields.Add(new IssueCustomField { Id = customFieldId, Values = new List<CustomFieldValue> { new CustomFieldValue { Info = customFieldValue } } });
+            User user = new User();
+            user.Login = USER_LOGIN;
+            user.FirstName = USER_FIRST_NAME;
+            user.LastName = USER_LAST_NAME;
+            user.Email = USER_EMAIL;
+            user.Password = USER_PASSWORD;
+            user.AuthenticationModeId = null;
+            user.MustChangePassword = false;
+            user.CustomFields = new List<IssueCustomField>();
+            user.CustomFields.Add(new IssueCustomField { Id = USER_CUSTOM_FIELD_ID, Values = new List<CustomFieldValue> { new CustomFieldValue { Info = USER_CUSTOM_FIELD_VALUE } } });
 
             User savedRedmineUser = null;
             try
             {
-                savedRedmineUser = redmineManager.CreateObject<User>(redmineUser);
+                savedRedmineUser = redmineManager.CreateObject<User>(user);
             }
             catch (RedmineException)
             {
@@ -127,29 +144,31 @@ namespace UnitTest_redmine_net40_api
                 return;
             }
 
-            Assert.AreEqual(redmineUser.Login, savedRedmineUser.Login);
+            Assert.IsNotNull(savedRedmineUser, "Created user is null.");
+            Assert.AreEqual(user.Login, savedRedmineUser.Login, "User login is invalid.");
+            Assert.AreEqual(user.Email, savedRedmineUser.Email, "User email is invalid.");
         }
 
         [TestMethod]
-        public void RedmineUser_ShouldUpdateUser()
+        public void Should_Update_User()
         {
-            User user = redmineManager.GetObject<User>(userIdToModify, null);
-            user.FirstName = userFirstNameUpdate;
-            redmineManager.UpdateObject<User>(userIdToModify, user);
+            User user = redmineManager.GetObject<User>(USER_ID_TO_UPDATE, null);
+            user.FirstName = USER_FIRST_NAME_UPDATED;
+            redmineManager.UpdateObject<User>(USER_ID_TO_UPDATE, user);
 
-            User updatedUser = redmineManager.GetObject<User>(userIdToModify, null);
+            User updatedUser = redmineManager.GetObject<User>(USER_ID_TO_UPDATE, null);
 
-            Assert.AreEqual(user.FirstName, updatedUser.FirstName);
+            Assert.IsNotNull(updatedUser, "Updated user is null.");
+            Assert.AreEqual(user.FirstName, updatedUser.FirstName, "User first name was not updated.");
         }
 
         [TestMethod]
-        public void RedmineUser_ShouldDeleteUser()
+        public void Should_Delete_User()
         {
-
             User user = null;
             try
             {
-                user = redmineManager.GetObject<User>(userIdToDelete, null);
+                user = redmineManager.GetObject<User>(USER_ID_TO_DELETE, null);
             }
             catch (RedmineException)
             {
@@ -162,7 +181,7 @@ namespace UnitTest_redmine_net40_api
             {
                 try
                 {
-                    redmineManager.DeleteObject<User>(userIdToDelete, null);
+                    redmineManager.DeleteObject<User>(USER_ID_TO_DELETE, null);
                 }
                 catch (RedmineException)
                 {
@@ -172,7 +191,7 @@ namespace UnitTest_redmine_net40_api
 
                 try
                 {
-                    user = redmineManager.GetObject<User>(userIdToDelete, null);
+                    user = redmineManager.GetObject<User>(USER_ID_TO_DELETE, null);
                 }
                 catch (RedmineException exc)
                 {
@@ -186,61 +205,61 @@ namespace UnitTest_redmine_net40_api
         }
 
         [TestMethod]
-        public void RedmineUser_ShouldAddUserToGroup()
+        public void Should_Add_User_To_Group()
         {
-            redmineManager.AddUserToGroup(groupId, int.Parse(userId));
+            redmineManager.AddUserToGroup(GROUP_ID, int.Parse(USER_ID));
 
-            User user = redmineManager.GetObject<User>(userId.ToString(), new NameValueCollection { { "include", "groups" } });
+            User user = redmineManager.GetObject<User>(USER_ID.ToString(), new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.GROUPS} });
 
-            Assert.IsTrue(user.Groups.Find(g => g.Id == groupId) != null);
+            Assert.IsNotNull(user, "User is null.");
+            Assert.IsNotNull(user.Groups, "Groups list is null.");
+            Assert.IsTrue(user.Groups.Find(g => g.Id == GROUP_ID) != null, "User was not added to group.");
         }
 
         [TestMethod]
-        public void RedmineUser_ShouldDeleteUserFromGroup()
-        {
-            redmineManager.RemoveUserFromGroup(groupId, int.Parse(userId));
-
-            User user = redmineManager.GetObject<User>(userId.ToString(), new NameValueCollection { { "include", "groups" } });
-
-            Assert.IsTrue(user.Groups == null || user.Groups.Find(g => g.Id == groupId) == null);
-        }
-
-        [TestMethod]
-        public void RedmineUser_ShouldReturnAllUsers()
-        {
-            IList<User> users = redmineManager.GetObjects<User>(new NameValueCollection { { "include", "groups,memberships" } });
-
-            Assert.IsNotNull(users);
-        }
-
-        [TestMethod]
-        public void RedmineUser_ShouldGetUserByGroup()
+        public void Should_Get_User_By_Group()
         {
             var users = redmineManager.GetObjects<User>(new NameValueCollection()
             {
-                {RedmineKeys.STATUS,((int)UserStatus.STATUS_ACTIVE).ToString(CultureInfo.InvariantCulture)},
-                {RedmineKeys.GROUP_ID,groupId.ToString(CultureInfo.InvariantCulture)}
+                {RedmineKeys.GROUP_ID,GROUP_ID.ToString(CultureInfo.InvariantCulture)}
             });
 
-            Assert.IsNotNull(users);
+            Assert.IsNotNull(users, "Users list is null.");
+            CollectionAssert.AllItemsAreNotNull(users, "List contains null user!");
+            CollectionAssert.AllItemsAreUnique(users, "Users not unique!");
         }
 
-        //[TestMethod]
-        //public void RedmineUser_ShouldCompareUsers()
-        //{
-        //    RedmineManager redmineSecondManager;
+        [TestMethod]
+        public void Should_Delete_User_From_Group()
+        {
+            redmineManager.RemoveUserFromGroup(GROUP_ID, int.Parse(USER_ID));
 
-        //    #if JSON
-        //        redmineSecondManager = new RedmineManager(uri, apiKey, MimeFormat.xml);
-        //    #else
-        //        redmineSecondManager = new RedmineManager(uri, apiKey, MimeFormat.json);
-        //    #endif
+            User user = redmineManager.GetObject<User>(USER_ID.ToString(), new NameValueCollection { {RedmineKeys.INCLUDE, RedmineKeys.GROUPS } });
 
-        //    User user = redmineManager.GetObject<User>(userId, new NameValueCollection { { "include", "groups,memberships" } });
-        //    User secondUser = redmineSecondManager.GetObject<User>(userId, new NameValueCollection { { "include", "groups,memberships" } });
+            Assert.IsNotNull(user, "User object is null.");
+            Assert.IsTrue(user.Groups == null || user.Groups.Find(g => g.Id == GROUP_ID) == null, "User was not removed from group.");
+        }
 
-        //    Assert.IsTrue(user.Equals(secondUser));
-        //}
-        #endregion Tests
+        [TestMethod]
+        public void Should_Get_All_Users_With_Metadata()
+        {
+            IList<User> users = redmineManager.GetObjects<User>(new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.GROUPS+","+RedmineKeys.MEMBERSHIPS } });
+
+            Assert.IsNotNull(users, "Users list is null.");
+            CollectionAssert.AllItemsAreInstancesOfType(users.ToList(), typeof(User), "Not all items are of type User.");
+            CollectionAssert.AllItemsAreNotNull(users.ToList(), "Users list contains null items.");
+            CollectionAssert.AllItemsAreUnique(users.ToList(), "Users are not unique.");
+        }
+
+        [TestMethod]
+        public void Should_Compare_Users()
+        {
+            var user = redmineManager.GetObject<User>(USER_ID, new NameValueCollection() { { RedmineKeys.INCLUDE, RedmineKeys.GROUPS + "," + RedmineKeys.MEMBERSHIPS } });
+            var userToCompare = redmineManager.GetObject<User>(USER_ID, new NameValueCollection() { { RedmineKeys.INCLUDE, RedmineKeys.GROUPS + "," + RedmineKeys.MEMBERSHIPS } });
+
+            Assert.IsNotNull(user, "User is null.");
+            Assert.IsTrue(user.Equals(userToCompare), "Users are not equal.");
+        }
+      
     }
 }
