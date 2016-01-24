@@ -86,7 +86,7 @@ namespace Redmine.Net.Api.Extensions
                     }
                     catch (WebException wex)
                     {
-                        wex.HandleWebException("DeleteWikiPageAsync", redmineManager.MimeFormat);
+                        wex.HandleWebException("GetWikiPageAsync", redmineManager.MimeFormat);
                     }
                     return null; 
                 }
@@ -174,8 +174,16 @@ namespace Redmine.Net.Api.Extensions
                 var url = UrlHelper.GetGetUrl<T>(redmineManager, id);
                 using (var wc = redmineManager.CreateWebClient(parameters))
                 {
-                    var response = wc.DownloadString(url);
-                    return RedmineSerializer.Deserialize<T>(response, redmineManager.MimeFormat);
+                    try
+                    {
+                        var response = wc.DownloadString(url);
+                        return RedmineSerializer.Deserialize<T>(response, redmineManager.MimeFormat);
+                    }
+                    catch (WebException wex)
+                    {
+                        wex.HandleWebException("GetObject", redmineManager.MimeFormat);
+                    }
+                    return null; 
                 }
             }, TaskCreationOptions.LongRunning);
             return task;
