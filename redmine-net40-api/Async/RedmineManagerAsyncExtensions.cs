@@ -112,7 +112,7 @@ namespace Redmine.Net.Api.Extensions
         {
             var data = redmineManager.MimeFormat == MimeFormat.xml
                    ? "<user_id>" + userId + "</user_id>"
-                   : "user_id:" + userId;
+                   : "{\"user_id\":\"" + userId + "\"}";
             var task = Task.Factory.StartNew(() =>
             {
                 var uri = UrlHelper.GetAddUserToGroupUrl(redmineManager, groupId);
