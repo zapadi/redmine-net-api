@@ -86,7 +86,7 @@ namespace UnitTest_redmine_net40_api
         }
 
         [TestMethod]
-        public void RedmineAttachments_ShouldGetById()
+        public void Should_Get_Attachment_By_Id()
         {
             var attachment = redmineManager.GetObject<Attachment>(ATTACHMENT_ID, null);
 
