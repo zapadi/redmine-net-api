@@ -11,84 +11,78 @@ namespace UnitTest_redmine_net40_api
     [TestClass]
     public class IssueTests
     {
+        private RedmineManager redmineManager;
+
         #region Constants
         //filters
         private const int NUMBER_OF_PAGINATED_ISSUES = 3;
-        private const string PROJECT_ID = "9";
-        private const string SUBPROJECT_ID = "10";
+        private const int OFFSET = 1;
+        private const string PROJECT_ID = "redmine-test";
+        private const string SUBPROJECT_ID = "test";
         private const string ALL_SUBPROJECTS = "!*";
-        private const string TRACKER_ID = "4";
+        private const string TRACKER_ID = "2";
         private const string STATUS_ID = "*";
         private const string ASSIGNED_TO_ID = "me";
-        private const string CUSTOM_FIELD_NAME = "cf_13";
-        private const string CUSTOM_FIELD_VALUE = "xxx";
-        private const string ISSUE_ID = "19";
+        private const string CUSTOM_FIELD_NAME = "cf_1";
+        private const string CUSTOM_FIELD_VALUE = "Testx";
+        private const string ISSUE_ID = "1";
 
         //issue data - used for create
-        private const int NEW_ISSUE_PROJECT_ID = 10;
-        private const int NEW_ISSUE_TRACKER_ID = 4;
-        private const int NEW_ISSUE_STATUS_ID = 5;
-        private const int NEW_ISSUE_PRIORITY_ID = 8;
+        private const int NEW_ISSUE_PROJECT_ID = 1;
+        private const int NEW_ISSUE_TRACKER_ID = 2;
+        private const int NEW_ISSUE_STATUS_ID = 4;
+        private const int NEW_ISSUE_PRIORITY_ID = 2;
         private const string NEW_ISSUE_SUBJECT = "Issue created using Rest API";
         private const string NEW_ISSUE_DESCRIPTION = "Issue description...";
-        private const int NEW_ISSUE_CATEGORY_ID = 11;
+        private const int NEW_ISSUE_CATEGORY_ID = 1;
         private const int NEW_ISSUE_FIXED_VERSION_ID = 9;
-        private const int NEW_ISSUE_ASSIGNED_TO_ID = 8;
-        private const int NEW_ISSUE_PARENT_ISSUE_ID = 19;
-        private const int NEW_ISSUE_CUSTOM_FIELD_ID = 13;
+        private const int NEW_ISSUE_ASSIGNED_TO_ID = 5;
+        private const int NEW_ISSUE_PARENT_ISSUE_ID = 1;
+        private const int NEW_ISSUE_CUSTOM_FIELD_ID = 1;
         private const string NEW_ISSUE_CUSTOM_FIELD_VALUE = "Issue custom field completed";
         private const bool NEW_ISSUE_IS_PRIVATE = true;
         private const int NEW_ISSUE_ESTIMATED_HOURS = 12;
         private readonly DateTime newIssueStartDate = DateTime.Now;
         private readonly DateTime newIssueDueDate = DateTime.Now.AddDays(10);
-        private const int NEW_ISSUE_FIRST_WATCHER_ID = 2;
-        private const int NEW_ISSUE_SECOND_WATCHER_ID = 8;
+        private const int NEW_ISSUE_FIRST_WATCHER_ID = 1;
+        private const int NEW_ISSUE_SECOND_WATCHER_ID = 5;
 
         //issue data - used for update
-        private const string UPDATED_ISSUE_ID = "76";
+        private const string UPDATED_ISSUE_ID = "7";
         private const string UPDATED_ISSUE_SUBJECT = "Issue updated subject";
         private const string UPDATED_ISSUE_DESCRIPTION = null;
         private readonly DateTime? updatedIssueStartDate = null;
         private readonly DateTime updatedIssueDueDate = DateTime.Now.AddMonths(1);
-        private const int UPDATED_ISSUE_PROJECT_ID = 10;
+        private const int UPDATED_ISSUE_PROJECT_ID = 1;
         private const int UPDATED_ISSUE_TRACKER_ID = 3;
-        private const int UPDATED_ISSUE_PRIORITY_ID = 9;
-        private const int UPDATED_ISSUE_CATEGORY_ID = 10;
-        private const int UPDATED_ISSUE_ASSIGNED_TO_ID = 2;
-        private const int UPDATED_ISSUE_PARENT_ISSUE_ID = 20;
-        private const int UPDATED_ISSUE_CUSTOM_FIELD_ID = 13;
+        private const int UPDATED_ISSUE_PRIORITY_ID = 2;
+        private const int UPDATED_ISSUE_CATEGORY_ID = 1;
+        private const int UPDATED_ISSUE_ASSIGNED_TO_ID = 1;
+        private const int UPDATED_ISSUE_PARENT_ISSUE_ID = 2;
+        private const int UPDATED_ISSUE_CUSTOM_FIELD_ID = 1;
         private const string UPDATED_ISSUE_CUSTOM_FIELD_VALUE = "Another custom field completed";
         private const int UPDATED_ISSUE_ESTIMATED_HOURS = 23;
         private const string UPDATED_ISSUE_NOTES = "A lot is changed";
         private const bool UPDATED_ISSUE_PRIVATE_NOTES = true;
 
-        private const string DELETED_ISSUE_ID = "76";
+        private const string DELETED_ISSUE_ID = "7";
 
         //watcher
-        private const int WATCHER_ISSUE_ID = 19;
-        private const int WATCHER_USER_ID = 2;
+        private const int WATCHER_ISSUE_ID = 1;
+        private const int WATCHER_USER_ID = 5;
 
         //issue data - for clone
         private const string ISSUE_TO_CLONE_SUBJECT = "Issue to clone";
-        private const int ISSUE_TO_CLONE_CUSTOM_FIELD_ID = 13;
+        private const int ISSUE_TO_CLONE_CUSTOM_FIELD_ID = 1;
         private const string ISSUE_TO_CLONE_CUSTOM_FIELD_VALUE = "Issue to clone custom field value";
-        private const int CLONED_ISSUE_CUSTOM_FIELD_ID = 14;
+        private const int CLONED_ISSUE_CUSTOM_FIELD_ID = 1;
         private const string CLONED_ISSUE_CUSTOM_FIELD_VALUE = "Cloned issue custom field value";
         #endregion Constants
-
-        #region Properties
-        private RedmineManager redmineManager;
-        private string uri;
-        private string apiKey;
-        #endregion Properties
 
         #region Initializes
         [TestInitialize]
         public void Initialize()
         {
-            uri = Helper.Uri;
-            apiKey = Helper.ApiKey;
-
             SetMimeTypeJson();
             SetMimeTypeXml();
         }
@@ -96,98 +90,127 @@ namespace UnitTest_redmine_net40_api
         [Conditional("JSON")]
         private void SetMimeTypeJson()
         {
-            redmineManager = new RedmineManager(uri, apiKey, MimeFormat.json);
+            redmineManager = new RedmineManager(Helper.Uri, Helper.ApiKey, MimeFormat.json);
         }
 
         [Conditional("XML")]
         private void SetMimeTypeXml()
         {
-            redmineManager = new RedmineManager(uri, apiKey);
+            redmineManager = new RedmineManager(Helper.Uri, Helper.ApiKey);
         }
         #endregion Initialize
 
         #region Tests
         [TestMethod]
-        public void RedmineIssues_ShouldReturnAllIssues()
+        public void Should_Get_All_Issues()
         {
             var issues = redmineManager.GetObjects<Issue>(null);
 
-            Assert.IsNotNull(issues);
+            Assert.IsNotNull(issues, "Issues is null.");
+            CollectionAssert.AllItemsAreInstancesOfType(issues, typeof(Issue), "Not all items are of type issue.");
+            CollectionAssert.AllItemsAreNotNull(issues, "Issues list contains null items.");
+            CollectionAssert.AllItemsAreUnique(issues, "Issues are not unique.");
         }
 
         [TestMethod]
-        public void RedmineIssues_ShouldReturnPaginatedIssues()
+        public void Should_Get_Paginated_Issues()
         {
-            var issues = redmineManager.GetObjects<Issue>(new NameValueCollection { { "offset", "1" }, { "limit", NUMBER_OF_PAGINATED_ISSUES.ToString() }, { "sort", "id:desc" } });
+            var issues = redmineManager.GetPaginatedObjects<Issue>(new NameValueCollection { { RedmineKeys.OFFSET, OFFSET.ToString() }, { RedmineKeys.LIMIT, NUMBER_OF_PAGINATED_ISSUES.ToString() }, { "sort", "id:desc" } });
 
-            Assert.IsNotNull(issues);
-            Assert.IsTrue(issues.Count <= NUMBER_OF_PAGINATED_ISSUES, "number of issues <= " + NUMBER_OF_PAGINATED_ISSUES.ToString());
+            Assert.IsNotNull(issues.Objects, "Issues is null.");
+            CollectionAssert.AllItemsAreInstancesOfType(issues.Objects, typeof(Issue), "Not all items are of type issue.");
+            CollectionAssert.AllItemsAreNotNull(issues.Objects, "Issues list contains null items.");
+            CollectionAssert.AllItemsAreUnique(issues.Objects, "Issues are not unique.");
+            Assert.IsTrue(issues.Objects.Count <= NUMBER_OF_PAGINATED_ISSUES, "number of issues <= " + NUMBER_OF_PAGINATED_ISSUES.ToString());
         }
 
         [TestMethod]
-        public void RedmineIssues_ShouldReturnFilteredIssuesByProjectId()
+        public void Should_Get_Issues_By_Project_Id()
         {
-            var issues = redmineManager.GetObjects<Issue>(new NameValueCollection { { "project_id", PROJECT_ID } });
-            Assert.IsNotNull(issues);
+            var issues = redmineManager.GetObjects<Issue>(new NameValueCollection { { RedmineKeys.PROJECT_ID, PROJECT_ID } });
+
+            Assert.IsNotNull(issues, "Issues is null.");
+            CollectionAssert.AllItemsAreInstancesOfType(issues, typeof(Issue), "Not all items are of type issue.");
+            CollectionAssert.AllItemsAreNotNull(issues, "Issues list contains null items.");
+            CollectionAssert.AllItemsAreUnique(issues, "Issues are not unique.");
         }
 
         [TestMethod]
-        public void RedmineIssues_ShouldReturnFilteredIssuesBySubprojectId()
+        public void Should_Get_Issues_By_subproject_Id()
         {
-            var issues = redmineManager.GetObjects<Issue>(new NameValueCollection { { "subproject_id", SUBPROJECT_ID } });
-            Assert.IsNotNull(issues);
+            var issues = redmineManager.GetObjects<Issue>(new NameValueCollection { { RedmineKeys.SUBPROJECT_ID, SUBPROJECT_ID } });
+            
+            Assert.IsNotNull(issues, "Issues is null.");
+            CollectionAssert.AllItemsAreInstancesOfType(issues, typeof(Issue), "Not all items are of type issue.");
+            CollectionAssert.AllItemsAreNotNull(issues, "Issues list contains null items.");
+            CollectionAssert.AllItemsAreUnique(issues, "Issues are not unique.");
         }
 
         [TestMethod]
-        public void RedmineIssues_ShouldReturnFilteredIssues_ByProjectWithoutSubprojects()
+        public void Should_Get_Issues_By_Project_Without_Subproject()
         {
-            var issues = redmineManager.GetObjects<Issue>(new NameValueCollection { { "project_id", PROJECT_ID }, { "subproject_id", ALL_SUBPROJECTS } });
+            var issues = redmineManager.GetObjects<Issue>(new NameValueCollection { { RedmineKeys.PROJECT_ID, PROJECT_ID }, { RedmineKeys.SUBPROJECT_ID, ALL_SUBPROJECTS } });
 
-            Assert.IsNotNull(issues);
+            Assert.IsNotNull(issues, "Issues is null.");
+            CollectionAssert.AllItemsAreInstancesOfType(issues, typeof(Issue), "Not all items are of type issue.");
+            CollectionAssert.AllItemsAreNotNull(issues, "Issues list contains null items.");
+            CollectionAssert.AllItemsAreUnique(issues, "Issues are not unique.");
         }
 
         [TestMethod]
-        public void RedmineIssues_ShouldReturnFilteredIssuesByTracker()
+        public void Should_Get_Issues_By_Tracker()
         {
-            var issues = redmineManager.GetObjects<Issue>(new NameValueCollection { { "tracker_id", TRACKER_ID } });
+            var issues = redmineManager.GetObjects<Issue>(new NameValueCollection { { RedmineKeys.TRACKER_ID, TRACKER_ID } });
 
-            Assert.IsNotNull(issues);
+            Assert.IsNotNull(issues, "Issues is null.");
+            CollectionAssert.AllItemsAreInstancesOfType(issues, typeof(Issue), "Not all items are of type issue.");
+            CollectionAssert.AllItemsAreNotNull(issues, "Issues list contains null items.");
+            CollectionAssert.AllItemsAreUnique(issues, "Issues are not unique.");
         }
 
         [TestMethod]
-        public void RedmineIssues_ShouldReturnFilteredIssuesByStatus()
+        public void Should_Get_Issues_By_Status()
         {
-            var issues = redmineManager.GetObjects<Issue>(new NameValueCollection { { "status_id", STATUS_ID } });
-            Assert.IsNotNull(issues);
+            var issues = redmineManager.GetObjects<Issue>(new NameValueCollection { { RedmineKeys.STATUS_ID, STATUS_ID } });
+            Assert.IsNotNull(issues, "Issues is null.");
+            CollectionAssert.AllItemsAreInstancesOfType(issues, typeof(Issue), "Not all items are of type issue.");
+            CollectionAssert.AllItemsAreNotNull(issues, "Issues list contains null items.");
+            CollectionAssert.AllItemsAreUnique(issues, "Issues are not unique.");
         }
 
         [TestMethod]
-        public void RedmineIssues_ShouldReturnFilteredIssuesByAsignee()
+        public void Should_Get_Issues_By_Asignee()
         {
-            var issues = redmineManager.GetObjects<Issue>(new NameValueCollection { { "assigned_to_id", ASSIGNED_TO_ID } });
+            var issues = redmineManager.GetObjects<Issue>(new NameValueCollection { { RedmineKeys.ASSIGNED_TO_ID, ASSIGNED_TO_ID } });
 
-            Assert.IsNotNull(issues);
+            Assert.IsNotNull(issues, "Issues is null.");
+            CollectionAssert.AllItemsAreInstancesOfType(issues, typeof(Issue), "Not all items are of type issue.");
+            CollectionAssert.AllItemsAreNotNull(issues, "Issues list contains null items.");
+            CollectionAssert.AllItemsAreUnique(issues, "Issues are not unique.");
         }
 
         [TestMethod]
-        public void RedmineIssues_ShouldReturnFilteredIssuesByCustomField()
+        public void Should_Get_Issues_By_Custom_Field()
         {
             var issues = redmineManager.GetObjects<Issue>(new NameValueCollection { { CUSTOM_FIELD_NAME, CUSTOM_FIELD_VALUE } });
 
-            Assert.IsNotNull(issues);
+            Assert.IsNotNull(issues, "Issues is null.");
+            CollectionAssert.AllItemsAreInstancesOfType(issues, typeof(Issue), "Not all items are of type issue.");
+            CollectionAssert.AllItemsAreNotNull(issues, "Issues list contains null items.");
+            CollectionAssert.AllItemsAreUnique(issues, "Issues are not unique.");
         }
 
         [TestMethod]
-        public void RedmineIssues_ShouldReturnIssueById()
+        public void Should_Get_Issue_By_Id()
         {
-            var issue = redmineManager.GetObject<Issue>(ISSUE_ID, new NameValueCollection { { "include", "children,attachments,relations,changesets,journals,watchers" } });
+            var issue = redmineManager.GetObject<Issue>(ISSUE_ID, new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.CHILDREN + "," + RedmineKeys.ATTACHMENTS + "," + RedmineKeys.RELATIONS + "," + RedmineKeys.CHANGESETS + "," + RedmineKeys.JOURNALS + "," + RedmineKeys.WATCHERS } });
 
-            Assert.IsNotNull(issue);
-            //TODO: add conditions for all associated data
+            Assert.IsNotNull(issue, "Returned issue is null.");
+            //TODO: add conditions for all associated data if nedeed
         }
 
         [TestMethod]
-        public void RedmineIssues_ShouldCreateIssue()
+        public void Should_Add_Issue()
         {
             Issue issue = new Issue
             {
@@ -222,12 +245,13 @@ namespace UnitTest_redmine_net40_api
 
             Issue savedIssue = redmineManager.CreateObject(issue);
 
-            Assert.AreEqual(issue.Subject, savedIssue.Subject);
-            Assert.AreNotEqual(issue, savedIssue);
+            Assert.IsNotNull(savedIssue, "Saved issue is null.");
+            Assert.AreEqual(issue.Subject, savedIssue.Subject, "Issue subject is invalid.");
+            Assert.AreNotEqual(issue, savedIssue, "Saved issue was not updated.");
         }
 
         [TestMethod]
-        public void RedmineIssues_ShouldUpdateIssue()
+        public void Should_Update_Issue()
         {
             var issue = redmineManager.GetObject<Issue>(UPDATED_ISSUE_ID, new NameValueCollection { { "include", "children,attachments,relations,changesets,journals,watchers" } });
             issue.Subject = UPDATED_ISSUE_SUBJECT;
@@ -241,7 +265,8 @@ namespace UnitTest_redmine_net40_api
             issue.AssignedTo.Id = UPDATED_ISSUE_ASSIGNED_TO_ID;
             issue.ParentIssue.Id = UPDATED_ISSUE_PARENT_ISSUE_ID;
 
-            issue.CustomFields.Add(new IssueCustomField { Id = UPDATED_ISSUE_CUSTOM_FIELD_ID, Values = new List<CustomFieldValue> { new CustomFieldValue { Info = UPDATED_ISSUE_CUSTOM_FIELD_VALUE } } });
+            if (issue.CustomFields != null)
+                issue.CustomFields.Add(new IssueCustomField { Id = UPDATED_ISSUE_CUSTOM_FIELD_ID, Values = new List<CustomFieldValue> { new CustomFieldValue { Info = UPDATED_ISSUE_CUSTOM_FIELD_VALUE } } });
             issue.EstimatedHours = UPDATED_ISSUE_ESTIMATED_HOURS;
             issue.Notes = UPDATED_ISSUE_NOTES;
             issue.PrivateNotes = UPDATED_ISSUE_PRIVATE_NOTES;
@@ -250,11 +275,13 @@ namespace UnitTest_redmine_net40_api
 
             var updatedIssue = redmineManager.GetObject<Issue>(UPDATED_ISSUE_ID, new NameValueCollection { { "include", "children,attachments,relations,changesets,journals,watchers" } });
 
-            Assert.AreEqual(issue.Subject, updatedIssue.Subject);
+            Assert.IsNotNull(updatedIssue, "Updated issue is null.");
+            Assert.AreEqual(issue.Subject, updatedIssue.Subject, "Issue subject is invalid.");
+          
         }
 
         [TestMethod]
-        public void RedmineIssues_ShouldDeleteIssue()
+        public void Should_Delete_Issue()
         {
             try
             {
@@ -279,36 +306,40 @@ namespace UnitTest_redmine_net40_api
         }
 
         [TestMethod]
-        public void RedmineIssues_ShouldAddWatcher()
+        public void Should_Add_Watcher_To_Issue()
         {
             redmineManager.AddWatcherToIssue(WATCHER_ISSUE_ID, WATCHER_USER_ID);
 
-            Issue issue = redmineManager.GetObject<Issue>(WATCHER_ISSUE_ID.ToString(), new NameValueCollection { { "include", "watchers" } });
+            Issue issue = redmineManager.GetObject<Issue>(WATCHER_ISSUE_ID.ToString(), new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.WATCHERS } });
 
-            Assert.IsTrue(((List<Watcher>)issue.Watchers).Find(w => w.Id == WATCHER_USER_ID) != null);
+            Assert.IsNotNull(issue, "Issue is null.");
+            Assert.IsNotNull(issue.Watchers, "Watchers list is null.");
+            Assert.IsTrue(((List<Watcher>)issue.Watchers).Find(w => w.Id == WATCHER_USER_ID) != null, "Watcher was not added.");
         }
 
         [TestMethod]
-        public void RedmineIssues_ShouldRemoveWatcher()
+        public void Should_Remove_Watcher_From_Issue()
         {
             redmineManager.RemoveWatcherFromIssue(WATCHER_ISSUE_ID, WATCHER_USER_ID);
 
-            Issue issue = redmineManager.GetObject<Issue>(WATCHER_ISSUE_ID.ToString(), new NameValueCollection { { "include", "watchers" } });
+            Issue issue = redmineManager.GetObject<Issue>(WATCHER_ISSUE_ID.ToString(), new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.WATCHERS } });
 
-            Assert.IsTrue(issue.Watchers == null || ((List<Watcher>)issue.Watchers).Find(w => w.Id == WATCHER_USER_ID) == null);
+            Assert.IsNotNull(issue, "Issue is null.");
+            Assert.IsTrue(issue.Watchers == null || ((List<Watcher>)issue.Watchers).Find(w => w.Id == WATCHER_USER_ID) == null, "Watcher was not removed.");
         }
 
         [TestMethod]
-        public void RedmineIssues_ShouldCompare()
+        public void Should_Compare_Issues()
         {
-            var issue = redmineManager.GetObject<Issue>(ISSUE_ID, new NameValueCollection { { "include", "children,attachments,relations,changesets,journals,watchers" } });
-            var issueToCompare = redmineManager.GetObject<Issue>(ISSUE_ID, new NameValueCollection { { "include", "children,attachments,relations,changesets,journals,watchers" } });
+            var issue = redmineManager.GetObject<Issue>(ISSUE_ID, new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.CHILDREN+","+RedmineKeys.ATTACHMENTS+","+RedmineKeys.RELATIONS+","+RedmineKeys.CHANGESETS+","+RedmineKeys.JOURNALS+","+RedmineKeys.WATCHERS } });
+            var issueToCompare = redmineManager.GetObject<Issue>(ISSUE_ID, new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.CHILDREN + "," + RedmineKeys.ATTACHMENTS + "," + RedmineKeys.RELATIONS + "," + RedmineKeys.CHANGESETS + "," + RedmineKeys.JOURNALS + "," + RedmineKeys.WATCHERS } });
 
-            Assert.IsTrue(issue.Equals(issueToCompare));
+            Assert.IsNotNull(issue, "Issue is null");
+            Assert.IsTrue(issue.Equals(issueToCompare), "Issues are not equal.");
         }
 
         [TestMethod]
-        public void RedmineIssues_ShouldClone()
+        public void Should_Clone_Issue()
         {
             var issueToClone = new Issue
             {
