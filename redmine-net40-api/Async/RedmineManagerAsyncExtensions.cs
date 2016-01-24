@@ -79,8 +79,16 @@ namespace Redmine.Net.Api.Extensions
                 var uri = UrlHelper.GetWikiPageUrl(redmineManager, projectId, parameters, pageName, version);
                 using (var wc = redmineManager.CreateWebClient(parameters))
                 {
-                    var response = wc.DownloadString(uri);
-                    return RedmineSerializer.Deserialize<WikiPage>(response, redmineManager.MimeFormat);
+                    try
+                    {
+                        var response = wc.DownloadString(uri);
+                        return RedmineSerializer.Deserialize<WikiPage>(response, redmineManager.MimeFormat);
+                    }
+                    catch (WebException wex)
+                    {
+                        wex.HandleWebException("DeleteWikiPageAsync", redmineManager.MimeFormat);
+                    }
+                    return null; 
                 }
             }, TaskCreationOptions.LongRunning);
             return task;
