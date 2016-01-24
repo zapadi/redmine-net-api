@@ -201,7 +201,7 @@ namespace Redmine.Net.Api.Types
             return (
                 Id == other.Id
                 && Login.Equals(other.Login)
-                && Password.Equals(other.Password)
+                //&& Password.Equals(other.Password)
                 && FirstName.Equals(other.FirstName)
                 && LastName.Equals(other.LastName)
                 && Email.Equals(other.Email)
@@ -211,9 +211,9 @@ namespace Redmine.Net.Api.Types
                 && LastLoginOn == other.LastLoginOn
                 && Status == other.Status
                 && MustChangePassword == other.MustChangePassword
-                && CustomFields.Equals(other.CustomFields)
-                && Memberships.Equals(other.Memberships)
-                && Groups.Equals(other.Groups)
+                && (CustomFields != null ? CustomFields.Equals<IssueCustomField>(other.CustomFields) : other.CustomFields == null)
+                && (Memberships != null ? Memberships.Equals<Membership>(other.Memberships): other.Memberships == null)
+                && (Groups != null ? Groups.Equals<UserGroup>(other.Groups) : other.Groups == null)
             );
         }
 
