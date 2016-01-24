@@ -279,7 +279,7 @@ namespace Redmine.Net.Api.Extensions
             var task = Task.Factory.StartNew(() =>
             {
                 var uri = UrlHelper.GetUploadFileUrl(redmineManager);
-                using (var wc = redmineManager.CreateWebClient(null))
+                using (var wc = redmineManager.CreateWebClient(null, true))
                 {
                     var response = wc.UploadData(uri, RedmineManager.POST, data);
 
