@@ -489,22 +489,21 @@ namespace Redmine.Net.Api.Types
             && DueDate == other.DueDate
             && DoneRatio == other.DoneRatio
             && EstimatedHours == other.EstimatedHours
-                && CustomFields.Equals(other.CustomFields)
+            && (CustomFields != null ? CustomFields.Equals<IssueCustomField>(other.CustomFields) : other.CustomFields == null)
             && CreatedOn == other.CreatedOn
             && UpdatedOn == other.UpdatedOn
             && AssignedTo == other.AssignedTo
             && FixedVersion == other.FixedVersion
             && Notes == other.Notes
-                && Watchers.Equals(other.Watchers)
+            && (Watchers != null ? Watchers.Equals<Watcher>(other.Watchers) : other.Watchers == null)
             && ClosedOn == other.ClosedOn
             && SpentHours == other.SpentHours
             && PrivateNotes == other.PrivateNotes
-
-                && Attachments.Equals(other.Attachments)
-                && Changesets.Equals(other.Changesets)
-                && Children.Equals(other.Children)
-                && Journals.Equals(other.Journals)
-                && Relations.Equals(other.Relations)
+            && (Attachments != null ? Attachments.Equals<Attachment>(other.Attachments) : other.Attachments == null)
+            && (Changesets!= null ? Changesets.Equals<ChangeSet>(other.Changesets) : other.Changesets == null)
+            && (Children != null ?  Children.Equals<IssueChild>(other.Children) : other.Children == null)
+            && (Journals != null ? Journals.Equals<Journal>(other.Journals) : other.Journals == null)
+            && (Relations != null ? Relations.Equals<IssueRelation>(other.Relations) : other.Relations == null)
             );
         }
 

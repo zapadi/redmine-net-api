@@ -97,10 +97,10 @@ namespace Redmine.Net.Api.Types
         public bool Equals(Detail other)
         {
             if (other == null) return false;
-            return Property.Equals(other.Property)
-                && StatusId.Equals(other.StatusId)
-                && OldValue.Equals(other.OldValue)
-                && NewValue.Equals(other.NewValue);
+            return (Property != null ? Property.Equals(other.Property) : other.Property == null)
+                && (StatusId != null ? StatusId.Equals(other.StatusId) : other.StatusId == null)
+                && (OldValue != null ? OldValue.Equals(other.OldValue) : other.OldValue == null)
+                && (NewValue != null ? NewValue.Equals(other.NewValue) : other.NewValue == null);
         }
 
         public override bool Equals(object obj)

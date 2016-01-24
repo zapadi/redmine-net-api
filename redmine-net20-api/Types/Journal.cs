@@ -115,7 +115,7 @@ namespace Redmine.Net.Api.Types
                 && User == other.User
                 && Notes == other.Notes
                 && CreatedOn == other.CreatedOn
-                && Equals(Details, other.Details);
+                && (Details != null ? Details.Equals<Detail>(other.Details) : other.Details == null );
         }
 
         public override bool Equals(object obj)
