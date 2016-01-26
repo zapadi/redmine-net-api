@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Redmine.Net.Api.Extensions;
+using System.Threading;
 
 namespace UnitTest_redmine_net40_api
 {
@@ -40,16 +41,28 @@ namespace UnitTest_redmine_net40_api
         }
 
         [TestMethod]
-        public async Task Should_Add_Project_Membership()
+        public void Should_Add_Project_Membership()
         {
             ProjectMembership pm = new ProjectMembership();
             pm.User = new IdentifiableName { Id = USER_ID };
             pm.Roles = new List<MembershipRole>();
             pm.Roles.Add(new MembershipRole { Id = ROLE_ID });
 
-            ProjectMembership updatedPM = await redmineManager.CreateObjectAsync<ProjectMembership>(pm, PROJECT_ID);
+            var updatedPM = redmineManager.CreateObjectAsync<ProjectMembership>(pm, PROJECT_ID);
+            var delay = Delay(3000);
+            int index = Task.WaitAny(updatedPM, delay);
 
-            Assert.IsNotNull(updatedPM, "Project membership is null.");
+            if (index == 0)
+                Assert.IsNotNull(updatedPM.Result, "Project membership is null.");
+            else
+                Assert.Fail("Operation timeout.");
+        }
+
+        private Task Delay(int milliseconds)       
+        {
+            var tcs = new TaskCompletionSource<object>();
+            new Timer(_ => tcs.SetResult(null)).Change(milliseconds, -1);
+            return tcs.Task;
         }
     }
 }

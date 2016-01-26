@@ -8,7 +8,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>UnitTest_redmine_net40_api</RootNamespace>
     <AssemblyName>UnitTest-redmine-net40-api</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -74,7 +74,6 @@
   </Choose>
   <ItemGroup>
     <Compile Include="AttachmentTests.cs" />
-    <Compile Include="AttachmentTestsAsync.cs" />
     <Compile Include="CustomFieldTests.cs" />
     <Compile Include="GroupTests.cs" />
     <Compile Include="Helper.cs" />
@@ -83,7 +82,6 @@
     <Compile Include="IssueRelationTests.cs" />
     <Compile Include="IssueStatusTests.cs" />
     <Compile Include="IssueTests.cs" />
-    <Compile Include="IssueTestsAsync.cs" />
     <Compile Include="ProjectMembershipTests.cs" />
     <Compile Include="ProjectMembershipTestsAsync.cs" />
     <Compile Include="ProjectTests.cs" />
@@ -94,11 +92,9 @@
     <Compile Include="TimeEntryActivityTests.cs" />
     <Compile Include="TimeEntryTests.cs" />
     <Compile Include="TrackerTests.cs" />
-    <Compile Include="UserTestsAsync.cs" />
     <Compile Include="UserTests.cs" />
     <Compile Include="VersionTests.cs" />
     <Compile Include="WikiPageTests.cs" />
-    <Compile Include="WikiPageTestsAsync.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
