@@ -205,7 +205,7 @@ namespace Redmine.Net.Api.Types
                 && FirstName.Equals(other.FirstName)
                 && LastName.Equals(other.LastName)
                 && Email.Equals(other.Email)
-                && ApiKey.Equals(other.ApiKey)
+				&& (ApiKey != null ? ApiKey.Equals(other.ApiKey) : other.ApiKey == null)
                 && AuthenticationModeId == other.AuthenticationModeId
                 && CreatedOn == other.CreatedOn
                 && LastLoginOn == other.LastLoginOn
