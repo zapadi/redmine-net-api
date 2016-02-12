@@ -190,7 +190,7 @@ namespace Redmine.Net.Api.Types
                 && Identifier.Equals(other.Identifier)
                 && Description.Equals(other.Description)
                 && (Parent != null ? Parent.Equals(other.Parent) : other.Parent == null)
-                && HomePage.Equals(other.HomePage)
+				&& (HomePage != null ? HomePage.Equals(other.HomePage) : other.HomePage == null)
                 && CreatedOn == other.CreatedOn
                 && UpdatedOn == other.UpdatedOn
                 && Status == other.Status
