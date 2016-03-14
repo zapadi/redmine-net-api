@@ -186,6 +186,8 @@ namespace Redmine.Net.Api.Types
             writer.WriteValueOrEmpty<decimal>(Hours, RedmineKeys.HOURS);
             writer.WriteIdIfNotNull(Activity, RedmineKeys.ACTIVITY_ID);
             writer.WriteElementString(RedmineKeys.COMMENTS, Comments);
+
+            writer.WriteArray(CustomFields, RedmineKeys.CUSTOM_FIELDS);
         }
 
         public bool Equals(TimeEntry other)
@@ -201,7 +203,7 @@ namespace Redmine.Net.Api.Types
                 && User == other.User
                 && CreatedOn == other.CreatedOn
                 && UpdatedOn == other.UpdatedOn
-                && (CustomFields!= null ? CustomFields.Equals<IssueCustomField>(other.CustomFields) : other.CustomFields== null));
+                && (CustomFields != null ? CustomFields.Equals<IssueCustomField>(other.CustomFields) : other.CustomFields == null));
         }
 
         public override int GetHashCode()
