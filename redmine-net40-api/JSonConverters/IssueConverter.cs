@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Web.Script.Serialization;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Types;
@@ -50,6 +51,7 @@ namespace Redmine.Net.Api.JSonConverters
                 issue.IsPrivate = dictionary.GetValue<bool>(RedmineKeys.IS_PRIVATE);
                 issue.StartDate = dictionary.GetValue<DateTime?>(RedmineKeys.START_DATE);
                 issue.DueDate = dictionary.GetValue<DateTime?>(RedmineKeys.DUE_DATE);
+                issue.SpentHours = dictionary.GetValue<float>(RedmineKeys.SPENT_HOURS);
                 issue.DoneRatio = dictionary.GetValue<float>(RedmineKeys.DONE_RATIO);
                 issue.EstimatedHours = dictionary.GetValue<float>(RedmineKeys.ESTIMATED_HOURS);
                 issue.ParentIssue = dictionary.GetValueAsIdentifiableName(RedmineKeys.PARENT);
@@ -97,7 +99,10 @@ namespace Redmine.Net.Api.JSonConverters
                 result.WriteDateOrEmpty(entity.DueDate, RedmineKeys.UPDATED_ON);
                 
 				if (entity.DoneRatio != null)
-                    result.Add(RedmineKeys.DONE_RATIO, entity.DoneRatio.ToString());
+                    result.Add(RedmineKeys.DONE_RATIO, entity.DoneRatio.Value.ToString(CultureInfo.InvariantCulture));
+
+                if(entity.SpentHours != null)
+                    result.Add(RedmineKeys.SPENT_HOURS, entity.SpentHours.Value.ToString(CultureInfo.InvariantCulture));
 
                 result.WriteArray(RedmineKeys.UPLOADS, entity.Uploads, new UploadConverter(), serializer);
                 result.WriteArray(RedmineKeys.CUSTOM_FIELDS, entity.CustomFields, new IssueCustomFieldConverter(), serializer);
