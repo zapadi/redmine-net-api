@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "redmine-net20-api", "redmine-net20-api\redmine-net20-api.csproj", "{DA3E3C1B-2C01-4FB5-968B-3769BBF382BD}"
 EndProject
@@ -18,6 +18,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTest-redmine-net45-api", "UnitTest-redmine-net45-api\UnitTest-redmine-net45-api.csproj", "{4CF8E757-9358-4710-9E5E-B301EEE6D73A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTest-redmine-net40-api", "UnitTest-redmine-net40-api\UnitTest-redmine-net40-api.csproj", "{0DE30921-1273-41F6-91D6-AB17EC61E8F0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "redmine-net451-api", "redmine-net451-api\redmine-net451-api.csproj", "{4AB94C09-8CFB-41C6-87D1-6B972E7F9307}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "redmine-net451-api-signed", "redmine-net451-api-signed\redmine-net451-api-signed.csproj", "{6E6E642E-F35A-4EA7-A2D7-16725156BD33}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -206,6 +210,46 @@ Global
 		{0DE30921-1273-41F6-91D6-AB17EC61E8F0}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{0DE30921-1273-41F6-91D6-AB17EC61E8F0}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{0DE30921-1273-41F6-91D6-AB17EC61E8F0}.Release|x86.ActiveCfg = Release|Any CPU
+		{4AB94C09-8CFB-41C6-87D1-6B972E7F9307}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4AB94C09-8CFB-41C6-87D1-6B972E7F9307}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4AB94C09-8CFB-41C6-87D1-6B972E7F9307}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{4AB94C09-8CFB-41C6-87D1-6B972E7F9307}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{4AB94C09-8CFB-41C6-87D1-6B972E7F9307}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4AB94C09-8CFB-41C6-87D1-6B972E7F9307}.DebugJSON|Any CPU.ActiveCfg = Debug|Any CPU
+		{4AB94C09-8CFB-41C6-87D1-6B972E7F9307}.DebugJSON|Any CPU.Build.0 = Debug|Any CPU
+		{4AB94C09-8CFB-41C6-87D1-6B972E7F9307}.DebugJSON|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{4AB94C09-8CFB-41C6-87D1-6B972E7F9307}.DebugJSON|Mixed Platforms.Build.0 = Debug|Any CPU
+		{4AB94C09-8CFB-41C6-87D1-6B972E7F9307}.DebugJSON|x86.ActiveCfg = Debug|Any CPU
+		{4AB94C09-8CFB-41C6-87D1-6B972E7F9307}.DebugXML|Any CPU.ActiveCfg = Debug|Any CPU
+		{4AB94C09-8CFB-41C6-87D1-6B972E7F9307}.DebugXML|Any CPU.Build.0 = Debug|Any CPU
+		{4AB94C09-8CFB-41C6-87D1-6B972E7F9307}.DebugXML|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{4AB94C09-8CFB-41C6-87D1-6B972E7F9307}.DebugXML|Mixed Platforms.Build.0 = Debug|Any CPU
+		{4AB94C09-8CFB-41C6-87D1-6B972E7F9307}.DebugXML|x86.ActiveCfg = Debug|Any CPU
+		{4AB94C09-8CFB-41C6-87D1-6B972E7F9307}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4AB94C09-8CFB-41C6-87D1-6B972E7F9307}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4AB94C09-8CFB-41C6-87D1-6B972E7F9307}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{4AB94C09-8CFB-41C6-87D1-6B972E7F9307}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{4AB94C09-8CFB-41C6-87D1-6B972E7F9307}.Release|x86.ActiveCfg = Release|Any CPU
+		{6E6E642E-F35A-4EA7-A2D7-16725156BD33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E6E642E-F35A-4EA7-A2D7-16725156BD33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E6E642E-F35A-4EA7-A2D7-16725156BD33}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{6E6E642E-F35A-4EA7-A2D7-16725156BD33}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{6E6E642E-F35A-4EA7-A2D7-16725156BD33}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6E6E642E-F35A-4EA7-A2D7-16725156BD33}.DebugJSON|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E6E642E-F35A-4EA7-A2D7-16725156BD33}.DebugJSON|Any CPU.Build.0 = Debug|Any CPU
+		{6E6E642E-F35A-4EA7-A2D7-16725156BD33}.DebugJSON|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{6E6E642E-F35A-4EA7-A2D7-16725156BD33}.DebugJSON|Mixed Platforms.Build.0 = Debug|Any CPU
+		{6E6E642E-F35A-4EA7-A2D7-16725156BD33}.DebugJSON|x86.ActiveCfg = Debug|Any CPU
+		{6E6E642E-F35A-4EA7-A2D7-16725156BD33}.DebugXML|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E6E642E-F35A-4EA7-A2D7-16725156BD33}.DebugXML|Any CPU.Build.0 = Debug|Any CPU
+		{6E6E642E-F35A-4EA7-A2D7-16725156BD33}.DebugXML|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{6E6E642E-F35A-4EA7-A2D7-16725156BD33}.DebugXML|Mixed Platforms.Build.0 = Debug|Any CPU
+		{6E6E642E-F35A-4EA7-A2D7-16725156BD33}.DebugXML|x86.ActiveCfg = Debug|Any CPU
+		{6E6E642E-F35A-4EA7-A2D7-16725156BD33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E6E642E-F35A-4EA7-A2D7-16725156BD33}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E6E642E-F35A-4EA7-A2D7-16725156BD33}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{6E6E642E-F35A-4EA7-A2D7-16725156BD33}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{6E6E642E-F35A-4EA7-A2D7-16725156BD33}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
