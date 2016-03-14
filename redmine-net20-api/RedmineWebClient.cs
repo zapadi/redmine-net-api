@@ -24,7 +24,7 @@ namespace Redmine.Net.Api
     /// </summary>
     public class RedmineWebClient : WebClient
     {
-        const string ua = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:8.0) Gecko/20100101 Firefox/8.0";
+        const string UA = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:8.0) Gecko/20100101 Firefox/8.0";
         //  private readonly CookieContainer container = new CookieContainer();
 
         protected override WebRequest GetWebRequest(Uri address)
@@ -41,20 +41,25 @@ namespace Redmine.Net.Api
                     httpWebRequest.CookieContainer = CookieContainer;
                 }
                 httpWebRequest.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate | DecompressionMethods.None;
+                httpWebRequest.PreAuthenticate = PreAuthenticate;
+                httpWebRequest.KeepAlive = KeepAlive;
+                httpWebRequest.UseDefaultCredentials = UseDefaultCredentials;
+                httpWebRequest.Credentials = Credentials;
+                httpWebRequest.UserAgent = UA;
+                httpWebRequest.CachePolicy = CachePolicy;
 
                 if (UseProxy)
+                {
+                    if (Proxy != null)
+                    {
+                        Proxy.Credentials = Credentials;
+                    }
                     httpWebRequest.Proxy = Proxy;
+                }
 
-                httpWebRequest.PreAuthenticate = PreAuthenticate;
-
-                httpWebRequest.KeepAlive = KeepAlive;
-
-                httpWebRequest.Credentials = Credentials;
                 if (Timeout != null)
                     httpWebRequest.Timeout = Timeout.Value.Milliseconds;
-                httpWebRequest.UseDefaultCredentials = UseDefaultCredentials;
-                httpWebRequest.UserAgent = ua;
-                httpWebRequest.CachePolicy = CachePolicy;
+
                 return httpWebRequest;
             }
 
@@ -71,5 +76,6 @@ namespace Redmine.Net.Api
         public CookieContainer CookieContainer { get; set; }
         public bool PreAuthenticate { get; set; }
         public bool KeepAlive { get; set; }
+
     }
 }

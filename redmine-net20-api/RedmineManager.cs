@@ -19,14 +19,11 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Globalization;
-using System.IO;
-
 using System.Net;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Xml;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Internals;
 using Redmine.Net.Api.Types;
@@ -38,7 +35,7 @@ namespace Redmine.Net.Api
     /// <summary>
     /// The main class to access Redmine API.
     /// </summary>
-	public class RedmineManager : IRedmineManager
+    public class RedmineManager : IRedmineManager
     {
         public const string REQUEST_FORMAT = "{0}/{1}/{2}.{3}";
         public const string FORMAT = "{0}/{1}.{2}";
@@ -87,7 +84,7 @@ namespace Redmine.Net.Api
 
         private readonly string host, apiKey, basicAuthorization;
         private readonly CredentialCache cache;
-        private MimeFormat mimeFormat;
+        private readonly MimeFormat mimeFormat;
 
         public static Dictionary<Type, string> Sufixes { get { return routes; } }
 
@@ -106,13 +103,15 @@ namespace Redmine.Net.Api
         /// </summary>
         public string ImpersonateUser { get; set; }
 
+        public IWebProxy Proxy { get; private set; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="RedmineManager"/> class.
         /// </summary>
         /// <param name="host">The host.</param>
         /// <param name="mimeFormat"></param>
         /// <param name="verifyServerCert">if set to <c>true</c> [verify server cert].</param>
-        public RedmineManager(string host, MimeFormat mimeFormat = MimeFormat.xml,bool verifyServerCert = true)
+        public RedmineManager(string host, MimeFormat mimeFormat = MimeFormat.xml, bool verifyServerCert = true, IWebProxy proxy = null)
         {
             if (string.IsNullOrEmpty(host)) throw new RedmineException("Host is not defined!");
             PageSize = 25;
@@ -126,6 +125,7 @@ namespace Redmine.Net.Api
 
             this.host = host;
             this.mimeFormat = mimeFormat;
+            Proxy = proxy;
 
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3;
             if (!verifyServerCert)
@@ -146,8 +146,8 @@ namespace Redmine.Net.Api
         /// <param name="apiKey">The API key.</param>
         /// <param name="mimeFormat"></param>
         /// <param name="verifyServerCert">if set to <c>true</c> [verify server cert].</param>
-        public RedmineManager(string host, string apiKey, MimeFormat mimeFormat = MimeFormat.xml, bool verifyServerCert = true)
-            : this(host, mimeFormat, verifyServerCert)
+        public RedmineManager(string host, string apiKey, MimeFormat mimeFormat = MimeFormat.xml, bool verifyServerCert = true, IWebProxy proxy = null)
+            : this(host, mimeFormat, verifyServerCert, proxy)
         {
             this.apiKey = apiKey;
         }
@@ -167,8 +167,8 @@ namespace Redmine.Net.Api
         /// <param name="password">The password.</param>
         /// <param name="mimeFormat"></param>
         /// <param name="verifyServerCert">if set to <c>true</c> [verify server cert].</param>
-        public RedmineManager(string host, string login, string password, MimeFormat mimeFormat = MimeFormat.xml, bool verifyServerCert = true)
-            : this(host, mimeFormat, verifyServerCert)
+        public RedmineManager(string host, string login, string password, MimeFormat mimeFormat = MimeFormat.xml, bool verifyServerCert = true, IWebProxy proxy = null)
+            : this(host, mimeFormat, verifyServerCert, proxy)
         {
             cache = new CredentialCache { { new Uri(host), "Basic", new NetworkCredential(login, password) } };
 
@@ -192,7 +192,7 @@ namespace Redmine.Net.Api
         public void AddWatcherToIssue(int issueId, int userId)
         {
             var url = UrlHelper.GetAddWatcherUrl(this, issueId, userId);
-            ExecuteUpload(url, POST,  MimeFormat == MimeFormat.xml
+            ExecuteUpload(url, POST, MimeFormat == MimeFormat.xml
                 ? "<user_id>" + userId + "</user_id>"
                 : "{\"user_id\":\"" + userId + "\"}"
                 , "AddWatcher");
@@ -472,7 +472,7 @@ namespace Redmine.Net.Api
         /// <code></code>
         public void UpdateObject<T>(string id, T obj, string projectId) where T : class, new()
         {
-            var url = UrlHelper.GetUploadUrl<T>(this, id, obj, projectId);
+            var url = UrlHelper.GetUploadUrl(this, id, obj, projectId);
 
             var data = RedmineSerializer.Serialize(obj, MimeFormat);
 
@@ -505,8 +505,7 @@ namespace Redmine.Net.Api
         /// <code></code>
         public virtual RedmineWebClient CreateWebClient(NameValueCollection parameters, bool uploadFile = false)
         {
-            var webClient = new RedmineWebClient();
-
+            var webClient = new RedmineWebClient { Proxy = Proxy };
             if (!uploadFile)
             {
                 webClient.Headers.Add(HttpRequestHeader.ContentType, MimeFormat == MimeFormat.xml ? "application/xml" : "application/json");
@@ -544,7 +543,7 @@ namespace Redmine.Net.Api
 
             return webClient;
         }
-        
+
         /// <summary>
         /// This is to take care of SSL certification validation which are not issued by Trusted Root CA.
         /// </summary>
@@ -622,7 +621,7 @@ namespace Redmine.Net.Api
                 }
                 catch (WebException webException)
                 {
-                   webException.HandleWebException(methodName, MimeFormat);
+                    webException.HandleWebException(methodName, MimeFormat);
                 }
             }
         }
