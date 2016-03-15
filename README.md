@@ -1,5 +1,5 @@
 ![](https://github.com/zapadi/redmine-net-api/blob/master/logo.png)
-# redmine-net-api ![](https://img.shields.io/nuget/dt/redmine-api.svg) ![](https://img.shields.io/nuget/dt/redmine-api-signed.svg)
+# redmine-net-api  
 
 redmine-net-api is a library for communicating with a Redmine project management application.
 
