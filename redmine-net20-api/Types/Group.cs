@@ -17,7 +17,6 @@
 using System;
 using System.Collections.Generic;
 using System.Xml;
-using System.Xml.Schema;
 using System.Xml.Serialization;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Internals;
@@ -28,26 +27,8 @@ namespace Redmine.Net.Api.Types
     /// Availability 2.1
     /// </summary>
     [XmlRoot(RedmineKeys.GROUP)]
-    public class Group : IXmlSerializable, IEquatable<Group>
+    public class Group : IdentifiableName, IEquatable<Group>
     {
-        /// <summary>
-        /// Gets or sets the id.
-        /// </summary>
-        /// <value>
-        /// The id.
-        /// </value>
-        [XmlElement(RedmineKeys.ID)]
-        public int Id { get; set; }
-
-        /// <summary>
-        /// Gets or sets the name.
-        /// </summary>
-        /// <value>
-        /// The name.
-        /// </value>
-        [XmlElement(RedmineKeys.NAME)]
-        public string Name { get; set; }
-
         /// <summary>
         /// Represents the group's users.
         /// </summary>
@@ -74,18 +55,10 @@ namespace Redmine.Net.Api.Types
         #region Implementation of IXmlSerializable
 
         /// <summary>
-        /// This method is reserved and should not be used. When implementing the IXmlSerializable interface, you should return null (Nothing in Visual Basic) from this method, and instead, if specifying a custom schema is required, apply the <see cref="T:System.Xml.Serialization.XmlSchemaProviderAttribute"/> to the class.
-        /// </summary>
-        /// <returns>
-        /// An <see cref="T:System.Xml.Schema.XmlSchema"/> that describes the XML representation of the object that is produced by the <see cref="M:System.Xml.Serialization.IXmlSerializable.WriteXml(System.Xml.XmlWriter)"/> method and consumed by the <see cref="M:System.Xml.Serialization.IXmlSerializable.ReadXml(System.Xml.XmlReader)"/> method.
-        /// </returns>
-        public XmlSchema GetSchema() { return null; }
-
-        /// <summary>
         /// Generates an object from its XML representation.
         /// </summary>
         /// <param name="reader">The <see cref="T:System.Xml.XmlReader"/> stream from which the object is deserialized. </param>
-        public void ReadXml(XmlReader reader)
+        public override void ReadXml(XmlReader reader)
         {
             reader.Read();
             while (!reader.EOF)
@@ -117,7 +90,7 @@ namespace Redmine.Net.Api.Types
         /// Converts an object into its XML representation.
         /// </summary>
         /// <param name="writer">The <see cref="T:System.Xml.XmlWriter"/> stream to which the object is serialized. </param>
-        public void WriteXml(XmlWriter writer)
+        public override void WriteXml(XmlWriter writer)
         {
             writer.WriteElementString(RedmineKeys.NAME, Name);
             writer.WriteArrayIds(Users, RedmineKeys.USER_IDS, typeof(int), GetGroupUserId);

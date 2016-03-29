@@ -28,17 +28,8 @@ namespace Redmine.Net.Api.Types
     /// 
     /// </summary>
     [XmlRoot(RedmineKeys.JOURNAL)]
-    public class Journal : IXmlSerializable, IEquatable<Journal>
+    public class Journal : Identifiable<Journal>, IEquatable<Journal>
     {
-        /// <summary>
-        /// Gets or sets the id.
-        /// </summary>
-        /// <value>
-        /// The id.
-        /// </value>
-        [XmlAttribute(RedmineKeys.ID)]
-        public int Id { get; set; }
-
         /// <summary>
         /// Gets or sets the user.
         /// </summary>

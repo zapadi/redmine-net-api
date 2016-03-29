@@ -17,7 +17,6 @@
 using System;
 using System.Collections.Generic;
 using System.Xml;
-using System.Xml.Schema;
 using System.Xml.Serialization;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Internals;
@@ -28,26 +27,8 @@ namespace Redmine.Net.Api.Types
     /// Availability 1.4
     /// </summary>
     [XmlRoot(RedmineKeys.ROLE)]
-    public class Role : IXmlSerializable, IEquatable<Role>
+    public class Role : IdentifiableName, IEquatable<Role>
     {
-        /// <summary>
-        /// Gets or sets the id.
-        /// </summary>
-        /// <value>
-        /// The id.
-        /// </value>
-        [XmlElement(RedmineKeys.ID)]
-        public int Id { get; set; }
-
-        /// <summary>
-        /// Gets or sets the name.
-        /// </summary>
-        /// <value>
-        /// The name.
-        /// </value>
-        [XmlElement(RedmineKeys.NAME)]
-        public string Name { get; set; }
-
         /// <summary>
         /// Gets or sets the permissions.
         /// </summary>
@@ -58,9 +39,7 @@ namespace Redmine.Net.Api.Types
         [XmlArrayItem(RedmineKeys.PERMISSION)]
         public IList<Permission> Permissions { get; set; }
 
-        public XmlSchema GetSchema() { return null; }
-
-        public void ReadXml(XmlReader reader)
+        public override void ReadXml(XmlReader reader)
         {
             reader.Read();
             while (!reader.EOF)
@@ -84,7 +63,7 @@ namespace Redmine.Net.Api.Types
             }
         }
 
-        public void WriteXml(XmlWriter writer) { }
+        public override void WriteXml(XmlWriter writer) { }
 
         public bool Equals(Role other)
         {

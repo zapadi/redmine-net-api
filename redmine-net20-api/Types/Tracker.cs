@@ -17,7 +17,6 @@
 using System;
 using System.Xml;
 using System.Xml.Serialization;
-using System.Xml.Schema;
 using Redmine.Net.Api.Internals;
 
 namespace Redmine.Net.Api.Types
@@ -26,35 +25,15 @@ namespace Redmine.Net.Api.Types
     /// Availability 1.3
     /// </summary>
     [XmlRoot(RedmineKeys.TRACKER)]
-    public class Tracker : IXmlSerializable, IEquatable<Tracker>
+    public class Tracker : IdentifiableName, IEquatable<Tracker>
     {
-        /// <summary>
-        /// Gets or sets the id.
-        /// </summary>
-        /// <value>
-        /// The id.
-        /// </value>
-        [XmlElement(RedmineKeys.ID)]
-        public int Id { get; set; }
-
-        /// <summary>
-        /// Gets or sets the name.
-        /// </summary>
-        /// <value>
-        /// The name.
-        /// </value>
-        [XmlElement(RedmineKeys.NAME)]
-        public string Name { get; set; }
-
-        public void WriteXml(XmlWriter writer) { }
-
-        public XmlSchema GetSchema() { return null; }
+        public override void WriteXml(XmlWriter writer) { }
 
         /// <summary>
         /// Generates an object from its XML representation.
         /// </summary>
         /// <param name="reader">The <see cref="T:System.Xml.XmlReader"/> stream from which the object is deserialized.</param>
-        public virtual void ReadXml(XmlReader reader)
+        public override void ReadXml(XmlReader reader)
         {
             reader.Read();
             while (!reader.EOF)
