@@ -16,7 +16,6 @@
 
 using System;
 using System.Xml;
-using System.Xml.Schema;
 using System.Xml.Serialization;
 using Redmine.Net.Api.Internals;
 
@@ -26,38 +25,18 @@ namespace Redmine.Net.Api.Types
     /// Availability 2.2
     /// </summary>
     [XmlRoot(RedmineKeys.ISSUE_PRIORITY)]
-    public class IssuePriority : IXmlSerializable, IEquatable<IssuePriority>
+    public class IssuePriority : IdentifiableName, IEquatable<IssuePriority>
     {
-        /// <summary>
-        /// Gets or sets the id.
-        /// </summary>
-        /// <value>
-        /// The id.
-        /// </value>
-        [XmlElement(RedmineKeys.ID)]
-        public int Id { get; set; }
-
-        /// <summary>
-        /// Gets or sets the name.
-        /// </summary>
-        /// <value>
-        /// The name.
-        /// </value>
-        [XmlElement(RedmineKeys.NAME)]
-        public string Name { get; set; }
-
         [XmlElement(RedmineKeys.IS_DEFAULT)]
         public bool IsDefault { get; set; }
 
         #region Implementation of IXmlSerializable
 
-        public XmlSchema GetSchema() { return null; }
-
         /// <summary>
         /// Generates an object from its XML representation.
         /// </summary>
         /// <param name="reader">The <see cref="T:System.Xml.XmlReader"/> stream from which the object is deserialized.</param>
-        public void ReadXml(XmlReader reader)
+        public override void ReadXml(XmlReader reader)
         {
             reader.Read();
             while (!reader.EOF)
@@ -81,7 +60,7 @@ namespace Redmine.Net.Api.Types
             }
         }
 
-        public void WriteXml(XmlWriter writer) { }
+        public override void WriteXml(XmlWriter writer) { }
 
         #endregion
 
