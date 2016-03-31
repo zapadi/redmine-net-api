@@ -46,13 +46,20 @@ namespace Redmine.Net.Api
 
         public const string ENTITY_WITH_PARENT_FORMAT = "{0}/{1}/{2}/{3}.{4}";
 
+        public const string ATTACHMENT_UPDATE_FORMAT = "{0}/attachments/issues/{1}.{2}";
+
         public const string CURRENT_USER_URI = "current";
+
         //Represents an HTTP PUT protocol method that is used to replace an entity identified by a URI.
         public const string PUT = "PUT";
         /// <summary>
         /// Represents an HTTP POST protocol method that is used to post a new entity as an addition to a URI.
         /// </summary>
         public const string POST = "POST";
+        /// <summary>
+        /// Represents an HTTP PATCH protocol method that is used to patch an existing entity identified  by a URI.
+        /// </summary>
+        public const string PATCH = "PATCH";
         /// <summary>
         /// Represents an HTTP DELETE protocol method.
         /// </summary>
@@ -614,9 +621,9 @@ namespace Redmine.Net.Api
             {
                 try
                 {
-                    if (actionType == POST || actionType == DELETE || actionType == PUT)
+                    if (actionType == POST || actionType == DELETE || actionType == PUT || actionType == PATCH)
                     {
-                        wc.UploadString(address, actionType, data);
+                        var val = wc.UploadString(address, actionType, data);
                     }
                 }
                 catch (WebException webException)
@@ -632,7 +639,7 @@ namespace Redmine.Net.Api
             {
                 try
                 {
-                    if (actionType == POST || actionType == DELETE || actionType == PUT)
+                    if (actionType == POST || actionType == DELETE || actionType == PUT || actionType == PATCH)
                     {
                         var response = wc.UploadString(address, actionType, data);
 
@@ -681,5 +688,19 @@ namespace Redmine.Net.Api
                 return null;
             }
         }
+
+        public void UpdateAttachment(int issueId, Attachment attachment)
+        {
+            var address = UrlHelper.GetAttachmentUpdateUrl(this, issueId);
+            var attachments = new Attachments {{attachment.Id, attachment}};
+            var data = RedmineSerializer.Serialize(attachments, MimeFormat);
+
+            ExecuteUpload(address, PATCH, data, "UpdateAttachment");    
+        }
+    }
+
+    public class Attachments : Dictionary<int, Attachment>
+    {
+
     }
 }

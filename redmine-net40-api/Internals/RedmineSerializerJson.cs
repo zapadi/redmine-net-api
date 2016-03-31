@@ -37,6 +37,7 @@ namespace Redmine.Net.Api.Internals
             {typeof (Query), new QueryConverter()},
             {typeof (Version), new VersionConverter()},
             {typeof (Attachment), new AttachmentConverter()},
+            {typeof (Attachments), new AttachmentsConverter()},
             {typeof (IssueRelation), new IssueRelationConverter()},
             {typeof (TimeEntry), new TimeEntryConverter()},
             {typeof (IssueStatus),new IssueStatusConverter()},

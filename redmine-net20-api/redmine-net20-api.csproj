@@ -69,6 +69,7 @@
     <Compile Include="Logging\LoggingEventType.cs" />
     <Compile Include="Logging\TraceLogger.cs" />
     <Compile Include="MimeFormat.cs" />
+    <Compile Include="Types\Attachments.cs" />
     <Compile Include="Types\PaginatedObjects.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RedmineException.cs" />

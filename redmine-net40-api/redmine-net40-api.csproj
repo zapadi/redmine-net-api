@@ -111,6 +111,9 @@
     <Compile Include="..\redmine-net20-api\Types\Attachment.cs">
       <Link>Types\Attachment.cs</Link>
     </Compile>
+    <Compile Include="..\redmine-net20-api\Types\Attachments.cs">
+      <Link>Types\Attachments.cs</Link>
+    </Compile>
     <Compile Include="..\redmine-net20-api\Types\ChangeSet.cs">
       <Link>Types\ChangeSet.cs</Link>
     </Compile>
@@ -252,6 +255,7 @@
     <Compile Include="Extensions\CollectionExtensions.cs" />
     <Compile Include="Extensions\XmlReaderExtensions.cs" />
     <Compile Include="JSonConverters\AttachmentConverter.cs" />
+    <Compile Include="JSonConverters\AttachmentsConverter.cs" />
     <Compile Include="JSonConverters\ChangeSetConverter.cs" />
     <Compile Include="JSonConverters\CustomFieldConverter.cs" />
     <Compile Include="JSonConverters\CustomFieldPossibleValueConverter.cs" />
