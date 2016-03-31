@@ -623,7 +623,7 @@ namespace Redmine.Net.Api
                 {
                     if (actionType == POST || actionType == DELETE || actionType == PUT || actionType == PATCH)
                     {
-                        var val = wc.UploadString(address, actionType, data);
+                        wc.UploadString(address, actionType, data);
                     }
                 }
                 catch (WebException webException)
