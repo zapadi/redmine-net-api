@@ -25,14 +25,8 @@ using Redmine.Net.Api.Internals;
 namespace Redmine.Net.Api.Types
 {
     [XmlRoot(RedmineKeys.CUSTOM_FIELD)]
-    public class CustomField : IXmlSerializable, IEquatable<CustomField>
+    public class CustomField : IdentifiableName, IEquatable<CustomField>
     {
-        [XmlElement(RedmineKeys.ID)]
-        public int Id { get; set; }
-
-        [XmlElement(RedmineKeys.NAME)]
-        public string Name { get; set; }
-
         [XmlElement(RedmineKeys.CUSTOMIZED_TYPE)]
         public string CustomizedType { get; set; }
 
@@ -78,9 +72,7 @@ namespace Redmine.Net.Api.Types
         [XmlArrayItem(RedmineKeys.ROLE)]
         public IList<CustomFieldRole> Roles { get; set; }
 
-        public XmlSchema GetSchema() { return null; }
-
-        public void ReadXml(XmlReader reader)
+        public override void ReadXml(XmlReader reader)
         {
             reader.Read();
             while (!reader.EOF)
@@ -130,7 +122,7 @@ namespace Redmine.Net.Api.Types
             }
         }
 
-        public void WriteXml(XmlWriter writer) { }
+        public override void WriteXml(XmlWriter writer) { }
 
         public bool Equals(CustomField other)
         {
