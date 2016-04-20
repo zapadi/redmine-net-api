@@ -145,5 +145,10 @@ namespace Redmine.Net.Api.Internals
         {
             return string.Format(RedmineManager.REQUEST_FORMAT, redmineManager.Host, RedmineManager.Sufixes[typeof(Issue)], issueId + "/watchers/" + userId, redmineManager.MimeFormat);
         }
+
+        public static string GetAttachmentUpdateUrl(RedmineManager redmineManager, int issueId)
+        {
+            return string.Format(RedmineManager.ATTACHMENT_UPDATE_FORMAT, redmineManager.Host, issueId, redmineManager.MimeFormat);
+        }
     }
 }

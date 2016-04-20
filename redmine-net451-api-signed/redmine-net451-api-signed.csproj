@@ -98,6 +98,9 @@
     <Compile Include="..\redmine-net20-api\types\Attachment.cs">
       <Link>Types\Attachment.cs</Link>
     </Compile>
+    <Compile Include="..\redmine-net20-api\Types\Attachments.cs">
+      <Link>Types\Attachments.cs</Link>
+    </Compile>
     <Compile Include="..\redmine-net20-api\types\ChangeSet.cs">
       <Link>Types\ChangeSet.cs</Link>
     </Compile>
@@ -259,6 +262,9 @@
     </Compile>
     <Compile Include="..\redmine-net40-api\jsonconverters\AttachmentConverter.cs">
       <Link>JsonConverters\AttachmentConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\redmine-net40-api\JSonConverters\AttachmentsConverter.cs">
+      <Link>JsonConverters\AttachmentsConverter.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net40-api\jsonconverters\ChangeSetConverter.cs">
       <Link>JsonConverters\ChangeSetConverter.cs</Link>

@@ -1,4 +1,4 @@
-/*
+﻿/*
    Copyright 2011 - 2016 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,55 +16,43 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web.Script.Serialization;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Types;
 
 namespace Redmine.Net.Api.JSonConverters
 {
-    internal class AttachmentConverter : JavaScriptConverter
+    internal class AttachmentsConverter : JavaScriptConverter
     {
         #region Overrides of JavaScriptConverter
 
         public override object Deserialize(IDictionary<string, object> dictionary, Type type, JavaScriptSerializer serializer)
         {
-            if (dictionary != null)
-            {
-                var attachment = new Attachment();
-
-                attachment.Id = dictionary.GetValue<int>(RedmineKeys.ID);
-                attachment.Description = dictionary.GetValue<string>(RedmineKeys.DESCRIPTION);
-                attachment.Author = dictionary.GetValueAsIdentifiableName(RedmineKeys.AUTHOR);
-                attachment.ContentType = dictionary.GetValue<string>(RedmineKeys.CONTENT_TYPE);
-                attachment.ContentUrl = dictionary.GetValue<string>(RedmineKeys.CONTENT_URL);
-                attachment.CreatedOn = dictionary.GetValue<DateTime?>(RedmineKeys.CREATED_ON);
-                attachment.FileName = dictionary.GetValue<string>(RedmineKeys.FILENAME);
-                attachment.FileSize = dictionary.GetValue<int>(RedmineKeys.FILESIZE);
-
-                return attachment;
-            }
-
             return null;
         }
 
         public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer)
         {
-            var entity = obj as Attachment;
+            var entity = obj as Attachments;
             var result = new Dictionary<string, object>();
 
             if (entity != null)
             {
-                result.Add(RedmineKeys.FILENAME, entity.FileName);
-                result.Add(RedmineKeys.DESCRIPTION, entity.Description);
+                foreach (var entry in entity)
+                {
+                    var attachment = new AttachmentConverter().Serialize(entry.Value, serializer);
+                    result.Add(entry.Key.ToString(), attachment.First().Value);
+                }
             }
 
             var root = new Dictionary<string, object>();
-            root[RedmineKeys.ATTACHMENT] = result;
+            root[RedmineKeys.ATTACHMENTS] = result;
 
             return root;
         }
 
-        public override IEnumerable<Type> SupportedTypes { get { return new List<Type>(new[] { typeof(Attachment) }); } }
+        public override IEnumerable<Type> SupportedTypes { get { return new List<Type>(new[] { typeof(Attachments) }); } }
 
         #endregion
     }
