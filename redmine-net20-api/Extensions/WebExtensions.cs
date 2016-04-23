@@ -43,6 +43,9 @@ namespace Redmine.Net.Api.Extensions
                             case (int)HttpStatusCode.Unauthorized:
                             case (int)HttpStatusCode.NotFound:
                             case (int)HttpStatusCode.Forbidden:
+								if (response.StatusDescription.Contains ("Not Found"))
+									throw new NotFoundException (response.StatusDescription, exception);
+						
                                 throw new RedmineException(response.StatusDescription, exception);
 
                             case (int)HttpStatusCode.Conflict:
