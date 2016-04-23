@@ -78,26 +78,9 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Delete_Issue_Relation()
 		{
-			try
-			{
-				fixture.redmineManager.DeleteObject<IssueRelation>(RELATION_ID_TO_DELETE, null);
-			}
-			catch (RedmineException)
-			{
-				Assert.True(false, "Relation could not be deleted.");
-				return;
-			}
-
-			try
-			{
-				fixture.redmineManager.GetObject<IssueRelation>(RELATION_ID_TO_DELETE, null);
-			}
-			catch (RedmineException exc)
-			{
-				Assert.Contains(exc.Message, "Not Found");
-				return;
-			}
-			Assert.True(false, "Test failed");
+			RedmineException exception = (RedmineException)Record.Exception(() =>fixture.redmineManager.DeleteObject<IssueRelation>(RELATION_ID_TO_DELETE, null));
+			Assert.Null (exception);
+			Assert.Throws<NotFoundException>(() => fixture.redmineManager.GetObject<IssueRelation>(RELATION_ID_TO_DELETE, null));
 		}
 	}
 }

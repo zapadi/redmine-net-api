@@ -99,26 +99,9 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Delete_Project_Membership()
 		{
-			try
-			{
-				fixture.redmineManager.DeleteObject<ProjectMembership>(DELETED_PROJECT_MEMBERSHIP_ID, null);
-			}
-			catch (RedmineException)
-			{
-				Assert.True(false, "Project membership could not be deleted.");
-				return;
-			}
-
-			try
-			{
-				fixture.redmineManager.GetObject<ProjectMembership>(DELETED_PROJECT_MEMBERSHIP_ID, null);
-			}
-			catch (RedmineException exc)
-			{
-				Assert.Contains(exc.Message, "Not Found");
-				return;
-			}
-			Assert.True(false, "Test failed");
+			RedmineException exception = (RedmineException)Record.Exception(() => fixture.redmineManager.DeleteObject<ProjectMembership>(DELETED_PROJECT_MEMBERSHIP_ID, null));
+			Assert.Null (exception);
+			Assert.Throws<NotFoundException>(() => fixture.redmineManager.GetObject<ProjectMembership>(DELETED_PROJECT_MEMBERSHIP_ID, null));
 		}
 	}
 }

@@ -27,7 +27,7 @@ namespace xUnitTestredminenet45api
 		private const int UPDATED_TIME_ENTRY_ACTIVITY_ID = 17;
 		private const string UPDATED_TIME_ENTRY_COMMENTS = "Time entry updated";
 
-		private const string DELETED_TIME_ENTRY_ID = "35";
+		private const string DELETED_TIME_ENTRY_ID = "43";
 
 		RedmineFixture fixture;
 		public TimeEntryTests (RedmineFixture fixture)
@@ -124,26 +124,9 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Delete_Time_Entry()
 		{
-			try
-			{
-				fixture.redmineManager.DeleteObject<TimeEntry>(DELETED_TIME_ENTRY_ID, null);
-			}
-			catch (RedmineException)
-			{
-				Assert.True(false, "Time entry could not be deleted.");
-				return;
-			}
-
-			try
-			{
-				fixture.redmineManager.GetObject<TimeEntry>(DELETED_TIME_ENTRY_ID, null);
-			}
-			catch (RedmineException exc)
-			{
-				Assert.Contains(exc.Message, "Not Found");
-				return;
-			}
-			Assert.True(false, "Test failed");
+			RedmineException exception = (RedmineException)Record.Exception(() => fixture.redmineManager.DeleteObject<TimeEntry>(DELETED_TIME_ENTRY_ID, null));
+			Assert.Null (exception);
+			Assert.Throws<NotFoundException>(() => fixture.redmineManager.GetObject<TimeEntry>(DELETED_TIME_ENTRY_ID, null));
 		}
 	}
 }

@@ -32,7 +32,7 @@ namespace xUnitTestredminenet45api
 		private const string USER_ID_TO_UPDATE = "34";
 		private const string USER_FIRST_NAME_UPDATED = "Updated first name";
 
-		private const string USER_ID_TO_DELETE = "35";
+		private const string USER_ID_TO_DELETE = "59";
 
 		private const string USER_ID_FOR_GROUP = "2";
 
@@ -51,8 +51,6 @@ namespace xUnitTestredminenet45api
 
 			Assert.NotNull(currentUser);
 			Assert.Equal(currentUser.ApiKey, Helper.ApiKey);
-
-
 		}
 
 		[Fact]
@@ -119,16 +117,9 @@ namespace xUnitTestredminenet45api
 			user.CustomFields.Add(new IssueCustomField { Id = USER_CUSTOM_FIELD_ID, Values = new List<CustomFieldValue> { new CustomFieldValue { Info = USER_CUSTOM_FIELD_VALUE } } });
 
 			User savedRedmineUser = null;
-			try
-			{
-				savedRedmineUser = fixture.redmineManager.CreateObject<User>(user);
-			}
-			catch (RedmineException)
-			{
-				Assert.True(false, "Create user failed.");
-				return;
-			}
+			RedmineException exception = (RedmineException)Record.Exception(() => savedRedmineUser = fixture.redmineManager.CreateObject<User>(user));
 
+			Assert.Null (exception);
 			Assert.NotNull(savedRedmineUser);
 			Assert.Equal(user.Login, savedRedmineUser.Login);
 			Assert.Equal(user.Email, savedRedmineUser.Email);
@@ -150,43 +141,9 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Delete_User()
 		{
-			User user = null;
-			try
-			{
-				user = fixture.redmineManager.GetObject<User>(USER_ID_TO_DELETE, null);
-			}
-			catch (RedmineException)
-			{
-
-				Assert.True(false, "User not found.");
-				return;
-			}
-
-			if (user != null)
-			{
-				try
-				{
-					fixture.redmineManager.DeleteObject<User>(USER_ID_TO_DELETE, null);
-				}
-				catch (RedmineException)
-				{
-					Assert.True(false, "User could not be deleted.");
-					return;
-				}
-
-				try
-				{
-					user = fixture.redmineManager.GetObject<User>(USER_ID_TO_DELETE, null);
-				}
-				catch (RedmineException exc)
-				{
-					Assert.Contains(exc.Message, "Not Found");
-					return;
-				}
-			}
-
-			Assert.True(false, "Failed");
-
+			RedmineException exc = (RedmineException)Record.Exception(() =>fixture.redmineManager.DeleteObject<User>(USER_ID_TO_DELETE, null));
+			Assert.Null (exc);
+			Assert.ThrowsAny<NotFoundException>(()=>fixture.redmineManager.GetObject<User>(USER_ID_TO_DELETE, null));
 		}
 
 		[Fact]

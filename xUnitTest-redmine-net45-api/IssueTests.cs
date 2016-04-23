@@ -244,26 +244,9 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Delete_Issue()
 		{
-			try
-			{
-				fixture.redmineManager.DeleteObject<Issue>(DELETED_ISSUE_ID, null);
-			}
-			catch (RedmineException)
-			{
-				Assert.True(false, "Issue could not be deleted.");
-
-			}
-
-			try
-			{
-				fixture.redmineManager.GetObject<Issue>(DELETED_ISSUE_ID, null);
-			}
-			catch (RedmineException exc)
-			{
-				Assert.Contains(exc.Message, "Not Found");
-				return;
-			}
-			Assert.True(false, "Test failed");
+			RedmineException exception = (RedmineException)Record.Exception(() => fixture.redmineManager.DeleteObject<Issue>(DELETED_ISSUE_ID, null));
+			Assert.Null (exception);
+			Assert.Throws<NotFoundException>(() => fixture.redmineManager.GetObject<Issue>(DELETED_ISSUE_ID, null));
 		}
 
 		[Fact]

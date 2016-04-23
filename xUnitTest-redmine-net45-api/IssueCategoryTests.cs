@@ -91,30 +91,13 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Delete_IssueCategory()
 		{
-			try
-			{
-				fixture.redmineManager.DeleteObject<IssueCategory>(ISSUE_CATEGORY_ID_TO_DELETE, null);
-			}
-			catch (RedmineException)
-			{
-				Assert.True(false, "Issue category could not be deleted.");
-				return;
-			}
-
-			try
-			{
-				fixture.redmineManager.GetObject<IssueCategory>(ISSUE_CATEGORY_ID_TO_DELETE, null);
-			}
-			catch (RedmineException exc)
-			{
-				Assert.Contains(exc.Message, "Not Found");
-				return;
-			}
-			Assert.True(false, "Test failed");
+			RedmineException exception = (RedmineException)Record.Exception(() =>fixture.redmineManager.DeleteObject<IssueCategory>(ISSUE_CATEGORY_ID_TO_DELETE, null));
+			Assert.Null (exception);
+			Assert.Throws<NotFoundException>(() => fixture.redmineManager.GetObject<IssueCategory>(ISSUE_CATEGORY_ID_TO_DELETE, null));
 		}
 
 		[Fact]
-		public void Should_Compare_IssueCAtegories()
+		public void Should_Compare_IssueCategories()
 		{
 			IssueCategory issueCategory = fixture.redmineManager.GetObject<IssueCategory>(ISSUE_CATEGORY_ID_TO_COMPARE, null);
 			IssueCategory issueCategoryToCompare = fixture.redmineManager.GetObject<IssueCategory>(ISSUE_CATEGORY_ID_TO_COMPARE, null);

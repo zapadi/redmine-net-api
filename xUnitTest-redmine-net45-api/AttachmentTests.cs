@@ -11,7 +11,7 @@ namespace xUnitTestredminenet45api
 	[Collection("RedmineCollection")]
 	public class AttachmentTests
 	{
-		const string ATTACHMENT_LOCAL_PATH = "../../../../uploadAttachment.pages";
+		const string ATTACHMENT_LOCAL_PATH = "uploadAttachment.pages";
 		const string ATTACHMENT_NAME = "AttachmentUploaded.txt";
 		const string ATTACHMENT_DESCRIPTION = "File uploaded using REST API";
 		const string ATTACHMENT_CONTENT_TYPE = "text/plain";
@@ -31,7 +31,7 @@ namespace xUnitTestredminenet45api
 		public void Should_Upload_Attachment()
 		{
 			//read document from specified path
-			byte[] documentData = File.ReadAllBytes(ATTACHMENT_LOCAL_PATH);
+			byte[] documentData = File.ReadAllBytes(AppDomain.CurrentDomain.BaseDirectory+ATTACHMENT_LOCAL_PATH);
 
 			//upload attachment to redmine
 			Upload attachment = fixture.redmineManager.UploadFile(documentData);

@@ -34,7 +34,7 @@ namespace xUnitTestredminenet45api
 		public async Task Should_Upload_Attachment()
 		{
 			//read document from specified path
-			string documentPath = "../../../../uploadAttachment.pages";
+			string documentPath = AppDomain.CurrentDomain.BaseDirectory+ "/uploadAttachment.pages";
 			byte[] documentData = File.ReadAllBytes(documentPath);
 
 			//upload attachment to redmine

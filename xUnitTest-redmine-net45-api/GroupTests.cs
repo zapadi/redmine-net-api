@@ -17,7 +17,7 @@ namespace xUnitTestredminenet45api
 		private const int NUMBER_OF_USERS = 2;
 
 		//group data - used for create
-		private const string NEW_GROUP_NAME = "Developers";
+		private const string NEW_GROUP_NAME = "Developers1";
 		private const int NEW_GROUP_USER_ID = 8;
 
 		//data used for update
@@ -88,16 +88,9 @@ namespace xUnitTestredminenet45api
 			group.Users.Add(new GroupUser { Id = NEW_GROUP_USER_ID });
 
 			Group savedGroup = null;
-			try
-			{
-				savedGroup = fixture.redmineManager.CreateObject<Group>(group);
-			}
-			catch (RedmineException)
-			{
-				Assert.True(false, "Create group failed.");
-				return;
-			}
+			RedmineException exception = (RedmineException)Record.Exception(() => savedGroup = fixture.redmineManager.CreateObject<Group>(group));
 
+			Assert.Null (exception);
 			Assert.NotNull(savedGroup);
 			Assert.True(group.Name.Equals(savedGroup.Name), "Saved group name is not valid.");
 		}
@@ -124,26 +117,9 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Delete_Group()
 		{
-			try
-			{
-				fixture.redmineManager.DeleteObject<Group>(DELETED_GROUP_ID, null);
-			}
-			catch (RedmineException)
-			{
-				Assert.True(false, "Group could not be deleted.");
-				return;
-			}
-
-			try
-			{
-				fixture.redmineManager.GetObject<Group>(DELETED_GROUP_ID, null);
-			}
-			catch (RedmineException exc)
-			{
-				Assert.Contains(exc.Message, "Not Found");
-				return;
-			}
-			Assert.True(false, "Test failed");
+			RedmineException exception = (RedmineException)Record.Exception(() => fixture.redmineManager.DeleteObject<Group>(DELETED_GROUP_ID, null));
+			Assert.Null (exception);
+			Assert.Throws<NotFoundException>(() => fixture.redmineManager.GetObject<Group>(DELETED_GROUP_ID, null));
 		}
 
 		[Fact]
