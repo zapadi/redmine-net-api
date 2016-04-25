@@ -39,7 +39,7 @@ namespace Redmine.Net.Api.Extensions
 								throw new ForbiddenException(response.StatusDescription, exception);
 
 		                    case (int)HttpStatusCode.Conflict:
-                                throw new RedmineException("The page that you are trying to update is staled!", exception);
+								throw new ConflictException("The page that you are trying to update is staled!", exception);
 
                             case 422:
 
