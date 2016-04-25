@@ -310,6 +310,9 @@
     <Compile Include="..\redmine-net20-api\Exceptions\RedmineTimeoutException.cs">
       <Link>Exceptions\RedmineTimeoutException.cs</Link>
     </Compile>
+    <Compile Include="..\redmine-net20-api\Exceptions\NameResolutionFailureException.cs">
+      <Link>Exceptions\NameResolutionFailureException.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
