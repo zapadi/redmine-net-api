@@ -37,6 +37,8 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugJSON|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -46,6 +48,8 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -394,6 +398,9 @@
     <Compile Include="Async\RedmineManagerAsync.cs" />
     <Compile Include="..\redmine-net20-api\Types\IValue.cs">
       <Link>Types\IValue.cs</Link>
+    </Compile>
+    <Compile Include="..\redmine-net20-api\NotFoundException.cs">
+      <Link>NotFoundException.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup />

@@ -39,10 +39,4 @@ namespace Redmine.Net.Api
         protected RedmineException(SerializationInfo info, StreamingContext context)
             : base(info, context) { }
     }
-
-	public class NotFoundException : RedmineException{
-
-		public NotFoundException(string message, Exception innerException)
-			: base(message, innerException) { }
-	}
 }
