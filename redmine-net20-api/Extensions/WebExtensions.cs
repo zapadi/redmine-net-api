@@ -65,7 +65,7 @@ namespace Redmine.Net.Api.Extensions
                                 }
                                 throw new RedmineException(method + " has invalid or missing attribute parameters: " + message, exception);
 
-                            case (int)HttpStatusCode.NotAcceptable: throw new RedmineException(response.StatusDescription, exception);
+							case (int)HttpStatusCode.NotAcceptable: throw new NotAcceptableException(response.StatusDescription, exception);
                         }
                     }
                     break;

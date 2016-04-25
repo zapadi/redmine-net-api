@@ -325,6 +325,9 @@
     <Compile Include="..\redmine-net20-api\Exceptions\ConflictException.cs">
       <Link>Exceptions\ConflictException.cs</Link>
     </Compile>
+    <Compile Include="..\redmine-net20-api\Exceptions\NotAcceptableException.cs">
+      <Link>Exceptions\NotAcceptableException.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
