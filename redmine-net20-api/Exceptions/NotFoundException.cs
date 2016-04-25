@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Redmine.Net.Api
+namespace Redmine.Net.Api.Exceptions
 {
 	public class NotFoundException : RedmineException
 	{

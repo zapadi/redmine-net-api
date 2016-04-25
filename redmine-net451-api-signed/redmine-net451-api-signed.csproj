@@ -82,9 +82,6 @@
     <Compile Include="..\redmine-net20-api\logging\TraceLogger.cs">
       <Link>Logging\TraceLogger.cs</Link>
     </Compile>
-    <Compile Include="..\redmine-net20-api\RedmineException.cs">
-      <Link>RedmineException.cs</Link>
-    </Compile>
     <Compile Include="..\redmine-net20-api\RedmineKeys.cs">
       <Link>RedmineKeys.cs</Link>
     </Compile>
@@ -390,8 +387,11 @@
       <Link>Extensions\TaskExtensions.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="..\redmine-net20-api\NotFoundException.cs">
-      <Link>NotFoundException.cs</Link>
+    <Compile Include="..\redmine-net20-api\Exceptions\NotFoundException.cs">
+      <Link>Exceptions\NotFoundException.cs</Link>
+    </Compile>
+    <Compile Include="..\redmine-net20-api\Exceptions\RedmineException.cs">
+      <Link>Exceptions\RedmineException.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>

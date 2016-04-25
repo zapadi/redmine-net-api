@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Globalization;
 using System.Linq;
+using Redmine.Net.Api.Exceptions;
 
 namespace xUnitTestredminenet45api
 {
@@ -197,17 +198,10 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public async Task Should_Delete_User()
 		{
-			var userId = 44.ToString();
-			try
-			{
-				await fixture.redmineManager.DeleteObjectAsync<User>(userId, null);
+			var userId = 62.ToString();
+			await fixture.redmineManager.DeleteObjectAsync<User>(userId, null);
+			await Assert.ThrowsAsync<NotFoundException>(async () => await fixture.redmineManager.GetObjectAsync<User>(userId, null));
 
-				await fixture.redmineManager.GetObjectAsync<User>(userId, null);
-			}
-			catch (RedmineException exc)
-			{
-				Assert.Contains(exc.Message, "Not Found");
-			}
 		}
 	}
 }

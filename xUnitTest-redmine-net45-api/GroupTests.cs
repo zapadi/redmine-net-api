@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Xunit;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Types;
+using Redmine.Net.Api.Exceptions;
 
 namespace xUnitTestredminenet45api
 {
@@ -25,7 +26,7 @@ namespace xUnitTestredminenet45api
 		private const string UPDATED_GROUP_NAME = "Best Developers";
 		private const int UPDATED_GROUP_USER_ID = 2;
 
-		private const string DELETED_GROUP_ID = "58";
+		private const string DELETED_GROUP_ID = "63";
 
 		RedmineFixture fixture;
 		public GroupTests (RedmineFixture fixture)

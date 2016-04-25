@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using Redmine.Net.Api.Internals;
 using Redmine.Net.Api.Types;
+using Redmine.Net.Api.Exceptions;
 
 namespace Redmine.Net.Api.Extensions
 {

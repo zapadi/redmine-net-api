@@ -5,6 +5,7 @@ using System.Collections.Specialized;
 using Redmine.Net.Api.Types;
 using System.Linq;
 using Redmine.Net.Api;
+using Redmine.Net.Api.Exceptions;
 
 namespace xUnitTestredminenet45api
 {
@@ -93,18 +94,7 @@ namespace xUnitTestredminenet45api
 		public void Should_Delete_Wiki_Page()
 		{
 			fixture.redmineManager.DeleteWikiPage(PROJECT_ID, WIKI_PAGE_NAME);
-
-			try
-			{
-				fixture.redmineManager.GetWikiPage(PROJECT_ID, null, WIKI_PAGE_NAME);
-			}
-			catch (RedmineException exc)
-			{
-				Assert.Contains(exc.Message, "Not Found");
-				return;
-			}
-			Assert.True(false, "Test failed");
-
+			Assert.Throws<NotFoundException>(() => fixture.redmineManager.GetWikiPage(PROJECT_ID, null, WIKI_PAGE_NAME));
 		}
 	}
 }

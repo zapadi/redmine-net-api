@@ -5,6 +5,7 @@ using Redmine.Net.Api;
 using System.Collections.Specialized;
 using System.Collections.Generic;
 using System.Linq;
+using Redmine.Net.Api.Exceptions;
 
 namespace xUnitTestredminenet45api
 {

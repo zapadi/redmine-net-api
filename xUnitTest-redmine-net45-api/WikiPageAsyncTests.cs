@@ -6,6 +6,7 @@ using Redmine.Net.Api.Async;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Threading.Tasks;
+using Redmine.Net.Api.Exceptions;
 
 namespace xUnitTestredminenet45api
 {
@@ -67,19 +68,8 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public async Task Should_Delete_WikiPage()
 		{
-			try
-			{
-				await fixture.redmineManager.DeleteWikiPageAsync(projectId, wikiPageName);
-
-				await fixture.redmineManager.GetWikiPageAsync(projectId, null, wikiPageName);
-			}
-			catch (RedmineException exc)
-			{
-				Assert.Contains(exc.Message, "Not Found");
-				return;
-			}
-			Assert.True(false, "Test failed");
-
+			await fixture.redmineManager.DeleteWikiPageAsync(projectId, wikiPageName);
+			await Assert.ThrowsAsync<NotFoundException>(async () => await fixture.redmineManager.GetWikiPageAsync(projectId, null, wikiPageName));
 		}
 
 	}

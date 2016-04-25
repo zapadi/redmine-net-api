@@ -3,6 +3,7 @@ using System.Collections.Specialized;
 using Xunit;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Types;
+using Redmine.Net.Api.Exceptions;
 
 namespace xUnitTestredminenet45api
 {
@@ -114,27 +115,9 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Delete_Version()
 		{
-			try
-			{
-				fixture.redmineManager.DeleteObject<Redmine.Net.Api.Types.Version>(DELETED_VERSION_ID, null);
-			}
-			catch (RedmineException)
-			{
-				Assert.True(false, "Version could not be deleted.");
-				return;
-			}
-
-			try
-			{
-				fixture.redmineManager.GetObject<Redmine.Net.Api.Types.Version>(DELETED_VERSION_ID, null);
-			}
-			catch (RedmineException exc)
-			{
-				Assert.Contains(exc.Message, "Not Found");
-				return;
-			}
-			Assert.True(false, "Test failed");
-
+			RedmineException exception = (RedmineException)Record.Exception(() => fixture.redmineManager.DeleteObject<Redmine.Net.Api.Types.Version>(DELETED_VERSION_ID, null));
+			Assert.Null (exception);
+			Assert.Throws<NotFoundException>(() => fixture.redmineManager.GetObject<Redmine.Net.Api.Types.Version>(DELETED_VERSION_ID, null));
 		}
 	}
 }
