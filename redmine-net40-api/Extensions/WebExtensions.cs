@@ -36,7 +36,7 @@ namespace Redmine.Net.Api.Extensions
 								throw new UnauthorizedException(response.StatusDescription, exception);
 
 							case (int)HttpStatusCode.Forbidden:
-		                        throw new RedmineException(response.StatusDescription, exception);
+								throw new ForbiddenException(response.StatusDescription, exception);
 
 		                    case (int)HttpStatusCode.Conflict:
                                 throw new RedmineException("The page that you are trying to update is staled!", exception);
