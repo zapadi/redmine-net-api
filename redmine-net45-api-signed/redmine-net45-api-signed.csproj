@@ -416,6 +416,9 @@
     <Compile Include="..\redmine-net20-api\Exceptions\RedmineException.cs">
       <Link>Exceptions\RedmineException.cs</Link>
     </Compile>
+    <Compile Include="..\redmine-net20-api\Exceptions\RedmineTimeoutException.cs">
+      <Link>Exceptions\RedmineTimeoutException.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="redmine-net-api.snk" />

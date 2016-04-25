@@ -18,7 +18,7 @@ namespace Redmine.Net.Api.Extensions
 
             switch (exception.Status)
             {
-                case WebExceptionStatus.Timeout: throw new RedmineException("Timeout!", exception);
+			case WebExceptionStatus.Timeout: throw new RedmineTimeoutException("Timeout!", exception);
                 case WebExceptionStatus.NameResolutionFailure: throw new RedmineException("Bad domain name!", exception);
                 case WebExceptionStatus.ProtocolError:
                     {

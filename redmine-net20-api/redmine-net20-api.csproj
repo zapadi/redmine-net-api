@@ -133,6 +133,7 @@
     <Compile Include="Logging\RedmineConsoleTraceListener.cs" />
     <Compile Include="Exceptions\NotFoundException.cs" />
     <Compile Include="Exceptions\RedmineException.cs" />
+    <Compile Include="Exceptions\RedmineTimeoutException.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
