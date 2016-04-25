@@ -313,6 +313,9 @@
     <Compile Include="..\redmine-net20-api\Exceptions\NameResolutionFailureException.cs">
       <Link>Exceptions\NameResolutionFailureException.cs</Link>
     </Compile>
+    <Compile Include="..\redmine-net20-api\Exceptions\InternalServerErrorException.cs">
+      <Link>Exceptions\InternalServerErrorException.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

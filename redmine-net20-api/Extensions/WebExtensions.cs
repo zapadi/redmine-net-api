@@ -44,6 +44,8 @@ namespace Redmine.Net.Api.Extensions
 								throw new NotFoundException (response.StatusDescription, exception);
 
                             case (int)HttpStatusCode.InternalServerError:
+								throw new InternalServerErrorException(response.StatusDescription, exception);
+
                             case (int)HttpStatusCode.Unauthorized:
                             case (int)HttpStatusCode.Forbidden:
                                 throw new RedmineException(response.StatusDescription, exception);
