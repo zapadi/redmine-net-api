@@ -316,6 +316,9 @@
     <Compile Include="..\redmine-net20-api\Exceptions\InternalServerErrorException.cs">
       <Link>Exceptions\InternalServerErrorException.cs</Link>
     </Compile>
+    <Compile Include="..\redmine-net20-api\Exceptions\UnauthorizedException.cs">
+      <Link>Exceptions\UnauthorizedException.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
