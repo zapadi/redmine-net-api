@@ -334,7 +334,10 @@ namespace Redmine.Net.Api.Async
                     if (tempResult != null)
                     {
                         if (resultList == null)
+                        {
                             resultList = tempResult.Objects;
+                            totalCount = tempResult.TotalCount;    
+                        }
                         else
                             resultList.AddRange(tempResult.Objects);
                     }
