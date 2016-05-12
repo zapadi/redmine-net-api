@@ -8,6 +8,8 @@ build_script:
   - Msbuild.exe redmine-net40-api-signed/redmine-net40-api-signed.csproj /verbosity:minimal /p:BuildNetFX40=true
   - Msbuild.exe redmine-net45-api/redmine-net45-api.csproj /verbosity:minimal /p:BuildNetFX45=true
   - Msbuild.exe redmine-net45-api-signed/redmine-net45-api-signed.csproj /verbosity:minimal /p:BuildNetFX45=true
+  - Msbuild.exe redmine-net451-api/redmine-net451-api.csproj /verbosity:minimal /p:BuildNetFX451=true
+  - Msbuild.exe redmine-net451-api-signed/redmine-net451-api-signed.csproj /verbosity:minimal /p:BuildNetFX451=true
 
 deploy: off
 

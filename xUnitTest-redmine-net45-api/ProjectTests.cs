@@ -1,5 +1,4 @@
-﻿using System;
-using Xunit;
+﻿using Xunit;
 using Redmine.Net.Api.Types;
 using Redmine.Net.Api;
 using System.Collections.Specialized;
@@ -110,7 +109,7 @@ namespace xUnitTestredminenet45api
 		{
 			var project = fixture.redmineManager.GetObject<Project>(PROJECT_IDENTIFIER, new NameValueCollection()
 				{
-					{RedmineKeys.INCLUDE, RedmineKeys.TRACKERS+","+RedmineKeys.ISSUE_CATEGORIES+","+RedmineKeys.ENABLED_MODULES}
+					{RedmineKeys.INCLUDE, string.Join(",",RedmineKeys.TRACKERS,RedmineKeys.ISSUE_CATEGORIES,RedmineKeys.ENABLED_MODULES)}
 				});
 
 			Assert.NotNull(project);
@@ -134,7 +133,7 @@ namespace xUnitTestredminenet45api
 		{
 			IList<Project> projects = fixture.redmineManager.GetObjects<Project>(new NameValueCollection()
 				{
-					{RedmineKeys.INCLUDE, RedmineKeys.TRACKERS+","+RedmineKeys.ISSUE_CATEGORIES+","+RedmineKeys.ENABLED_MODULES}
+					{RedmineKeys.INCLUDE, string.Join(",",RedmineKeys.TRACKERS,RedmineKeys.ISSUE_CATEGORIES,RedmineKeys.ENABLED_MODULES)}
 				});
 
 			Assert.NotNull(projects);
@@ -180,10 +179,12 @@ namespace xUnitTestredminenet45api
 			project.Parent = new IdentifiableName { Id = NEW_PROJECT_PARENT_ID };
 			project.InheritMembers = NEW_PROJECT_INHERIT_MEMBERS;
 			project.Trackers = new List<ProjectTracker> { new ProjectTracker { Id = NEW_PROJECT_TRACKER_ID } };
-			project.EnabledModules = new List<ProjectEnabledModule>();
-			project.EnabledModules.Add(new ProjectEnabledModule { Name = NEW_PROJECT_ENABLED_MODULE_NAME });
+		    project.EnabledModules = new List<ProjectEnabledModule>
+		    {
+		        new ProjectEnabledModule {Name = NEW_PROJECT_ENABLED_MODULE_NAME}
+		    };
 
-			Project savedProject = fixture.redmineManager.CreateObject<Project>(project);
+		    Project savedProject = fixture.redmineManager.CreateObject<Project>(project);
 
 			Assert.NotNull(savedProject);
 			Assert.True(savedProject.Identifier.Equals(NEW_PROJECT_IDENTIFIER), "Project identifier is invalid.");

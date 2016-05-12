@@ -369,7 +369,6 @@ namespace Redmine.Net.Api
         /// <typeparam name="T">The type of objects to retrieve.</typeparam>
         /// <param name="parameters">Optional filters and/or optional fetched data.</param>
         /// <returns>Returns a complete list of objects.</returns>
-
         public List<T> GetObjects<T>(NameValueCollection parameters) where T : class, new()
         {
             int totalCount = 0, pageSize;
@@ -407,7 +406,6 @@ namespace Redmine.Net.Api
         /// <typeparam name="T">The type of objects to retrieve.</typeparam>
         /// <param name="parameters">Optional filters and/or optional fetched data.</param>
         /// <returns>Returns a complete list of objects.</returns>
-
         [Obsolete("Use GetObjects method instead.")]
         public List<T> GetTotalObjectList<T>(NameValueCollection parameters) where T : class, new()
         {

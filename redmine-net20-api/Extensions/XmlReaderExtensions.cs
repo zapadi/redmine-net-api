@@ -78,7 +78,6 @@ namespace Redmine.Net.Api.Extensions
         public static DateTime? ReadElementContentAsNullableDateTime(this XmlReader reader)
         {
             var str = reader.ReadElementContentAsString();
-
             DateTime result;
 
             if (string.IsNullOrEmpty(str) || !DateTime.TryParse(str, out result)) return null;
@@ -94,7 +93,6 @@ namespace Redmine.Net.Api.Extensions
         public static float? ReadElementContentAsNullableFloat(this XmlReader reader)
         {
             var str = reader.ReadElementContentAsString();
-
             float result;
 
             if (string.IsNullOrEmpty(str) || !float.TryParse(str, NumberStyles.Any, NumberFormatInfo.InvariantInfo, out result)) return null;
@@ -110,7 +108,6 @@ namespace Redmine.Net.Api.Extensions
         public static int? ReadElementContentAsNullableInt(this XmlReader reader)
         {
             var str = reader.ReadElementContentAsString();
-
             int result;
 
             if (string.IsNullOrEmpty(str) || !int.TryParse(str, NumberStyles.Any, NumberFormatInfo.InvariantInfo, out result)) return null;
@@ -126,7 +123,6 @@ namespace Redmine.Net.Api.Extensions
         public static decimal? ReadElementContentAsNullableDecimal(this XmlReader reader)
         {
             var str = reader.ReadElementContentAsString();
-
             decimal result;
 
             if (string.IsNullOrEmpty(str) || !decimal.TryParse(str, NumberStyles.Any, NumberFormatInfo.InvariantInfo, out result)) return null;
@@ -179,41 +175,6 @@ namespace Redmine.Net.Api.Extensions
             }
             return result;
         }
-
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <param name="reader"></param>
-        ///// <param name="type"></param>
-        ///// <returns></returns>
-        //public static ArrayList ReadElementContentAsCollection(this XmlReader reader, Type type)
-        //{
-        //    var result = new ArrayList();
-        //    var serializer = new XmlSerializer(type);
-        //    var xml = reader.ReadOuterXml();
-        //    using (var stringReader = new StringReader(xml))
-        //    {
-        //        using (var xmlTextReader = new XmlTextReader(stringReader))
-        //        {
-        //            xmlTextReader.ReadStartElement();
-        //            while (!xmlTextReader.EOF)
-        //            {
-        //                if (xmlTextReader.NodeType == XmlNodeType.EndElement)
-        //                {
-        //                    xmlTextReader.ReadEndElement();
-        //                    continue;
-        //                }
-
-        //                var subTree = xmlTextReader.ReadSubtree();
-        //                var obj = serializer.Deserialize(subTree);
-        //                if (obj != null)
-        //                    result.Add(obj);
-        //                xmlTextReader.Read();
-        //            }
-        //        }
-        //    }
-        //    return result;
-        //}
 
         /// <summary>
         /// Writes the id if not null.

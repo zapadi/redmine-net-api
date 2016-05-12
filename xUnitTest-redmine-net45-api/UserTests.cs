@@ -2,10 +2,11 @@
 using System.Collections.Specialized;
 using System.Collections.Generic;
 using System.Globalization;
-using Xunit;
+
 using Redmine.Net.Api;
 using Redmine.Net.Api.Types;
 using Redmine.Net.Api.Exceptions;
+using Xunit;
 
 namespace xUnitTestredminenet45api
 {
