@@ -38,6 +38,8 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugJSON|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -47,6 +49,8 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -72,7 +76,6 @@
     <Compile Include="Types\Attachments.cs" />
     <Compile Include="Types\PaginatedObjects.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RedmineException.cs" />
     <Compile Include="RedmineKeys.cs" />
     <Compile Include="RedmineManager.cs" />
     <Compile Include="Async\RedmineManagerAsync.cs" />
@@ -129,6 +132,15 @@
     <Compile Include="Internals\Utils.cs" />
     <Compile Include="Types\IValue.cs" />
     <Compile Include="Logging\RedmineConsoleTraceListener.cs" />
+    <Compile Include="Exceptions\NotFoundException.cs" />
+    <Compile Include="Exceptions\RedmineException.cs" />
+    <Compile Include="Exceptions\RedmineTimeoutException.cs" />
+    <Compile Include="Exceptions\NameResolutionFailureException.cs" />
+    <Compile Include="Exceptions\InternalServerErrorException.cs" />
+    <Compile Include="Exceptions\UnauthorizedException.cs" />
+    <Compile Include="Exceptions\ForbiddenException.cs" />
+    <Compile Include="Exceptions\ConflictException.cs" />
+    <Compile Include="Exceptions\NotAcceptableException.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -139,4 +151,7 @@
   </Target>
   -->
   <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Exceptions\" />
+  </ItemGroup>
 </Project>

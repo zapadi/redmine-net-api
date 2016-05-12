@@ -38,6 +38,8 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugJSON|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -47,6 +49,8 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -94,9 +98,6 @@
     </Compile>
     <Compile Include="..\redmine-net20-api\Logging\TraceLogger.cs">
       <Link>Logging\TraceLogger.cs</Link>
-    </Compile>
-    <Compile Include="..\redmine-net20-api\RedmineException.cs">
-      <Link>RedmineException.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net20-api\RedmineKeys.cs">
       <Link>RedmineKeys.cs</Link>
@@ -304,6 +305,33 @@
       <Link>Types\IValue.cs</Link>
     </Compile>
     <Compile Include="Extensions\WebExtensions.cs" />
+    <Compile Include="..\redmine-net20-api\Exceptions\NotFoundException.cs">
+      <Link>Exceptions\NotFoundException.cs</Link>
+    </Compile>
+    <Compile Include="..\redmine-net20-api\Exceptions\RedmineException.cs">
+      <Link>Exceptions\RedmineException.cs</Link>
+    </Compile>
+    <Compile Include="..\redmine-net20-api\Exceptions\RedmineTimeoutException.cs">
+      <Link>Exceptions\RedmineTimeoutException.cs</Link>
+    </Compile>
+    <Compile Include="..\redmine-net20-api\Exceptions\NameResolutionFailureException.cs">
+      <Link>Exceptions\NameResolutionFailureException.cs</Link>
+    </Compile>
+    <Compile Include="..\redmine-net20-api\Exceptions\InternalServerErrorException.cs">
+      <Link>Exceptions\InternalServerErrorException.cs</Link>
+    </Compile>
+    <Compile Include="..\redmine-net20-api\Exceptions\UnauthorizedException.cs">
+      <Link>Exceptions\UnauthorizedException.cs</Link>
+    </Compile>
+    <Compile Include="..\redmine-net20-api\Exceptions\ForbiddenException.cs">
+      <Link>Exceptions\ForbiddenException.cs</Link>
+    </Compile>
+    <Compile Include="..\redmine-net20-api\Exceptions\ConflictException.cs">
+      <Link>Exceptions\ConflictException.cs</Link>
+    </Compile>
+    <Compile Include="..\redmine-net20-api\Exceptions\NotAcceptableException.cs">
+      <Link>Exceptions\NotAcceptableException.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

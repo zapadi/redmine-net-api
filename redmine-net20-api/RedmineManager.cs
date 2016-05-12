@@ -29,6 +29,7 @@ using Redmine.Net.Api.Internals;
 using Redmine.Net.Api.Types;
 using Group = Redmine.Net.Api.Types.Group;
 using Version = Redmine.Net.Api.Types.Version;
+using Redmine.Net.Api.Exceptions;
 
 namespace Redmine.Net.Api
 {

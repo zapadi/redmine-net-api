@@ -2,6 +2,7 @@
 using System.Collections.Specialized;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Types;
+using Redmine.Net.Api.Exceptions;
 
 namespace Redmine.Net.Api.Internals
 {

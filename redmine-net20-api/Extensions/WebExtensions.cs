@@ -21,6 +21,7 @@ using System.IO;
 using System.Net;
 using Redmine.Net.Api.Internals;
 using Redmine.Net.Api.Types;
+using Redmine.Net.Api.Exceptions;
 
 namespace Redmine.Net.Api.Extensions
 {
@@ -32,21 +33,27 @@ namespace Redmine.Net.Api.Extensions
 
             switch (exception.Status)
             {
-                case WebExceptionStatus.Timeout: throw new RedmineException("Timeout!", exception);
-                case WebExceptionStatus.NameResolutionFailure: throw new RedmineException("Bad domain name!", exception);
+			case WebExceptionStatus.Timeout: throw new RedmineTimeoutException("Timeout!", exception);
+			case WebExceptionStatus.NameResolutionFailure: throw new NameResolutionFailureException("Bad domain name!", exception);
                 case WebExceptionStatus.ProtocolError:
                     {
                         var response = (HttpWebResponse)exception.Response;
                         switch ((int)response.StatusCode)
                         {
+							case (int)HttpStatusCode.NotFound:
+								throw new NotFoundException (response.StatusDescription, exception);
+
                             case (int)HttpStatusCode.InternalServerError:
-                            case (int)HttpStatusCode.Unauthorized:
-                            case (int)HttpStatusCode.NotFound:
+								throw new InternalServerErrorException(response.StatusDescription, exception);
+
+							case (int)HttpStatusCode.Unauthorized:
+								throw new UnauthorizedException(response.StatusDescription, exception);
+
                             case (int)HttpStatusCode.Forbidden:
-                                throw new RedmineException(response.StatusDescription, exception);
+								throw new ForbiddenException(response.StatusDescription, exception);
 
                             case (int)HttpStatusCode.Conflict:
-                                throw new RedmineException("The page that you are trying to update is staled!", exception);
+								throw new ConflictException("The page that you are trying to update is staled!", exception);
 
                             case 422:
                                 var errors = GetRedmineExceptions(exception.Response, mimeFormat);
@@ -58,7 +65,7 @@ namespace Redmine.Net.Api.Extensions
                                 }
                                 throw new RedmineException(method + " has invalid or missing attribute parameters: " + message, exception);
 
-                            case (int)HttpStatusCode.NotAcceptable: throw new RedmineException(response.StatusDescription, exception);
+							case (int)HttpStatusCode.NotAcceptable: throw new NotAcceptableException(response.StatusDescription, exception);
                         }
                     }
                     break;
