@@ -213,5 +213,8 @@ namespace Redmine.Net.Api
 		public const string TOTAL_COUNT = "total_count";
 
         public const string SUBPROJECT_ID = "subproject_id";
+        
+        public const string SORT = "sort";
+		public const string ALL ="*";
     }
 }
