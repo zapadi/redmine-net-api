@@ -56,4 +56,10 @@ A good way to get started (flow):
 
 The API is released under Apache 2 open-source license. You can use it for both personal and commercial purposes, build upon it and modify it.
 
+## Thanks
 
+I would like to thank:
+
+* JetBrains for my Open Source ReSharper licence, 
+
+* AppVeyor for allowing free build CI services for Open Source projects
