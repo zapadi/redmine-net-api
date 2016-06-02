@@ -41,6 +41,10 @@ redmine-net45-api-signed | ![alt text](https://ci.appveyor.com/api/projects/stat
 redmine-net451-api | ![alt text](https://ci.appveyor.com/api/projects/status/github/zapadi/redmine-net-api?branch=master&svg=true) | [![NuGet package](https://img.shields.io/nuget/v/redmine-api.svg)](https://www.nuget.org/packages/redmine-api.Web)
 redmine-net451-api-signed | ![alt text](https://ci.appveyor.com/api/projects/status/github/zapadi/redmine-net-api?branch=master&svg=true) | [![NuGet package](https://img.shields.io/nuget/v/redmine-api.svg)](https://www.nuget.org/packages/redmine-api.Web)
 
+## WIKI
+
+Please review the wiki pages on how to use **redmine-net-api**.
+
 ## Contributing
 Contributions are really appreciated!
 
