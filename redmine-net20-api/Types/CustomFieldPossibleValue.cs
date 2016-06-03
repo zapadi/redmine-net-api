@@ -1,4 +1,4 @@
-/*
+﻿/*
    Copyright 2011 - 2016 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -45,7 +45,7 @@ namespace Redmine.Net.Api.Types
             unchecked
             {
                 var hashCode = 13;
-				hashCode = Utils.GetHashCode(Value,hashCode);
+				hashCode = HashCodeHelper.GetHashCode(Value,hashCode);
                 return hashCode;
             }
         }

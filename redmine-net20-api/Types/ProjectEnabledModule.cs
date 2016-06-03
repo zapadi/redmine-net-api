@@ -38,5 +38,5 @@ namespace Redmine.Net.Api.Types
         {
             return string.Format("[ProjectEnabledModule: {0}]", base.ToString());
         }
-    }
+	}
 }

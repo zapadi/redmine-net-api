@@ -1,32 +1,32 @@
-﻿using System;
+﻿using Redmine.Net.Api.Types;
 using Xunit;
-using Redmine.Net.Api.Types;
 
 namespace xUnitTestredminenet45api
 {
-	[Collection("RedmineCollection")]
-	public class QueryTests
-	{
-		private const int NUMBER_OF_QUERIES = 2;
-		private const bool EXISTS_PUBLIC_QUERY = true;
+    [Collection("RedmineCollection")]
+    public class QueryTests
+    {
+        private const int NUMBER_OF_QUERIES = 2;
+        private const bool EXISTS_PUBLIC_QUERY = true;
 
-		RedmineFixture fixture;
-		public QueryTests (RedmineFixture fixture)
-		{
-			this.fixture = fixture;
-		}
+        private readonly RedmineFixture fixture;
 
-		[Fact]
-		public void Should_Get_All_Queries()
-		{
-			var queries = fixture.redmineManager.GetObjects<Query>(null);
+        public QueryTests(RedmineFixture fixture)
+        {
+            this.fixture = fixture;
+        }
 
-			Assert.NotNull(queries);
-			Assert.True(queries.Count == NUMBER_OF_QUERIES, "Queries count != " + NUMBER_OF_QUERIES);
-			Assert.All (queries, q => Assert.IsType<Query> (q));
+        [Fact]
+        public void Should_Get_All_Queries()
+        {
+            var queries = fixture.Manager.GetObjects<Query>(null);
 
-			Assert.True(queries.Exists(q => q.IsPublic) == EXISTS_PUBLIC_QUERY, EXISTS_PUBLIC_QUERY ? "Public query should exist." : "Public query should not exist.");
-		}
-	}
+            Assert.NotNull(queries);
+            Assert.True(queries.Count == NUMBER_OF_QUERIES, "Queries count != " + NUMBER_OF_QUERIES);
+            Assert.All(queries, q => Assert.IsType<Query>(q));
+
+            Assert.True(queries.Exists(q => q.IsPublic) == EXISTS_PUBLIC_QUERY,
+                EXISTS_PUBLIC_QUERY ? "Public query should exist." : "Public query should not exist.");
+        }
+    }
 }
-

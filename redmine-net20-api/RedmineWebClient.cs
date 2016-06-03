@@ -34,7 +34,6 @@ namespace Redmine.Net.Api
 
             if (httpWebRequest != null)
             {
-
                 if (UseCookies)
                 {
                     httpWebRequest.Headers.Add(HttpRequestHeader.Cookie, "redmineCookie");

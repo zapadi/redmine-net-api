@@ -18,7 +18,7 @@ using System.Collections.Generic;
 
 namespace Redmine.Net.Api.Internals
 {
-    internal static class Utils
+    internal static class HashCodeHelper
     {
         public static int GetHashCode<T>(IList<T> list, int hash)
         {
@@ -27,8 +27,8 @@ namespace Redmine.Net.Api.Internals
                 var hashCode = hash;
                 if (list != null)
                 {
-                    hashCode = (hashCode * 13) + list.Count;
-                    foreach (T t in list)
+                    hashCode = hashCode * 13 + list.Count;
+                    foreach (var t in list)
                     {
                         hashCode *= 13;
                         if (t != null) hashCode = hashCode + t.GetHashCode();

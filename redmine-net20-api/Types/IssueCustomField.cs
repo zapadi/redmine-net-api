@@ -69,12 +69,6 @@ namespace Redmine.Net.Api.Types
             if (itemsCount > 1)
             {
                 writer.WriteArrayStringElement(Values, RedmineKeys.VALUE, GetValue);
-                //                writer.WriteStartElement(RedmineKeys.VALUE);
-                //                writer.WriteAttributeString("type", "array");
-                //
-                //                foreach (var v in Values) writer.WriteElementString(RedmineKeys.VALUE, v.Info);
-                //
-                //                writer.WriteEndElement();
             }
             else
             {
@@ -104,10 +98,10 @@ namespace Redmine.Net.Api.Types
             unchecked
             {
                 var hashCode = 13;
-                hashCode = Utils.GetHashCode(Id, hashCode);
-                hashCode = Utils.GetHashCode(Name, hashCode);
-                hashCode = Utils.GetHashCode(Values, hashCode);
-                hashCode = Utils.GetHashCode(Multiple, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Id, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Name, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Values, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Multiple, hashCode);
                 return hashCode;
             }
         }

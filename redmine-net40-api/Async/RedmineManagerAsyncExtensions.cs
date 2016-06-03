@@ -21,10 +21,11 @@ using System.Globalization;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Internals;
 using Redmine.Net.Api.Types;
 
-namespace Redmine.Net.Api.Extensions
+namespace Redmine.Net.Api.Async
 {
     public static class RedmineManagerAsyncExtensions
     {
@@ -52,7 +53,7 @@ namespace Redmine.Net.Api.Extensions
 
                 using (var wc = redmineManager.CreateWebClient(null))
                 {
-                    var response = wc.UploadString(uri, RedmineManager.PUT, data);
+						var response = wc.UploadString(uri, HttpVerbs.PUT, data);
                     return RedmineSerializer.Deserialize<WikiPage>(response, redmineManager.MimeFormat);
                 }
             }, TaskCreationOptions.LongRunning);
@@ -67,7 +68,7 @@ namespace Redmine.Net.Api.Extensions
             {
                 using (var wc = redmineManager.CreateWebClient(null))
                 {
-                    wc.UploadString(uri, RedmineManager.DELETE, string.Empty);
+						wc.UploadString(uri, HttpVerbs.DELETE, string.Empty);
                 }
             }, TaskCreationOptions.LongRunning);
         }
@@ -110,15 +111,13 @@ namespace Redmine.Net.Api.Extensions
 
         public static Task AddUserToGroupAsync(this RedmineManager redmineManager, int groupId, int userId)
         {
-            var data = redmineManager.MimeFormat == MimeFormat.xml
-                   ? "<user_id>" + userId + "</user_id>"
-                   : "{\"user_id\":\"" + userId + "\"}";
+            var data = DataHelper.UserData(userId, redmineManager.MimeFormat);
             var task = Task.Factory.StartNew(() =>
             {
                 var uri = UrlHelper.GetAddUserToGroupUrl(redmineManager, groupId);
                 using (var wc = redmineManager.CreateWebClient(null))
                 {
-                    wc.UploadString(uri, RedmineManager.POST, data);
+						wc.UploadString(uri, HttpVerbs.POST, data);
                 }
             }, TaskCreationOptions.LongRunning);
             return task;
@@ -131,7 +130,7 @@ namespace Redmine.Net.Api.Extensions
                 var uri = UrlHelper.GetRemoveUserFromGroupUrl(redmineManager, groupId, userId);
                 using (var wc = redmineManager.CreateWebClient(null))
                 {
-                    wc.UploadString(uri, RedmineManager.DELETE, string.Empty);
+						wc.UploadString(uri, HttpVerbs.DELETE, string.Empty);
                 }
             }, TaskCreationOptions.LongRunning);
             return task;
@@ -139,16 +138,14 @@ namespace Redmine.Net.Api.Extensions
 
         public static Task AddWatcherToIssueAsync(this RedmineManager redmineManager, int issueId, int userId)
         {
-            var data = redmineManager.MimeFormat == MimeFormat.xml
-                ? "<user_id>" + userId + "</user_id>"
-                : "{\"user_id\":\"" + userId + "\"}";
+            var data = DataHelper.UserData(userId, redmineManager.MimeFormat);
             var task = Task.Factory.StartNew(() =>
             {
                 var uri = UrlHelper.GetAddWatcherUrl(redmineManager, issueId, userId);
 
                 using (var wc = redmineManager.CreateWebClient(null))
                 {
-                    wc.UploadString(uri, RedmineManager.POST, data);
+						wc.UploadString(uri, HttpVerbs.POST, data);
                 }
             }, TaskCreationOptions.LongRunning);
             return task;
@@ -161,7 +158,7 @@ namespace Redmine.Net.Api.Extensions
                 var uri = UrlHelper.GetRemoveWatcherUrl(redmineManager, issueId, userId);
                 using (var wc = redmineManager.CreateWebClient(null))
                 {
-                    wc.UploadString(uri, RedmineManager.DELETE, string.Empty);
+						wc.UploadString(uri, HttpVerbs.DELETE, string.Empty);
                 }
             }, TaskCreationOptions.LongRunning);
             return task;
@@ -203,7 +200,7 @@ namespace Redmine.Net.Api.Extensions
 
                 using (var wc = redmineManager.CreateWebClient(null))
                 {
-                    var response = wc.UploadString(url, RedmineManager.POST, data);
+						var response = wc.UploadString(url, HttpVerbs.POST, data);
                     return RedmineSerializer.Deserialize<T>(response, redmineManager.MimeFormat);
                 }
             }, TaskCreationOptions.LongRunning);
@@ -270,7 +267,7 @@ namespace Redmine.Net.Api.Extensions
                 using (var wc = redmineManager.CreateWebClient(null))
                 {
                     var data = RedmineSerializer.Serialize(obj,redmineManager.MimeFormat);
-                    wc.UploadString(url, RedmineManager.PUT, data);
+						wc.UploadString(url, HttpVerbs.PUT, data);
                 }
             }, TaskCreationOptions.LongRunning);
             return task;
@@ -284,7 +281,7 @@ namespace Redmine.Net.Api.Extensions
 
                 using (var wc = redmineManager.CreateWebClient(parameters))
                 {
-                    wc.UploadString(uri, RedmineManager.DELETE, string.Empty);
+						wc.UploadString(uri, HttpVerbs.DELETE, string.Empty);
                 }
             }, TaskCreationOptions.LongRunning);
             return task;
@@ -297,7 +294,7 @@ namespace Redmine.Net.Api.Extensions
                 var uri = UrlHelper.GetUploadFileUrl(redmineManager);
                 using (var wc = redmineManager.CreateWebClient(null, true))
                 {
-                    var response = wc.UploadData(uri, RedmineManager.POST, data);
+						var response = wc.UploadData(uri, HttpVerbs.POST, data);
 
                     var responseString = Encoding.ASCII.GetString(response);
                     return RedmineSerializer.Deserialize<Upload>(responseString, redmineManager.MimeFormat);

@@ -1,4 +1,4 @@
-/*
+﻿/*
    Copyright 2011 - 2016 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -139,14 +139,14 @@ namespace Redmine.Net.Api.Types
             unchecked
             {
                 var hashCode = base.GetHashCode();
-                hashCode = Utils.GetHashCode(Title, hashCode);
-                hashCode = Utils.GetHashCode(Text, hashCode);
-                hashCode = Utils.GetHashCode(Comments, hashCode);
-                hashCode = Utils.GetHashCode(Version, hashCode);
-                hashCode = Utils.GetHashCode(Author, hashCode);
-                hashCode = Utils.GetHashCode(CreatedOn, hashCode);
-                hashCode = Utils.GetHashCode(UpdatedOn, hashCode);
-                hashCode = Utils.GetHashCode(Attachments, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Title, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Text, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Comments, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Version, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Author, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(CreatedOn, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(UpdatedOn, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Attachments, hashCode);
                 return hashCode;
             }
         }

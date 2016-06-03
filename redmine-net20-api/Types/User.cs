@@ -222,20 +222,20 @@ namespace Redmine.Net.Api.Types
             unchecked
             {
                 var hashCode = base.GetHashCode();
-                hashCode = Utils.GetHashCode(Login, hashCode);
-                hashCode = Utils.GetHashCode(Password, hashCode);
-                hashCode = Utils.GetHashCode(FirstName, hashCode);
-                hashCode = Utils.GetHashCode(LastName, hashCode);
-                hashCode = Utils.GetHashCode(Email, hashCode);
-                hashCode = Utils.GetHashCode(AuthenticationModeId, hashCode);
-                hashCode = Utils.GetHashCode(CreatedOn, hashCode);
-                hashCode = Utils.GetHashCode(LastLoginOn, hashCode);
-                hashCode = Utils.GetHashCode(ApiKey, hashCode);
-                hashCode = Utils.GetHashCode(Status, hashCode);
-                hashCode = Utils.GetHashCode(MustChangePassword, hashCode);
-                hashCode = Utils.GetHashCode(CustomFields, hashCode);
-                hashCode = Utils.GetHashCode(Memberships, hashCode);
-                hashCode = Utils.GetHashCode(Groups, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Login, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Password, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(FirstName, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(LastName, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Email, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(AuthenticationModeId, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(CreatedOn, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(LastLoginOn, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(ApiKey, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Status, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(MustChangePassword, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(CustomFields, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Memberships, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Groups, hashCode);
                 return hashCode;
             }
         }

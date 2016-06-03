@@ -166,141 +166,28 @@ namespace Redmine.Net.Api.Extensions
 
         public static ArrayList ReadElementContentAsCollection(this XmlReader reader, Type type)
         {
-            var result = new ArrayList();
+            var arrayList = new ArrayList();
             var serializer = new XmlSerializer(type);
-            var xml = reader.ReadOuterXml();
-            using (var sr = new StringReader(xml))
+            var outerXml = reader.ReadOuterXml();
+            using (var stringReader = new StringReader(outerXml))
             {
-                var r = new XmlTextReader(sr);
-                r.ReadStartElement();
-                while (!r.EOF)
+                var xmlTextReader = new XmlTextReader(stringReader);
+                xmlTextReader.ReadStartElement();
+                while (!xmlTextReader.EOF)
                 {
-                    if (r.NodeType == XmlNodeType.EndElement)
+                    if (xmlTextReader.NodeType == XmlNodeType.EndElement)
                     {
-                        r.ReadEndElement();
+                        xmlTextReader.ReadEndElement();
                         continue;
                     }
 
-                    var subTree = r.ReadSubtree();
-                    var temp = serializer.Deserialize(subTree);
-                    if (temp != null) result.Add(temp);
-                    r.Read();
+                    var subTree = xmlTextReader.ReadSubtree();
+                    var subTreeDeserialized = serializer.Deserialize(subTree);
+                    if (subTreeDeserialized != null) arrayList.Add(subTreeDeserialized);
+                    xmlTextReader.Read();
                 }
             }
-            return result;
-        }
-
-        /// <summary>
-        /// Writes the id if not null.
-        /// </summary>
-        /// <param name="writer">The writer.</param>
-        /// <param name="ident">The ident.</param>
-        /// <param name="tag">The tag.</param>
-        public static void WriteIdIfNotNull(this XmlWriter writer, IdentifiableName ident, string tag)
-        {
-            if (ident != null) writer.WriteElementString(tag, ident.Id.ToString(CultureInfo.InvariantCulture));
-        }
-
-        public static void WriteIdOrEmpty(this XmlWriter writer, IdentifiableName ident, string tag)
-        {
-            writer.WriteElementString(tag,
-                ident != null ? ident.Id.ToString(CultureInfo.InvariantCulture) : string.Empty);
-        }
-
-        /// <summary>
-        /// Writes string empty if T has default value or null.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="writer">The writer.</param>
-        /// <param name="val">The value.</param>
-        /// <param name="tag">The tag.</param>
-        public static void WriteValueOrEmpty<T>(this XmlWriter writer, T? val, string tag) where T : struct
-        {
-            if (!val.HasValue || EqualityComparer<T>.Default.Equals(val.Value, default(T)))
-                writer.WriteElementString(tag, string.Empty);
-            else
-                writer.WriteElementString(tag, string.Format(NumberFormatInfo.InvariantInfo, "{0}", val.Value));
-        }
-
-        public static void WriteIfNotDefaultOrNull<T>(this XmlWriter writer, T? val, string tag) where T : struct
-        {
-            if (!val.HasValue) return;
-            if (!EqualityComparer<T>.Default.Equals(val.Value, default(T)))
-                writer.WriteElementString(tag, string.Format(NumberFormatInfo.InvariantInfo, "{0}", val.Value));
-        }
-
-        public static void WriteDateOrEmpty(this XmlWriter writer, DateTime? val, string tag)
-        {
-            if (!val.HasValue || val.Value.Equals(default(DateTime)))
-                writer.WriteElementString(tag, string.Empty);
-            else
-                writer.WriteElementString(tag, string.Format(NumberFormatInfo.InvariantInfo, "{0}", val.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)));
-        }
-
-        public static void WriteArray(this XmlWriter writer, IEnumerable col, string elementName)
-        {
-            if (col == null) return;
-            writer.WriteStartElement(elementName);
-            writer.WriteAttributeString("type", "array");
-
-            foreach (var item in col)
-            {
-                new XmlSerializer(item.GetType()).Serialize(writer, item);
-            }
-
-            writer.WriteEndElement();
-        }
-
-        public static void WriteArrayIds(this XmlWriter writer, IEnumerable col, string elementName, Type type, Func<object, int> f)
-        {
-            if (col == null) return;
-            writer.WriteStartElement(elementName);
-            writer.WriteAttributeString("type", "array");
-
-            var serializer = new XmlSerializer(type);
-            foreach (var item in col)
-            {
-                serializer.Serialize(writer, f.Invoke(item));
-            }
-
-            writer.WriteEndElement();
-        }
-
-        public static void WriteArray(this XmlWriter writer, IEnumerable list, string elementName, Type type, string root, string defaultNamespace = null)
-        {
-            if (list == null) return;
-            writer.WriteStartElement(elementName);
-            writer.WriteAttributeString("type", "array");
-
-            var serializer = new XmlSerializer(type, new XmlAttributeOverrides(), null, new XmlRootAttribute(root), defaultNamespace);
-            foreach (var item in list)
-            {
-                serializer.Serialize(writer, item);
-            }
-
-            writer.WriteEndElement();
-        }
-
-        public static void WriteArrayStringElement(this XmlWriter writer, IEnumerable col, string elementName, Func<object, string> f)
-        {
-            if (col == null) return;
-            writer.WriteStartElement(elementName);
-            writer.WriteAttributeString("type", "array");
-            foreach (var item in col)
-            {
-                writer.WriteElementString(elementName, f.Invoke(item));
-            }
-            writer.WriteEndElement();
-        }
-
-        public static void WriteListElements(this XmlWriter xmlWriter, IEnumerable<IValue> list, string elementName)
-        {
-            if (list == null) return;
-
-            foreach (var item in list)
-            {
-                xmlWriter.WriteElementString(elementName, item.Value);
-            }
+            return arrayList;
         }
     }
 }

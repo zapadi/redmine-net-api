@@ -14,22 +14,32 @@
    limitations under the License.
 */
 
+using System;
 using System.Collections.Generic;
 
 namespace Redmine.Net.Api.Extensions
 {
     public static class CollectionExtensions
     {
-        public static bool Equals<T>(this IList<T> list, IList<T> listToCompare) where T : class
+        public static bool Equals<T>(this IList<T> leftList, IList<T> rightList) where T : class
         {
-            if (listToCompare == null) return false;
+            if (rightList == null) return false;
 
-            if (list.Count != listToCompare.Count) return false;
+            if (leftList.Count != rightList.Count) return false;
 
             var index = 0;
-            while (index < list.Count &&  (list[index] as T).Equals(listToCompare[index] as T)) index++;
-            
-            return index == list.Count;
+            while (index < leftList.Count && leftList[index].Equals(rightList[index])) index++;
+
+            return index == leftList.Count;
+        }
+
+        public static IList<T> Clone<T>(this IList<T> list) where T : ICloneable
+        {
+            if (list == null) return null;
+            IList<T> clonedList = new List<T>();
+            foreach (var item in list)
+                clonedList.Add((T) item.Clone());
+            return clonedList;
         }
     }
 }

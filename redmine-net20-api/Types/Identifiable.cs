@@ -55,7 +55,7 @@ namespace Redmine.Net.Api.Types
             unchecked
             {
                 var hashCode = 13;
-                hashCode = Utils.GetHashCode(Id, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Id, hashCode);
                 return hashCode;
             }
         }
@@ -74,10 +74,5 @@ namespace Redmine.Net.Api.Types
         {
             return string.Format("[Identifiable: Id={0}]", Id);
         }
-    }
-
-    public interface Identifiable
-    {
-        int Id { get; set; }
     }
 }

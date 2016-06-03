@@ -1,0 +1,1110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="44160ec7-060c-4cf4-8720-7fb8addc5320" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/redmine-net20-api/HttpVerbs.cs" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/redmine-net20-api/Internals/Utils.cs" afterPath="$PROJECT_DIR$/redmine-net20-api/Internals/HashCodeHelper.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net-api.sln" afterPath="$PROJECT_DIR$/redmine-net-api.sln" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net20-api/Async/RedmineManagerAsync.cs" afterPath="$PROJECT_DIR$/redmine-net20-api/Async/RedmineManagerAsync.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net20-api/Exceptions/ConflictException.cs" afterPath="$PROJECT_DIR$/redmine-net20-api/Exceptions/ConflictException.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net20-api/Exceptions/ForbiddenException.cs" afterPath="$PROJECT_DIR$/redmine-net20-api/Exceptions/ForbiddenException.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net20-api/Exceptions/InternalServerErrorException.cs" afterPath="$PROJECT_DIR$/redmine-net20-api/Exceptions/InternalServerErrorException.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net20-api/Exceptions/NameResolutionFailureException.cs" afterPath="$PROJECT_DIR$/redmine-net20-api/Exceptions/NameResolutionFailureException.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net20-api/Exceptions/NotAcceptableException.cs" afterPath="$PROJECT_DIR$/redmine-net20-api/Exceptions/NotAcceptableException.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net20-api/Exceptions/NotFoundException.cs" afterPath="$PROJECT_DIR$/redmine-net20-api/Exceptions/NotFoundException.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net20-api/Exceptions/RedmineTimeoutException.cs" afterPath="$PROJECT_DIR$/redmine-net20-api/Exceptions/RedmineTimeoutException.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net20-api/Exceptions/UnauthorizedException.cs" afterPath="$PROJECT_DIR$/redmine-net20-api/Exceptions/UnauthorizedException.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net20-api/Extensions/Extensions.cs" afterPath="$PROJECT_DIR$/redmine-net20-api/Extensions/Extensions.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net20-api/Extensions/WebExtensions.cs" afterPath="$PROJECT_DIR$/redmine-net20-api/Extensions/WebExtensions.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net20-api/Extensions/XmlReaderExtensions.cs" afterPath="$PROJECT_DIR$/redmine-net20-api/Extensions/XmlReaderExtensions.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net20-api/Internals/RedmineSerializer.cs" afterPath="$PROJECT_DIR$/redmine-net20-api/Internals/RedmineSerializer.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net20-api/Logging/ColorConsoleLogger.cs" afterPath="$PROJECT_DIR$/redmine-net20-api/Logging/ColorConsoleLogger.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net20-api/Logging/ConsoleLogger.cs" afterPath="$PROJECT_DIR$/redmine-net20-api/Logging/ConsoleLogger.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net20-api/Logging/ILogger.cs" afterPath="$PROJECT_DIR$/redmine-net20-api/Logging/ILogger.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net20-api/Logging/LogEntry.cs" afterPath="$PROJECT_DIR$/redmine-net20-api/Logging/LogEntry.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net20-api/Logging/Logger.cs" afterPath="$PROJECT_DIR$/redmine-net20-api/Logging/Logger.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net20-api/Logging/LoggerExtensions.cs" afterPath="$PROJECT_DIR$/redmine-net20-api/Logging/LoggerExtensions.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net20-api/Logging/LoggingEventType.cs" afterPath="$PROJECT_DIR$/redmine-net20-api/Logging/LoggingEventType.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net20-api/Logging/RedmineConsoleTraceListener.cs" afterPath="$PROJECT_DIR$/redmine-net20-api/Logging/RedmineConsoleTraceListener.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net20-api/Logging/TraceLogger.cs" afterPath="$PROJECT_DIR$/redmine-net20-api/Logging/TraceLogger.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net20-api/MimeFormat.cs" afterPath="$PROJECT_DIR$/redmine-net20-api/MimeFormat.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net20-api/RedmineManager.cs" afterPath="$PROJECT_DIR$/redmine-net20-api/RedmineManager.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net20-api/Types/Attachment.cs" afterPath="$PROJECT_DIR$/redmine-net20-api/Types/Attachment.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net20-api/Types/ChangeSet.cs" afterPath="$PROJECT_DIR$/redmine-net20-api/Types/ChangeSet.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net20-api/Types/CustomField.cs" afterPath="$PROJECT_DIR$/redmine-net20-api/Types/CustomField.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net20-api/Types/CustomFieldPossibleValue.cs" afterPath="$PROJECT_DIR$/redmine-net20-api/Types/CustomFieldPossibleValue.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net20-api/Types/CustomFieldValue.cs" afterPath="$PROJECT_DIR$/redmine-net20-api/Types/CustomFieldValue.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net20-api/Types/Detail.cs" afterPath="$PROJECT_DIR$/redmine-net20-api/Types/Detail.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net20-api/Types/Error.cs" afterPath="$PROJECT_DIR$/redmine-net20-api/Types/Error.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net20-api/Types/Group.cs" afterPath="$PROJECT_DIR$/redmine-net20-api/Types/Group.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net20-api/Types/Identifiable.cs" afterPath="$PROJECT_DIR$/redmine-net20-api/Types/Identifiable.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net20-api/Types/IdentifiableName.cs" afterPath="$PROJECT_DIR$/redmine-net20-api/Types/IdentifiableName.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net20-api/Types/Issue.cs" afterPath="$PROJECT_DIR$/redmine-net20-api/Types/Issue.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net20-api/Types/IssueCategory.cs" afterPath="$PROJECT_DIR$/redmine-net20-api/Types/IssueCategory.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net20-api/Types/IssueChild.cs" afterPath="$PROJECT_DIR$/redmine-net20-api/Types/IssueChild.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net20-api/Types/IssueCustomField.cs" afterPath="$PROJECT_DIR$/redmine-net20-api/Types/IssueCustomField.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net20-api/Types/IssuePriority.cs" afterPath="$PROJECT_DIR$/redmine-net20-api/Types/IssuePriority.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net20-api/Types/IssueRelation.cs" afterPath="$PROJECT_DIR$/redmine-net20-api/Types/IssueRelation.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net20-api/Types/IssueStatus.cs" afterPath="$PROJECT_DIR$/redmine-net20-api/Types/IssueStatus.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net20-api/Types/Journal.cs" afterPath="$PROJECT_DIR$/redmine-net20-api/Types/Journal.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net20-api/Types/Membership.cs" afterPath="$PROJECT_DIR$/redmine-net20-api/Types/Membership.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net20-api/Types/MembershipRole.cs" afterPath="$PROJECT_DIR$/redmine-net20-api/Types/MembershipRole.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net20-api/Types/News.cs" afterPath="$PROJECT_DIR$/redmine-net20-api/Types/News.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net20-api/Types/Permission.cs" afterPath="$PROJECT_DIR$/redmine-net20-api/Types/Permission.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net20-api/Types/Project.cs" afterPath="$PROJECT_DIR$/redmine-net20-api/Types/Project.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net20-api/Types/ProjectEnabledModule.cs" afterPath="$PROJECT_DIR$/redmine-net20-api/Types/ProjectEnabledModule.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net20-api/Types/ProjectMembership.cs" afterPath="$PROJECT_DIR$/redmine-net20-api/Types/ProjectMembership.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net20-api/Types/Query.cs" afterPath="$PROJECT_DIR$/redmine-net20-api/Types/Query.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net20-api/Types/Role.cs" afterPath="$PROJECT_DIR$/redmine-net20-api/Types/Role.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net20-api/Types/TimeEntry.cs" afterPath="$PROJECT_DIR$/redmine-net20-api/Types/TimeEntry.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net20-api/Types/TimeEntryActivity.cs" afterPath="$PROJECT_DIR$/redmine-net20-api/Types/TimeEntryActivity.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net20-api/Types/Tracker.cs" afterPath="$PROJECT_DIR$/redmine-net20-api/Types/Tracker.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net20-api/Types/Upload.cs" afterPath="$PROJECT_DIR$/redmine-net20-api/Types/Upload.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net20-api/Types/User.cs" afterPath="$PROJECT_DIR$/redmine-net20-api/Types/User.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net20-api/Types/Version.cs" afterPath="$PROJECT_DIR$/redmine-net20-api/Types/Version.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net20-api/Types/WikiPage.cs" afterPath="$PROJECT_DIR$/redmine-net20-api/Types/WikiPage.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net20-api/redmine-net20-api.csproj" afterPath="$PROJECT_DIR$/redmine-net20-api/redmine-net20-api.csproj" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net40-api/Async/RedmineManagerAsyncExtensions.cs" afterPath="$PROJECT_DIR$/redmine-net40-api/Async/RedmineManagerAsyncExtensions.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redmine-net45-api/Async/RedmineManagerAsync.cs" afterPath="$PROJECT_DIR$/redmine-net45-api/Async/RedmineManagerAsync.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/xUnitTest-redmine-net45-api/xUnitTest-redmine-net45-api.csproj" afterPath="$PROJECT_DIR$/xUnitTest-redmine-net45-api/xUnitTest-redmine-net45-api.csproj" />
+    </list>
+    <ignored path="Redmine-net-api.iws" />
+    <ignored path=".idea/workspace.xml" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CreatePatchCommitExecutor">
+    <option name="PATCH_PATH" value="" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
+  <component name="FavoritesManager">
+    <favorites_list name="Redmine-net-api" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="RedmineKeys.cs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/redmine-net20-api/RedmineKeys.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="527">
+              <caret line="31" column="56" selection-start-line="31" selection-start-column="56" selection-end-line="31" selection-end-column="56" />
+              <folding>
+                <marker date="1463385906000" expanded="true" signature="625:8844" ph="{...}" />
+                <marker date="1463385906000" expanded="true" signature="660:8842" ph="{...}" />
+                <marker date="1463385906000" expanded="true" signature="1340:2193" ph="Project" />
+                <marker date="1463385906000" expanded="true" signature="2203:2282" ph="Issue" />
+                <marker date="1463385906000" expanded="true" signature="2292:2498" ph="IssueStatus" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="HashCodeHelper.cs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/redmine-net20-api/Internals/HashCodeHelper.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="340">
+              <caret line="20" column="28" selection-start-line="20" selection-start-column="28" selection-end-line="20" selection-end-column="28" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="UrlHelper.cs" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/redmine-net20-api/Internals/UrlHelper.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="2414">
+              <caret line="159" column="1" selection-start-line="159" selection-start-column="1" selection-end-line="159" selection-end-column="1" />
+              <folding>
+                <marker date="1463089145000" expanded="true" signature="606:768" ph="..." />
+                <marker date="1463089145000" expanded="true" signature="805:8335" ph="{...}" />
+                <marker date="1463089145000" expanded="true" signature="843:8333" ph="{...}" />
+                <marker date="1463089145000" expanded="true" signature="991:1296" ph="{...}" />
+                <marker date="1463089145000" expanded="true" signature="1413:2574" ph="{...}" />
+                <marker date="1463089145000" expanded="true" signature="2686:2991" ph="{...}" />
+                <marker date="1463089145000" expanded="true" signature="3100:3405" ph="{...}" />
+                <marker date="1463089145000" expanded="true" signature="3536:4993" ph="{...}" />
+                <marker date="1463089145000" expanded="true" signature="5085:5232" ph="{...}" />
+                <marker date="1463089145000" expanded="true" signature="5394:5757" ph="{...}" />
+                <marker date="1463089145000" expanded="true" signature="5853:6061" ph="{...}" />
+                <marker date="1463089145000" expanded="true" signature="6174:6392" ph="{...}" />
+                <marker date="1463089145000" expanded="true" signature="6471:6617" ph="{...}" />
+                <marker date="1463089145000" expanded="true" signature="6697:6901" ph="{...}" />
+                <marker date="1463089145000" expanded="true" signature="7024:7196" ph="{...}" />
+                <marker date="1463089145000" expanded="true" signature="7311:7467" ph="{...}" />
+                <marker date="1463089145000" expanded="true" signature="7571:7766" ph="{...}" />
+                <marker date="1463089145000" expanded="true" signature="7873:8078" ph="{...}" />
+                <marker date="1463089145000" expanded="true" signature="8175:8327" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CollectionExtensions.cs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/redmine-net20-api/Extensions/CollectionExtensions.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="374">
+              <caret line="22" column="30" selection-start-line="22" selection-start-column="30" selection-end-line="22" selection-end-column="30" />
+              <folding>
+                <marker date="1463088844000" expanded="true" signature="670:1153" ph="{...}" />
+                <marker date="1463088844000" expanded="true" signature="717:1151" ph="{...}" />
+                <marker date="1463088844000" expanded="true" signature="820:1145" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="NameValueCollectionExtensions.cs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/redmine-net20-api/Extensions/NameValueCollectionExtensions.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="238">
+              <caret line="14" column="2" selection-start-line="14" selection-start-column="2" selection-end-line="14" selection-end-column="2" />
+              <folding>
+                <marker date="1464345493000" expanded="true" signature="674:1040" ph="{...}" />
+                <marker date="1464345493000" expanded="true" signature="730:1038" ph="{...}" />
+                <marker date="1464345493000" expanded="true" signature="842:1032" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="LoggingExtensions.cs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/redmine-net20-api/Extensions/LoggingExtensions.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="629">
+              <caret line="37" column="1" selection-start-line="37" selection-start-column="1" selection-end-line="37" selection-end-column="1" />
+              <folding>
+                <marker date="1464345508000" expanded="true" signature="667:1102" ph="{...}" />
+                <marker date="1464345508000" expanded="true" signature="711:1100" ph="{...}" />
+                <marker date="1464345508000" expanded="true" signature="794:844" ph="{...}" />
+                <marker date="1464345508000" expanded="true" signature="921:976" ph="{...}" />
+                <marker date="1464345508000" expanded="true" signature="1046:1094" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="WebExtensions.cs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/redmine-net20-api/Extensions/WebExtensions.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-246">
+              <caret line="40" column="16" selection-start-line="40" selection-start-column="16" selection-end-line="40" selection-end-column="16" />
+              <folding>
+                <marker date="1463516019000" expanded="true" signature="606:804" ph="..." />
+                <marker date="1463516019000" expanded="true" signature="842:4167" ph="{...}" />
+                <marker date="1463516019000" expanded="true" signature="882:4165" ph="{...}" />
+                <marker date="1463516019000" expanded="true" signature="1001:3231" ph="{...}" />
+                <marker date="1463516019000" expanded="false" signature="3341:4159" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="XmlReaderExtensions.cs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/redmine-net20-api/Extensions/XmlReaderExtensions.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="14" selection-end-column="2" />
+              <folding>
+                <marker date="1464346211000" expanded="true" signature="780:6576" ph="{...}" />
+                <marker date="1464346211000" expanded="true" signature="826:6574" ph="{...}" />
+                <marker date="1464346211000" expanded="false" signature="841:1073" ph="/// ..." />
+                <marker date="1464346211000" expanded="false" signature="1163:1460" ph="{...}" />
+                <marker date="1464346211000" expanded="false" signature="1470:1673" ph="/// ..." />
+                <marker date="1464346211000" expanded="false" signature="1772:2070" ph="{...}" />
+                <marker date="1464346211000" expanded="false" signature="2080:2316" ph="/// ..." />
+                <marker date="1464346211000" expanded="false" signature="2411:2653" ph="{...}" />
+                <marker date="1464346211000" expanded="false" signature="2663:2845" ph="/// ..." />
+                <marker date="1464346211000" expanded="false" signature="2937:3169" ph="{...}" />
+                <marker date="1464346211000" expanded="false" signature="3179:3357" ph="/// ..." />
+                <marker date="1464346211000" expanded="false" signature="3443:3719" ph="{...}" />
+                <marker date="1464346211000" expanded="false" signature="3729:3905" ph="/// ..." />
+                <marker date="1464346211000" expanded="false" signature="3987:4259" ph="{...}" />
+                <marker date="1464346211000" expanded="false" signature="4269:4449" ph="/// ..." />
+                <marker date="1464346211000" expanded="false" signature="4539:4819" ph="{...}" />
+                <marker date="1464346211000" expanded="false" signature="4829:5048" ph="/// ..." />
+                <marker date="1464346211000" expanded="false" signature="5151:6568" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="XmlWriterExtensions.cs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/redmine-net20-api/Extensions/XmlWriterExtensions.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="238">
+              <caret line="14" column="2" selection-start-line="14" selection-start-column="2" selection-end-line="14" selection-end-column="2" />
+              <folding>
+                <marker date="1464346321000" expanded="true" signature="606:813" ph="..." />
+                <marker date="1464346321000" expanded="true" signature="851:6363" ph="{...}" />
+                <marker date="1464346321000" expanded="true" signature="897:6361" ph="{...}" />
+                <marker date="1464346321000" expanded="true" signature="912:1138" ph="/// ..." />
+                <marker date="1464346321000" expanded="true" signature="1241:1373" ph="{...}" />
+                <marker date="1464346321000" expanded="true" signature="1383:1560" ph="/// ..." />
+                <marker date="1464346321000" expanded="true" signature="1658:2039" ph="{...}" />
+                <marker date="1464346321000" expanded="true" signature="2195:2659" ph="{...}" />
+                <marker date="1464346321000" expanded="true" signature="2793:3174" ph="{...}" />
+                <marker date="1464346321000" expanded="true" signature="3310:3688" ph="{...}" />
+                <marker date="1464346321000" expanded="true" signature="3806:4019" ph="{...}" />
+                <marker date="1464346321000" expanded="true" signature="4029:4200" ph="/// ..." />
+                <marker date="1464346321000" expanded="true" signature="4301:4445" ph="{...}" />
+                <marker date="1464346321000" expanded="true" signature="4455:4669" ph="/// ..." />
+                <marker date="1464346321000" expanded="true" signature="4783:5031" ph="{...}" />
+                <marker date="1464346321000" expanded="true" signature="5041:5335" ph="/// ..." />
+                <marker date="1464346321000" expanded="true" signature="5443:5747" ph="{...}" />
+                <marker date="1464346321000" expanded="true" signature="5757:5926" ph="/// ..." />
+                <marker date="1464346321000" expanded="true" signature="6020:6355" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="RedmineSerializer.cs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/redmine-net20-api/Internals/RedmineSerializer.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="226">
+              <caret line="102" column="0" selection-start-line="102" selection-start-column="0" selection-end-line="102" selection-end-column="0" />
+              <folding>
+                <marker date="1464346581000" expanded="true" signature="606:777" ph="..." />
+                <marker date="1464346581000" expanded="true" signature="814:5395" ph="{...}" />
+                <marker date="1464346581000" expanded="true" signature="860:5393" ph="{...}" />
+                <marker date="1464346581000" expanded="true" signature="875:1347" ph="/// ..." />
+                <marker date="1464346581000" expanded="false" signature="1409:1863" ph="{...}" />
+                <marker date="1464346581000" expanded="true" signature="1873:2510" ph="/// ..." />
+                <marker date="1464346581000" expanded="false" signature="2574:2780" ph="{...}" />
+                <marker date="1464346581000" expanded="true" signature="2790:3427" ph="/// ..." />
+                <marker date="1464346581000" expanded="false" signature="3488:3684" ph="{...}" />
+                <marker date="1464346581000" expanded="true" signature="3780:3831" ph="{...}" />
+                <marker date="1464346581000" expanded="true" signature="3841:4057" ph="/// ..." />
+                <marker date="1464346581000" expanded="true" signature="4159:4220" ph="{...}" />
+                <marker date="1464346581000" expanded="true" signature="4345:4417" ph="{...}" />
+                <marker date="1464346581000" expanded="true" signature="4523:5387" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/redmine-net40-api/Internals/RedmineSerializerJson.cs" />
+        <option value="$PROJECT_DIR$/redmine-net20-api/Async/RedmineManagerAsync.cs" />
+        <option value="$PROJECT_DIR$/redmine-net20-api/Internals/Func.cs" />
+        <option value="$PROJECT_DIR$/redmine-net20-api/Internals/UrlHelper.cs" />
+        <option value="$PROJECT_DIR$/xUnitTest-redmine-net45-api/ProjectTests.cs" />
+        <option value="$PROJECT_DIR$/redmine-net20-api/Exceptions/ConflictException.cs" />
+        <option value="$PROJECT_DIR$/redmine-net20-api/Exceptions/UnauthorizedException.cs" />
+        <option value="$PROJECT_DIR$/redmine-net20-api/Exceptions/RedmineTimeoutException.cs" />
+        <option value="$PROJECT_DIR$/redmine-net20-api/Exceptions/NotFoundException.cs" />
+        <option value="$PROJECT_DIR$/redmine-net20-api/Exceptions/NotAcceptableException.cs" />
+        <option value="$PROJECT_DIR$/redmine-net20-api/Exceptions/NameResolutionFailureException.cs" />
+        <option value="$PROJECT_DIR$/redmine-net20-api/Exceptions/InternalServerErrorException.cs" />
+        <option value="$PROJECT_DIR$/redmine-net20-api/Exceptions/ForbiddenException.cs" />
+        <option value="$PROJECT_DIR$/redmine-net20-api/Extensions/CollectionExtensions.cs" />
+        <option value="$PROJECT_DIR$/redmine-net20-api/Extensions/WebExtensions.cs" />
+        <option value="$PROJECT_DIR$/redmine-net20-api/Logging/ColorConsoleLogger.cs" />
+        <option value="$PROJECT_DIR$/redmine-net20-api/Logging/ConsoleLogger.cs" />
+        <option value="$PROJECT_DIR$/redmine-net20-api/Logging/ILogger.cs" />
+        <option value="$PROJECT_DIR$/redmine-net20-api/Logging/LogEntry.cs" />
+        <option value="$PROJECT_DIR$/redmine-net20-api/Logging/Logger.cs" />
+        <option value="$PROJECT_DIR$/redmine-net20-api/Logging/LoggerExtensions.cs" />
+        <option value="$PROJECT_DIR$/redmine-net20-api/Logging/LoggingEventType.cs" />
+        <option value="$PROJECT_DIR$/redmine-net20-api/Logging/RedmineConsoleTraceListener.cs" />
+        <option value="$PROJECT_DIR$/redmine-net20-api/Logging/TraceLogger.cs" />
+        <option value="$PROJECT_DIR$/redmine-net-api.sln" />
+        <option value="$PROJECT_DIR$/redmine-net20-api/Extensions/Extensions.cs" />
+        <option value="$PROJECT_DIR$/redmine-net20-api/Extensions/NameValueCollectionExtensions.cs" />
+        <option value="$PROJECT_DIR$/redmine-net20-api/Extensions/LoggingExtensions.cs" />
+        <option value="$PROJECT_DIR$/redmine-net20-api/Types/Group.cs" />
+        <option value="$PROJECT_DIR$/redmine-net20-api/Extensions/XmlReaderExtensions.cs" />
+        <option value="$PROJECT_DIR$/redmine-net20-api/Extensions/XmlWriterExtensions.cs" />
+        <option value="$PROJECT_DIR$/redmine-net20-api/Internals/RedmineSerializer.cs" />
+        <option value="$PROJECT_DIR$/redmine-net20-api/Internals/Utils.cs" />
+        <option value="$PROJECT_DIR$/redmine-net20-api/Internals/HashCodeHelper.cs" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectFrameBounds">
+    <option name="x" value="586" />
+    <option name="y" value="160" />
+    <option name="width" value="1440" />
+    <option name="height" value="873" />
+  </component>
+  <component name="ProjectInspectionProfilesVisibleTreeState">
+    <entry key="Project Default">
+      <profile-state>
+        <expanded-state>
+          <State>
+            <id />
+          </State>
+          <State>
+            <id>General</id>
+          </State>
+          <State>
+            <id>HTML</id>
+          </State>
+          <State>
+            <id>Internationalization issues</id>
+          </State>
+          <State>
+            <id>RELAX NG</id>
+          </State>
+          <State>
+            <id>XML</id>
+          </State>
+        </expanded-state>
+        <selected-state>
+          <State>
+            <id>XML</id>
+          </State>
+        </selected-state>
+      </profile-state>
+    </entry>
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="false">
+    <OptionsSetting value="true" id="Add" />
+    <OptionsSetting value="true" id="Remove" />
+    <OptionsSetting value="true" id="Checkout" />
+    <OptionsSetting value="true" id="Update" />
+    <OptionsSetting value="true" id="Status" />
+    <OptionsSetting value="true" id="Edit" />
+    <ConfirmationsSetting value="1" id="Add" />
+    <ConfirmationsSetting value="0" id="Remove" />
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="SolutionExplorer" proportions="" version="1">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+      <manualOrder />
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="SolutionExplorer">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Redmine-net-api" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="redmine-net-api" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Redmine-net-api" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="redmine-net-api" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="redmine-net20-api" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Redmine-net-api" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="redmine-net-api" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="redmine-net20-api" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Internals" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Redmine-net-api" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="redmine-net-api" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="redmine-net20-api" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Extensions" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Redmine-net-api" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="redmine-net-api" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="redmine-net20-api" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Async" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="RedmineManagerAsync.cs" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/redmine-net-api.sln" />
+    <property name="settings.editor.selected.configurable" value="preferences.toolset" />
+    <property name="settings.editor.splitter.proportion" value="0.2" />
+  </component>
+  <component name="RunManager" selected=".NET Project.Default">
+    <configuration default="true" type="DotNetProject" factoryName=".NET Project">
+      <option name="PROJECT_PATH" value="" />
+      <option name="PROJECT_KIND" value="None" />
+      <option name="EXE_PATH" value="" />
+      <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <method />
+    </configuration>
+    <configuration default="false" name="Default" type="DotNetProject" factoryName=".NET Project">
+      <option name="PROJECT_PATH" value="" />
+      <option name="PROJECT_KIND" value="None" />
+      <option name="EXE_PATH" value="" />
+      <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <method />
+    </configuration>
+    <list size="1">
+      <item index="0" class="java.lang.String" itemvalue=".NET Project.Default" />
+    </list>
+  </component>
+  <component name="ShelveChangesManager" show_recycled="false">
+    <option name="remove_strategy" value="false" />
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="44160ec7-060c-4cf4-8720-7fb8addc5320" name="Default" comment="" />
+      <created>1463086096481</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1463086096481</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="586" y="160" width="1440" height="873" extended-state="0" />
+    <editor active="true" />
+    <layout>
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21489972" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Errors in solution" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3295129" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Build" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32822478" sideWeight="0.49713877" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32863188" sideWeight="0.5028612" order="0" side_tool="true" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32822478" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32863188" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="NuGet" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="combo" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+    </layout>
+  </component>
+  <component name="Vcs.Log.UiProperties">
+    <option name="RECENTLY_FILTERED_USER_GROUPS">
+      <collection />
+    </option>
+    <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
+      <collection />
+    </option>
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <option name="time" value="1" />
+    </breakpoint-manager>
+    <watches-manager />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/redmine-net20-api/RedmineKeys.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <marker date="1463385906000" expanded="true" signature="625:8844" ph="{...}" />
+            <marker date="1463385906000" expanded="true" signature="660:8842" ph="{...}" />
+            <marker date="1463385906000" expanded="true" signature="1340:2193" ph="Project" />
+            <marker date="1463385906000" expanded="true" signature="2203:2282" ph="Issue" />
+            <marker date="1463385906000" expanded="true" signature="2292:2498" ph="IssueStatus" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/redmine-net20-api/RedmineWebClient.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="340">
+          <caret line="20" column="1" selection-start-line="20" selection-start-column="1" selection-end-line="20" selection-end-column="1" />
+          <folding>
+            <marker date="1457947730000" expanded="true" signature="606:631" ph="..." />
+            <marker date="1457947730000" expanded="true" signature="665:706" ph="/// ..." />
+            <marker date="1457947730000" expanded="true" signature="752:2759" ph="{...}" />
+            <marker date="1457947730000" expanded="true" signature="1004:2388" ph="{...}" />
+            <marker date="1457947730000" expanded="true" signature="2487:2550" ph="/// ..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/redmine-net20-api/RedmineManager.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="850">
+          <caret line="50" column="0" selection-start-line="50" selection-start-column="0" selection-end-line="50" selection-end-column="0" />
+          <folding>
+            <marker date="1463830690000" expanded="true" signature="606:1114" ph="..." />
+            <marker date="1463830690000" expanded="true" signature="1141:31621" ph="{...}" />
+            <marker date="1463830690000" expanded="true" signature="1148:1226" ph="/// ..." />
+            <marker date="1463830690000" expanded="true" signature="1276:1886" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/xUnitTest-redmine-net45-api/ProjectTests.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/redmine-net40-api/Internals/RedmineSerializerJson.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="618">
+          <caret line="73" column="86" selection-start-line="73" selection-start-column="86" selection-end-line="73" selection-end-column="86" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/redmine-net40-api/Extensions/JsonExtensions.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-34">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/xUnitTest-redmine-net45-api/Helper.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/xUnitTest-redmine-net45-api/AttachmentAsyncTests.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/redmine-net40-api/Async/RedmineManagerAsyncExtensions.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-136">
+          <caret line="57" column="48" selection-start-line="57" selection-start-column="48" selection-end-line="57" selection-end-column="48" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/redmine-net20-api/Exceptions/UnauthorizedException.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="579">
+          <caret line="41" column="1" selection-start-line="41" selection-start-column="1" selection-end-line="41" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/redmine-net20-api/Exceptions/RedmineTimeoutException.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="579">
+          <caret line="41" column="1" selection-start-line="41" selection-start-column="1" selection-end-line="41" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/redmine-net20-api/Exceptions/RedmineException.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-118">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/redmine-net20-api/Exceptions/NotFoundException.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="579">
+          <caret line="41" column="1" selection-start-line="41" selection-start-column="1" selection-end-line="41" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/redmine-net20-api/Exceptions/NotAcceptableException.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="579">
+          <caret line="41" column="1" selection-start-line="41" selection-start-column="1" selection-end-line="41" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/redmine-net20-api/Exceptions/NameResolutionFailureException.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="579">
+          <caret line="41" column="1" selection-start-line="41" selection-start-column="1" selection-end-line="41" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/redmine-net20-api/Exceptions/InternalServerErrorException.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="579">
+          <caret line="41" column="1" selection-start-line="41" selection-start-column="1" selection-end-line="41" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/redmine-net20-api/Exceptions/ForbiddenException.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="579">
+          <caret line="41" column="1" selection-start-line="41" selection-start-column="1" selection-end-line="41" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/redmine-net20-api/Exceptions/ConflictException.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="137">
+          <caret line="15" column="0" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/redmine-net20-api/Extensions/ExtensionAttribute.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="14" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/redmine-net20-api/MimeFormat.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/redmine-net20-api/Logging/TraceLogger.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="15" column="0" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/redmine-net20-api/Logging/ColorConsoleLogger.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="14" column="2" selection-start-line="14" selection-start-column="2" selection-end-line="14" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/redmine-net20-api/Logging/ConsoleLogger.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="14" column="2" selection-start-line="14" selection-start-column="2" selection-end-line="14" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/redmine-net20-api/Logging/ILogger.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="14" column="2" selection-start-line="14" selection-start-column="2" selection-end-line="14" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/redmine-net20-api/Logging/LogEntry.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="14" column="2" selection-start-line="14" selection-start-column="2" selection-end-line="14" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/redmine-net20-api/Logging/Logger.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="14" column="2" selection-start-line="14" selection-start-column="2" selection-end-line="14" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/redmine-net20-api/Logging/LoggerExtensions.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="15" column="0" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/redmine-net20-api/Logging/LoggingEventType.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="14" column="2" selection-start-line="14" selection-start-column="2" selection-end-line="14" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/redmine-net20-api/Logging/RedmineConsoleTraceListener.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="14" column="2" selection-start-line="14" selection-start-column="2" selection-end-line="14" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/redmine-net20-api/RedmineWebClient.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="340">
+          <caret line="20" column="1" selection-start-line="20" selection-start-column="1" selection-end-line="20" selection-end-column="1" />
+          <folding>
+            <marker date="1457947730000" expanded="true" signature="606:631" ph="..." />
+            <marker date="1457947730000" expanded="true" signature="665:706" ph="/// ..." />
+            <marker date="1457947730000" expanded="true" signature="752:2759" ph="{...}" />
+            <marker date="1457947730000" expanded="true" signature="1004:2388" ph="{...}" />
+            <marker date="1457947730000" expanded="true" signature="2487:2550" ph="/// ..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/redmine-net20-api/RedmineManager.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="612">
+          <caret line="36" column="0" selection-start-line="36" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
+          <folding>
+            <marker date="1463830690000" expanded="true" signature="606:1114" ph="..." />
+            <marker date="1463830690000" expanded="true" signature="1141:31621" ph="{...}" />
+            <marker date="1463830690000" expanded="true" signature="1148:1226" ph="/// ..." />
+            <marker date="1463830690000" expanded="true" signature="1276:1886" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/xUnitTest-redmine-net45-api/ProjectTests.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="48" column="0" selection-start-line="48" selection-start-column="0" selection-end-line="48" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/redmine-net-api.sln">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="51">
+          <caret line="159" column="0" selection-start-line="159" selection-start-column="0" selection-end-line="159" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/redmine-net20-api/Async/RedmineManagerAsync.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="935">
+          <caret line="55" column="14" selection-start-line="55" selection-start-column="14" selection-end-line="55" selection-end-column="14" />
+          <folding>
+            <marker date="1463830185000" expanded="true" signature="6:208" ph="..." />
+            <marker date="1463830185000" expanded="true" signature="241:12671" ph="{...}" />
+            <marker date="1463830185000" expanded="true" signature="364:12669" ph="{...}" />
+            <marker date="1463830185000" expanded="true" signature="431:1115" ph="{...}" />
+            <marker date="1463830185000" expanded="true" signature="1244:1712" ph="{...}" />
+            <marker date="1463830185000" expanded="true" signature="1868:2454" ph="{...}" />
+            <marker date="1463830185000" expanded="true" signature="2573:2903" ph="{...}" />
+            <marker date="1463830185000" expanded="true" signature="3079:3582" ph="{...}" />
+            <marker date="1463830185000" expanded="true" signature="3733:4214" ph="{...}" />
+            <marker date="1463830185000" expanded="true" signature="4323:4843" ph="{...}" />
+            <marker date="1463830185000" expanded="true" signature="4957:5325" ph="{...}" />
+            <marker date="1463830185000" expanded="true" signature="5437:5962" ph="{...}" />
+            <marker date="1463830185000" expanded="true" signature="6079:6441" ph="{...}" />
+            <marker date="1463830185000" expanded="true" signature="6592:7041" ph="{...}" />
+            <marker date="1463830185000" expanded="true" signature="7159:7244" ph="{...}" />
+            <marker date="1463830185000" expanded="true" signature="7378:7923" ph="{...}" />
+            <marker date="1463830185000" expanded="true" signature="8091:8585" ph="{...}" />
+            <marker date="1463830185000" expanded="true" signature="10564:11003" ph="{...}" />
+            <marker date="1463830185000" expanded="true" signature="11154:11506" ph="{...}" />
+            <marker date="1463830185000" expanded="true" signature="11607:12148" ph="{...}" />
+            <marker date="1463830185000" expanded="true" signature="12254:12663" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/redmine-net20-api/Internals/Func.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="16" column="0" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/redmine-net20-api/Extensions/Extensions.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="396">
+          <caret line="32" column="1" selection-start-line="32" selection-start-column="1" selection-end-line="32" selection-end-column="1" />
+          <folding>
+            <marker date="1464345493000" expanded="true" signature="605:646" ph="..." />
+            <marker date="1464345493000" expanded="true" signature="684:1066" ph="{...}" />
+            <marker date="1464345493000" expanded="true" signature="721:1064" ph="{...}" />
+            <marker date="1464345493000" expanded="true" signature="815:1058" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/redmine-net20-api/Extensions/NameValueCollectionExtensions.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="14" column="2" selection-start-line="14" selection-start-column="2" selection-end-line="14" selection-end-column="2" />
+          <folding>
+            <marker date="1464345493000" expanded="true" signature="674:1040" ph="{...}" />
+            <marker date="1464345493000" expanded="true" signature="730:1038" ph="{...}" />
+            <marker date="1464345493000" expanded="true" signature="842:1032" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/redmine-net20-api/Extensions/LoggingExtensions.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="629">
+          <caret line="37" column="1" selection-start-line="37" selection-start-column="1" selection-end-line="37" selection-end-column="1" />
+          <folding>
+            <marker date="1464345508000" expanded="true" signature="667:1102" ph="{...}" />
+            <marker date="1464345508000" expanded="true" signature="711:1100" ph="{...}" />
+            <marker date="1464345508000" expanded="true" signature="794:844" ph="{...}" />
+            <marker date="1464345508000" expanded="true" signature="921:976" ph="{...}" />
+            <marker date="1464345508000" expanded="true" signature="1046:1094" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/redmine-net20-api/Types/Group.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1938">
+          <caret line="126" column="0" selection-start-line="126" selection-start-column="0" selection-end-line="126" selection-end-column="0" />
+          <folding>
+            <marker date="1464346642000" expanded="true" signature="606:764" ph="..." />
+            <marker date="1464346642000" expanded="true" signature="797:5681" ph="{...}" />
+            <marker date="1464346642000" expanded="true" signature="804:861" ph="/// ..." />
+            <marker date="1464346642000" expanded="true" signature="955:5673" ph="{...}" />
+            <marker date="1464346642000" expanded="true" signature="970:1048" ph="/// ..." />
+            <marker date="1464346642000" expanded="true" signature="1188:1314" ph="/// ..." />
+            <marker date="1464346642000" expanded="true" signature="1485:1611" ph="/// ..." />
+            <marker date="1464346642000" expanded="true" signature="1771:3541" ph="Implementation of IXmlSerializable" />
+            <marker date="1464346642000" expanded="true" signature="1823:2049" ph="/// ..." />
+            <marker date="1464346642000" expanded="true" signature="2104:3059" ph="{...}" />
+            <marker date="1464346642000" expanded="true" signature="3069:3290" ph="/// ..." />
+            <marker date="1464346642000" expanded="true" signature="3346:3521" ph="{...}" />
+            <marker date="1464346642000" expanded="true" signature="3551:5346" ph="Implementation of IEquatable&lt;Group&gt;" />
+            <marker date="1464346642000" expanded="true" signature="3604:3967" ph="/// ..." />
+            <marker date="1464346642000" expanded="true" signature="4007:4493" ph="{...}" />
+            <marker date="1464346642000" expanded="true" signature="4542:4776" ph="{...}" />
+            <marker date="1464346642000" expanded="true" signature="4819:5326" ph="{...}" />
+            <marker date="1464346642000" expanded="true" signature="5389:5562" ph="{...}" />
+            <marker date="1464346642000" expanded="true" signature="5608:5667" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/redmine-net20-api/Extensions/CollectionExtensions.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="374">
+          <caret line="22" column="30" selection-start-line="22" selection-start-column="30" selection-end-line="22" selection-end-column="30" />
+          <folding>
+            <marker date="1463088844000" expanded="true" signature="670:1153" ph="{...}" />
+            <marker date="1463088844000" expanded="true" signature="717:1151" ph="{...}" />
+            <marker date="1463088844000" expanded="true" signature="820:1145" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/redmine-net20-api/Extensions/WebExtensions.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-246">
+          <caret line="40" column="16" selection-start-line="40" selection-start-column="16" selection-end-line="40" selection-end-column="16" />
+          <folding>
+            <marker date="1463516019000" expanded="true" signature="606:804" ph="..." />
+            <marker date="1463516019000" expanded="true" signature="842:4167" ph="{...}" />
+            <marker date="1463516019000" expanded="true" signature="882:4165" ph="{...}" />
+            <marker date="1463516019000" expanded="true" signature="1001:3231" ph="{...}" />
+            <marker date="1463516019000" expanded="false" signature="3341:4159" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/redmine-net20-api/Extensions/XmlReaderExtensions.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="14" selection-end-column="2" />
+          <folding>
+            <marker date="1464346211000" expanded="true" signature="780:6576" ph="{...}" />
+            <marker date="1464346211000" expanded="true" signature="826:6574" ph="{...}" />
+            <marker date="1464346211000" expanded="false" signature="841:1073" ph="/// ..." />
+            <marker date="1464346211000" expanded="false" signature="1163:1460" ph="{...}" />
+            <marker date="1464346211000" expanded="false" signature="1470:1673" ph="/// ..." />
+            <marker date="1464346211000" expanded="false" signature="1772:2070" ph="{...}" />
+            <marker date="1464346211000" expanded="false" signature="2080:2316" ph="/// ..." />
+            <marker date="1464346211000" expanded="false" signature="2411:2653" ph="{...}" />
+            <marker date="1464346211000" expanded="false" signature="2663:2845" ph="/// ..." />
+            <marker date="1464346211000" expanded="false" signature="2937:3169" ph="{...}" />
+            <marker date="1464346211000" expanded="false" signature="3179:3357" ph="/// ..." />
+            <marker date="1464346211000" expanded="false" signature="3443:3719" ph="{...}" />
+            <marker date="1464346211000" expanded="false" signature="3729:3905" ph="/// ..." />
+            <marker date="1464346211000" expanded="false" signature="3987:4259" ph="{...}" />
+            <marker date="1464346211000" expanded="false" signature="4269:4449" ph="/// ..." />
+            <marker date="1464346211000" expanded="false" signature="4539:4819" ph="{...}" />
+            <marker date="1464346211000" expanded="false" signature="4829:5048" ph="/// ..." />
+            <marker date="1464346211000" expanded="false" signature="5151:6568" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/redmine-net20-api/Extensions/XmlWriterExtensions.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="14" column="2" selection-start-line="14" selection-start-column="2" selection-end-line="14" selection-end-column="2" />
+          <folding>
+            <marker date="1464346321000" expanded="true" signature="606:813" ph="..." />
+            <marker date="1464346321000" expanded="true" signature="851:6363" ph="{...}" />
+            <marker date="1464346321000" expanded="true" signature="897:6361" ph="{...}" />
+            <marker date="1464346321000" expanded="true" signature="912:1138" ph="/// ..." />
+            <marker date="1464346321000" expanded="true" signature="1241:1373" ph="{...}" />
+            <marker date="1464346321000" expanded="true" signature="1383:1560" ph="/// ..." />
+            <marker date="1464346321000" expanded="true" signature="1658:2039" ph="{...}" />
+            <marker date="1464346321000" expanded="true" signature="2195:2659" ph="{...}" />
+            <marker date="1464346321000" expanded="true" signature="2793:3174" ph="{...}" />
+            <marker date="1464346321000" expanded="true" signature="3310:3688" ph="{...}" />
+            <marker date="1464346321000" expanded="true" signature="3806:4019" ph="{...}" />
+            <marker date="1464346321000" expanded="true" signature="4029:4200" ph="/// ..." />
+            <marker date="1464346321000" expanded="true" signature="4301:4445" ph="{...}" />
+            <marker date="1464346321000" expanded="true" signature="4455:4669" ph="/// ..." />
+            <marker date="1464346321000" expanded="true" signature="4783:5031" ph="{...}" />
+            <marker date="1464346321000" expanded="true" signature="5041:5335" ph="/// ..." />
+            <marker date="1464346321000" expanded="true" signature="5443:5747" ph="{...}" />
+            <marker date="1464346321000" expanded="true" signature="5757:5926" ph="/// ..." />
+            <marker date="1464346321000" expanded="true" signature="6020:6355" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/redmine-net20-api/Internals/RedmineSerializer.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="226">
+          <caret line="102" column="0" selection-start-line="102" selection-start-column="0" selection-end-line="102" selection-end-column="0" />
+          <folding>
+            <marker date="1464346581000" expanded="true" signature="606:777" ph="..." />
+            <marker date="1464346581000" expanded="true" signature="814:5395" ph="{...}" />
+            <marker date="1464346581000" expanded="true" signature="860:5393" ph="{...}" />
+            <marker date="1464346581000" expanded="true" signature="875:1347" ph="/// ..." />
+            <marker date="1464346581000" expanded="false" signature="1409:1863" ph="{...}" />
+            <marker date="1464346581000" expanded="true" signature="1873:2510" ph="/// ..." />
+            <marker date="1464346581000" expanded="false" signature="2574:2780" ph="{...}" />
+            <marker date="1464346581000" expanded="true" signature="2790:3427" ph="/// ..." />
+            <marker date="1464346581000" expanded="false" signature="3488:3684" ph="{...}" />
+            <marker date="1464346581000" expanded="true" signature="3780:3831" ph="{...}" />
+            <marker date="1464346581000" expanded="true" signature="3841:4057" ph="/// ..." />
+            <marker date="1464346581000" expanded="true" signature="4159:4220" ph="{...}" />
+            <marker date="1464346581000" expanded="true" signature="4345:4417" ph="{...}" />
+            <marker date="1464346581000" expanded="true" signature="4523:5387" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/redmine-net20-api/Internals/HashCodeHelper.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="340">
+          <caret line="20" column="28" selection-start-line="20" selection-start-column="28" selection-end-line="20" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/redmine-net20-api/RedmineKeys.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="527">
+          <caret line="31" column="56" selection-start-line="31" selection-start-column="56" selection-end-line="31" selection-end-column="56" />
+          <folding>
+            <marker date="1463385906000" expanded="true" signature="625:8844" ph="{...}" />
+            <marker date="1463385906000" expanded="true" signature="660:8842" ph="{...}" />
+            <marker date="1463385906000" expanded="true" signature="1340:2193" ph="Project" />
+            <marker date="1463385906000" expanded="true" signature="2203:2282" ph="Issue" />
+            <marker date="1463385906000" expanded="true" signature="2292:2498" ph="IssueStatus" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/redmine-net20-api/Internals/UrlHelper.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2414">
+          <caret line="159" column="1" selection-start-line="159" selection-start-column="1" selection-end-line="159" selection-end-column="1" />
+          <folding>
+            <marker date="1463089145000" expanded="true" signature="606:768" ph="..." />
+            <marker date="1463089145000" expanded="true" signature="805:8335" ph="{...}" />
+            <marker date="1463089145000" expanded="true" signature="843:8333" ph="{...}" />
+            <marker date="1463089145000" expanded="true" signature="991:1296" ph="{...}" />
+            <marker date="1463089145000" expanded="true" signature="1413:2574" ph="{...}" />
+            <marker date="1463089145000" expanded="true" signature="2686:2991" ph="{...}" />
+            <marker date="1463089145000" expanded="true" signature="3100:3405" ph="{...}" />
+            <marker date="1463089145000" expanded="true" signature="3536:4993" ph="{...}" />
+            <marker date="1463089145000" expanded="true" signature="5085:5232" ph="{...}" />
+            <marker date="1463089145000" expanded="true" signature="5394:5757" ph="{...}" />
+            <marker date="1463089145000" expanded="true" signature="5853:6061" ph="{...}" />
+            <marker date="1463089145000" expanded="true" signature="6174:6392" ph="{...}" />
+            <marker date="1463089145000" expanded="true" signature="6471:6617" ph="{...}" />
+            <marker date="1463089145000" expanded="true" signature="6697:6901" ph="{...}" />
+            <marker date="1463089145000" expanded="true" signature="7024:7196" ph="{...}" />
+            <marker date="1463089145000" expanded="true" signature="7311:7467" ph="{...}" />
+            <marker date="1463089145000" expanded="true" signature="7571:7766" ph="{...}" />
+            <marker date="1463089145000" expanded="true" signature="7873:8078" ph="{...}" />
+            <marker date="1463089145000" expanded="true" signature="8175:8327" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ScopeChooserConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
+  </component>
+</project>

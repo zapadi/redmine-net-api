@@ -58,12 +58,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Async\Task.cs" />
     <Compile Include="Extensions\CollectionExtensions.cs" />
     <Compile Include="Extensions\ExtensionAttribute.cs" />
-    <Compile Include="Extensions\Extensions.cs" />
+    <Compile Include="Extensions\LoggingExtensions.cs" />
+    <Compile Include="Extensions\NameValueCollectionExtensions.cs" />
     <Compile Include="Extensions\WebExtensions.cs" />
     <Compile Include="Extensions\XmlReaderExtensions.cs" />
+    <Compile Include="Extensions\XmlWriterExtensions.cs" />
+    <Compile Include="Internals\DataHelper.cs" />
     <Compile Include="Internals\Func.cs" />
+    <Compile Include="Internals\HashCodeHelper.cs" />
     <Compile Include="Logging\ColorConsoleLogger.cs" />
     <Compile Include="Logging\ConsoleLogger.cs" />
     <Compile Include="Logging\ILogger.cs" />
@@ -129,7 +134,6 @@
     <Compile Include="Types\Watcher.cs" />
     <Compile Include="Types\WikiPage.cs" />
     <Compile Include="Internals\UrlHelper.cs" />
-    <Compile Include="Internals\Utils.cs" />
     <Compile Include="Types\IValue.cs" />
     <Compile Include="Logging\RedmineConsoleTraceListener.cs" />
     <Compile Include="Exceptions\NotFoundException.cs" />
@@ -141,6 +145,7 @@
     <Compile Include="Exceptions\ForbiddenException.cs" />
     <Compile Include="Exceptions\ConflictException.cs" />
     <Compile Include="Exceptions\NotAcceptableException.cs" />
+    <Compile Include="HttpVerbs.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -151,7 +156,5 @@
   </Target>
   -->
   <ItemGroup />
-  <ItemGroup>
-    <Folder Include="Exceptions\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>

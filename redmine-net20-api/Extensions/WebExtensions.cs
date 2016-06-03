@@ -22,6 +22,7 @@ using System.Net;
 using Redmine.Net.Api.Internals;
 using Redmine.Net.Api.Types;
 using Redmine.Net.Api.Exceptions;
+using Redmine.Net.Api.Logging;
 
 namespace Redmine.Net.Api.Extensions
 {
@@ -31,10 +32,14 @@ namespace Redmine.Net.Api.Extensions
         {
             if (exception == null) return;
 
+            Logger.Current.Error("ExceptionStatus: {0}, Method: {1}, MimeFormat: {2}", exception.Status, method, mimeFormat);
+
             switch (exception.Status)
             {
-			case WebExceptionStatus.Timeout: throw new RedmineTimeoutException("Timeout!", exception);
-			case WebExceptionStatus.NameResolutionFailure: throw new NameResolutionFailureException("Bad domain name!", exception);
+				case WebExceptionStatus.Timeout:
+                    throw new RedmineTimeoutException("Timeout!", exception);
+				case WebExceptionStatus.NameResolutionFailure:
+                    throw new NameResolutionFailureException("Bad domain name!", exception);
                 case WebExceptionStatus.ProtocolError:
                     {
                         var response = (HttpWebResponse)exception.Response;
@@ -63,6 +68,7 @@ namespace Redmine.Net.Api.Extensions
                                     foreach (var error in errors)
                                         message = message + (error.Info + "\n");
                                 }
+                                Logger.Current.Error("ErrorMessage: {0}", message);
                                 throw new RedmineException(method + " has invalid or missing attribute parameters: " + message, exception);
 
 							case (int)HttpStatusCode.NotAcceptable: throw new NotAcceptableException(response.StatusDescription, exception);
@@ -79,9 +85,9 @@ namespace Redmine.Net.Api.Extensions
             using (var dataStream = webResponse.GetResponseStream())
             {
                 if (dataStream == null) return null;
-                using (var reader = new StreamReader(dataStream))
+                using (var streamReader = new StreamReader(dataStream))
                 {
-                    var responseFromServer = reader.ReadToEnd();
+                    var responseFromServer = streamReader.ReadToEnd();
 
                     if (string.IsNullOrEmpty(responseFromServer.Trim())) return null;
                     try
@@ -91,7 +97,7 @@ namespace Redmine.Net.Api.Extensions
                     }
                     catch (Exception ex)
                     {
-                        Trace.TraceError(ex.Message);
+                        Logger.Current.Error(ex.Message);
                     }
                 }
                 return null;
