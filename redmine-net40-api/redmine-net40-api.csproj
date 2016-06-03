@@ -63,14 +63,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\redmine-net20-api\Internals\DataHelper.cs">
-      <Link>Internals\DataHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\redmine-net20-api\Internals\HashCodeHelper.cs">
-      <Link>Internals\HashCodeHelper.cs</Link>
+    <Compile Include="..\redmine-net20-api\Extensions\Extensions.cs">
+      <Link>Extensions\Extensions.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net20-api\Internals\UrlHelper.cs">
       <Link>Internals\UrlHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\redmine-net20-api\Internals\Utils.cs">
+      <Link>Internals\Utils.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net20-api\Logging\ColorConsoleLogger.cs">
       <Link>Logging\ColorConsoleLogger.cs</Link>
@@ -254,11 +254,7 @@
       <Link>Types\WikiPage.cs</Link>
     </Compile>
     <Compile Include="Extensions\CollectionExtensions.cs" />
-    <Compile Include="Extensions\LoggingExtensions.cs" />
-    <Compile Include="Extensions\NameValueCollectionExtensions.cs" />
     <Compile Include="Extensions\XmlReaderExtensions.cs" />
-    <Compile Include="Extensions\XmlWriterExtensions.cs" />
-    <Compile Include="HttpVerbs.cs" />
     <Compile Include="JSonConverters\AttachmentConverter.cs" />
     <Compile Include="JSonConverters\AttachmentsConverter.cs" />
     <Compile Include="JSonConverters\ChangeSetConverter.cs" />

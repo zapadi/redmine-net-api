@@ -134,13 +134,13 @@ namespace Redmine.Net.Api.Types
             unchecked
             {
                 var hashCode = base.GetHashCode();
-                hashCode = HashCodeHelper.GetHashCode(FileName, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(FileSize, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(ContentType, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(Author, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(CreatedOn, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(Description, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(ContentUrl, hashCode);
+                hashCode = Utils.GetHashCode(FileName, hashCode);
+                hashCode = Utils.GetHashCode(FileSize, hashCode);
+                hashCode = Utils.GetHashCode(ContentType, hashCode);
+                hashCode = Utils.GetHashCode(Author, hashCode);
+                hashCode = Utils.GetHashCode(CreatedOn, hashCode);
+                hashCode = Utils.GetHashCode(Description, hashCode);
+                hashCode = Utils.GetHashCode(ContentUrl, hashCode);
 
                 return hashCode;
             }

@@ -206,19 +206,19 @@ namespace Redmine.Net.Api.Types
         public override int GetHashCode()
         {
             var hashCode = base.GetHashCode();
-            hashCode = HashCodeHelper.GetHashCode(Identifier, hashCode);
-            hashCode = HashCodeHelper.GetHashCode(Description, hashCode);
-            hashCode = HashCodeHelper.GetHashCode(Parent, hashCode);
-            hashCode = HashCodeHelper.GetHashCode(HomePage, hashCode);
-            hashCode = HashCodeHelper.GetHashCode(CreatedOn, hashCode);
-            hashCode = HashCodeHelper.GetHashCode(UpdatedOn, hashCode);
-            hashCode = HashCodeHelper.GetHashCode(Status, hashCode);
-            hashCode = HashCodeHelper.GetHashCode(IsPublic, hashCode);
-            hashCode = HashCodeHelper.GetHashCode(InheritMembers, hashCode);
-            hashCode = HashCodeHelper.GetHashCode(Trackers, hashCode);
-            hashCode = HashCodeHelper.GetHashCode(CustomFields, hashCode);
-            hashCode = HashCodeHelper.GetHashCode(IssueCategories, hashCode);
-            hashCode = HashCodeHelper.GetHashCode(EnabledModules, hashCode);
+            hashCode = Utils.GetHashCode(Identifier, hashCode);
+            hashCode = Utils.GetHashCode(Description, hashCode);
+            hashCode = Utils.GetHashCode(Parent, hashCode);
+            hashCode = Utils.GetHashCode(HomePage, hashCode);
+            hashCode = Utils.GetHashCode(CreatedOn, hashCode);
+            hashCode = Utils.GetHashCode(UpdatedOn, hashCode);
+            hashCode = Utils.GetHashCode(Status, hashCode);
+            hashCode = Utils.GetHashCode(IsPublic, hashCode);
+            hashCode = Utils.GetHashCode(InheritMembers, hashCode);
+            hashCode = Utils.GetHashCode(Trackers, hashCode);
+            hashCode = Utils.GetHashCode(CustomFields, hashCode);
+            hashCode = Utils.GetHashCode(IssueCategories, hashCode);
+            hashCode = Utils.GetHashCode(EnabledModules, hashCode);
 
             return hashCode;
         }

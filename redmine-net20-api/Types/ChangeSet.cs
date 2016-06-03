@@ -106,10 +106,10 @@ namespace Redmine.Net.Api.Types
             unchecked
             {
                 var hashCode = 13;
-                hashCode = HashCodeHelper.GetHashCode(Revision, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(User, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(Comments, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(CommittedOn, hashCode);
+                hashCode = Utils.GetHashCode(Revision, hashCode);
+                hashCode = Utils.GetHashCode(User, hashCode);
+                hashCode = Utils.GetHashCode(Comments, hashCode);
+                hashCode = Utils.GetHashCode(CommittedOn, hashCode);
                 return hashCode;
             }
         }

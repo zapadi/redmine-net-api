@@ -97,7 +97,7 @@ namespace Redmine.Net.Api.Internals
         {
             var result = JsonDeserializeToList(jsonString, root, typeof(T), out totalCount);
 
-            return ((ArrayList) result).OfType<T>().ToList();
+            return ((ArrayList) result)?.OfType<T>().ToList();
         }
 
         public static T JsonDeserialize<T>(string jsonString, string root) where T : new()

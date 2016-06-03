@@ -18,7 +18,6 @@ namespace Redmine.Net.Api
 {
     public enum MimeFormat
     {
-        XML
+        xml
     }
-
 }
