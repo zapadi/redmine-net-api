@@ -18,7 +18,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Globalization;
 using System.Net;
-using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Internals;
@@ -37,19 +37,7 @@ namespace Redmine.Net.Api.Async
         public static async Task<User> GetCurrentUserAsync(this RedmineManager redmineManager, NameValueCollection parameters = null)
         {
             var uri = string.Format(RedmineManager.REQUEST_FORMAT, redmineManager.Host, RedmineManager.Sufixes[typeof(User)], RedmineManager.CURRENT_USER_URI, redmineManager.MimeFormat);
-            using (var wc = redmineManager.CreateWebClient(null))
-            {
-                try
-                {
-                    var result = await wc.DownloadStringTaskAsync(uri).ConfigureAwait(false);
-                    return RedmineSerializer.Deserialize<User>(result, redmineManager.MimeFormat);
-                }
-                catch (WebException wex)
-                {
-                    wex.HandleWebException("GetCurrentUserAsync", redmineManager.MimeFormat);
-                }
-                return null;
-            }
+            return await WebApiAsyncHelper.ExecuteDownload<User>(redmineManager, uri, "GetCurrentUserAsync", parameters);
         }
 
         /// <summary>
@@ -64,20 +52,7 @@ namespace Redmine.Net.Api.Async
         {
             var uri = UrlHelper.GetWikiCreateOrUpdaterUrl(redmineManager, projectId, pageName);
             var data = RedmineSerializer.Serialize(wikiPage, redmineManager.MimeFormat);
-
-            using (var wc = redmineManager.CreateWebClient(null))
-            {
-                try
-                {
-					var response = await wc.UploadStringTaskAsync(uri, HttpVerbs.PUT, data).ConfigureAwait(false);
-                    return RedmineSerializer.Deserialize<WikiPage>(response, redmineManager.MimeFormat);
-                }
-                catch (WebException wex)
-                {
-                    wex.HandleWebException("CreateOrUpdateWikiPageAsync", redmineManager.MimeFormat);
-                }
-                return null;
-            }
+            return await WebApiAsyncHelper.ExecuteUpload<WikiPage>(redmineManager, uri, HttpVerbs.PUT, data, "CreateOrUpdateWikiPageAsync");
         }
 
         /// <summary>
@@ -90,17 +65,7 @@ namespace Redmine.Net.Api.Async
         public static async Task DeleteWikiPageAsync(this RedmineManager redmineManager, string projectId, string pageName)
         {
             var uri = UrlHelper.GetDeleteWikirUrl(redmineManager, projectId, pageName);
-            using (var wc = redmineManager.CreateWebClient(null))
-            {
-                try
-                {
-					await wc.UploadStringTaskAsync(uri, HttpVerbs.DELETE, string.Empty).ConfigureAwait(false);
-                }
-                catch (WebException wex)
-                {
-                    wex.HandleWebException("DeleteWikiPageAsync", redmineManager.MimeFormat);
-                }
-            }
+            await WebApiAsyncHelper.ExecuteUpload(redmineManager, uri, HttpVerbs.DELETE, string.Empty, "DeleteWikiPageAsync");
         }
 
         /// <summary>
@@ -113,20 +78,7 @@ namespace Redmine.Net.Api.Async
         public static async Task<Upload> UploadFileAsync(this RedmineManager redmineManager, byte[] data)
         {
             var uri = UrlHelper.GetUploadFileUrl(redmineManager);
-            using (var wc = redmineManager.CreateWebClient(null, true))
-            {
-                try
-                {
-					var response = await wc.UploadDataTaskAsync(uri, HttpVerbs.POST, data).ConfigureAwait(false);
-                    var responseString = Encoding.ASCII.GetString(response);
-                    return RedmineSerializer.Deserialize<Upload>(responseString, redmineManager.MimeFormat);
-                }
-                catch (WebException wex)
-                {
-                    wex.HandleWebException("UploadFileAsync", redmineManager.MimeFormat);
-                }
-                return null;
-            }
+            return await WebApiAsyncHelper.ExecuteUploadFile(redmineManager, uri, data, "UploadFileAsync");
         }
 
         /// <summary>
@@ -137,19 +89,7 @@ namespace Redmine.Net.Api.Async
         /// <returns></returns>
         public static async Task<byte[]> DownloadFileAsync(this RedmineManager redmineManager, string address)
         {
-            using (var wc = redmineManager.CreateWebClient(null, true))
-            {
-                try
-                {
-                    var response = await wc.DownloadDataTaskAsync(address).ConfigureAwait(false);
-                    return response;
-                }
-                catch (WebException wex)
-                {
-                    wex.HandleWebException("DownloadFileAsync", redmineManager.MimeFormat);
-                }
-                return null;
-            }
+            return await WebApiAsyncHelper.ExecuteDownloadFile(redmineManager, address, "DownloadFileAsync");
         }
 
         /// <summary>
@@ -164,19 +104,7 @@ namespace Redmine.Net.Api.Async
         public static async Task<WikiPage> GetWikiPageAsync(this RedmineManager redmineManager, string projectId, NameValueCollection parameters, string pageName, uint version = 0)
         {
             var uri = UrlHelper.GetWikiPageUrl(redmineManager, projectId, parameters, pageName, version);
-            using (var wc = redmineManager.CreateWebClient(parameters))
-            {
-                try
-                {
-                    var response = await wc.DownloadStringTaskAsync(uri).ConfigureAwait(false);
-                    return RedmineSerializer.Deserialize<WikiPage>(response, redmineManager.MimeFormat);
-                }
-                catch (WebException wex)
-                {
-                    wex.HandleWebException("GetWikiPageAsync", redmineManager.MimeFormat);
-                }
-                return null;
-            }
+            return await WebApiAsyncHelper.ExecuteDownload<WikiPage>(redmineManager, uri, "GetWikiPageAsync", parameters);
         }
 
         /// <summary>
@@ -189,20 +117,7 @@ namespace Redmine.Net.Api.Async
         public static async Task<List<WikiPage>> GetAllWikiPagesAsync(this RedmineManager redmineManager, NameValueCollection parameters, string projectId)
         {
             var uri = UrlHelper.GetWikisUrl(redmineManager, projectId);
-            using (var wc = redmineManager.CreateWebClient(parameters))
-            {
-                try
-                {
-                    var response = await wc.DownloadStringTaskAsync(uri).ConfigureAwait(false);
-                    var result = RedmineSerializer.DeserializeList<WikiPage>(response, redmineManager.MimeFormat);
-                    return result.Objects;
-                }
-                catch (WebException wex)
-                {
-                    wex.HandleWebException("GetAllWikiPagesAsync", redmineManager.MimeFormat);
-                }
-                return null;
-            }
+            return await WebApiAsyncHelper.ExecuteDownloadList<WikiPage>(redmineManager, uri, "GetAllWikiPagesAsync", parameters);
         }
 
         /// <summary>
@@ -216,18 +131,7 @@ namespace Redmine.Net.Api.Async
         {
             var data = DataHelper.UserData(userId, redmineManager.MimeFormat);
             var uri = UrlHelper.GetAddUserToGroupUrl(redmineManager, groupId);
-
-            using (var wc = redmineManager.CreateWebClient(null))
-            {
-                try
-                {
-					await wc.UploadStringTaskAsync(uri, HttpVerbs.POST, data).ConfigureAwait(false);
-                }
-                catch (WebException wex)
-                {
-                    wex.HandleWebException("AddUserToGroupAsync", redmineManager.MimeFormat);
-                }
-            }
+            await WebApiAsyncHelper.ExecuteUpload(redmineManager, uri, HttpVerbs.POST, data, "AddUserToGroupAsync");
         }
 
         /// <summary>
@@ -240,17 +144,7 @@ namespace Redmine.Net.Api.Async
         public static async Task DeleteUserFromGroupAsync(this RedmineManager redmineManager, int groupId, int userId)
         {
             var uri = UrlHelper.GetRemoveUserFromGroupUrl(redmineManager, groupId, userId);
-            using (var wc = redmineManager.CreateWebClient(null))
-            {
-                try
-                {
-					await wc.UploadStringTaskAsync(uri, HttpVerbs.DELETE, string.Empty).ConfigureAwait(false);
-                }
-                catch (WebException wex)
-                {
-                    wex.HandleWebException("DeleteUserFromGroupAsync", redmineManager.MimeFormat);
-                }
-            }
+            await WebApiAsyncHelper.ExecuteUpload(redmineManager, uri, HttpVerbs.DELETE, string.Empty, "DeleteUserFromGroupAsync");
         }
 
         /// <summary>
@@ -264,65 +158,47 @@ namespace Redmine.Net.Api.Async
         {
             var data = DataHelper.UserData(userId, redmineManager.MimeFormat);
             var uri = UrlHelper.GetAddWatcherUrl(redmineManager, issueId, userId);
-
-            using (var wc = redmineManager.CreateWebClient(null))
-            {
-                try
-                {
-					await wc.UploadStringTaskAsync(uri, HttpVerbs.POST, data).ConfigureAwait(false);
-                }
-                catch (WebException wex)
-                {
-                    wex.HandleWebException("AddWatcherAsync", redmineManager.MimeFormat);
-                }
-            }
+            await WebApiAsyncHelper.ExecuteUpload(redmineManager, uri, HttpVerbs.POST, data, "AddWatcherAsync");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="redmineManager"></param>
+        /// <param name="issueId"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         public static async Task RemoveWatcherAsync(this RedmineManager redmineManager, int issueId, int userId)
         {
             var uri = UrlHelper.GetRemoveWatcherUrl(redmineManager, issueId, userId);
-            using (var wc = redmineManager.CreateWebClient(null))
-            {
-                try
-                {
-					await wc.UploadStringTaskAsync(uri, HttpVerbs.DELETE, string.Empty).ConfigureAwait(false);
-                }
-                catch (WebException wex)
-                {
-                    wex.HandleWebException("RemoveWatcherAsync", redmineManager.MimeFormat);
-                }
-            }
+            await WebApiAsyncHelper.ExecuteUpload(redmineManager, uri, HttpVerbs.DELETE, string.Empty, "RemoveWatcherAsync");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="redmineManager"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
         public static async Task<PaginatedObjects<T>> GetPaginatedObjectsAsync<T>(this RedmineManager redmineManager, NameValueCollection parameters) where T : class, new()
         {
-            var url = UrlHelper.GetListUrl<T>(redmineManager, parameters);
-            using (var wc = redmineManager.CreateWebClient(parameters))
-            {
-                try
-                {
-                    var response = await wc.DownloadStringTaskAsync(url).ConfigureAwait(false);
-                    return RedmineSerializer.DeserializeList<T>(response, redmineManager.MimeFormat);
-                }
-                catch (WebException wex)
-                {
-                    wex.HandleWebException("GetPaginatedObjectsAsync", redmineManager.MimeFormat);
-                }
-                return null;
-            }
+            var uri = UrlHelper.GetListUrl<T>(redmineManager, parameters);
+            return await WebApiAsyncHelper.ExecuteDownloadPaginatedList<T>(redmineManager, uri, "GetPaginatedObjectsAsync", parameters);
         }
 
         public static async Task<List<T>> GetObjectsAsync<T>(this RedmineManager redmineManager, NameValueCollection parameters) where T : class, new()
         {
-            
-            int totalCount = 0, pageSize;
+            int totalCount = 0, pageSize, offset;
             List<T> resultList = null;
+
             if (parameters == null) parameters = new NameValueCollection();
-            int offset = 0;
+
             int.TryParse(parameters[RedmineKeys.LIMIT], out pageSize);
+            int.TryParse(parameters[RedmineKeys.OFFSET], out offset);
             if (pageSize == default(int))
             {
-                pageSize = redmineManager.PageSize > 0 ? redmineManager.PageSize : 25;
+                pageSize = redmineManager.PageSize > 0 ? redmineManager.PageSize : RedmineManager.DEFAULT_PAGE_SIZE_VALUE;
                 parameters.Set(RedmineKeys.LIMIT, pageSize.ToString(CultureInfo.InvariantCulture));
             }
             try
@@ -336,10 +212,12 @@ namespace Redmine.Net.Api.Async
                         if (resultList == null)
                         {
                             resultList = tempResult.Objects;
-                            totalCount = tempResult.TotalCount;    
+                            totalCount = tempResult.TotalCount;
                         }
                         else
+                        {
                             resultList.AddRange(tempResult.Objects);
+                        }
                     }
                     offset += pageSize;
                 } while (offset < totalCount);
@@ -361,20 +239,8 @@ namespace Redmine.Net.Api.Async
         /// <returns></returns>
         public static async Task<T> GetObjectAsync<T>(this RedmineManager redmineManager, string id, NameValueCollection parameters) where T : class, new()
         {
-            var url = UrlHelper.GetGetUrl<T>(redmineManager, id);
-            using (var wc = redmineManager.CreateWebClient(parameters))
-            {
-                string response = null;
-                try
-                {
-                    response = await wc.DownloadStringTaskAsync(url).ConfigureAwait(false);
-                }
-                catch (WebException wex)
-                {
-                    wex.HandleWebException("GetobjectAsync", redmineManager.MimeFormat);
-                }
-                return RedmineSerializer.Deserialize<T>(response, redmineManager.MimeFormat);
-            }
+            var uri = UrlHelper.GetGetUrl<T>(redmineManager, id);
+            return await WebApiAsyncHelper.ExecuteDownload<T>(redmineManager, uri, "GetobjectAsync", parameters);
         }
 
         /// <summary>
@@ -399,39 +265,17 @@ namespace Redmine.Net.Api.Async
         ///  <returns></returns>
         public static async Task<T> CreateObjectAsync<T>(this RedmineManager redmineManager, T obj, string ownerId) where T : class, new()
         {
-            var url = UrlHelper.GetCreateUrl<T>(redmineManager, ownerId);
+            var uri = UrlHelper.GetCreateUrl<T>(redmineManager, ownerId);
             var data = RedmineSerializer.Serialize(obj, redmineManager.MimeFormat);
-
-            using (var wc = redmineManager.CreateWebClient(null))
-            {
-                string response = null;
-                try
-                {
-					response = await wc.UploadStringTaskAsync(url, HttpVerbs.POST, data).ConfigureAwait(false);
-                }
-                catch (WebException wex)
-                {
-                    wex.HandleWebException("CreateObjectAsync", redmineManager.MimeFormat);
-                }
-                return RedmineSerializer.Deserialize<T>(response, redmineManager.MimeFormat);
-            }
+            return await WebApiAsyncHelper.ExecuteUpload<T>(redmineManager, uri, HttpVerbs.POST, data, "CreateObjectAsync");
         }
 
         public static async Task UpdateObjectAsync<T>(this RedmineManager redmineManager, string id, T obj, string projectId = null) where T : class, new()
         {
-            var url = UrlHelper.GetUploadUrl(redmineManager, id, obj, projectId);
-            using (var wc = redmineManager.CreateWebClient(null))
-            {
-                var data = RedmineSerializer.Serialize(obj, redmineManager.MimeFormat);
-                try
-                {
-					await wc.UploadStringTaskAsync(url, HttpVerbs.PUT, data).ConfigureAwait(false);
-                }
-                catch (WebException wex)
-                {
-                    wex.HandleWebException("UpdateObjectAsync", redmineManager.MimeFormat);
-                }
-            }
+            var uri = UrlHelper.GetUploadUrl(redmineManager, id, obj, projectId);
+            var data = RedmineSerializer.Serialize(obj, redmineManager.MimeFormat);
+            data = Regex.Replace(data, @"\r\n|\r|\n", "\r\n");
+            await WebApiAsyncHelper.ExecuteUpload<T>(redmineManager, uri, HttpVerbs.PUT, data, "UpdateObjectAsync");
         }
 
         /// <summary>
@@ -445,18 +289,7 @@ namespace Redmine.Net.Api.Async
         public static async Task DeleteObjectAsync<T>(this RedmineManager redmineManager, string id, NameValueCollection parameters) where T : class, new()
         {
             var uri = UrlHelper.GetDeleteUrl<T>(redmineManager, id);
-
-            using (var wc = redmineManager.CreateWebClient(parameters))
-            {
-                try
-                {
-					await wc.UploadStringTaskAsync(uri, HttpVerbs.DELETE, string.Empty).ConfigureAwait(false);
-                }
-                catch (WebException wex)
-                {
-                    wex.HandleWebException("DeleteObjectAsync", redmineManager.MimeFormat);
-                }
-            }
+            await WebApiAsyncHelper.ExecuteUpload<T>(redmineManager, uri, HttpVerbs.DELETE, string.Empty, "DeleteObjectAsync");
         }
     }
 }

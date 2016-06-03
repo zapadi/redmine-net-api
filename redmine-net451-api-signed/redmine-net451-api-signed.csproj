@@ -58,6 +58,9 @@
     <Compile Include="..\redmine-net20-api\internals\UrlHelper.cs">
       <Link>Internals\UrlHelper.cs</Link>
     </Compile>
+    <Compile Include="..\redmine-net20-api\Internals\WebApiHelper.cs">
+      <Link>Internals\WebApiHelper.cs</Link>
+    </Compile>
     <Compile Include="..\redmine-net20-api\logging\ColorConsoleLogger.cs">
       <Link>Logging\ColorConsoleLogger.cs</Link>
     </Compile>
@@ -403,6 +406,9 @@
     </Compile>
     <Compile Include="..\redmine-net45-api\extensions\TaskExtensions.cs">
       <Link>Extensions\TaskExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\redmine-net45-api\Internals\WebApiAsyncHelper.cs">
+      <Link>Internals\WebApiAsyncHelper.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="..\redmine-net20-api\Exceptions\NotFoundException.cs">

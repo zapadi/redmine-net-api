@@ -96,6 +96,10 @@ namespace Redmine.Net.Api.Internals
         /// <typeparam name="T"></typeparam>
         /// <param name="response"></param>
         /// <param name="mimeFormat"></param>
+        /// <exception cref="RedmineException"></exception>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="InvalidOperationException"></exception>
         /// <returns></returns>
         public static T Deserialize<T>(string response, MimeFormat mimeFormat) where T : class, new()
         {
@@ -152,7 +156,7 @@ namespace Redmine.Net.Api.Internals
 
         private static PaginatedObjects<T> JSonDeserializeList<T>(string response) where T : class, new()
         {
-            int totalItems;
+            int totalItems, offset;
             var type = typeof(T);
             var jsonRoot = (string)null;
             if (type == typeof(Error)) jsonRoot = RedmineKeys.ERRORS;
@@ -162,11 +166,12 @@ namespace Redmine.Net.Api.Internals
             if (string.IsNullOrEmpty(jsonRoot))
                 jsonRoot = RedmineManager.Sufixes[type];
 
-            var result = JsonDeserializeToList<T>(response, jsonRoot, out totalItems);
+            var result = JsonDeserializeToList<T>(response, jsonRoot, out totalItems, out offset);
 
             return new PaginatedObjects<T>()
             {
                 TotalCount = totalItems,
+                Offset = offset,
                 Objects = result.ToList()
             };
         }
@@ -182,11 +187,12 @@ namespace Redmine.Net.Api.Internals
                     xmlReader.Read();
 
                     var totalItems = xmlReader.ReadAttributeAsInt(RedmineKeys.TOTAL_COUNT);
-
+                    var offset = xmlReader.ReadAttributeAsInt(RedmineKeys.OFFSET);
                     var result = xmlReader.ReadElementContentAsCollection<T>();
                     return new PaginatedObjects<T>()
                     {
                         TotalCount = totalItems,
+                        Offset = offset,
                         Objects = result
                     };
                 }

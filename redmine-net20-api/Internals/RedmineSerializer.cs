@@ -33,6 +33,7 @@ namespace Redmine.Net.Api.Internals
         /// <param name="obj">The object to serialize.</param>
         /// <returns>The System.String that contains the XML document.</returns>
         /// <exception cref="InvalidOperationException"></exception>
+        /// <exception cref="ArgumentNullException"></exception>
         // ReSharper disable once InconsistentNaming
         private static string ToXML<T>(T obj) where T : class
         {

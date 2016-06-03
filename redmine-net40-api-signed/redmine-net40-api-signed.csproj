@@ -83,6 +83,9 @@
     <Compile Include="..\redmine-net20-api\internals\UrlHelper.cs">
       <Link>Internals\UrlHelper.cs</Link>
     </Compile>
+    <Compile Include="..\redmine-net20-api\Internals\WebApiHelper.cs">
+      <Link>Internals\WebApiHelper.cs</Link>
+    </Compile>
     <Compile Include="..\redmine-net20-api\Logging\ColorConsoleLogger.cs">
       <Link>Logging\ColorConsoleLogger.cs</Link>
     </Compile>
@@ -267,8 +270,8 @@
     <Compile Include="..\redmine-net20-api\Types\WikiPage.cs">
       <Link>Types\WikiPage.cs</Link>
     </Compile>
-    <Compile Include="..\redmine-net40-api\Async\RedmineManagerAsyncExtensions.cs">
-      <Link>Async\RedmineManagerAsyncExtensions.cs</Link>
+    <Compile Include="..\redmine-net40-api\Async\RedmineManagerAsync.cs">
+      <Link>Async\RedmineManagerAsync.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net40-api\Extensions\CollectionExtensions.cs">
       <Link>Extensions\CollectionExtensions.cs</Link>

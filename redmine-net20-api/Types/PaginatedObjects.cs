@@ -23,5 +23,7 @@ namespace Redmine.Net.Api.Types
         public List<T> Objects { get; set; }
 
         public int TotalCount { get; set; }
+
+        public int Offset { get; set; }
     }
 }

@@ -15,6 +15,10 @@
 */
 
 using System;
+using System.Collections.Generic;
+using System.Web.Script.Serialization;
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -75,7 +79,7 @@ namespace Redmine.Net.Api.Internals
         /// <summary>
         /// Available json converters.
         /// </summary>
-        public static IReadOnlyDictionary<Type, JavaScriptConverter> JsonConverters { get { return new ReadOnlyDictionary<Type, JavaScriptConverter>(jsonConverters); } }
+        public static Dictionary<Type, JavaScriptConverter> JsonConverters { get { return jsonConverters; } }
 
         /// <summary>
         /// 
@@ -96,15 +100,16 @@ namespace Redmine.Net.Api.Internals
         public static List<T> JsonDeserializeToList<T>(string jsonString, string root) where T : class, new()
         {
             int totalCount;
-            return JsonDeserializeToList<T>(jsonString, root, out totalCount);
+            int offset;
+            return JsonDeserializeToList<T>(jsonString, root, out totalCount, out offset);
         }
 
         /// <summary>
         /// JSON Deserialization
         /// </summary>
-        public static List<T> JsonDeserializeToList<T>(string jsonString, string root, out int totalCount) where T : class,new()
+        public static List<T> JsonDeserializeToList<T>(string jsonString, string root, out int totalCount, out int offset) where T : class,new()
         {
-            var result = JsonDeserializeToList(jsonString, root, typeof(T), out totalCount);
+            var result = JsonDeserializeToList(jsonString, root, typeof(T), out totalCount, out offset);
             return ((ArrayList)result).OfType<T>().ToList();
         }
 
@@ -162,9 +167,10 @@ namespace Redmine.Net.Api.Internals
             }
         }
 
-        private static object JsonDeserializeToList(string jsonString, string root, Type type, out int totalCount)
+        private static object JsonDeserializeToList(string jsonString, string root, Type type, out int totalCount, out int offset)
         {
             totalCount = 0;
+            offset = 0;
             if (string.IsNullOrEmpty(jsonString)) throw new ArgumentNullException("jsonString");
 
             var serializer = new JavaScriptSerializer();
@@ -172,9 +178,11 @@ namespace Redmine.Net.Api.Internals
             var dictionary = serializer.Deserialize<Dictionary<string, object>>(jsonString);
             if (dictionary == null) return null;
 
-            object obj, tc;
+            object obj, tc, off;
 
             if (dictionary.TryGetValue(RedmineKeys.TOTAL_COUNT, out tc)) totalCount = (int)tc;
+
+            if (dictionary.TryGetValue(RedmineKeys.OFFSET, out off)) offset = (int)off;
 
             if (!dictionary.TryGetValue(root.ToLowerInvariant(), out obj)) return null;
             
