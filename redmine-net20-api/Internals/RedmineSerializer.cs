@@ -85,50 +85,35 @@ namespace Redmine.Net.Api.Internals
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="obj"></param>
-        /// <param name="mimeFormat"></param>
-        /// <exception cref="InvalidOperationException"></exception>
-        /// <returns></returns>
         public static string Serialize<T>(T obj, MimeFormat mimeFormat) where T : class, new()
         {
             return ToXML(obj);
         }
 
         /// <summary>
-        /// Deserializes the document contained by the specific System.String.
+        /// 
         /// </summary>
-        /// <typeparam name="T">The type of objects to deserialize.</typeparam>
-        /// <param name="response">The System.String that contains the XML document to deserialize.</param>
-        /// <param name="mimeFormat">XML or JSON</param>
-        /// <exception cref="System.InvalidOperationException"> An error occurred during deserialization. The original exception is available
-        /// using the System.Exception.InnerException property.</exception>
-        /// <returns>The T object being deserialized.</returns>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="response"></param>
+        /// <param name="mimeFormat"></param>
+        /// <returns></returns>
         public static T Deserialize<T>(string response, MimeFormat mimeFormat) where T : class, new()
         {
+            if (string.IsNullOrEmpty(response)) throw new RedmineException("could not deserialize: " + response);
+
             return FromXML<T>(response);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="T">The type of objects to deserialize.</typeparam>
-        /// <param name="response"></param>
-        /// <param name="mimeFormat">XML or JSON</param>
-        /// <exception cref="InvalidOperationException"></exception>
-        /// <exception cref="RedmineException"></exception>
-        /// <returns>A paginated list of type T.</returns>
         public static PaginatedObjects<T> DeserializeList<T>(string response, MimeFormat mimeFormat) where T : class, new()
         {
+            if (string.IsNullOrEmpty(response)) throw new RedmineException("web response is null!");
+
             return XmlDeserializeList<T>(response);
         }
 
         private static PaginatedObjects<T> XmlDeserializeList<T>(string response) where T : class, new()
         {
-            if (string.IsNullOrEmpty(response)) throw new RedmineException("Could not deserialize a null or empty response!");
+            if (string.IsNullOrEmpty(response)) throw new RedmineException("could not deserialize: " + response);
 
             using (var stringReader = new StringReader(response))
             {

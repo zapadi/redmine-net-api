@@ -1,28 +1,30 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using Redmine.Net.Api;
 
 namespace xUnitTestredminenet45api
 {
-    public class RedmineFixture
-    {
-        public RedmineFixture()
-        {
-            SetMimeTypeXML();
-            SetMimeTypeJSON();
-        }
+	public class RedmineFixture
+	{
+		public RedmineManager redmineManager;
 
-        public RedmineManager Manager { get; private set; }
+		public RedmineFixture ()
+		{
+			SetMimeTypeXML();
+			SetMimeTypeJSON();
+		}
 
-        [Conditional("JSON")]
-        private void SetMimeTypeJSON()
-        {
-            Manager = new RedmineManager(Helper.Uri, Helper.ApiKey, MimeFormat.JSON);
-        }
+		[Conditional("JSON")]
+		private void SetMimeTypeJSON()
+		{
+			redmineManager = new RedmineManager(Helper.Uri, Helper.ApiKey, MimeFormat.json);
+		}
 
-        [Conditional("XML")]
-        private void SetMimeTypeXML()
-        {
-            Manager = new RedmineManager(Helper.Uri, Helper.ApiKey);
-        }
-    }
+		[Conditional("XML")]
+		private void SetMimeTypeXML()
+		{
+			redmineManager = new RedmineManager(Helper.Uri, Helper.ApiKey);
+		}
+	}
 }
+

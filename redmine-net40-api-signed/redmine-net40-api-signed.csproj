@@ -68,23 +68,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\redmine-net20-api\Extensions\Extensions.cs">
+      <Link>Extensions\Extensions.cs</Link>
+    </Compile>
     <Compile Include="..\redmine-net20-api\Extensions\XmlReaderExtensions.cs">
       <Link>Extensions\XmlReaderExtensions.cs</Link>
-    </Compile>
-    <Compile Include="..\redmine-net20-api\Extensions\XmlWriterExtensions.cs">
-      <Link>Extensions\XmlWriterExtensions.cs</Link>
-    </Compile>
-    <Compile Include="..\redmine-net20-api\Internals\DataHelper.cs">
-      <Link>Internals\DataHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\redmine-net20-api\Internals\HashCodeHelper.cs">
-      <Link>Internals\HashCodeHelper.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net20-api\internals\UrlHelper.cs">
       <Link>Internals\UrlHelper.cs</Link>
     </Compile>
+<<<<<<< HEAD
     <Compile Include="..\redmine-net20-api\Internals\WebApiHelper.cs">
       <Link>Internals\WebApiHelper.cs</Link>
+=======
+    <Compile Include="..\redmine-net20-api\internals\Utils.cs">
+      <Link>Internals\Utils.cs</Link>
+>>>>>>> master
     </Compile>
     <Compile Include="..\redmine-net20-api\Logging\ColorConsoleLogger.cs">
       <Link>Logging\ColorConsoleLogger.cs</Link>
@@ -279,14 +278,8 @@
     <Compile Include="..\redmine-net40-api\Extensions\JsonExtensions.cs">
       <Link>Extensions\JsonExtensions.cs</Link>
     </Compile>
-    <Compile Include="..\redmine-net40-api\Extensions\NameValueCollectionExtensions.cs">
-      <Link>Extensions\NameValueCollectionExtensions.cs</Link>
-    </Compile>
     <Compile Include="..\redmine-net40-api\Extensions\WebExtensions.cs">
       <Link>Extensions\WebExtensions.cs</Link>
-    </Compile>
-    <Compile Include="..\redmine-net40-api\HttpVerbs.cs">
-      <Link>HttpVerbs.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net40-api\Internals\RedmineSerializer.cs">
       <Link>Internals\RedmineSerializer.cs</Link>

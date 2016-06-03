@@ -1,53 +1,47 @@
-﻿using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Threading.Tasks;
+﻿using System;
+using Xunit;
+using Redmine.Net.Api;
 using Redmine.Net.Api.Async;
 using Redmine.Net.Api.Types;
-using Xunit;
+using System.Threading.Tasks;
+using System.Collections.Specialized;
+using System.Collections.Generic;
 
 namespace xUnitTestredminenet45api
 {
-    [Collection("RedmineCollection")]
-    public class IssueAsyncTests
-    {
-        private const int WATCHER_ISSUE_ID = 91;
-        private const int WATCHER_USER_ID = 2;
+	[Collection("RedmineCollection")]
+	public class IssueAsyncTests
+	{
+		private const int watcherIssueId = 91;
+		private const int watcherUserId = 2;
 
-        private readonly RedmineFixture fixture;
+		RedmineFixture fixture;
+		public IssueAsyncTests(RedmineFixture fixture)
+		{
+			this.fixture = fixture;
+		}
 
-        public IssueAsyncTests(RedmineFixture fixture)
-        {
-            this.fixture = fixture;
-        }
+		[Fact]
+		public async Task Should_Add_Watcher_To_Issue()
+		{
+			await fixture.redmineManager.AddWatcherAsync(watcherIssueId, watcherUserId);
 
-        [Fact]
-        public async Task Should_Add_Watcher_To_Issue()
-        {
-            await fixture.Manager.AddWatcherAsync(WATCHER_ISSUE_ID, WATCHER_USER_ID);
+			Issue issue = await fixture.redmineManager.GetObjectAsync<Issue>(watcherIssueId.ToString(), new NameValueCollection { { "include", "watchers" } });
 
-            var issue =
-                await
-                    fixture.Manager.GetObjectAsync<Issue>(WATCHER_ISSUE_ID.ToString(),
-                        new NameValueCollection {{"include", "watchers"}});
+			Assert.NotNull(issue);
+			Assert.True(issue.Watchers.Count == 1, "Number of watchers != 1");
+			Assert.True(((List<Watcher>)issue.Watchers).Find(w => w.Id == watcherUserId) != null, "Watcher not added to issue.");
+		}
 
-            Assert.NotNull(issue);
-            Assert.True(issue.Watchers.Count == 1, "Number of watchers != 1");
-            Assert.True(((List<Watcher>) issue.Watchers).Find(w => w.Id == WATCHER_USER_ID) != null,
-                "Watcher not added to issue.");
-        }
+		[Fact]
+		public async Task Should_Remove_Watcher_From_Issue()
+		{
+			await fixture.redmineManager.RemoveWatcherAsync(watcherIssueId, watcherUserId);
 
-        [Fact]
-        public async Task Should_Remove_Watcher_From_Issue()
-        {
-            await fixture.Manager.RemoveWatcherAsync(WATCHER_ISSUE_ID, WATCHER_USER_ID);
+			Issue issue = await fixture.redmineManager.GetObjectAsync<Issue>(watcherIssueId.ToString(), new NameValueCollection { { "include", "watchers" } });
 
-            var issue =
-                await
-                    fixture.Manager.GetObjectAsync<Issue>(WATCHER_ISSUE_ID.ToString(),
-                        new NameValueCollection {{"include", "watchers"}});
-
-            Assert.True(issue.Watchers == null ||
-                        ((List<Watcher>) issue.Watchers).Find(w => w.Id == WATCHER_USER_ID) == null);
-        }
-    }
+			Assert.True(issue.Watchers == null || ((List<Watcher>)issue.Watchers).Find(w => w.Id == watcherUserId) == null);
+		}
+	}
 }
+

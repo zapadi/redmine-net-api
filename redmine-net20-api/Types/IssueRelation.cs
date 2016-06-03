@@ -130,11 +130,11 @@ namespace Redmine.Net.Api.Types
             unchecked
             {
                 var hashCode = 13;
-                hashCode = HashCodeHelper.GetHashCode(Id, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(IssueId, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(IssueToId, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(Type, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(Delay, hashCode);
+                hashCode = Utils.GetHashCode(Id, hashCode);
+                hashCode = Utils.GetHashCode(IssueId, hashCode);
+                hashCode = Utils.GetHashCode(IssueToId, hashCode);
+                hashCode = Utils.GetHashCode(Type, hashCode);
+                hashCode = Utils.GetHashCode(Delay, hashCode);
                 return hashCode;
             }
         }

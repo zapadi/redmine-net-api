@@ -111,6 +111,15 @@ namespace Redmine.Net.Api.Types
         {
             writer.WriteIdIfNotNull(User, RedmineKeys.USER_ID);
             writer.WriteArray(Roles, RedmineKeys.ROLE_IDS, typeof(MembershipRole), RedmineKeys.ROLE_ID);
+            //
+            //            writer.WriteStartElement(RedmineKeys.ROLE_IDS);
+            //            writer.WriteAttributeString("type", "array");
+            //            foreach (var role in Roles)
+            //            {
+            //                new XmlSerializer(role.GetType(), new XmlAttributeOverrides(), null, new XmlRootAttribute(RedmineKeys.ROLE_ID), string.Empty)
+            //					.Serialize(writer, role);
+            //            }
+            //            writer.WriteEndElement();
         }
 
         public override int GetHashCode()
@@ -118,10 +127,10 @@ namespace Redmine.Net.Api.Types
             unchecked
             {
                 var hashCode = base.GetHashCode();
-                hashCode = HashCodeHelper.GetHashCode(Project, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(User, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(Group, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(Roles, hashCode);
+                hashCode = Utils.GetHashCode(Project, hashCode);
+                hashCode = Utils.GetHashCode(User, hashCode);
+                hashCode = Utils.GetHashCode(Group, hashCode);
+                hashCode = Utils.GetHashCode(Roles, hashCode);
                 return hashCode;
             }
         }
