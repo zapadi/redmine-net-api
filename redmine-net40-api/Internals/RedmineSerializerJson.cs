@@ -17,6 +17,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Web.Script.Serialization;
 using Redmine.Net.Api.JSonConverters;
@@ -71,14 +72,22 @@ namespace Redmine.Net.Api.Internals
             {typeof (CustomFieldPossibleValue), new CustomFieldPossibleValueConverter()}
         };
 
-        public static Dictionary<Type, JavaScriptConverter> JsonConverters { get { return jsonConverters; } }
+        /// <summary>
+        /// Available json converters.
+        /// </summary>
+        public static IReadOnlyDictionary<Type, JavaScriptConverter> JsonConverters { get { return new ReadOnlyDictionary<Type, JavaScriptConverter>(jsonConverters); } }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="type"></param>
+        /// <returns></returns>
         public static string JsonSerializer<T>(T type) where T : new()
         {
             var serializer = new JavaScriptSerializer() { MaxJsonLength = int.MaxValue };
             serializer.RegisterConverters(new[] { jsonConverters[typeof(T)] });
-            var jsonString = serializer.Serialize(type);
-            return jsonString;
+            return serializer.Serialize(type);
         }
 
         /// <summary>
@@ -96,51 +105,59 @@ namespace Redmine.Net.Api.Internals
         public static List<T> JsonDeserializeToList<T>(string jsonString, string root, out int totalCount) where T : class,new()
         {
             var result = JsonDeserializeToList(jsonString, root, typeof(T), out totalCount);
-
-            return ((ArrayList) result).OfType<T>().ToList();
+            return ((ArrayList)result).OfType<T>().ToList();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="jsonString"></param>
+        /// <param name="root"></param>
+        /// <returns></returns>
         public static T JsonDeserialize<T>(string jsonString, string root) where T : new()
         {
             var type = typeof(T);
             var result = JsonDeserialize(jsonString, type, root);
-            if (result == null) return default(T);
-
-            return (T)result;
+            return result == null ? default(T) : (T) result;
         }
-
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="jsonString"></param>
+        /// <param name="type"></param>
+        /// <param name="root"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="InvalidOperationException"></exception>
+        /// <returns></returns>
         public static object JsonDeserialize(string jsonString, Type type, string root)
         {
-            if (string.IsNullOrEmpty(jsonString)) return null;
+            if (string.IsNullOrEmpty(jsonString)) throw new ArgumentNullException("jsonString");
 
             var serializer = new JavaScriptSerializer();
             serializer.RegisterConverters(new[] { jsonConverters[type] });
 
-            var dic = serializer.Deserialize<Dictionary<string, object>>(jsonString);
-            if (dic == null) return null;
+            var dictionary = serializer.Deserialize<Dictionary<string, object>>(jsonString);
+            if (dictionary == null) return null;
 
             object obj;
-            if (dic.TryGetValue(root ?? type.Name.ToLowerInvariant(), out obj))
-            {
-                var deserializedObject = serializer.ConvertToType(obj, type);
-
-                return deserializedObject;
-            }
-            return null;
+            return !dictionary.TryGetValue(root ?? type.Name.ToLowerInvariant(), out obj) ? null : serializer.ConvertToType(obj, type);
         }
 
-        private static void AddToList(JavaScriptSerializer serializer, IList list, Type type, object obj)
+        private static void AddToList(JavaScriptSerializer serializer, IList list, Type type, object arrayList)
         {
-            foreach (var item in (ArrayList)obj)
+            foreach (var obj in (ArrayList)arrayList)
             {
-                if (item is ArrayList)
+                if (obj is ArrayList)
                 {
-                    AddToList(serializer, list, type, item);
+                    AddToList(serializer, list, type, obj);
                 }
                 else
                 {
-                    var o = serializer.ConvertToType(item, type);
-                    list.Add(o);
+                    var convertedType = serializer.ConvertToType(obj, type);
+                    list.Add(convertedType);
                 }
             }
         }
@@ -148,43 +165,44 @@ namespace Redmine.Net.Api.Internals
         private static object JsonDeserializeToList(string jsonString, string root, Type type, out int totalCount)
         {
             totalCount = 0;
-            if (string.IsNullOrEmpty(jsonString)) return null;
+            if (string.IsNullOrEmpty(jsonString)) throw new ArgumentNullException("jsonString");
 
             var serializer = new JavaScriptSerializer();
             serializer.RegisterConverters(new[] { jsonConverters[type] });
-            var dic = serializer.Deserialize<Dictionary<string, object>>(jsonString);
-            if (dic == null) return null;
+            var dictionary = serializer.Deserialize<Dictionary<string, object>>(jsonString);
+            if (dictionary == null) return null;
 
             object obj, tc;
 
-            if (dic.TryGetValue(RedmineKeys.TOTAL_COUNT, out tc)) totalCount = (int)tc;
+            if (dictionary.TryGetValue(RedmineKeys.TOTAL_COUNT, out tc)) totalCount = (int)tc;
 
-            if (dic.TryGetValue(root.ToLowerInvariant(), out obj))
+            if (!dictionary.TryGetValue(root.ToLowerInvariant(), out obj)) return null;
+            
+            var arrayList = new ArrayList();
+            if (type == typeof(Error))
             {
-                var arrayList = new ArrayList();
-                if (type == typeof(Error))
+                string info = null;
+                foreach (var item in (ArrayList)obj)
                 {
-                    string info = null;
-                    foreach (var item in (ArrayList)obj)
+                    var innerArrayList = item as ArrayList;
+                    if (innerArrayList != null)
                     {
-                        var innerArrayList = item as ArrayList;
-                        if (innerArrayList != null)
-                        {
-                            info = innerArrayList.Cast<object>().Aggregate(info, (current, item2) => current + (item2 as string + " "));
-                        }
-                        else
-                            info += item as string + " ";
+                        info = innerArrayList.Cast<object>()
+                            .Aggregate(info, (current, item2) => current + (item2 as string + " "));
                     }
-                    var err = new Error { Info = info };
-                    arrayList.Add(err);
+                    else
+                    {
+                        info += item as string + " ";
+                    }
                 }
-                else
-                {
-                    AddToList(serializer, arrayList, type, obj);
-                }
-                return arrayList;
+                var err = new Error { Info = info };
+                arrayList.Add(err);
             }
-            return null;
+            else
+            {
+                AddToList(serializer, arrayList, type, obj);
+            }
+            return arrayList;
         }
     }
 }
