@@ -38,13 +38,13 @@ namespace Redmine.Net.Api.Types
         public string Property { get; set; }
 
         /// <summary>
-        /// Gets or sets the status id.
+        /// Gets or sets the name.
         /// </summary>
         /// <value>
-        /// The status id.
+        /// The name.
         /// </value>
-        [XmlAttribute(RedmineKeys.STATUS_ID)]
-        public string StatusId { get; set; }
+        [XmlAttribute(RedmineKeys.NAME)]
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the old value.
@@ -69,7 +69,7 @@ namespace Redmine.Net.Api.Types
         public void ReadXml(XmlReader reader)
         {
             Property = reader.GetAttribute(RedmineKeys.PROPERTY);
-            StatusId = reader.GetAttribute(RedmineKeys.STATUS_ID);
+            Name = reader.GetAttribute(RedmineKeys.NAME);
 
             reader.Read();
 
@@ -98,7 +98,7 @@ namespace Redmine.Net.Api.Types
         {
             if (other == null) return false;
             return (Property != null ? Property.Equals(other.Property) : other.Property == null)
-                && (StatusId != null ? StatusId.Equals(other.StatusId) : other.StatusId == null)
+                && (Name != null ? Name.Equals(other.Name) : other.Name == null)
                 && (OldValue != null ? OldValue.Equals(other.OldValue) : other.OldValue == null)
                 && (NewValue != null ? NewValue.Equals(other.NewValue) : other.NewValue == null);
         }
@@ -116,10 +116,10 @@ namespace Redmine.Net.Api.Types
             unchecked
             {
                 var hashCode = 13;
-                hashCode = HashCodeExtensions.GetHashCode(Property, hashCode);
-                hashCode = HashCodeExtensions.GetHashCode(StatusId, hashCode);
-                hashCode = HashCodeExtensions.GetHashCode(OldValue, hashCode);
-                hashCode = HashCodeExtensions.GetHashCode(NewValue, hashCode);
+                hashCode = Utils.GetHashCode(Property, hashCode);
+                hashCode = Utils.GetHashCode(Name, hashCode);
+                hashCode = Utils.GetHashCode(OldValue, hashCode);
+                hashCode = Utils.GetHashCode(NewValue, hashCode);
 
                 return hashCode;
             }
@@ -127,7 +127,7 @@ namespace Redmine.Net.Api.Types
 
         public override string ToString()
         {
-            return string.Format("[Detail: Property={0}, StatusId={1}, OldValue={2}, NewValue={3}]", Property, StatusId, OldValue, NewValue);
+            return string.Format("[Detail: Property={0}, Name={1}, OldValue={2}, NewValue={3}]", Property, Name, OldValue, NewValue);
         }
     }
 }

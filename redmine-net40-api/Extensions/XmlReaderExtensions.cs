@@ -73,9 +73,15 @@ namespace Redmine.Net.Api.Extensions
         {
             var str = reader.ReadElementContentAsString();
 
-            DateTime result;
-            if (string.IsNullOrWhiteSpace(str) || !DateTime.TryParse(str, out result)) return null;
+            // Format for journals, attachments etc.
+            string format = "yyyy'-'MM'-'dd HH':'mm':'ss UTC";
 
+            DateTime result;
+            if (string.IsNullOrWhiteSpace(str) || !DateTime.TryParse(str, out result))
+            {
+                if (!DateTime.TryParseExact(str, format, System.Globalization.CultureInfo.InvariantCulture, DateTimeStyles.None, out result))
+                    return null;
+            }
             return result;
         }
 
