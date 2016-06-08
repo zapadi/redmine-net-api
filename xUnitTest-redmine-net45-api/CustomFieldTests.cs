@@ -20,7 +20,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void RedmineCustomFields_ShouldGetAllCustomFields()
 		{
-			var customFields = fixture.redmineManager.GetObjects<CustomField>(null);
+			var customFields = fixture.RedmineManager.GetObjects<CustomField>(null);
 
 			Assert.NotNull(customFields);
 			Assert.True(customFields.Count == NUMBER_OF_CUSTOM_FIELDS, "Custom fields count != "+NUMBER_OF_CUSTOM_FIELDS);

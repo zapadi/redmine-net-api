@@ -67,29 +67,18 @@ namespace Redmine.Net.Api.Internals
             }
         }
 
-        ///// <summary>
-        ///// Deserializes the XML document contained by the specific System.String.
-        ///// </summary>
-        ///// <param name="xml">The System.String that contains the XML document to deserialize.</param>
-        ///// <param name="type">The type of objects to deserialize.</param>
-        ///// <returns>The System.Object being deserialized.</returns>
-        ///// <exception cref="System.InvalidOperationException"> An error occurred during deserialization. The original exception is available
-        ///// using the System.Exception.InnerException property.</exception>
-        //// ReSharper disable once InconsistentNaming
-        //private static object FromXML(string xml, Type type)
-        //{
-        //    using (var text = new StringReader(xml))
-        //    {
-        //        var sr = new XmlSerializer(type);
-        //        return sr.Deserialize(text);
-        //    }
-        //}
-
+        /// <summary>
+        /// Serializes the specified type T and writes the XML document to a string.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="obj"></param>
+        /// <param name="mimeFormat"></param>
+        /// <returns></returns>
         public static string Serialize<T>(T obj, MimeFormat mimeFormat) where T : class, new()
         {
             try
             {
-                if (mimeFormat == MimeFormat.json)
+                if (mimeFormat == MimeFormat.Json)
                 {
                     return JsonSerializer(obj);
                 }
@@ -102,7 +91,7 @@ namespace Redmine.Net.Api.Internals
         }
 
         /// <summary>
-        /// 
+        ///  Deserializes the XML document contained by the specific System.String.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="response"></param>
@@ -117,7 +106,7 @@ namespace Redmine.Net.Api.Internals
             if (string.IsNullOrEmpty(response)) throw new RedmineException("Could not deserialize null!");
             try
             {
-                if (mimeFormat == MimeFormat.json)
+                if (mimeFormat == MimeFormat.Json)
                 {
                     var type = typeof (T);
                     var jsonRoot = (string) null;
@@ -151,7 +140,7 @@ namespace Redmine.Net.Api.Internals
             {
                 if (string.IsNullOrWhiteSpace(response)) throw new RedmineException("Could not deserialize null!");
 
-                if (mimeFormat == MimeFormat.json)
+                if (mimeFormat == MimeFormat.Json)
                 {
                     return JSonDeserializeList<T>(response);
                 }
@@ -167,7 +156,7 @@ namespace Redmine.Net.Api.Internals
 
         private static PaginatedObjects<T> JSonDeserializeList<T>(string response) where T : class, new()
         {
-<<<<<<< HEAD
+
             int totalItems, offset;
             var type = typeof(T);
             var jsonRoot = (string)null;
@@ -175,15 +164,7 @@ namespace Redmine.Net.Api.Internals
             if (type == typeof(WikiPage)) jsonRoot = RedmineKeys.WIKI_PAGES;
             if (type == typeof(IssuePriority)) jsonRoot = RedmineKeys.ISSUE_PRIORITIES;
             if (type == typeof(TimeEntryActivity)) jsonRoot = RedmineKeys.TIME_ENTRY_ACTIVITIES;
-=======
-            int totalItems;
-            var type = typeof (T);
-            var jsonRoot = (string) null;
-            if (type == typeof (Error)) jsonRoot = RedmineKeys.ERRORS;
-            if (type == typeof (WikiPage)) jsonRoot = RedmineKeys.WIKI_PAGES;
-            if (type == typeof (IssuePriority)) jsonRoot = RedmineKeys.ISSUE_PRIORITIES;
-            if (type == typeof (TimeEntryActivity)) jsonRoot = RedmineKeys.TIME_ENTRY_ACTIVITIES;
->>>>>>> master
+
             if (string.IsNullOrEmpty(jsonRoot))
                 jsonRoot = RedmineManager.Sufixes[type];
 

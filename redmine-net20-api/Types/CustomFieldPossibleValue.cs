@@ -45,7 +45,7 @@ namespace Redmine.Net.Api.Types
             unchecked
             {
                 var hashCode = 13;
-				hashCode = Utils.GetHashCode(Value,hashCode);
+				hashCode = HashCodeExtensions.GetHashCode(Value,hashCode);
                 return hashCode;
             }
         }

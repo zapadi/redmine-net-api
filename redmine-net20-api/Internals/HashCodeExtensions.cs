@@ -18,8 +18,15 @@ using System.Collections.Generic;
 
 namespace Redmine.Net.Api.Internals
 {
-    internal static class Utils
+    internal static class HashCodeExtensions
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="list"></param>
+        /// <param name="hash"></param>
+        /// <returns></returns>
         public static int GetHashCode<T>(IList<T> list, int hash)
         {
             unchecked
@@ -39,6 +46,13 @@ namespace Redmine.Net.Api.Internals
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="entity"></param>
+        /// <param name="hash"></param>
+        /// <returns></returns>
         public static int GetHashCode<T>(T entity, int hash)
         {
             unchecked

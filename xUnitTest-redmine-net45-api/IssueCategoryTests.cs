@@ -39,7 +39,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Get_All_IssueCategories_By_ProjectId()
 		{
-			var issueCategories = fixture.redmineManager.GetObjects<IssueCategory>(new NameValueCollection { { RedmineKeys.PROJECT_ID, PROJECT_ID } });
+			var issueCategories = fixture.RedmineManager.GetObjects<IssueCategory>(new NameValueCollection { { RedmineKeys.PROJECT_ID, PROJECT_ID } });
 
 			Assert.NotNull(issueCategories);
 			Assert.All (issueCategories, ic => Assert.IsType<IssueCategory> (ic));
@@ -53,7 +53,7 @@ namespace xUnitTestredminenet45api
 			issueCategory.Name = NEW_ISSUE_CATEGORY_NAME;
 			issueCategory.AsignTo = new IdentifiableName { Id = NEW_ISSUE_CATEGORY_ASIGNEE_ID };
 
-			IssueCategory savedIssueCategory = fixture.redmineManager.CreateObject<IssueCategory>(issueCategory, PROJECT_ID);
+			IssueCategory savedIssueCategory = fixture.RedmineManager.CreateObject<IssueCategory>(issueCategory, PROJECT_ID);
 
 			Assert.NotNull(savedIssueCategory);
 			Assert.True(savedIssueCategory.Name.Equals(NEW_ISSUE_CATEGORY_NAME), "Saved issue category name is invalid.");
@@ -62,7 +62,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Get_IssueCategory_By_Id()
 		{
-			IssueCategory issueCategory = fixture.redmineManager.GetObject<IssueCategory>(ISSUE_CATEGORY_ID_TO_GET, null);
+			IssueCategory issueCategory = fixture.RedmineManager.GetObject<IssueCategory>(ISSUE_CATEGORY_ID_TO_GET, null);
 
 			Assert.NotNull(issueCategory);
 			Assert.True(issueCategory.Name.Equals(ISSUE_CATEGORY_NAME_TO_GET), "Issue category name is invalid.");
@@ -75,13 +75,13 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Update_IssueCategory()
 		{
-			IssueCategory issueCategory = fixture.redmineManager.GetObject<IssueCategory>(ISSUE_CATEGORY_ID_TO_UPDATE, null);
+			IssueCategory issueCategory = fixture.RedmineManager.GetObject<IssueCategory>(ISSUE_CATEGORY_ID_TO_UPDATE, null);
 			issueCategory.Name = ISSUE_CATEGORY_NAME_TO_UPDATE;
 			issueCategory.AsignTo = new IdentifiableName { Id = ISSUE_CATEGORY_ASIGNEE_ID_TO_UPDATE };
 
-			fixture.redmineManager.UpdateObject<IssueCategory>(ISSUE_CATEGORY_ID_TO_UPDATE, issueCategory);
+			fixture.RedmineManager.UpdateObject<IssueCategory>(ISSUE_CATEGORY_ID_TO_UPDATE, issueCategory);
 
-			IssueCategory updatedIssueCategory = fixture.redmineManager.GetObject<IssueCategory>(ISSUE_CATEGORY_ID_TO_UPDATE, null);
+			IssueCategory updatedIssueCategory = fixture.RedmineManager.GetObject<IssueCategory>(ISSUE_CATEGORY_ID_TO_UPDATE, null);
 
 			Assert.NotNull(updatedIssueCategory);
 			Assert.True(updatedIssueCategory.Name.Equals(ISSUE_CATEGORY_NAME_TO_UPDATE), "Issue category name was not updated.");
@@ -92,16 +92,16 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Delete_IssueCategory()
 		{
-			RedmineException exception = (RedmineException)Record.Exception(() =>fixture.redmineManager.DeleteObject<IssueCategory>(ISSUE_CATEGORY_ID_TO_DELETE, null));
+			RedmineException exception = (RedmineException)Record.Exception(() =>fixture.RedmineManager.DeleteObject<IssueCategory>(ISSUE_CATEGORY_ID_TO_DELETE, null));
 			Assert.Null (exception);
-			Assert.Throws<NotFoundException>(() => fixture.redmineManager.GetObject<IssueCategory>(ISSUE_CATEGORY_ID_TO_DELETE, null));
+			Assert.Throws<NotFoundException>(() => fixture.RedmineManager.GetObject<IssueCategory>(ISSUE_CATEGORY_ID_TO_DELETE, null));
 		}
 
 		[Fact]
 		public void Should_Compare_IssueCategories()
 		{
-			IssueCategory issueCategory = fixture.redmineManager.GetObject<IssueCategory>(ISSUE_CATEGORY_ID_TO_COMPARE, null);
-			IssueCategory issueCategoryToCompare = fixture.redmineManager.GetObject<IssueCategory>(ISSUE_CATEGORY_ID_TO_COMPARE, null);
+			IssueCategory issueCategory = fixture.RedmineManager.GetObject<IssueCategory>(ISSUE_CATEGORY_ID_TO_COMPARE, null);
+			IssueCategory issueCategoryToCompare = fixture.RedmineManager.GetObject<IssueCategory>(ISSUE_CATEGORY_ID_TO_COMPARE, null);
 
 			Assert.True(issueCategory.Equals(issueCategoryToCompare));
 		}

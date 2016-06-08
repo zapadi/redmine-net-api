@@ -17,13 +17,8 @@
 using System;
 using System.Collections.Generic;
 using System.Web.Script.Serialization;
-
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.Web.Script.Serialization;
 using Redmine.Net.Api.JSonConverters;
 using Redmine.Net.Api.Types;
 using Version = Redmine.Net.Api.Types.Version;
@@ -109,14 +104,8 @@ namespace Redmine.Net.Api.Internals
         /// </summary>
         public static List<T> JsonDeserializeToList<T>(string jsonString, string root, out int totalCount, out int offset) where T : class,new()
         {
-<<<<<<< HEAD
             var result = JsonDeserializeToList(jsonString, root, typeof(T), out totalCount, out offset);
             return ((ArrayList)result).OfType<T>().ToList();
-=======
-            var result = JsonDeserializeToList(jsonString, root, typeof(T), out totalCount);
-
-            return ((ArrayList) result)?.OfType<T>().ToList();
->>>>>>> master
         }
 
         /// <summary>

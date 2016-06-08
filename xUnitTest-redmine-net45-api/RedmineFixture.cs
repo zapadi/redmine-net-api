@@ -1,14 +1,13 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using Redmine.Net.Api;
 
 namespace xUnitTestredminenet45api
 {
 	public class RedmineFixture
 	{
-		public RedmineManager redmineManager;
+	    public RedmineManager RedmineManager { get; set; }
 
-		public RedmineFixture ()
+	    public RedmineFixture ()
 		{
 			SetMimeTypeXML();
 			SetMimeTypeJSON();
@@ -17,14 +16,13 @@ namespace xUnitTestredminenet45api
 		[Conditional("JSON")]
 		private void SetMimeTypeJSON()
 		{
-			redmineManager = new RedmineManager(Helper.Uri, Helper.ApiKey, MimeFormat.json);
+			RedmineManager = new RedmineManager(Helper.Uri, Helper.ApiKey, MimeFormat.Json);
 		}
 
 		[Conditional("XML")]
 		private void SetMimeTypeXML()
 		{
-			redmineManager = new RedmineManager(Helper.Uri, Helper.ApiKey);
+			RedmineManager = new RedmineManager(Helper.Uri, Helper.ApiKey);
 		}
 	}
 }
-

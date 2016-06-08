@@ -94,15 +94,6 @@ namespace Redmine.Net.Api.Types
         {
             writer.WriteElementString(RedmineKeys.NAME, Name);
             writer.WriteArrayIds(Users, RedmineKeys.USER_IDS, typeof(int), GetGroupUserId);
-            //            if (Users == null) return;
-            //
-            //            writer.WriteStartElement(RedmineKeys.USER_IDS);
-            //            writer.WriteAttributeString("type", "array");
-            //            foreach (var userId in Users)
-            //            {
-            //                new XmlSerializer(typeof(int)).Serialize(writer, userId.Id);
-            //            }
-            //            writer.WriteEndElement();
         }
 
         #endregion
@@ -139,11 +130,11 @@ namespace Redmine.Net.Api.Types
             unchecked
             {
                 var hashCode = 13;
-                hashCode = Utils.GetHashCode(Id, hashCode);
-                hashCode = Utils.GetHashCode(Name, hashCode);
-                hashCode = Utils.GetHashCode(Users, hashCode);
-                hashCode = Utils.GetHashCode(CustomFields, hashCode);
-                hashCode = Utils.GetHashCode(Memberships, hashCode);
+                hashCode = HashCodeExtensions.GetHashCode(Id, hashCode);
+                hashCode = HashCodeExtensions.GetHashCode(Name, hashCode);
+                hashCode = HashCodeExtensions.GetHashCode(Users, hashCode);
+                hashCode = HashCodeExtensions.GetHashCode(CustomFields, hashCode);
+                hashCode = HashCodeExtensions.GetHashCode(Memberships, hashCode);
                 return hashCode;
             }
         }
@@ -160,6 +151,4 @@ namespace Redmine.Net.Api.Types
             return ((GroupUser)gu).Id;
         }
     }
-
-    
 }

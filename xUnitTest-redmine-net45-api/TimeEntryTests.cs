@@ -39,7 +39,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Get_All_Time_Entries()
 		{
-			var timeEntries = fixture.redmineManager.GetObjects<TimeEntry>(null);
+			var timeEntries = fixture.RedmineManager.GetObjects<TimeEntry>(null);
 
 			Assert.NotNull(timeEntries);
 			Assert.NotEmpty (timeEntries);
@@ -57,7 +57,7 @@ namespace xUnitTestredminenet45api
 			timeEntry.Activity = new IdentifiableName { Id = NEW_TIME_ENTRY_ACTIVITY_ID };
 			timeEntry.Comments = NEW_TIME_ENTRY_COMMENTS;
 
-			TimeEntry savedTimeEntry = fixture.redmineManager.CreateObject<TimeEntry>(timeEntry);
+			TimeEntry savedTimeEntry = fixture.RedmineManager.CreateObject<TimeEntry>(timeEntry);
 
 			Assert.NotNull (savedTimeEntry);
 			Assert.NotNull(savedTimeEntry.Issue);
@@ -77,7 +77,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Get_Time_Entry_By_Id()
 		{
-			var timeEntry = fixture.redmineManager.GetObject<TimeEntry>(TIME_ENTRY_ID, null);
+			var timeEntry = fixture.RedmineManager.GetObject<TimeEntry>(TIME_ENTRY_ID, null);
 
 			Assert.NotNull(timeEntry);
 			Assert.IsType<TimeEntry>(timeEntry);
@@ -90,8 +90,8 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Compare_Time_Entries()
 		{
-			var timeEntry = fixture.redmineManager.GetObject<TimeEntry>(TIME_ENTRY_ID, null);
-			var timeEntryToCompare = fixture.redmineManager.GetObject<TimeEntry>(TIME_ENTRY_ID, null);
+			var timeEntry = fixture.RedmineManager.GetObject<TimeEntry>(TIME_ENTRY_ID, null);
+			var timeEntryToCompare = fixture.RedmineManager.GetObject<TimeEntry>(TIME_ENTRY_ID, null);
 
 			Assert.NotNull(timeEntry);
 			Assert.True(timeEntry.Equals(timeEntryToCompare), "Time entries are not equal.");
@@ -100,7 +100,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Update_Time_Entry()
 		{
-			var timeEntry = fixture.redmineManager.GetObject<TimeEntry>(UPDATED_TIME_ENTRY_ID, null);
+			var timeEntry = fixture.RedmineManager.GetObject<TimeEntry>(UPDATED_TIME_ENTRY_ID, null);
 			timeEntry.Project.Id = UPDATED_TIME_ENTRY_PROJECT_ID;
 			timeEntry.Issue.Id = UPDATED_TIME_ENTRY_ISSUE_ID;
 			timeEntry.SpentOn = UPDATED_TIME_ENTRY_DATE;
@@ -110,9 +110,9 @@ namespace xUnitTestredminenet45api
 			if (timeEntry.Activity == null) timeEntry.Activity = new IdentifiableName();
 			timeEntry.Activity.Id = UPDATED_TIME_ENTRY_ACTIVITY_ID;
 
-			fixture.redmineManager.UpdateObject<TimeEntry>(UPDATED_TIME_ENTRY_ID, timeEntry);
+			fixture.RedmineManager.UpdateObject<TimeEntry>(UPDATED_TIME_ENTRY_ID, timeEntry);
 
-			var updatedTimeEntry = fixture.redmineManager.GetObject<TimeEntry>(UPDATED_TIME_ENTRY_ID, null);
+			var updatedTimeEntry = fixture.RedmineManager.GetObject<TimeEntry>(UPDATED_TIME_ENTRY_ID, null);
 
 			Assert.NotNull(updatedTimeEntry);
 			Assert.True (updatedTimeEntry.Project.Id == timeEntry.Project.Id, "Time entry project was not updated.");
@@ -125,9 +125,9 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Delete_Time_Entry()
 		{
-			RedmineException exception = (RedmineException)Record.Exception(() => fixture.redmineManager.DeleteObject<TimeEntry>(DELETED_TIME_ENTRY_ID, null));
+			RedmineException exception = (RedmineException)Record.Exception(() => fixture.RedmineManager.DeleteObject<TimeEntry>(DELETED_TIME_ENTRY_ID, null));
 			Assert.Null (exception);
-			Assert.Throws<NotFoundException>(() => fixture.redmineManager.GetObject<TimeEntry>(DELETED_TIME_ENTRY_ID, null));
+			Assert.Throws<NotFoundException>(() => fixture.RedmineManager.GetObject<TimeEntry>(DELETED_TIME_ENTRY_ID, null));
 		}
 	}
 }

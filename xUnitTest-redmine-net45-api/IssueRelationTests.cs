@@ -37,7 +37,7 @@ namespace xUnitTestredminenet45api
 			relation.Type = RELATION_TYPE;
 			relation.Delay = RELATION_DELAY;
 
-			IssueRelation savedRelation = fixture.redmineManager.CreateObject<IssueRelation>(relation, ISSUE_ID);
+			IssueRelation savedRelation = fixture.RedmineManager.CreateObject<IssueRelation>(relation, ISSUE_ID);
 
 			Assert.NotNull(savedRelation);
 			Assert.True(savedRelation.IssueId == RELATED_ISSUE_ID, "Related issue id is not valid.");
@@ -49,7 +49,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Get_IssueRelations_By_Issue_Id()
 		{
-			var relations = fixture.redmineManager.GetObjects<IssueRelation>(new NameValueCollection { { RedmineKeys.ISSUE_ID, ISSUE_ID } });
+			var relations = fixture.RedmineManager.GetObjects<IssueRelation>(new NameValueCollection { { RedmineKeys.ISSUE_ID, ISSUE_ID } });
 
 			Assert.NotNull(relations);
 			Assert.True(relations.Count == NUMBER_OF_RELATIONS, "Number of issue relations != " + NUMBER_OF_RELATIONS);
@@ -58,7 +58,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Get_IssueRelation_By_Id()
 		{
-			var relation = fixture.redmineManager.GetObject<IssueRelation>(RELATION_ID_TO_GET, null);
+			var relation = fixture.RedmineManager.GetObject<IssueRelation>(RELATION_ID_TO_GET, null);
 
 			Assert.NotNull(relation);
 			Assert.True(relation.IssueId == RELATED_ISSUE_ID, "Related issue id is not valid.");
@@ -70,8 +70,8 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Compare_IssueRelations()
 		{
-			var relation = fixture.redmineManager.GetObject<IssueRelation>(RELATION_ID_TO_COMPARE, null);
-			var relationToCompare = fixture.redmineManager.GetObject<IssueRelation>(RELATION_ID_TO_COMPARE, null);
+			var relation = fixture.RedmineManager.GetObject<IssueRelation>(RELATION_ID_TO_COMPARE, null);
+			var relationToCompare = fixture.RedmineManager.GetObject<IssueRelation>(RELATION_ID_TO_COMPARE, null);
 
 			Assert.True(relation.Equals(relationToCompare), "Issue relations are not equal.");
 		}
@@ -79,9 +79,9 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Delete_Issue_Relation()
 		{
-			RedmineException exception = (RedmineException)Record.Exception(() =>fixture.redmineManager.DeleteObject<IssueRelation>(RELATION_ID_TO_DELETE, null));
+			RedmineException exception = (RedmineException)Record.Exception(() =>fixture.RedmineManager.DeleteObject<IssueRelation>(RELATION_ID_TO_DELETE, null));
 			Assert.Null (exception);
-			Assert.Throws<NotFoundException>(() => fixture.redmineManager.GetObject<IssueRelation>(RELATION_ID_TO_DELETE, null));
+			Assert.Throws<NotFoundException>(() => fixture.RedmineManager.GetObject<IssueRelation>(RELATION_ID_TO_DELETE, null));
 		}
 	}
 }

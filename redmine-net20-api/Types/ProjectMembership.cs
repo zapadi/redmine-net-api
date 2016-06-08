@@ -70,9 +70,9 @@ namespace Redmine.Net.Api.Types
         public bool Equals(ProjectMembership other)
         {
             if (other == null) return false;
-            return (Id == other.Id 
-                && Project.Equals(other.Project) 
-                && Roles.Equals<MembershipRole>(other.Roles )
+            return (Id == other.Id
+                && Project.Equals(other.Project)
+                && Roles.Equals<MembershipRole>(other.Roles)
                 && (User != null ? User.Equals(other.User) : other.User == null)
                 && (Group != null ? Group.Equals(other.Group) : other.Group == null));
         }
@@ -111,15 +111,6 @@ namespace Redmine.Net.Api.Types
         {
             writer.WriteIdIfNotNull(User, RedmineKeys.USER_ID);
             writer.WriteArray(Roles, RedmineKeys.ROLE_IDS, typeof(MembershipRole), RedmineKeys.ROLE_ID);
-            //
-            //            writer.WriteStartElement(RedmineKeys.ROLE_IDS);
-            //            writer.WriteAttributeString("type", "array");
-            //            foreach (var role in Roles)
-            //            {
-            //                new XmlSerializer(role.GetType(), new XmlAttributeOverrides(), null, new XmlRootAttribute(RedmineKeys.ROLE_ID), string.Empty)
-            //					.Serialize(writer, role);
-            //            }
-            //            writer.WriteEndElement();
         }
 
         public override int GetHashCode()
@@ -127,10 +118,10 @@ namespace Redmine.Net.Api.Types
             unchecked
             {
                 var hashCode = base.GetHashCode();
-                hashCode = Utils.GetHashCode(Project, hashCode);
-                hashCode = Utils.GetHashCode(User, hashCode);
-                hashCode = Utils.GetHashCode(Group, hashCode);
-                hashCode = Utils.GetHashCode(Roles, hashCode);
+                hashCode = HashCodeExtensions.GetHashCode(Project, hashCode);
+                hashCode = HashCodeExtensions.GetHashCode(User, hashCode);
+                hashCode = HashCodeExtensions.GetHashCode(Group, hashCode);
+                hashCode = HashCodeExtensions.GetHashCode(Roles, hashCode);
                 return hashCode;
             }
         }

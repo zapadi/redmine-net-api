@@ -18,7 +18,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Get_All_Issue_Priority()
 		{
-			var issuePriorities = fixture.redmineManager.GetObjects<IssuePriority>(null);
+			var issuePriorities = fixture.RedmineManager.GetObjects<IssuePriority>(null);
 
 			Assert.NotNull(issuePriorities);
 			Assert.True(issuePriorities.Count == NUMBER_OF_ISSUE_PRIORITIES, "Issue priorities count != " + NUMBER_OF_ISSUE_PRIORITIES);

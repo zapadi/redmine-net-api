@@ -519,40 +519,40 @@ namespace Redmine.Net.Api.Types
         {
             var hashCode = base.GetHashCode();
 
-            hashCode = Utils.GetHashCode(Project, hashCode);
-            hashCode = Utils.GetHashCode(Tracker, hashCode);
-            hashCode = Utils.GetHashCode(Status, hashCode);
-            hashCode = Utils.GetHashCode(Priority, hashCode);
-            hashCode = Utils.GetHashCode(Author, hashCode);
-            hashCode = Utils.GetHashCode(Category, hashCode);
+            hashCode = HashCodeExtensions.GetHashCode(Project, hashCode);
+            hashCode = HashCodeExtensions.GetHashCode(Tracker, hashCode);
+            hashCode = HashCodeExtensions.GetHashCode(Status, hashCode);
+            hashCode = HashCodeExtensions.GetHashCode(Priority, hashCode);
+            hashCode = HashCodeExtensions.GetHashCode(Author, hashCode);
+            hashCode = HashCodeExtensions.GetHashCode(Category, hashCode);
 
-            hashCode = Utils.GetHashCode(Subject, hashCode);
-            hashCode = Utils.GetHashCode(Description, hashCode);
-            hashCode = Utils.GetHashCode(StartDate, hashCode);
-            hashCode = Utils.GetHashCode(Project, hashCode);
-            hashCode = Utils.GetHashCode(DueDate, hashCode);
-            hashCode = Utils.GetHashCode(DoneRatio, hashCode);
+            hashCode = HashCodeExtensions.GetHashCode(Subject, hashCode);
+            hashCode = HashCodeExtensions.GetHashCode(Description, hashCode);
+            hashCode = HashCodeExtensions.GetHashCode(StartDate, hashCode);
+            hashCode = HashCodeExtensions.GetHashCode(Project, hashCode);
+            hashCode = HashCodeExtensions.GetHashCode(DueDate, hashCode);
+            hashCode = HashCodeExtensions.GetHashCode(DoneRatio, hashCode);
 
-            hashCode = Utils.GetHashCode(PrivateNotes, hashCode);
-            hashCode = Utils.GetHashCode(EstimatedHours, hashCode);
-            hashCode = Utils.GetHashCode(SpentHours, hashCode);
-            hashCode = Utils.GetHashCode(CreatedOn, hashCode);
-            hashCode = Utils.GetHashCode(UpdatedOn, hashCode);
+            hashCode = HashCodeExtensions.GetHashCode(PrivateNotes, hashCode);
+            hashCode = HashCodeExtensions.GetHashCode(EstimatedHours, hashCode);
+            hashCode = HashCodeExtensions.GetHashCode(SpentHours, hashCode);
+            hashCode = HashCodeExtensions.GetHashCode(CreatedOn, hashCode);
+            hashCode = HashCodeExtensions.GetHashCode(UpdatedOn, hashCode);
 
-            hashCode = Utils.GetHashCode(Notes, hashCode);
-            hashCode = Utils.GetHashCode(AssignedTo, hashCode);
-            hashCode = Utils.GetHashCode(ParentIssue, hashCode);
-            hashCode = Utils.GetHashCode(FixedVersion, hashCode);
-            hashCode = Utils.GetHashCode(IsPrivate, hashCode);
-            hashCode = Utils.GetHashCode(Journals, hashCode);
-            hashCode = Utils.GetHashCode(CustomFields, hashCode);
+            hashCode = HashCodeExtensions.GetHashCode(Notes, hashCode);
+            hashCode = HashCodeExtensions.GetHashCode(AssignedTo, hashCode);
+            hashCode = HashCodeExtensions.GetHashCode(ParentIssue, hashCode);
+            hashCode = HashCodeExtensions.GetHashCode(FixedVersion, hashCode);
+            hashCode = HashCodeExtensions.GetHashCode(IsPrivate, hashCode);
+            hashCode = HashCodeExtensions.GetHashCode(Journals, hashCode);
+            hashCode = HashCodeExtensions.GetHashCode(CustomFields, hashCode);
 
-            hashCode = Utils.GetHashCode(Changesets, hashCode);
-            hashCode = Utils.GetHashCode(Attachments, hashCode);
-            hashCode = Utils.GetHashCode(Relations, hashCode);
-            hashCode = Utils.GetHashCode(Children, hashCode);
-            hashCode = Utils.GetHashCode(Uploads, hashCode);
-            hashCode = Utils.GetHashCode(Watchers, hashCode);
+            hashCode = HashCodeExtensions.GetHashCode(Changesets, hashCode);
+            hashCode = HashCodeExtensions.GetHashCode(Attachments, hashCode);
+            hashCode = HashCodeExtensions.GetHashCode(Relations, hashCode);
+            hashCode = HashCodeExtensions.GetHashCode(Children, hashCode);
+            hashCode = HashCodeExtensions.GetHashCode(Uploads, hashCode);
+            hashCode = HashCodeExtensions.GetHashCode(Watchers, hashCode);
 
             return hashCode;
         }

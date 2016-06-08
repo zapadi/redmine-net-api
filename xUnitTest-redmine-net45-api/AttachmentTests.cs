@@ -34,7 +34,7 @@ namespace xUnitTestredminenet45api
 			byte[] documentData = File.ReadAllBytes(AppDomain.CurrentDomain.BaseDirectory+ATTACHMENT_LOCAL_PATH);
 
 			//upload attachment to redmine
-			Upload attachment = fixture.redmineManager.UploadFile(documentData);
+			Upload attachment = fixture.RedmineManager.UploadFile(documentData);
 
 			//set attachment properties
 			attachment.FileName = ATTACHMENT_NAME;
@@ -51,9 +51,9 @@ namespace xUnitTestredminenet45api
 			issue.Uploads = attachments;
 
 			//create issue and attach document
-			Issue issueWithAttachment = fixture.redmineManager.CreateObject<Issue>(issue);
+			Issue issueWithAttachment = fixture.RedmineManager.CreateObject<Issue>(issue);
 
-			issue = fixture.redmineManager.GetObject<Issue>(issueWithAttachment.Id.ToString(), new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.ATTACHMENTS } });
+			issue = fixture.RedmineManager.GetObject<Issue>(issueWithAttachment.Id.ToString(), new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.ATTACHMENTS } });
 
 			Assert.NotNull(issue);
 			Assert.NotNull(issue.Attachments);
@@ -67,7 +67,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Get_Attachment_By_Id()
 		{
-			var attachment = fixture.redmineManager.GetObject<Attachment>(ATTACHMENT_ID, null);
+			var attachment = fixture.RedmineManager.GetObject<Attachment>(ATTACHMENT_ID, null);
 
 			Assert.NotNull(attachment);
 			Assert.IsType<Attachment> (attachment);
@@ -79,7 +79,7 @@ namespace xUnitTestredminenet45api
 		{
 			var url = Helper.Uri + "/attachments/download/" + ATTACHMENT_ID + "/" + ATTACHMENT_FILE_NAME;
 
-			var document = fixture.redmineManager.DownloadFile(url);
+			var document = fixture.RedmineManager.DownloadFile(url);
 
 			Assert.NotNull(document);
 		}

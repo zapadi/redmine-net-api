@@ -37,7 +37,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Get_All_Groups()
 		{
-			var groups = fixture.redmineManager.GetObjects<Group>(null);
+			var groups = fixture.RedmineManager.GetObjects<Group>(null);
 
 			Assert.NotNull(groups);
 			Assert.All (groups, g => Assert.IsType<Group> (g));
@@ -47,7 +47,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Get_Group_With_Memberships()
 		{
-			var group = fixture.redmineManager.GetObject<Group>(GROUP_ID, new NameValueCollection() { { RedmineKeys.INCLUDE, RedmineKeys.MEMBERSHIPS } });
+			var group = fixture.RedmineManager.GetObject<Group>(GROUP_ID, new NameValueCollection() { { RedmineKeys.INCLUDE, RedmineKeys.MEMBERSHIPS } });
 
 			Assert.NotNull(group);
 			Assert.All (group.Memberships, m => Assert.IsType<Membership> (m));
@@ -57,7 +57,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Get_Group_With_Users()
 		{
-			var group = fixture.redmineManager.GetObject<Group>(GROUP_ID, new NameValueCollection() { { RedmineKeys.INCLUDE, RedmineKeys.USERS } });
+			var group = fixture.RedmineManager.GetObject<Group>(GROUP_ID, new NameValueCollection() { { RedmineKeys.INCLUDE, RedmineKeys.USERS } });
 
 			Assert.NotNull(group);
 			Assert.All (group.Users, u => Assert.IsType<GroupUser> (u));
@@ -67,7 +67,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Get_Group_With_All_Associated_Data()
 		{
-			var group = fixture.redmineManager.GetObject<Group>(GROUP_ID, new NameValueCollection() { { RedmineKeys.INCLUDE, RedmineKeys.MEMBERSHIPS+","+RedmineKeys.USERS } });
+			var group = fixture.RedmineManager.GetObject<Group>(GROUP_ID, new NameValueCollection() { { RedmineKeys.INCLUDE, RedmineKeys.MEMBERSHIPS+","+RedmineKeys.USERS } });
 
 			Assert.NotNull(group);
 
@@ -89,7 +89,7 @@ namespace xUnitTestredminenet45api
 			group.Users.Add(new GroupUser { Id = NEW_GROUP_USER_ID });
 
 			Group savedGroup = null;
-			RedmineException exception = (RedmineException)Record.Exception(() => savedGroup = fixture.redmineManager.CreateObject<Group>(group));
+			RedmineException exception = (RedmineException)Record.Exception(() => savedGroup = fixture.RedmineManager.CreateObject<Group>(group));
 
 			Assert.Null (exception);
 			Assert.NotNull(savedGroup);
@@ -99,13 +99,13 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Update_Group()
 		{
-			Group group = fixture.redmineManager.GetObject<Group>(UPDATED_GROUP_ID, new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.USERS} });
+			Group group = fixture.RedmineManager.GetObject<Group>(UPDATED_GROUP_ID, new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.USERS} });
 			group.Name = UPDATED_GROUP_NAME;
 			group.Users.Add(new GroupUser { Id = UPDATED_GROUP_USER_ID });
 
-			fixture.redmineManager.UpdateObject<Group>(UPDATED_GROUP_ID, group);
+			fixture.RedmineManager.UpdateObject<Group>(UPDATED_GROUP_ID, group);
 
-			Group updatedGroup = fixture.redmineManager.GetObject<Group>(UPDATED_GROUP_ID, new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.USERS } });
+			Group updatedGroup = fixture.RedmineManager.GetObject<Group>(UPDATED_GROUP_ID, new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.USERS } });
 
 			Assert.NotNull(updatedGroup);
 			Assert.True(updatedGroup.Name.Equals(UPDATED_GROUP_NAME), "Group name was not updated.");
@@ -118,16 +118,16 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Delete_Group()
 		{
-			RedmineException exception = (RedmineException)Record.Exception(() => fixture.redmineManager.DeleteObject<Group>(DELETED_GROUP_ID, null));
+			RedmineException exception = (RedmineException)Record.Exception(() => fixture.RedmineManager.DeleteObject<Group>(DELETED_GROUP_ID, null));
 			Assert.Null (exception);
-			Assert.Throws<NotFoundException>(() => fixture.redmineManager.GetObject<Group>(DELETED_GROUP_ID, null));
+			Assert.Throws<NotFoundException>(() => fixture.RedmineManager.GetObject<Group>(DELETED_GROUP_ID, null));
 		}
 
 		[Fact]
 		public void Should_Compare_Groups()
 		{
-			var firstGroup = fixture.redmineManager.GetObject<Group>(GROUP_ID, new NameValueCollection() { { RedmineKeys.INCLUDE, RedmineKeys.MEMBERSHIPS + "," + RedmineKeys.USERS } });
-			var secondGroup = fixture.redmineManager.GetObject<Group>(GROUP_ID, new NameValueCollection() { { RedmineKeys.INCLUDE, RedmineKeys.MEMBERSHIPS + "," + RedmineKeys.USERS } });
+			var firstGroup = fixture.RedmineManager.GetObject<Group>(GROUP_ID, new NameValueCollection() { { RedmineKeys.INCLUDE, RedmineKeys.MEMBERSHIPS + "," + RedmineKeys.USERS } });
+			var secondGroup = fixture.RedmineManager.GetObject<Group>(GROUP_ID, new NameValueCollection() { { RedmineKeys.INCLUDE, RedmineKeys.MEMBERSHIPS + "," + RedmineKeys.USERS } });
 
 			Assert.True(firstGroup.Equals(secondGroup), "Compared groups are different.");
 		}

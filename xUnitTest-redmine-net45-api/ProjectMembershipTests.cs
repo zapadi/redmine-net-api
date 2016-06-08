@@ -35,7 +35,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Get_Memberships_By_Project_Identifier()
 		{
-			var projectMemberships = fixture.redmineManager.GetObjects<ProjectMembership>(new NameValueCollection { { RedmineKeys.PROJECT_ID, PROJECT_IDENTIFIER } });
+			var projectMemberships = fixture.RedmineManager.GetObjects<ProjectMembership>(new NameValueCollection { { RedmineKeys.PROJECT_ID, PROJECT_IDENTIFIER } });
 
 			Assert.NotNull(projectMemberships);
 			Assert.True(projectMemberships.Count == NUMBER_OF_PROJECT_MEMBERSHIPS, "Project memberships count != " + NUMBER_OF_PROJECT_MEMBERSHIPS);
@@ -50,7 +50,7 @@ namespace xUnitTestredminenet45api
 			pm.Roles = new List<MembershipRole>();
 			pm.Roles.Add(new MembershipRole { Id = NEW_PROJECT_MEMBERSHIP_ROLE_ID });
 
-			ProjectMembership createdPM = fixture.redmineManager.CreateObject<ProjectMembership>(pm, PROJECT_IDENTIFIER);
+			ProjectMembership createdPM = fixture.RedmineManager.CreateObject<ProjectMembership>(pm, PROJECT_IDENTIFIER);
 
 			Assert.NotNull(createdPM);
 			Assert.True(createdPM.User.Id == NEW_PROJECT_MEMBERSHIP_USER_ID, "User is invalid.");
@@ -61,7 +61,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Get_Project_Membership_By_Id()
 		{
-			var projectMembership = fixture.redmineManager.GetObject<ProjectMembership>(PROJECT_MEMBERSHIP_ID, null);
+			var projectMembership = fixture.RedmineManager.GetObject<ProjectMembership>(PROJECT_MEMBERSHIP_ID, null);
 
 			Assert.NotNull(projectMembership);
 			Assert.NotNull(projectMembership.Project);
@@ -73,8 +73,8 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Compare_Project_Memberships()
 		{
-			var projectMembership = fixture.redmineManager.GetObject<ProjectMembership>(PROJECT_MEMBERSHIP_ID, null);
-			var projectMembershipToCompare = fixture.redmineManager.GetObject<ProjectMembership>(PROJECT_MEMBERSHIP_ID, null);
+			var projectMembership = fixture.RedmineManager.GetObject<ProjectMembership>(PROJECT_MEMBERSHIP_ID, null);
+			var projectMembershipToCompare = fixture.RedmineManager.GetObject<ProjectMembership>(PROJECT_MEMBERSHIP_ID, null);
 
 			Assert.NotNull(projectMembership);
 			Assert.True(projectMembership.Equals(projectMembershipToCompare), "Project memberships are not equal.");
@@ -83,12 +83,12 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Update_Project_Membership()
 		{
-			var pm = fixture.redmineManager.GetObject<ProjectMembership>(UPDATED_PROJECT_MEMBERSHIP_ID, null);
+			var pm = fixture.RedmineManager.GetObject<ProjectMembership>(UPDATED_PROJECT_MEMBERSHIP_ID, null);
 			pm.Roles.Add(new MembershipRole { Id = UPDATED_PROJECT_MEMBERSHIP_ROLE_ID });
 
-			fixture.redmineManager.UpdateObject<ProjectMembership>(UPDATED_PROJECT_MEMBERSHIP_ID, pm);
+			fixture.RedmineManager.UpdateObject<ProjectMembership>(UPDATED_PROJECT_MEMBERSHIP_ID, pm);
 
-			var updatedPM = fixture.redmineManager.GetObject<ProjectMembership>(UPDATED_PROJECT_MEMBERSHIP_ID, null);
+			var updatedPM = fixture.RedmineManager.GetObject<ProjectMembership>(UPDATED_PROJECT_MEMBERSHIP_ID, null);
 
 			Assert.NotNull(updatedPM);
 			Assert.NotNull(updatedPM.Roles);
@@ -100,9 +100,9 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Delete_Project_Membership()
 		{
-			RedmineException exception = (RedmineException)Record.Exception(() => fixture.redmineManager.DeleteObject<ProjectMembership>(DELETED_PROJECT_MEMBERSHIP_ID, null));
+			RedmineException exception = (RedmineException)Record.Exception(() => fixture.RedmineManager.DeleteObject<ProjectMembership>(DELETED_PROJECT_MEMBERSHIP_ID, null));
 			Assert.Null (exception);
-			Assert.Throws<NotFoundException>(() => fixture.redmineManager.GetObject<ProjectMembership>(DELETED_PROJECT_MEMBERSHIP_ID, null));
+			Assert.Throws<NotFoundException>(() => fixture.RedmineManager.GetObject<ProjectMembership>(DELETED_PROJECT_MEMBERSHIP_ID, null));
 		}
 	}
 }

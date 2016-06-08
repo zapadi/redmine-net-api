@@ -159,22 +159,22 @@ namespace Redmine.Net.Api.Types
             unchecked
             {
                 var hashCode = 13;
-                hashCode = Utils.GetHashCode(Id,hashCode);
-				hashCode = Utils.GetHashCode(IsFilter,hashCode);
-				hashCode = Utils.GetHashCode(IsRequired,hashCode);
-				hashCode = Utils.GetHashCode(Multiple,hashCode);
-				hashCode = Utils.GetHashCode(Searchable,hashCode);
-				hashCode = Utils.GetHashCode(Visible,hashCode);
-				hashCode = Utils.GetHashCode(CustomizedType,hashCode);
-				hashCode = Utils.GetHashCode(DefaultValue,hashCode);
-				hashCode = Utils.GetHashCode(FieldFormat,hashCode);
-				hashCode = Utils.GetHashCode(MaxLength,hashCode);
-				hashCode = Utils.GetHashCode(MinLength,hashCode);
-				hashCode = Utils.GetHashCode(Name,hashCode);
-				hashCode = Utils.GetHashCode(Regexp,hashCode);
-				hashCode = Utils.GetHashCode(PossibleValues,hashCode);
-				hashCode = Utils.GetHashCode(Roles,hashCode);
-				hashCode = Utils.GetHashCode(Trackers,hashCode);
+                hashCode = HashCodeExtensions.GetHashCode(Id,hashCode);
+				hashCode = HashCodeExtensions.GetHashCode(IsFilter,hashCode);
+				hashCode = HashCodeExtensions.GetHashCode(IsRequired,hashCode);
+				hashCode = HashCodeExtensions.GetHashCode(Multiple,hashCode);
+				hashCode = HashCodeExtensions.GetHashCode(Searchable,hashCode);
+				hashCode = HashCodeExtensions.GetHashCode(Visible,hashCode);
+				hashCode = HashCodeExtensions.GetHashCode(CustomizedType,hashCode);
+				hashCode = HashCodeExtensions.GetHashCode(DefaultValue,hashCode);
+				hashCode = HashCodeExtensions.GetHashCode(FieldFormat,hashCode);
+				hashCode = HashCodeExtensions.GetHashCode(MaxLength,hashCode);
+				hashCode = HashCodeExtensions.GetHashCode(MinLength,hashCode);
+				hashCode = HashCodeExtensions.GetHashCode(Name,hashCode);
+				hashCode = HashCodeExtensions.GetHashCode(Regexp,hashCode);
+				hashCode = HashCodeExtensions.GetHashCode(PossibleValues,hashCode);
+				hashCode = HashCodeExtensions.GetHashCode(Roles,hashCode);
+				hashCode = HashCodeExtensions.GetHashCode(Trackers,hashCode);
                 return hashCode;
             }
         }

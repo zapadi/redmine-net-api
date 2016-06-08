@@ -68,22 +68,29 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\redmine-net20-api\Extensions\Extensions.cs">
-      <Link>Extensions\Extensions.cs</Link>
+    <Compile Include="..\redmine-net20-api\Internals\DataHelper.cs">
+      <Link>Internals\DataHelper.cs</Link>
+    </Compile>
+<Compile Include="..\redmine-net20-api\Extensions\XmlWriterExtensions.cs">
+      <Link>Extensions\XmlWriterExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\redmine-net20-api\Extensions\NameValueCollectionExtensions.cs">
+      <Link>Extensions\NameValueCollectionExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\redmine-net20-api\HttpVerbs.cs">
+      <Link>HttpVerbs.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net20-api\Extensions\XmlReaderExtensions.cs">
       <Link>Extensions\XmlReaderExtensions.cs</Link>
     </Compile>
+    <Compile Include="..\redmine-net20-api\Internals\HashCodeExtensions.cs">
+      <Link>Logging\LogEntry.cs</Link>
+    </Compile>
     <Compile Include="..\redmine-net20-api\internals\UrlHelper.cs">
       <Link>Internals\UrlHelper.cs</Link>
     </Compile>
-<<<<<<< HEAD
     <Compile Include="..\redmine-net20-api\Internals\WebApiHelper.cs">
       <Link>Internals\WebApiHelper.cs</Link>
-=======
-    <Compile Include="..\redmine-net20-api\internals\Utils.cs">
-      <Link>Internals\Utils.cs</Link>
->>>>>>> master
     </Compile>
     <Compile Include="..\redmine-net20-api\Logging\ColorConsoleLogger.cs">
       <Link>Logging\ColorConsoleLogger.cs</Link>
@@ -410,6 +417,7 @@
     <Compile Include="..\redmine-net40-api\MimeFormat.cs">
       <Link>MimeFormat.cs</Link>
     </Compile>
+    <Compile Include="Attachments.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="..\redmine-net20-api\Exceptions\NotFoundException.cs">
       <Link>Exceptions\NotFoundException.cs</Link>

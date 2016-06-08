@@ -24,7 +24,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public async Task Should_Get_Attachment_By_Id()
 		{
-			var attachment = await fixture.redmineManager.GetObjectAsync<Attachment>(ATTACHMENT_ID, null);
+			var attachment = await fixture.RedmineManager.GetObjectAsync<Attachment>(ATTACHMENT_ID, null);
 
 			Assert.NotNull(attachment);
 			Assert.IsType<Attachment>(attachment);
@@ -38,7 +38,7 @@ namespace xUnitTestredminenet45api
 			byte[] documentData = File.ReadAllBytes(documentPath);
 
 			//upload attachment to redmine
-			Upload attachment = await fixture.redmineManager.UploadFileAsync(documentData);
+			Upload attachment = await fixture.RedmineManager.UploadFileAsync(documentData);
 
 			//set attachment properties
 			attachment.FileName = "uploadAttachment.pages";
@@ -72,9 +72,9 @@ namespace xUnitTestredminenet45api
 			issue.Watchers.Add(new Watcher { Id = 2 });
 
 			//create issue and attach document
-			Issue issueWithAttachment = await fixture.redmineManager.CreateObjectAsync<Issue>(issue);
+			Issue issueWithAttachment = await fixture.RedmineManager.CreateObjectAsync<Issue>(issue);
 
-			issue = await fixture.redmineManager.GetObjectAsync<Issue>(issueWithAttachment.Id.ToString(), new NameValueCollection { { "include", "attachments" } });
+			issue = await fixture.RedmineManager.GetObjectAsync<Issue>(issueWithAttachment.Id.ToString(), new NameValueCollection { { "include", "attachments" } });
 
 			Assert.NotNull(issue);
 			Assert.IsType<Issue>(issue);
@@ -86,9 +86,9 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public async Task Sould_Download_Attachment()
 		{
-			var attachment = await fixture.redmineManager.GetObjectAsync<Attachment>(ATTACHMENT_ID, null);
+			var attachment = await fixture.RedmineManager.GetObjectAsync<Attachment>(ATTACHMENT_ID, null);
 
-			var document = await fixture.redmineManager.DownloadFileAsync(attachment.ContentUrl);
+			var document = await fixture.RedmineManager.DownloadFileAsync(attachment.ContentUrl);
 
 			Assert.NotNull(document);
 		}

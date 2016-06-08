@@ -19,7 +19,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void RedmineTrackers_ShouldGetAllTrackers()
 		{
-			var trackers = fixture.redmineManager.GetObjects<Tracker>(null);
+			var trackers = fixture.RedmineManager.GetObjects<Tracker>(null);
 
 			Assert.NotNull(trackers);
 			Assert.NotEmpty (trackers);

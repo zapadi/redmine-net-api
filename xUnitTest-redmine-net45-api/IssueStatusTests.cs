@@ -20,7 +20,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Get_All_Issue_Statuses()
 		{
-			var issueStatuses = fixture.redmineManager.GetObjects<IssueStatus>(null);
+			var issueStatuses = fixture.RedmineManager.GetObjects<IssueStatus>(null);
 
 			Assert.NotNull(issueStatuses);
 			Assert.True(issueStatuses.Count == NUMBER_OF_ISSUE_STATUSES, "Issue statuses count != " + NUMBER_OF_ISSUE_STATUSES);

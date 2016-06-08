@@ -31,7 +31,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Add_Or_Update_WikiPage()
 		{
-			WikiPage page = fixture.redmineManager.CreateOrUpdateWikiPage(PROJECT_ID, WIKI_PAGE_NAME, new WikiPage { Text = WIKI_PAGE_UPDATED_TEXT, Comments = WIKI_PAGE_COMMENT });
+			WikiPage page = fixture.RedmineManager.CreateOrUpdateWikiPage(PROJECT_ID, WIKI_PAGE_NAME, new WikiPage { Text = WIKI_PAGE_UPDATED_TEXT, Comments = WIKI_PAGE_COMMENT });
 
 			Assert.NotNull(page);
 			Assert.True(page.Title.Equals(WIKI_PAGE_NAME), "Wiki page name is invalid.");
@@ -42,7 +42,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Get_All_Wiki_Pages_By_Project_Id()
 		{
-			List<WikiPage> pages = (List<WikiPage>)fixture.redmineManager.GetAllWikiPages(PROJECT_ID);
+			List<WikiPage> pages = (List<WikiPage>)fixture.RedmineManager.GetAllWikiPages(PROJECT_ID);
 
 			Assert.NotNull(pages);
 			Assert.All (pages, p => Assert.IsType<WikiPage> (p));
@@ -53,7 +53,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Get_Wiki_Page_By_Title()
 		{
-			WikiPage page = fixture.redmineManager.GetWikiPage(PROJECT_ID, null, WIKI_PAGE_TITLE);
+			WikiPage page = fixture.RedmineManager.GetWikiPage(PROJECT_ID, null, WIKI_PAGE_TITLE);
 
 			Assert.NotNull(page);
 			Assert.True(page.Title.Equals(WIKI_PAGE_TITLE), "Wiki page name is invalid.");
@@ -62,7 +62,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Get_Wiki_Page_By_Title_With_Attachments()
 		{
-			WikiPage page = fixture.redmineManager.GetWikiPage(PROJECT_ID, new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.ATTACHMENTS } }, WIKI_PAGE_NAME);
+			WikiPage page = fixture.RedmineManager.GetWikiPage(PROJECT_ID, new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.ATTACHMENTS } }, WIKI_PAGE_NAME);
 
 			Assert.NotNull(page);
 			Assert.Equal(page.Title, WIKI_PAGE_NAME);
@@ -73,7 +73,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Get_Wiki_Page_By_Version()
 		{
-			WikiPage oldPage = fixture.redmineManager.GetWikiPage(PROJECT_ID,null, WIKI_PAGE_NAME, WIKI_PAGE_VERSION);
+			WikiPage oldPage = fixture.RedmineManager.GetWikiPage(PROJECT_ID,null, WIKI_PAGE_NAME, WIKI_PAGE_VERSION);
 
 			Assert.NotNull(oldPage);
 			Assert.Equal(oldPage.Title, WIKI_PAGE_NAME);
@@ -83,8 +83,8 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Compare_Wiki_Pages()
 		{
-			WikiPage page = fixture.redmineManager.GetWikiPage(PROJECT_ID, new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.ATTACHMENTS } }, WIKI_PAGE_NAME);
-			WikiPage pageToCompare = fixture.redmineManager.GetWikiPage(PROJECT_ID, new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.ATTACHMENTS } }, WIKI_PAGE_NAME);
+			WikiPage page = fixture.RedmineManager.GetWikiPage(PROJECT_ID, new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.ATTACHMENTS } }, WIKI_PAGE_NAME);
+			WikiPage pageToCompare = fixture.RedmineManager.GetWikiPage(PROJECT_ID, new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.ATTACHMENTS } }, WIKI_PAGE_NAME);
 
 			Assert.NotNull(page);
 			Assert.True(page.Equals(pageToCompare), "Wiki pages are not equal.");
@@ -93,8 +93,8 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Delete_Wiki_Page()
 		{
-			fixture.redmineManager.DeleteWikiPage(PROJECT_ID, WIKI_PAGE_NAME);
-			Assert.Throws<NotFoundException>(() => fixture.redmineManager.GetWikiPage(PROJECT_ID, null, WIKI_PAGE_NAME));
+			fixture.RedmineManager.DeleteWikiPage(PROJECT_ID, WIKI_PAGE_NAME);
+			Assert.Throws<NotFoundException>(() => fixture.RedmineManager.GetWikiPage(PROJECT_ID, null, WIKI_PAGE_NAME));
 		}
 	}
 }

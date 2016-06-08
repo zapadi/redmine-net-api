@@ -22,7 +22,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Get_All_News()
 		{
-			var news = fixture.redmineManager.GetObjects<News>(null);
+			var news = fixture.RedmineManager.GetObjects<News>(null);
 
 			Assert.NotNull(news);
 			Assert.True(news.Count == NUMBER_OF_NEWS, "News count != " + NUMBER_OF_NEWS);
@@ -32,7 +32,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Get_News_By_Project_Id()
 		{
-			var news = fixture.redmineManager.GetObjects<News>(new NameValueCollection { { RedmineKeys.PROJECT_ID, PROJECT_ID } });
+			var news = fixture.RedmineManager.GetObjects<News>(new NameValueCollection { { RedmineKeys.PROJECT_ID, PROJECT_ID } });
 
 			Assert.NotNull(news);
 			Assert.True(news.Count == NUMBER_OF_NEWS_BY_PROJECT_ID, "News count != " + NUMBER_OF_NEWS_BY_PROJECT_ID);
@@ -42,8 +42,8 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Compare_News()
 		{
-			var firstNews = fixture.redmineManager.GetPaginatedObjects<News>(new NameValueCollection() {{RedmineKeys.LIMIT, "1" },{RedmineKeys.OFFSET, "0" }});
-			var secondNews = fixture.redmineManager.GetPaginatedObjects<News>(new NameValueCollection() { { RedmineKeys.LIMIT, "1" }, { RedmineKeys.OFFSET, "0" } });
+			var firstNews = fixture.RedmineManager.GetPaginatedObjects<News>(new NameValueCollection() {{RedmineKeys.LIMIT, "1" },{RedmineKeys.OFFSET, "0" }});
+			var secondNews = fixture.RedmineManager.GetPaginatedObjects<News>(new NameValueCollection() { { RedmineKeys.LIMIT, "1" }, { RedmineKeys.OFFSET, "0" } });
 
 			Assert.NotNull(firstNews);
 			Assert.NotNull(firstNews.Objects);

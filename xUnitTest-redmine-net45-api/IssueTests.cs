@@ -84,7 +84,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Get_All_Issues()
 		{
-			var issues = fixture.redmineManager.GetObjects<Issue>(null);
+			var issues = fixture.RedmineManager.GetObjects<Issue>(null);
 
 			Assert.NotNull(issues);
 			Assert.All (issues, i => Assert.IsType<Issue> (i));
@@ -93,7 +93,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Get_Paginated_Issues()
 		{
-			var issues = fixture.redmineManager.GetPaginatedObjects<Issue>(new NameValueCollection { { RedmineKeys.OFFSET, OFFSET.ToString() }, { RedmineKeys.LIMIT, NUMBER_OF_PAGINATED_ISSUES.ToString() }, { "sort", "id:desc" } });
+			var issues = fixture.RedmineManager.GetPaginatedObjects<Issue>(new NameValueCollection { { RedmineKeys.OFFSET, OFFSET.ToString() }, { RedmineKeys.LIMIT, NUMBER_OF_PAGINATED_ISSUES.ToString() }, { "sort", "id:desc" } });
 
 			Assert.NotNull(issues.Objects);
 			Assert.All (issues.Objects, i => Assert.IsType<Issue> (i));
@@ -103,7 +103,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Get_Issues_By_Project_Id()
 		{
-			var issues = fixture.redmineManager.GetObjects<Issue>(new NameValueCollection { { RedmineKeys.PROJECT_ID, PROJECT_ID } });
+			var issues = fixture.RedmineManager.GetObjects<Issue>(new NameValueCollection { { RedmineKeys.PROJECT_ID, PROJECT_ID } });
 
 			Assert.NotNull(issues);
 			Assert.All (issues, i => Assert.IsType<Issue> (i));
@@ -112,7 +112,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Get_Issues_By_subproject_Id()
 		{
-			var issues = fixture.redmineManager.GetObjects<Issue>(new NameValueCollection { { RedmineKeys.SUBPROJECT_ID, SUBPROJECT_ID } });
+			var issues = fixture.RedmineManager.GetObjects<Issue>(new NameValueCollection { { RedmineKeys.SUBPROJECT_ID, SUBPROJECT_ID } });
 
 			Assert.NotNull(issues);
 			Assert.All (issues, i => Assert.IsType<Issue> (i));
@@ -121,7 +121,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Get_Issues_By_Project_Without_Subproject()
 		{
-			var issues = fixture.redmineManager.GetObjects<Issue>(new NameValueCollection { { RedmineKeys.PROJECT_ID, PROJECT_ID }, { RedmineKeys.SUBPROJECT_ID, ALL_SUBPROJECTS } });
+			var issues = fixture.RedmineManager.GetObjects<Issue>(new NameValueCollection { { RedmineKeys.PROJECT_ID, PROJECT_ID }, { RedmineKeys.SUBPROJECT_ID, ALL_SUBPROJECTS } });
 
 			Assert.NotNull(issues);
 			Assert.All (issues, i => Assert.IsType<Issue> (i));
@@ -130,7 +130,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Get_Issues_By_Tracker()
 		{
-			var issues = fixture.redmineManager.GetObjects<Issue>(new NameValueCollection { { RedmineKeys.TRACKER_ID, TRACKER_ID } });
+			var issues = fixture.RedmineManager.GetObjects<Issue>(new NameValueCollection { { RedmineKeys.TRACKER_ID, TRACKER_ID } });
 
 			Assert.NotNull(issues);
 			Assert.All (issues, i => Assert.IsType<Issue> (i));
@@ -139,7 +139,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Get_Issues_By_Status()
 		{
-			var issues = fixture.redmineManager.GetObjects<Issue>(new NameValueCollection { { RedmineKeys.STATUS_ID, STATUS_ID } });
+			var issues = fixture.RedmineManager.GetObjects<Issue>(new NameValueCollection { { RedmineKeys.STATUS_ID, STATUS_ID } });
 			Assert.NotNull(issues);
 			Assert.All (issues, i => Assert.IsType<Issue> (i));
 		}
@@ -147,7 +147,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Get_Issues_By_Asignee()
 		{
-			var issues = fixture.redmineManager.GetObjects<Issue>(new NameValueCollection { { RedmineKeys.ASSIGNED_TO_ID, ASSIGNED_TO_ID } });
+			var issues = fixture.RedmineManager.GetObjects<Issue>(new NameValueCollection { { RedmineKeys.ASSIGNED_TO_ID, ASSIGNED_TO_ID } });
 
 			Assert.NotNull(issues);
 			Assert.All (issues, i => Assert.IsType<Issue> (i));
@@ -156,7 +156,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Get_Issues_By_Custom_Field()
 		{
-			var issues = fixture.redmineManager.GetObjects<Issue>(new NameValueCollection { { CUSTOM_FIELD_NAME, CUSTOM_FIELD_VALUE } });
+			var issues = fixture.RedmineManager.GetObjects<Issue>(new NameValueCollection { { CUSTOM_FIELD_NAME, CUSTOM_FIELD_VALUE } });
 
 			Assert.NotNull(issues);
 			Assert.All (issues, i => Assert.IsType<Issue> (i));
@@ -165,7 +165,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Get_Issue_By_Id()
 		{
-			var issue = fixture.redmineManager.GetObject<Issue>(ISSUE_ID, new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.CHILDREN + "," + RedmineKeys.ATTACHMENTS + "," + RedmineKeys.RELATIONS + "," + RedmineKeys.CHANGESETS + "," + RedmineKeys.JOURNALS + "," + RedmineKeys.WATCHERS } });
+			var issue = fixture.RedmineManager.GetObject<Issue>(ISSUE_ID, new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.CHILDREN + "," + RedmineKeys.ATTACHMENTS + "," + RedmineKeys.RELATIONS + "," + RedmineKeys.CHANGESETS + "," + RedmineKeys.JOURNALS + "," + RedmineKeys.WATCHERS } });
 
 			Assert.NotNull(issue);
 			//TODO: add conditions for all associated data if nedeed
@@ -205,7 +205,7 @@ namespace xUnitTestredminenet45api
 				}
 			};
 
-			Issue savedIssue = fixture.redmineManager.CreateObject(issue);
+			Issue savedIssue = fixture.RedmineManager.CreateObject(issue);
 
 			Assert.NotNull(savedIssue);
 			Assert.True(issue.Subject.Equals(savedIssue.Subject), "Issue subject is invalid.");
@@ -215,7 +215,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Update_Issue()
 		{
-			var issue = fixture.redmineManager.GetObject<Issue>(UPDATED_ISSUE_ID, new NameValueCollection { { "include", "children,attachments,relations,changesets,journals,watchers" } });
+			var issue = fixture.RedmineManager.GetObject<Issue>(UPDATED_ISSUE_ID, new NameValueCollection { { "include", "children,attachments,relations,changesets,journals,watchers" } });
 			issue.Subject = UPDATED_ISSUE_SUBJECT;
 			issue.Description = UPDATED_ISSUE_DESCRIPTION;
 			issue.StartDate = updatedIssueStartDate;
@@ -233,9 +233,9 @@ namespace xUnitTestredminenet45api
 			issue.Notes = UPDATED_ISSUE_NOTES;
 			issue.PrivateNotes = UPDATED_ISSUE_PRIVATE_NOTES;
 
-			fixture.redmineManager.UpdateObject(UPDATED_ISSUE_ID, issue);
+			fixture.RedmineManager.UpdateObject(UPDATED_ISSUE_ID, issue);
 
-			var updatedIssue = fixture.redmineManager.GetObject<Issue>(UPDATED_ISSUE_ID, new NameValueCollection { { "include", "children,attachments,relations,changesets,journals,watchers" } });
+			var updatedIssue = fixture.RedmineManager.GetObject<Issue>(UPDATED_ISSUE_ID, new NameValueCollection { { "include", "children,attachments,relations,changesets,journals,watchers" } });
 
 			Assert.NotNull(updatedIssue);
 			Assert.True(issue.Subject.Equals(updatedIssue.Subject), "Issue subject is invalid.");
@@ -245,17 +245,17 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Delete_Issue()
 		{
-			RedmineException exception = (RedmineException)Record.Exception(() => fixture.redmineManager.DeleteObject<Issue>(DELETED_ISSUE_ID, null));
+			RedmineException exception = (RedmineException)Record.Exception(() => fixture.RedmineManager.DeleteObject<Issue>(DELETED_ISSUE_ID, null));
 			Assert.Null (exception);
-			Assert.Throws<NotFoundException>(() => fixture.redmineManager.GetObject<Issue>(DELETED_ISSUE_ID, null));
+			Assert.Throws<NotFoundException>(() => fixture.RedmineManager.GetObject<Issue>(DELETED_ISSUE_ID, null));
 		}
 
 		[Fact]
 		public void Should_Add_Watcher_To_Issue()
 		{
-			fixture.redmineManager.AddWatcherToIssue(WATCHER_ISSUE_ID, WATCHER_USER_ID);
+			fixture.RedmineManager.AddWatcherToIssue(WATCHER_ISSUE_ID, WATCHER_USER_ID);
 
-			Issue issue = fixture.redmineManager.GetObject<Issue>(WATCHER_ISSUE_ID.ToString(), new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.WATCHERS } });
+			Issue issue = fixture.RedmineManager.GetObject<Issue>(WATCHER_ISSUE_ID.ToString(), new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.WATCHERS } });
 
 			Assert.NotNull(issue);
 			Assert.NotNull(issue.Watchers);
@@ -265,9 +265,9 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Remove_Watcher_From_Issue()
 		{
-			fixture.redmineManager.RemoveWatcherFromIssue(WATCHER_ISSUE_ID, WATCHER_USER_ID);
+			fixture.RedmineManager.RemoveWatcherFromIssue(WATCHER_ISSUE_ID, WATCHER_USER_ID);
 
-			Issue issue = fixture.redmineManager.GetObject<Issue>(WATCHER_ISSUE_ID.ToString(), new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.WATCHERS } });
+			Issue issue = fixture.RedmineManager.GetObject<Issue>(WATCHER_ISSUE_ID.ToString(), new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.WATCHERS } });
 
 			Assert.NotNull(issue);
 			Assert.True(issue.Watchers == null || ((List<Watcher>)issue.Watchers).Find(w => w.Id == WATCHER_USER_ID) == null, "Watcher was not removed.");
@@ -276,8 +276,8 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Compare_Issues()
 		{
-			var issue = fixture.redmineManager.GetObject<Issue>(ISSUE_ID, new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.CHILDREN+","+RedmineKeys.ATTACHMENTS+","+RedmineKeys.RELATIONS+","+RedmineKeys.CHANGESETS+","+RedmineKeys.JOURNALS+","+RedmineKeys.WATCHERS } });
-			var issueToCompare = fixture.redmineManager.GetObject<Issue>(ISSUE_ID, new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.CHILDREN + "," + RedmineKeys.ATTACHMENTS + "," + RedmineKeys.RELATIONS + "," + RedmineKeys.CHANGESETS + "," + RedmineKeys.JOURNALS + "," + RedmineKeys.WATCHERS } });
+			var issue = fixture.RedmineManager.GetObject<Issue>(ISSUE_ID, new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.CHILDREN+","+RedmineKeys.ATTACHMENTS+","+RedmineKeys.RELATIONS+","+RedmineKeys.CHANGESETS+","+RedmineKeys.JOURNALS+","+RedmineKeys.WATCHERS } });
+			var issueToCompare = fixture.RedmineManager.GetObject<Issue>(ISSUE_ID, new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.CHILDREN + "," + RedmineKeys.ATTACHMENTS + "," + RedmineKeys.RELATIONS + "," + RedmineKeys.CHANGESETS + "," + RedmineKeys.JOURNALS + "," + RedmineKeys.WATCHERS } });
 
 			Assert.NotNull(issue);
 			Assert.True(issue.Equals(issueToCompare), "Issues are not equal.");

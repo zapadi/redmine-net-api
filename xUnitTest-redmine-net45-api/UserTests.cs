@@ -49,7 +49,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Get_Current_User()
 		{
-			User currentUser = fixture.redmineManager.GetCurrentUser();
+			User currentUser = fixture.RedmineManager.GetCurrentUser();
 
 			Assert.NotNull(currentUser);
 			Assert.Equal(currentUser.ApiKey, Helper.ApiKey);
@@ -58,7 +58,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Get_User_By_Id()
 		{
-			User user = fixture.redmineManager.GetObject<User>(USER_ID, null);
+			User user = fixture.RedmineManager.GetObject<User>(USER_ID, null);
 
 			Assert.NotNull(user);
 		}
@@ -66,7 +66,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Get_User_By_Id_Including_Groups_And_Memberships()
 		{
-			var user = fixture.redmineManager.GetObject<User>(USER_ID, new NameValueCollection() { { RedmineKeys.INCLUDE, RedmineKeys.GROUPS+","+RedmineKeys.MEMBERSHIPS } });
+			var user = fixture.RedmineManager.GetObject<User>(USER_ID, new NameValueCollection() { { RedmineKeys.INCLUDE, RedmineKeys.GROUPS+","+RedmineKeys.MEMBERSHIPS } });
 
 			Assert.NotNull(user);
 
@@ -82,7 +82,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Get_X_Users_From_Offset_Y()
 		{
-			var result = fixture.redmineManager.GetPaginatedObjects<User>(new NameValueCollection() {
+			var result = fixture.RedmineManager.GetPaginatedObjects<User>(new NameValueCollection() {
 				{ RedmineKeys.INCLUDE, RedmineKeys.GROUPS+","+RedmineKeys.MEMBERSHIPS },
 				{RedmineKeys.LIMIT,LIMIT },
 				{RedmineKeys.OFFSET,OFFSET }
@@ -95,7 +95,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Get_Users_By_State()
 		{
-			var users = fixture.redmineManager.GetObjects<User>(new NameValueCollection()
+			var users = fixture.RedmineManager.GetObjects<User>(new NameValueCollection()
 				{
 					{ RedmineKeys.STATUS, ((int)USER_STATE).ToString(CultureInfo.InvariantCulture) }
 				});
@@ -119,7 +119,7 @@ namespace xUnitTestredminenet45api
 			user.CustomFields.Add(new IssueCustomField { Id = USER_CUSTOM_FIELD_ID, Values = new List<CustomFieldValue> { new CustomFieldValue { Info = USER_CUSTOM_FIELD_VALUE } } });
 
 			User savedRedmineUser = null;
-			RedmineException exception = (RedmineException)Record.Exception(() => savedRedmineUser = fixture.redmineManager.CreateObject<User>(user));
+			RedmineException exception = (RedmineException)Record.Exception(() => savedRedmineUser = fixture.RedmineManager.CreateObject<User>(user));
 
 			Assert.Null (exception);
 			Assert.NotNull(savedRedmineUser);
@@ -130,11 +130,11 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Update_User()
 		{
-			User user = fixture.redmineManager.GetObject<User>(USER_ID_TO_UPDATE, null);
+			User user = fixture.RedmineManager.GetObject<User>(USER_ID_TO_UPDATE, null);
 			user.FirstName = USER_FIRST_NAME_UPDATED;
-			fixture.redmineManager.UpdateObject<User>(USER_ID_TO_UPDATE, user);
+			fixture.RedmineManager.UpdateObject<User>(USER_ID_TO_UPDATE, user);
 
-			User updatedUser = fixture.redmineManager.GetObject<User>(USER_ID_TO_UPDATE, null);
+			User updatedUser = fixture.RedmineManager.GetObject<User>(USER_ID_TO_UPDATE, null);
 
 			Assert.NotNull(updatedUser);
 			Assert.Equal (user.FirstName, updatedUser.FirstName);
@@ -143,17 +143,17 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Delete_User()
 		{
-			RedmineException exc = (RedmineException)Record.Exception(() =>fixture.redmineManager.DeleteObject<User>(USER_ID_TO_DELETE, null));
+			RedmineException exc = (RedmineException)Record.Exception(() =>fixture.RedmineManager.DeleteObject<User>(USER_ID_TO_DELETE, null));
 			Assert.Null (exc);
-			Assert.ThrowsAny<NotFoundException>(()=>fixture.redmineManager.GetObject<User>(USER_ID_TO_DELETE, null));
+			Assert.ThrowsAny<NotFoundException>(()=>fixture.RedmineManager.GetObject<User>(USER_ID_TO_DELETE, null));
 		}
 
 		[Fact]
 		public void Should_Add_User_To_Group()
 		{
-			fixture.redmineManager.AddUserToGroup(GROUP_ID, int.Parse(USER_ID_FOR_GROUP));
+			fixture.RedmineManager.AddUserToGroup(GROUP_ID, int.Parse(USER_ID_FOR_GROUP));
 
-			User user = fixture.redmineManager.GetObject<User>(USER_ID_FOR_GROUP.ToString(), new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.GROUPS} });
+			User user = fixture.RedmineManager.GetObject<User>(USER_ID_FOR_GROUP.ToString(), new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.GROUPS} });
 
 			Assert.NotNull(user);
 			Assert.NotNull(user.Groups);
@@ -163,7 +163,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Get_User_By_Group()
 		{
-			var users = fixture.redmineManager.GetObjects<User>(new NameValueCollection()
+			var users = fixture.RedmineManager.GetObjects<User>(new NameValueCollection()
 				{
 					{RedmineKeys.GROUP_ID,GROUP_ID.ToString(CultureInfo.InvariantCulture)}
 				});
@@ -175,9 +175,9 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Delete_User_From_Group()
 		{
-			fixture.redmineManager.RemoveUserFromGroup(GROUP_ID, int.Parse(USER_ID_FOR_GROUP));
+			fixture.RedmineManager.RemoveUserFromGroup(GROUP_ID, int.Parse(USER_ID_FOR_GROUP));
 
-			User user = fixture.redmineManager.GetObject<User>(USER_ID_FOR_GROUP, new NameValueCollection { {RedmineKeys.INCLUDE, RedmineKeys.GROUPS } });
+			User user = fixture.RedmineManager.GetObject<User>(USER_ID_FOR_GROUP, new NameValueCollection { {RedmineKeys.INCLUDE, RedmineKeys.GROUPS } });
 
 			Assert.NotNull(user);
 			Assert.True(user.Groups == null || user.Groups.Find(g => g.Id == GROUP_ID) == null, "User was not removed from group.");
@@ -186,7 +186,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Get_All_Users_With_Metadata()
 		{
-			IList<User> users = fixture.redmineManager.GetObjects<User>(new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.GROUPS+","+RedmineKeys.MEMBERSHIPS } });
+			IList<User> users = fixture.RedmineManager.GetObjects<User>(new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.GROUPS+","+RedmineKeys.MEMBERSHIPS } });
 
 			Assert.NotNull(users);
 			Assert.All (users, u => Assert.IsType<User> (u));
@@ -195,8 +195,8 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Compare_Users()
 		{
-			var user = fixture.redmineManager.GetObject<User>(USER_ID, new NameValueCollection() { { RedmineKeys.INCLUDE, RedmineKeys.GROUPS + "," + RedmineKeys.MEMBERSHIPS } });
-			var userToCompare = fixture.redmineManager.GetObject<User>(USER_ID, new NameValueCollection() { { RedmineKeys.INCLUDE, RedmineKeys.GROUPS + "," + RedmineKeys.MEMBERSHIPS } });
+			var user = fixture.RedmineManager.GetObject<User>(USER_ID, new NameValueCollection() { { RedmineKeys.INCLUDE, RedmineKeys.GROUPS + "," + RedmineKeys.MEMBERSHIPS } });
+			var userToCompare = fixture.RedmineManager.GetObject<User>(USER_ID, new NameValueCollection() { { RedmineKeys.INCLUDE, RedmineKeys.GROUPS + "," + RedmineKeys.MEMBERSHIPS } });
 
 			Assert.NotNull(user);
 			Assert.True(user.Equals(userToCompare), "Users are not equal.");

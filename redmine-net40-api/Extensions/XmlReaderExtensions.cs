@@ -120,6 +120,7 @@ namespace Redmine.Net.Api.Extensions
 
             decimal result;
             if (string.IsNullOrWhiteSpace(str) || !decimal.TryParse(str, NumberStyles.Any, NumberFormatInfo.InvariantInfo, out result)) return null;
+
             return result;
         }
 
@@ -190,117 +191,117 @@ namespace Redmine.Net.Api.Extensions
             return result;
         }
 
-        /// <summary>
-        /// Writes the id if not null.
-        /// </summary>
-        /// <param name="writer">The writer.</param>
-        /// <param name="ident">The ident.</param>
-        /// <param name="tag">The tag.</param>
-        public static void WriteIdIfNotNull(this XmlWriter writer, IdentifiableName ident, string tag)
-        {
-            if (ident != null) writer.WriteElementString(tag, ident.Id.ToString(CultureInfo.InvariantCulture));
-        }
+        ///// <summary>
+        ///// Writes the id if not null.
+        ///// </summary>
+        ///// <param name="writer">The writer.</param>
+        ///// <param name="ident">The ident.</param>
+        ///// <param name="tag">The tag.</param>
+        //public static void WriteIdIfNotNull(this XmlWriter writer, IdentifiableName ident, string tag)
+        //{
+        //    if (ident != null) writer.WriteElementString(tag, ident.Id.ToString(CultureInfo.InvariantCulture));
+        //}
 
-        public static void WriteIdOrEmpty(this XmlWriter writer, IdentifiableName ident, string tag)
-        {
-            writer.WriteElementString(tag,
-                ident != null ? ident.Id.ToString(CultureInfo.InvariantCulture) : string.Empty);
-        }
+        //public static void WriteIdOrEmpty(this XmlWriter writer, IdentifiableName ident, string tag)
+        //{
+        //    writer.WriteElementString(tag,
+        //        ident != null ? ident.Id.ToString(CultureInfo.InvariantCulture) : string.Empty);
+        //}
 
-        /// <summary>
-        /// Writes string empty if T has default value or null.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="writer">The writer.</param>
-        /// <param name="val">The value.</param>
-        /// <param name="tag">The tag.</param>
-        public static void WriteValueOrEmpty<T>(this XmlWriter writer, T? val, string tag) where T : struct
-        {
-            if (!val.HasValue || EqualityComparer<T>.Default.Equals(val.Value, default(T)))
-                writer.WriteElementString(tag, string.Empty);
-            else
-                writer.WriteElementString(tag, string.Format(NumberFormatInfo.InvariantInfo, "{0}", val.Value));
-        }
+        ///// <summary>
+        ///// Writes string empty if T has default value or null.
+        ///// </summary>
+        ///// <typeparam name="T"></typeparam>
+        ///// <param name="writer">The writer.</param>
+        ///// <param name="val">The value.</param>
+        ///// <param name="tag">The tag.</param>
+        //public static void WriteValueOrEmpty<T>(this XmlWriter writer, T? val, string tag) where T : struct
+        //{
+        //    if (!val.HasValue || EqualityComparer<T>.Default.Equals(val.Value, default(T)))
+        //        writer.WriteElementString(tag, string.Empty);
+        //    else
+        //        writer.WriteElementString(tag, string.Format(NumberFormatInfo.InvariantInfo, "{0}", val.Value));
+        //}
 
-        public static void WriteIfNotDefaultOrNull<T>(this XmlWriter writer, T? val, string tag) where T : struct
-        {
-            if (!val.HasValue) return;
-            if (!EqualityComparer<T>.Default.Equals(val.Value, default(T)))
-                writer.WriteElementString(tag, string.Format(NumberFormatInfo.InvariantInfo, "{0}", val.Value));
-        }
+        //public static void WriteIfNotDefaultOrNull<T>(this XmlWriter writer, T? val, string tag) where T : struct
+        //{
+        //    if (!val.HasValue) return;
+        //    if (!EqualityComparer<T>.Default.Equals(val.Value, default(T)))
+        //        writer.WriteElementString(tag, string.Format(NumberFormatInfo.InvariantInfo, "{0}", val.Value));
+        //}
 
-        public static void WriteDateOrEmpty(this XmlWriter writer, DateTime? val, string tag)
-        {
-            if (!val.HasValue || val.Value.Equals(default(DateTime)))
-                writer.WriteElementString(tag, string.Empty);
-            else
-                writer.WriteElementString(tag, string.Format(NumberFormatInfo.InvariantInfo, "{0}", val.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)));
-        }
+        //public static void WriteDateOrEmpty(this XmlWriter writer, DateTime? val, string tag)
+        //{
+        //    if (!val.HasValue || val.Value.Equals(default(DateTime)))
+        //        writer.WriteElementString(tag, string.Empty);
+        //    else
+        //        writer.WriteElementString(tag, string.Format(NumberFormatInfo.InvariantInfo, "{0}", val.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)));
+        //}
 
-        public static void WriteArray(this XmlWriter writer, IEnumerable col, string elementName)
-        {
-            if (col == null) return;
-            writer.WriteStartElement(elementName);
-            writer.WriteAttributeString("type", "array");
+        //public static void WriteArray(this XmlWriter writer, IEnumerable col, string elementName)
+        //{
+        //    if (col == null) return;
+        //    writer.WriteStartElement(elementName);
+        //    writer.WriteAttributeString("type", "array");
 
-            foreach (var item in col)
-            {
-                new XmlSerializer(item.GetType()).Serialize(writer, item);
-            }
+        //    foreach (var item in col)
+        //    {
+        //        new XmlSerializer(item.GetType()).Serialize(writer, item);
+        //    }
 
-            writer.WriteEndElement();
-        }
+        //    writer.WriteEndElement();
+        //}
 
-        public static void WriteArrayIds(this XmlWriter writer, IEnumerable col, string elementName, Type type, Func<object, int> f)
-        {
-            if (col == null) return;
-            writer.WriteStartElement(elementName);
-            writer.WriteAttributeString("type", "array");
+        //public static void WriteArrayIds(this XmlWriter writer, IEnumerable col, string elementName, Type type, Func<object, int> f)
+        //{
+        //    if (col == null) return;
+        //    writer.WriteStartElement(elementName);
+        //    writer.WriteAttributeString("type", "array");
 
-            var serializer = new XmlSerializer(type);
-            foreach (var item in col)
-            {
-                serializer.Serialize(writer, f.Invoke(item));
-            }
+        //    var serializer = new XmlSerializer(type);
+        //    foreach (var item in col)
+        //    {
+        //        serializer.Serialize(writer, f.Invoke(item));
+        //    }
 
-            writer.WriteEndElement();
-        }
+        //    writer.WriteEndElement();
+        //}
 
-        public static void WriteArray(this XmlWriter writer, IEnumerable list, string elementName, Type type, string root, string defaultNamespace = null)
-        {
-            if (list == null) return;
-            writer.WriteStartElement(elementName);
-            writer.WriteAttributeString("type", "array");
+        //public static void WriteArray(this XmlWriter writer, IEnumerable list, string elementName, Type type, string root, string defaultNamespace = null)
+        //{
+        //    if (list == null) return;
+        //    writer.WriteStartElement(elementName);
+        //    writer.WriteAttributeString("type", "array");
 
-            var serializer = new XmlSerializer(type, new XmlAttributeOverrides(), null, new XmlRootAttribute(root), defaultNamespace);
-            foreach (var item in list)
-            {
-                serializer.Serialize(writer, item);
-            }
+        //    var serializer = new XmlSerializer(type, new XmlAttributeOverrides(), null, new XmlRootAttribute(root), defaultNamespace);
+        //    foreach (var item in list)
+        //    {
+        //        serializer.Serialize(writer, item);
+        //    }
 
-            writer.WriteEndElement();
-        }
+        //    writer.WriteEndElement();
+        //}
 
-        public static void WriteArrayStringElement(this XmlWriter writer, IEnumerable col, string elementName, Func<object, string> f)
-        {
-            if (col == null) return;
-            writer.WriteStartElement(elementName);
-            writer.WriteAttributeString("type", "array");
-            foreach (var item in col)
-            {
-                writer.WriteElementString(elementName, f.Invoke(item));
-            }
-            writer.WriteEndElement();
-        }
+        //public static void WriteArrayStringElement(this XmlWriter writer, IEnumerable col, string elementName, Func<object, string> f)
+        //{
+        //    if (col == null) return;
+        //    writer.WriteStartElement(elementName);
+        //    writer.WriteAttributeString("type", "array");
+        //    foreach (var item in col)
+        //    {
+        //        writer.WriteElementString(elementName, f.Invoke(item));
+        //    }
+        //    writer.WriteEndElement();
+        //}
 
-        public static void WriteListElements(this XmlWriter xmlWriter, IEnumerable<IValue> list, string elementName)
-        {
-            if (list == null) return;
+        //public static void WriteListElements(this XmlWriter xmlWriter, IEnumerable<IValue> list, string elementName)
+        //{
+        //    if (list == null) return;
 
-            foreach (var item in list)
-            {
-                xmlWriter.WriteElementString(elementName, item.Value);
-            }
-        }
+        //    foreach (var item in list)
+        //    {
+        //        xmlWriter.WriteElementString(elementName, item.Value);
+        //    }
+        //}
     }
 }

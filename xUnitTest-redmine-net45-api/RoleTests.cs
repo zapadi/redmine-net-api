@@ -21,7 +21,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Get_All_Roles()
 		{
-			var roles = fixture.redmineManager.GetObjects<Role>(null);
+			var roles = fixture.RedmineManager.GetObjects<Role>(null);
 
 			Assert.NotNull(roles);
 			Assert.True(roles.Count == NUMBER_OF_ROLES, "Roles count != " + NUMBER_OF_ROLES);
@@ -31,7 +31,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Get_Role_By_Id()
 		{
-			Role role = fixture.redmineManager.GetObject<Role>(ROLE_ID, null);
+			Role role = fixture.RedmineManager.GetObject<Role>(ROLE_ID, null);
 
 			Assert.NotNull(role);
 			Assert.True(role.Name.Equals(ROLE_NAME), "Role name is invalid."); ;

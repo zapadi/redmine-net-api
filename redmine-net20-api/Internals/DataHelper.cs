@@ -14,10 +14,18 @@
    limitations under the License.
 */
 
-namespace Redmine.Net.Api.Logging
+namespace Redmine.Net.Api.Internals
 {
-    public interface ILogger
+    /// <summary>
+    /// 
+    /// </summary>
+    internal static class DataHelper
     {
-        void Log(LogEntry entry);
+        public static string UserData(int userId, MimeFormat mimeFormat)
+        {
+            return mimeFormat == MimeFormat.Xml
+                ? "<user_id>" + userId + "</user_id>"
+                : "{\"user_id\":\"" + userId + "\"}";
+        }
     }
 }

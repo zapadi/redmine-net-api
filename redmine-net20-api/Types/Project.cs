@@ -206,19 +206,19 @@ namespace Redmine.Net.Api.Types
         public override int GetHashCode()
         {
             var hashCode = base.GetHashCode();
-            hashCode = Utils.GetHashCode(Identifier, hashCode);
-            hashCode = Utils.GetHashCode(Description, hashCode);
-            hashCode = Utils.GetHashCode(Parent, hashCode);
-            hashCode = Utils.GetHashCode(HomePage, hashCode);
-            hashCode = Utils.GetHashCode(CreatedOn, hashCode);
-            hashCode = Utils.GetHashCode(UpdatedOn, hashCode);
-            hashCode = Utils.GetHashCode(Status, hashCode);
-            hashCode = Utils.GetHashCode(IsPublic, hashCode);
-            hashCode = Utils.GetHashCode(InheritMembers, hashCode);
-            hashCode = Utils.GetHashCode(Trackers, hashCode);
-            hashCode = Utils.GetHashCode(CustomFields, hashCode);
-            hashCode = Utils.GetHashCode(IssueCategories, hashCode);
-            hashCode = Utils.GetHashCode(EnabledModules, hashCode);
+            hashCode = HashCodeExtensions.GetHashCode(Identifier, hashCode);
+            hashCode = HashCodeExtensions.GetHashCode(Description, hashCode);
+            hashCode = HashCodeExtensions.GetHashCode(Parent, hashCode);
+            hashCode = HashCodeExtensions.GetHashCode(HomePage, hashCode);
+            hashCode = HashCodeExtensions.GetHashCode(CreatedOn, hashCode);
+            hashCode = HashCodeExtensions.GetHashCode(UpdatedOn, hashCode);
+            hashCode = HashCodeExtensions.GetHashCode(Status, hashCode);
+            hashCode = HashCodeExtensions.GetHashCode(IsPublic, hashCode);
+            hashCode = HashCodeExtensions.GetHashCode(InheritMembers, hashCode);
+            hashCode = HashCodeExtensions.GetHashCode(Trackers, hashCode);
+            hashCode = HashCodeExtensions.GetHashCode(CustomFields, hashCode);
+            hashCode = HashCodeExtensions.GetHashCode(IssueCategories, hashCode);
+            hashCode = HashCodeExtensions.GetHashCode(EnabledModules, hashCode);
 
             return hashCode;
         }

@@ -30,7 +30,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public  async Task Should_Add_Or_Update_Page()
 		{
-			WikiPage page = await fixture.redmineManager.CreateOrUpdateWikiPageAsync(projectId, wikiPageName, new WikiPage { Text = wikiPageUpdatedText, Comments = wikiPageComment });
+			WikiPage page = await fixture.RedmineManager.CreateOrUpdateWikiPageAsync(projectId, wikiPageName, new WikiPage { Text = wikiPageUpdatedText, Comments = wikiPageComment });
 
 			Assert.NotNull(page);
 			Assert.True(page.Title == wikiPageName, "Wiki page " + wikiPageName + " does not exist.");
@@ -39,7 +39,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public async Task Should_Get_All_Pages()
 		{
-			List<WikiPage> pages = (List<WikiPage>)await fixture.redmineManager.GetAllWikiPagesAsync(null, projectId);
+			List<WikiPage> pages = (List<WikiPage>)await fixture.RedmineManager.GetAllWikiPagesAsync(null, projectId);
 
 			Assert.NotNull(pages);
 
@@ -50,7 +50,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public async Task Should_Get_Page_By_Name()
 		{
-			WikiPage page = await fixture.redmineManager.GetWikiPageAsync(projectId, new NameValueCollection { { "include", "attachments" } }, wikiPageName);
+			WikiPage page = await fixture.RedmineManager.GetWikiPageAsync(projectId, new NameValueCollection { { "include", "attachments" } }, wikiPageName);
 
 			Assert.NotNull(page);
 			Assert.True(page.Title == wikiPageName, "Wiki page " + wikiPageName + " does not exist.");
@@ -59,7 +59,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public async Task Should_Get_Wiki_Page_Old_Version()
 		{
-			WikiPage oldPage = await fixture.redmineManager.GetWikiPageAsync(projectId, new NameValueCollection { { "include", "attachments" } }, wikiPageName, wikiPageVersion);
+			WikiPage oldPage = await fixture.RedmineManager.GetWikiPageAsync(projectId, new NameValueCollection { { "include", "attachments" } }, wikiPageName, wikiPageVersion);
 
 			Assert.True(oldPage.Title == wikiPageName,  "Wiki page " + wikiPageName + " does not exist.");
 			Assert.True(oldPage.Version == wikiPageVersion, "Wiki page version " + wikiPageVersion + " does not exist.");
@@ -68,8 +68,8 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public async Task Should_Delete_WikiPage()
 		{
-			await fixture.redmineManager.DeleteWikiPageAsync(projectId, wikiPageName);
-			await Assert.ThrowsAsync<NotFoundException>(async () => await fixture.redmineManager.GetWikiPageAsync(projectId, null, wikiPageName));
+			await fixture.RedmineManager.DeleteWikiPageAsync(projectId, wikiPageName);
+			await Assert.ThrowsAsync<NotFoundException>(async () => await fixture.RedmineManager.GetWikiPageAsync(projectId, null, wikiPageName));
 		}
 
 	}

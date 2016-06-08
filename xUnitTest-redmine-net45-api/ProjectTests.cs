@@ -50,7 +50,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Get_Project()
 		{
-			var project = fixture.redmineManager.GetObject<Project>(PROJECT_IDENTIFIER, null);
+			var project = fixture.RedmineManager.GetObject<Project>(PROJECT_IDENTIFIER, null);
 
 			Assert.NotNull(project);
 			Assert.IsType<Project>(project);
@@ -59,7 +59,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Get_Project_With_Trackers()
 		{
-			var project = fixture.redmineManager.GetObject<Project>(PROJECT_IDENTIFIER, new NameValueCollection()
+			var project = fixture.RedmineManager.GetObject<Project>(PROJECT_IDENTIFIER, new NameValueCollection()
 				{
 					{RedmineKeys.INCLUDE, RedmineKeys.TRACKERS}
 				});
@@ -75,7 +75,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Get_Project_With_IssueCategories()
 		{
-			var project = fixture.redmineManager.GetObject<Project>(PROJECT_IDENTIFIER, new NameValueCollection()
+			var project = fixture.RedmineManager.GetObject<Project>(PROJECT_IDENTIFIER, new NameValueCollection()
 				{
 					{RedmineKeys.INCLUDE, RedmineKeys.ISSUE_CATEGORIES}
 				});
@@ -91,7 +91,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Get_Project_With_EnabledModules()
 		{
-			var project = fixture.redmineManager.GetObject<Project>(PROJECT_IDENTIFIER, new NameValueCollection()
+			var project = fixture.RedmineManager.GetObject<Project>(PROJECT_IDENTIFIER, new NameValueCollection()
 				{
 					{RedmineKeys.INCLUDE, RedmineKeys.ENABLED_MODULES}
 				});
@@ -107,7 +107,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Get_Project_With_All_Data()
 		{
-			var project = fixture.redmineManager.GetObject<Project>(PROJECT_IDENTIFIER, new NameValueCollection()
+			var project = fixture.RedmineManager.GetObject<Project>(PROJECT_IDENTIFIER, new NameValueCollection()
 				{
 					{RedmineKeys.INCLUDE, string.Join(",",RedmineKeys.TRACKERS,RedmineKeys.ISSUE_CATEGORIES,RedmineKeys.ENABLED_MODULES)}
 				});
@@ -131,7 +131,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Get_All_Projects_With_All_Data()
 		{
-			IList<Project> projects = fixture.redmineManager.GetObjects<Project>(new NameValueCollection()
+			IList<Project> projects = fixture.RedmineManager.GetObjects<Project>(new NameValueCollection()
 				{
 					{RedmineKeys.INCLUDE, string.Join(",",RedmineKeys.TRACKERS,RedmineKeys.ISSUE_CATEGORIES,RedmineKeys.ENABLED_MODULES)}
 				});
@@ -160,7 +160,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Get_Project_News()
 		{
-			var news = fixture.redmineManager.GetObjects<News>(new NameValueCollection { { RedmineKeys.PROJECT_ID, PROJECT_IDENTIFIER } });
+			var news = fixture.RedmineManager.GetObjects<News>(new NameValueCollection { { RedmineKeys.PROJECT_ID, PROJECT_IDENTIFIER } });
 
 			Assert.NotNull(news);
 			Assert.True(news.Count == NUMBER_OF_NEWS_BY_PROJECT_ID, "News count != " + NUMBER_OF_NEWS_BY_PROJECT_ID);
@@ -184,7 +184,7 @@ namespace xUnitTestredminenet45api
 		        new ProjectEnabledModule {Name = NEW_PROJECT_ENABLED_MODULE_NAME}
 		    };
 
-		    Project savedProject = fixture.redmineManager.CreateObject<Project>(project);
+		    Project savedProject = fixture.RedmineManager.CreateObject<Project>(project);
 
 			Assert.NotNull(savedProject);
 			Assert.True(savedProject.Identifier.Equals(NEW_PROJECT_IDENTIFIER), "Project identifier is invalid.");
@@ -193,7 +193,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Update_Project()
 		{
-			var project = fixture.redmineManager.GetObject<Project>(UPDATED_PROJECT_IDENTIFIER, new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.TRACKERS + "," + RedmineKeys.ISSUE_CATEGORIES + "," + RedmineKeys.ENABLED_MODULES } });
+			var project = fixture.RedmineManager.GetObject<Project>(UPDATED_PROJECT_IDENTIFIER, new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.TRACKERS + "," + RedmineKeys.ISSUE_CATEGORIES + "," + RedmineKeys.ENABLED_MODULES } });
 			project.Name = UPDATED_PROJECT_NAME;
 			project.Description = UPDATED_PROJECT_DESCRIPTION;
 			project.HomePage = UPDATED_PROJECT_HOMEPAGE;
@@ -202,9 +202,9 @@ namespace xUnitTestredminenet45api
 			project.InheritMembers = UPDATED_PROJECT_INHERIT_MEMBERS;
 			project.Trackers = UPDATED_PROJECT_TRACKERS;
 
-			fixture.redmineManager.UpdateObject<Project>(UPDATED_PROJECT_IDENTIFIER, project);
+			fixture.RedmineManager.UpdateObject<Project>(UPDATED_PROJECT_IDENTIFIER, project);
 
-			var updatedProject = fixture.redmineManager.GetObject<Project>(UPDATED_PROJECT_IDENTIFIER, new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.TRACKERS + "," + RedmineKeys.ISSUE_CATEGORIES + "," + RedmineKeys.ENABLED_MODULES } });
+			var updatedProject = fixture.RedmineManager.GetObject<Project>(UPDATED_PROJECT_IDENTIFIER, new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.TRACKERS + "," + RedmineKeys.ISSUE_CATEGORIES + "," + RedmineKeys.ENABLED_MODULES } });
 
 			Assert.NotNull(updatedProject);
 			Assert.True(updatedProject.Name.Equals(UPDATED_PROJECT_NAME), "Project name was not updated.");
@@ -213,16 +213,16 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Delete_Project()
 		{
-			RedmineException exception = (RedmineException)Record.Exception(() => fixture.redmineManager.DeleteObject<Project>(DELETED_PROJECT_IDENTIFIER, null));
+			RedmineException exception = (RedmineException)Record.Exception(() => fixture.RedmineManager.DeleteObject<Project>(DELETED_PROJECT_IDENTIFIER, null));
 			Assert.Null (exception);
-			Assert.Throws<NotFoundException>(() => fixture.redmineManager.GetObject<Project>(DELETED_PROJECT_IDENTIFIER, null));
+			Assert.Throws<NotFoundException>(() => fixture.RedmineManager.GetObject<Project>(DELETED_PROJECT_IDENTIFIER, null));
 		}
 
 		[Fact]
 		public void Should_Compare_Projects()
 		{
-			var project = fixture.redmineManager.GetObject<Project>(PROJECT_IDENTIFIER, new NameValueCollection() { { RedmineKeys.INCLUDE, RedmineKeys.TRACKERS + "," + RedmineKeys.ISSUE_CATEGORIES + "," + RedmineKeys.ENABLED_MODULES } });
-			var projectToCompare = fixture.redmineManager.GetObject<Project>(PROJECT_IDENTIFIER, new NameValueCollection() { { RedmineKeys.INCLUDE, RedmineKeys.TRACKERS + "," + RedmineKeys.ISSUE_CATEGORIES + "," + RedmineKeys.ENABLED_MODULES } });
+			var project = fixture.RedmineManager.GetObject<Project>(PROJECT_IDENTIFIER, new NameValueCollection() { { RedmineKeys.INCLUDE, RedmineKeys.TRACKERS + "," + RedmineKeys.ISSUE_CATEGORIES + "," + RedmineKeys.ENABLED_MODULES } });
+			var projectToCompare = fixture.RedmineManager.GetObject<Project>(PROJECT_IDENTIFIER, new NameValueCollection() { { RedmineKeys.INCLUDE, RedmineKeys.TRACKERS + "," + RedmineKeys.ISSUE_CATEGORIES + "," + RedmineKeys.ENABLED_MODULES } });
 
 			Assert.NotNull(project);
 			Assert.True(project.Equals(projectToCompare), "Compared projects are not equal.");

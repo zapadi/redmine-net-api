@@ -85,6 +85,13 @@ namespace Redmine.Net.Api.Internals
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="obj"></param>
+        /// <param name="mimeFormat"></param>
+        /// <returns></returns>
         public static string Serialize<T>(T obj, MimeFormat mimeFormat) where T : class, new()
         {
             return ToXML(obj);
@@ -104,6 +111,13 @@ namespace Redmine.Net.Api.Internals
             return FromXML<T>(response);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="response"></param>
+        /// <param name="mimeFormat"></param>
+        /// <returns></returns>
         public static PaginatedObjects<T> DeserializeList<T>(string response, MimeFormat mimeFormat) where T : class, new()
         {
             if (string.IsNullOrEmpty(response)) throw new RedmineException("web response is null!");

@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2016 Adrian Popescu.
+   Copyright 2011 - 2016 Adrian Popescu
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -14,10 +14,17 @@
    limitations under the License.
 */
 
-namespace Redmine.Net.Api.Logging
+using System.Collections.Specialized;
+
+namespace Redmine.Net.Api.Extensions
 {
-    public interface ILogger
+    public static class NameValueCollectionExtensions
     {
-        void Log(LogEntry entry);
+        public static string GetParameterValue(this NameValueCollection parameters, string parameterName)
+        {
+            if (parameters == null) return null;
+            var value = parameters.Get(parameterName);
+            return string.IsNullOrEmpty(value) ? null : value;
+        }
     }
 }

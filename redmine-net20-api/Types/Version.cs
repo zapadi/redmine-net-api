@@ -153,14 +153,14 @@ namespace Redmine.Net.Api.Types
             unchecked
             {
                 var hashCode = base.GetHashCode();
-                hashCode = Utils.GetHashCode(Project, hashCode);
-                hashCode = Utils.GetHashCode(Description, hashCode);
-                hashCode = Utils.GetHashCode(Status, hashCode);
-                hashCode = Utils.GetHashCode(DueDate, hashCode);
-                hashCode = Utils.GetHashCode(Sharing, hashCode);
-                hashCode = Utils.GetHashCode(CreatedOn, hashCode);
-                hashCode = Utils.GetHashCode(UpdatedOn, hashCode);
-                hashCode = Utils.GetHashCode(CustomFields, hashCode);
+                hashCode = HashCodeExtensions.GetHashCode(Project, hashCode);
+                hashCode = HashCodeExtensions.GetHashCode(Description, hashCode);
+                hashCode = HashCodeExtensions.GetHashCode(Status, hashCode);
+                hashCode = HashCodeExtensions.GetHashCode(DueDate, hashCode);
+                hashCode = HashCodeExtensions.GetHashCode(Sharing, hashCode);
+                hashCode = HashCodeExtensions.GetHashCode(CreatedOn, hashCode);
+                hashCode = HashCodeExtensions.GetHashCode(UpdatedOn, hashCode);
+                hashCode = HashCodeExtensions.GetHashCode(CustomFields, hashCode);
                 return hashCode;
             }
         }

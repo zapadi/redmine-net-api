@@ -19,7 +19,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Get_All_TimeEntryActivities()
 		{
-			var timeEntryActivities = fixture.redmineManager.GetObjects<TimeEntryActivity>(null);
+			var timeEntryActivities = fixture.RedmineManager.GetObjects<TimeEntryActivity>(null);
 
 			Assert.NotNull(timeEntryActivities);
 			Assert.True(timeEntryActivities.Count == NUMBER_OF_TIME_ENTRY_ACTIVITIES, "Time entry activities count != " + NUMBER_OF_TIME_ENTRY_ACTIVITIES);

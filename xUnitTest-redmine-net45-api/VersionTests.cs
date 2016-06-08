@@ -41,7 +41,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Get_Versions_By_Project_Id()
 		{
-			var versions = fixture.redmineManager.GetObjects<Redmine.Net.Api.Types.Version>(new NameValueCollection { { RedmineKeys.PROJECT_ID, PROJECT_ID } });
+			var versions = fixture.RedmineManager.GetObjects<Redmine.Net.Api.Types.Version>(new NameValueCollection { { RedmineKeys.PROJECT_ID, PROJECT_ID } });
 
 			Assert.NotNull(versions);
 			Assert.NotEmpty (versions);
@@ -59,7 +59,7 @@ namespace xUnitTestredminenet45api
 			version.DueDate = NEW_VERSION_DUE_DATE;
 			version.Description = NEW_VERSION_DESCRIPTION;
 
-			Redmine.Net.Api.Types.Version savedVersion = fixture.redmineManager.CreateObject<Redmine.Net.Api.Types.Version>(version, PROJECT_ID);
+			Redmine.Net.Api.Types.Version savedVersion = fixture.RedmineManager.CreateObject<Redmine.Net.Api.Types.Version>(version, PROJECT_ID);
 
 			Assert.NotNull(savedVersion);
 			Assert.NotNull(savedVersion.Project);
@@ -74,7 +74,7 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Get_Version_By_Id()
 		{
-			Redmine.Net.Api.Types.Version version = fixture.redmineManager.GetObject<Redmine.Net.Api.Types.Version>(VERSION_ID, null);
+			Redmine.Net.Api.Types.Version version = fixture.RedmineManager.GetObject<Redmine.Net.Api.Types.Version>(VERSION_ID, null);
 
 			Assert.NotNull(version);
 		}
@@ -82,8 +82,8 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Compare_Versions()
 		{
-			Redmine.Net.Api.Types.Version version = fixture.redmineManager.GetObject<Redmine.Net.Api.Types.Version>(VERSION_ID, null);
-			Redmine.Net.Api.Types.Version versionToCompare = fixture.redmineManager.GetObject<Redmine.Net.Api.Types.Version>(VERSION_ID, null);
+			Redmine.Net.Api.Types.Version version = fixture.RedmineManager.GetObject<Redmine.Net.Api.Types.Version>(VERSION_ID, null);
+			Redmine.Net.Api.Types.Version versionToCompare = fixture.RedmineManager.GetObject<Redmine.Net.Api.Types.Version>(VERSION_ID, null);
 
 			Assert.NotNull(version);
 			Assert.True(version.Equals(versionToCompare), "Versions are not equal.");
@@ -93,16 +93,16 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Update_Version()
 		{
-			Redmine.Net.Api.Types.Version version = fixture.redmineManager.GetObject<Redmine.Net.Api.Types.Version>(UPDATED_VERSION_ID, null);
+			Redmine.Net.Api.Types.Version version = fixture.RedmineManager.GetObject<Redmine.Net.Api.Types.Version>(UPDATED_VERSION_ID, null);
 			version.Name = UPDATED_VERSION_NAME;
 			version.Status = UPDATED_VERSION_STATUS;
 			version.Sharing = UPDATED_VERSION_SHARING;
 			version.DueDate = UPDATED_VERSION_DUE_DATE;
 			version.Description = UPDATED_VERSION_DESCRIPTION;
 
-			fixture.redmineManager.UpdateObject<Redmine.Net.Api.Types.Version>(UPDATED_VERSION_ID, version);
+			fixture.RedmineManager.UpdateObject<Redmine.Net.Api.Types.Version>(UPDATED_VERSION_ID, version);
 
-			Redmine.Net.Api.Types.Version updatedVersion = fixture.redmineManager.GetObject<Redmine.Net.Api.Types.Version>(UPDATED_VERSION_ID, null);
+			Redmine.Net.Api.Types.Version updatedVersion = fixture.RedmineManager.GetObject<Redmine.Net.Api.Types.Version>(UPDATED_VERSION_ID, null);
 
 			Assert.NotNull(version);
 			Assert.True (updatedVersion.Name.Equals (version.Name), "Version name not updated.");
@@ -115,9 +115,9 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public void Should_Delete_Version()
 		{
-			RedmineException exception = (RedmineException)Record.Exception(() => fixture.redmineManager.DeleteObject<Redmine.Net.Api.Types.Version>(DELETED_VERSION_ID, null));
+			RedmineException exception = (RedmineException)Record.Exception(() => fixture.RedmineManager.DeleteObject<Redmine.Net.Api.Types.Version>(DELETED_VERSION_ID, null));
 			Assert.Null (exception);
-			Assert.Throws<NotFoundException>(() => fixture.redmineManager.GetObject<Redmine.Net.Api.Types.Version>(DELETED_VERSION_ID, null));
+			Assert.Throws<NotFoundException>(() => fixture.RedmineManager.GetObject<Redmine.Net.Api.Types.Version>(DELETED_VERSION_ID, null));
 		}
 	}
 }
