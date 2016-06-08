@@ -22,12 +22,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
+    <DebugType>none</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\redmine-net40-api-signed.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -71,7 +72,7 @@
     <Compile Include="..\redmine-net20-api\Internals\DataHelper.cs">
       <Link>Internals\DataHelper.cs</Link>
     </Compile>
-<Compile Include="..\redmine-net20-api\Extensions\XmlWriterExtensions.cs">
+    <Compile Include="..\redmine-net20-api\Extensions\XmlWriterExtensions.cs">
       <Link>Extensions\XmlWriterExtensions.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net20-api\Extensions\NameValueCollectionExtensions.cs">

@@ -23,12 +23,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
+    <DebugType>none</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\redmine-net40-api.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugXML|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -69,7 +70,6 @@
     <Compile Include="..\redmine-net20-api\Internals\UrlHelper.cs">
       <Link>Internals\UrlHelper.cs</Link>
     </Compile>
-
     <Compile Include="..\redmine-net20-api\Internals\DataHelper.cs">
       <Link>Internals\DataHelper.cs</Link>
     </Compile>
@@ -79,7 +79,6 @@
     <Compile Include="..\redmine-net20-api\HttpVerbs.cs">
       <Link>HttpVerbs.cs</Link>
     </Compile>
-
     <Compile Include="..\redmine-net20-api\Internals\HashCodeExtensions.cs">
       <Link>Extensions\HashCodeExtensions.cs</Link>
     </Compile>
