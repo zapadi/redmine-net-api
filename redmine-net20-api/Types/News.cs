@@ -126,12 +126,12 @@ namespace Redmine.Net.Api.Types
             unchecked
             {
                 var hashCode = base.GetHashCode();
-                hashCode = HashCodeExtensions.GetHashCode(Project, hashCode);
-                hashCode = HashCodeExtensions.GetHashCode(Author, hashCode);
-                hashCode = HashCodeExtensions.GetHashCode(Title, hashCode);
-                hashCode = HashCodeExtensions.GetHashCode(Summary, hashCode);
-                hashCode = HashCodeExtensions.GetHashCode(Description, hashCode);
-                hashCode = HashCodeExtensions.GetHashCode(CreatedOn, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Project, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Author, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Title, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Summary, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Description, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(CreatedOn, hashCode);
                 return hashCode;
             }
         }

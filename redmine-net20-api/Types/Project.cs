@@ -206,19 +206,19 @@ namespace Redmine.Net.Api.Types
         public override int GetHashCode()
         {
             var hashCode = base.GetHashCode();
-            hashCode = HashCodeExtensions.GetHashCode(Identifier, hashCode);
-            hashCode = HashCodeExtensions.GetHashCode(Description, hashCode);
-            hashCode = HashCodeExtensions.GetHashCode(Parent, hashCode);
-            hashCode = HashCodeExtensions.GetHashCode(HomePage, hashCode);
-            hashCode = HashCodeExtensions.GetHashCode(CreatedOn, hashCode);
-            hashCode = HashCodeExtensions.GetHashCode(UpdatedOn, hashCode);
-            hashCode = HashCodeExtensions.GetHashCode(Status, hashCode);
-            hashCode = HashCodeExtensions.GetHashCode(IsPublic, hashCode);
-            hashCode = HashCodeExtensions.GetHashCode(InheritMembers, hashCode);
-            hashCode = HashCodeExtensions.GetHashCode(Trackers, hashCode);
-            hashCode = HashCodeExtensions.GetHashCode(CustomFields, hashCode);
-            hashCode = HashCodeExtensions.GetHashCode(IssueCategories, hashCode);
-            hashCode = HashCodeExtensions.GetHashCode(EnabledModules, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(Identifier, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(Description, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(Parent, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(HomePage, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(CreatedOn, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(UpdatedOn, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(Status, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(IsPublic, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(InheritMembers, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(Trackers, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(CustomFields, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(IssueCategories, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(EnabledModules, hashCode);
 
             return hashCode;
         }

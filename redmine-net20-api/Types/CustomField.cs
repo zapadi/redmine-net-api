@@ -159,22 +159,22 @@ namespace Redmine.Net.Api.Types
             unchecked
             {
                 var hashCode = 13;
-                hashCode = HashCodeExtensions.GetHashCode(Id,hashCode);
-				hashCode = HashCodeExtensions.GetHashCode(IsFilter,hashCode);
-				hashCode = HashCodeExtensions.GetHashCode(IsRequired,hashCode);
-				hashCode = HashCodeExtensions.GetHashCode(Multiple,hashCode);
-				hashCode = HashCodeExtensions.GetHashCode(Searchable,hashCode);
-				hashCode = HashCodeExtensions.GetHashCode(Visible,hashCode);
-				hashCode = HashCodeExtensions.GetHashCode(CustomizedType,hashCode);
-				hashCode = HashCodeExtensions.GetHashCode(DefaultValue,hashCode);
-				hashCode = HashCodeExtensions.GetHashCode(FieldFormat,hashCode);
-				hashCode = HashCodeExtensions.GetHashCode(MaxLength,hashCode);
-				hashCode = HashCodeExtensions.GetHashCode(MinLength,hashCode);
-				hashCode = HashCodeExtensions.GetHashCode(Name,hashCode);
-				hashCode = HashCodeExtensions.GetHashCode(Regexp,hashCode);
-				hashCode = HashCodeExtensions.GetHashCode(PossibleValues,hashCode);
-				hashCode = HashCodeExtensions.GetHashCode(Roles,hashCode);
-				hashCode = HashCodeExtensions.GetHashCode(Trackers,hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Id,hashCode);
+				hashCode = HashCodeHelper.GetHashCode(IsFilter,hashCode);
+				hashCode = HashCodeHelper.GetHashCode(IsRequired,hashCode);
+				hashCode = HashCodeHelper.GetHashCode(Multiple,hashCode);
+				hashCode = HashCodeHelper.GetHashCode(Searchable,hashCode);
+				hashCode = HashCodeHelper.GetHashCode(Visible,hashCode);
+				hashCode = HashCodeHelper.GetHashCode(CustomizedType,hashCode);
+				hashCode = HashCodeHelper.GetHashCode(DefaultValue,hashCode);
+				hashCode = HashCodeHelper.GetHashCode(FieldFormat,hashCode);
+				hashCode = HashCodeHelper.GetHashCode(MaxLength,hashCode);
+				hashCode = HashCodeHelper.GetHashCode(MinLength,hashCode);
+				hashCode = HashCodeHelper.GetHashCode(Name,hashCode);
+				hashCode = HashCodeHelper.GetHashCode(Regexp,hashCode);
+				hashCode = HashCodeHelper.GetHashCode(PossibleValues,hashCode);
+				hashCode = HashCodeHelper.GetHashCode(Roles,hashCode);
+				hashCode = HashCodeHelper.GetHashCode(Trackers,hashCode);
                 return hashCode;
             }
         }

@@ -76,7 +76,7 @@ namespace Redmine.Net.Api.Types
             unchecked
             {
                 var hashCode = 13;
-                hashCode = HashCodeExtensions.GetHashCode(Info, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Info, hashCode);
                 return hashCode;
             }
         }

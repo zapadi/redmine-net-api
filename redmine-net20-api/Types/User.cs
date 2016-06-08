@@ -222,20 +222,20 @@ namespace Redmine.Net.Api.Types
             unchecked
             {
                 var hashCode = base.GetHashCode();
-                hashCode = HashCodeExtensions.GetHashCode(Login, hashCode);
-                hashCode = HashCodeExtensions.GetHashCode(Password, hashCode);
-                hashCode = HashCodeExtensions.GetHashCode(FirstName, hashCode);
-                hashCode = HashCodeExtensions.GetHashCode(LastName, hashCode);
-                hashCode = HashCodeExtensions.GetHashCode(Email, hashCode);
-                hashCode = HashCodeExtensions.GetHashCode(AuthenticationModeId, hashCode);
-                hashCode = HashCodeExtensions.GetHashCode(CreatedOn, hashCode);
-                hashCode = HashCodeExtensions.GetHashCode(LastLoginOn, hashCode);
-                hashCode = HashCodeExtensions.GetHashCode(ApiKey, hashCode);
-                hashCode = HashCodeExtensions.GetHashCode(Status, hashCode);
-                hashCode = HashCodeExtensions.GetHashCode(MustChangePassword, hashCode);
-                hashCode = HashCodeExtensions.GetHashCode(CustomFields, hashCode);
-                hashCode = HashCodeExtensions.GetHashCode(Memberships, hashCode);
-                hashCode = HashCodeExtensions.GetHashCode(Groups, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Login, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Password, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(FirstName, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(LastName, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Email, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(AuthenticationModeId, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(CreatedOn, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(LastLoginOn, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(ApiKey, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Status, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(MustChangePassword, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(CustomFields, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Memberships, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Groups, hashCode);
                 return hashCode;
             }
         }
