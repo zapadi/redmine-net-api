@@ -1,12 +1,15 @@
-
+os: Visual Studio 2015
 version: 1.0.{build}
+# environment:
+#    COVERALLS_REPO_TOKEN:  
+#       secure: 8JYxwCWszeAaWBr41pD17LB925K7Sk7utvKsIb1qz44i2anf9uLmvh2q0ilMQTBO
 pull_requests:
   do_not_increment_build_number: true
 branches:
   only:
   - master
-configuration: Release
-platform: Any CPU
+#configuration: Release
+#platform: Any CPU
 assembly_info:
   patch: true
   file: '**\AssemblyInfo.*'
@@ -41,8 +44,7 @@ artifacts:
 
 # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified
 cache:
-  - packages -> **\packages.config
-  - '%LocalAppData%\NuGet\Cache'
+   - '%USERPROFILE%\.nuget\packages -> **\project.json'  # project.json cache
 
 deploy:
 - provider: NuGet
