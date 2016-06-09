@@ -10,12 +10,12 @@ branches:
   - master
 #configuration: Release
 #platform: Any CPU
-#assembly_info:
-#  patch: true
-#  file: '**\AssemblyInfo.*'
-#  assembly_version: '{version}'
-#  assembly_file_version: '{version}'
-#  assembly_informational_version: '{version}'
+assembly_info:
+  patch: true
+  file: '**\AssemblyInfo.*'
+  assembly_version: '{version}'
+  assembly_file_version: '{version}'
+  assembly_informational_version: '{version}'
 
 build_script:
   - Msbuild.exe redmine-net20-api/redmine-net20-api.csproj /verbosity:minimal /p:BuildNetFX20=true 
@@ -35,7 +35,7 @@ build:
   verbosity: detailed
 
 after_build:
-- nuget pack redmine-net-api.nuspec 
+- nuget pack redmine-net-api.nuspec -Version %appveyor_build_version%
 
 nuget:
   account_feed: true
