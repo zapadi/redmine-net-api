@@ -37,6 +37,10 @@ build:
 after_build:
 - nuget pack redmine-net-api.nuspec
 
+nuget:
+  account_feed: true
+  project_feed: true
+
 test: off
 
 artifacts:
