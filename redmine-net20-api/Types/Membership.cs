@@ -45,8 +45,16 @@ namespace Redmine.Net.Api.Types
         [XmlArrayItem(RedmineKeys.ROLE)]
         public List<MembershipRole> Roles { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public XmlSchema GetSchema() { return null; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
         public void ReadXml(XmlReader reader)
         {
             reader.Read();
@@ -71,8 +79,17 @@ namespace Redmine.Net.Api.Types
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
         public void WriteXml(XmlWriter writer) { }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public bool Equals(Membership other)
         {
             if (other == null) return false;
@@ -81,6 +98,10 @@ namespace Redmine.Net.Api.Types
                     (Roles != null ? Roles.Equals<MembershipRole>(other.Roles) : other.Roles == null));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override int GetHashCode()
         {
             unchecked
@@ -93,6 +114,10 @@ namespace Redmine.Net.Api.Types
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return string.Format("[Membership: {2}, Project={0}, Roles={1}]", Project, Roles, base.ToString());

@@ -86,6 +86,10 @@ namespace Redmine.Net.Api.Types
         [XmlArrayItem(RedmineKeys.CUSTOM_FIELD)]
         public IList<IssueCustomField> CustomFields { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
         public override void ReadXml(XmlReader reader)
         {
             reader.Read();
@@ -124,6 +128,10 @@ namespace Redmine.Net.Api.Types
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
         public override void WriteXml(XmlWriter writer)
         {
             writer.WriteElementString(RedmineKeys.NAME, Name);
@@ -134,6 +142,11 @@ namespace Redmine.Net.Api.Types
             writer.WriteElementString(RedmineKeys.DESCRIPTION, Description);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public bool Equals(Version other)
         {
             if (other == null) return false;
@@ -148,6 +161,10 @@ namespace Redmine.Net.Api.Types
                 && (CustomFields != null ? CustomFields.Equals<IssueCustomField>(other.CustomFields) : other.CustomFields == null));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override int GetHashCode()
         {
             unchecked
@@ -165,6 +182,10 @@ namespace Redmine.Net.Api.Types
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return string.Format("[Version: {8}, Project={0}, Description={1}, Status={2}, DueDate={3}, Sharing={4}, CreatedOn={5}, UpdatedOn={6}, CustomFields={7}]",
@@ -172,19 +193,49 @@ namespace Redmine.Net.Api.Types
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public enum VersionSharing
     {
+        /// <summary>
+        /// 
+        /// </summary>
         none = 1,
+        /// <summary>
+        /// 
+        /// </summary>
         descendants,
+        /// <summary>
+        /// 
+        /// </summary>
         hierarchy,
+        /// <summary>
+        /// 
+        /// </summary>
         tree,
+        /// <summary>
+        /// 
+        /// </summary>
         system
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public enum VersionStatus
     {
+        /// <summary>
+        /// 
+        /// </summary>
         open = 1,
+        /// <summary>
+        /// 
+        /// </summary>
         locked,
+        /// <summary>
+        /// 
+        /// </summary>
         closed
     }
 }

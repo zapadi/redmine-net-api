@@ -34,7 +34,11 @@ namespace Redmine.Net.Api.Types
         [XmlAttribute(RedmineKeys.ID)]
         public int Id { get; set; }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public bool Equals(Identifiable<T> other)
         {
             if (other == null) return false;
@@ -42,6 +46,11 @@ namespace Redmine.Net.Api.Types
             return Id == other.Id;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
@@ -50,6 +59,10 @@ namespace Redmine.Net.Api.Types
             return Equals(obj as Identifiable<T>);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override int GetHashCode()
         {
             unchecked
@@ -60,16 +73,32 @@ namespace Redmine.Net.Api.Types
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
         public static bool operator ==(Identifiable<T> left, Identifiable<T> right)
         {
             return Equals(left, right);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
         public static bool operator !=(Identifiable<T> left, Identifiable<T> right)
         {
             return !Equals(left, right);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return string.Format("[Identifiable: Id={0}]", Id);

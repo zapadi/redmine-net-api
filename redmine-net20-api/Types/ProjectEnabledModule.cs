@@ -25,14 +25,19 @@ namespace Redmine.Net.Api.Types
  public class ProjectEnabledModule : IdentifiableName, IValue
     {
         #region IValue implementation
-
+        /// <summary>
+        /// 
+        /// </summary>
         public string Value
         {
             get { return Name; }
         }
 
         #endregion
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return string.Format("[ProjectEnabledModule: {0}]", base.ToString());

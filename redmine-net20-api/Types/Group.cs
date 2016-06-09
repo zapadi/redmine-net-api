@@ -117,6 +117,11 @@ namespace Redmine.Net.Api.Types
                 && (Memberships != null ? Memberships.Equals<Membership>(other.Memberships) : other.Memberships == null);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
@@ -125,6 +130,10 @@ namespace Redmine.Net.Api.Types
             return Equals(obj as Group);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override int GetHashCode()
         {
             unchecked
@@ -141,11 +150,20 @@ namespace Redmine.Net.Api.Types
 
         #endregion
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return string.Format("[Group: Id={0}, Name={1}, Users={2}, CustomFields={3}, Memberships={4}]", Id, Name, Users, CustomFields, Memberships);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="gu"></param>
+        /// <returns></returns>
         public int GetGroupUserId(object gu)
         {
             return ((GroupUser)gu).Id;

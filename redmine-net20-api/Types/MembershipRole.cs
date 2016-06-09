@@ -49,17 +49,30 @@ namespace Redmine.Net.Api.Types
             reader.Read();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
         public override void WriteXml(XmlWriter writer)
         {
             writer.WriteValue(Id);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public bool Equals(MembershipRole other)
         {
             if (other == null) return false;
             return Id == other.Id && Name == other.Name && Inherited == other.Inherited;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override int GetHashCode()
         {
             unchecked
@@ -72,6 +85,10 @@ namespace Redmine.Net.Api.Types
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return string.Format("[MembershipRole: {1}, Inherited={0}]", Inherited, base.ToString());

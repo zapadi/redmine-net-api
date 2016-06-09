@@ -56,6 +56,10 @@ namespace Redmine.Net.Api.Types
         [XmlElement(RedmineKeys.DESCRIPTION)]
         public string Description { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public XmlSchema GetSchema() { return null; }
 
         public bool Equals(Upload other)
@@ -67,6 +71,11 @@ namespace Redmine.Net.Api.Types
                 && ContentType.Equals(other.ContentType);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
@@ -75,6 +84,10 @@ namespace Redmine.Net.Api.Types
             return Equals(obj as Upload);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override int GetHashCode()
         {
             unchecked
@@ -88,6 +101,10 @@ namespace Redmine.Net.Api.Types
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return string.Format("[Upload: Token={0}, FileName={1}, ContentType={2}, Description={3}]", Token, FileName, ContentType, Description);

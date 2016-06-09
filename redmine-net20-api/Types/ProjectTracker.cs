@@ -29,6 +29,10 @@ namespace Redmine.Net.Api.Types
         /// </summary>
 		public string Value{get{return Id.ToString ();}}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
 		public override string ToString ()
 		{
 			return string.Format ("[ProjectTracker: {0}]", base.ToString());

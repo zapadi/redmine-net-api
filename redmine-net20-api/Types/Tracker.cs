@@ -68,6 +68,12 @@ namespace Redmine.Net.Api.Types
 
             return Id == other.Id && Name == other.Name;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
@@ -76,6 +82,10 @@ namespace Redmine.Net.Api.Types
             return Equals(obj as Tracker);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override int GetHashCode()
         {
             unchecked
@@ -86,6 +96,11 @@ namespace Redmine.Net.Api.Types
                 return hashCode;
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return string.Format("[Tracker: Id={0}, Name={1}]", Id, Name);

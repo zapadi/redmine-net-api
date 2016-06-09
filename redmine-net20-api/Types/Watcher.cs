@@ -26,7 +26,9 @@ namespace Redmine.Net.Api.Types
     public class Watcher : IdentifiableName, IValue, ICloneable
     {
         #region IValue implementation
-
+        /// <summary>
+        /// 
+        /// </summary>
         public string Value
         {
             get
@@ -37,11 +39,19 @@ namespace Redmine.Net.Api.Types
 
         #endregion
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return string.Format("[Watcher: {0}]", base.ToString());
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public object Clone()
         {
             var watcher = new Watcher { Id = Id, Name = Name };

@@ -4,8 +4,16 @@ using Redmine.Net.Api.Types;
 
 namespace Redmine.Net.Api.Async
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public delegate void Task();
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TRes"></typeparam>
+    /// <returns></returns>
     public delegate TRes Task<out TRes>();
 
     public static class RedmineManagerAsync

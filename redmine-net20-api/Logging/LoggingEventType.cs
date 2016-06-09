@@ -21,10 +21,25 @@ namespace Redmine.Net.Api.Logging
     /// </summary>
     public enum LoggingEventType
     {
+        /// <summary>
+        /// 
+        /// </summary>
         Debug,
+        /// <summary>
+        /// 
+        /// </summary>
         Information,
+        /// <summary>
+        /// 
+        /// </summary>
         Warning,
+        /// <summary>
+        /// 
+        /// </summary>
         Error,
+        /// <summary>
+        /// 
+        /// </summary>
         Fatal
     };
 }

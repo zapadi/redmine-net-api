@@ -134,11 +134,19 @@ namespace Redmine.Net.Api.Types
         [XmlArrayItem(RedmineKeys.GROUP)]
         public List<UserGroup> Groups { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public XmlSchema GetSchema()
         {
             return null;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
         public void ReadXml(XmlReader reader)
         {
             reader.Read();
@@ -185,6 +193,10 @@ namespace Redmine.Net.Api.Types
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
         public void WriteXml(XmlWriter writer)
         {
             writer.WriteElementString(RedmineKeys.LOGIN, Login);
@@ -198,6 +210,11 @@ namespace Redmine.Net.Api.Types
             writer.WriteArray(CustomFields, RedmineKeys.CUSTOM_FIELDS);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public bool Equals(User other)
         {
             if (other == null) return false;
@@ -220,6 +237,10 @@ namespace Redmine.Net.Api.Types
             );
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override int GetHashCode()
         {
             unchecked
@@ -243,6 +264,10 @@ namespace Redmine.Net.Api.Types
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return string.Format("[User: {14}, Login={0}, Password={1}, FirstName={2}, LastName={3}, Email={4}, AuthenticationModeId={5}, CreatedOn={6}, LastLoginOn={7}, ApiKey={8}, Status={9}, MustChangePassword={10}, CustomFields={11}, Memberships={12}, Groups={13}]",

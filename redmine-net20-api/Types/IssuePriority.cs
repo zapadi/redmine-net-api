@@ -63,12 +63,20 @@ namespace Redmine.Net.Api.Types
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
         public override void WriteXml(XmlWriter writer) { }
 
         #endregion
 
         #region Implementation of IEquatable<IssuePriority>
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public bool Equals(IssuePriority other)
         {
             if (other == null) return false;
@@ -76,6 +84,11 @@ namespace Redmine.Net.Api.Types
             return Id == other.Id && Name == other.Name && IsDefault == other.IsDefault;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
@@ -84,6 +97,10 @@ namespace Redmine.Net.Api.Types
             return Equals(obj as IssuePriority);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override int GetHashCode()
         {
             unchecked
@@ -96,6 +113,10 @@ namespace Redmine.Net.Api.Types
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return string.Format("[IssuePriority: Id={0}, Name={1}, IsDefault={2}]", Id, Name, IsDefault);

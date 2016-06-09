@@ -24,6 +24,10 @@ namespace Redmine.Net.Api.Types
     [XmlRoot(RedmineKeys.USER)]
     public class GroupUser : IdentifiableName
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
 		public override string ToString ()
 		{
 			return string.Format ("[GroupUser: {0}]", base.ToString());
