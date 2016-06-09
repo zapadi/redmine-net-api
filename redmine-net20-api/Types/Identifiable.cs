@@ -75,9 +75,4 @@ namespace Redmine.Net.Api.Types
             return string.Format("[Identifiable: Id={0}]", Id);
         }
     }
-
-    public interface Identifiable
-    {
-        int Id { get; set; }
-    }
 }

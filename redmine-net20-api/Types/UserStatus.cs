@@ -16,11 +16,26 @@
 
 namespace Redmine.Net.Api.Types
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public enum UserStatus
     {
+        /// <summary>
+        /// 
+        /// </summary>
         STATUS_ANONYMOUS = 0,
+        /// <summary>
+        /// 
+        /// </summary>
         STATUS_ACTIVE = 1,
+        /// <summary>
+        /// 
+        /// </summary>
         STATUS_REGISTERED = 2,
+        /// <summary>
+        /// 
+        /// </summary>
         STATUS_LOCKED = 3
     }
 }

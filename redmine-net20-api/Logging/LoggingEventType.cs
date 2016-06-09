@@ -16,6 +16,9 @@
 
 namespace Redmine.Net.Api.Logging
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public enum LoggingEventType
     {
         Debug,

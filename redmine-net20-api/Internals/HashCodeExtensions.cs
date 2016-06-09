@@ -18,6 +18,9 @@ using System.Collections.Generic;
 
 namespace Redmine.Net.Api.Internals
 {
+    /// <summary>
+    /// 
+    /// </summary>
     internal static class HashCodeHelper
     {
         /// <summary>

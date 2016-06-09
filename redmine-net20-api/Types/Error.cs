@@ -22,9 +22,15 @@ using Redmine.Net.Api.Internals;
 
 namespace Redmine.Net.Api.Types
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [XmlRoot(RedmineKeys.ERROR)]
     public class Error : IXmlSerializable, IEquatable<Error>
     {
+        /// <summary>
+        /// 
+        /// </summary>
         [XmlText]
         public string Info { get; set; }
 

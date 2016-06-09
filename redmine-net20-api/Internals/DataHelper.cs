@@ -21,6 +21,12 @@ namespace Redmine.Net.Api.Internals
     /// </summary>
     internal static class DataHelper
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="mimeFormat"></param>
+        /// <returns></returns>
         public static string UserData(int userId, MimeFormat mimeFormat)
         {
             return mimeFormat == MimeFormat.Xml

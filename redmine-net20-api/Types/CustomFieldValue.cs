@@ -20,9 +20,15 @@ using Redmine.Net.Api.Internals;
 
 namespace Redmine.Net.Api.Types
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [XmlRoot(RedmineKeys.VALUE)]
     public class CustomFieldValue : IEquatable<CustomFieldValue>, ICloneable
     {
+        /// <summary>
+        /// 
+        /// </summary>
         [XmlText]
         public string Info { get; set; }
 

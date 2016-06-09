@@ -16,17 +16,27 @@
 
 namespace Redmine.Net.Api.Logging
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class Logger
     {
         static readonly object locker = new object();
         private static ILogger logger;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public static ILogger Current
         {
             get { return logger ?? (logger = new ConsoleLogger()); }
             private set { logger = value; }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="logger"></param>
         public static void UseLogger(ILogger logger)
         {
             lock (locker)

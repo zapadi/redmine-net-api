@@ -18,11 +18,18 @@ using System;
 
 namespace Redmine.Net.Api.Logging
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class ColorConsoleLogger : ILogger
     {
         private static readonly object locker = new object();
         private readonly ConsoleColor? defaultConsoleColor = null;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entry"></param>
         public void Log(LogEntry entry)
         {
             lock (locker)

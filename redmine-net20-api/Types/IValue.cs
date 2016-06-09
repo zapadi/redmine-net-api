@@ -16,8 +16,14 @@
 
 namespace Redmine.Net.Api.Types
 {
-
-	public interface IValue{
+    /// <summary>
+    /// 
+    /// </summary>
+	public interface IValue
+    {
+        /// <summary>
+        /// 
+        /// </summary>
 		string Value{ get;}
 	}
 }

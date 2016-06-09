@@ -16,10 +16,22 @@
 
 namespace Redmine.Net.Api.Types
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public enum ProjectStatus
     {
+        /// <summary>
+        /// 
+        /// </summary>
         Active = 1,
+        /// <summary>
+        /// 
+        /// </summary>
         Closed = 5,
+        /// <summary>
+        /// 
+        /// </summary>
         Archived = 9
     }
 }

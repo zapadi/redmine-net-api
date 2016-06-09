@@ -19,15 +19,26 @@ using System.Diagnostics;
 
 namespace Redmine.Net.Api.Logging
 {
+    /// <summary>
+    /// 
+    /// </summary>
 	public class RedmineConsoleTraceListener : TraceListener
 	{
 		#region implemented abstract members of TraceListener
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
 		public override void Write (string message)
 		{
 			Console.Write(message);
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
 		public override void WriteLine (string message)
 		{
 			Console.WriteLine(message);
@@ -35,12 +46,29 @@ namespace Redmine.Net.Api.Logging
 
 		#endregion
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="eventCache"></param>
+        /// <param name="source"></param>
+        /// <param name="eventType"></param>
+        /// <param name="id"></param>
+        /// <param name="message"></param>
 		public override void TraceEvent(TraceEventCache eventCache, string source, TraceEventType eventType, int id,
 			string message)
 		{
 			WriteLine(message);
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="eventCache"></param>
+        /// <param name="source"></param>
+        /// <param name="eventType"></param>
+        /// <param name="id"></param>
+        /// <param name="format"></param>
+        /// <param name="args"></param>
 		public override void TraceEvent(TraceEventCache eventCache, string source, TraceEventType eventType, int id,
 			string format, params object[] args)
 		{

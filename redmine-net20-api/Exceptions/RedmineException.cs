@@ -19,6 +19,9 @@ using System.Runtime.Serialization;
 
 namespace Redmine.Net.Api.Exceptions
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class RedmineException : Exception
     {
         public RedmineException()

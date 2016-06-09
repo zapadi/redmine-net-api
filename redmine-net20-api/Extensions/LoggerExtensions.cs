@@ -18,18 +18,33 @@ using Redmine.Net.Api.Logging;
 
 namespace Redmine.Net.Api.Extensions
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class LoggerExtensions
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="redmineManager"></param>
         public static void UseConsoleLog(this RedmineManager redmineManager)
         {
             Logger.UseLogger(new ConsoleLogger());
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="redmineManager"></param>
         public static void UseColorConsoleLog(this RedmineManager redmineManager)
         {
             Logger.UseLogger(new ColorConsoleLogger());
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="redmineManager"></param>
         public static void UseTraceLog(this RedmineManager redmineManager)
         {
             Logger.UseLogger(new TraceLogger());

@@ -19,6 +19,9 @@ using System.Runtime.Serialization;
 
 namespace Redmine.Net.Api.Exceptions
 {
+    /// <summary>
+    /// 
+    /// </summary>
 	public class InternalServerErrorException : RedmineException
 	{
 		public InternalServerErrorException()
@@ -40,4 +43,3 @@ namespace Redmine.Net.Api.Exceptions
 			: base(info, context) { }
 	}
 }
-

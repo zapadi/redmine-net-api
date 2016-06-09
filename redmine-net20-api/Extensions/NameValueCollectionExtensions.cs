@@ -18,8 +18,17 @@ using System.Collections.Specialized;
 
 namespace Redmine.Net.Api.Extensions
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class NameValueCollectionExtensions
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parameters"></param>
+        /// <param name="parameterName"></param>
+        /// <returns></returns>
         public static string GetParameterValue(this NameValueCollection parameters, string parameterName)
         {
             if (parameters == null) return null;

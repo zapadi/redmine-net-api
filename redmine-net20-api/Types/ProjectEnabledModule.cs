@@ -18,12 +18,11 @@ using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
-
-    [XmlRoot(RedmineKeys.ENABLED_MODULE)]
     /// <summary>
     /// the module name: boards, calendar, documents, files, gantt, issue_tracking, news, repository, time_tracking, wiki.
     /// </summary>
-    public class ProjectEnabledModule : IdentifiableName, IValue
+    [XmlRoot(RedmineKeys.ENABLED_MODULE)]
+ public class ProjectEnabledModule : IdentifiableName, IValue
     {
         #region IValue implementation
 

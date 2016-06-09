@@ -18,12 +18,23 @@ using System.Collections.Generic;
 
 namespace Redmine.Net.Api.Types
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class PaginatedObjects<T>
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public List<T> Objects { get; set; }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public int TotalCount { get; set; }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public int Offset { get; set; }
     }
 }

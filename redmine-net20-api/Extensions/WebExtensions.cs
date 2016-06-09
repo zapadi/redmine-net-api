@@ -25,6 +25,9 @@ using Redmine.Net.Api.Exceptions;
 
 namespace Redmine.Net.Api.Extensions
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class WebExtensions
     {
         /// <summary>

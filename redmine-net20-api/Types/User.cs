@@ -100,6 +100,9 @@ namespace Redmine.Net.Api.Types
         [XmlElement(RedmineKeys.STATUS, IsNullable = true)]
         public UserStatus Status { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [XmlElement(RedmineKeys.MUST_CHANGE_PASSWD, IsNullable = true)]
         public bool MustChangePassword { get; set; }
 

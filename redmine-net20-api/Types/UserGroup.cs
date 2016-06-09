@@ -18,6 +18,9 @@ using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [XmlRoot(RedmineKeys.GROUP)]
     public class UserGroup : IdentifiableName
     {

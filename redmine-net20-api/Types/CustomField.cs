@@ -24,50 +24,95 @@ using Redmine.Net.Api.Internals;
 
 namespace Redmine.Net.Api.Types
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [XmlRoot(RedmineKeys.CUSTOM_FIELD)]
     public class CustomField : IdentifiableName, IEquatable<CustomField>
     {
+        /// <summary>
+        /// 
+        /// </summary>
         [XmlElement(RedmineKeys.CUSTOMIZED_TYPE)]
         public string CustomizedType { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [XmlElement(RedmineKeys.FIELD_FORMAT)]
         public string FieldFormat { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [XmlElement(RedmineKeys.REGEXP)]
         public string Regexp { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [XmlElement(RedmineKeys.MIN_LENGTH)]
         public int? MinLength { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [XmlElement(RedmineKeys.MAX_LENGTH)]
         public int? MaxLength { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [XmlElement(RedmineKeys.IS_REQUIRED)]
         public bool IsRequired { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [XmlElement(RedmineKeys.IS_FILTER)]
         public bool IsFilter { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [XmlElement(RedmineKeys.SEARCHABLE)]
         public bool Searchable { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [XmlElement(RedmineKeys.MULTIPLE)]
         public bool Multiple { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [XmlElement(RedmineKeys.DEFAULT_VALUE)]
         public string DefaultValue { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [XmlElement(RedmineKeys.VISIBLE)]
         public bool Visible { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [XmlArray(RedmineKeys.POSSIBLE_VALUES)]
         [XmlArrayItem(RedmineKeys.POSSIBLE_VALUE)]
         public IList<CustomFieldPossibleValue> PossibleValues { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [XmlArray(RedmineKeys.TRACKERS)]
         [XmlArrayItem(RedmineKeys.TRACKER)]
         public IList<TrackerCustomField> Trackers { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [XmlArray(RedmineKeys.ROLES)]
         [XmlArrayItem(RedmineKeys.ROLE)]
         public IList<CustomFieldRole> Roles { get; set; }

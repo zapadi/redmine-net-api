@@ -207,12 +207,22 @@ namespace Redmine.Net.Api
             return WebApiHelper.ExecuteDownload<User>(this, url, "GetCurrentUser", parameters);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="issueId"></param>
+        /// <param name="userId"></param>
         public void AddWatcherToIssue(int issueId, int userId)
         {
             var url = UrlHelper.GetAddWatcherUrl(this, issueId, userId);
             WebApiHelper.ExecuteUpload(this, url, HttpVerbs.POST, DataHelper.UserData(userId, MimeFormat), "AddWatcher");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="issueId"></param>
+        /// <param name="userId"></param>
         public void RemoveWatcherFromIssue(int issueId, int userId)
         {
             var url = UrlHelper.GetRemoveWatcherUrl(this, issueId, userId);
@@ -339,6 +349,12 @@ namespace Redmine.Net.Api
             return GetObjects<T>(parameters);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
         public PaginatedObjects<T> GetPaginatedObjects<T>(NameValueCollection parameters) where T : class, new()
         {
             var url = UrlHelper.GetListUrl<T>(this, parameters);
@@ -621,7 +637,12 @@ namespace Redmine.Net.Api
 
             return false;
         }
-
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="issueId"></param>
+        /// <param name="attachment"></param>
         public void UpdateAttachment(int issueId, Attachment attachment)
         {
             var address = UrlHelper.GetAttachmentUpdateUrl(this, issueId);

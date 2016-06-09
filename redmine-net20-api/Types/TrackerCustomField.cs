@@ -20,6 +20,9 @@ using Redmine.Net.Api.Extensions;
 
 namespace Redmine.Net.Api.Types
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [XmlRoot(RedmineKeys.TRACKER)]
     public class TrackerCustomField : Tracker
     {

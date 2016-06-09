@@ -3,6 +3,9 @@ using System.Runtime.Serialization;
 
 namespace Redmine.Net.Api.Exceptions
 {
+    /// <summary>
+    /// 
+    /// </summary>
 	public class ForbiddenException : RedmineException
 	{
 		public ForbiddenException()
@@ -24,4 +27,3 @@ namespace Redmine.Net.Api.Exceptions
 			: base(info, context) { }
 	}
 }
-

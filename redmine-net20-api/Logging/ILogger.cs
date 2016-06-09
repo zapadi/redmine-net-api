@@ -16,8 +16,15 @@
 
 namespace Redmine.Net.Api.Logging
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public interface ILogger
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entry"></param>
         void Log(LogEntry entry);
     }
 }

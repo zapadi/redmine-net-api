@@ -24,6 +24,9 @@ using Redmine.Net.Api.Exceptions;
 
 namespace Redmine.Net.Api.Internals
 {
+    /// <summary>
+    /// 
+    /// </summary>
     internal static class RedmineSerializer
     {
         /// <summary>

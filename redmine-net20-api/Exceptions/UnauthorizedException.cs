@@ -19,6 +19,9 @@ using System.Runtime.Serialization;
 
 namespace Redmine.Net.Api.Exceptions
 {
+    /// <summary>
+    /// 
+    /// </summary>
 	public class UnauthorizedException : RedmineException
 	{
 		public UnauthorizedException()
@@ -40,4 +43,3 @@ namespace Redmine.Net.Api.Exceptions
 			: base(info, context) { }
 	}
 }
-

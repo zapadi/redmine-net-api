@@ -71,6 +71,9 @@ namespace Redmine.Net.Api.Types
         [XmlElement(RedmineKeys.UPDATED_ON, IsNullable = true)]
         public DateTime? UpdatedOn { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [XmlElement(RedmineKeys.STATUS)]
         public ProjectStatus Status { get; set; }
 
@@ -97,10 +100,16 @@ namespace Redmine.Net.Api.Types
         [XmlArrayItem(RedmineKeys.TRACKER)]
         public IList<ProjectTracker> Trackers { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [XmlArray(RedmineKeys.CUSTOM_FIELDS)]
         [XmlArrayItem(RedmineKeys.CUSTOM_FIELD)]
         public IList<IssueCustomField> CustomFields { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [XmlArray(RedmineKeys.ISSUE_CATEGORIES)]
         [XmlArrayItem(RedmineKeys.ISSUE_CATEGORY)]
         public IList<ProjectIssueCategory> IssueCategories { get; set; }

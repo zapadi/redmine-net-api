@@ -17,6 +17,9 @@ limitations under the License.
 namespace Redmine.Net.Api
 {
 
+    /// <summary>
+    /// 
+    /// </summary>
     public static class HttpVerbs
     {
         /// <summary>

@@ -20,9 +20,15 @@ using Redmine.Net.Api.Internals;
 
 namespace Redmine.Net.Api.Types
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [XmlRoot(RedmineKeys.PERMISSION)]
     public class Permission : IEquatable<Permission>
     {
+        /// <summary>
+        /// 
+        /// </summary>
         [XmlText]
         public string Info { get; set; }
 

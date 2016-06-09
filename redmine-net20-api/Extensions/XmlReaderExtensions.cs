@@ -23,6 +23,9 @@ using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Extensions
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static partial class XmlExtensions
     {
         /// <summary>

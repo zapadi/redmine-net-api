@@ -30,18 +30,33 @@ namespace Redmine.Net.Api.Types
     [XmlRoot(RedmineKeys.WIKI_PAGE)]
     public class WikiPage : Identifiable<WikiPage>, IXmlSerializable, IEquatable<WikiPage>
     {
+        /// <summary>
+        /// 
+        /// </summary>
         [XmlElement(RedmineKeys.TITLE)]
         public string Title { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [XmlElement(RedmineKeys.TEXT)]
         public string Text { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [XmlElement(RedmineKeys.COMMENTS)]
         public string Comments { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [XmlElement(RedmineKeys.VERSION)]
         public int Version { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [XmlElement(RedmineKeys.AUTHOR)]
         public IdentifiableName Author { get; set; }
 

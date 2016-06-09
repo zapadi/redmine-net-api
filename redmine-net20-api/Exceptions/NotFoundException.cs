@@ -18,6 +18,9 @@ using System.Runtime.Serialization;
 
 namespace Redmine.Net.Api.Exceptions
 {
+    /// <summary>
+    /// 
+    /// </summary>
 	public class NotFoundException : RedmineException
 	{
 		public NotFoundException()
@@ -39,4 +42,3 @@ namespace Redmine.Net.Api.Exceptions
 			: base(info, context) { }
 	}
 }
-

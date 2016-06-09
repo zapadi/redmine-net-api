@@ -18,9 +18,16 @@ using System;
 
 namespace Redmine.Net.Api.Logging
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class ConsoleLogger : ILogger
     {
         private static readonly object locker = new object();
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entry"></param>
         public void Log(LogEntry entry)
         {
             lock (locker)

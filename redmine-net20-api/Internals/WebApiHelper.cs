@@ -22,6 +22,9 @@ using Redmine.Net.Api.Types;
 
 namespace Redmine.Net.Api.Internals
 {
+    /// <summary>
+    /// 
+    /// </summary>
     internal static class WebApiHelper
     {
         /// <summary>

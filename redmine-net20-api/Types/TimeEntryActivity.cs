@@ -27,6 +27,9 @@ namespace Redmine.Net.Api.Types
     [XmlRoot(RedmineKeys.TIME_ENTRY_ACTIVITY)]
     public class TimeEntryActivity : IdentifiableName, IEquatable<TimeEntryActivity>
     {
+        /// <summary>
+        /// 
+        /// </summary>
         [XmlElement(RedmineKeys.IS_DEFAULT)]
         public bool IsDefault { get; set; }
 

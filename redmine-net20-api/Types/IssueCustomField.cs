@@ -38,6 +38,9 @@ namespace Redmine.Net.Api.Types
         [XmlArrayItem(RedmineKeys.VALUE)]
         public IList<CustomFieldValue> Values { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [XmlAttribute(RedmineKeys.MULTIPLE)]
         public bool Multiple { get; set; }
 
@@ -69,12 +72,6 @@ namespace Redmine.Net.Api.Types
             if (itemsCount > 1)
             {
                 writer.WriteArrayStringElement(Values, RedmineKeys.VALUE, GetValue);
-                //                writer.WriteStartElement(RedmineKeys.VALUE);
-                //                writer.WriteAttributeString("type", "array");
-                //
-                //                foreach (var v in Values) writer.WriteElementString(RedmineKeys.VALUE, v.Info);
-                //
-                //                writer.WriteEndElement();
             }
             else
             {

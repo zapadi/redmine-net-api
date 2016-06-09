@@ -27,6 +27,9 @@ namespace Redmine.Net.Api.Types
     [XmlRoot(RedmineKeys.ISSUE_PRIORITY)]
     public class IssuePriority : IdentifiableName, IEquatable<IssuePriority>
     {
+        /// <summary>
+        /// 
+        /// </summary>
         [XmlElement(RedmineKeys.IS_DEFAULT)]
         public bool IsDefault { get; set; }
 

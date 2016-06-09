@@ -16,8 +16,14 @@
 
 namespace Redmine.Net.Api
 {
+    /// <summary>
+    /// 
+    /// </summary>
 	public static class RedmineKeys
     {
+        /// <summary>
+        /// issue_priorities
+        /// </summary>
         public const string ISSUE_PRIORITIES = "issue_priorities";
         public const string TIME_ENTRY_ACTIVITIES = "time_entry_activities";
 
@@ -206,15 +212,36 @@ namespace Redmine.Net.Api
         public const string PROJECTS = "projects";
         public const string ISSUES = "issues";
 
+        /// <summary>
+        /// limit
+        /// </summary>
 		public const string LIMIT = "limit";
+        /// <summary>
+        /// include
+        /// </summary>
         public const string INCLUDE = "include";
+        /// <summary>
+        /// offset
+        /// </summary>
         public const string OFFSET = "offset";
+        /// <summary>
+        /// key
+        /// </summary>
 		public const string KEY = "key";
+        /// <summary>
+        /// total_count
+        /// </summary>
 		public const string TOTAL_COUNT = "total_count";
 
         public const string SUBPROJECT_ID = "subproject_id";
         
+        /// <summary>
+        /// sort
+        /// </summary>
         public const string SORT = "sort";
+        /// <summary>
+        /// *
+        /// </summary>
 		public const string ALL ="*";
     }
 }

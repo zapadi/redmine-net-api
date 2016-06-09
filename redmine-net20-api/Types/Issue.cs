@@ -259,6 +259,9 @@ namespace Redmine.Net.Api.Types
         [XmlArrayItem(RedmineKeys.UPLOAD)]
         public IList<Upload> Uploads { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [XmlArray(RedmineKeys.WATCHERS)]
         [XmlArrayItem(RedmineKeys.WATCHER)]
         public IList<Watcher> Watchers { get; set; }

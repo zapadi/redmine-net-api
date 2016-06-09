@@ -24,8 +24,7 @@ namespace Redmine.Net.Api.Types
     [XmlRoot(RedmineKeys.ISSUE_CATEGORY)]
     public class ProjectIssueCategory : IdentifiableName
     {
-        
-		public override string ToString ()
+        public override string ToString ()
 		{
 			return string.Format ("[ProjectIssueCategory: {0}]", base.ToString());
 		}

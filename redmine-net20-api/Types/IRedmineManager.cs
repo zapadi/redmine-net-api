@@ -9,7 +9,7 @@ namespace Redmine.Net.Api.Types
         string ImpersonateUser { get; set; }
 
         User GetCurrentUser(NameValueCollection parameters = null);
-      //  List<User> GetUsers(UserStatus userStatus = UserStatus.STATUS_ACTIVE, string name = null, int groupId = 0);
+      
         void AddUserToGroup(int groupId, int userId);
         void RemoveUserFromGroup(int groupId, int userId);
         void AddWatcherToIssue(int issueId, int userId);

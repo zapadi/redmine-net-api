@@ -19,8 +19,15 @@ using System.Diagnostics;
 
 namespace Redmine.Net.Api.Logging
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class TraceLogger : ILogger
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entry"></param>
         public void Log(LogEntry entry)
         {
             switch (entry.Severity)

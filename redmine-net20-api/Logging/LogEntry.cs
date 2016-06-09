@@ -18,6 +18,9 @@ using System;
 
 namespace Redmine.Net.Api.Logging
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class LogEntry
     {
         public readonly LoggingEventType Severity;

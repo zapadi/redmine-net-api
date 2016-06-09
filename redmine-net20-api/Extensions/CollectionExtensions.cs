@@ -19,8 +19,17 @@ using System.Collections.Generic;
 
 namespace Redmine.Net.Api.Extensions
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class CollectionExtensions
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="listToClone"></param>
+        /// <returns></returns>
         public static IList<T> Clone<T>(this IList<T> listToClone) where T : ICloneable
         {
             if (listToClone == null) return null;
@@ -30,6 +39,13 @@ namespace Redmine.Net.Api.Extensions
             return clonedList;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="list"></param>
+        /// <param name="listToCompare"></param>
+        /// <returns></returns>
         public static bool Equals<T>(this IList<T> list, IList<T> listToCompare) where T : class
         {
             if (listToCompare == null) return false;
