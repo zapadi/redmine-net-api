@@ -24,21 +24,49 @@ namespace Redmine.Net.Api.Exceptions
     /// </summary>
 	public class ConflictException : RedmineException
 	{
+        /// <summary>
+        /// 
+        /// </summary>
 		public ConflictException()
 			: base() { }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
 		public ConflictException(string message)
 			: base(message) { }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="format"></param>
+        /// <param name="args"></param>
 		public ConflictException(string format, params object[] args)
 			: base(string.Format(format, args)) { }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="innerException"></param>
 		public ConflictException(string message, Exception innerException)
 			: base(message, innerException) { }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="format"></param>
+        /// <param name="innerException"></param>
+        /// <param name="args"></param>
 		public ConflictException(string format, Exception innerException, params object[] args)
 			: base(string.Format(format, args), innerException) { }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
 		protected ConflictException(SerializationInfo info, StreamingContext context)
 			: base(info, context) { }
 	}

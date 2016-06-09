@@ -24,21 +24,49 @@ namespace Redmine.Net.Api.Exceptions
     /// </summary>
     public class RedmineException : Exception
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public RedmineException()
             : base() { }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
         public RedmineException(string message)
             : base(message) { }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="format"></param>
+        /// <param name="args"></param>
         public RedmineException(string format, params object[] args)
             : base(string.Format(format, args)) { }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="innerException"></param>
         public RedmineException(string message, Exception innerException)
             : base(message, innerException) { }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="format"></param>
+        /// <param name="innerException"></param>
+        /// <param name="args"></param>
         public RedmineException(string format, Exception innerException, params object[] args)
             : base(string.Format(format, args), innerException) { }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
         protected RedmineException(SerializationInfo info, StreamingContext context)
             : base(info, context) { }
     }
