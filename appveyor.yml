@@ -33,7 +33,7 @@ build:
   verbosity: detailed
 
 #artifacts:
- - path: **/*.nupkg
+ - path: '**/*.nupkg'
     
 test: off
 
