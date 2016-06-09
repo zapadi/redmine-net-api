@@ -18,17 +18,17 @@
    
   </metadata>
     <files>
-      <file src="redmine-net20-api\bin\Release\redmine-net20-api.dll" target="lib\net20"/>
-      <file src="redmine-net20-api\bin\Release\redmine-net20-api.xml" target="lib\net20"/>
+      <file src="redmine-net20-api\bin\Debug\redmine-net20-api.dll" target="lib\net20"/>
+      <file src="redmine-net20-api\bin\Debug\redmine-net20-api.xml" target="lib\net20"/>
 
-      <file src="redmine-net40-api\bin\Release\redmine-net40-api.dll" target="lib\net40"/>
-      <file src="redmine-net40-api\bin\Release\redmine-net40-api.xml" target="lib\net40"/>
+      <file src="redmine-net40-api\bin\Debug\redmine-net40-api.dll" target="lib\net40"/>
+      <file src="redmine-net40-api\bin\Debug\redmine-net40-api.xml" target="lib\net40"/>
 
-      <file src="redmine-net45-api\bin\Release\redmine-net45-api.dll" target="lib\net45"/>
-      <file src="redmine-net45-api\bin\Release\redmine-net45-api.xml" target="lib\net45"/>
+      <file src="redmine-net45-api\bin\Debug\redmine-net45-api.dll" target="lib\net45"/>
+      <file src="redmine-net45-api\bin\Debug\redmine-net45-api.xml" target="lib\net45"/>
 
-      <file src="redmine-net451-api\bin\Release\redmine-net451-api.dll" target="lib\net451"/>
-      <file src="redmine-net451-api\bin\Release\redmine-net451-api.xml" target="lib\net451"/>
+      <file src="redmine-net451-api\bin\Debug\redmine-net451-api.dll" target="lib\net451"/>
+      <file src="redmine-net451-api\bin\Debug\redmine-net451-api.xml" target="lib\net451"/>
     </files>
 
 </package>
