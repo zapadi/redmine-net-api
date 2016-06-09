@@ -35,7 +35,7 @@ build:
   verbosity: detailed
 
 after_build:
-- nuget pack redmine-net-api.nuspec
+- nuget pack redmine-net-api.nuspec -Version %appveyor_build_version%
 
 nuget:
   account_feed: true
@@ -55,5 +55,5 @@ deploy:
 - provider: NuGet
   api_key:
     secure: PojoRMfsSOFs1hOuvSMRfR4+icliUzEg5hzjFjNUO03akBmKjWf22To/DYxSlzd/
-  artifact: redminepackage
+  artifact: /.*\.nupkg/
   skip_symbols: true
