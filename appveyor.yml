@@ -10,7 +10,7 @@ assembly_info:
   assembly_version: '{version}'
   assembly_file_version: '{version}'
   assembly_informational_version: '{version}'
-# configuration: Release
+configuration: Release
 install:
 - cmd: nuget restore -verbosity detailed
 build_script:
@@ -24,8 +24,8 @@ build_script:
 build:
   publish_nuget: true
   verbosity: minimal
-artifacts:
-    - path: NuGet/*.nupkg
+#artifacts:
+# - path: NuGet/*.nupkg
     
 test: off
 # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified
