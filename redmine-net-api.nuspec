@@ -2,7 +2,7 @@
 <package xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <metadata xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <id>redmine-api</id>
-    <version>0.0.0.0</version>
+    <version>$version$</version>
     <title>Redmine .NET API</title>
     <authors>Adrian Popescu</authors>
     <owners>Adrian Popescu</owners>
