@@ -46,14 +46,14 @@ namespace Redmine.Net.Api.JSonConverters
                     var list = val as ArrayList;
                     if (list != null)
                     {
-                        foreach (string value in list)
+                        foreach (object value in list)
                         {
-                            customField.Values.Add(new CustomFieldValue { Info = value });
+                            customField.Values.Add(new CustomFieldValue { Info = Convert.ToString(value) });
                         }
                     }
                     else
                     {
-                        customField.Values.Add(new CustomFieldValue { Info = val as string });
+                        customField.Values.Add(new CustomFieldValue { Info = Convert.ToString(val) });
                     }
                 }
                 return customField;
