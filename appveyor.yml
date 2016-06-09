@@ -13,8 +13,7 @@ assembly_info:
   assembly_version: '{version}'
   assembly_file_version: '{version}'
   assembly_informational_version: '{version}'
-install:
-- cmd: nuget restore -verbosity detailed
+
 build_script:
   - Msbuild.exe redmine-net20-api/redmine-net20-api.csproj /verbosity:minimal /p:BuildNetFX20=true 
   - Msbuild.exe redmine-net40-api/redmine-net40-api.csproj /verbosity:minimal /p:BuildNetFX40=true 
@@ -23,13 +22,23 @@ build_script:
   - Msbuild.exe redmine-net45-api-signed/redmine-net45-api-signed.csproj /verbosity:minimal /p:BuildNetFX45=true
   - Msbuild.exe redmine-net451-api/redmine-net451-api.csproj /verbosity:minimal /p:BuildNetFX451=true
   - Msbuild.exe redmine-net451-api-signed/redmine-net451-api-signed.csproj /verbosity:minimal /p:BuildNetFX451=true
+
+before_build:
+- nuget restore -verbosity detailed
+
 build:
   project: redmine-net-api.sln
   publish_nuget: true
   verbosity: detailed
+
+after_build:
+- nuget pack redmine-net-api.nuspec
+
 test: off
+
 artifacts:
-- path: '**/*.nupkg'
+- path: '*.nupkg'
+
 # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified
 cache:
   - packages -> **\packages.config
@@ -39,4 +48,5 @@ deploy:
 - provider: NuGet
   api_key:
     secure: PojoRMfsSOFs1hOuvSMRfR4+icliUzEg5hzjFjNUO03akBmKjWf22To/DYxSlzd/
+  artifact: '*.nupkg'
   skip_symbols: true
