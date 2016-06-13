@@ -35,7 +35,7 @@ build:
   verbosity: detailed
 
 after_build:
-- nuget pack redmine-net-api.nuspec -Version 1.0.3
+- nuget pack redmine-net-api.nuspec -Version 1.0.4
 nuget:
   account_feed: true
   project_feed: true
