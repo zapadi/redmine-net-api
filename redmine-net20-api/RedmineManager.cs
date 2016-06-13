@@ -38,14 +38,41 @@ namespace Redmine.Net.Api
     /// </summary>
     public class RedmineManager : IRedmineManager
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public const string REQUEST_FORMAT = "{0}/{1}/{2}.{3}";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string FORMAT = "{0}/{1}.{2}";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string WIKI_INDEX_FORMAT = "{0}/projects/{1}/wiki/index.{2}";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string WIKI_PAGE_FORMAT = "{0}/projects/{1}/wiki/{2}.{3}";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string WIKI_VERSION_FORMAT = "{0}/projects/{1}/wiki/{2}/{3}.{4}";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string ENTITY_WITH_PARENT_FORMAT = "{0}/{1}/{2}/{3}.{4}";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string ATTACHMENT_UPDATE_FORMAT = "{0}/attachments/issues/{1}.{2}";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string CURRENT_USER_URI = "current";
+        /// <summary>
+        /// 
+        /// </summary>
         public const int DEFAULT_PAGE_SIZE_VALUE = 25;
 
         private readonly string basicAuthorization;

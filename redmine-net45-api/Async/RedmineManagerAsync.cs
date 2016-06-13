@@ -37,7 +37,7 @@ namespace Redmine.Net.Api.Async
             NameValueCollection parameters = null)
         {
             var uri = string.Format(RedmineManager.REQUEST_FORMAT, redmineManager.Host,
-                RedmineManager.Sufixes[typeof(User)], RedmineManager.CURRENT_USER_URI, redmineManager.MimeFormat);
+                RedmineManager.Sufixes[typeof(User)], RedmineManager.CURRENT_USER_URI, redmineManager.MimeFormat.ToString().ToLower());
 
             return await WebApiAsyncHelper.ExecuteDownload<User>(redmineManager, uri, "GetCurrentUserAsync", parameters);
         }
@@ -289,6 +289,15 @@ namespace Redmine.Net.Api.Async
             return await WebApiAsyncHelper.ExecuteUpload<T>(redmineManager, uri, HttpVerbs.POST, data, "CreateObjectAsync");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="redmineManager"></param>
+        /// <param name="id"></param>
+        /// <param name="obj"></param>
+        /// <param name="projectId"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public static async Task UpdateObjectAsync<T>(this RedmineManager redmineManager, string id, T obj, string projectId = null)
             where T : class, new()
         {
