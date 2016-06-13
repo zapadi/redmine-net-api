@@ -45,19 +45,19 @@ namespace Redmine.Net.Api.Extensions
         /// 
         /// </summary>
         /// <param name="writer"></param>
-        /// <param name="col"></param>
+        /// <param name="collection"></param>
         /// <param name="elementName"></param>
-        public static void WriteArray(this XmlWriter writer, IEnumerable col, string elementName)
+        public static void WriteArray(this XmlWriter writer, IEnumerable collection, string elementName)
         {
+            if (collection == null) return;
             writer.WriteStartElement(elementName);
             writer.WriteAttributeString("type", "array");
-            if (col != null)
+
+            foreach (var item in collection)
             {
-                foreach (var item in col)
-                {
-                    new XmlSerializer(item.GetType()).Serialize(writer, item);
-                }
+                new XmlSerializer(item.GetType()).Serialize(writer, item);
             }
+
             writer.WriteEndElement();
         }
 
@@ -65,21 +65,21 @@ namespace Redmine.Net.Api.Extensions
         /// 
         /// </summary>
         /// <param name="writer"></param>
-        /// <param name="col"></param>
+        /// <param name="collection"></param>
         /// <param name="elementName"></param>
         /// <param name="type"></param>
         /// <param name="f"></param>
-        public static void WriteArrayIds(this XmlWriter writer, IEnumerable col, string elementName, Type type, Func<object, int> f)
+        public static void WriteArrayIds(this XmlWriter writer, IEnumerable collection, string elementName, Type type, Func<object, int> f)
         {
+            if (collection == null) return;
             writer.WriteStartElement(elementName);
             writer.WriteAttributeString("type", "array");
-            if (col != null)
+
+            foreach (var item in collection)
             {
-                foreach (var item in col)
-                {
-                    new XmlSerializer(type).Serialize(writer, f.Invoke(item));
-                }
+                new XmlSerializer(type).Serialize(writer, f.Invoke(item));
             }
+
             writer.WriteEndElement();
         }
 
@@ -87,22 +87,23 @@ namespace Redmine.Net.Api.Extensions
         /// 
         /// </summary>
         /// <param name="writer"></param>
-        /// <param name="list"></param>
+        /// <param name="collection"></param>
         /// <param name="elementName"></param>
         /// <param name="type"></param>
         /// <param name="root"></param>
         /// <param name="defaultNamespace"></param>
-        public static void WriteArray(this XmlWriter writer, IEnumerable list, string elementName, Type type, string root, string defaultNamespace = null)
+        public static void WriteArray(this XmlWriter writer, IEnumerable collection, string elementName, Type type, string root, string defaultNamespace = null)
         {
+            if (collection == null) return;
             writer.WriteStartElement(elementName);
             writer.WriteAttributeString("type", "array");
-            if (list != null)
+
+            foreach (var item in collection)
             {
-                foreach (var item in list)
-                {
-                    new XmlSerializer(type, new XmlAttributeOverrides(), new Type[] { }, new XmlRootAttribute(root), defaultNamespace).Serialize(writer, item);
-                }
+                new XmlSerializer(type, new XmlAttributeOverrides(), new Type[] { }, new XmlRootAttribute(root),
+                    defaultNamespace).Serialize(writer, item);
             }
+
             writer.WriteEndElement();
         }
 
@@ -110,19 +111,18 @@ namespace Redmine.Net.Api.Extensions
         /// 
         /// </summary>
         /// <param name="writer"></param>
-        /// <param name="col"></param>
+        /// <param name="collection"></param>
         /// <param name="elementName"></param>
         /// <param name="f"></param>
-        public static void WriteArrayStringElement(this XmlWriter writer, IEnumerable col, string elementName, Func<object, string> f)
+        public static void WriteArrayStringElement(this XmlWriter writer, IEnumerable collection, string elementName, Func<object, string> f)
         {
+            if (collection == null) return;
             writer.WriteStartElement(elementName);
             writer.WriteAttributeString("type", "array");
-            if (col != null)
+
+            foreach (var item in collection)
             {
-                foreach (var item in col)
-                {
-                    writer.WriteElementString(elementName, f.Invoke(item));
-                }
+                writer.WriteElementString(elementName, f.Invoke(item));
             }
             writer.WriteEndElement();
         }
@@ -131,13 +131,13 @@ namespace Redmine.Net.Api.Extensions
         /// 
         /// </summary>
         /// <param name="xmlWriter"></param>
-        /// <param name="list"></param>
+        /// <param name="collection"></param>
         /// <param name="elementName"></param>
-        public static void WriteListElements(this XmlWriter xmlWriter, IEnumerable<IValue> list, string elementName)
+        public static void WriteListElements(this XmlWriter xmlWriter, IEnumerable<IValue> collection, string elementName)
         {
-            if (list == null) return;
+            if (collection == null) return;
 
-            foreach (var item in list)
+            foreach (var item in collection)
             {
                 xmlWriter.WriteElementString(elementName, item.Value);
             }
