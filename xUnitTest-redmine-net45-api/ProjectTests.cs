@@ -1,232 +1,175 @@
-﻿using Xunit;
-using Redmine.Net.Api.Types;
-using Redmine.Net.Api;
-using System.Collections.Specialized;
+﻿
 using System.Collections.Generic;
-using System.Linq;
+using System.Collections.Specialized;
+using Redmine.Net.Api;
 using Redmine.Net.Api.Exceptions;
+using Redmine.Net.Api.Types;
+using Xunit;
 
 namespace xUnitTestredminenet45api
 {
-	[Collection("RedmineCollection")]
-	public class ProjectTests
-	{
-		private const string PROJECT_IDENTIFIER = "redmine-net-api";
-		private const int NUMBER_OF_TRACKERS = 3;
-		private const int NUMBER_OF_ISSUE_CATEGORIES = 2;
-		private const int NUMBER_OF_ENABLED_MODULES = 9;
-		private const int NUMBER_OF_NEWS_BY_PROJECT_ID =1;
-		private const int NUMBER_OF_PROJECTS = 6;
+    [Trait("Redmine-Net-Api", "Projects")]
+    [Collection("RedmineCollection")]
+    public class ProjectTests
+    {
+	    private const string PROJECT_IDENTIFIER = "redmine-net-api-project-test";
+      	private const string PROJECT_NAME = "Redmine Net Api Project Test";
 
-		//project data - used for create
-		private const string NEW_PROJECT_NAME = "Project created using API";
-		private const string NEW_PROJECT_IDENTIFIER = "redmine-net-testxyz";
-		private const string NEW_PROJECT_DESCRIPTION = "Test project description";
-		private const string NEW_PROJECT_HOMEPAGE = "http://RedmineTests.ro";
-		private const bool NEW_PROJECT_ISPUBLIC = true;
-		private const int NEW_PROJECT_PARENT_ID = 1;
-		private const bool NEW_PROJECT_INHERIT_MEMBERS = true;
-		private const int NEW_PROJECT_TRACKER_ID = 3;
-		private const string NEW_PROJECT_ENABLED_MODULE_NAME = "news";
+	    private readonly RedmineFixture fixture;
 
-		//project data - used for update
-		private const string UPDATED_PROJECT_IDENTIFIER = "redmine-net-testxyz";
-		private const string UPDATED_PROJECT_NAME = "Project created using API updated";
-		private const string UPDATED_PROJECT_DESCRIPTION = "Test project description updated";
-		private const string UPDATED_PROJECT_HOMEPAGE = "http://redmineTestsUpdated.ro";
-		private const bool UPDATED_PROJECT_ISPUBLIC = true;
-		private const IdentifiableName UPDATED_PROJECT_PARENT = null;
-		private const bool UPDATED_PROJECT_INHERIT_MEMBERS = false;
-		private const List<ProjectTracker> UPDATED_PROJECT_TRACKERS = null;
+        public ProjectTests(RedmineFixture fixture)
+        {
+            this.fixture = fixture;
+        }
 
-		private const string DELETED_PROJECT_IDENTIFIER = "redmine-net-testxyz";
+	    [Fact]
+	    public void Should_Create_Project_With_Required_Properties()
+	    {
+		    var savedProject = fixture.RedmineManager.CreateObject(CreateTestProjectWithRequiredPropertiesSet());
 
-		RedmineFixture fixture;
-		public ProjectTests (RedmineFixture fixture)
-		{
-			this.fixture = fixture;
-		}
+            Assert.NotNull(savedProject);
+		    Assert.NotEqual(savedProject.Id, 0);
+		    Assert.True(savedProject.Name.Equals(PROJECT_NAME), "Project name is invalid.");
+            Assert.True(savedProject.Identifier.Equals(PROJECT_IDENTIFIER), "Project identifier is invalid.");
+	    }
+
+	    [Fact]
+        public void Should_Get_Redmine_Net_Api_Project_Test_Project()
+        {
+            var project = fixture.RedmineManager.GetObject<Project>(PROJECT_IDENTIFIER, null);
+
+            Assert.NotNull(project);
+            Assert.IsType<Project>(project);
+	        Assert.Equal(project.Identifier,PROJECT_IDENTIFIER);
+	        Assert.Equal(project.Name,PROJECT_NAME);
+        }
 
 		[Fact]
-		public void Should_Get_Project()
+		public void Should_Update_Redmine_Net_Api_Project_Test_Project()
 		{
-			var project = fixture.RedmineManager.GetObject<Project>(PROJECT_IDENTIFIER, null);
+			const string UPDATED_PROJECT_NAME = "Project created using API updated";
+	 		const string UPDATED_PROJECT_DESCRIPTION = "Test project description updated";
+	 		const string UPDATED_PROJECT_HOMEPAGE = "http://redmineTestsUpdated.ro";
+	 		const bool UPDATED_PROJECT_ISPUBLIC = true;
+	 		const bool UPDATED_PROJECT_INHERIT_MEMBERS = false;
 
-			Assert.NotNull(project);
-			Assert.IsType<Project>(project);
-		}
-
-		[Fact]
-		public void Should_Get_Project_With_Trackers()
-		{
-			var project = fixture.RedmineManager.GetObject<Project>(PROJECT_IDENTIFIER, new NameValueCollection()
-				{
-					{RedmineKeys.INCLUDE, RedmineKeys.TRACKERS}
-				});
-
-			Assert.NotNull(project);
-			Assert.IsType<Project>(project);
-
-			Assert.NotNull(project.Trackers);
-			Assert.True(project.Trackers.Count == NUMBER_OF_TRACKERS, "Trackers count != " + NUMBER_OF_TRACKERS);
-			Assert.All (project.Trackers, t => Assert.IsType<ProjectTracker> (t));
-		}
-
-		[Fact]
-		public void Should_Get_Project_With_IssueCategories()
-		{
-			var project = fixture.RedmineManager.GetObject<Project>(PROJECT_IDENTIFIER, new NameValueCollection()
-				{
-					{RedmineKeys.INCLUDE, RedmineKeys.ISSUE_CATEGORIES}
-				});
-
-			Assert.NotNull(project);
-			Assert.IsType<Project>(project);
-
-			Assert.NotNull(project.IssueCategories);
-			Assert.True(project.IssueCategories.Count == NUMBER_OF_ISSUE_CATEGORIES, "Issue categories count != " + NUMBER_OF_ISSUE_CATEGORIES);
-			Assert.All (project.IssueCategories, ic => Assert.IsType<ProjectIssueCategory> (ic));
-		}
-
-		[Fact]
-		public void Should_Get_Project_With_EnabledModules()
-		{
-			var project = fixture.RedmineManager.GetObject<Project>(PROJECT_IDENTIFIER, new NameValueCollection()
-				{
-					{RedmineKeys.INCLUDE, RedmineKeys.ENABLED_MODULES}
-				});
-
-			Assert.NotNull(project);
-			Assert.IsType<Project>(project);
-
-			Assert.NotNull(project.EnabledModules);
-			Assert.True(project.EnabledModules.Count == NUMBER_OF_ENABLED_MODULES, "Enabled modules count != " + NUMBER_OF_ENABLED_MODULES);
-			Assert.All (project.EnabledModules, em => Assert.IsType<ProjectEnabledModule> (em));
-		}
-
-		[Fact]
-		public void Should_Get_Project_With_All_Data()
-		{
-			var project = fixture.RedmineManager.GetObject<Project>(PROJECT_IDENTIFIER, new NameValueCollection()
-				{
-					{RedmineKeys.INCLUDE, string.Join(",",RedmineKeys.TRACKERS,RedmineKeys.ISSUE_CATEGORIES,RedmineKeys.ENABLED_MODULES)}
-				});
-
-			Assert.NotNull(project);
-			Assert.IsType<Project>(project);
-
-			Assert.NotNull(project.Trackers);
-			Assert.True(project.Trackers.Count == NUMBER_OF_TRACKERS, "Trackers count != " + NUMBER_OF_TRACKERS);
-			Assert.All (project.Trackers, t => Assert.IsType<ProjectTracker> (t));
-
-			Assert.NotNull(project.IssueCategories);
-			Assert.True(project.IssueCategories.Count == NUMBER_OF_ISSUE_CATEGORIES, "Issue categories count != " + NUMBER_OF_ISSUE_CATEGORIES);
-			Assert.All (project.IssueCategories, ic => Assert.IsType<ProjectIssueCategory> (ic));
-
-			Assert.NotNull(project.EnabledModules);
-			Assert.True(project.EnabledModules.Count == NUMBER_OF_ENABLED_MODULES, "Enabled modules count != " + NUMBER_OF_ENABLED_MODULES);
-			Assert.All (project.EnabledModules, em => Assert.IsType<ProjectEnabledModule> (em));
-		}
-
-		[Fact]
-		public void Should_Get_All_Projects_With_All_Data()
-		{
-			IList<Project> projects = fixture.RedmineManager.GetObjects<Project>(new NameValueCollection()
-				{
-					{RedmineKeys.INCLUDE, string.Join(",",RedmineKeys.TRACKERS,RedmineKeys.ISSUE_CATEGORIES,RedmineKeys.ENABLED_MODULES)}
-				});
-
-			Assert.NotNull(projects);
-			Assert.True(projects.Count == NUMBER_OF_PROJECTS, "Projects count != " + NUMBER_OF_PROJECTS);
-			Assert.All (projects, p => Assert.IsType<Project> (p));
-				
-			var project = projects.ToList().Find(p => p.Identifier == PROJECT_IDENTIFIER);
-			Assert.NotNull(project);
-			Assert.IsType<Project>(project);
-
-			Assert.NotNull(project.Trackers);
-			Assert.True(project.Trackers.Count == NUMBER_OF_TRACKERS, "Trackers count != " + NUMBER_OF_TRACKERS);
-			Assert.All (project.Trackers, t => Assert.IsType<ProjectTracker> (t));
-
-			Assert.NotNull(project.IssueCategories);
-			Assert.True(project.IssueCategories.Count == NUMBER_OF_ISSUE_CATEGORIES, "Issue categories count != " + NUMBER_OF_ISSUE_CATEGORIES);
-			Assert.All (project.IssueCategories, ic => Assert.IsType<ProjectIssueCategory> (ic));
-
-			Assert.NotNull(project.EnabledModules);
-			Assert.True(project.EnabledModules.Count == NUMBER_OF_ENABLED_MODULES, "Enabled modules count != " + NUMBER_OF_ENABLED_MODULES);
-			Assert.All (project.EnabledModules, em => Assert.IsType<ProjectEnabledModule> (em));
-		}
-
-		[Fact]
-		public void Should_Get_Project_News()
-		{
-			var news = fixture.RedmineManager.GetObjects<News>(new NameValueCollection { { RedmineKeys.PROJECT_ID, PROJECT_IDENTIFIER } });
-
-			Assert.NotNull(news);
-			Assert.True(news.Count == NUMBER_OF_NEWS_BY_PROJECT_ID, "News count != " + NUMBER_OF_NEWS_BY_PROJECT_ID);
-			Assert.All (news, n => Assert.IsType<News> (n));
-		}
-
-		[Fact]
-		public void Should_Create_Projects()
-		{
-			Project project = new Project();
-			project.Name = NEW_PROJECT_NAME;
-			project.Identifier = NEW_PROJECT_IDENTIFIER;
-			project.Description = NEW_PROJECT_DESCRIPTION;
-			project.HomePage = NEW_PROJECT_HOMEPAGE;
-			project.IsPublic = NEW_PROJECT_ISPUBLIC;
-			project.Parent = new IdentifiableName { Id = NEW_PROJECT_PARENT_ID };
-			project.InheritMembers = NEW_PROJECT_INHERIT_MEMBERS;
-			project.Trackers = new List<ProjectTracker> { new ProjectTracker { Id = NEW_PROJECT_TRACKER_ID } };
-		    project.EnabledModules = new List<ProjectEnabledModule>
-		    {
-		        new ProjectEnabledModule {Name = NEW_PROJECT_ENABLED_MODULE_NAME}
-		    };
-
-		    Project savedProject = fixture.RedmineManager.CreateObject<Project>(project);
-
-			Assert.NotNull(savedProject);
-			Assert.True(savedProject.Identifier.Equals(NEW_PROJECT_IDENTIFIER), "Project identifier is invalid.");
-		}
-
-		[Fact]
-		public void Should_Update_Project()
-		{
-			var project = fixture.RedmineManager.GetObject<Project>(UPDATED_PROJECT_IDENTIFIER, new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.TRACKERS + "," + RedmineKeys.ISSUE_CATEGORIES + "," + RedmineKeys.ENABLED_MODULES } });
+			var project = fixture.RedmineManager.GetObject<Project>(PROJECT_IDENTIFIER,null);
 			project.Name = UPDATED_PROJECT_NAME;
 			project.Description = UPDATED_PROJECT_DESCRIPTION;
 			project.HomePage = UPDATED_PROJECT_HOMEPAGE;
 			project.IsPublic = UPDATED_PROJECT_ISPUBLIC;
-			project.Parent = UPDATED_PROJECT_PARENT;
 			project.InheritMembers = UPDATED_PROJECT_INHERIT_MEMBERS;
-			project.Trackers = UPDATED_PROJECT_TRACKERS;
 
-			fixture.RedmineManager.UpdateObject<Project>(UPDATED_PROJECT_IDENTIFIER, project);
+			var exception =(RedmineException)Record.Exception(
+						() => fixture.RedmineManager.UpdateObject(PROJECT_IDENTIFIER, project));
+			Assert.Null(exception);
 
-			var updatedProject = fixture.RedmineManager.GetObject<Project>(UPDATED_PROJECT_IDENTIFIER, new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.TRACKERS + "," + RedmineKeys.ISSUE_CATEGORIES + "," + RedmineKeys.ENABLED_MODULES } });
+			var updatedProject = fixture.RedmineManager.GetObject<Project>(PROJECT_IDENTIFIER,null);
 
-			Assert.NotNull(updatedProject);
 			Assert.True(updatedProject.Name.Equals(UPDATED_PROJECT_NAME), "Project name was not updated.");
+			Assert.True(updatedProject.Description.Equals(UPDATED_PROJECT_DESCRIPTION), "Project description was not updated.");
+			Assert.True(updatedProject.HomePage.Equals(UPDATED_PROJECT_HOMEPAGE), "Project homepage was not updated.");
+			Assert.True(updatedProject.IsPublic.Equals(UPDATED_PROJECT_ISPUBLIC), "Project is_public was not updated.");
+			Assert.True(updatedProject.InheritMembers.Equals(UPDATED_PROJECT_INHERIT_MEMBERS), "Project inherit_members was not updated.");
 		}
 
 		[Fact]
-		public void Should_Delete_Project()
+		public void Should_Delete_Redmine_Net_Api_Project_Test_Project()
 		{
-			RedmineException exception = (RedmineException)Record.Exception(() => fixture.RedmineManager.DeleteObject<Project>(DELETED_PROJECT_IDENTIFIER, null));
-			Assert.Null (exception);
-			Assert.Throws<NotFoundException>(() => fixture.RedmineManager.GetObject<Project>(DELETED_PROJECT_IDENTIFIER, null));
+			var exception = (RedmineException)Record.Exception(
+						() => fixture.RedmineManager.DeleteObject<Project>(PROJECT_IDENTIFIER, null));
+			Assert.Null(exception);
+			Assert.Throws<NotFoundException>(() => fixture.RedmineManager.GetObject<Project>(PROJECT_IDENTIFIER, null));
 		}
 
-		[Fact]
-		public void Should_Compare_Projects()
-		{
-			var project = fixture.RedmineManager.GetObject<Project>(PROJECT_IDENTIFIER, new NameValueCollection() { { RedmineKeys.INCLUDE, RedmineKeys.TRACKERS + "," + RedmineKeys.ISSUE_CATEGORIES + "," + RedmineKeys.ENABLED_MODULES } });
-			var projectToCompare = fixture.RedmineManager.GetObject<Project>(PROJECT_IDENTIFIER, new NameValueCollection() { { RedmineKeys.INCLUDE, RedmineKeys.TRACKERS + "," + RedmineKeys.ISSUE_CATEGORIES + "," + RedmineKeys.ENABLED_MODULES } });
+	    [Fact]
+       	public void Should_Create_Project_With_All_Properties_Set()
+       	{
+        	var savedProject = fixture.RedmineManager.CreateObject(CreateTestProjectWithAllPropertiesSet());
 
-			Assert.NotNull(project);
-			Assert.True(project.Equals(projectToCompare), "Compared projects are not equal.");
-		}
-	}
+            Assert.NotNull(savedProject);
+		    Assert.NotEqual(savedProject.Id, 0);
+            Assert.True(savedProject.Identifier.Equals("rnaptap"), "Project identifier is invalid.");
+            Assert.True(savedProject.Name.Equals("Redmine Net Api Project Test All Properties"), "Project name is invalid.");
+        }
+
+        [Fact]
+        public void Should_Get_test_Project_With_All_Properties_Set()
+        {
+            var project = fixture.RedmineManager.GetObject<Project>(PROJECT_IDENTIFIER, new NameValueCollection
+            {
+                {
+                    RedmineKeys.INCLUDE,
+                    string.Join(",", RedmineKeys.TRACKERS, RedmineKeys.ENABLED_MODULES)
+                }
+            });
+
+            Assert.NotNull(project);
+            Assert.IsType<Project>(project);
+	        Assert.True(project.Name.Equals("Redmine Net Api Project Test All Properties"), "Project name not equal.");
+           	Assert.True(project.Identifier.Equals("rnaptap"),"Project identifier not equal.");
+	        Assert.True(project.Description.Equals("This is a test project."), "Project description not equal.");
+            Assert.True(project.HomePage.Equals("www.redminetest.com"), "Project homepage not equal.");
+            Assert.True(project.IsPublic.Equals(true), "Project is_public not equal.");
+            Assert.True(project.InheritMembers.Equals(true), "Project inherit_members not equal.");
+
+            Assert.NotNull(project.Trackers);
+            Assert.True(project.Trackers.Count == 2, "Trackers count != " + 2);
+            Assert.All(project.Trackers, t => Assert.IsType<ProjectTracker>(t));
+
+            Assert.NotNull(project.EnabledModules);
+            Assert.True(project.EnabledModules.Count == 2, "Enabled modules count != " + 2);
+            Assert.All(project.EnabledModules, em => Assert.IsType<ProjectEnabledModule>(em));
+        }
+
+	    private static Project CreateTestProjectWithRequiredPropertiesSet()
+	    {
+		    var project = new Project
+		    {
+			    Name = PROJECT_NAME,
+			    Identifier = PROJECT_IDENTIFIER
+		    };
+
+		    return project;
+	    }
+
+	    private static Project CreateTestProjectWithAllPropertiesSet()
+       	{
+			var project = new Project
+		    {
+				Name = "Redmine Net Api Project Test All Properties",
+			    Description = "This is a test project.",
+			    Identifier = "rnaptap",
+			    HomePage = "www.redminetest.com",
+			    IsPublic = true,
+			    InheritMembers = true,
+			    Status = ProjectStatus.Active,
+
+			    EnabledModules = new List<ProjectEnabledModule>()
+			    {
+					new ProjectEnabledModule() {Name = "issue_tracking"},
+				    new ProjectEnabledModule(){Name = "time_tracking"}
+			    },
+			    Trackers = new List<ProjectTracker>()
+			    {
+				    new ProjectTracker {Id = 1},
+				    new ProjectTracker {Id = 2}
+			    },
+		    };
+
+		    return project;
+       	}
+
+	    private static Project CreateTestProjectWithParentSet()
+       	{
+        	var project = new Project
+        	{
+        		Name = "Redmine Net Api Project With Parent Set",
+        		Identifier = "rnapwps",
+			    Parent = new IdentifiableName{Id = 1}
+        	};
+
+        	return project;
+       	}
+    }
 }
-
