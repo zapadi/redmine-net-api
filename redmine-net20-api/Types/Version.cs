@@ -135,8 +135,8 @@ namespace Redmine.Net.Api.Types
         public override void WriteXml(XmlWriter writer)
         {
             writer.WriteElementString(RedmineKeys.NAME, Name);
-            writer.WriteElementString(RedmineKeys.STATUS, Status.ToString());
-            writer.WriteElementString(RedmineKeys.SHARING, Sharing.ToString());
+            writer.WriteElementString(RedmineKeys.STATUS, Status.ToString().ToLowerInvariant());
+            writer.WriteElementString(RedmineKeys.SHARING, Sharing.ToString().ToLowerInvariant());
 
             writer.WriteDateOrEmpty(DueDate, RedmineKeys.DUE_DATE);
             writer.WriteElementString(RedmineKeys.DESCRIPTION, Description);

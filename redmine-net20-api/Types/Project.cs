@@ -182,8 +182,8 @@ namespace Redmine.Net.Api.Types
             writer.WriteElementString(RedmineKeys.NAME, Name);
             writer.WriteElementString(RedmineKeys.IDENTIFIER, Identifier);
             writer.WriteElementString(RedmineKeys.DESCRIPTION, Description);
-            writer.WriteElementString(RedmineKeys.INHERIT_MEMBERS, InheritMembers.ToString());
-            writer.WriteElementString(RedmineKeys.IS_PUBLIC, IsPublic.ToString());
+            writer.WriteElementString(RedmineKeys.INHERIT_MEMBERS, InheritMembers.ToString().ToLowerInvariant());
+            writer.WriteElementString(RedmineKeys.IS_PUBLIC, IsPublic.ToString().ToLowerInvariant());
             writer.WriteIdOrEmpty(Parent, RedmineKeys.PARENT_ID);
             writer.WriteElementString(RedmineKeys.HOMEPAGE, HomePage);
 
@@ -227,22 +227,25 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
         public override int GetHashCode()
         {
-            var hashCode = base.GetHashCode();
-            hashCode = HashCodeHelper.GetHashCode(Identifier, hashCode);
-            hashCode = HashCodeHelper.GetHashCode(Description, hashCode);
-            hashCode = HashCodeHelper.GetHashCode(Parent, hashCode);
-            hashCode = HashCodeHelper.GetHashCode(HomePage, hashCode);
-            hashCode = HashCodeHelper.GetHashCode(CreatedOn, hashCode);
-            hashCode = HashCodeHelper.GetHashCode(UpdatedOn, hashCode);
-            hashCode = HashCodeHelper.GetHashCode(Status, hashCode);
-            hashCode = HashCodeHelper.GetHashCode(IsPublic, hashCode);
-            hashCode = HashCodeHelper.GetHashCode(InheritMembers, hashCode);
-            hashCode = HashCodeHelper.GetHashCode(Trackers, hashCode);
-            hashCode = HashCodeHelper.GetHashCode(CustomFields, hashCode);
-            hashCode = HashCodeHelper.GetHashCode(IssueCategories, hashCode);
-            hashCode = HashCodeHelper.GetHashCode(EnabledModules, hashCode);
+	        unchecked
+	        {
+		        var hashCode = base.GetHashCode();
+		        hashCode = HashCodeHelper.GetHashCode(Identifier, hashCode);
+		        hashCode = HashCodeHelper.GetHashCode(Description, hashCode);
+		        hashCode = HashCodeHelper.GetHashCode(Parent, hashCode);
+		        hashCode = HashCodeHelper.GetHashCode(HomePage, hashCode);
+		        hashCode = HashCodeHelper.GetHashCode(CreatedOn, hashCode);
+		        hashCode = HashCodeHelper.GetHashCode(UpdatedOn, hashCode);
+		        hashCode = HashCodeHelper.GetHashCode(Status, hashCode);
+		        hashCode = HashCodeHelper.GetHashCode(IsPublic, hashCode);
+		        hashCode = HashCodeHelper.GetHashCode(InheritMembers, hashCode);
+		        hashCode = HashCodeHelper.GetHashCode(Trackers, hashCode);
+		        hashCode = HashCodeHelper.GetHashCode(CustomFields, hashCode);
+		        hashCode = HashCodeHelper.GetHashCode(IssueCategories, hashCode);
+		        hashCode = HashCodeHelper.GetHashCode(EnabledModules, hashCode);
 
-            return hashCode;
+		        return hashCode;
+	        }
         }
 
         /// <summary>

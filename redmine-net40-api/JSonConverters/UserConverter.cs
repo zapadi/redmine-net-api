@@ -64,7 +64,7 @@ namespace Redmine.Net.Api.JSonConverters
                 result.Add(RedmineKeys.LASTNAME, entity.LastName);
                 result.Add(RedmineKeys.MAIL, entity.Email);
                 result.Add(RedmineKeys.PASSWORD, entity.Password);
-                result.Add(RedmineKeys.MUST_CHANGE_PASSWD, entity.MustChangePassword);
+                result.Add(RedmineKeys.MUST_CHANGE_PASSWD, entity.MustChangePassword.ToString().ToLowerInvariant());
                 result.WriteValueOrEmpty(entity.AuthenticationModeId, RedmineKeys.AUTH_SOURCE_ID);
                 result.WriteArray(RedmineKeys.CUSTOM_FIELDS, entity.CustomFields, new IssueCustomFieldConverter(), serializer);
 

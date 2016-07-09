@@ -63,8 +63,8 @@ namespace Redmine.Net.Api.JSonConverters
                 result.Add(RedmineKeys.IDENTIFIER, entity.Identifier);
                 result.Add(RedmineKeys.DESCRIPTION, entity.Description);
                 result.Add(RedmineKeys.HOMEPAGE, entity.HomePage);
-                result.Add(RedmineKeys.INHERIT_MEMBERS, entity.InheritMembers);
-                result.Add(RedmineKeys.IS_PUBLIC, entity.IsPublic);
+                result.Add(RedmineKeys.INHERIT_MEMBERS, entity.InheritMembers.ToString().ToLowerInvariant());
+                result.Add(RedmineKeys.IS_PUBLIC, entity.IsPublic.ToString().ToLowerInvariant());
 
                 result.WriteIdOrEmpty(entity.Parent, RedmineKeys.PARENT_ID, string.Empty);
                 result.WriteArray(RedmineKeys.CUSTOM_FIELDS, entity.CustomFields, new IssueCustomFieldConverter(), serializer);

@@ -59,8 +59,8 @@ namespace Redmine.Net.Api.JSonConverters
             if (entity != null)
             {
                 result.Add(RedmineKeys.NAME, entity.Name);
-                result.Add(RedmineKeys.STATUS, entity.Status.ToString());
-                result.Add(RedmineKeys.SHARING, entity.Sharing.ToString());
+                result.Add(RedmineKeys.STATUS, entity.Status.ToString().ToLowerInvariant());
+                result.Add(RedmineKeys.SHARING, entity.Sharing.ToString().ToLowerInvariant());
                 result.Add(RedmineKeys.DESCRIPTION, entity.Description);
 
                 var root = new Dictionary<string, object>();
