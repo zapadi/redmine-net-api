@@ -65,13 +65,13 @@ namespace Redmine.Net.Api.JSonConverters
                 result.Add(RedmineKeys.HOMEPAGE, entity.HomePage);
                 result.Add(RedmineKeys.INHERIT_MEMBERS, entity.InheritMembers.ToString().ToLowerInvariant());
                 result.Add(RedmineKeys.IS_PUBLIC, entity.IsPublic.ToString().ToLowerInvariant());
-
                 result.WriteIdOrEmpty(entity.Parent, RedmineKeys.PARENT_ID, string.Empty);
-                result.WriteArray(RedmineKeys.CUSTOM_FIELDS, entity.CustomFields, new IssueCustomFieldConverter(), serializer);
-
                 result.WriteIdsArray(RedmineKeys.TRACKER_IDS, entity.Trackers);
                 result.WriteNamesArray(RedmineKeys.ENABLED_MODULE_NAMES, entity.EnabledModules);
-              
+                if (entity.Id > 0)
+                {
+                  result.WriteArray(RedmineKeys.CUSTOM_FIELDS, entity.CustomFields, new IssueCustomFieldConverter(), serializer);
+                }
                 var root = new Dictionary<string, object>();
                 root[RedmineKeys.PROJECT] = result;
                 return root;
