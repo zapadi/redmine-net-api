@@ -1,4 +1,19 @@
-﻿
+﻿/*
+   Copyright 2011 - 2016 Adrian Popescu.
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
+
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using Redmine.Net.Api;
@@ -82,6 +97,27 @@ namespace xUnitTestredminenet45api
 			Assert.Throws<NotFoundException>(() => fixture.RedmineManager.GetObject<Project>(PROJECT_IDENTIFIER, null));
 		}
 
+        [Fact]
+      	public void Should_Delete_Project_With_All_Properties_Set()
+      	{
+      		var exception = (RedmineException)Record.Exception(
+      						() => fixture.RedmineManager.DeleteObject<Project>("rnaptap", null));
+      		Assert.Null(exception);
+      		Assert.Throws<NotFoundException>(() => fixture.RedmineManager.GetObject<Project>("rnaptap", null));
+      	}
+
+        [Fact]
+        public void Should_Throw_Exception_When_Create_Empty_Project()
+        {
+            Assert.Throws<RedmineException>(() => fixture.RedmineManager.CreateObject(new Project()));
+        }
+
+        [Fact]
+        public void Should_Throw_Exception_When_Project_Identifier_Is_Invalid()
+        {
+            Assert.Throws<NotFoundException>(() => fixture.RedmineManager.GetObject<Project>("99999999", null));
+        }
+
 	    [Fact]
        	public void Should_Create_Project_With_All_Properties_Set()
        	{
@@ -93,10 +129,41 @@ namespace xUnitTestredminenet45api
             Assert.True(savedProject.Name.Equals("Redmine Net Api Project Test All Properties"), "Project name is invalid.");
         }
 
+	    [Fact]
+	    public void Should_Throw_Exception_Create_Project_Invalid_Trackers()
+	    {
+		    Assert.Throws<NotFoundException>(
+			    () => fixture.RedmineManager.CreateObject(CreateTestProjectWithInvalidTrackersId()));
+	    }
+
         [Fact]
-        public void Should_Get_test_Project_With_All_Properties_Set()
+        public void Should_Create_Project_With_Parent()
         {
-            var project = fixture.RedmineManager.GetObject<Project>(PROJECT_IDENTIFIER, new NameValueCollection
+            var parentProject = fixture.RedmineManager.CreateObject(new Project(){Identifier = "parent-project", Name = "Parent project"});
+
+            var savedProject = fixture.RedmineManager.CreateObject(CreateTestProjectWithParentSet(parentProject.Id));
+            Assert.NotNull(savedProject);
+            Assert.True(savedProject.Parent.Id == parentProject.Id, "Parent project is invalid.");
+        }
+
+        [Fact]
+        public void Should_Delete_Project_And_Parent_Project()
+        {
+            var exception = (RedmineException)Record.Exception(
+                                () => fixture.RedmineManager.DeleteObject<Project>("rnapwps", null));
+            Assert.Null(exception);
+            Assert.Throws<NotFoundException>(() => fixture.RedmineManager.GetObject<Project>("rnapwps", null));
+
+            exception = (RedmineException)Record.Exception(
+                                () => fixture.RedmineManager.DeleteObject<Project>("parent-project", null));
+            Assert.Null(exception);
+            Assert.Throws<NotFoundException>(() => fixture.RedmineManager.GetObject<Project>("parent-project", null));
+        }
+
+        [Fact]
+        public void Should_Get_Test_Project_With_All_Properties_Set()
+        {
+            var project = fixture.RedmineManager.GetObject<Project>("rnaptap", new NameValueCollection
             {
                 {
                     RedmineKeys.INCLUDE,
@@ -111,14 +178,13 @@ namespace xUnitTestredminenet45api
 	        Assert.True(project.Description.Equals("This is a test project."), "Project description not equal.");
             Assert.True(project.HomePage.Equals("www.redminetest.com"), "Project homepage not equal.");
             Assert.True(project.IsPublic.Equals(true), "Project is_public not equal.");
-            Assert.True(project.InheritMembers.Equals(true), "Project inherit_members not equal.");
 
             Assert.NotNull(project.Trackers);
             Assert.True(project.Trackers.Count == 2, "Trackers count != " + 2);
             Assert.All(project.Trackers, t => Assert.IsType<ProjectTracker>(t));
 
             Assert.NotNull(project.EnabledModules);
-            Assert.True(project.EnabledModules.Count == 2, "Enabled modules count != " + 2);
+            Assert.True(project.EnabledModules.Count == 2, "Enabled modules count ("+project.EnabledModules.Count+") != " + 2);
             Assert.All(project.EnabledModules, em => Assert.IsType<ProjectEnabledModule>(em));
         }
 
@@ -160,13 +226,29 @@ namespace xUnitTestredminenet45api
 		    return project;
        	}
 
-	    private static Project CreateTestProjectWithParentSet()
+	    private static Project CreateTestProjectWithInvalidTrackersId()
+        {
+        	var project = new Project
+        		{
+        			Name = "Redmine Net Api Project Test Invalid Trackers",
+					Identifier = "rnaptit",
+        			Trackers = new List<ProjectTracker>()
+        			{
+        				new ProjectTracker {Id = 10},
+        				new ProjectTracker {Id = 20}
+        			},
+        		};
+
+        	return project;
+        }
+
+	    private static Project CreateTestProjectWithParentSet(int parentId)
        	{
         	var project = new Project
         	{
         		Name = "Redmine Net Api Project With Parent Set",
         		Identifier = "rnapwps",
-			    Parent = new IdentifiableName{Id = 1}
+			    Parent = new IdentifiableName{Id = parentId}
         	};
 
         	return project;
