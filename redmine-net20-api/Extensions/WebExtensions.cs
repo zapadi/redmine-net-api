@@ -22,6 +22,7 @@ using System.Net;
 using Redmine.Net.Api.Internals;
 using Redmine.Net.Api.Types;
 using Redmine.Net.Api.Exceptions;
+using Redmine.Net.Api.Logging;
 
 namespace Redmine.Net.Api.Extensions
 {
@@ -100,7 +101,7 @@ namespace Redmine.Net.Api.Extensions
                     }
                     catch (Exception ex)
                     {
-                        Trace.TraceError(ex.Message);
+                        Logger.Current.Error(ex.Message);
                     }
                 }
                 return null;
