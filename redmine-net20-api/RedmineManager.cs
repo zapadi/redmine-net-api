@@ -36,7 +36,7 @@ namespace Redmine.Net.Api
     /// <summary>
     /// The main class to access Redmine API.
     /// </summary>
-    public class RedmineManager : IRedmineManager
+    public class RedmineManager //: IRedmineManager
     {
         /// <summary>
         /// 
@@ -349,7 +349,7 @@ namespace Redmine.Net.Api
         /// <returns>Returns the object of type T.</returns>
         /// <exception cref="System.InvalidOperationException"> An error occurred during deserialization. The original exception is available
         /// using the System.Exception.InnerException property.</exception>
-        /// <code> 
+        /// <code>
         /// <example>
         ///     string issueId = "927";
         ///     NameValueCollection parameters = null;
@@ -415,20 +415,29 @@ namespace Redmine.Net.Api
         /// </summary>
         /// <typeparam name="T">The type of objects to retrieve.</typeparam>
         /// <param name="parameters">Optional filters and/or optional fetched data.</param>
-        /// <returns>Returns a complete list of objects.</returns>
-        public List<T> GetObjects<T>(NameValueCollection parameters) where T : class, new()
+        /// <returns>
+        /// Returns a complete list of objects.
+        /// </returns>
+	    public List<T> GetObjects<T>(NameValueCollection parameters) where T : class, new()
         {
-            int totalCount = 0, pageSize, offset;
+            int totalCount = 0, pageSize = 0, offset = 0;
             List<T> resultList = null;
 
-            if (parameters == null) parameters = new NameValueCollection();
-            int.TryParse(parameters[RedmineKeys.LIMIT], out pageSize);
-            int.TryParse(parameters[RedmineKeys.OFFSET], out offset);
-            if (pageSize == default(int))
+	        if (parameters == null)
+	        {
+		        parameters = new NameValueCollection();
+	        }
+	        else
+	        {
+		        int.TryParse(parameters[RedmineKeys.LIMIT], out pageSize);
+		        int.TryParse(parameters[RedmineKeys.OFFSET], out offset);
+	        }
+	        if (pageSize == default(int))
             {
                 pageSize = PageSize > 0 ? PageSize : DEFAULT_PAGE_SIZE_VALUE;
                 parameters.Set(RedmineKeys.LIMIT, pageSize.ToString(CultureInfo.InvariantCulture));
             }
+
             try
             {
                 do
@@ -499,7 +508,7 @@ namespace Redmine.Net.Api
         /// <typeparam name="T">The type of object to be update.</typeparam>
         /// <param name="id">The id of the object to be update.</param>
         /// <param name="obj">The object to be update.</param>
-        /// <remarks>When trying to update an object with invalid or missing attribute parameters, you will get a 422 Unprocessable Entity response. That means that the object could not be updated.</remarks>
+        /// <remarks>When trying to update an object with invalid or missing attribute parameters, you will get a 422(RedmineException) Unprocessable Entity response. That means that the object could not be updated.</remarks>
         /// <exception cref="RedmineException"></exception>
         /// <code></code>
         public void UpdateObject<T>(string id, T obj) where T : class, new()
@@ -514,7 +523,7 @@ namespace Redmine.Net.Api
         /// <param name="id">The id of the object to be update.</param>
         /// <param name="obj">The object to be update.</param>
         /// <param name="projectId"></param>
-        /// <remarks>When trying to update an object with invalid or missing attribute parameters, you will get a 422 Unprocessable Entity response. That means that the object could not be updated.</remarks>
+        /// <remarks>When trying to update an object with invalid or missing attribute parameters, you will get a 422(RedmineException) Unprocessable Entity response. That means that the object could not be updated.</remarks>
         /// <exception cref="RedmineException"></exception>
         /// <code></code>
         public void UpdateObject<T>(string id, T obj, string projectId) where T : class, new()
@@ -608,7 +617,9 @@ namespace Redmine.Net.Api
             var webClient = new RedmineWebClient { Proxy = Proxy };
             if (!uploadFile)
             {
-                webClient.Headers.Add(HttpRequestHeader.ContentType, MimeFormat == MimeFormat.Xml ? "application/xml" : "application/json");
+                webClient.Headers.Add(HttpRequestHeader.ContentType, MimeFormat == MimeFormat.Xml
+	                ? "application/xml"
+	                : "application/json");
                 webClient.Encoding = Encoding.UTF8;
             }
             else
