@@ -30,7 +30,7 @@ namespace Redmine.Net.Api.Types
     public class Project : IdentifiableName, IEquatable<Project>
     {
         /// <summary>
-        /// Gets or sets the identifier.
+        /// Gets or sets the identifier (Required).
         /// </summary>
         /// <value>The identifier.</value>
         [XmlElement(RedmineKeys.IDENTIFIER)]
@@ -72,8 +72,11 @@ namespace Redmine.Net.Api.Types
         public DateTime? UpdatedOn { get; set; }
 
         /// <summary>
-        /// 
+        /// Gets or sets the status.
         /// </summary>
+        /// <value>
+        /// The status.
+        /// </value>
         [XmlElement(RedmineKeys.STATUS)]
         public ProjectStatus Status { get; set; }
 
@@ -87,6 +90,12 @@ namespace Redmine.Net.Api.Types
         [XmlElement(RedmineKeys.IS_PUBLIC)]
         public bool IsPublic { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [inherit members].
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [inherit members]; otherwise, <c>false</c>.
+        /// </value>
         [XmlElement(RedmineKeys.INHERIT_MEMBERS)]
         public bool InheritMembers { get; set; }
 
@@ -101,15 +110,21 @@ namespace Redmine.Net.Api.Types
         public IList<ProjectTracker> Trackers { get; set; }
 
         /// <summary>
-        /// 
+        /// Gets or sets the custom fields.
         /// </summary>
+        /// <value>
+        /// The custom fields.
+        /// </value>
         [XmlArray(RedmineKeys.CUSTOM_FIELDS)]
         [XmlArrayItem(RedmineKeys.CUSTOM_FIELD)]
         public IList<IssueCustomField> CustomFields { get; set; }
 
         /// <summary>
-        /// 
+        /// Gets or sets the issue categories.
         /// </summary>
+        /// <value>
+        /// The issue categories.
+        /// </value>
         [XmlArray(RedmineKeys.ISSUE_CATEGORIES)]
         [XmlArrayItem(RedmineKeys.ISSUE_CATEGORY)]
         public IList<ProjectIssueCategory> IssueCategories { get; set; }
@@ -117,6 +132,9 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// since 2.6.0
         /// </summary>
+        /// <value>
+        /// The enabled modules.
+        /// </value>
         [XmlArray(RedmineKeys.ENABLED_MODULES)]
         [XmlArrayItem(RedmineKeys.ENABLED_MODULE)]
         public IList<ProjectEnabledModule> EnabledModules { get; set; }
@@ -174,7 +192,6 @@ namespace Redmine.Net.Api.Types
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="writer"></param>
         public override void WriteXml(XmlWriter writer)

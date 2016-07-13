@@ -16,6 +16,9 @@ namespace Redmine.Net.Api.Async
     /// <returns></returns>
     public delegate TRes Task<out TRes>();
 
+	  /// <summary>
+        ///
+        /// </summary>
     public static class RedmineManagerAsync
     {
         /// <summary>

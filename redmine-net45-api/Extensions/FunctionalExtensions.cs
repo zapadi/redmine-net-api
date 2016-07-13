@@ -2,6 +2,9 @@ using System;
 
 namespace Redmine.Net.Api.Extensions
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class FunctionalExtensions
     {
 
@@ -17,6 +20,14 @@ namespace Redmine.Net.Api.Extensions
             return @this;
         }
 
+        /// <summary>
+        /// Maps the specified function.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the source.</typeparam>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="this">The this.</param>
+        /// <param name="fn">The function.</param>
+        /// <returns></returns>
         public static TResult Map<TSource, TResult>(this TSource @this, Func<TSource, TResult> fn)
         {
             return fn(@this);

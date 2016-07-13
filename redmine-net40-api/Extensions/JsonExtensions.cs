@@ -26,6 +26,9 @@ using Redmine.Net.Api.Types;
 
 namespace Redmine.Net.Api.Extensions
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class JsonExtensions
     {
         /// <summary>

@@ -110,6 +110,12 @@ namespace Redmine.Net.Api.Types
         [XmlElement(RedmineKeys.DONE_RATIO, IsNullable = true)]
         public float? DoneRatio { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [private notes].
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [private notes]; otherwise, <c>false</c>.
+        /// </value>
         [XmlElement(RedmineKeys.PRIVATE_NOTES)]
         public bool PrivateNotes { get; set; }
 

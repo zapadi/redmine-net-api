@@ -23,15 +23,39 @@ namespace Redmine.Net.Api.Logging
     /// </summary>
     public class LogEntry
     {
-        public readonly LoggingEventType Severity;
-        public readonly string Message;
-        public readonly Exception Exception;
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LogEntry"/> class.
+        /// </summary>
+        /// <param name="severity">The severity.</param>
+        /// <param name="message">The message.</param>
+        /// <param name="exception">The exception.</param>
         public LogEntry(LoggingEventType severity, string message, Exception exception = null)
         {
             Severity = severity;
             Message = message;
             Exception = exception;
         }
+
+        /// <summary>
+        /// Gets the severity.
+        /// </summary>
+        /// <value>
+        /// The severity.
+        /// </value>
+        public LoggingEventType Severity { get; private set; }
+        /// <summary>
+        /// Gets the message.
+        /// </summary>
+        /// <value>
+        /// The message.
+        /// </value>
+        public string Message { get; private set; }
+        /// <summary>
+        /// Gets the exception.
+        /// </summary>
+        /// <value>
+        /// The exception.
+        /// </value>
+        public Exception Exception { get; private set; }
     }
 }

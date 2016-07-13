@@ -24,8 +24,27 @@ using Redmine.Net.Api.Exceptions;
 
 namespace Redmine.Net.Api.Extensions
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class WebExtensions
     {
+        /// <summary>
+        /// Handles the web exception.
+        /// </summary>
+        /// <param name="exception">The exception.</param>
+        /// <param name="method">The method.</param>
+        /// <param name="mimeFormat">The MIME format.</param>
+        /// <exception cref="RedmineTimeoutException">Timeout!</exception>
+        /// <exception cref="NameResolutionFailureException">Bad domain name!</exception>
+        /// <exception cref="NotFoundException"></exception>
+        /// <exception cref="InternalServerErrorException"></exception>
+        /// <exception cref="UnauthorizedException"></exception>
+        /// <exception cref="ForbiddenException"></exception>
+        /// <exception cref="ConflictException">The page that you are trying to update is staled!</exception>
+        /// <exception cref="RedmineException">
+        /// </exception>
+        /// <exception cref="NotAcceptableException"></exception>
         public static void HandleWebException(this WebException exception, string method, MimeFormat mimeFormat)
         {
             if (exception == null) return;

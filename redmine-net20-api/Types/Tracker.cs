@@ -27,6 +27,9 @@ namespace Redmine.Net.Api.Types
     [XmlRoot(RedmineKeys.TRACKER)]
     public class Tracker : IdentifiableName, IEquatable<Tracker>
     {
+        /// <summary>
+        /// </summary>
+        /// <param name="writer"></param>
         public override void WriteXml(XmlWriter writer) { }
 
         /// <summary>
