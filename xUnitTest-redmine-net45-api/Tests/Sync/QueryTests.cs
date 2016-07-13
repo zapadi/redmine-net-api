@@ -1,5 +1,4 @@
-﻿using System;
-using Xunit;
+﻿using Xunit;
 using Redmine.Net.Api.Types;
 
 namespace xUnitTestredminenet45api
@@ -10,7 +9,7 @@ namespace xUnitTestredminenet45api
 		private const int NUMBER_OF_QUERIES = 2;
 		private const bool EXISTS_PUBLIC_QUERY = true;
 
-		RedmineFixture fixture;
+	    private readonly RedmineFixture fixture;
 		public QueryTests (RedmineFixture fixture)
 		{
 			this.fixture = fixture;
@@ -29,4 +28,3 @@ namespace xUnitTestredminenet45api
 		}
 	}
 }
-

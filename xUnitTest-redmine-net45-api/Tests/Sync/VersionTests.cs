@@ -17,7 +17,7 @@ namespace xUnitTestredminenet45api
 		private const string NEW_VERSION_NAME = "VersionTesting";
 		private const VersionStatus NEW_VERSION_STATUS = VersionStatus.locked;
 		private const VersionSharing NEW_VERSION_SHARING = VersionSharing.hierarchy;
-		private DateTime NEW_VERSION_DUE_DATE = DateTime.Now.AddDays(7);
+		private DateTime newVersionDueDate = DateTime.Now.AddDays(7);
 		private const string NEW_VERSION_DESCRIPTION = "Version description";
 
 		private const string VERSION_ID = "6";
@@ -27,12 +27,12 @@ namespace xUnitTestredminenet45api
 		private const string UPDATED_VERSION_NAME = "Updated version";
 		private const VersionStatus UPDATED_VERSION_STATUS = VersionStatus.closed;
 		private const VersionSharing UPDATED_VERSION_SHARING = VersionSharing.system;
-		private DateTime UPDATED_VERSION_DUE_DATE = DateTime.Now.AddMonths(1);
+		private readonly DateTime updatedVersionDueDate = DateTime.Now.AddMonths(1);
 		private const string UPDATED_VERSION_DESCRIPTION = "Updated description";
 
 		private const string DELETED_VERSION_ID = "22";
 
-		RedmineFixture fixture;
+	    private readonly RedmineFixture fixture;
 		public VersionTests  (RedmineFixture fixture)
 		{
 			this.fixture = fixture;
@@ -56,10 +56,10 @@ namespace xUnitTestredminenet45api
 			version.Name = NEW_VERSION_NAME;
 			version.Status = NEW_VERSION_STATUS;
 			version.Sharing = NEW_VERSION_SHARING;
-			version.DueDate = NEW_VERSION_DUE_DATE;
+			version.DueDate = newVersionDueDate;
 			version.Description = NEW_VERSION_DESCRIPTION;
 
-			Redmine.Net.Api.Types.Version savedVersion = fixture.RedmineManager.CreateObject<Redmine.Net.Api.Types.Version>(version, PROJECT_ID);
+			Redmine.Net.Api.Types.Version savedVersion = fixture.RedmineManager.CreateObject(version, PROJECT_ID);
 
 			Assert.NotNull(savedVersion);
 			Assert.NotNull(savedVersion.Project);
@@ -67,7 +67,7 @@ namespace xUnitTestredminenet45api
 			Assert.True(savedVersion.Status.Equals(NEW_VERSION_STATUS), "Version status is invalid.");
 			Assert.True(savedVersion.Sharing.Equals(NEW_VERSION_SHARING), "Version sharing is invalid.");
 			Assert.NotNull(savedVersion.DueDate);
-			Assert.True(savedVersion.DueDate.Value.Date.Equals(NEW_VERSION_DUE_DATE.Date), "Version due date is invalid.");
+			Assert.True(savedVersion.DueDate.Value.Date.Equals(newVersionDueDate.Date), "Version due date is invalid.");
 			Assert.True(savedVersion.Description.Equals(NEW_VERSION_DESCRIPTION), "Version description is invalid.");
 		}
 
@@ -97,10 +97,10 @@ namespace xUnitTestredminenet45api
 			version.Name = UPDATED_VERSION_NAME;
 			version.Status = UPDATED_VERSION_STATUS;
 			version.Sharing = UPDATED_VERSION_SHARING;
-			version.DueDate = UPDATED_VERSION_DUE_DATE;
+			version.DueDate = updatedVersionDueDate;
 			version.Description = UPDATED_VERSION_DESCRIPTION;
 
-			fixture.RedmineManager.UpdateObject<Redmine.Net.Api.Types.Version>(UPDATED_VERSION_ID, version);
+			fixture.RedmineManager.UpdateObject(UPDATED_VERSION_ID, version);
 
 			Redmine.Net.Api.Types.Version updatedVersion = fixture.RedmineManager.GetObject<Redmine.Net.Api.Types.Version>(UPDATED_VERSION_ID, null);
 
@@ -121,4 +121,3 @@ namespace xUnitTestredminenet45api
 		}
 	}
 }
-

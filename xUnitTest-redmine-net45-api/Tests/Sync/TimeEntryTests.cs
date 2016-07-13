@@ -1,6 +1,5 @@
 ﻿using System;
 using Xunit;
-using Redmine.Net.Api;
 using Redmine.Net.Api.Types;
 using Redmine.Net.Api.Exceptions;
 
@@ -12,7 +11,7 @@ namespace xUnitTestredminenet45api
 		//timeEntryData - used for create
 		private const int NEW_TIME_ENTRY_ISSUE_ID = 18;
 		private const int NEW_TIME_ENTRY_PROJECT_ID = 9;
-		private DateTime NEW_TIME_ENTRY_DATE = DateTime.Now;
+		private DateTime newTimeEntryDate = DateTime.Now;
 		private const int NEW_TIME_ENTRY_HOURS = 1;
 		private const int NEW_TIME_ENTRY_ACTIVITY_ID = 16;
 		private const string NEW_TIME_ENTRY_COMMENTS = "Added time entry on project";
@@ -23,14 +22,14 @@ namespace xUnitTestredminenet45api
 		private const string UPDATED_TIME_ENTRY_ID = "31";
 		private const int UPDATED_TIME_ENTRY_ISSUE_ID = 18;
 		private const int UPDATED_TIME_ENTRY_PROJECT_ID = 9;
-		private DateTime UPDATED_TIME_ENTRY_DATE = DateTime.Now.AddDays(-2);
+		private readonly DateTime updatedTimeEntryDate = DateTime.Now.AddDays(-2);
 		private const int UPDATED_TIME_ENTRY_HOURS = 3;
 		private const int UPDATED_TIME_ENTRY_ACTIVITY_ID = 17;
 		private const string UPDATED_TIME_ENTRY_COMMENTS = "Time entry updated";
 
 		private const string DELETED_TIME_ENTRY_ID = "43";
 
-		RedmineFixture fixture;
+	    private readonly RedmineFixture fixture;
 		public TimeEntryTests (RedmineFixture fixture)
 		{
 			this.fixture = fixture;
@@ -52,12 +51,12 @@ namespace xUnitTestredminenet45api
 			TimeEntry timeEntry = new TimeEntry();
 			timeEntry.Issue = new IdentifiableName { Id = NEW_TIME_ENTRY_ISSUE_ID };
 			timeEntry.Project = new IdentifiableName { Id = NEW_TIME_ENTRY_PROJECT_ID };
-			timeEntry.SpentOn = NEW_TIME_ENTRY_DATE;
+			timeEntry.SpentOn = newTimeEntryDate;
 			timeEntry.Hours = NEW_TIME_ENTRY_HOURS;
 			timeEntry.Activity = new IdentifiableName { Id = NEW_TIME_ENTRY_ACTIVITY_ID };
 			timeEntry.Comments = NEW_TIME_ENTRY_COMMENTS;
 
-			TimeEntry savedTimeEntry = fixture.RedmineManager.CreateObject<TimeEntry>(timeEntry);
+			TimeEntry savedTimeEntry = fixture.RedmineManager.CreateObject(timeEntry);
 
 			Assert.NotNull (savedTimeEntry);
 			Assert.NotNull(savedTimeEntry.Issue);
@@ -65,7 +64,7 @@ namespace xUnitTestredminenet45api
 			Assert.NotNull(savedTimeEntry.Project);
 			Assert.True(savedTimeEntry.Project.Id == NEW_TIME_ENTRY_PROJECT_ID, "Project id is invalid.");
 			Assert.NotNull(savedTimeEntry.SpentOn);
-			Assert.True(DateTime.Compare(savedTimeEntry.SpentOn.Value.Date, NEW_TIME_ENTRY_DATE.Date) ==0, "Date is invalid.");
+			Assert.True(DateTime.Compare(savedTimeEntry.SpentOn.Value.Date, newTimeEntryDate.Date) ==0, "Date is invalid.");
 			Assert.NotNull(savedTimeEntry.Hours);
 			Assert.True(savedTimeEntry.Hours == NEW_TIME_ENTRY_HOURS, "Hours value is not valid.");
 			Assert.NotNull(savedTimeEntry.Activity);
@@ -103,14 +102,14 @@ namespace xUnitTestredminenet45api
 			var timeEntry = fixture.RedmineManager.GetObject<TimeEntry>(UPDATED_TIME_ENTRY_ID, null);
 			timeEntry.Project.Id = UPDATED_TIME_ENTRY_PROJECT_ID;
 			timeEntry.Issue.Id = UPDATED_TIME_ENTRY_ISSUE_ID;
-			timeEntry.SpentOn = UPDATED_TIME_ENTRY_DATE;
+			timeEntry.SpentOn = updatedTimeEntryDate;
 			timeEntry.Hours = UPDATED_TIME_ENTRY_HOURS;
 			timeEntry.Comments = UPDATED_TIME_ENTRY_COMMENTS;
 
 			if (timeEntry.Activity == null) timeEntry.Activity = new IdentifiableName();
 			timeEntry.Activity.Id = UPDATED_TIME_ENTRY_ACTIVITY_ID;
 
-			fixture.RedmineManager.UpdateObject<TimeEntry>(UPDATED_TIME_ENTRY_ID, timeEntry);
+			fixture.RedmineManager.UpdateObject(UPDATED_TIME_ENTRY_ID, timeEntry);
 
 			var updatedTimeEntry = fixture.RedmineManager.GetObject<TimeEntry>(UPDATED_TIME_ENTRY_ID, null);
 
@@ -131,4 +130,3 @@ namespace xUnitTestredminenet45api
 		}
 	}
 }
-

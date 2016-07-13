@@ -1,5 +1,4 @@
-﻿using System;
-using Xunit;
+﻿using Xunit;
 using Redmine.Net.Api.Types;
 
 namespace xUnitTestredminenet45api
@@ -7,7 +6,7 @@ namespace xUnitTestredminenet45api
 	[Collection("RedmineCollection")]
 	public class TrackerTests
 	{
-		RedmineFixture fixture;
+	    private readonly RedmineFixture fixture;
 
 		private const int NUMBER_OF_TRACKERS = 2;
 
@@ -28,4 +27,3 @@ namespace xUnitTestredminenet45api
 		}
 	}
 }
-

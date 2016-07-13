@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Specialized;
+﻿using System.Collections.Specialized;
 using System.Collections.Generic;
 using Xunit;
 using Redmine.Net.Api;
@@ -28,7 +27,7 @@ namespace xUnitTestredminenet45api
 
 		private const string DELETED_GROUP_ID = "63";
 
-		RedmineFixture fixture;
+	    private readonly RedmineFixture fixture;
 		public GroupTests (RedmineFixture fixture)
 		{
 			this.fixture = fixture;
@@ -89,7 +88,7 @@ namespace xUnitTestredminenet45api
 			group.Users.Add(new GroupUser { Id = NEW_GROUP_USER_ID });
 
 			Group savedGroup = null;
-			RedmineException exception = (RedmineException)Record.Exception(() => savedGroup = fixture.RedmineManager.CreateObject<Group>(group));
+			RedmineException exception = (RedmineException)Record.Exception(() => savedGroup = fixture.RedmineManager.CreateObject(group));
 
 			Assert.Null (exception);
 			Assert.NotNull(savedGroup);
@@ -103,7 +102,7 @@ namespace xUnitTestredminenet45api
 			group.Name = UPDATED_GROUP_NAME;
 			group.Users.Add(new GroupUser { Id = UPDATED_GROUP_USER_ID });
 
-			fixture.RedmineManager.UpdateObject<Group>(UPDATED_GROUP_ID, group);
+			fixture.RedmineManager.UpdateObject(UPDATED_GROUP_ID, group);
 
 			Group updatedGroup = fixture.RedmineManager.GetObject<Group>(UPDATED_GROUP_ID, new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.USERS } });
 
@@ -133,4 +132,3 @@ namespace xUnitTestredminenet45api
 		}
 	}
 }
-

@@ -1,5 +1,4 @@
-﻿using System;
-using Xunit;
+﻿using Xunit;
 using Redmine.Net.Api.Types;
 
 namespace xUnitTestredminenet45api
@@ -11,7 +10,7 @@ namespace xUnitTestredminenet45api
 		private const bool EXISTS_CLOSED_ISSUE_STATUSES = true;
 		private const bool EXISTS_DEFAULT_ISSUE_STATUSES = true;
 
-		RedmineFixture fixture;
+	    private readonly RedmineFixture fixture;
 		public IssueStatusTests (RedmineFixture fixture)
 		{
 			this.fixture = fixture;
@@ -31,4 +30,3 @@ namespace xUnitTestredminenet45api
 		}
 	}
 }
-

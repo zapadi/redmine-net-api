@@ -1,5 +1,4 @@
-﻿using System;
-using Xunit;
+﻿using Xunit;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Types;
 
@@ -11,7 +10,7 @@ namespace xUnitTestredminenet45api
 		private const int NUMBER_OF_CUSTOM_FIELDS = 10;
 		private const bool ISSUE_CUSTOM_FIELD_EXISTS = true;
 
-		RedmineFixture fixture;
+	    private readonly RedmineFixture fixture;
 		public CustomFieldTests (RedmineFixture fixture)
 		{
 			this.fixture = fixture;
@@ -30,4 +29,3 @@ namespace xUnitTestredminenet45api
 		}
 	}
 }
-

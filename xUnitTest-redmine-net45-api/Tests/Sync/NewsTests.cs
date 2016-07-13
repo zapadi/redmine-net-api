@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Specialized;
+﻿using System.Collections.Specialized;
 using Xunit;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Types;
@@ -13,7 +12,7 @@ namespace xUnitTestredminenet45api
 		private const string PROJECT_ID = "redmine-net-testq";
 		private const int NUMBER_OF_NEWS_BY_PROJECT_ID = 1;
 
-		RedmineFixture fixture;
+	    private readonly RedmineFixture fixture;
 		public NewsTests (RedmineFixture fixture)
 		{
 			this.fixture = fixture;
@@ -57,4 +56,3 @@ namespace xUnitTestredminenet45api
 		}
 	}
 }
-

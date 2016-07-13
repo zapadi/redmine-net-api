@@ -1,5 +1,4 @@
-﻿using System;
-using Xunit;
+﻿using Xunit;
 using Redmine.Net.Api.Types;
 
 namespace xUnitTestredminenet45api
@@ -12,7 +11,7 @@ namespace xUnitTestredminenet45api
 		private const string ROLE_NAME = "CustomRole";
 		private const int NUMBER_OF_ROLE_PERMISSIONS = 1;
 
-		RedmineFixture fixture;
+	    private readonly RedmineFixture fixture;
 		public RoleTests (RedmineFixture fixture)
 		{
 			this.fixture = fixture;
@@ -41,4 +40,3 @@ namespace xUnitTestredminenet45api
 		}
 	}
 }
-

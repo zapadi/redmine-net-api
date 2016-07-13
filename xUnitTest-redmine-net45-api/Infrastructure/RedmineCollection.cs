@@ -1,5 +1,4 @@
-﻿using System;
-using Xunit;
+﻿using Xunit;
 
 namespace xUnitTestredminenet45api
 {
@@ -9,4 +8,3 @@ namespace xUnitTestredminenet45api
 		
 	}
 }
-

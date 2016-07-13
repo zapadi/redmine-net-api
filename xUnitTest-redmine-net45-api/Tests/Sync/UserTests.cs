@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Specialized;
+﻿using System.Collections.Specialized;
 using System.Collections.Generic;
 using System.Globalization;
 
@@ -40,7 +39,7 @@ namespace xUnitTestredminenet45api
 
 		private const int GROUP_ID = 9;
 
-		RedmineFixture fixture;
+	    private readonly RedmineFixture fixture;
 		public UserTests(RedmineFixture fixture)
 		{
 			this.fixture = fixture;
@@ -119,7 +118,7 @@ namespace xUnitTestredminenet45api
 			user.CustomFields.Add(new IssueCustomField { Id = USER_CUSTOM_FIELD_ID, Values = new List<CustomFieldValue> { new CustomFieldValue { Info = USER_CUSTOM_FIELD_VALUE } } });
 
 			User savedRedmineUser = null;
-			RedmineException exception = (RedmineException)Record.Exception(() => savedRedmineUser = fixture.RedmineManager.CreateObject<User>(user));
+			RedmineException exception = (RedmineException)Record.Exception(() => savedRedmineUser = fixture.RedmineManager.CreateObject(user));
 
 			Assert.Null (exception);
 			Assert.NotNull(savedRedmineUser);
@@ -132,7 +131,7 @@ namespace xUnitTestredminenet45api
 		{
 			User user = fixture.RedmineManager.GetObject<User>(USER_ID_TO_UPDATE, null);
 			user.FirstName = USER_FIRST_NAME_UPDATED;
-			fixture.RedmineManager.UpdateObject<User>(USER_ID_TO_UPDATE, user);
+			fixture.RedmineManager.UpdateObject(USER_ID_TO_UPDATE, user);
 
 			User updatedUser = fixture.RedmineManager.GetObject<User>(USER_ID_TO_UPDATE, null);
 
@@ -204,4 +203,3 @@ namespace xUnitTestredminenet45api
 
 	}
 }
-

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Specialized;
+﻿using System.Collections.Specialized;
 using Xunit;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Types;
@@ -23,7 +22,7 @@ namespace xUnitTestredminenet45api
 
 		private const string RELATION_ID_TO_COMPARE = "26";
 
-		RedmineFixture fixture;
+	    private readonly RedmineFixture fixture;
 		public IssueRelationTests (RedmineFixture fixture)
 		{
 			this.fixture = fixture;
@@ -37,7 +36,7 @@ namespace xUnitTestredminenet45api
 			relation.Type = RELATION_TYPE;
 			relation.Delay = RELATION_DELAY;
 
-			IssueRelation savedRelation = fixture.RedmineManager.CreateObject<IssueRelation>(relation, ISSUE_ID);
+			IssueRelation savedRelation = fixture.RedmineManager.CreateObject(relation, ISSUE_ID);
 
 			Assert.NotNull(savedRelation);
 			Assert.True(savedRelation.IssueId == RELATED_ISSUE_ID, "Related issue id is not valid.");
@@ -85,4 +84,3 @@ namespace xUnitTestredminenet45api
 		}
 	}
 }
-

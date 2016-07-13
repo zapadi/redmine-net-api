@@ -75,7 +75,7 @@ namespace xUnitTestredminenet45api
 		private const int CLONED_ISSUE_CUSTOM_FIELD_ID = 13;
 		private const string CLONED_ISSUE_CUSTOM_FIELD_VALUE = "Cloned issue custom field value";
 
-		RedmineFixture fixture;
+	    private readonly RedmineFixture fixture;
 		public IssueTests (RedmineFixture fixture)
 		{
 			this.fixture = fixture;
@@ -312,4 +312,3 @@ namespace xUnitTestredminenet45api
 		}
 	}
 }
-

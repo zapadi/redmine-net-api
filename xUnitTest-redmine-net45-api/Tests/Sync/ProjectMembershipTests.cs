@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Specialized;
+﻿using System.Collections.Specialized;
 using System.Collections.Generic;
 using Xunit;
 using Redmine.Net.Api.Types;
@@ -26,7 +25,7 @@ namespace xUnitTestredminenet45api
 
 		private const string DELETED_PROJECT_MEMBERSHIP_ID = "142";
 
-		RedmineFixture fixture;
+	    private readonly RedmineFixture fixture;
 		public ProjectMembershipTests (RedmineFixture fixture)
 		{
 			this.fixture = fixture;
@@ -50,12 +49,12 @@ namespace xUnitTestredminenet45api
 			pm.Roles = new List<MembershipRole>();
 			pm.Roles.Add(new MembershipRole { Id = NEW_PROJECT_MEMBERSHIP_ROLE_ID });
 
-			ProjectMembership createdPM = fixture.RedmineManager.CreateObject<ProjectMembership>(pm, PROJECT_IDENTIFIER);
+			ProjectMembership createdPm = fixture.RedmineManager.CreateObject(pm, PROJECT_IDENTIFIER);
 
-			Assert.NotNull(createdPM);
-			Assert.True(createdPM.User.Id == NEW_PROJECT_MEMBERSHIP_USER_ID, "User is invalid.");
-			Assert.NotNull(createdPM.Roles);
-			Assert.True(createdPM.Roles.Exists(r => r.Id == NEW_PROJECT_MEMBERSHIP_ROLE_ID), string.Format("Role id {0} does not exist.", NEW_PROJECT_MEMBERSHIP_ROLE_ID));
+			Assert.NotNull(createdPm);
+			Assert.True(createdPm.User.Id == NEW_PROJECT_MEMBERSHIP_USER_ID, "User is invalid.");
+			Assert.NotNull(createdPm.Roles);
+			Assert.True(createdPm.Roles.Exists(r => r.Id == NEW_PROJECT_MEMBERSHIP_ROLE_ID), string.Format("Role id {0} does not exist.", NEW_PROJECT_MEMBERSHIP_ROLE_ID));
 		}
 
 		[Fact]
@@ -86,15 +85,15 @@ namespace xUnitTestredminenet45api
 			var pm = fixture.RedmineManager.GetObject<ProjectMembership>(UPDATED_PROJECT_MEMBERSHIP_ID, null);
 			pm.Roles.Add(new MembershipRole { Id = UPDATED_PROJECT_MEMBERSHIP_ROLE_ID });
 
-			fixture.RedmineManager.UpdateObject<ProjectMembership>(UPDATED_PROJECT_MEMBERSHIP_ID, pm);
+			fixture.RedmineManager.UpdateObject(UPDATED_PROJECT_MEMBERSHIP_ID, pm);
 
-			var updatedPM = fixture.RedmineManager.GetObject<ProjectMembership>(UPDATED_PROJECT_MEMBERSHIP_ID, null);
+			var updatedPm = fixture.RedmineManager.GetObject<ProjectMembership>(UPDATED_PROJECT_MEMBERSHIP_ID, null);
 
-			Assert.NotNull(updatedPM);
-			Assert.NotNull(updatedPM.Roles);
-			Assert.All (updatedPM.Roles, r => Assert.IsType<MembershipRole> (r));
+			Assert.NotNull(updatedPm);
+			Assert.NotNull(updatedPm.Roles);
+			Assert.All (updatedPm.Roles, r => Assert.IsType<MembershipRole> (r));
 
-			Assert.True(updatedPM.Roles.Find(r => r.Id == UPDATED_PROJECT_MEMBERSHIP_ROLE_ID) != null, string.Format("Role with id {0} was not found in roles list.", UPDATED_PROJECT_MEMBERSHIP_ROLE_ID));
+			Assert.True(updatedPm.Roles.Find(r => r.Id == UPDATED_PROJECT_MEMBERSHIP_ROLE_ID) != null, string.Format("Role with id {0} was not found in roles list.", UPDATED_PROJECT_MEMBERSHIP_ROLE_ID));
 		}
 
 		[Fact]
@@ -106,4 +105,3 @@ namespace xUnitTestredminenet45api
 		}
 	}
 }
-

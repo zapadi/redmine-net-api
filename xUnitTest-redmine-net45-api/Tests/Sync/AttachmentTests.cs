@@ -11,17 +11,17 @@ namespace xUnitTestredminenet45api
 	[Collection("RedmineCollection")]
 	public class AttachmentTests
 	{
-		const string ATTACHMENT_LOCAL_PATH = "uploadAttachment.pages";
-		const string ATTACHMENT_NAME = "AttachmentUploaded.txt";
-		const string ATTACHMENT_DESCRIPTION = "File uploaded using REST API";
-		const string ATTACHMENT_CONTENT_TYPE = "text/plain";
-		const int PROJECT_ID = 9;
-		const string ISSUE_SUBJECT = "Issue with attachments";
+	    private const string ATTACHMENT_LOCAL_PATH = "uploadAttachment.pages";
+	    private const string ATTACHMENT_NAME = "AttachmentUploaded.txt";
+	    private const string ATTACHMENT_DESCRIPTION = "File uploaded using REST API";
+	    private const string ATTACHMENT_CONTENT_TYPE = "text/plain";
+	    private const int PROJECT_ID = 9;
+	    private const string ISSUE_SUBJECT = "Issue with attachments";
 
-		const string ATTACHMENT_ID = "48";
-		const string ATTACHMENT_FILE_NAME = "uploadAttachment.pages";
+	    private const string ATTACHMENT_ID = "48";
+	    private const string ATTACHMENT_FILE_NAME = "uploadAttachment.pages";
 
-		RedmineFixture fixture;
+	    private readonly RedmineFixture fixture;
 		public AttachmentTests (RedmineFixture fixture)
 		{
 			this.fixture = fixture;
@@ -51,7 +51,7 @@ namespace xUnitTestredminenet45api
 			issue.Uploads = attachments;
 
 			//create issue and attach document
-			Issue issueWithAttachment = fixture.RedmineManager.CreateObject<Issue>(issue);
+			Issue issueWithAttachment = fixture.RedmineManager.CreateObject(issue);
 
 			issue = fixture.RedmineManager.GetObject<Issue>(issueWithAttachment.Id.ToString(), new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.ATTACHMENTS } });
 
@@ -85,4 +85,3 @@ namespace xUnitTestredminenet45api
 		}
 	}
 }
-

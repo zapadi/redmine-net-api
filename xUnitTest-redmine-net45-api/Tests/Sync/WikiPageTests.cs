@@ -1,5 +1,4 @@
-﻿using System;
-using Xunit;
+﻿using Xunit;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using Redmine.Net.Api.Types;
@@ -22,7 +21,7 @@ namespace xUnitTestredminenet45api
 
 		private const string WIKI_PAGE_TITLE = "Wiki2";
 
-		RedmineFixture fixture;
+	    private readonly RedmineFixture fixture;
 		public WikiPageTests (RedmineFixture fixture)
 		{
 			this.fixture = fixture;
@@ -98,4 +97,3 @@ namespace xUnitTestredminenet45api
 		}
 	}
 }
-

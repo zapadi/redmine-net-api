@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Specialized;
+﻿using System.Collections.Specialized;
 using Xunit;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Types;
@@ -30,7 +29,7 @@ namespace xUnitTestredminenet45api
 
 		private const string ISSUE_CATEGORY_ID_TO_COMPARE = "17";
 
-		RedmineFixture fixture;
+	    private readonly RedmineFixture fixture;
 		public IssueCategoryTests(RedmineFixture fixture)
 		{
 			this.fixture = fixture;
@@ -53,7 +52,7 @@ namespace xUnitTestredminenet45api
 			issueCategory.Name = NEW_ISSUE_CATEGORY_NAME;
 			issueCategory.AsignTo = new IdentifiableName { Id = NEW_ISSUE_CATEGORY_ASIGNEE_ID };
 
-			IssueCategory savedIssueCategory = fixture.RedmineManager.CreateObject<IssueCategory>(issueCategory, PROJECT_ID);
+			IssueCategory savedIssueCategory = fixture.RedmineManager.CreateObject(issueCategory, PROJECT_ID);
 
 			Assert.NotNull(savedIssueCategory);
 			Assert.True(savedIssueCategory.Name.Equals(NEW_ISSUE_CATEGORY_NAME), "Saved issue category name is invalid.");
@@ -79,7 +78,7 @@ namespace xUnitTestredminenet45api
 			issueCategory.Name = ISSUE_CATEGORY_NAME_TO_UPDATE;
 			issueCategory.AsignTo = new IdentifiableName { Id = ISSUE_CATEGORY_ASIGNEE_ID_TO_UPDATE };
 
-			fixture.RedmineManager.UpdateObject<IssueCategory>(ISSUE_CATEGORY_ID_TO_UPDATE, issueCategory);
+			fixture.RedmineManager.UpdateObject(ISSUE_CATEGORY_ID_TO_UPDATE, issueCategory);
 
 			IssueCategory updatedIssueCategory = fixture.RedmineManager.GetObject<IssueCategory>(ISSUE_CATEGORY_ID_TO_UPDATE, null);
 

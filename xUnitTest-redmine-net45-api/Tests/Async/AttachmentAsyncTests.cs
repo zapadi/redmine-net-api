@@ -3,7 +3,6 @@ using System.IO;
 using System.Collections.Specialized;
 using System.Collections.Generic;
 using Xunit;
-using Redmine.Net.Api;
 using Redmine.Net.Api.Types;
 using Redmine.Net.Api.Async;
 using System.Threading.Tasks;
@@ -15,7 +14,7 @@ namespace xUnitTestredminenet45api
 	{
 		private const string ATTACHMENT_ID = "10";
 
-		RedmineFixture fixture;
+	    private readonly RedmineFixture fixture;
 		public AttachmentAsyncTests (RedmineFixture fixture)
 		{
 			this.fixture = fixture;
@@ -72,7 +71,7 @@ namespace xUnitTestredminenet45api
 			issue.Watchers.Add(new Watcher { Id = 2 });
 
 			//create issue and attach document
-			Issue issueWithAttachment = await fixture.RedmineManager.CreateObjectAsync<Issue>(issue);
+			Issue issueWithAttachment = await fixture.RedmineManager.CreateObjectAsync(issue);
 
 			issue = await fixture.RedmineManager.GetObjectAsync<Issue>(issueWithAttachment.Id.ToString(), new NameValueCollection { { "include", "attachments" } });
 
@@ -94,4 +93,3 @@ namespace xUnitTestredminenet45api
 		}
 	}
 }
-

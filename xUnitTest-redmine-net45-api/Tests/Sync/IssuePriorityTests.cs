@@ -1,5 +1,4 @@
-﻿using System;
-using Xunit;
+﻿using Xunit;
 using Redmine.Net.Api.Types;
 
 namespace xUnitTestredminenet45api
@@ -9,7 +8,7 @@ namespace xUnitTestredminenet45api
 	{
 		private const int NUMBER_OF_ISSUE_PRIORITIES = 4;
 
-		RedmineFixture fixture;
+	    private readonly RedmineFixture fixture;
 		public IssuePriorityTests (RedmineFixture fixture)
 		{
 			this.fixture = fixture;
@@ -27,4 +26,3 @@ namespace xUnitTestredminenet45api
 		}
 	}
 }
-
