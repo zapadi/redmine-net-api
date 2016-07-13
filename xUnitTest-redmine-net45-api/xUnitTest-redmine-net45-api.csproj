@@ -55,8 +55,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Infrastructure\CaseOrder.cs" />
+    <Compile Include="Infrastructure\CollectionOrderer.cs" />
+    <Compile Include="Infrastructure\OrderAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UserTests.cs" />
+    <Compile Include="Tests\RedmineTest.cs" />
+    <Compile Include="Tests\Sync\UserTests.cs" />
     <Compile Include="Helper.cs" />
     <Compile Include="RedmineFixture.cs" />
     <Compile Include="Infrastructure\RedmineCollection.cs" />
