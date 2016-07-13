@@ -5,7 +5,7 @@ using System.Net.Cache;
 
 namespace Redmine.Net.Api.Types
 {
-    public interface IRedmineWebClient{
+     interface IRedmineWebClient{
         Uri BaseAddress { get; set; }
         NameValueCollection QueryString { get; set; }
 
