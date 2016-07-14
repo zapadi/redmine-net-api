@@ -110,10 +110,15 @@ namespace Redmine.Net.Api
         /// <param name="verifyServerCert">if set to <c>true</c> [verify server cert].</param>
         /// <param name="proxy"></param>
         /// <param name="securityProtocolType"></param>
-        public RedmineManager(string host, MimeFormat mimeFormat = MimeFormat.Xml, bool verifyServerCert = true, IWebProxy proxy = null, SecurityProtocolType securityProtocolType = SecurityProtocolType.Ssl3)
+        public RedmineManager(string host, MimeFormat mimeFormat = MimeFormat.Xml, bool verifyServerCert = true, IWebProxy proxy = null, SecurityProtocolType securityProtocolType = default(SecurityProtocolType))
         {
             if (string.IsNullOrEmpty(host)) throw new RedmineException("Host is not defined!");
             PageSize = 25;
+
+            if(default(SecurityProtocolType) != securityProtocolType)
+            {
+                securityProtocolType = ServicePointManager.SecurityProtocol;
+            }
 
             Uri uriResult;
             if (!Uri.TryCreate(host, UriKind.Absolute, out uriResult) || !(uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps))
@@ -148,7 +153,7 @@ namespace Redmine.Net.Api
         /// <param name="verifyServerCert">if set to <c>true</c> [verify server cert].</param>
         /// <param name="proxy"></param>
         /// <param name="securityProtocolType"></param>
-        public RedmineManager(string host, string apiKey, MimeFormat mimeFormat = MimeFormat.Xml, bool verifyServerCert = true, IWebProxy proxy = null, SecurityProtocolType securityProtocolType = SecurityProtocolType.Ssl3)
+        public RedmineManager(string host, string apiKey, MimeFormat mimeFormat = MimeFormat.Xml, bool verifyServerCert = true, IWebProxy proxy = null, SecurityProtocolType securityProtocolType = default(SecurityProtocolType))
             : this(host, mimeFormat, verifyServerCert, proxy, securityProtocolType)
         {
             ApiKey = apiKey;
@@ -171,7 +176,7 @@ namespace Redmine.Net.Api
         /// <param name="verifyServerCert">if set to <c>true</c> [verify server cert].</param>
         /// <param name="proxy"></param>
         /// <param name="securityProtocolType"></param>
-        public RedmineManager(string host, string login, string password, MimeFormat mimeFormat = MimeFormat.Xml, bool verifyServerCert = true, IWebProxy proxy = null, SecurityProtocolType securityProtocolType = SecurityProtocolType.Ssl3)
+        public RedmineManager(string host, string login, string password, MimeFormat mimeFormat = MimeFormat.Xml, bool verifyServerCert = true, IWebProxy proxy = null, SecurityProtocolType securityProtocolType = default(SecurityProtocolType))
             : this(host, mimeFormat, verifyServerCert, proxy, securityProtocolType)
         {
             cache = new CredentialCache { { new Uri(host), "Basic", new NetworkCredential(login, password) } };
