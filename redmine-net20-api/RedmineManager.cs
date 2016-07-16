@@ -486,6 +486,52 @@ namespace Redmine.Net.Api
         /// <summary>
         ///     Returns the complete list of objects.
         /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="limit">The page size.</param>
+        /// <param name="offset">The offset.</param>
+        /// <param name="include">Optional fetched data.</param>
+        /// <remarks>
+        /// Optional fetched data:
+        ///     Project: trackers, issue_categories, enabled_modules (since 2.6.0)
+        ///     Issue: children, attachments, relations, changesets, journals, watchers - Since 2.3.0
+        ///     Users: memberships, groups (added in 2.1)
+        ///     Groups: users, memberships
+        /// </remarks>
+        /// <returns>Returns the complete list of objects.</returns>
+        public List<T> GetObjects<T>(int limit, int offset, params string[] include) where T : class, new()
+        {
+            var parameters = new NameValueCollection();
+            parameters.Add(RedmineKeys.LIMIT, limit.ToString(CultureInfo.InvariantCulture));
+            parameters.Add(RedmineKeys.OFFSET, offset.ToString(CultureInfo.InvariantCulture));
+            if (include != null)
+            {
+                parameters.Add(RedmineKeys.INCLUDE, string.Join(",", include));
+            }
+
+            return GetObjects<T>(parameters);
+        }
+
+        /// <summary>
+        ///     Returns the complete list of objects.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="include">Optional fetched data.</param>
+        /// <remarks>
+        /// Optional fetched data:
+        ///     Project: trackers, issue_categories, enabled_modules (since 2.6.0)
+        ///     Issue: children, attachments, relations, changesets, journals, watchers - Since 2.3.0
+        ///     Users: memberships, groups (added in 2.1)
+        ///     Groups: users, memberships
+        /// </remarks>
+        /// <returns>Returns the complete list of objects.</returns>
+        public List<T> GetObjects<T>(params string[] include) where T : class, new()
+        {
+            return GetObjects<T>(PageSize, 0, include);
+        }
+
+        /// <summary>
+        ///     Returns the complete list of objects.
+        /// </summary>
         /// <typeparam name="T">The type of objects to retrieve.</typeparam>
         /// <param name="parameters">Optional filters and/or optional fetched data.</param>
         /// <returns>
@@ -494,7 +540,7 @@ namespace Redmine.Net.Api
         public List<T> GetObjects<T>(NameValueCollection parameters) where T : class, new()
         {
             int totalCount = 0, pageSize = 0, offset = 0;
-            bool isLimitSet = false;
+            var isLimitSet = false;
             List<T> resultList = null;
 
             if (parameters == null)
@@ -503,7 +549,7 @@ namespace Redmine.Net.Api
             }
             else
             {
-                isLimitSet =int.TryParse(parameters[RedmineKeys.LIMIT], out pageSize);
+                isLimitSet = int.TryParse(parameters[RedmineKeys.LIMIT], out pageSize);
                 int.TryParse(parameters[RedmineKeys.OFFSET], out offset);
             }
             if (pageSize == default(int))
