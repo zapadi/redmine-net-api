@@ -35,7 +35,7 @@ namespace xUnitTestredminenet45api
         {
             const int NUMBER_OF_TIME_ENTRY_ACTIVITIES = 3;
 
-            var timeEntryActivities = fixture.RedmineManager.GetObjects<TimeEntryActivity>(null);
+            var timeEntryActivities = fixture.RedmineManager.GetObjects<TimeEntryActivity>();
 
             Assert.NotNull(timeEntryActivities);
             Assert.All(timeEntryActivities, t => Assert.IsType<TimeEntryActivity>(t));

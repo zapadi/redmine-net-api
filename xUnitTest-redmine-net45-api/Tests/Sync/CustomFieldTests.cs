@@ -35,7 +35,7 @@ namespace xUnitTestredminenet45api
         {
             const int NUMBER_OF_CUSTOM_FIELDS = 10;
 
-            var customFields = fixture.RedmineManager.GetObjects<CustomField>(null);
+            var customFields = fixture.RedmineManager.GetObjects<CustomField>();
 
             Assert.NotNull(customFields);
             Assert.All(customFields, cf => Assert.IsType<CustomField>(cf));

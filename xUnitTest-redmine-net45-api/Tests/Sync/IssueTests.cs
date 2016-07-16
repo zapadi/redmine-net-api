@@ -29,7 +29,7 @@ namespace xUnitTestredminenet45api
 		[Fact, Order(1)]
 		public void Should_Get_All_Issues()
 		{
-			var issues = fixture.RedmineManager.GetObjects<Issue>(null);
+			var issues = fixture.RedmineManager.GetObjects<Issue>();
 
 			Assert.NotNull(issues);
 			Assert.All (issues, i => Assert.IsType<Issue> (i));

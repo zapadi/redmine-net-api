@@ -34,7 +34,7 @@ namespace xUnitTestredminenet45api
         public void Should_Get_All_Queries()
         {
             const int NUMBER_OF_QUERIES = 2;
-            var queries = fixture.RedmineManager.GetObjects<Query>(null);
+            var queries = fixture.RedmineManager.GetObjects<Query>();
 
             Assert.NotNull(queries);
             Assert.All(queries, q => Assert.IsType<Query>(q));

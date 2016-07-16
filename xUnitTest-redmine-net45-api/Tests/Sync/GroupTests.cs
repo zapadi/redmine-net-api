@@ -71,7 +71,7 @@ namespace xUnitTestredminenet45api
         {
 	        const int NUMBER_OF_GROUPS = 3;
 
-	        var groups = fixture.RedmineManager.GetObjects<Group>(null);
+	        var groups = fixture.RedmineManager.GetObjects<Group>();
 
             Assert.NotNull(groups);
             Assert.All(groups, g => Assert.IsType<Group>(g));

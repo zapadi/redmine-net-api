@@ -34,7 +34,7 @@ namespace xUnitTestredminenet45api
         public void Should_Get_All_Roles()
         {
             const int NUMBER_OF_ROLES = 3;
-            var roles = fixture.RedmineManager.GetObjects<Role>(null);
+            var roles = fixture.RedmineManager.GetObjects<Role>();
 
             Assert.NotNull(roles);
             Assert.All(roles, r => Assert.IsType<Role>(r));

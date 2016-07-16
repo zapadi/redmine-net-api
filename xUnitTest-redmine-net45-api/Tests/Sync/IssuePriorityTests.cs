@@ -34,7 +34,7 @@ namespace xUnitTestredminenet45api
         public void Should_Get_All_Issue_Priority()
         {
             const int NUMBER_OF_ISSUE_PRIORITIES = 4;
-            var issuePriorities = fixture.RedmineManager.GetObjects<IssuePriority>(null);
+            var issuePriorities = fixture.RedmineManager.GetObjects<IssuePriority>();
 
             Assert.NotNull(issuePriorities);
             Assert.All(issuePriorities, ip => Assert.IsType<IssuePriority>(ip));

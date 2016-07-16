@@ -35,7 +35,7 @@ namespace xUnitTestredminenet45api
         {
 	        const int NUMBER_OF_TRACKERS = 2;
 
-            var trackers = fixture.RedmineManager.GetObjects<Tracker>(null);
+            var trackers = fixture.RedmineManager.GetObjects<Tracker>();
 
             Assert.NotNull(trackers);
             Assert.All(trackers, t => Assert.IsType<Tracker>(t));

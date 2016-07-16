@@ -85,7 +85,7 @@ namespace xUnitTestredminenet45api
         [Fact, Order(2)]
         public void Should_Get_All_Time_Entries()
         {
-            var timeEntries = fixture.RedmineManager.GetObjects<TimeEntry>(null);
+            var timeEntries = fixture.RedmineManager.GetObjects<TimeEntry>();
 
             Assert.NotNull(timeEntries);
             Assert.NotEmpty(timeEntries);

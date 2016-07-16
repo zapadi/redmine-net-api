@@ -36,7 +36,7 @@ namespace xUnitTestredminenet45api
         public void Should_Get_All_News()
         {
             const int NUMBER_OF_NEWS = 2;
-            var news = fixture.RedmineManager.GetObjects<News>(null);
+            var news = fixture.RedmineManager.GetObjects<News>();
 
             Assert.NotNull(news);
             Assert.All(news, n => Assert.IsType<News>(n));
