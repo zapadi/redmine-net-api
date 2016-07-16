@@ -21,7 +21,8 @@ using Xunit;
 
 namespace xUnitTestredminenet45api
 {
-    [Collection("RedmineCollection")]
+	[Trait("Redmine-Net-Api", "News")]
+	[Collection("RedmineCollection")]
     public class NewsTests
     {
         public NewsTests(RedmineFixture fixture)
@@ -29,10 +30,9 @@ namespace xUnitTestredminenet45api
             this.fixture = fixture;
         }
 
-        private const string PROJECT_ID = "redmine-net-testq";
         private readonly RedmineFixture fixture;
 
-        [Fact]
+        [Fact, Order(1)]
         public void Should_Get_All_News()
         {
             const int NUMBER_OF_NEWS = 2;
@@ -43,10 +43,11 @@ namespace xUnitTestredminenet45api
             Assert.True(news.Count == NUMBER_OF_NEWS, "News count(" + news.Count + ") != " + NUMBER_OF_NEWS);
         }
 
-        [Fact]
+        [Fact, Order(2)]
         public void Should_Get_News_By_Project_Id()
         {
-            const int NUMBER_OF_NEWS_BY_PROJECT_ID = 1;
+	        const string PROJECT_ID = "redmine-net-testq";
+	        const int NUMBER_OF_NEWS_BY_PROJECT_ID = 1;
             var news =
                 fixture.RedmineManager.GetObjects<News>(new NameValueCollection {{RedmineKeys.PROJECT_ID, PROJECT_ID}});
 

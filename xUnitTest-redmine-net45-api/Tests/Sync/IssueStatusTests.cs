@@ -19,7 +19,8 @@ using Xunit;
 
 namespace xUnitTestredminenet45api
 {
-    [Collection("RedmineCollection")]
+	[Trait("Redmine-Net-Api", "IssueStatuses")]
+	[Collection("RedmineCollection")]
     public class IssueStatusTests
     {
         public IssueStatusTests(RedmineFixture fixture)

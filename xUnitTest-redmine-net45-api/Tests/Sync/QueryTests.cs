@@ -19,7 +19,8 @@ using Xunit;
 
 namespace xUnitTestredminenet45api
 {
-    [Collection("RedmineCollection")]
+	[Trait("Redmine-Net-Api", "Queries")]
+	[Collection("RedmineCollection")]
     public class QueryTests
     {
         public QueryTests(RedmineFixture fixture)
@@ -29,7 +30,7 @@ namespace xUnitTestredminenet45api
 
         private readonly RedmineFixture fixture;
 
-        [Fact]
+        [Fact, Order(1)]
         public void Should_Get_All_Queries()
         {
             const int NUMBER_OF_QUERIES = 2;

@@ -24,7 +24,8 @@ using Version = Redmine.Net.Api.Types.Version;
 
 namespace xUnitTestredminenet45api
 {
-    [Collection("RedmineCollection")]
+	[Trait("Redmine-Net-Api", "Versions")]
+	[Collection("RedmineCollection")]
     public class VersionTests
     {
         public VersionTests(RedmineFixture fixture)
@@ -32,36 +33,26 @@ namespace xUnitTestredminenet45api
             this.fixture = fixture;
         }
 
-        private const string PROJECT_ID = "redmine-net-api";
-        private const int NUMBER_OF_VERSIONS = 5;
-        //version data - used for create
-        private const string NEW_VERSION_NAME = "VersionTesting";
-        private const VersionStatus NEW_VERSION_STATUS = VersionStatus.locked;
-        private const VersionSharing NEW_VERSION_SHARING = VersionSharing.hierarchy;
-        private DateTime newVersionDueDate = DateTime.Now.AddDays(7);
-        private const string NEW_VERSION_DESCRIPTION = "Version description";
-        private const string VERSION_ID = "6";
-        //version data - used for update 
-        private const string UPDATED_VERSION_ID = "15";
-        private const string UPDATED_VERSION_NAME = "Updated version";
-        private const VersionStatus UPDATED_VERSION_STATUS = VersionStatus.closed;
-        private const VersionSharing UPDATED_VERSION_SHARING = VersionSharing.system;
-        private readonly DateTime updatedVersionDueDate = DateTime.Now.AddMonths(1);
-        private const string UPDATED_VERSION_DESCRIPTION = "Updated description";
-        private const string DELETED_VERSION_ID = "22";
+	    private readonly RedmineFixture fixture;
 
-        private readonly RedmineFixture fixture;
+	    private const string PROJECT_ID = "redmine-net-api";
 
         [Fact]
         [Order(1)]
         public void Should_Create_Version()
         {
-            var version = new Version
+	        const string NEW_VERSION_NAME = "VersionTesting";
+	        const VersionStatus NEW_VERSION_STATUS = VersionStatus.locked;
+	        const VersionSharing NEW_VERSION_SHARING = VersionSharing.hierarchy;
+	        DateTime NEW_VERSION_DUE_DATE = DateTime.Now.AddDays(7);
+	        const string NEW_VERSION_DESCRIPTION = "Version description";
+
+	        var version = new Version
             {
                 Name = NEW_VERSION_NAME,
                 Status = NEW_VERSION_STATUS,
                 Sharing = NEW_VERSION_SHARING,
-                DueDate = newVersionDueDate,
+                DueDate = NEW_VERSION_DUE_DATE,
                 Description = NEW_VERSION_DESCRIPTION
             };
 
@@ -73,7 +64,7 @@ namespace xUnitTestredminenet45api
             Assert.True(savedVersion.Status.Equals(NEW_VERSION_STATUS), "Version status is invalid.");
             Assert.True(savedVersion.Sharing.Equals(NEW_VERSION_SHARING), "Version sharing is invalid.");
             Assert.NotNull(savedVersion.DueDate);
-            Assert.True(savedVersion.DueDate.Value.Date.Equals(newVersionDueDate.Date), "Version due date is invalid.");
+            Assert.True(savedVersion.DueDate.Value.Date.Equals(NEW_VERSION_DUE_DATE.Date), "Version due date is invalid.");
             Assert.True(savedVersion.Description.Equals(NEW_VERSION_DESCRIPTION), "Version description is invalid.");
         }
 
@@ -81,7 +72,8 @@ namespace xUnitTestredminenet45api
         [Order(99)]
         public void Should_Delete_Version()
         {
-            var exception =
+	        const string DELETED_VERSION_ID = "22";
+	        var exception =
                 (RedmineException)
                     Record.Exception(() => fixture.RedmineManager.DeleteObject<Version>(DELETED_VERSION_ID, null));
             Assert.Null(exception);
@@ -92,7 +84,9 @@ namespace xUnitTestredminenet45api
         [Order(3)]
         public void Should_Get_Version_By_Id()
         {
-            var version = fixture.RedmineManager.GetObject<Version>(VERSION_ID, null);
+	        const string VERSION_ID = "6";
+
+	        var version = fixture.RedmineManager.GetObject<Version>(VERSION_ID, null);
 
             Assert.NotNull(version);
         }
@@ -101,7 +95,8 @@ namespace xUnitTestredminenet45api
         [Order(2)]
         public void Should_Get_Versions_By_Project_Id()
         {
-            var versions =
+	        const int NUMBER_OF_VERSIONS = 5;
+	        var versions =
                 fixture.RedmineManager.GetObjects<Version>(new NameValueCollection
                 {
                     {RedmineKeys.PROJECT_ID, PROJECT_ID}
@@ -109,18 +104,25 @@ namespace xUnitTestredminenet45api
 
             Assert.NotNull(versions);
             Assert.All(versions, v => Assert.IsType<Version>(v));
-            Assert.True(versions.Count == NUMBER_OF_VERSIONS, "Versions count != " + NUMBER_OF_VERSIONS);
+            Assert.True(versions.Count == NUMBER_OF_VERSIONS, "Versions count ( "+versions.Count+" ) != " + NUMBER_OF_VERSIONS);
         }
 
         [Fact]
         [Order(4)]
         public void Should_Update_Version()
         {
-            var version = fixture.RedmineManager.GetObject<Version>(UPDATED_VERSION_ID, null);
+	        const string UPDATED_VERSION_ID = "15";
+	        const string UPDATED_VERSION_NAME = "Updated version";
+	        const VersionStatus UPDATED_VERSION_STATUS = VersionStatus.closed;
+	        const VersionSharing UPDATED_VERSION_SHARING = VersionSharing.system;
+	        DateTime UPDATED_VERSION_DUE_DATE = DateTime.Now.AddMonths(1);
+	        const string UPDATED_VERSION_DESCRIPTION = "Updated description";
+
+	        var version = fixture.RedmineManager.GetObject<Version>(UPDATED_VERSION_ID, null);
             version.Name = UPDATED_VERSION_NAME;
             version.Status = UPDATED_VERSION_STATUS;
             version.Sharing = UPDATED_VERSION_SHARING;
-            version.DueDate = updatedVersionDueDate;
+            version.DueDate = UPDATED_VERSION_DUE_DATE;
             version.Description = UPDATED_VERSION_DESCRIPTION;
 
             fixture.RedmineManager.UpdateObject(UPDATED_VERSION_ID, version);

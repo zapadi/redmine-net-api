@@ -24,7 +24,8 @@ using Xunit;
 
 namespace xUnitTestredminenet45api
 {
-    [Collection("RedmineCollection")]
+	[Trait("Redmine-Net-Api", "WikiPages")]
+	[Collection("RedmineCollection")]
     public class WikiPageTests
     {
         public WikiPageTests(RedmineFixture fixture)
@@ -32,22 +33,18 @@ namespace xUnitTestredminenet45api
             this.fixture = fixture;
         }
 
-        private const string PROJECT_ID = "redmine-net-api";
+	    private readonly RedmineFixture fixture;
+
+	    private const string PROJECT_ID = "redmine-net-api";
         private const string WIKI_PAGE_NAME = "Wiki";
-        private const string WIKI_PAGE_UPDATED_TEXT = "Updated again and again wiki page";
-        private const string WIKI_PAGE_COMMENT = "I did it through code";
-
-        private const int NUMBER_OF_WIKI_PAGES = 2;
-        private const int WIKI_PAGE_VERSION = 1;
-
-        private const string WIKI_PAGE_TITLE = "Wiki2";
-
-        private readonly RedmineFixture fixture;
 
         [Fact, Order(1)]
         public void Should_Add_Or_Update_WikiPage()
         {
-            var page = fixture.RedmineManager.CreateOrUpdateWikiPage(PROJECT_ID, WIKI_PAGE_NAME,
+	        const string WIKI_PAGE_UPDATED_TEXT = "Updated again and again wiki page";
+	        const string WIKI_PAGE_COMMENT = "I did it through code";
+
+	        var page = fixture.RedmineManager.CreateOrUpdateWikiPage(PROJECT_ID, WIKI_PAGE_NAME,
                 new WikiPage {Text = WIKI_PAGE_UPDATED_TEXT, Comments = WIKI_PAGE_COMMENT});
 
             Assert.NotNull(page);
@@ -66,7 +63,9 @@ namespace xUnitTestredminenet45api
         [Fact, Order(2)]
         public void Should_Get_All_Wiki_Pages_By_Project_Id()
         {
-            var pages = (List<WikiPage>) fixture.RedmineManager.GetAllWikiPages(PROJECT_ID);
+	        const int NUMBER_OF_WIKI_PAGES = 2;
+
+	        var pages = (List<WikiPage>) fixture.RedmineManager.GetAllWikiPages(PROJECT_ID);
 
             Assert.NotNull(pages);
             Assert.All(pages, p => Assert.IsType<WikiPage>(p));
@@ -78,10 +77,12 @@ namespace xUnitTestredminenet45api
         [Fact, Order(3)]
         public void Should_Get_Wiki_Page_By_Title()
         {
-            var page = fixture.RedmineManager.GetWikiPage(PROJECT_ID, null, WIKI_PAGE_TITLE);
+	        const string WIKI_PAGE_TITLE = "Wiki2";
+
+	        var page = fixture.RedmineManager.GetWikiPage(PROJECT_ID, null, WIKI_PAGE_TITLE);
 
             Assert.NotNull(page);
-            Assert.True(page.Title.Equals(WIKI_PAGE_TITLE), "Wiki page name is invalid.");
+            Assert.True(page.Title.Equals(WIKI_PAGE_TITLE), "Wiki page title is invalid.");
         }
 
         [Fact, Order(4)]
@@ -99,7 +100,8 @@ namespace xUnitTestredminenet45api
         [Fact, Order(5)]
         public void Should_Get_Wiki_Page_By_Version()
         {
-            var oldPage = fixture.RedmineManager.GetWikiPage(PROJECT_ID, null, WIKI_PAGE_NAME, WIKI_PAGE_VERSION);
+	        const int WIKI_PAGE_VERSION = 1;
+	        var oldPage = fixture.RedmineManager.GetWikiPage(PROJECT_ID, null, WIKI_PAGE_NAME, WIKI_PAGE_VERSION);
 
             Assert.NotNull(oldPage);
             Assert.Equal(oldPage.Title, WIKI_PAGE_NAME);

@@ -19,7 +19,8 @@ using Xunit;
 
 namespace xUnitTestredminenet45api
 {
-    [Collection("RedmineCollection")]
+	[Trait("Redmine-Net-Api", "IssuePriorities")]
+	[Collection("RedmineCollection")]
     public class IssuePriorityTests
     {
         public IssuePriorityTests(RedmineFixture fixture)

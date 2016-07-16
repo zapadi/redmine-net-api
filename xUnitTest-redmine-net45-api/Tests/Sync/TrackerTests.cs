@@ -19,7 +19,8 @@ using Xunit;
 
 namespace xUnitTestredminenet45api
 {
-    [Collection("RedmineCollection")]
+	[Trait("Redmine-Net-Api", "Trackers")]
+	[Collection("RedmineCollection")]
     public class TrackerTests
     {
         public TrackerTests(RedmineFixture fixture)
@@ -32,11 +33,13 @@ namespace xUnitTestredminenet45api
         [Fact]
         public void RedmineTrackers_ShouldGetAllTrackers()
         {
+	        const int NUMBER_OF_TRACKERS = 2;
+
             var trackers = fixture.RedmineManager.GetObjects<Tracker>(null);
 
             Assert.NotNull(trackers);
             Assert.All(trackers, t => Assert.IsType<Tracker>(t));
-            Assert.True(trackers.Count == 2, "Trackers count(" + trackers.Count + ") != " + 2);
+            Assert.True(trackers.Count == NUMBER_OF_TRACKERS, "Trackers count(" + trackers.Count + ") != " + NUMBER_OF_TRACKERS);
         }
     }
 }

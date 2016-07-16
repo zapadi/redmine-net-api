@@ -19,7 +19,8 @@ using Xunit;
 
 namespace xUnitTestredminenet45api
 {
-    [Collection("RedmineCollection")]
+	[Trait("Redmine-Net-Api", "CustomFields")]
+	[Collection("RedmineCollection")]
     public class CustomFieldTests
     {
         public CustomFieldTests(RedmineFixture fixture)
@@ -29,7 +30,7 @@ namespace xUnitTestredminenet45api
 
         private readonly RedmineFixture fixture;
 
-        [Fact]
+        [Fact, Order(1)]
         public void Should_Get_All_CustomFields()
         {
             const int NUMBER_OF_CUSTOM_FIELDS = 10;

@@ -19,7 +19,8 @@ using Xunit;
 
 namespace xUnitTestredminenet45api
 {
-    [Collection("RedmineCollection")]
+	[Trait("Redmine-Net-Api", "TimeEntryActivities")]
+	[Collection("RedmineCollection")]
     public class TimeEntryActivityTests
     {
         public TimeEntryActivityTests(RedmineFixture fixture)
@@ -29,7 +30,7 @@ namespace xUnitTestredminenet45api
 
         private readonly RedmineFixture fixture;
 
-        [Fact]
+        [Fact, Order(1)]
         public void Should_Get_All_TimeEntryActivities()
         {
             const int NUMBER_OF_TIME_ENTRY_ACTIVITIES = 3;
@@ -39,7 +40,7 @@ namespace xUnitTestredminenet45api
             Assert.NotNull(timeEntryActivities);
             Assert.All(timeEntryActivities, t => Assert.IsType<TimeEntryActivity>(t));
             Assert.True(timeEntryActivities.Count == NUMBER_OF_TIME_ENTRY_ACTIVITIES,
-                "Time entry activities count != " + NUMBER_OF_TIME_ENTRY_ACTIVITIES);
+                "Time entry activities count ( "+ timeEntryActivities.Count +" ) != " + NUMBER_OF_TIME_ENTRY_ACTIVITIES);
         }
     }
 }
