@@ -494,6 +494,7 @@ namespace Redmine.Net.Api
         public List<T> GetObjects<T>(NameValueCollection parameters) where T : class, new()
         {
             int totalCount = 0, pageSize = 0, offset = 0;
+            bool isLimitSet = false;
             List<T> resultList = null;
 
             if (parameters == null)
@@ -502,7 +503,7 @@ namespace Redmine.Net.Api
             }
             else
             {
-                int.TryParse(parameters[RedmineKeys.LIMIT], out pageSize);
+                isLimitSet =int.TryParse(parameters[RedmineKeys.LIMIT], out pageSize);
                 int.TryParse(parameters[RedmineKeys.OFFSET], out offset);
             }
             if (pageSize == default(int))
@@ -522,7 +523,7 @@ namespace Redmine.Net.Api
                         if (resultList == null)
                         {
                             resultList = tempResult.Objects;
-                            totalCount = tempResult.TotalCount;
+                            totalCount = isLimitSet ? pageSize : tempResult.TotalCount;
                         }
                         else
                         {
