@@ -1,58 +1,59 @@
-﻿using System.Collections.Specialized;
-using Xunit;
+﻿/*
+   Copyright 2011 - 2016 Adrian Popescu.
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
+
+using System.Collections.Specialized;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Types;
+using Xunit;
 
 namespace xUnitTestredminenet45api
 {
-	[Collection("RedmineCollection")]
-	public class NewsTests
-	{
-		private const int NUMBER_OF_NEWS = 2;
-		private const string PROJECT_ID = "redmine-net-testq";
-		private const int NUMBER_OF_NEWS_BY_PROJECT_ID = 1;
+    [Collection("RedmineCollection")]
+    public class NewsTests
+    {
+        public NewsTests(RedmineFixture fixture)
+        {
+            this.fixture = fixture;
+        }
 
-	    private readonly RedmineFixture fixture;
-		public NewsTests (RedmineFixture fixture)
-		{
-			this.fixture = fixture;
-		}
+        private const string PROJECT_ID = "redmine-net-testq";
+        private readonly RedmineFixture fixture;
 
-		[Fact]
-		public void Should_Get_All_News()
-		{
-			var news = fixture.RedmineManager.GetObjects<News>(null);
+        [Fact]
+        public void Should_Get_All_News()
+        {
+            const int NUMBER_OF_NEWS = 2;
+            var news = fixture.RedmineManager.GetObjects<News>(null);
 
-			Assert.NotNull(news);
-			Assert.True(news.Count == NUMBER_OF_NEWS, "News count != " + NUMBER_OF_NEWS);
-			Assert.All (news, n => Assert.IsType<News> (n));
-		}
+            Assert.NotNull(news);
+            Assert.All(news, n => Assert.IsType<News>(n));
+            Assert.True(news.Count == NUMBER_OF_NEWS, "News count(" + news.Count + ") != " + NUMBER_OF_NEWS);
+        }
 
-		[Fact]
-		public void Should_Get_News_By_Project_Id()
-		{
-			var news = fixture.RedmineManager.GetObjects<News>(new NameValueCollection { { RedmineKeys.PROJECT_ID, PROJECT_ID } });
+        [Fact]
+        public void Should_Get_News_By_Project_Id()
+        {
+            const int NUMBER_OF_NEWS_BY_PROJECT_ID = 1;
+            var news =
+                fixture.RedmineManager.GetObjects<News>(new NameValueCollection {{RedmineKeys.PROJECT_ID, PROJECT_ID}});
 
-			Assert.NotNull(news);
-			Assert.True(news.Count == NUMBER_OF_NEWS_BY_PROJECT_ID, "News count != " + NUMBER_OF_NEWS_BY_PROJECT_ID);
-			Assert.All(news, n => Assert.IsType<News> (n));
-		}
-
-		[Fact]
-		public void Should_Compare_News()
-		{
-			var firstNews = fixture.RedmineManager.GetPaginatedObjects<News>(new NameValueCollection() {{RedmineKeys.LIMIT, "1" },{RedmineKeys.OFFSET, "0" }});
-			var secondNews = fixture.RedmineManager.GetPaginatedObjects<News>(new NameValueCollection() { { RedmineKeys.LIMIT, "1" }, { RedmineKeys.OFFSET, "0" } });
-
-			Assert.NotNull(firstNews);
-			Assert.NotNull(firstNews.Objects);
-			Assert.True(firstNews.Objects.Count == 1, "First news objects list count != 1");
-
-			Assert.NotNull(secondNews);
-			Assert.NotNull(secondNews.Objects);
-			Assert.True(secondNews.Objects.Count == 1, "Second news objects list count != 1");
-
-			Assert.True(firstNews.Objects[0].Equals(secondNews.Objects[0]), "Compared news are not equal.");
-		}
-	}
+            Assert.NotNull(news);
+            Assert.All(news, n => Assert.IsType<News>(n));
+            Assert.True(news.Count == NUMBER_OF_NEWS_BY_PROJECT_ID,
+                "News count(" + news.Count + ") != " + NUMBER_OF_NEWS_BY_PROJECT_ID);
+        }
+    }
 }

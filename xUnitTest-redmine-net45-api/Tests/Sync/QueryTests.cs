@@ -1,30 +1,44 @@
-﻿using Xunit;
+﻿/*
+   Copyright 2011 - 2016 Adrian Popescu.
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
+
 using Redmine.Net.Api.Types;
+using Xunit;
 
 namespace xUnitTestredminenet45api
 {
-	[Collection("RedmineCollection")]
-	public class QueryTests
-	{
-		private const int NUMBER_OF_QUERIES = 2;
-		private const bool EXISTS_PUBLIC_QUERY = true;
+    [Collection("RedmineCollection")]
+    public class QueryTests
+    {
+        public QueryTests(RedmineFixture fixture)
+        {
+            this.fixture = fixture;
+        }
 
-	    private readonly RedmineFixture fixture;
-		public QueryTests (RedmineFixture fixture)
-		{
-			this.fixture = fixture;
-		}
+        private readonly RedmineFixture fixture;
 
-		[Fact]
-		public void Should_Get_All_Queries()
-		{
-			var queries = fixture.RedmineManager.GetObjects<Query>(null);
+        [Fact]
+        public void Should_Get_All_Queries()
+        {
+            const int NUMBER_OF_QUERIES = 2;
+            var queries = fixture.RedmineManager.GetObjects<Query>(null);
 
-			Assert.NotNull(queries);
-			Assert.True(queries.Count == NUMBER_OF_QUERIES, "Queries count != " + NUMBER_OF_QUERIES);
-			Assert.All (queries, q => Assert.IsType<Query> (q));
-
-			Assert.True(queries.Exists(q => q.IsPublic) == EXISTS_PUBLIC_QUERY, EXISTS_PUBLIC_QUERY ? "Public query should exist." : "Public query should not exist.");
-		}
-	}
+            Assert.NotNull(queries);
+            Assert.All(queries, q => Assert.IsType<Query>(q));
+            Assert.True(queries.Count == NUMBER_OF_QUERIES,
+                "Queries count(" + queries.Count + ") != " + NUMBER_OF_QUERIES);
+        }
+    }
 }

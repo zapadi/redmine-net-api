@@ -85,8 +85,8 @@ namespace xUnitTestredminenet45api
                 Identifier = "rnaptit",
                 Trackers = new List<ProjectTracker>
                 {
-                    new ProjectTracker {Id = 10},
-                    new ProjectTracker {Id = 20}
+                    new ProjectTracker {Id = 999999},
+                    new ProjectTracker {Id = 999998}
                 }
             };
 
@@ -108,9 +108,6 @@ namespace xUnitTestredminenet45api
         [Fact, Order(1)]
         public void Should_Create_Project_With_All_Properties_Set()
         {
-            //Assert.Equal(1, Index);
-            //Interlocked.Increment(ref Index);
-
             var savedProject = fixture.RedmineManager.CreateObject(CreateTestProjectWithAllPropertiesSet());
 
             Assert.NotNull(savedProject);
@@ -123,9 +120,6 @@ namespace xUnitTestredminenet45api
         [Fact, Order(2)]
         public void Should_Create_Project_With_Parent()
         {
-            //Assert.Equal(2, Index);
-            //Interlocked.Increment(ref Index);
-
             var parentProject =
                 fixture.RedmineManager.CreateObject(new Project {Identifier = "parent-project", Name = "Parent project"});
 
@@ -138,9 +132,6 @@ namespace xUnitTestredminenet45api
         [Fact, Order(0)]
         public void Should_Create_Project_With_Required_Properties()
         {
-            //Assert.Equal(0, Index);
-            //Interlocked.Increment(ref Index);
-
             var savedProject = fixture.RedmineManager.CreateObject(CreateTestProjectWithRequiredPropertiesSet());
 
             Assert.NotNull(savedProject);
@@ -152,9 +143,6 @@ namespace xUnitTestredminenet45api
         [Fact, Order(9)]
         public void Should_Delete_Project_And_Parent_Project()
         {
-            //Assert.Equal(9, Index);
-            //Interlocked.Increment(ref Index);
-
             var exception =
                 (RedmineException) Record.Exception(() => fixture.RedmineManager.DeleteObject<Project>("rnapwps", null));
             Assert.Null(exception);
@@ -170,9 +158,6 @@ namespace xUnitTestredminenet45api
         [Fact, Order(10)]
         public void Should_Delete_Project_With_All_Properties_Set()
         {
-            //Assert.Equal(10, Index);
-            //Interlocked.Increment(ref Index);
-
             var exception =
                 (RedmineException) Record.Exception(() => fixture.RedmineManager.DeleteObject<Project>("rnaptap", null));
             Assert.Null(exception);
@@ -182,9 +167,6 @@ namespace xUnitTestredminenet45api
         [Fact, Order(11)]
         public void Should_Delete_Redmine_Net_Api_Project_Test_Project()
         {
-            //Assert.Equal(11, Index);
-            //Interlocked.Increment(ref Index);
-
             var exception =
                 (RedmineException)
                     Record.Exception(() => fixture.RedmineManager.DeleteObject<Project>(PROJECT_IDENTIFIER, null));
@@ -195,9 +177,6 @@ namespace xUnitTestredminenet45api
         [Fact, Order(3)]
         public void Should_Get_Redmine_Net_Api_Project_Test_Project()
         {
-            //Assert.Equal(3, Index);
-            //Interlocked.Increment(ref Index);
-
             var project = fixture.RedmineManager.GetObject<Project>(PROJECT_IDENTIFIER, null);
 
             Assert.NotNull(project);
@@ -209,9 +188,6 @@ namespace xUnitTestredminenet45api
         [Fact, Order(4)]
         public void Should_Get_Test_Project_With_All_Properties_Set()
         {
-            // Assert.Equal(4, Index);
-            // Interlocked.Increment(ref Index);
-
             var project = fixture.RedmineManager.GetObject<Project>("rnaptap", new NameValueCollection
             {
                 {RedmineKeys.INCLUDE, string.Join(",", RedmineKeys.TRACKERS, RedmineKeys.ENABLED_MODULES)}
@@ -236,40 +212,28 @@ namespace xUnitTestredminenet45api
             Assert.All(project.EnabledModules, em => Assert.IsType<ProjectEnabledModule>(em));
         }
 
-        //[Fact,Order(6)]
-        //public void Should_Throw_Exception_Create_Project_Invalid_Trackers()
-        //{
-        //    Assert.Equal(6, Index);
-        //    Interlocked.Increment(ref Index);
-
-        //    Assert.Throws<NotFoundException>(
-        //        () => fixture.RedmineManager.CreateObject(CreateTestProjectWithInvalidTrackersId()));
-        //}
+        [Fact, Order(12)]
+        public void Should_Throw_Exception_Create_Project_Invalid_Trackers()
+        {
+            Assert.Throws<NotFoundException>(
+                () => fixture.RedmineManager.CreateObject(CreateTestProjectWithInvalidTrackersId()));
+        }
 
         [Fact, Order(7)]
         public void Should_Throw_Exception_When_Create_Empty_Project()
         {
-            //Assert.Equal(7, Index);
-            //Interlocked.Increment(ref Index);
-
             Assert.Throws<RedmineException>(() => fixture.RedmineManager.CreateObject(new Project()));
         }
 
         [Fact, Order(8)]
         public void Should_Throw_Exception_When_Project_Identifier_Is_Invalid()
         {
-            //Assert.Equal(8, Index);
-            //Interlocked.Increment(ref Index);
-
             Assert.Throws<NotFoundException>(() => fixture.RedmineManager.GetObject<Project>("99999999", null));
         }
 
         [Fact, Order(5)]
         public void Should_Update_Redmine_Net_Api_Project_Test_Project()
         {
-            //Assert.Equal(5, Index);
-            //Interlocked.Increment(ref Index);
-
             const string UPDATED_PROJECT_NAME = "Project created using API updated";
             const string UPDATED_PROJECT_DESCRIPTION = "Test project description updated";
             const string UPDATED_PROJECT_HOMEPAGE = "http://redmineTestsUpdated.com";
@@ -296,7 +260,6 @@ namespace xUnitTestredminenet45api
             Assert.True(updatedProject.HomePage.Equals(UPDATED_PROJECT_HOMEPAGE), "Project homepage was not updated.");
             Assert.True(updatedProject.IsPublic.Equals(UPDATED_PROJECT_ISPUBLIC),
                 "Project is_public was not updated. (This property is available starting with 2.6.0)");
-            // Assert.True(updatedProject.InheritMembers.Equals(UPDATED_PROJECT_INHERIT_MEMBERS),"Project inherit_members was not updated.");
         }
     }
 }

@@ -85,7 +85,7 @@
     <Compile Include="Tests\Sync\IssueTests.cs" />
     <Compile Include="Tests\Async\AttachmentAsyncTests.cs" />
     <Compile Include="Tests\Async\IssueAsyncTests.cs" />
-    <Compile Include="Tests\Sync\UserAsyncTests.cs" />
+    <Compile Include="Tests\Async\UserAsyncTests.cs" />
     <Compile Include="Tests\Async\WikiPageAsyncTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

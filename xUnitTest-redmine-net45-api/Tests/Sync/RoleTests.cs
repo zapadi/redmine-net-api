@@ -1,42 +1,61 @@
-﻿using Xunit;
+﻿/*
+   Copyright 2011 - 2016 Adrian Popescu.
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
+
 using Redmine.Net.Api.Types;
+using Xunit;
 
 namespace xUnitTestredminenet45api
 {
-	[Collection("RedmineCollection")]
-	public class RoleTests
-	{
-		private const int NUMBER_OF_ROLES = 3;
-		private const string ROLE_ID = "5";
-		private const string ROLE_NAME = "CustomRole";
-		private const int NUMBER_OF_ROLE_PERMISSIONS = 1;
+    [Collection("RedmineCollection")]
+    public class RoleTests
+    {
+        public RoleTests(RedmineFixture fixture)
+        {
+            this.fixture = fixture;
+        }
 
-	    private readonly RedmineFixture fixture;
-		public RoleTests (RedmineFixture fixture)
-		{
-			this.fixture = fixture;
-		}
+        private readonly RedmineFixture fixture;
 
-		[Fact]
-		public void Should_Get_All_Roles()
-		{
-			var roles = fixture.RedmineManager.GetObjects<Role>(null);
+        [Fact]
+        public void Should_Get_All_Roles()
+        {
+            const int NUMBER_OF_ROLES = 3;
+            var roles = fixture.RedmineManager.GetObjects<Role>(null);
 
-			Assert.NotNull(roles);
-			Assert.True(roles.Count == NUMBER_OF_ROLES, "Roles count != " + NUMBER_OF_ROLES);
-			Assert.All (roles, r => Assert.IsType<Role> (r));
-		}
+            Assert.NotNull(roles);
+            Assert.All(roles, r => Assert.IsType<Role>(r));
+            Assert.True(roles.Count == NUMBER_OF_ROLES, "Roles count(" + roles.Count + ") != " + NUMBER_OF_ROLES);
+        }
 
-		[Fact]
-		public void Should_Get_Role_By_Id()
-		{
-			Role role = fixture.RedmineManager.GetObject<Role>(ROLE_ID, null);
+        [Fact]
+        public void Should_Get_Role_By_Id()
+        {
+            const string ROLE_ID = "5";
+            const int NUMBER_OF_ROLE_PERMISSIONS = 1;
+            const string ROLE_NAME = "CustomRole";
 
-			Assert.NotNull(role);
-			Assert.True(role.Name.Equals(ROLE_NAME), "Role name is invalid."); ;
-			Assert.NotNull(role.Permissions);
-			Assert.True(role.Permissions.Count == NUMBER_OF_ROLE_PERMISSIONS, "Permissions count != "+NUMBER_OF_ROLE_PERMISSIONS);
-			Assert.All (role.Permissions, p => Assert.IsType<Permission> (p));
-		}
-	}
+            var role = fixture.RedmineManager.GetObject<Role>(ROLE_ID, null);
+
+            Assert.NotNull(role);
+            Assert.True(role.Name.Equals(ROLE_NAME), "Role name is invalid.");
+
+            Assert.NotNull(role.Permissions);
+            Assert.All(role.Permissions, p => Assert.IsType<Permission>(p));
+            Assert.True(role.Permissions.Count == NUMBER_OF_ROLE_PERMISSIONS,
+                "Permissions count(" + role.Permissions.Count + ") != " + NUMBER_OF_ROLE_PERMISSIONS);
+        }
+    }
 }

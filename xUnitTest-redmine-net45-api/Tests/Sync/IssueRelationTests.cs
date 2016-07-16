@@ -1,86 +1,100 @@
-﻿using System.Collections.Specialized;
-using Xunit;
+﻿/*
+   Copyright 2011 - 2016 Adrian Popescu.
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
+
+using System.Collections.Specialized;
 using Redmine.Net.Api;
-using Redmine.Net.Api.Types;
 using Redmine.Net.Api.Exceptions;
+using Redmine.Net.Api.Types;
+using Xunit;
 
 namespace xUnitTestredminenet45api
 {
-	[Collection("RedmineCollection")]
-	public class IssueRelationTests
-	{
-		private const string ISSUE_ID = "96";
-		private const int RELATED_ISSUE_ID = 94;
-		private const IssueRelationType RELATION_TYPE = IssueRelationType.follows;
-		private const IssueRelationType OPPOSED_RELATION_TYPE = IssueRelationType.precedes;
-		private const int RELATION_DELAY = 2;
-		private const int NUMBER_OF_RELATIONS = 1;
+    [Collection("RedmineCollection")]
+    public class IssueRelationTests
+    {
+        public IssueRelationTests(RedmineFixture fixture)
+        {
+            this.fixture = fixture;
+        }
 
-		private const string RELATION_ID_TO_GET = "27";
+        private const string ISSUE_ID = "96";
+        private const int RELATED_ISSUE_ID = 94;
+        private const int RELATION_DELAY = 2;
+        private const int NUMBER_OF_RELATIONS = 1;
+        private const string RELATION_ID_TO_GET = "27";
+        private const string RELATION_ID_TO_DELETE = "23";
+        private const IssueRelationType RELATION_TYPE = IssueRelationType.follows;
+        private const IssueRelationType OPPOSED_RELATION_TYPE = IssueRelationType.precedes;
 
-		private const string RELATION_ID_TO_DELETE = "23";
+        private readonly RedmineFixture fixture;
 
-		private const string RELATION_ID_TO_COMPARE = "26";
+        [Fact, Order(1)]
+        public void Should_Add_Issue_Relation()
+        {
+            var relation = new IssueRelation
+            {
+                IssueToId = RELATED_ISSUE_ID,
+                Type = RELATION_TYPE,
+                Delay = RELATION_DELAY
+            };
 
-	    private readonly RedmineFixture fixture;
-		public IssueRelationTests (RedmineFixture fixture)
-		{
-			this.fixture = fixture;
-		}
+            var savedRelation = fixture.RedmineManager.CreateObject(relation, ISSUE_ID);
 
-		[Fact]
-		public void Should_Add_Issue_Relation()
-		{
-			IssueRelation relation = new IssueRelation();
-			relation.IssueToId = RELATED_ISSUE_ID;
-			relation.Type = RELATION_TYPE;
-			relation.Delay = RELATION_DELAY;
+            Assert.NotNull(savedRelation);
+            Assert.True(savedRelation.IssueId == RELATED_ISSUE_ID, "Related issue id is not valid.");
+            Assert.True(savedRelation.IssueToId.ToString().Equals(ISSUE_ID), "Issue id is not valid.");
+            Assert.True(savedRelation.Delay == RELATION_DELAY, "Delay is not valid.");
+            Assert.True(savedRelation.Type == OPPOSED_RELATION_TYPE, "Relation type is not valid.");
+        }
 
-			IssueRelation savedRelation = fixture.RedmineManager.CreateObject(relation, ISSUE_ID);
+        [Fact, Order(4)]
+        public void Should_Delete_Issue_Relation()
+        {
+            var exception =
+                (RedmineException)
+                    Record.Exception(
+                        () => fixture.RedmineManager.DeleteObject<IssueRelation>(RELATION_ID_TO_DELETE, null));
+            Assert.Null(exception);
+            Assert.Throws<NotFoundException>(
+                () => fixture.RedmineManager.GetObject<IssueRelation>(RELATION_ID_TO_DELETE, null));
+        }
 
-			Assert.NotNull(savedRelation);
-			Assert.True(savedRelation.IssueId == RELATED_ISSUE_ID, "Related issue id is not valid.");
-			Assert.True(savedRelation.IssueToId.ToString().Equals(ISSUE_ID), "Issue id is not valid.");
-			Assert.True(savedRelation.Delay == RELATION_DELAY, "Delay is not valid.");
-			Assert.True(savedRelation.Type == OPPOSED_RELATION_TYPE, "Relation type is not valid.");
-		}
+        [Fact, Order(2)]
+        public void Should_Get_IssueRelation_By_Id()
+        {
+            var relation = fixture.RedmineManager.GetObject<IssueRelation>(RELATION_ID_TO_GET, null);
 
-		[Fact]
-		public void Should_Get_IssueRelations_By_Issue_Id()
-		{
-			var relations = fixture.RedmineManager.GetObjects<IssueRelation>(new NameValueCollection { { RedmineKeys.ISSUE_ID, ISSUE_ID } });
+            Assert.NotNull(relation);
+            Assert.True(relation.IssueId == RELATED_ISSUE_ID, "Related issue id is not valid.");
+            Assert.True(relation.IssueToId.ToString().Equals(ISSUE_ID), "Issue id is not valid.");
+            Assert.True(relation.Delay == RELATION_DELAY, "Delay is not valid.");
+            Assert.True(relation.Type == OPPOSED_RELATION_TYPE, "Relation type is not valid.");
+        }
 
-			Assert.NotNull(relations);
-			Assert.True(relations.Count == NUMBER_OF_RELATIONS, "Number of issue relations != " + NUMBER_OF_RELATIONS);
-		}
+        [Fact, Order(3)]
+        public void Should_Get_IssueRelations_By_Issue_Id()
+        {
+            var relations =
+                fixture.RedmineManager.GetObjects<IssueRelation>(new NameValueCollection
+                {
+                    {RedmineKeys.ISSUE_ID, ISSUE_ID}
+                });
 
-		[Fact]
-		public void Should_Get_IssueRelation_By_Id()
-		{
-			var relation = fixture.RedmineManager.GetObject<IssueRelation>(RELATION_ID_TO_GET, null);
-
-			Assert.NotNull(relation);
-			Assert.True(relation.IssueId == RELATED_ISSUE_ID, "Related issue id is not valid.");
-			Assert.True(relation.IssueToId.ToString().Equals(ISSUE_ID), "Issue id is not valid.");
-			Assert.True(relation.Delay == RELATION_DELAY, "Delay is not valid.");
-			Assert.True(relation.Type == OPPOSED_RELATION_TYPE, "Relation type is not valid.");
-		}
-
-		[Fact]
-		public void Should_Compare_IssueRelations()
-		{
-			var relation = fixture.RedmineManager.GetObject<IssueRelation>(RELATION_ID_TO_COMPARE, null);
-			var relationToCompare = fixture.RedmineManager.GetObject<IssueRelation>(RELATION_ID_TO_COMPARE, null);
-
-			Assert.True(relation.Equals(relationToCompare), "Issue relations are not equal.");
-		}
-
-		[Fact]
-		public void Should_Delete_Issue_Relation()
-		{
-			RedmineException exception = (RedmineException)Record.Exception(() =>fixture.RedmineManager.DeleteObject<IssueRelation>(RELATION_ID_TO_DELETE, null));
-			Assert.Null (exception);
-			Assert.Throws<NotFoundException>(() => fixture.RedmineManager.GetObject<IssueRelation>(RELATION_ID_TO_DELETE, null));
-		}
-	}
+            Assert.NotNull(relations);
+            Assert.True(relations.Count == NUMBER_OF_RELATIONS, "Number of issue relations != " + NUMBER_OF_RELATIONS);
+        }
+    }
 }
