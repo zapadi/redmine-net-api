@@ -23,7 +23,8 @@ using Xunit;
 
 namespace xUnitTestredminenet45api
 {
-    [Collection("RedmineCollection")]
+	[Trait("Redmine-Net-Api", "ProjectMemberships")]
+	[Collection("RedmineCollection")]
     public class ProjectMembershipTests
     {
         public ProjectMembershipTests(RedmineFixture fixture)
@@ -31,23 +32,18 @@ namespace xUnitTestredminenet45api
             this.fixture = fixture;
         }
 
-        private const string PROJECT_IDENTIFIER = "redmine-net-testq";
-        private const int NUMBER_OF_PROJECT_MEMBERSHIPS = 3;
-        //PM data - used for create
-        private const int NEW_PROJECT_MEMBERSHIP_USER_ID = 2;
-        private const int NEW_PROJECT_MEMBERSHIP_ROLE_ID = 5;
-        private const string PROJECT_MEMBERSHIP_ID = "143";
-        //PM data - used for update
-        private const string UPDATED_PROJECT_MEMBERSHIP_ID = "143";
-        private const int UPDATED_PROJECT_MEMBERSHIP_ROLE_ID = 4;
-        private const string DELETED_PROJECT_MEMBERSHIP_ID = "142";
+	    private readonly RedmineFixture fixture;
 
-        private readonly RedmineFixture fixture;
+	    private const string PROJECT_IDENTIFIER = "redmine-net-testq";
+
 
         [Fact, Order(1)]
         public void Should_Add_Project_Membership()
         {
-            var pm = new ProjectMembership
+	        const int NEW_PROJECT_MEMBERSHIP_USER_ID = 2;
+	        const int NEW_PROJECT_MEMBERSHIP_ROLE_ID = 5;
+
+	        var pm = new ProjectMembership
             {
                 User = new IdentifiableName {Id = NEW_PROJECT_MEMBERSHIP_USER_ID},
                 Roles = new List<MembershipRole> {new MembershipRole {Id = NEW_PROJECT_MEMBERSHIP_ROLE_ID}}
@@ -65,7 +61,8 @@ namespace xUnitTestredminenet45api
         [Fact,Order(99)]
         public void Should_Delete_Project_Membership()
         {
-            var exception =
+	        const string DELETED_PROJECT_MEMBERSHIP_ID = "142";
+	        var exception =
                 (RedmineException)
                     Record.Exception(
                         () =>
@@ -78,7 +75,8 @@ namespace xUnitTestredminenet45api
         [Fact, Order(2)]
         public void Should_Get_Memberships_By_Project_Identifier()
         {
-            var projectMemberships =
+	        const int NUMBER_OF_PROJECT_MEMBERSHIPS = 3;
+	        var projectMemberships =
                 fixture.RedmineManager.GetObjects<ProjectMembership>(new NameValueCollection
                 {
                     {RedmineKeys.PROJECT_ID, PROJECT_IDENTIFIER}
@@ -86,14 +84,15 @@ namespace xUnitTestredminenet45api
 
             Assert.NotNull(projectMemberships);
             Assert.True(projectMemberships.Count == NUMBER_OF_PROJECT_MEMBERSHIPS,
-                "Project memberships count != " + NUMBER_OF_PROJECT_MEMBERSHIPS);
+                "Project memberships count ( "+ projectMemberships.Count +" ) != " + NUMBER_OF_PROJECT_MEMBERSHIPS);
             Assert.All(projectMemberships, pm => Assert.IsType<ProjectMembership>(pm));
         }
 
         [Fact, Order(3)]
         public void Should_Get_Project_Membership_By_Id()
         {
-            var projectMembership = fixture.RedmineManager.GetObject<ProjectMembership>(PROJECT_MEMBERSHIP_ID, null);
+	        const string PROJECT_MEMBERSHIP_ID = "143";
+	        var projectMembership = fixture.RedmineManager.GetObject<ProjectMembership>(PROJECT_MEMBERSHIP_ID, null);
 
             Assert.NotNull(projectMembership);
             Assert.NotNull(projectMembership.Project);
@@ -106,7 +105,10 @@ namespace xUnitTestredminenet45api
         [Fact, Order(4)]
         public void Should_Update_Project_Membership()
         {
-            var pm = fixture.RedmineManager.GetObject<ProjectMembership>(UPDATED_PROJECT_MEMBERSHIP_ID, null);
+	        const string UPDATED_PROJECT_MEMBERSHIP_ID = "143";
+	        const int UPDATED_PROJECT_MEMBERSHIP_ROLE_ID = 4;
+
+	        var pm = fixture.RedmineManager.GetObject<ProjectMembership>(UPDATED_PROJECT_MEMBERSHIP_ID, null);
             pm.Roles.Add(new MembershipRole {Id = UPDATED_PROJECT_MEMBERSHIP_ROLE_ID});
 
             fixture.RedmineManager.UpdateObject(UPDATED_PROJECT_MEMBERSHIP_ID, pm);

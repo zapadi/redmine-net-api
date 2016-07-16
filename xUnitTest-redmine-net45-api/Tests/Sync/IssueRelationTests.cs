@@ -22,7 +22,8 @@ using Xunit;
 
 namespace xUnitTestredminenet45api
 {
-    [Collection("RedmineCollection")]
+	[Trait("Redmine-Net-Api", "IssueRelations")]
+	[Collection("RedmineCollection")]
     public class IssueRelationTests
     {
         public IssueRelationTests(RedmineFixture fixture)
@@ -30,21 +31,19 @@ namespace xUnitTestredminenet45api
             this.fixture = fixture;
         }
 
-        private const string ISSUE_ID = "96";
+	    private readonly RedmineFixture fixture;
+
+	    private const string ISSUE_ID = "96";
         private const int RELATED_ISSUE_ID = 94;
         private const int RELATION_DELAY = 2;
-        private const int NUMBER_OF_RELATIONS = 1;
-        private const string RELATION_ID_TO_GET = "27";
-        private const string RELATION_ID_TO_DELETE = "23";
-        private const IssueRelationType RELATION_TYPE = IssueRelationType.follows;
-        private const IssueRelationType OPPOSED_RELATION_TYPE = IssueRelationType.precedes;
 
-        private readonly RedmineFixture fixture;
+        private const IssueRelationType OPPOSED_RELATION_TYPE = IssueRelationType.precedes;
 
         [Fact, Order(1)]
         public void Should_Add_Issue_Relation()
         {
-            var relation = new IssueRelation
+	        const IssueRelationType RELATION_TYPE = IssueRelationType.follows;
+	        var relation = new IssueRelation
             {
                 IssueToId = RELATED_ISSUE_ID,
                 Type = RELATION_TYPE,
@@ -63,7 +62,8 @@ namespace xUnitTestredminenet45api
         [Fact, Order(4)]
         public void Should_Delete_Issue_Relation()
         {
-            var exception =
+	        const string RELATION_ID_TO_DELETE = "23";
+	        var exception =
                 (RedmineException)
                     Record.Exception(
                         () => fixture.RedmineManager.DeleteObject<IssueRelation>(RELATION_ID_TO_DELETE, null));
@@ -75,7 +75,8 @@ namespace xUnitTestredminenet45api
         [Fact, Order(2)]
         public void Should_Get_IssueRelation_By_Id()
         {
-            var relation = fixture.RedmineManager.GetObject<IssueRelation>(RELATION_ID_TO_GET, null);
+	        const string RELATION_ID_TO_GET = "27";
+	        var relation = fixture.RedmineManager.GetObject<IssueRelation>(RELATION_ID_TO_GET, null);
 
             Assert.NotNull(relation);
             Assert.True(relation.IssueId == RELATED_ISSUE_ID, "Related issue id is not valid.");
@@ -87,14 +88,15 @@ namespace xUnitTestredminenet45api
         [Fact, Order(3)]
         public void Should_Get_IssueRelations_By_Issue_Id()
         {
-            var relations =
+	        const int NUMBER_OF_RELATIONS = 1;
+	        var relations =
                 fixture.RedmineManager.GetObjects<IssueRelation>(new NameValueCollection
                 {
                     {RedmineKeys.ISSUE_ID, ISSUE_ID}
                 });
 
             Assert.NotNull(relations);
-            Assert.True(relations.Count == NUMBER_OF_RELATIONS, "Number of issue relations != " + NUMBER_OF_RELATIONS);
+            Assert.True(relations.Count == NUMBER_OF_RELATIONS, "Number of issue relations ( "+relations.Count+" ) != " + NUMBER_OF_RELATIONS);
         }
     }
 }

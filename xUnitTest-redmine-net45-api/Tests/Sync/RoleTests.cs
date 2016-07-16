@@ -19,7 +19,8 @@ using Xunit;
 
 namespace xUnitTestredminenet45api
 {
-    [Collection("RedmineCollection")]
+	[Trait("Redmine-Net-Api", "Roles")]
+	[Collection("RedmineCollection")]
     public class RoleTests
     {
         public RoleTests(RedmineFixture fixture)
@@ -29,7 +30,7 @@ namespace xUnitTestredminenet45api
 
         private readonly RedmineFixture fixture;
 
-        [Fact]
+        [Fact, Order(1)]
         public void Should_Get_All_Roles()
         {
             const int NUMBER_OF_ROLES = 3;
@@ -40,7 +41,7 @@ namespace xUnitTestredminenet45api
             Assert.True(roles.Count == NUMBER_OF_ROLES, "Roles count(" + roles.Count + ") != " + NUMBER_OF_ROLES);
         }
 
-        [Fact]
+        [Fact, Order(2)]
         public void Should_Get_Role_By_Id()
         {
             const string ROLE_ID = "5";

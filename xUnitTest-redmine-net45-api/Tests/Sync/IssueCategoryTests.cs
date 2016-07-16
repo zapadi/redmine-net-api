@@ -6,7 +6,8 @@ using Xunit;
 
 namespace xUnitTestredminenet45api
 {
-    [Collection("RedmineCollection")]
+	[Trait("Redmine-Net-Api", "IssueCategories")]
+	[Collection("RedmineCollection")]
     public class IssueCategoryTests
     {
         public IssueCategoryTests(RedmineFixture fixture)
@@ -14,32 +15,16 @@ namespace xUnitTestredminenet45api
             this.fixture = fixture;
         }
 
-        private const string PROJECT_ID = "redmine-net-testq";
-        private const int NUMBER_OF_ISSUE_CATEGORIES = 2;
+	    private readonly RedmineFixture fixture;
 
-        //issueCategory data for insert
-        private const string NEW_ISSUE_CATEGORY_NAME = "Test category";
-        private const int NEW_ISSUE_CATEGORY_ASIGNEE_ID = 5;
+	    private const string PROJECT_ID = "redmine-net-testq";
 
-        private const string ISSUE_CATEGORY_ID_TO_GET = "17";
-        private const string ISSUE_CATEGORY_NAME_TO_GET = "Test category";
-        private const string ISSUE_CATEGORY_PROJECT_NAME_TO_GET = "redmine-net-testq";
-        private const string ISSUE_CATEGORY_ASIGNEE_NAME_TO_GET = "Alina";
-
-        private const string ISSUE_CATEGORY_ID_TO_UPDATE = "17";
-        private const string ISSUE_CATEGORY_NAME_TO_UPDATE = "Category updated";
-        private const int ISSUE_CATEGORY_ASIGNEE_ID_TO_UPDATE = 2;
-
-        private const string ISSUE_CATEGORY_ID_TO_DELETE = "16";
-
-        private const string ISSUE_CATEGORY_ID_TO_COMPARE = "17";
-
-        private readonly RedmineFixture fixture;
-
-        [Fact]
+        [Fact, Order(1)]
         public void Should_Create_IssueCategory()
         {
-            var issueCategory = new IssueCategory
+	        const string NEW_ISSUE_CATEGORY_NAME = "Test category";
+	        const int NEW_ISSUE_CATEGORY_ASIGNEE_ID = 5;
+	        var issueCategory = new IssueCategory
             {
                 Name = NEW_ISSUE_CATEGORY_NAME,
                 AsignTo = new IdentifiableName {Id = NEW_ISSUE_CATEGORY_ASIGNEE_ID}
@@ -51,10 +36,11 @@ namespace xUnitTestredminenet45api
             Assert.True(savedIssueCategory.Name.Equals(NEW_ISSUE_CATEGORY_NAME), "Saved issue category name is invalid.");
         }
 
-        [Fact]
+        [Fact, Order(99)]
         public void Should_Delete_IssueCategory()
         {
-            var exception =
+	        const string ISSUE_CATEGORY_ID_TO_DELETE = "16";
+	        var exception =
                 (RedmineException)
                     Record.Exception(
                         () => fixture.RedmineManager.DeleteObject<IssueCategory>(ISSUE_CATEGORY_ID_TO_DELETE, null));
@@ -63,10 +49,11 @@ namespace xUnitTestredminenet45api
                 () => fixture.RedmineManager.GetObject<IssueCategory>(ISSUE_CATEGORY_ID_TO_DELETE, null));
         }
 
-        [Fact]
+        [Fact, Order(2)]
         public void Should_Get_All_IssueCategories_By_ProjectId()
         {
-            var issueCategories =
+	        const int NUMBER_OF_ISSUE_CATEGORIES = 2;
+	        var issueCategories =
                 fixture.RedmineManager.GetObjects<IssueCategory>(new NameValueCollection
                 {
                     {RedmineKeys.PROJECT_ID, PROJECT_ID}
@@ -75,13 +62,18 @@ namespace xUnitTestredminenet45api
             Assert.NotNull(issueCategories);
             Assert.All(issueCategories, ic => Assert.IsType<IssueCategory>(ic));
             Assert.True(issueCategories.Count == NUMBER_OF_ISSUE_CATEGORIES,
-                "Number of issue categories != " + NUMBER_OF_ISSUE_CATEGORIES);
+                "Number of issue categories ( "+issueCategories.Count+" ) != " + NUMBER_OF_ISSUE_CATEGORIES);
         }
 
-        [Fact]
+        [Fact, Order(3)]
         public void Should_Get_IssueCategory_By_Id()
         {
-            var issueCategory = fixture.RedmineManager.GetObject<IssueCategory>(ISSUE_CATEGORY_ID_TO_GET, null);
+	        const string ISSUE_CATEGORY_ID_TO_GET = "17";
+	        const string ISSUE_CATEGORY_NAME_TO_GET = "Test category";
+	        const string ISSUE_CATEGORY_PROJECT_NAME_TO_GET = "redmine-net-testq";
+	        const string ISSUE_CATEGORY_ASIGNEE_NAME_TO_GET = "Alina";
+
+	        var issueCategory = fixture.RedmineManager.GetObject<IssueCategory>(ISSUE_CATEGORY_ID_TO_GET, null);
 
             Assert.NotNull(issueCategory);
             Assert.True(issueCategory.Name.Equals(ISSUE_CATEGORY_NAME_TO_GET), "Issue category name is invalid.");
@@ -93,10 +85,14 @@ namespace xUnitTestredminenet45api
                 "Project name is invalid.");
         }
 
-        [Fact]
+        [Fact, Order(4)]
         public void Should_Update_IssueCategory()
         {
-            var issueCategory = fixture.RedmineManager.GetObject<IssueCategory>(ISSUE_CATEGORY_ID_TO_UPDATE, null);
+	        const string ISSUE_CATEGORY_ID_TO_UPDATE = "17";
+	        const string ISSUE_CATEGORY_NAME_TO_UPDATE = "Category updated";
+	        const int ISSUE_CATEGORY_ASIGNEE_ID_TO_UPDATE = 2;
+
+	        var issueCategory = fixture.RedmineManager.GetObject<IssueCategory>(ISSUE_CATEGORY_ID_TO_UPDATE, null);
             issueCategory.Name = ISSUE_CATEGORY_NAME_TO_UPDATE;
             issueCategory.AsignTo = new IdentifiableName {Id = ISSUE_CATEGORY_ASIGNEE_ID_TO_UPDATE};
 
