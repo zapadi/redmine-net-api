@@ -45,7 +45,7 @@ namespace Redmine.Net.Api.Extensions
         }
 
         /// <summary>
-        /// Reads the attribute as nullable int.
+        ///     Reads the attribute as nullable int.
         /// </summary>
         /// <param name="reader">The reader.</param>
         /// <param name="attributeName">Name of the attribute.</param>
@@ -185,7 +185,7 @@ namespace Redmine.Net.Api.Extensions
         }
 
         /// <summary>
-        /// Reads the element content as collection.
+        ///     Reads the element content as collection.
         /// </summary>
         /// <param name="reader">The reader.</param>
         /// <param name="type">The type.</param>

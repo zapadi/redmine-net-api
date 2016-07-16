@@ -22,10 +22,10 @@ namespace Redmine.Net.Api.Internals
     internal static class DataHelper
     {
         /// <summary>
-        /// 
+        /// Users the data.
         /// </summary>
-        /// <param name="userId"></param>
-        /// <param name="mimeFormat"></param>
+        /// <param name="userId">The user identifier.</param>
+        /// <param name="mimeFormat">The MIME format.</param>
         /// <returns></returns>
         public static string UserData(int userId, MimeFormat mimeFormat)
         {

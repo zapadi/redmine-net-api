@@ -22,7 +22,6 @@ namespace Redmine.Net.Api
     public enum MimeFormat
     {
         /// <summary>
-        /// 
         /// </summary>
         Xml
     }

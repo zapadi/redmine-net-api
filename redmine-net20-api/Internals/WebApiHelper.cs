@@ -28,13 +28,13 @@ namespace Redmine.Net.Api.Internals
     internal static class WebApiHelper
     {
         /// <summary>
-        /// 
+        /// Executes the upload.
         /// </summary>
-        /// <param name="redmineManager"></param>
-        /// <param name="address"></param>
-        /// <param name="actionType"></param>
-        /// <param name="data"></param>
-        /// <param name="methodName"></param>
+        /// <param name="redmineManager">The redmine manager.</param>
+        /// <param name="address">The address.</param>
+        /// <param name="actionType">Type of the action.</param>
+        /// <param name="data">The data.</param>
+        /// <param name="methodName">Name of the method.</param>
         public static void ExecuteUpload(RedmineManager redmineManager, string address, string actionType, string data,
             string methodName)
         {
@@ -56,14 +56,14 @@ namespace Redmine.Net.Api.Internals
         }
 
         /// <summary>
-        /// 
+        /// Executes the upload.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="redmineManager"></param>
-        /// <param name="address"></param>
-        /// <param name="actionType"></param>
-        /// <param name="data"></param>
-        /// <param name="methodName"></param>
+        /// <param name="redmineManager">The redmine manager.</param>
+        /// <param name="address">The address.</param>
+        /// <param name="actionType">Type of the action.</param>
+        /// <param name="data">The data.</param>
+        /// <param name="methodName">Name of the method.</param>
         /// <returns></returns>
         public static T ExecuteUpload<T>(RedmineManager redmineManager, string address, string actionType, string data,
             string methodName)
@@ -89,13 +89,13 @@ namespace Redmine.Net.Api.Internals
         }
 
         /// <summary>
-        /// 
+        /// Executes the download.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="redmineManager"></param>
-        /// <param name="address"></param>
-        /// <param name="methodName"></param>
-        /// <param name="parameters"></param>
+        /// <param name="redmineManager">The redmine manager.</param>
+        /// <param name="address">The address.</param>
+        /// <param name="methodName">Name of the method.</param>
+        /// <param name="parameters">The parameters.</param>
         /// <returns></returns>
         public static T ExecuteDownload<T>(RedmineManager redmineManager, string address, string methodName,
             NameValueCollection parameters = null)
@@ -118,13 +118,13 @@ namespace Redmine.Net.Api.Internals
         }
 
         /// <summary>
-        /// 
+        /// Executes the download list.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="redmineManager"></param>
-        /// <param name="address"></param>
-        /// <param name="methodName"></param>
-        /// <param name="parameters"></param>
+        /// <param name="redmineManager">The redmine manager.</param>
+        /// <param name="address">The address.</param>
+        /// <param name="methodName">Name of the method.</param>
+        /// <param name="parameters">The parameters.</param>
         /// <returns></returns>
         public static PaginatedObjects<T> ExecuteDownloadList<T>(RedmineManager redmineManager, string address,
             string methodName,
@@ -146,11 +146,11 @@ namespace Redmine.Net.Api.Internals
         }
 
         /// <summary>
-        /// 
+        /// Executes the download file.
         /// </summary>
-        /// <param name="redmineManager"></param>
-        /// <param name="address"></param>
-        /// <param name="methodName"></param>
+        /// <param name="redmineManager">The redmine manager.</param>
+        /// <param name="address">The address.</param>
+        /// <param name="methodName">Name of the method.</param>
         /// <returns></returns>
         public static byte[] ExecuteDownloadFile(RedmineManager redmineManager, string address, string methodName)
         {
@@ -169,12 +169,12 @@ namespace Redmine.Net.Api.Internals
         }
 
         /// <summary>
-        /// 
+        /// Executes the upload file.
         /// </summary>
-        /// <param name="redmineManager"></param>
-        /// <param name="address"></param>
-        /// <param name="data"></param>
-        /// <param name="methodName"></param>
+        /// <param name="redmineManager">The redmine manager.</param>
+        /// <param name="address">The address.</param>
+        /// <param name="data">The data.</param>
+        /// <param name="methodName">Name of the method.</param>
         /// <returns></returns>
         public static Upload ExecuteUploadFile(RedmineManager redmineManager, string address, byte[] data, string methodName)
         {

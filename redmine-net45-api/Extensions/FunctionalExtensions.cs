@@ -32,5 +32,58 @@ namespace Redmine.Net.Api.Extensions
         {
             return fn(@this);
         }
+
+        /// <summary>
+        /// Curries the specified function.
+        /// </summary>
+        /// <typeparam name="A"></typeparam>
+        /// <typeparam name="B"></typeparam>
+        /// <typeparam name="C"></typeparam>
+        /// <param name="func">The function.</param>
+        /// <returns></returns>
+        public static Func<A, Func<B, C>> Curry<A, B, C>(this Func<A, B, C> func)
+        {
+            return a => b => func(a, b);
+        }
+
+        /// <summary>
+        /// Curries the specified function.
+        /// </summary>
+        /// <typeparam name="A"></typeparam>
+        /// <typeparam name="B"></typeparam>
+        /// <typeparam name="C"></typeparam>
+        /// <typeparam name="D"></typeparam>
+        /// <param name="func">The function.</param>
+        /// <returns></returns>
+        public static Func<A, Func<B, Func<C, D>>> Curry<A, B, C, D>(this Func<A, B, C, D> func)
+        {
+            return a => b => c => func(a, b, c);
+        }
+
+        /// <summary>
+        /// Caches the specified function.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="func">The function.</param>
+        /// <param name="interval">The interval.</param>
+        /// <returns></returns>
+        public static Func<T> Cache<T>(Func<T> func, int interval)
+        {
+            var cachedValue = func();
+            var timeCached= DateTime.Now;
+
+            Func<T> cachedFunc = () =>
+            {
+                if((DateTime.Now - timeCached).Seconds >= interval)
+                {
+                    timeCached = DateTime.Now;
+                    cachedValue = func();
+                }
+
+                return cachedValue;
+            };
+
+            return cachedFunc;
+        }
     }
 }

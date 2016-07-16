@@ -42,11 +42,11 @@ namespace Redmine.Net.Api.Extensions
         }
 
         /// <summary>
-        /// 
+        /// Writes the array.
         /// </summary>
-        /// <param name="writer"></param>
-        /// <param name="collection"></param>
-        /// <param name="elementName"></param>
+        /// <param name="writer">The writer.</param>
+        /// <param name="collection">The collection.</param>
+        /// <param name="elementName">Name of the element.</param>
         public static void WriteArray(this XmlWriter writer, IEnumerable collection, string elementName)
         {
             if (collection == null) return;
@@ -62,13 +62,13 @@ namespace Redmine.Net.Api.Extensions
         }
 
         /// <summary>
-        /// 
+        /// Writes the array ids.
         /// </summary>
-        /// <param name="writer"></param>
-        /// <param name="collection"></param>
-        /// <param name="elementName"></param>
-        /// <param name="type"></param>
-        /// <param name="f"></param>
+        /// <param name="writer">The writer.</param>
+        /// <param name="collection">The collection.</param>
+        /// <param name="elementName">Name of the element.</param>
+        /// <param name="type">The type.</param>
+        /// <param name="f">The f.</param>
         public static void WriteArrayIds(this XmlWriter writer, IEnumerable collection, string elementName, Type type, Func<object, int> f)
         {
             if (collection == null) return;
@@ -84,14 +84,14 @@ namespace Redmine.Net.Api.Extensions
         }
 
         /// <summary>
-        /// 
+        /// Writes the array.
         /// </summary>
-        /// <param name="writer"></param>
-        /// <param name="collection"></param>
-        /// <param name="elementName"></param>
-        /// <param name="type"></param>
-        /// <param name="root"></param>
-        /// <param name="defaultNamespace"></param>
+        /// <param name="writer">The writer.</param>
+        /// <param name="collection">The collection.</param>
+        /// <param name="elementName">Name of the element.</param>
+        /// <param name="type">The type.</param>
+        /// <param name="root">The root.</param>
+        /// <param name="defaultNamespace">The default namespace.</param>
         public static void WriteArray(this XmlWriter writer, IEnumerable collection, string elementName, Type type, string root, string defaultNamespace = null)
         {
             if (collection == null) return;
@@ -108,12 +108,12 @@ namespace Redmine.Net.Api.Extensions
         }
 
         /// <summary>
-        /// 
+        /// Writes the array string element.
         /// </summary>
-        /// <param name="writer"></param>
-        /// <param name="collection"></param>
-        /// <param name="elementName"></param>
-        /// <param name="f"></param>
+        /// <param name="writer">The writer.</param>
+        /// <param name="collection">The collection.</param>
+        /// <param name="elementName">Name of the element.</param>
+        /// <param name="f">The func to invoke.</param>
         public static void WriteArrayStringElement(this XmlWriter writer, IEnumerable collection, string elementName, Func<object, string> f)
         {
             if (collection == null) return;
@@ -128,11 +128,11 @@ namespace Redmine.Net.Api.Extensions
         }
 
         /// <summary>
-        /// 
+        /// Writes the list elements.
         /// </summary>
-        /// <param name="xmlWriter"></param>
-        /// <param name="collection"></param>
-        /// <param name="elementName"></param>
+        /// <param name="xmlWriter">The XML writer.</param>
+        /// <param name="collection">The collection.</param>
+        /// <param name="elementName">Name of the element.</param>
         public static void WriteListElements(this XmlWriter xmlWriter, IEnumerable<IValue> collection, string elementName)
         {
             if (collection == null) return;
@@ -144,23 +144,23 @@ namespace Redmine.Net.Api.Extensions
         }
 
         /// <summary>
-        /// 
+        /// Writes the identifier or empty.
         /// </summary>
-        /// <param name="writer"></param>
-        /// <param name="ident"></param>
-        /// <param name="tag"></param>
+        /// <param name="writer">The writer.</param>
+        /// <param name="ident">The ident.</param>
+        /// <param name="tag">The tag.</param>
         public static void WriteIdOrEmpty(this XmlWriter writer, IdentifiableName ident, string tag)
         {
             writer.WriteElementString(tag, ident != null ? ident.Id.ToString(CultureInfo.InvariantCulture) : string.Empty);
         }
 
         /// <summary>
-        /// 
+        /// Writes if not default or null.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="writer"></param>
-        /// <param name="val"></param>
-        /// <param name="tag"></param>
+        /// <param name="writer">The writer.</param>
+        /// <param name="val">The value.</param>
+        /// <param name="tag">The tag.</param>
         public static void WriteIfNotDefaultOrNull<T>(this XmlWriter writer, T? val, string tag) where T : struct
         {
             if (!val.HasValue) return;
@@ -184,11 +184,11 @@ namespace Redmine.Net.Api.Extensions
         }
 
         /// <summary>
-        /// 
+        /// Writes the date or empty.
         /// </summary>
-        /// <param name="writer"></param>
-        /// <param name="val"></param>
-        /// <param name="tag"></param>
+        /// <param name="writer">The writer.</param>
+        /// <param name="val">The value.</param>
+        /// <param name="tag">The tag.</param>
         public static void WriteDateOrEmpty(this XmlWriter writer, DateTime? val, string tag)
         {
             if (!val.HasValue || val.Value.Equals(default(DateTime)))

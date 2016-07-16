@@ -19,6 +19,7 @@ namespace System.Runtime.CompilerServices
     /// <summary>
     /// 
     /// </summary>
+    /// <seealso cref="System.Attribute" />
     [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Method, AllowMultiple=false, Inherited=false)]
     public class ExtensionAttribute: Attribute
     {

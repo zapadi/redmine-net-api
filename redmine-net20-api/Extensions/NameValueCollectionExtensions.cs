@@ -24,10 +24,10 @@ namespace Redmine.Net.Api.Extensions
     public static class NameValueCollectionExtensions
     {
         /// <summary>
-        /// 
+        /// Gets the parameter value.
         /// </summary>
-        /// <param name="parameters"></param>
-        /// <param name="parameterName"></param>
+        /// <param name="parameters">The parameters.</param>
+        /// <param name="parameterName">Name of the parameter.</param>
         /// <returns></returns>
         public static string GetParameterValue(this NameValueCollection parameters, string parameterName)
         {

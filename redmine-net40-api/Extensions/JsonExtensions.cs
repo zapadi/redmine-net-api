@@ -32,23 +32,23 @@ namespace Redmine.Net.Api.Extensions
     public static class JsonExtensions
     {
         /// <summary>
-        /// 
+        /// Writes the identifier if not null.
         /// </summary>
-        /// <param name="dictionary"></param>
-        /// <param name="ident"></param>
-        /// <param name="key"></param>
+        /// <param name="dictionary">The dictionary.</param>
+        /// <param name="ident">The ident.</param>
+        /// <param name="key">The key.</param>
         public static void WriteIdIfNotNull(this Dictionary<string, object> dictionary, IdentifiableName ident, string key)
         {
             if (ident != null) dictionary.Add(key, ident.Id);
         }
 
         /// <summary>
-        /// 
+        /// Writes the identifier or empty.
         /// </summary>
-        /// <param name="dictionary"></param>
-        /// <param name="ident"></param>
-        /// <param name="key"></param>
-        /// <param name="emptyValue"></param>
+        /// <param name="dictionary">The dictionary.</param>
+        /// <param name="ident">The ident.</param>
+        /// <param name="key">The key.</param>
+        /// <param name="emptyValue">The empty value.</param>
         public static void WriteIdOrEmpty(this Dictionary<string, object> dictionary, IdentifiableName ident, string key, string emptyValue = null)
         {
             if (ident != null) dictionary.Add(key, ident.Id);
@@ -56,14 +56,14 @@ namespace Redmine.Net.Api.Extensions
         }
 
         /// <summary>
-        /// 
+        /// Writes the array.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="dictionary"></param>
-        /// <param name="key"></param>
-        /// <param name="col"></param>
-        /// <param name="converter"></param>
-        /// <param name="serializer"></param>
+        /// <param name="dictionary">The dictionary.</param>
+        /// <param name="key">The key.</param>
+        /// <param name="col">The col.</param>
+        /// <param name="converter">The converter.</param>
+        /// <param name="serializer">The serializer.</param>
         public static void WriteArray<T>(this Dictionary<string, object> dictionary, string key, IEnumerable<T> col,
             JavaScriptConverter converter, JavaScriptSerializer serializer)
         {
@@ -75,11 +75,11 @@ namespace Redmine.Net.Api.Extensions
         }
 
         /// <summary>
-        /// 
+        /// Writes the ids array.
         /// </summary>
-        /// <param name="dictionary"></param>
-        /// <param name="key"></param>
-        /// <param name="coll"></param>
+        /// <param name="dictionary">The dictionary.</param>
+        /// <param name="key">The key.</param>
+        /// <param name="coll">The coll.</param>
         public static void WriteIdsArray(this Dictionary<string, object> dictionary, string key,
             IEnumerable<IdentifiableName> coll)
         {
@@ -88,11 +88,11 @@ namespace Redmine.Net.Api.Extensions
         }
 
         /// <summary>
-        /// 
+        /// Writes the names array.
         /// </summary>
-        /// <param name="dictionary"></param>
-        /// <param name="key"></param>
-        /// <param name="coll"></param>
+        /// <param name="dictionary">The dictionary.</param>
+        /// <param name="key">The key.</param>
+        /// <param name="coll">The coll.</param>
         public static void WriteNamesArray(this Dictionary<string, object> dictionary, string key,
             IEnumerable<IdentifiableName> coll)
         {
@@ -101,11 +101,11 @@ namespace Redmine.Net.Api.Extensions
         }
 
         /// <summary>
-        /// 
+        /// Writes the date or empty.
         /// </summary>
-        /// <param name="dictionary"></param>
-        /// <param name="val"></param>
-        /// <param name="tag"></param>
+        /// <param name="dictionary">The dictionary.</param>
+        /// <param name="val">The value.</param>
+        /// <param name="tag">The tag.</param>
         public static void WriteDateOrEmpty(this Dictionary<string, object> dictionary, DateTime? val, string tag)
         {
             if (!val.HasValue || val.Value.Equals(default(DateTime)))
@@ -115,12 +115,12 @@ namespace Redmine.Net.Api.Extensions
         }
 
         /// <summary>
-        /// 
+        /// Writes the value or empty.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="dictionary"></param>
-        /// <param name="val"></param>
-        /// <param name="tag"></param>
+        /// <param name="dictionary">The dictionary.</param>
+        /// <param name="val">The value.</param>
+        /// <param name="tag">The tag.</param>
         public static void WriteValueOrEmpty<T>(this Dictionary<string, object> dictionary, T? val, string tag) where T : struct
         {
             if (!val.HasValue || EqualityComparer<T>.Default.Equals(val.Value, default(T)))
@@ -130,23 +130,23 @@ namespace Redmine.Net.Api.Extensions
         }
 
         /// <summary>
-        /// 
+        /// Writes the value or default.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="dictionary"></param>
-        /// <param name="val"></param>
-        /// <param name="tag"></param>
+        /// <param name="dictionary">The dictionary.</param>
+        /// <param name="val">The value.</param>
+        /// <param name="tag">The tag.</param>
         public static void WriteValueOrDefault<T>(this Dictionary<string, object> dictionary, T? val, string tag) where T : struct
         {
             dictionary.Add(tag, val ?? default(T));
         }
 
         /// <summary>
-        /// 
+        /// Gets the value.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="dictionary"></param>
-        /// <param name="key"></param>
+        /// <param name="dictionary">The dictionary.</param>
+        /// <param name="key">The key.</param>
         /// <returns></returns>
         public static T GetValue<T>(this IDictionary<string, object> dictionary, string key)
         {
@@ -170,10 +170,10 @@ namespace Redmine.Net.Api.Extensions
         }
 
         /// <summary>
-        /// 
+        /// Gets the name of the value as identifiable.
         /// </summary>
-        /// <param name="dictionary"></param>
-        /// <param name="key"></param>
+        /// <param name="dictionary">The dictionary.</param>
+        /// <param name="key">The key.</param>
         /// <returns></returns>
         public static IdentifiableName GetValueAsIdentifiableName(this IDictionary<string, object> dictionary, string key)
         {
@@ -191,8 +191,8 @@ namespace Redmine.Net.Api.Extensions
         /// For Json
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="dictionary"></param>
-        /// <param name="key"></param>
+        /// <param name="dictionary">The dictionary.</param>
+        /// <param name="key">The key.</param>
         /// <returns></returns>
         public static List<T> GetValueAsCollection<T>(this IDictionary<string, object> dictionary, string key) where T : new()
         {

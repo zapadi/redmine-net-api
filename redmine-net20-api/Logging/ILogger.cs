@@ -22,9 +22,9 @@ namespace Redmine.Net.Api.Logging
     public interface ILogger
     {
         /// <summary>
-        /// 
+        /// Logs the specified entry.
         /// </summary>
-        /// <param name="entry"></param>
+        /// <param name="entry">The entry.</param>
         void Log(LogEntry entry);
     }
 }

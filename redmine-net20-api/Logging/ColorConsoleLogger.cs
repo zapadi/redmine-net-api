@@ -56,6 +56,11 @@ namespace Redmine.Net.Api.Logging
             }
         }
 
+        /// <summary>
+        /// Gets the log level console colors.
+        /// </summary>
+        /// <param name="logLevel">The log level.</param>
+        /// <returns></returns>
         private ConsoleColors GetLogLevelConsoleColors(LoggingEventType logLevel)
         {
             // do not change user's background color except for Critical
@@ -74,6 +79,9 @@ namespace Redmine.Net.Api.Logging
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         private struct ConsoleColors
         {
             public ConsoleColors(ConsoleColor? foreground, ConsoleColor? background): this()
@@ -82,8 +90,20 @@ namespace Redmine.Net.Api.Logging
                 Background = background;
             }
 
+            /// <summary>
+            /// Gets or sets the foreground.
+            /// </summary>
+            /// <value>
+            /// The foreground.
+            /// </value>
             public ConsoleColor? Foreground { get; private set; }
 
+            /// <summary>
+            /// Gets or sets the background.
+            /// </summary>
+            /// <value>
+            /// The background.
+            /// </value>
             public ConsoleColor? Background { get; private set; }
         }
     }

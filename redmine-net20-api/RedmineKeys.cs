@@ -21,7 +21,7 @@ namespace Redmine.Net.Api
     public static class RedmineKeys
     {
         /// <summary>
-        /// 
+        /// The activity
         /// </summary>
         public const string ACTIVITY = "activity";
         /// <summary>

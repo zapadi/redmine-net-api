@@ -93,6 +93,12 @@ namespace Redmine.Net.Api.Extensions
             }
         }
 
+        /// <summary>
+        /// Gets the redmine exceptions.
+        /// </summary>
+        /// <param name="webResponse">The web response.</param>
+        /// <param name="mimeFormat">The MIME format.</param>
+        /// <returns></returns>
         private static List<Error> GetRedmineExceptions(this WebResponse webResponse, MimeFormat mimeFormat)
         {
             using (var dataStream = webResponse.GetResponseStream())

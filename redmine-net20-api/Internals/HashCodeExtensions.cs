@@ -24,12 +24,14 @@ namespace Redmine.Net.Api.Internals
     internal static class HashCodeHelper
     {
         /// <summary>
-        /// 
+        /// Returns a hash code for the list.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="list"></param>
-        /// <param name="hash"></param>
-        /// <returns></returns>
+        /// <param name="list">The list.</param>
+        /// <param name="hash">The hash.</param>
+        /// <returns>
+        /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
+        /// </returns>
         public static int GetHashCode<T>(IList<T> list, int hash)
         {
             unchecked
@@ -50,12 +52,14 @@ namespace Redmine.Net.Api.Internals
         }
 
         /// <summary>
-        /// 
+        /// Returns a hash code for this instance.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="entity"></param>
-        /// <param name="hash"></param>
-        /// <returns></returns>
+        /// <param name="entity">The entity.</param>
+        /// <param name="hash">The hash.</param>
+        /// <returns>
+        /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
+        /// </returns>
         public static int GetHashCode<T>(T entity, int hash)
         {
             unchecked
