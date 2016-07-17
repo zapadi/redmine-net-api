@@ -108,7 +108,7 @@ namespace Redmine.Net.Api
         /// <param name="mimeFormat">The MIME format.</param>
         /// <param name="verifyServerCert">if set to <c>true</c> [verify server cert].</param>
         /// <param name="proxy">The proxy.</param>
-        /// <param name="securityProtocolType">Type of the security protocol.</param>
+        /// <param name="securityProtocolType">Use this parameter to specify a SecurityProtcolType. Note: it is recommended to leave this parameter at its default value as this setting also affects the calling application process.</param>
         /// <exception cref="Redmine.Net.Api.Exceptions.RedmineException">
         ///     Host is not defined!
         ///     or
@@ -120,7 +120,7 @@ namespace Redmine.Net.Api
             if (string.IsNullOrEmpty(host)) throw new RedmineException("Host is not defined!");
             PageSize = 25;
 
-            if (default(SecurityProtocolType) != securityProtocolType)
+            if (default(SecurityProtocolType) == securityProtocolType)
             {
                 securityProtocolType = ServicePointManager.SecurityProtocol;
             }
@@ -162,7 +162,7 @@ namespace Redmine.Net.Api
         /// <param name="mimeFormat">The MIME format.</param>
         /// <param name="verifyServerCert">if set to <c>true</c> [verify server cert].</param>
         /// <param name="proxy">The proxy.</param>
-        /// <param name="securityProtocolType">Type of the security protocol.</param>
+        /// <param name="securityProtocolType">Use this parameter to specify a SecurityProtcolType. Note: it is recommended to leave this parameter at its default value as this setting also affects the calling application process.</param>
         public RedmineManager(string host, string apiKey, MimeFormat mimeFormat = MimeFormat.Xml,
             bool verifyServerCert = true, IWebProxy proxy = null,
             SecurityProtocolType securityProtocolType = default(SecurityProtocolType))
@@ -191,7 +191,7 @@ namespace Redmine.Net.Api
         /// <param name="mimeFormat">The MIME format.</param>
         /// <param name="verifyServerCert">if set to <c>true</c> [verify server cert].</param>
         /// <param name="proxy">The proxy.</param>
-        /// <param name="securityProtocolType">Type of the security protocol.</param>
+        /// <param name="securityProtocolType">Use this parameter to specify a SecurityProtcolType. Note: it is recommended to leave this parameter at its default value as this setting also affects the calling application process.</param>
         public RedmineManager(string host, string login, string password, MimeFormat mimeFormat = MimeFormat.Xml,
             bool verifyServerCert = true, IWebProxy proxy = null,
             SecurityProtocolType securityProtocolType = default(SecurityProtocolType))
