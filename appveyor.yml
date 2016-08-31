@@ -1,5 +1,5 @@
 os: Visual Studio 2015
-version: 1.0.{build}
+version: 2.0.{build}
 # environment:
 #    COVERALLS_REPO_TOKEN:  
 #       secure: 8JYxwCWszeAaWBr41pD17LB925K7Sk7utvKsIb1qz44i2anf9uLmvh2q0ilMQTBO
@@ -35,12 +35,9 @@ build:
   verbosity: detailed
 
 after_build:
-<<<<<<< HEAD
-- nuget pack redmine-net-api.nuspec -Version 1.0.4
-=======
 - ps: nuget pack redmine-net-api.nuspec -Version $env:appveyor_build_version
 - ps: nuget pack redmine-net-api-signed.nuspec -Version $env:appveyor_build_version
->>>>>>> dev
+
 nuget:
   account_feed: true
   project_feed: true
@@ -49,7 +46,6 @@ test: off
 
 artifacts:
 - path: '*.nupkg'
-#  name: redminepackage
 
 # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified
 cache:
