@@ -82,7 +82,7 @@ namespace Redmine.Net.Api.Async
         /// <param name="redmineManager">The redmine manager.</param>
         /// <param name="projectId">The project identifier.</param>
         /// <returns></returns>
-        public static Task<IList<WikiPage>> GetAllWikiPagesAsync(this RedmineManager redmineManager, string projectId)
+        public static Task<List<WikiPage>> GetAllWikiPagesAsync(this RedmineManager redmineManager, string projectId)
         {
             return Task.Factory.StartNew(() => redmineManager.GetAllWikiPages(projectId), TaskCreationOptions.LongRunning);
         }
@@ -221,7 +221,7 @@ namespace Redmine.Net.Api.Async
         /// <returns></returns>
         public static Task DeleteObjectAsync<T>(this RedmineManager redmineManager, string id, NameValueCollection parameters) where T : class, new()
         {
-            return Task.Factory.StartNew(() => redmineManager.DeleteObject<T>(id, parameters), TaskCreationOptions.LongRunning);
+            return Task.Factory.StartNew(() => redmineManager.DeleteObject<T>(id), TaskCreationOptions.LongRunning);
         }
 
         /// <summary>

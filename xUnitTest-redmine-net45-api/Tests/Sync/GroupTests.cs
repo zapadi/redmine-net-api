@@ -125,7 +125,7 @@ namespace xUnitTestredminenet45api
 
 		    var exception =
 			    (RedmineException)
-			    Record.Exception(() => fixture.RedmineManager.DeleteObject<Group>(DELETED_GROUP_ID, null));
+			    Record.Exception(() => fixture.RedmineManager.DeleteObject<Group>(DELETED_GROUP_ID));
 		    Assert.Null(exception);
 		    Assert.Throws<NotFoundException>(() => fixture.RedmineManager.GetObject<Group>(DELETED_GROUP_ID, null));
 	    }

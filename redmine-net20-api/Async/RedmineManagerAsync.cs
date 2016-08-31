@@ -227,7 +227,7 @@ namespace Redmine.Net.Api.Async
         public static Task DeleteObjectAsync<T>(this RedmineManager redmineManager, string id,
             NameValueCollection parameters) where T : class, new()
         {
-            return delegate { redmineManager.DeleteObject<T>(id, parameters); };
+            return delegate { redmineManager.DeleteObject<T>(id); };
         }
 
         /// <summary>

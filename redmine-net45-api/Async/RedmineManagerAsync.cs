@@ -36,13 +36,9 @@ namespace Redmine.Net.Api.Async
         /// <param name="redmineManager">The redmine manager.</param>
         /// <param name="parameters">The parameters.</param>
         /// <returns></returns>
-        public static async Task<User> GetCurrentUserAsync(this RedmineManager redmineManager,
-            NameValueCollection parameters = null)
+        public static async Task<User> GetCurrentUserAsync(this RedmineManager redmineManager, NameValueCollection parameters = null)
         {
-            var uri = string.Format(RedmineManager.REQUEST_FORMAT, redmineManager.Host,
-                RedmineManager.Sufixes[typeof(User)], RedmineManager.CURRENT_USER_URI,
-                redmineManager.MimeFormat.ToString().ToLower());
-
+            var uri = UrlHelper.GetCurrentUserUrl(redmineManager);
             return await WebApiAsyncHelper.ExecuteDownload<User>(redmineManager, uri, "GetCurrentUserAsync", parameters);
         }
 
@@ -54,16 +50,12 @@ namespace Redmine.Net.Api.Async
         /// <param name="pageName">Name of the page.</param>
         /// <param name="wikiPage">The wiki page.</param>
         /// <returns></returns>
-        public static async Task<WikiPage> CreateOrUpdateWikiPageAsync(this RedmineManager redmineManager,
-            string projectId, string pageName, WikiPage wikiPage)
+        public static async Task<WikiPage> CreateOrUpdateWikiPageAsync(this RedmineManager redmineManager, string projectId, string pageName, WikiPage wikiPage)
         {
             var uri = UrlHelper.GetWikiCreateOrUpdaterUrl(redmineManager, projectId, pageName);
             var data = RedmineSerializer.Serialize(wikiPage, redmineManager.MimeFormat);
 
-            return
-                await
-                    WebApiAsyncHelper.ExecuteUpload<WikiPage>(redmineManager, uri, HttpVerbs.PUT, data,
-                        "CreateOrUpdateWikiPageAsync");
+            return await WebApiAsyncHelper.ExecuteUpload<WikiPage>(redmineManager, uri, HttpVerbs.PUT, data, "CreateOrUpdateWikiPageAsync");
         }
 
         /// <summary>
@@ -77,10 +69,7 @@ namespace Redmine.Net.Api.Async
             string pageName)
         {
             var uri = UrlHelper.GetDeleteWikirUrl(redmineManager, projectId, pageName);
-
-            await
-                WebApiAsyncHelper.ExecuteUpload(redmineManager, uri, HttpVerbs.DELETE, string.Empty,
-                    "DeleteWikiPageAsync");
+            await WebApiAsyncHelper.ExecuteUpload(redmineManager, uri, HttpVerbs.DELETE, string.Empty, "DeleteWikiPageAsync");
         }
 
         /// <summary>
@@ -95,7 +84,6 @@ namespace Redmine.Net.Api.Async
         public static async Task<Upload> UploadFileAsync(this RedmineManager redmineManager, byte[] data)
         {
             var uri = UrlHelper.GetUploadFileUrl(redmineManager);
-
             return await WebApiAsyncHelper.ExecuteUploadFile(redmineManager, uri, data, "UploadFileAsync");
         }
 
@@ -123,9 +111,7 @@ namespace Redmine.Net.Api.Async
             NameValueCollection parameters, string pageName, uint version = 0)
         {
             var uri = UrlHelper.GetWikiPageUrl(redmineManager, projectId, parameters, pageName, version);
-
-            return
-                await WebApiAsyncHelper.ExecuteDownload<WikiPage>(redmineManager, uri, "GetWikiPageAsync", parameters);
+            return await WebApiAsyncHelper.ExecuteDownload<WikiPage>(redmineManager, uri, "GetWikiPageAsync", parameters);
         }
 
         /// <summary>
@@ -135,15 +121,10 @@ namespace Redmine.Net.Api.Async
         /// <param name="parameters">The parameters.</param>
         /// <param name="projectId">The project identifier.</param>
         /// <returns></returns>
-        public static async Task<List<WikiPage>> GetAllWikiPagesAsync(this RedmineManager redmineManager,
-            NameValueCollection parameters, string projectId)
+        public static async Task<List<WikiPage>> GetAllWikiPagesAsync(this RedmineManager redmineManager, NameValueCollection parameters, string projectId)
         {
             var uri = UrlHelper.GetWikisUrl(redmineManager, projectId);
-
-            return
-                await
-                    WebApiAsyncHelper.ExecuteDownloadList<WikiPage>(redmineManager, uri, "GetAllWikiPagesAsync",
-                        parameters);
+            return await WebApiAsyncHelper.ExecuteDownloadList<WikiPage>(redmineManager, uri, "GetAllWikiPagesAsync", parameters);
         }
 
         /// <summary>
@@ -158,7 +139,6 @@ namespace Redmine.Net.Api.Async
         public static async Task AddUserToGroupAsync(this RedmineManager redmineManager, int groupId, int userId)
         {
             var data = DataHelper.UserData(userId, redmineManager.MimeFormat);
-
             var uri = UrlHelper.GetAddUserToGroupUrl(redmineManager, groupId);
 
             await WebApiAsyncHelper.ExecuteUpload(redmineManager, uri, HttpVerbs.POST, data, "AddUserToGroupAsync");
@@ -174,10 +154,7 @@ namespace Redmine.Net.Api.Async
         public static async Task DeleteUserFromGroupAsync(this RedmineManager redmineManager, int groupId, int userId)
         {
             var uri = UrlHelper.GetRemoveUserFromGroupUrl(redmineManager, groupId, userId);
-
-            await
-                WebApiAsyncHelper.ExecuteUpload(redmineManager, uri, HttpVerbs.DELETE, string.Empty,
-                    "DeleteUserFromGroupAsync");
+            await WebApiAsyncHelper.ExecuteUpload(redmineManager, uri, HttpVerbs.DELETE, string.Empty, "DeleteUserFromGroupAsync");
         }
 
         /// <summary>
@@ -190,7 +167,6 @@ namespace Redmine.Net.Api.Async
         public static async Task AddWatcherAsync(this RedmineManager redmineManager, int issueId, int userId)
         {
             var data = DataHelper.UserData(userId, redmineManager.MimeFormat);
-
             var uri = UrlHelper.GetAddWatcherUrl(redmineManager, issueId, userId);
 
             await WebApiAsyncHelper.ExecuteUpload(redmineManager, uri, HttpVerbs.POST, data, "AddWatcherAsync");
@@ -206,10 +182,7 @@ namespace Redmine.Net.Api.Async
         public static async Task RemoveWatcherAsync(this RedmineManager redmineManager, int issueId, int userId)
         {
             var uri = UrlHelper.GetRemoveWatcherUrl(redmineManager, issueId, userId);
-
-            await
-                WebApiAsyncHelper.ExecuteUpload(redmineManager, uri, HttpVerbs.DELETE, string.Empty,
-                    "RemoveWatcherAsync");
+            await WebApiAsyncHelper.ExecuteUpload(redmineManager, uri, HttpVerbs.DELETE, string.Empty, "RemoveWatcherAsync");
         }
 
         /// <summary>
@@ -224,11 +197,7 @@ namespace Redmine.Net.Api.Async
             where T : class, new()
         {
             var uri = UrlHelper.GetListUrl<T>(redmineManager, parameters);
-
-            return
-                await
-                    WebApiAsyncHelper.ExecuteDownloadPaginatedList<T>(redmineManager, uri, "GetPaginatedObjectsAsync",
-                        parameters);
+            return await WebApiAsyncHelper.ExecuteDownloadPaginatedList<T>(redmineManager, uri, "GetPaginatedObjectsAsync", parameters);
         }
 
         /// <summary>
@@ -238,8 +207,7 @@ namespace Redmine.Net.Api.Async
         /// <param name="redmineManager">The redmine manager.</param>
         /// <param name="parameters">The parameters.</param>
         /// <returns></returns>
-        public static async Task<List<T>> GetObjectsAsync<T>(this RedmineManager redmineManager,
-            NameValueCollection parameters)
+        public static async Task<List<T>> GetObjectsAsync<T>(this RedmineManager redmineManager, NameValueCollection parameters)
             where T : class, new()
         {
             int totalCount = 0, pageSize, offset;
@@ -292,12 +260,10 @@ namespace Redmine.Net.Api.Async
         /// <param name="id">The id of the object.</param>
         /// <param name="parameters">Optional filters and/or optional fetched data.</param>
         /// <returns></returns>
-        public static async Task<T> GetObjectAsync<T>(this RedmineManager redmineManager, string id,
-            NameValueCollection parameters)
+        public static async Task<T> GetObjectAsync<T>(this RedmineManager redmineManager, string id, NameValueCollection parameters)
             where T : class, new()
         {
             var uri = UrlHelper.GetGetUrl<T>(redmineManager, id);
-
             return await WebApiAsyncHelper.ExecuteDownload<T>(redmineManager, uri, "GetobjectAsync", parameters);
         }
 
@@ -328,8 +294,7 @@ namespace Redmine.Net.Api.Async
             var uri = UrlHelper.GetCreateUrl<T>(redmineManager, ownerId);
             var data = RedmineSerializer.Serialize(obj, redmineManager.MimeFormat);
 
-            return
-                await WebApiAsyncHelper.ExecuteUpload<T>(redmineManager, uri, HttpVerbs.POST, data, "CreateObjectAsync");
+            return await WebApiAsyncHelper.ExecuteUpload<T>(redmineManager, uri, HttpVerbs.POST, data, "CreateObjectAsync");
         }
 
         /// <summary>
@@ -341,8 +306,7 @@ namespace Redmine.Net.Api.Async
         /// <param name="obj">The object.</param>
         /// <param name="projectId">The project identifier.</param>
         /// <returns></returns>
-        public static async Task UpdateObjectAsync<T>(this RedmineManager redmineManager, string id, T obj,
-            string projectId = null)
+        public static async Task UpdateObjectAsync<T>(this RedmineManager redmineManager, string id, T obj, string projectId = null)
             where T : class, new()
         {
             var uri = UrlHelper.GetUploadUrl(redmineManager, id, obj, projectId);
@@ -360,15 +324,11 @@ namespace Redmine.Net.Api.Async
         /// <param name="id">The id of the object to delete</param>
         /// <param name="parameters">Optional filters and/or optional fetched data.</param>
         /// <returns></returns>
-        public static async Task DeleteObjectAsync<T>(this RedmineManager redmineManager, string id,
-            NameValueCollection parameters)
+        public static async Task DeleteObjectAsync<T>(this RedmineManager redmineManager, string id, NameValueCollection parameters)
             where T : class, new()
         {
             var uri = UrlHelper.GetDeleteUrl<T>(redmineManager, id);
-
-            await
-                WebApiAsyncHelper.ExecuteUpload<T>(redmineManager, uri, HttpVerbs.DELETE, string.Empty,
-                    "DeleteObjectAsync");
+            await WebApiAsyncHelper.ExecuteUpload<T>(redmineManager, uri, HttpVerbs.DELETE, string.Empty, "DeleteObjectAsync");
         }
     }
 }

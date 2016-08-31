@@ -243,7 +243,7 @@ namespace xUnitTestredminenet45api
 		{
 			const string DELETED_ISSUE_ID = "90";
 
-			RedmineException exception = (RedmineException)Record.Exception(() => fixture.RedmineManager.DeleteObject<Issue>(DELETED_ISSUE_ID, null));
+			RedmineException exception = (RedmineException)Record.Exception(() => fixture.RedmineManager.DeleteObject<Issue>(DELETED_ISSUE_ID));
 			Assert.Null (exception);
 			Assert.Throws<NotFoundException>(() => fixture.RedmineManager.GetObject<Issue>(DELETED_ISSUE_ID, null));
 		}

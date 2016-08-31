@@ -75,7 +75,7 @@ namespace xUnitTestredminenet45api
 	        const string DELETED_VERSION_ID = "22";
 	        var exception =
                 (RedmineException)
-                    Record.Exception(() => fixture.RedmineManager.DeleteObject<Version>(DELETED_VERSION_ID, null));
+                    Record.Exception(() => fixture.RedmineManager.DeleteObject<Version>(DELETED_VERSION_ID));
             Assert.Null(exception);
             Assert.Throws<NotFoundException>(() => fixture.RedmineManager.GetObject<Version>(DELETED_VERSION_ID, null));
         }
@@ -115,8 +115,9 @@ namespace xUnitTestredminenet45api
 	        const string UPDATED_VERSION_NAME = "Updated version";
 	        const VersionStatus UPDATED_VERSION_STATUS = VersionStatus.closed;
 	        const VersionSharing UPDATED_VERSION_SHARING = VersionSharing.system;
-	        DateTime UPDATED_VERSION_DUE_DATE = DateTime.Now.AddMonths(1);
 	        const string UPDATED_VERSION_DESCRIPTION = "Updated description";
+
+            DateTime UPDATED_VERSION_DUE_DATE = DateTime.Now.AddMonths(1);
 
 	        var version = fixture.RedmineManager.GetObject<Version>(UPDATED_VERSION_ID, null);
             version.Name = UPDATED_VERSION_NAME;
@@ -133,7 +134,7 @@ namespace xUnitTestredminenet45api
             Assert.True(updatedVersion.Name.Equals(version.Name), "Version name not updated.");
             Assert.True(updatedVersion.Status.Equals(version.Status), "Status not updated");
             Assert.True(updatedVersion.Sharing.Equals(version.Sharing), "Sharing not updated");
-            Assert.True(DateTime.Compare(updatedVersion.DueDate.Value.Date, version.DueDate.Value.Date) == 0,
+            Assert.True(updatedVersion.DueDate != null && DateTime.Compare(updatedVersion.DueDate.Value.Date, version.DueDate.Value.Date) == 0,
                 "DueDate not updated");
             Assert.True(updatedVersion.Description.Equals(version.Description), "Description not updated");
         }

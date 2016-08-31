@@ -160,7 +160,7 @@ namespace xUnitTestredminenet45api
 		{
 			var exception =
 				(RedmineException)
-				Record.Exception(() => fixture.RedmineManager.DeleteObject<User>(CREATED_USER_ID, null));
+				Record.Exception(() => fixture.RedmineManager.DeleteObject<User>(CREATED_USER_ID));
 			Assert.Null(exception);
 			Assert.Throws<NotFoundException>(() => fixture.RedmineManager.GetObject<User>(CREATED_USER_ID, null));
 
@@ -171,7 +171,7 @@ namespace xUnitTestredminenet45api
 		{
 			var exception =
 				(RedmineException)
-				Record.Exception(() => fixture.RedmineManager.DeleteObject<User>(CREATED_USER_WITH_ALL_PROP_ID, null));
+				Record.Exception(() => fixture.RedmineManager.DeleteObject<User>(CREATED_USER_WITH_ALL_PROP_ID));
 			Assert.Null(exception);
 			Assert.Throws<NotFoundException>(() => fixture.RedmineManager.GetObject<User>(CREATED_USER_WITH_ALL_PROP_ID, null));
 

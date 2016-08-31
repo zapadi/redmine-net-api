@@ -36,40 +36,8 @@ namespace Redmine.Net.Api
     /// <summary>
     ///     The main class to access Redmine API.
     /// </summary>
-    public class RedmineManager //: IRedmineManager
+    public class RedmineManager
     {
-        /// <summary>
-        /// </summary>
-        public const string REQUEST_FORMAT = "{0}/{1}/{2}.{3}";
-
-        /// <summary>
-        /// </summary>
-        public const string FORMAT = "{0}/{1}.{2}";
-
-        /// <summary>
-        /// </summary>
-        public const string WIKI_INDEX_FORMAT = "{0}/projects/{1}/wiki/index.{2}";
-
-        /// <summary>
-        /// </summary>
-        public const string WIKI_PAGE_FORMAT = "{0}/projects/{1}/wiki/{2}.{3}";
-
-        /// <summary>
-        /// </summary>
-        public const string WIKI_VERSION_FORMAT = "{0}/projects/{1}/wiki/{2}/{3}.{4}";
-
-        /// <summary>
-        /// </summary>
-        public const string ENTITY_WITH_PARENT_FORMAT = "{0}/{1}/{2}/{3}.{4}";
-
-        /// <summary>
-        /// </summary>
-        public const string ATTACHMENT_UPDATE_FORMAT = "{0}/attachments/issues/{1}.{2}";
-
-        /// <summary>
-        /// </summary>
-        public const string CURRENT_USER_URI = "current";
-
         /// <summary>
         /// </summary>
         public const int DEFAULT_PAGE_SIZE_VALUE = 25;
@@ -100,6 +68,7 @@ namespace Redmine.Net.Api
 
         private readonly string basicAuthorization;
         private readonly CredentialCache cache;
+        private string host;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="RedmineManager" /> class.
@@ -124,16 +93,6 @@ namespace Redmine.Net.Api
             {
                 securityProtocolType = ServicePointManager.SecurityProtocol;
             }
-
-            Uri uriResult;
-            if (!Uri.TryCreate(host, UriKind.Absolute, out uriResult) ||
-                !(uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps))
-            {
-                host = "http://" + host;
-            }
-
-            if (!Uri.TryCreate(host, UriKind.Absolute, out uriResult))
-                throw new RedmineException("The host is not valid!");
 
             Host = host;
             MimeFormat = mimeFormat;
@@ -201,7 +160,7 @@ namespace Redmine.Net.Api
             SecurityProtocolType securityProtocolType = default(SecurityProtocolType))
             : this(host, mimeFormat, verifyServerCert, proxy, securityProtocolType)
         {
-            cache = new CredentialCache {{new Uri(host), "Basic", new NetworkCredential(login, password)}};
+            cache = new CredentialCache { { new Uri(host), "Basic", new NetworkCredential(login, password) } };
 
             var token = Convert.ToBase64String(Encoding.UTF8.GetBytes(string.Format("{0}:{1}", login, password)));
             basicAuthorization = string.Format("Basic {0}", token);
@@ -224,7 +183,22 @@ namespace Redmine.Net.Api
         /// <value>
         ///     The host.
         /// </value>
-        public string Host { get; private set; }
+        public string Host
+        {
+            get { return host; }
+            private set
+            {
+                Uri uriResult;
+                if (!Uri.TryCreate(value, UriKind.Absolute, out uriResult) ||
+                    !(uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps))
+                {
+                    host = "http://" + value;
+                }
+
+                if (!Uri.TryCreate(host, UriKind.Absolute, out uriResult))
+                    throw new RedmineException("The host is not valid!");
+            }
+        }
 
         /// <summary>
         ///     The ApiKey used to authenticate.
@@ -340,6 +314,22 @@ namespace Redmine.Net.Api
         }
 
         /// <summary>
+        ///     Creates or updates a wiki page.
+        /// </summary>
+        /// <param name="projectId">The project id or identifier.</param>
+        /// <param name="pageName">The wiki page name.</param>
+        /// <param name="wikiPage">The wiki page to create or update.</param>
+        /// <returns></returns>
+        public WikiPage CreateOrUpdateWikiPage(string projectId, string pageName, WikiPage wikiPage)
+        {
+            var result = RedmineSerializer.Serialize(wikiPage, MimeFormat);
+            if (string.IsNullOrEmpty(result)) return null;
+
+            var url = UrlHelper.GetWikiCreateOrUpdaterUrl(this, projectId, pageName);
+            return WebApiHelper.ExecuteUpload<WikiPage>(this, url, HttpVerbs.PUT, result, "CreateOrUpdateWikiPage");
+        }
+
+        /// <summary>
         /// Gets the wiki page.
         /// </summary>
         /// <param name="projectId">The project identifier.</param>
@@ -358,27 +348,11 @@ namespace Redmine.Net.Api
         /// </summary>
         /// <param name="projectId">The project id or identifier.</param>
         /// <returns></returns>
-        public IList<WikiPage> GetAllWikiPages(string projectId)
+        public List<WikiPage> GetAllWikiPages(string projectId)
         {
             var url = UrlHelper.GetWikisUrl(this, projectId);
             var result = WebApiHelper.ExecuteDownloadList<WikiPage>(this, url, "GetAllWikiPages");
             return result != null ? result.Objects : null;
-        }
-
-        /// <summary>
-        ///     Creates or updates a wiki page.
-        /// </summary>
-        /// <param name="projectId">The project id or identifier.</param>
-        /// <param name="pageName">The wiki page name.</param>
-        /// <param name="wikiPage">The wiki page to create or update.</param>
-        /// <returns></returns>
-        public WikiPage CreateOrUpdateWikiPage(string projectId, string pageName, WikiPage wikiPage)
-        {
-            var result = RedmineSerializer.Serialize(wikiPage, MimeFormat);
-            if (string.IsNullOrEmpty(result)) return null;
-
-            var url = UrlHelper.GetWikiCreateOrUpdaterUrl(this, projectId, pageName);
-            return WebApiHelper.ExecuteUpload<WikiPage>(this, url, HttpVerbs.PUT, result, "CreateOrUpdateWikiPage");
         }
 
         /// <summary>
@@ -605,20 +579,6 @@ namespace Redmine.Net.Api
         /// </summary>
         /// <typeparam name="T">The type of objects to delete.</typeparam>
         /// <param name="id">The id of the object to delete</param>
-        /// <param name="parameters">Optional filters and/or optional fetched data.</param>
-        /// <exception cref="RedmineException"></exception>
-        /// <code></code>
-        [Obsolete("Use DeleteObject<T>(string id) instead.")]
-        public void DeleteObject<T>(string id, NameValueCollection parameters) where T : class, new()
-        {
-            DeleteObject<T>(id, 0);
-        }
-
-        /// <summary>
-        ///     Deletes the Redmine object.
-        /// </summary>
-        /// <typeparam name="T">The type of objects to delete.</typeparam>
-        /// <param name="id">The id of the object to delete</param>
         /// <exception cref="RedmineException"></exception>
         /// <code></code>
         public void DeleteObject<T>(string id) where T : class, new()
@@ -659,6 +619,20 @@ namespace Redmine.Net.Api
         {
             var url = UrlHelper.GetUploadFileUrl(this);
             return WebApiHelper.ExecuteUploadFile(this, url, data, "UploadFile");
+        }
+
+        /// <summary>
+        ///     Updates the attachment.
+        /// </summary>
+        /// <param name="issueId">The issue identifier.</param>
+        /// <param name="attachment">The attachment.</param>
+        public void UpdateAttachment(int issueId, Attachment attachment)
+        {
+            var address = UrlHelper.GetAttachmentUpdateUrl(this, issueId);
+            var attachments = new Attachments { { attachment.Id, attachment } };
+            var data = RedmineSerializer.Serialize(attachments, MimeFormat);
+
+            WebApiHelper.ExecuteUpload(this, address, HttpVerbs.PATCH, data, "UpdateAttachment");
         }
 
         /// <summary>
@@ -710,7 +684,7 @@ namespace Redmine.Net.Api
         /// <code></code>
         public virtual RedmineWebClient CreateWebClient(NameValueCollection parameters, bool uploadFile = false)
         {
-            var webClient = new RedmineWebClient {Proxy = Proxy};
+            var webClient = new RedmineWebClient { Proxy = Proxy };
             if (!uploadFile)
             {
                 webClient.Headers.Add(HttpRequestHeader.ContentType, MimeFormat == MimeFormat.Xml
@@ -724,7 +698,9 @@ namespace Redmine.Net.Api
             }
 
             if (parameters != null)
+            {
                 webClient.QueryString = parameters;
+            }
 
             if (!string.IsNullOrEmpty(ApiKey))
             {
@@ -746,7 +722,9 @@ namespace Redmine.Net.Api
             }
 
             if (!string.IsNullOrEmpty(ImpersonateUser))
+            {
                 webClient.Headers.Add("X-Redmine-Switch-User", ImpersonateUser);
+            }
 
             return webClient;
         }
@@ -770,20 +748,6 @@ namespace Redmine.Net.Api
             Logger.Current.Error("X509Certificate [{0}] Policy Error: '{1}'", cert.Subject, error);
 
             return false;
-        }
-
-        /// <summary>
-        ///     Updates the attachment.
-        /// </summary>
-        /// <param name="issueId">The issue identifier.</param>
-        /// <param name="attachment">The attachment.</param>
-        public void UpdateAttachment(int issueId, Attachment attachment)
-        {
-            var address = UrlHelper.GetAttachmentUpdateUrl(this, issueId);
-            var attachments = new Attachments {{attachment.Id, attachment}};
-            var data = RedmineSerializer.Serialize(attachments, MimeFormat);
-
-            WebApiHelper.ExecuteUpload(this, address, HttpVerbs.PATCH, data, "UpdateAttachment");
         }
     }
 }

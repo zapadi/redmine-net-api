@@ -66,7 +66,7 @@ namespace xUnitTestredminenet45api
 	        var exception =
                 (RedmineException)
                     Record.Exception(
-                        () => fixture.RedmineManager.DeleteObject<IssueRelation>(RELATION_ID_TO_DELETE, null));
+                        () => fixture.RedmineManager.DeleteObject<IssueRelation>(RELATION_ID_TO_DELETE));
             Assert.Null(exception);
             Assert.Throws<NotFoundException>(
                 () => fixture.RedmineManager.GetObject<IssueRelation>(RELATION_ID_TO_DELETE, null));

@@ -76,7 +76,7 @@ namespace xUnitTestredminenet45api
 	        const string DELETED_TIME_ENTRY_ID = "43";
 	        var exception =
                 (RedmineException)
-                    Record.Exception(() => fixture.RedmineManager.DeleteObject<TimeEntry>(DELETED_TIME_ENTRY_ID, null));
+                    Record.Exception(() => fixture.RedmineManager.DeleteObject<TimeEntry>(DELETED_TIME_ENTRY_ID));
             Assert.Null(exception);
             Assert.Throws<NotFoundException>(
                 () => fixture.RedmineManager.GetObject<TimeEntry>(DELETED_TIME_ENTRY_ID, null));

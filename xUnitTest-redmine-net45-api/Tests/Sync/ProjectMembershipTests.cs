@@ -66,7 +66,7 @@ namespace xUnitTestredminenet45api
                 (RedmineException)
                     Record.Exception(
                         () =>
-                            fixture.RedmineManager.DeleteObject<ProjectMembership>(DELETED_PROJECT_MEMBERSHIP_ID, null));
+                            fixture.RedmineManager.DeleteObject<ProjectMembership>(DELETED_PROJECT_MEMBERSHIP_ID));
             Assert.Null(exception);
             Assert.Throws<NotFoundException>(
                 () => fixture.RedmineManager.GetObject<ProjectMembership>(DELETED_PROJECT_MEMBERSHIP_ID, null));

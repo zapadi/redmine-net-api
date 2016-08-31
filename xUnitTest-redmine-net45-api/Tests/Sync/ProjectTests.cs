@@ -223,13 +223,13 @@ namespace xUnitTestredminenet45api
         public void Should_Delete_Project_And_Parent_Project()
         {
             var exception =
-                (RedmineException) Record.Exception(() => fixture.RedmineManager.DeleteObject<Project>("rnapwps", null));
+                (RedmineException) Record.Exception(() => fixture.RedmineManager.DeleteObject<Project>("rnapwps"));
             Assert.Null(exception);
             Assert.Throws<NotFoundException>(() => fixture.RedmineManager.GetObject<Project>("rnapwps", null));
 
             exception =
                 (RedmineException)
-                    Record.Exception(() => fixture.RedmineManager.DeleteObject<Project>("parent-project", null));
+                    Record.Exception(() => fixture.RedmineManager.DeleteObject<Project>("parent-project"));
             Assert.Null(exception);
             Assert.Throws<NotFoundException>(() => fixture.RedmineManager.GetObject<Project>("parent-project", null));
         }
@@ -238,7 +238,7 @@ namespace xUnitTestredminenet45api
         public void Should_Delete_Project_With_All_Properties_Set()
         {
             var exception =
-                (RedmineException) Record.Exception(() => fixture.RedmineManager.DeleteObject<Project>("rnaptap", null));
+                (RedmineException) Record.Exception(() => fixture.RedmineManager.DeleteObject<Project>("rnaptap"));
             Assert.Null(exception);
             Assert.Throws<NotFoundException>(() => fixture.RedmineManager.GetObject<Project>("rnaptap", null));
         }
@@ -248,7 +248,7 @@ namespace xUnitTestredminenet45api
         {
             var exception =
                 (RedmineException)
-                    Record.Exception(() => fixture.RedmineManager.DeleteObject<Project>(PROJECT_IDENTIFIER, null));
+                    Record.Exception(() => fixture.RedmineManager.DeleteObject<Project>(PROJECT_IDENTIFIER));
             Assert.Null(exception);
             Assert.Throws<NotFoundException>(() => fixture.RedmineManager.GetObject<Project>(PROJECT_IDENTIFIER, null));
         }
