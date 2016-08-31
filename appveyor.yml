@@ -4,18 +4,18 @@ version: 1.0.{build}
 #    COVERALLS_REPO_TOKEN:  
 #       secure: 8JYxwCWszeAaWBr41pD17LB925K7Sk7utvKsIb1qz44i2anf9uLmvh2q0ilMQTBO
 pull_requests:
-  do_not_increment_build_number: true
+  do_not_increment_build_number: false
 branches:
   only:
-  - master
+  - dev
 #configuration: Release
 #platform: Any CPU
-#assembly_info:
-#  patch: true
-#  file: '**\AssemblyInfo.*'
-#  assembly_version: '{version}'
-#  assembly_file_version: '{version}'
-#  assembly_informational_version: '{version}'
+assembly_info:
+  patch: true
+  file: '**\AssemblyInfo.*'
+  assembly_version: '{version}'
+  assembly_file_version: '{version}'
+  assembly_informational_version: '{version}'
 
 build_script:
   - Msbuild.exe redmine-net20-api/redmine-net20-api.csproj /verbosity:minimal /p:BuildNetFX20=true 
@@ -27,7 +27,7 @@ build_script:
   - Msbuild.exe redmine-net451-api-signed/redmine-net451-api-signed.csproj /verbosity:minimal /p:BuildNetFX451=true
 
 before_build:
-- nuget restore -verbosity detailed
+- nuget restore
 
 build:
   project: redmine-net-api.sln
@@ -35,7 +35,8 @@ build:
   verbosity: detailed
 
 after_build:
-- nuget pack redmine-net-api.nuspec -Version 1.0.3
+- nuget pack redmine-net-api.nuspec -Version {version}
+- nuget pack redmine-net-api-signed.nuspec -Version {version}
 nuget:
   account_feed: true
   project_feed: true
@@ -44,7 +45,7 @@ test: off
 
 artifacts:
 - path: '*.nupkg'
-  name: redminepackage
+#  name: redminepackage
 
 # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified
 cache:
