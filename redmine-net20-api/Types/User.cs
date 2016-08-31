@@ -205,7 +205,7 @@ namespace Redmine.Net.Api.Types
             writer.WriteElementString(RedmineKeys.MAIL, Email);
             writer.WriteElementString(RedmineKeys.PASSWORD, Password);
             writer.WriteValueOrEmpty(AuthenticationModeId, RedmineKeys.AUTH_SOURCE_ID);
-            writer.WriteElementString(RedmineKeys.MUST_CHANGE_PASSWD, MustChangePassword.ToString());
+            writer.WriteElementString(RedmineKeys.MUST_CHANGE_PASSWD, MustChangePassword.ToString().ToLowerInvariant());
 
             writer.WriteArray(CustomFields, RedmineKeys.CUSTOM_FIELDS);
         }

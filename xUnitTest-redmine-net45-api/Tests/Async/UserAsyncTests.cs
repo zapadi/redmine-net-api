@@ -15,12 +15,12 @@ namespace xUnitTestredminenet45api
 	[Collection("RedmineCollection")]
 	public class UserAsyncTests
 	{
-		private const string userId = "8";
-		private const string limit = "2";
-		private const string offset = "1";
-		private const int groupId = 9;
+		private const string USER_ID = "8";
+		private const string LIMIT = "2";
+		private const string OFFSET = "1";
+		private const int GROUP_ID = 9;
 
-		RedmineFixture fixture;
+	    private readonly RedmineFixture fixture;
 		public UserAsyncTests (RedmineFixture fixture)
 		{
 			this.fixture = fixture;
@@ -36,14 +36,14 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public async Task Should_Get_User_By_Id()
 		{
-			var user = await fixture.RedmineManager.GetObjectAsync<User>(userId, null);
+			var user = await fixture.RedmineManager.GetObjectAsync<User>(USER_ID, null);
 			Assert.NotNull(user);
 		}
 
 		[Fact]
 		public async Task Should_Get_User_By_Id_Including_Groups_And_Memberships()
 		{
-			var user = await fixture.RedmineManager.GetObjectAsync<User>(userId, new NameValueCollection() { { RedmineKeys.INCLUDE, "groups,memberships" } });
+			var user = await fixture.RedmineManager.GetObjectAsync<User>(USER_ID, new NameValueCollection() { { RedmineKeys.INCLUDE, "groups,memberships" } });
 
 			Assert.NotNull(user);
 
@@ -59,8 +59,8 @@ namespace xUnitTestredminenet45api
 		{
 			var result = await fixture.RedmineManager.GetPaginatedObjectsAsync<User>(new NameValueCollection() {
 				{ RedmineKeys.INCLUDE, "groups, memberships" },
-				{RedmineKeys.LIMIT,limit },
-				{RedmineKeys.OFFSET,offset }
+				{RedmineKeys.LIMIT,LIMIT },
+				{RedmineKeys.OFFSET,OFFSET }
 			});
 
 			Assert.NotNull(result);
@@ -133,7 +133,7 @@ namespace xUnitTestredminenet45api
 		{
 			var users = await fixture.RedmineManager.GetObjectsAsync<User>(new NameValueCollection()
 				{
-					{RedmineKeys.GROUP_ID, groupId.ToString(CultureInfo.InvariantCulture)}
+					{RedmineKeys.GROUP_ID, GROUP_ID.ToString(CultureInfo.InvariantCulture)}
 				});
 
 			Assert.NotNull(users);
@@ -144,22 +144,22 @@ namespace xUnitTestredminenet45api
 		[Fact]
 		public async Task Should_Add_User_To_Group()
 		{
-			await fixture.RedmineManager.AddUserToGroupAsync(groupId, int.Parse(userId));
+			await fixture.RedmineManager.AddUserToGroupAsync(GROUP_ID, int.Parse(USER_ID));
 
-			User user = fixture.RedmineManager.GetObject<User>(userId.ToString(CultureInfo.InvariantCulture), new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.GROUPS } });
+			User user = fixture.RedmineManager.GetObject<User>(USER_ID.ToString(CultureInfo.InvariantCulture), new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.GROUPS } });
 
 			Assert.NotNull (user.Groups);
-			Assert.True(user.Groups.FirstOrDefault(g => g.Id == groupId) != null);
+			Assert.True(user.Groups.FirstOrDefault(g => g.Id == GROUP_ID) != null);
 		}
 
 		[Fact]
 		public async Task Should_Remove_User_From_Group()
 		{
-			await fixture.RedmineManager.DeleteUserFromGroupAsync(groupId, int.Parse(userId));
+			await fixture.RedmineManager.DeleteUserFromGroupAsync(GROUP_ID, int.Parse(USER_ID));
 
-			User user = await fixture.RedmineManager.GetObjectAsync<User>(userId.ToString(CultureInfo.InvariantCulture), new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.GROUPS } });
+			User user = await fixture.RedmineManager.GetObjectAsync<User>(USER_ID.ToString(CultureInfo.InvariantCulture), new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.GROUPS } });
 
-			Assert.True(user.Groups == null || user.Groups.FirstOrDefault(g => g.Id == groupId) == null);
+			Assert.True(user.Groups == null || user.Groups.FirstOrDefault(g => g.Id == GROUP_ID) == null);
 		}
 
 		[Fact]
@@ -205,4 +205,3 @@ namespace xUnitTestredminenet45api
 		}
 	}
 }
-

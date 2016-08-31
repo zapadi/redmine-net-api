@@ -20,54 +20,65 @@ using System.Runtime.Serialization;
 namespace Redmine.Net.Api.Exceptions
 {
     /// <summary>
-    /// 
     /// </summary>
-	public class InternalServerErrorException : RedmineException
-	{
+    /// <seealso cref="Redmine.Net.Api.Exceptions.RedmineException" />
+    public class InternalServerErrorException : RedmineException
+    {
         /// <summary>
-        /// 
+        ///     Initializes a new instance of the <see cref="InternalServerErrorException" /> class.
         /// </summary>
-		public InternalServerErrorException()
-			: base() { }
+        public InternalServerErrorException()
+        {
+        }
 
         /// <summary>
-        /// 
+        ///     Initializes a new instance of the <see cref="InternalServerErrorException" /> class.
         /// </summary>
         /// <param name="message"></param>
-		public InternalServerErrorException(string message)
-			: base(message) { }
+        public InternalServerErrorException(string message)
+            : base(message)
+        {
+        }
 
         /// <summary>
-        /// 
+        ///     Initializes a new instance of the <see cref="InternalServerErrorException" /> class.
         /// </summary>
         /// <param name="format"></param>
         /// <param name="args"></param>
-		public InternalServerErrorException(string format, params object[] args)
-			: base(string.Format(format, args)) { }
+        public InternalServerErrorException(string format, params object[] args)
+            : base(string.Format(format, args))
+        {
+        }
 
         /// <summary>
-        /// 
+        ///     Initializes a new instance of the <see cref="InternalServerErrorException" /> class.
         /// </summary>
         /// <param name="message"></param>
         /// <param name="innerException"></param>
-		public InternalServerErrorException(string message, Exception innerException)
-			: base(message, innerException) { }
+        public InternalServerErrorException(string message, Exception innerException)
+            : base(message, innerException)
+        {
+        }
 
         /// <summary>
-        /// 
+        ///     Initializes a new instance of the <see cref="InternalServerErrorException" /> class.
         /// </summary>
         /// <param name="format"></param>
         /// <param name="innerException"></param>
         /// <param name="args"></param>
-		public InternalServerErrorException(string format, Exception innerException, params object[] args)
-			: base(string.Format(format, args), innerException) { }
+        public InternalServerErrorException(string format, Exception innerException, params object[] args)
+            : base(string.Format(format, args), innerException)
+        {
+        }
 
         /// <summary>
-        /// 
+        ///     Initializes a new instance of the <see cref="InternalServerErrorException" /> class.
         /// </summary>
         /// <param name="info"></param>
         /// <param name="context"></param>
-		protected InternalServerErrorException(SerializationInfo info, StreamingContext context)
-			: base(info, context) { }
-	}
+        protected InternalServerErrorException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+        }
+    }
 }

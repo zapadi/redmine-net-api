@@ -13,60 +13,72 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
+
 using System;
 using System.Runtime.Serialization;
 
 namespace Redmine.Net.Api.Exceptions
 {
     /// <summary>
-    /// 
     /// </summary>
-	public class NameResolutionFailureException : RedmineException
-	{
+    /// <seealso cref="Redmine.Net.Api.Exceptions.RedmineException" />
+    public class NameResolutionFailureException : RedmineException
+    {
         /// <summary>
-        /// 
+        ///     Initializes a new instance of the <see cref="NameResolutionFailureException" /> class.
         /// </summary>
-		public NameResolutionFailureException()
-			: base() { }
+        public NameResolutionFailureException()
+        {
+        }
 
         /// <summary>
-        /// 
+        ///     Initializes a new instance of the <see cref="NameResolutionFailureException" /> class.
         /// </summary>
         /// <param name="message"></param>
-		public NameResolutionFailureException(string message)
-			: base(message) { }
+        public NameResolutionFailureException(string message)
+            : base(message)
+        {
+        }
 
         /// <summary>
-        /// 
+        ///     Initializes a new instance of the <see cref="NameResolutionFailureException" /> class.
         /// </summary>
         /// <param name="format"></param>
         /// <param name="args"></param>
-		public NameResolutionFailureException(string format, params object[] args)
-			: base(string.Format(format, args)) { }
+        public NameResolutionFailureException(string format, params object[] args)
+            : base(string.Format(format, args))
+        {
+        }
 
         /// <summary>
-        /// 
+        ///     Initializes a new instance of the <see cref="NameResolutionFailureException" /> class.
         /// </summary>
         /// <param name="message"></param>
         /// <param name="innerException"></param>
-		public NameResolutionFailureException(string message, Exception innerException)
-			: base(message, innerException) { }
+        public NameResolutionFailureException(string message, Exception innerException)
+            : base(message, innerException)
+        {
+        }
 
         /// <summary>
-        /// 
+        ///     Initializes a new instance of the <see cref="NameResolutionFailureException" /> class.
         /// </summary>
         /// <param name="format"></param>
         /// <param name="innerException"></param>
         /// <param name="args"></param>
-		public NameResolutionFailureException(string format, Exception innerException, params object[] args)
-			: base(string.Format(format, args), innerException) { }
+        public NameResolutionFailureException(string format, Exception innerException, params object[] args)
+            : base(string.Format(format, args), innerException)
+        {
+        }
 
         /// <summary>
-        /// 
+        ///     Initializes a new instance of the <see cref="NameResolutionFailureException" /> class.
         /// </summary>
         /// <param name="info"></param>
         /// <param name="context"></param>
-		protected NameResolutionFailureException(SerializationInfo info, StreamingContext context)
-			: base(info, context) { }
-	}
+        protected NameResolutionFailureException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+        }
+    }
 }

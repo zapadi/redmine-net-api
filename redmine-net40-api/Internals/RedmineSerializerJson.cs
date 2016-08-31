@@ -25,6 +25,9 @@ using Version = Redmine.Net.Api.Types.Version;
 
 namespace Redmine.Net.Api.Internals
 {
+    /// <summary>
+    /// 
+    /// </summary>
     internal static partial class RedmineSerializer
     {
         private static readonly Dictionary<Type, JavaScriptConverter> jsonConverters = new Dictionary<Type, JavaScriptConverter>
@@ -77,10 +80,10 @@ namespace Redmine.Net.Api.Internals
         public static Dictionary<Type, JavaScriptConverter> JsonConverters { get { return jsonConverters; } }
 
         /// <summary>
-        /// 
+        /// Jsons the serializer.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="type"></param>
+        /// <param name="type">The type.</param>
         /// <returns></returns>
         public static string JsonSerializer<T>(T type) where T : new()
         {
@@ -92,6 +95,10 @@ namespace Redmine.Net.Api.Internals
         /// <summary>
         /// JSON Deserialization
         /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="jsonString">The json string.</param>
+        /// <param name="root">The root.</param>
+        /// <returns></returns>
         public static List<T> JsonDeserializeToList<T>(string jsonString, string root) where T : class, new()
         {
             int totalCount;
@@ -102,6 +109,12 @@ namespace Redmine.Net.Api.Internals
         /// <summary>
         /// JSON Deserialization
         /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="jsonString">The json string.</param>
+        /// <param name="root">The root.</param>
+        /// <param name="totalCount">The total count.</param>
+        /// <param name="offset">The offset.</param>
+        /// <returns></returns>
         public static List<T> JsonDeserializeToList<T>(string jsonString, string root, out int totalCount, out int offset) where T : class,new()
         {
             var result = JsonDeserializeToList(jsonString, root, typeof(T), out totalCount, out offset);
@@ -109,11 +122,11 @@ namespace Redmine.Net.Api.Internals
         }
 
         /// <summary>
-        /// 
+        /// Jsons the deserialize.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="jsonString"></param>
-        /// <param name="root"></param>
+        /// <param name="jsonString">The json string.</param>
+        /// <param name="root">The root.</param>
         /// <returns></returns>
         public static T JsonDeserialize<T>(string jsonString, string root) where T : new()
         {
@@ -121,17 +134,18 @@ namespace Redmine.Net.Api.Internals
             var result = JsonDeserialize(jsonString, type, root);
             return result == null ? default(T) : (T) result;
         }
-        
+
         /// <summary>
-        /// 
+        /// Jsons the deserialize.
         /// </summary>
-        /// <param name="jsonString"></param>
-        /// <param name="type"></param>
-        /// <param name="root"></param>
+        /// <param name="jsonString">The json string.</param>
+        /// <param name="type">The type.</param>
+        /// <param name="root">The root.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">jsonString</exception>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ArgumentException"></exception>
         /// <exception cref="InvalidOperationException"></exception>
-        /// <returns></returns>
         public static object JsonDeserialize(string jsonString, Type type, string root)
         {
             if (string.IsNullOrEmpty(jsonString)) throw new ArgumentNullException("jsonString");
@@ -146,6 +160,13 @@ namespace Redmine.Net.Api.Internals
             return !dictionary.TryGetValue(root ?? type.Name.ToLowerInvariant(), out obj) ? null : serializer.ConvertToType(obj, type);
         }
 
+        /// <summary>
+        /// Adds to list.
+        /// </summary>
+        /// <param name="serializer">The serializer.</param>
+        /// <param name="list">The list.</param>
+        /// <param name="type">The type.</param>
+        /// <param name="arrayList">The array list.</param>
         private static void AddToList(JavaScriptSerializer serializer, IList list, Type type, object arrayList)
         {
             foreach (var obj in (ArrayList)arrayList)
@@ -162,6 +183,16 @@ namespace Redmine.Net.Api.Internals
             }
         }
 
+        /// <summary>
+        /// Jsons the deserialize to list.
+        /// </summary>
+        /// <param name="jsonString">The json string.</param>
+        /// <param name="root">The root.</param>
+        /// <param name="type">The type.</param>
+        /// <param name="totalCount">The total count.</param>
+        /// <param name="offset">The offset.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">jsonString</exception>
         private static object JsonDeserializeToList(string jsonString, string root, Type type, out int totalCount, out int offset)
         {
             totalCount = 0;

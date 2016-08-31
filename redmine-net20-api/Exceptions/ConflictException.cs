@@ -20,54 +20,65 @@ using System.Runtime.Serialization;
 namespace Redmine.Net.Api.Exceptions
 {
     /// <summary>
-    /// 
     /// </summary>
-	public class ConflictException : RedmineException
-	{
+    /// <seealso cref="Redmine.Net.Api.Exceptions.RedmineException" />
+    public class ConflictException : RedmineException
+    {
         /// <summary>
-        /// 
+        ///     Initializes a new instance of the <see cref="ConflictException" /> class.
         /// </summary>
-		public ConflictException()
-			: base() { }
+        public ConflictException()
+        {
+        }
 
         /// <summary>
-        /// 
+        ///     Initializes a new instance of the <see cref="ConflictException" /> class.
         /// </summary>
         /// <param name="message"></param>
-		public ConflictException(string message)
-			: base(message) { }
+        public ConflictException(string message)
+            : base(message)
+        {
+        }
 
         /// <summary>
-        /// 
+        ///     Initializes a new instance of the <see cref="ConflictException" /> class.
         /// </summary>
         /// <param name="format"></param>
         /// <param name="args"></param>
-		public ConflictException(string format, params object[] args)
-			: base(string.Format(format, args)) { }
+        public ConflictException(string format, params object[] args)
+            : base(string.Format(format, args))
+        {
+        }
 
         /// <summary>
-        /// 
+        ///     Initializes a new instance of the <see cref="ConflictException" /> class.
         /// </summary>
         /// <param name="message"></param>
         /// <param name="innerException"></param>
-		public ConflictException(string message, Exception innerException)
-			: base(message, innerException) { }
+        public ConflictException(string message, Exception innerException)
+            : base(message, innerException)
+        {
+        }
 
         /// <summary>
-        /// 
+        ///     Initializes a new instance of the <see cref="ConflictException" /> class.
         /// </summary>
         /// <param name="format"></param>
         /// <param name="innerException"></param>
         /// <param name="args"></param>
-		public ConflictException(string format, Exception innerException, params object[] args)
-			: base(string.Format(format, args), innerException) { }
+        public ConflictException(string format, Exception innerException, params object[] args)
+            : base(string.Format(format, args), innerException)
+        {
+        }
 
         /// <summary>
-        /// 
+        ///     Initializes a new instance of the <see cref="ConflictException" /> class.
         /// </summary>
         /// <param name="info"></param>
         /// <param name="context"></param>
-		protected ConflictException(SerializationInfo info, StreamingContext context)
-			: base(info, context) { }
-	}
+        protected ConflictException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+        }
+    }
 }

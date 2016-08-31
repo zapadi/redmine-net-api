@@ -44,10 +44,10 @@ namespace Redmine.Net.Api.Extensions
         }
 
         /// <summary>
-        /// 
+        /// Reads the attribute as nullable int.
         /// </summary>
-        /// <param name="reader"></param>
-        /// <param name="attributeName"></param>
+        /// <param name="reader">The reader.</param>
+        /// <param name="attributeName">Name of the attribute.</param>
         /// <returns></returns>
         public static int? ReadAttributeAsNullableInt(this XmlReader reader, string attributeName)
         {

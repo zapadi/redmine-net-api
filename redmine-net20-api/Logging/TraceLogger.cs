@@ -25,9 +25,10 @@ namespace Redmine.Net.Api.Logging
     public class TraceLogger : ILogger
     {
         /// <summary>
-        /// 
+        /// Logs the specified entry.
         /// </summary>
-        /// <param name="entry"></param>
+        /// <param name="entry">The entry.</param>
+        /// <exception cref="System.ArgumentOutOfRangeException"></exception>
         public void Log(LogEntry entry)
         {
             switch (entry.Severity)

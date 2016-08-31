@@ -8,8 +8,20 @@ using Redmine.Net.Api.Types;
 
 namespace Redmine.Net.Api.Internals
 {
+    /// <summary>
+    /// 
+    /// </summary>
     internal static class WebApiAsyncHelper
     {
+        /// <summary>
+        /// Executes the upload.
+        /// </summary>
+        /// <param name="redmineManager">The redmine manager.</param>
+        /// <param name="address">The address.</param>
+        /// <param name="actionType">Type of the action.</param>
+        /// <param name="data">The data.</param>
+        /// <param name="methodName">Name of the method.</param>
+        /// <returns></returns>
         public static async Task ExecuteUpload(RedmineManager redmineManager, string address, string actionType, string data,
             string methodName)
         {
@@ -30,6 +42,16 @@ namespace Redmine.Net.Api.Internals
             }
         }
 
+        /// <summary>
+        /// Executes the upload.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="redmineManager">The redmine manager.</param>
+        /// <param name="address">The address.</param>
+        /// <param name="actionType">Type of the action.</param>
+        /// <param name="data">The data.</param>
+        /// <param name="methodName">Name of the method.</param>
+        /// <returns></returns>
         public static async Task<T> ExecuteUpload<T>(RedmineManager redmineManager, string address, string actionType, string data,
             string methodName)
             where T : class, new()
@@ -53,6 +75,15 @@ namespace Redmine.Net.Api.Internals
             }
         }
 
+        /// <summary>
+        /// Executes the download.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="redmineManager">The redmine manager.</param>
+        /// <param name="address">The address.</param>
+        /// <param name="methodName">Name of the method.</param>
+        /// <param name="parameters">The parameters.</param>
+        /// <returns></returns>
         public static async Task<T> ExecuteDownload<T>(RedmineManager redmineManager, string address, string methodName,
             NameValueCollection parameters = null)
             where T : class, new()
@@ -72,6 +103,15 @@ namespace Redmine.Net.Api.Internals
             }
         }
 
+        /// <summary>
+        /// Executes the download list.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="redmineManager">The redmine manager.</param>
+        /// <param name="address">The address.</param>
+        /// <param name="methodName">Name of the method.</param>
+        /// <param name="parameters">The parameters.</param>
+        /// <returns></returns>
         public static async Task<List<T>> ExecuteDownloadList<T>(RedmineManager redmineManager, string address,
            string methodName,
            NameValueCollection parameters = null) where T : class, new()
@@ -94,6 +134,15 @@ namespace Redmine.Net.Api.Internals
         }
 
 
+        /// <summary>
+        /// Executes the download paginated list.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="redmineManager">The redmine manager.</param>
+        /// <param name="address">The address.</param>
+        /// <param name="methodName">Name of the method.</param>
+        /// <param name="parameters">The parameters.</param>
+        /// <returns></returns>
         public static async Task<PaginatedObjects<T>> ExecuteDownloadPaginatedList<T>(RedmineManager redmineManager, string address,
             string methodName,
             NameValueCollection parameters = null) where T : class, new()
@@ -113,6 +162,13 @@ namespace Redmine.Net.Api.Internals
             }
         }
 
+        /// <summary>
+        /// Executes the download file.
+        /// </summary>
+        /// <param name="redmineManager">The redmine manager.</param>
+        /// <param name="address">The address.</param>
+        /// <param name="methodName">Name of the method.</param>
+        /// <returns></returns>
         public static async Task<byte[]> ExecuteDownloadFile(RedmineManager redmineManager, string address, string methodName)
         {
             using (var wc = redmineManager.CreateWebClient(null, true))
@@ -129,6 +185,14 @@ namespace Redmine.Net.Api.Internals
             }
         }
 
+        /// <summary>
+        /// Executes the upload file.
+        /// </summary>
+        /// <param name="redmineManager">The redmine manager.</param>
+        /// <param name="address">The address.</param>
+        /// <param name="data">The data.</param>
+        /// <param name="methodName">Name of the method.</param>
+        /// <returns></returns>
         public static async Task<Upload> ExecuteUploadFile(RedmineManager redmineManager, string address, byte[] data, string methodName)
         {
             using (var wc = redmineManager.CreateWebClient(null, true))

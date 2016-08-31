@@ -3,7 +3,7 @@ using System.Collections.Specialized;
 
 namespace Redmine.Net.Api.Types
 {
-    public interface IRedmineManager
+     interface IRedmineManager
     {
         int PageSize { get; set; }
         string ImpersonateUser { get; set; }

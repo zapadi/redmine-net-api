@@ -25,8 +25,11 @@ namespace Redmine.Net.Api.Logging
         private static ILogger logger;
 
         /// <summary>
-        /// 
+        /// Gets the current ILogger.
         /// </summary>
+        /// <value>
+        /// The current.
+        /// </value>
         public static ILogger Current
         {
             get { return logger ?? (logger = new ConsoleLogger()); }
@@ -34,9 +37,9 @@ namespace Redmine.Net.Api.Logging
         }
 
         /// <summary>
-        /// 
+        /// Uses the logger.
         /// </summary>
-        /// <param name="logger"></param>
+        /// <param name="logger">The logger.</param>
         public static void UseLogger(ILogger logger)
         {
             lock (locker)

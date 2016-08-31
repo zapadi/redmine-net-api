@@ -25,10 +25,10 @@ namespace Redmine.Net.Api.Extensions
     public static class CollectionExtensions
     {
         /// <summary>
-        /// 
+        /// Clones the specified list to clone.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="listToClone"></param>
+        /// <param name="listToClone">The list to clone.</param>
         /// <returns></returns>
         public static IList<T> Clone<T>(this IList<T> listToClone) where T : ICloneable
         {
@@ -40,11 +40,11 @@ namespace Redmine.Net.Api.Extensions
         }
 
         /// <summary>
-        /// 
+        /// Equalses the specified list to compare.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="list"></param>
-        /// <param name="listToCompare"></param>
+        /// <param name="list">The list.</param>
+        /// <param name="listToCompare">The list to compare.</param>
         /// <returns></returns>
         public static bool Equals<T>(this IList<T> list, IList<T> listToCompare) where T : class
         {
