@@ -608,9 +608,35 @@ namespace Redmine.Net.Api
         /// <param name="parameters">Optional filters and/or optional fetched data.</param>
         /// <exception cref="RedmineException"></exception>
         /// <code></code>
+        [Obsolete("Use DeleteObject<T>(string id) instead.")]
         public void DeleteObject<T>(string id, NameValueCollection parameters) where T : class, new()
         {
-            var url = UrlHelper.GetDeleteUrl<T>(this, id);
+            DeleteObject<T>(id, 0);
+        }
+
+        /// <summary>
+        ///     Deletes the Redmine object.
+        /// </summary>
+        /// <typeparam name="T">The type of objects to delete.</typeparam>
+        /// <param name="id">The id of the object to delete</param>
+        /// <exception cref="RedmineException"></exception>
+        /// <code></code>
+        public void DeleteObject<T>(string id) where T : class, new()
+        {
+            DeleteObject<T>(id, 0);
+        }
+
+        /// <summary>
+        /// Deletes the Redmine object.
+        /// </summary>
+        /// <typeparam name="T">The type of objects to delete.</typeparam>
+        /// <param name="id">The id of the object to delete</param>
+        /// <param name="reassignToId">When there are issues assigned to the category you are deleting, this parameter lets you reassign these issues to the category with this id. This parameter is optional.</param>
+        /// <exception cref="RedmineException"></exception>
+        /// <code></code>
+        public void DeleteObject<T>(string id, int reassignToId) where T : class, new()
+        {
+            var url = UrlHelper.GetDeleteUrl<T>(this, id, reassignToId);
             WebApiHelper.ExecuteUpload(this, url, HttpVerbs.DELETE, string.Empty, "DeleteObject");
         }
 
@@ -734,8 +760,7 @@ namespace Redmine.Net.Api
         /// <param name="error">The error.</param>
         /// <returns></returns>
         /// <code></code>
-        public virtual bool RemoteCertValidate(object sender, X509Certificate cert, X509Chain chain,
-            SslPolicyErrors error)
+        public virtual bool RemoteCertValidate(object sender, X509Certificate cert, X509Chain chain, SslPolicyErrors error)
         {
             if (error == SslPolicyErrors.None)
             {

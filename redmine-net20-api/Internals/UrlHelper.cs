@@ -16,6 +16,7 @@
 
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Globalization;
 using Redmine.Net.Api.Exceptions;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Types;
@@ -90,12 +91,34 @@ namespace Redmine.Net.Api.Internals
         /// <param name="redmineManager">The redmine manager.</param>
         /// <param name="id">The identifier.</param>
         /// <returns></returns>
+        /// <exception cref="KeyNotFoundException"></exception>
         /// <exception cref="System.Collections.Generic.KeyNotFoundException"></exception>
         public static string GetDeleteUrl<T>(RedmineManager redmineManager, string id) where T : class, new()
+        {
+            return GetDeleteUrl<T>(redmineManager, id, 0);
+        }
+
+        /// <summary>
+        /// Gets the delete URL.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="redmineManager">The redmine manager.</param>
+        /// <param name="id">The identifier.</param>
+        /// <param name="reassignToId">When there are issues assigned to the category you are deleting, this parameter lets you reassign these issues to the category with this id. This parameter is optional.</param>
+        /// <returns></returns>
+        /// <exception cref="KeyNotFoundException"></exception>
+        /// <exception cref="System.Collections.Generic.KeyNotFoundException"></exception>
+        public static string GetDeleteUrl<T>(RedmineManager redmineManager, string id, int reassignToId) where T : class, new()
         {
             var type = typeof(T);
 
             if (!RedmineManager.Sufixes.ContainsKey(type)) throw new KeyNotFoundException(type.Name);
+
+            if (reassignToId > 0 && type == typeof(IssueCategory))
+            {
+                return string.Format(RedmineManager.REQUEST_FORMAT, redmineManager.Host, RedmineManager.Sufixes[type], id,
+                redmineManager.MimeFormat.ToString().ToLower()) + "?reassign_to_id=" + reassignToId.ToString(CultureInfo.InvariantCulture);
+            }
 
             return string.Format(RedmineManager.REQUEST_FORMAT, redmineManager.Host, RedmineManager.Sufixes[type], id,
                 redmineManager.MimeFormat.ToString().ToLower());
