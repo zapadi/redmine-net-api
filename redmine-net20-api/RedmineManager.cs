@@ -128,7 +128,9 @@ namespace Redmine.Net.Api
             Uri uriResult;
             if (!Uri.TryCreate(host, UriKind.Absolute, out uriResult) ||
                 !(uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps))
+            {
                 host = "http://" + host;
+            }
 
             if (!Uri.TryCreate(host, UriKind.Absolute, out uriResult))
                 throw new RedmineException("The host is not valid!");
@@ -140,7 +142,9 @@ namespace Redmine.Net.Api
 
             ServicePointManager.SecurityProtocol = securityProtocolType;
             if (!verifyServerCert)
+            {
                 ServicePointManager.ServerCertificateValidationCallback += RemoteCertValidate;
+            }
         }
 
         /// <summary>
@@ -336,22 +340,13 @@ namespace Redmine.Net.Api
         }
 
         /// <summary>
-        ///     Downloads the user whose credentials are used to access the API. This method does not block the calling thread.
+        /// Gets the wiki page.
         /// </summary>
-        /// <param name="projectId">The project id or identifier.</param>
-        /// <param name="parameters">
-        ///     attachments
-        ///     The accepted parameters are: memberships and groups (added in 2.1).
-        /// </param>
-        /// <param name="pageName">The wiki page name.</param>
-        /// <param name="version">The version of the wiki page.</param>
-        /// <returns>
-        ///     Returns the Guid associated with the async request.
-        /// </returns>
-        /// <exception cref="System.InvalidOperationException">
-        ///     An error occurred during deserialization. The original exception is available
-        ///     using the System.Exception.InnerException property.
-        /// </exception>
+        /// <param name="projectId">The project identifier.</param>
+        /// <param name="parameters">The parameters.</param>
+        /// <param name="pageName">Name of the page.</param>
+        /// <param name="version">The version.</param>
+        /// <returns></returns>
         public WikiPage GetWikiPage(string projectId, NameValueCollection parameters, string pageName, uint version = 0)
         {
             var url = UrlHelper.GetWikiPageUrl(this, projectId, parameters, pageName, version);
@@ -425,25 +420,6 @@ namespace Redmine.Net.Api
         }
 
         /// <summary>
-        ///     Returns a paginated list of objects.
-        /// </summary>
-        /// <typeparam name="T">The type of objects to retrieve.</typeparam>
-        /// <param name="parameters">Optional filters and/or optional fetched data.</param>
-        /// <returns>
-        ///     Returns a paginated list of objects.
-        /// </returns>
-        /// <remarks>
-        ///     By default only 25 results can be retrieved by request.
-        ///     Maximum is 100. To change the maximum value set in your Settings -&gt; General, "Objects per page options".By
-        ///     adding (for instance) 9999 there would make you able to get that many results per request.
-        /// </remarks>
-        [Obsolete("Use GetObjects method instead.")]
-        public List<T> GetObjectList<T>(NameValueCollection parameters) where T : class, new()
-        {
-            return GetObjects<T>(parameters);
-        }
-
-        /// <summary>
         ///     Gets the paginated objects.
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -453,34 +429,6 @@ namespace Redmine.Net.Api
         {
             var url = UrlHelper.GetListUrl<T>(this, parameters);
             return WebApiHelper.ExecuteDownloadList<T>(this, url, "GetObjectList", parameters);
-        }
-
-        /// <summary>
-        ///     Returns a paginated list of objects.
-        /// </summary>
-        /// <typeparam name="T">The type of objects to retrieve.</typeparam>
-        /// <param name="parameters">Optional filters and/or optional fetched data.</param>
-        /// <param name="totalCount">Provide information about the total object count available in Redmine.</param>
-        /// <returns>
-        ///     Returns a paginated list of objects.
-        /// </returns>
-        /// <remarks>
-        ///     By default only 25 results can be retrieved by request. Maximum is 100. To change the maximum value set in your
-        ///     Settings -&gt; General, "Objects per page options".By adding (for instance) 9999 there would make you able to get
-        ///     that many results per request.
-        /// </remarks>
-        /// <code></code>
-        [Obsolete("Use GetPaginatedObjects method instead.")]
-        public List<T> GetObjectList<T>(NameValueCollection parameters, out int totalCount) where T : class, new()
-        {
-            totalCount = -1;
-            var result = GetPaginatedObjects<T>(parameters);
-            if (result != null)
-            {
-                totalCount = result.TotalCount;
-                return result.Objects;
-            }
-            return null;
         }
 
         /// <summary>
@@ -584,20 +532,6 @@ namespace Redmine.Net.Api
                 wex.HandleWebException("GetObjectsAsync", MimeFormat);
             }
             return resultList;
-        }
-
-        /// <summary>
-        ///     Returns the complete list of objects.
-        /// </summary>
-        /// <typeparam name="T">The type of objects to retrieve.</typeparam>
-        /// <param name="parameters">Optional filters and/or optional fetched data.</param>
-        /// <returns>
-        ///     Returns a complete list of objects.
-        /// </returns>
-        [Obsolete("Use GetObjects method instead.")]
-        public List<T> GetTotalObjectList<T>(NameValueCollection parameters) where T : class, new()
-        {
-            return GetObjects<T>(parameters);
         }
 
         /// <summary>
