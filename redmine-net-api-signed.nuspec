@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<package xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <metadata xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <id>redmine-api-signed</id>
+    <version>0.0.0.0</version>
+    <title>Redmine .NET API Signed</title>
+    <authors>Adrian Popescu</authors>
+    <owners>Adrian Popescu</owners>
+    <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+    <projectUrl>https://github.com/zapadi/redmine-net-api</projectUrl>
+    <iconUrl>https://github.com/zapadi/redmine-net-api/blob/master/logo.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Redmine .NET API is a communication library for Redmine project management application.</description>
+    
+    <copyright>Copyright 2011 - 2016</copyright>
+    <language>en-GB</language>
+    <tags>Redmine API .NET Signed C#</tags>
+  </metadata>
+ 
+   <files>
+    <file src="redmine-net45-api-signed\bin\Debug\redmine-net45-api-signed.dll" target="lib\net45"/>
+    <file src="redmine-net45-api-signed\bin\Debug\redmine-net45-api-signed.xml" target="lib\net45"/>
+
+    <file src="redmine-net40-api-signed\bin\Debug\redmine-net40-api-signed.dll" target="lib\net40"/>
+    <file src="redmine-net40-api-signed\bin\Debug\redmine-net40-api-signed.xml" target="lib\net40"/>
+
+    <file src="redmine-net451-api-signed\bin\Debug\redmine-net451-api-signed.dll" target="lib\net451"/>
+    <file src="redmine-net451-api-signed\bin\Debug\redmine-net451-api-signed.xml" target="lib\net451"/>
+  </files>
+
+</package>
