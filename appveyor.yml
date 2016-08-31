@@ -35,8 +35,8 @@ build:
   verbosity: detailed
 
 after_build:
-- nuget pack redmine-net-api.nuspec -Version {version}
-- nuget pack redmine-net-api-signed.nuspec -Version {version}
+- ps: nuget pack redmine-net-api.nuspec -Version $env:appveyor_build_version
+- ps: nuget pack redmine-net-api-signed.nuspec -Version $env:appveyor_build_version
 nuget:
   account_feed: true
   project_feed: true
