@@ -33,13 +33,13 @@ Resource | Read | Create | Update | Delete
 
 Package | Build status | Nuget
 -------- | ------------ | -------
-redmine-net20-api | ![alt text](https://ci.appveyor.com/api/projects/status/github/zapadi/redmine-net-api?branch=master&svg=true) | [![NuGet package](https://img.shields.io/nuget/v/redmine-api.svg)](https://www.nuget.org/packages/redmine-api.Web)  
-redmine-net40-api | ![alt text](https://ci.appveyor.com/api/projects/status/github/zapadi/redmine-net-api?branch=master&svg=true) | [![NuGet package](https://img.shields.io/nuget/v/redmine-api.svg)](https://www.nuget.org/packages/redmine-api.Web)
-redmine-net40-api-signed | ![alt text](https://ci.appveyor.com/api/projects/status/github/zapadi/redmine-net-api?branch=master&svg=true) | [![NuGet package](https://img.shields.io/nuget/v/redmine-api.svg)](https://www.nuget.org/packages/redmine-api.Web)
-redmine-net45-api | ![alt text](https://ci.appveyor.com/api/projects/status/github/zapadi/redmine-net-api?branch=master&svg=true) | [![NuGet package](https://img.shields.io/nuget/v/redmine-api.svg)](https://www.nuget.org/packages/redmine-api.Web)
-redmine-net45-api-signed | ![alt text](https://ci.appveyor.com/api/projects/status/github/zapadi/redmine-net-api?branch=master&svg=true) | [![NuGet package](https://img.shields.io/nuget/v/redmine-api.svg)](https://www.nuget.org/packages/redmine-api.Web)
-redmine-net451-api | ![alt text](https://ci.appveyor.com/api/projects/status/github/zapadi/redmine-net-api?branch=master&svg=true) | [![NuGet package](https://img.shields.io/nuget/v/redmine-api.svg)](https://www.nuget.org/packages/redmine-api.Web)
-redmine-net451-api-signed | ![alt text](https://ci.appveyor.com/api/projects/status/github/zapadi/redmine-net-api?branch=master&svg=true) | [![NuGet package](https://img.shields.io/nuget/v/redmine-api.svg)](https://www.nuget.org/packages/redmine-api.Web)
+redmine-net20-api | ![alt text](https://ci.appveyor.com/api/projects/status/github/zapadi/redmine-net-api?branch=master&svg=true) | [![NuGet package](https://img.shields.io/nuget/v/redmine-api.svg)](https://www.nuget.org/packages/redmine-api)  
+redmine-net40-api | ![alt text](https://ci.appveyor.com/api/projects/status/github/zapadi/redmine-net-api?branch=master&svg=true) | [![NuGet package](https://img.shields.io/nuget/v/redmine-api.svg)](https://www.nuget.org/packages/redmine-api)
+redmine-net40-api-signed | ![alt text](https://ci.appveyor.com/api/projects/status/github/zapadi/redmine-net-api?branch=master&svg=true) | [![NuGet package](https://img.shields.io/nuget/v/redmine-api.svg)](https://www.nuget.org/packages/redmine-api)
+redmine-net45-api | ![alt text](https://ci.appveyor.com/api/projects/status/github/zapadi/redmine-net-api?branch=master&svg=true) | [![NuGet package](https://img.shields.io/nuget/v/redmine-api.svg)](https://www.nuget.org/packages/redmine-api)
+redmine-net45-api-signed | ![alt text](https://ci.appveyor.com/api/projects/status/github/zapadi/redmine-net-api?branch=master&svg=true) | [![NuGet package](https://img.shields.io/nuget/v/redmine-api.svg)](https://www.nuget.org/packages/redmine-api)
+redmine-net451-api | ![alt text](https://ci.appveyor.com/api/projects/status/github/zapadi/redmine-net-api?branch=master&svg=true) | [![NuGet package](https://img.shields.io/nuget/v/redmine-api.svg)](https://www.nuget.org/packages/redmine-api)
+redmine-net451-api-signed | ![alt text](https://ci.appveyor.com/api/projects/status/github/zapadi/redmine-net-api?branch=master&svg=true) | [![NuGet package](https://img.shields.io/nuget/v/redmine-api.svg)](https://www.nuget.org/packages/redmine-api)
 
 ## WIKI
 
