@@ -1,24 +1,33 @@
-﻿using Redmine.Net.Api;
+﻿using System;
+using System.Runtime.Remoting;
+using Redmine.Net.Api;
 using Redmine.Net.Api.Exceptions;
-using Redmine.Net.Api.Extensions;
 using Xunit;
 
 namespace xUnitTestredminenet45api.Tests
 {
     [Trait("Redmine-api", "Credentials")]
+    [Collection("RedmineCollection")]
+    [Order(1)]
     public class RedmineTest
     {
 
         [Fact]
-        public void Should_Throw_Redmine_Exception_When_Host_Is_Null_Or_Empty()
+        public void Should_Throw_Redmine_Exception_When_Host_Is_Null()
         {
-            Assert.Throws<RedmineException>(() => new RedmineManager(Helper.Uri, Helper.Username, Helper.Password));
+            Assert.Throws<RedmineException>(() => new RedmineManager(null, Helper.Username, Helper.Password));
         }
 
-        [Fact]
+	    [Fact]
+	    public void Should_Throw_Redmine_Exception_When_Host_Is_Empty()
+	    {
+		    Assert.Throws<RedmineException>(() => new RedmineManager(String.Empty, Helper.Username, Helper.Password));
+	    }
+
+	    [Fact]
         public void Should_Throw_Redmine_Exception_When_Host_Is_Invalid()
         {
-            Assert.Throws<RedmineException>(() => new RedmineManager(Helper.Uri, Helper.Username, Helper.Password));
+            Assert.Throws<RedmineException>(() => new RedmineManager("invalid<>", Helper.Username, Helper.Password));
         }
 
         [Fact]

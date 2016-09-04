@@ -188,11 +188,13 @@ namespace Redmine.Net.Api
             get { return host; }
             private set
             {
+	            host = value;
+
                 Uri uriResult;
-                if (!Uri.TryCreate(value, UriKind.Absolute, out uriResult) ||
+                if (!Uri.TryCreate(host, UriKind.Absolute, out uriResult) ||
                     !(uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps))
                 {
-                    host = "http://" + value;
+                    host = "http://" + host;
                 }
 
                 if (!Uri.TryCreate(host, UriKind.Absolute, out uriResult))
