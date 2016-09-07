@@ -1,4 +1,5 @@
-﻿using System.Collections.Specialized;
+﻿using System;
+using System.Collections.Specialized;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Exceptions;
 using Redmine.Net.Api.Types;
@@ -17,13 +18,15 @@ namespace xUnitTestredminenet45api
 
 	    private readonly RedmineFixture fixture;
 
-	    private const string PROJECT_ID = "redmine-net-testq";
+	    const string PROJECT_ID = "redmine-net-testq";
+	    const string NEW_ISSUE_CATEGORY_NAME = "Test category";
+	    const int NEW_ISSUE_CATEGORY_ASIGNEE_ID = 1;
+
+	    private static string CREATED_ISSUE_CATEGORY_ID;
 
         [Fact, Order(1)]
         public void Should_Create_IssueCategory()
         {
-	        const string NEW_ISSUE_CATEGORY_NAME = "Test category";
-	        const int NEW_ISSUE_CATEGORY_ASIGNEE_ID = 5;
 	        var issueCategory = new IssueCategory
             {
                 Name = NEW_ISSUE_CATEGORY_NAME,
@@ -32,6 +35,8 @@ namespace xUnitTestredminenet45api
 
             var savedIssueCategory = fixture.RedmineManager.CreateObject(issueCategory, PROJECT_ID);
 
+	        CREATED_ISSUE_CATEGORY_ID = savedIssueCategory.Id.ToString();
+
             Assert.NotNull(savedIssueCategory);
             Assert.True(savedIssueCategory.Name.Equals(NEW_ISSUE_CATEGORY_NAME), "Saved issue category name is invalid.");
         }
@@ -39,20 +44,19 @@ namespace xUnitTestredminenet45api
         [Fact, Order(99)]
         public void Should_Delete_IssueCategory()
         {
-	        const string ISSUE_CATEGORY_ID_TO_DELETE = "16";
 	        var exception =
                 (RedmineException)
                     Record.Exception(
-                        () => fixture.RedmineManager.DeleteObject<IssueCategory>(ISSUE_CATEGORY_ID_TO_DELETE));
+                        () => fixture.RedmineManager.DeleteObject<IssueCategory>(CREATED_ISSUE_CATEGORY_ID));
             Assert.Null(exception);
             Assert.Throws<NotFoundException>(
-                () => fixture.RedmineManager.GetObject<IssueCategory>(ISSUE_CATEGORY_ID_TO_DELETE, null));
+                () => fixture.RedmineManager.GetObject<IssueCategory>(CREATED_ISSUE_CATEGORY_ID, null));
         }
 
         [Fact, Order(2)]
         public void Should_Get_All_IssueCategories_By_ProjectId()
         {
-	        const int NUMBER_OF_ISSUE_CATEGORIES = 2;
+	        const int NUMBER_OF_ISSUE_CATEGORIES = 3;
 	        var issueCategories =
                 fixture.RedmineManager.GetObjects<IssueCategory>(new NameValueCollection
                 {
@@ -68,15 +72,13 @@ namespace xUnitTestredminenet45api
         [Fact, Order(3)]
         public void Should_Get_IssueCategory_By_Id()
         {
-	        const string ISSUE_CATEGORY_ID_TO_GET = "17";
-	        const string ISSUE_CATEGORY_NAME_TO_GET = "Test category";
-	        const string ISSUE_CATEGORY_PROJECT_NAME_TO_GET = "redmine-net-testq";
-	        const string ISSUE_CATEGORY_ASIGNEE_NAME_TO_GET = "Alina";
+	        const string ISSUE_CATEGORY_PROJECT_NAME_TO_GET = "Redmine tests";
+	        const string ISSUE_CATEGORY_ASIGNEE_NAME_TO_GET = "Redmine";
 
-	        var issueCategory = fixture.RedmineManager.GetObject<IssueCategory>(ISSUE_CATEGORY_ID_TO_GET, null);
+	        var issueCategory = fixture.RedmineManager.GetObject<IssueCategory>(CREATED_ISSUE_CATEGORY_ID, null);
 
             Assert.NotNull(issueCategory);
-            Assert.True(issueCategory.Name.Equals(ISSUE_CATEGORY_NAME_TO_GET), "Issue category name is invalid.");
+            Assert.True(issueCategory.Name.Equals(NEW_ISSUE_CATEGORY_NAME), "Issue category name is invalid.");
             Assert.NotNull(issueCategory.AsignTo);
             Assert.True(issueCategory.AsignTo.Name.Contains(ISSUE_CATEGORY_ASIGNEE_NAME_TO_GET),
                 "Asignee name is invalid.");
@@ -88,17 +90,16 @@ namespace xUnitTestredminenet45api
         [Fact, Order(4)]
         public void Should_Update_IssueCategory()
         {
-	        const string ISSUE_CATEGORY_ID_TO_UPDATE = "17";
 	        const string ISSUE_CATEGORY_NAME_TO_UPDATE = "Category updated";
 	        const int ISSUE_CATEGORY_ASIGNEE_ID_TO_UPDATE = 2;
 
-	        var issueCategory = fixture.RedmineManager.GetObject<IssueCategory>(ISSUE_CATEGORY_ID_TO_UPDATE, null);
+	        var issueCategory = fixture.RedmineManager.GetObject<IssueCategory>(CREATED_ISSUE_CATEGORY_ID, null);
             issueCategory.Name = ISSUE_CATEGORY_NAME_TO_UPDATE;
             issueCategory.AsignTo = new IdentifiableName {Id = ISSUE_CATEGORY_ASIGNEE_ID_TO_UPDATE};
 
-            fixture.RedmineManager.UpdateObject(ISSUE_CATEGORY_ID_TO_UPDATE, issueCategory);
+            fixture.RedmineManager.UpdateObject(CREATED_ISSUE_CATEGORY_ID, issueCategory);
 
-            var updatedIssueCategory = fixture.RedmineManager.GetObject<IssueCategory>(ISSUE_CATEGORY_ID_TO_UPDATE, null);
+            var updatedIssueCategory = fixture.RedmineManager.GetObject<IssueCategory>(CREATED_ISSUE_CATEGORY_ID, null);
 
             Assert.NotNull(updatedIssueCategory);
             Assert.True(updatedIssueCategory.Name.Equals(ISSUE_CATEGORY_NAME_TO_UPDATE),
@@ -107,5 +108,25 @@ namespace xUnitTestredminenet45api
             Assert.True(updatedIssueCategory.AsignTo.Id == ISSUE_CATEGORY_ASIGNEE_ID_TO_UPDATE,
                 "Issue category asignee was not updated.");
         }
+
+	    [Fact, Order(5)]
+	    public void Should_Reassign_Issue_After_Issue_Category_Is_Deleted()
+	    {
+		    const string ISSUE_CATEGORY_ID_TO_DELETE = "8";
+		    const string ISSUE_CATEGORY_ID_TO_REASSIGN = "10";
+		    const string ISSUE_ID_REASSIGNED = "9";
+
+		    var exception =
+			    (RedmineException)
+			    Record.Exception(
+				    () => fixture.RedmineManager.DeleteObject<IssueCategory>(ISSUE_CATEGORY_ID_TO_DELETE, new NameValueCollection{{RedmineKeys.REASSIGN_TO_ID, ISSUE_CATEGORY_ID_TO_REASSIGN}}));
+		    Assert.Null(exception);
+		    Assert.Throws<NotFoundException>(
+			    () => fixture.RedmineManager.GetObject<IssueCategory>(ISSUE_CATEGORY_ID_TO_DELETE, null));
+
+		    var issue = fixture.RedmineManager.GetObject<Issue>(ISSUE_ID_REASSIGNED, null);
+		    Assert.NotNull(issue.Category);
+		    Assert.True(ISSUE_CATEGORY_ID_TO_REASSIGN.Equals(issue.Category.Id.ToString()), string.Format("Issue was not reassigned. Issue category id {0} != {1}", issue.Category.Id, ISSUE_CATEGORY_ID_TO_REASSIGN));
+	    }
     }
 }

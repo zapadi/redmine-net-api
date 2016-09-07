@@ -27,18 +27,19 @@ namespace Redmine.Net.Api.Internals
     /// </summary>
     internal static class WebApiHelper
     {
-        /// <summary>
-        /// Executes the upload.
-        /// </summary>
-        /// <param name="redmineManager">The redmine manager.</param>
-        /// <param name="address">The address.</param>
-        /// <param name="actionType">Type of the action.</param>
-        /// <param name="data">The data.</param>
-        /// <param name="methodName">Name of the method.</param>
-        public static void ExecuteUpload(RedmineManager redmineManager, string address, string actionType, string data,
-            string methodName)
+	    /// <summary>
+	    /// Executes the upload.
+	    /// </summary>
+	    /// <param name="redmineManager">The redmine manager.</param>
+	    /// <param name="address">The address.</param>
+	    /// <param name="actionType">Type of the action.</param>
+	    /// <param name="data">The data.</param>
+	    /// <param name="methodName">Name of the method.</param>
+	    /// <param name="parameters">The parameters</param>
+	    public static void ExecuteUpload(RedmineManager redmineManager, string address, string actionType, string data,
+            string methodName, NameValueCollection parameters = null)
         {
-            using (var wc = redmineManager.CreateWebClient(null))
+            using (var wc = redmineManager.CreateWebClient(parameters))
             {
                 try
                 {

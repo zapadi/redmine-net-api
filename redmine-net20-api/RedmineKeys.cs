@@ -620,5 +620,9 @@ namespace Redmine.Net.Api
         /// 
         /// </summary>
         public const string WIKI_PAGES = "wiki_pages";
+	    /// <summary>
+	    ///
+	    /// </summary>
+	    public const string REASSIGN_TO_ID = "reassign_to_id";
     }
 }

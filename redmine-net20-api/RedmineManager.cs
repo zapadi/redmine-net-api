@@ -585,21 +585,21 @@ namespace Redmine.Net.Api
         /// <code></code>
         public void DeleteObject<T>(string id) where T : class, new()
         {
-            DeleteObject<T>(id, 0);
+            DeleteObject<T>(id, null);
         }
 
-        /// <summary>
-        /// Deletes the Redmine object.
-        /// </summary>
-        /// <typeparam name="T">The type of objects to delete.</typeparam>
-        /// <param name="id">The id of the object to delete</param>
-        /// <param name="reassignToId">When there are issues assigned to the category you are deleting, this parameter lets you reassign these issues to the category with this id. This parameter is optional.</param>
-        /// <exception cref="RedmineException"></exception>
-        /// <code></code>
-        public void DeleteObject<T>(string id, int reassignToId) where T : class, new()
+	    /// <summary>
+	    /// Deletes the Redmine object.
+	    /// </summary>
+	    /// <typeparam name="T">The type of objects to delete.</typeparam>
+	    /// <param name="id">The id of the object to delete</param>
+	    /// <param name="parameters">The parameters</param>
+	    /// <exception cref="RedmineException"></exception>
+	    /// <code></code>
+	    public void DeleteObject<T>(string id, NameValueCollection parameters = null) where T : class, new()
         {
-            var url = UrlHelper.GetDeleteUrl<T>(this, id, reassignToId);
-            WebApiHelper.ExecuteUpload(this, url, HttpVerbs.DELETE, string.Empty, "DeleteObject");
+            var url = UrlHelper.GetDeleteUrl<T>(this, id);
+            WebApiHelper.ExecuteUpload(this, url, HttpVerbs.DELETE, string.Empty, "DeleteObject", parameters);
         }
 
         /// <summary>
