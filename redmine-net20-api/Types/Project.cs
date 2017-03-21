@@ -139,6 +139,10 @@ namespace Redmine.Net.Api.Types
         [XmlArrayItem(RedmineKeys.ENABLED_MODULE)]
         public IList<ProjectEnabledModule> EnabledModules { get; set; }
 
+        [XmlArray(RedmineKeys.TIME_ENTRY_ACTIVITIES)]
+        [XmlArrayItem(RedmineKeys.TIME_ENTRY_ACTIVITY)]
+        public IList<TimeEntryActivity> TimeEntryActivities { get; set; }
+
         /// <summary>
         /// Generates an object from its XML representation.
         /// </summary>
@@ -185,6 +189,8 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.ISSUE_CATEGORIES: IssueCategories = reader.ReadElementContentAsCollection<ProjectIssueCategory>(); break;
 
                     case RedmineKeys.ENABLED_MODULES: EnabledModules = reader.ReadElementContentAsCollection<ProjectEnabledModule>(); break;
+
+                    case RedmineKeys.TIME_ENTRY_ACTIVITIES: TimeEntryActivities = reader.ReadElementContentAsCollection<TimeEntryActivity>(); break;
 
                     default: reader.Read(); break;
                 }
