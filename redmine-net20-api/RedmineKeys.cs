@@ -544,6 +544,17 @@ namespace Redmine.Net.Api
         /// 
         /// </summary>
         public const string TOTAL_COUNT = "total_count";
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string TOTAL_ESTIMATED_HOURS = "total_estimated_hours";
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string TOTAL_SPENT_HOURS = "total_spent_hours";
+
         /// <summary>
         /// 
         /// </summary>
