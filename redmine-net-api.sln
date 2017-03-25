@@ -17,7 +17,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "redmine-net451-api", "redmi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "redmine-net451-api-signed", "redmine-net451-api-signed\redmine-net451-api-signed.csproj", "{6E6E642E-F35A-4EA7-A2D7-16725156BD33}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xUnitTest-redmine-net45-api", "xUnitTest-redmine-net45-api\xUnitTest-redmine-net45-api.csproj", "{170210BF-5F03-4531-8A63-06E356CA284B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xUnitTest-redmine-net-api", "xUnitTest-redmine-net45-api\xUnitTest-redmine-net-api.csproj", "{170210BF-5F03-4531-8A63-06E356CA284B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "redmine-net452-api", "redmine-net452-api\redmine-net452-api.csproj", "{404B264F-363B-44AD-AE8D-2587C2E6FA82}"
 EndProject
