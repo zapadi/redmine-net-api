@@ -21,11 +21,12 @@ using System.IO;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Types;
 using Xunit;
+using Redmine.Net.Api.Exceptions;
 
 namespace xUnitTestredminenet45api
 {
-	[Trait("Redmine-Net-Api", "Attachments")]
-	[Collection("RedmineCollection")]
+    [Trait("Redmine-Net-Api", "Attachments")]
+    [Collection("RedmineCollection")]
     public class AttachmentTests
     {
         public AttachmentTests(RedmineFixture fixture)
@@ -33,7 +34,7 @@ namespace xUnitTestredminenet45api
             this.fixture = fixture;
         }
 
-	    private readonly RedmineFixture fixture;
+        private readonly RedmineFixture fixture;
 
         private const string ATTACHMENT_ID = "48";
         private const string ATTACHMENT_FILE_NAME = "uploadAttachment.pages";
@@ -55,21 +56,21 @@ namespace xUnitTestredminenet45api
 
             Assert.NotNull(attachment);
             Assert.IsType<Attachment>(attachment);
-            Assert.True(attachment.FileName == ATTACHMENT_FILE_NAME, "Attachment file name ( "+ attachment.FileName +" ) " +
-                                                                     "is not the expected one ( "+ ATTACHMENT_FILE_NAME +" ).");
+            Assert.True(attachment.FileName == ATTACHMENT_FILE_NAME, "Attachment file name ( " + attachment.FileName + " ) " +
+                                                                     "is not the expected one ( " + ATTACHMENT_FILE_NAME + " ).");
         }
 
         [Fact, Order(3)]
         public void Should_Upload_Attachment()
         {
-	        const string ATTACHMENT_LOCAL_PATH = "uploadAttachment.pages";
-	        const string ATTACHMENT_NAME = "AttachmentUploaded.txt";
-	        const string ATTACHMENT_DESCRIPTION = "File uploaded using REST API";
-	        const string ATTACHMENT_CONTENT_TYPE = "text/plain";
-	        const int PROJECT_ID = 9;
-	        const string ISSUE_SUBJECT = "Issue with attachments";
+            const string ATTACHMENT_LOCAL_PATH = "uploadAttachment.pages";
+            const string ATTACHMENT_NAME = "AttachmentUploaded.txt";
+            const string ATTACHMENT_DESCRIPTION = "File uploaded using REST API";
+            const string ATTACHMENT_CONTENT_TYPE = "text/plain";
+            const int PROJECT_ID = 9;
+            const string ISSUE_SUBJECT = "Issue with attachments";
 
-	        //read document from specified path
+            //read document from specified path
             var documentData = File.ReadAllBytes(AppDomain.CurrentDomain.BaseDirectory + ATTACHMENT_LOCAL_PATH);
 
             //upload attachment to redmine
@@ -86,7 +87,7 @@ namespace xUnitTestredminenet45api
 
             var issue = new Issue
             {
-                Project = new Project {Id = PROJECT_ID},
+                Project = new Project { Id = PROJECT_ID },
                 Subject = ISSUE_SUBJECT,
                 Uploads = attachments
             };
@@ -95,19 +96,26 @@ namespace xUnitTestredminenet45api
             var issueWithAttachment = fixture.RedmineManager.CreateObject(issue);
 
             issue = fixture.RedmineManager.GetObject<Issue>(issueWithAttachment.Id.ToString(),
-                new NameValueCollection {{RedmineKeys.INCLUDE, RedmineKeys.ATTACHMENTS}});
+                new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.ATTACHMENTS } });
 
             Assert.NotNull(issue);
             Assert.NotNull(issue.Attachments);
             Assert.All(issue.Attachments, a => Assert.IsType<Attachment>(a));
-            Assert.True(issue.Attachments.Count == 1, "Number of attachments ( "+ issue.Attachments.Count +" ) != 1");
+            Assert.True(issue.Attachments.Count == 1, "Number of attachments ( " + issue.Attachments.Count + " ) != 1");
 
-	        var firstAttachment = issue.Attachments[0];
-	        Assert.True(firstAttachment.FileName == ATTACHMENT_NAME, "Attachment name is invalid.");
-            Assert.True(firstAttachment.Description == ATTACHMENT_DESCRIPTION,
-                "Attachment description is invalid.");
-            Assert.True(firstAttachment.ContentType == ATTACHMENT_CONTENT_TYPE,
-                "Attachment content type is invalid.");
+            var firstAttachment = issue.Attachments[0];
+            Assert.True(firstAttachment.FileName == ATTACHMENT_NAME, "Attachment name is invalid.");
+            Assert.True(firstAttachment.Description == ATTACHMENT_DESCRIPTION,"Attachment description is invalid.");
+            Assert.True(firstAttachment.ContentType == ATTACHMENT_CONTENT_TYPE,"Attachment content type is invalid.");
+        }
+
+
+        [Fact, Order(4)]
+        public void Should_Delete_Attachment()
+        {
+            var exception = (RedmineException)Record.Exception(() => fixture.RedmineManager.DeleteObject<Attachment>(ATTACHMENT_ID));
+            Assert.Null(exception);
+            Assert.Throws<NotFoundException>(() => fixture.RedmineManager.GetObject<Attachment>(ATTACHMENT_ID, null));
         }
     }
 }
