@@ -42,6 +42,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+<Compile Include="..\redmine-net20-api\Internals\HashCodeHelper.cs">
+      <Link>Internals\HashCodeHelper.cs</Link>
+    </Compile>
+
     <Compile Include="..\redmine-net20-api\Internals\DataHelper.cs">
       <Link>Internals\DataHelper.cs</Link>
     </Compile>
@@ -77,9 +81,6 @@
     </Compile>
     <Compile Include="..\redmine-net20-api\logging\LoggerExtensions.cs">
       <Link>Logging\LoggerExtensions.cs</Link>
-    </Compile>
-    <Compile Include="..\redmine-net20-api\Internals\HashCodeExtensions.cs">
-      <Link>Logging\LogEntry.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net20-api\logging\LoggingEventType.cs">
       <Link>Logging\LoggingEventType.cs</Link>

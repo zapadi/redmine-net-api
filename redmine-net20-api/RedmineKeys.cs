@@ -1,5 +1,5 @@
 /*
-   Copyright 2011 - 2016 Adrian Popescu.
+   Copyright 2011 - 2017 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -544,6 +544,17 @@ namespace Redmine.Net.Api
         /// 
         /// </summary>
         public const string TOTAL_COUNT = "total_count";
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string TOTAL_ESTIMATED_HOURS = "total_estimated_hours";
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string TOTAL_SPENT_HOURS = "total_spent_hours";
+
         /// <summary>
         /// 
         /// </summary>

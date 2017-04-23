@@ -1,5 +1,5 @@
 /*
-   Copyright 2011 - 2016 Adrian Popescu.
+   Copyright 2011 - 2017 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ namespace Redmine.Net.Api.JSonConverters
         /// </summary>
         public override IEnumerable<Type> SupportedTypes
         {
-            get { return new List<Type>(new[] {typeof(WikiPage)}); }
+            get { return new List<Type>(new[] { typeof(WikiPage) }); }
         }
 
         /// <summary>
@@ -85,6 +85,7 @@ namespace Redmine.Net.Api.JSonConverters
                 result.Add(RedmineKeys.TEXT, entity.Text);
                 result.Add(RedmineKeys.COMMENTS, entity.Comments);
                 result.WriteValueOrEmpty<int>(entity.Version, RedmineKeys.VERSION);
+                result.WriteArray(RedmineKeys.UPLOADS, entity.Uploads, new UploadConverter(), serializer);
 
                 var root = new Dictionary<string, object>();
                 root[RedmineKeys.WIKI_PAGE] = result;

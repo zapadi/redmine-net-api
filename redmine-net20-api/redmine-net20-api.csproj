@@ -69,6 +69,7 @@
     <Compile Include="Extensions\XmlWriterExtensions.cs" />
     <Compile Include="Internals\DataHelper.cs" />
     <Compile Include="Internals\Func.cs" />
+    <Compile Include="Internals\HashCodeHelper.cs" />
     <Compile Include="Logging\ColorConsoleLogger.cs" />
     <Compile Include="Logging\ConsoleLogger.cs" />
     <Compile Include="Logging\ILogger.cs" />
@@ -134,7 +135,6 @@
     <Compile Include="Types\Watcher.cs" />
     <Compile Include="Types\WikiPage.cs" />
     <Compile Include="Internals\UrlHelper.cs" />
-    <Compile Include="Internals\HashCodeExtensions.cs" />
     <Compile Include="Types\IValue.cs" />
     <Compile Include="Logging\RedmineConsoleTraceListener.cs" />
     <Compile Include="Exceptions\NotFoundException.cs" />
