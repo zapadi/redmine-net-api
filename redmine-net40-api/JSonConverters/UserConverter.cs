@@ -49,6 +49,7 @@ namespace Redmine.Net.Api.JSonConverters
                 user.FirstName = dictionary.GetValue<string>(RedmineKeys.FIRSTNAME);
                 user.LastName = dictionary.GetValue<string>(RedmineKeys.LASTNAME);
                 user.Email = dictionary.GetValue<string>(RedmineKeys.MAIL);
+                user.MailNotification = dictionary.GetValue<string>(RedmineKeys.MAIL_NOTIFICATION);
                 user.AuthenticationModeId = dictionary.GetValue<int?>(RedmineKeys.AUTH_SOURCE_ID);
                 user.CreatedOn = dictionary.GetValue<DateTime?>(RedmineKeys.CREATED_ON);
                 user.LastLoginOn = dictionary.GetValue<DateTime?>(RedmineKeys.LAST_LOGIN_ON);
@@ -84,6 +85,7 @@ namespace Redmine.Net.Api.JSonConverters
                 result.Add(RedmineKeys.FIRSTNAME, entity.FirstName);
                 result.Add(RedmineKeys.LASTNAME, entity.LastName);
                 result.Add(RedmineKeys.MAIL, entity.Email);
+                result.Add(RedmineKeys.MAIL_NOTIFICATION, entity.MailNotification);
                 result.Add(RedmineKeys.PASSWORD, entity.Password);
                 result.Add(RedmineKeys.MUST_CHANGE_PASSWD, entity.MustChangePassword.ToString().ToLowerInvariant());
                 result.WriteValueOrEmpty(entity.AuthenticationModeId, RedmineKeys.AUTH_SOURCE_ID);
