@@ -135,6 +135,15 @@ namespace Redmine.Net.Api.Types
         public List<UserGroup> Groups { get; set; }
 
         /// <summary>
+        /// Gets or sets the user's mail_notification.
+        /// </summary>
+        /// <value>
+        /// only_my_events, only_assigned, [...]
+        /// </value>
+        [XmlElement(RedmineKeys.MAIL_NOTIFICATION)]
+        public string MailNotification { get; set; }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
@@ -170,6 +179,8 @@ namespace Redmine.Net.Api.Types
 
                     case RedmineKeys.MAIL: Email = reader.ReadElementContentAsString(); break;
 
+                    case RedmineKeys.MAIL_NOTIFICATION: MailNotification = reader.ReadElementContentAsString(); break;
+
                     case RedmineKeys.MUST_CHANGE_PASSWD: MustChangePassword = reader.ReadElementContentAsBoolean(); break;
 
                     case RedmineKeys.AUTH_SOURCE_ID: AuthenticationModeId = reader.ReadElementContentAsNullableInt(); break;
@@ -203,6 +214,7 @@ namespace Redmine.Net.Api.Types
             writer.WriteElementString(RedmineKeys.FIRSTNAME, FirstName);
             writer.WriteElementString(RedmineKeys.LASTNAME, LastName);
             writer.WriteElementString(RedmineKeys.MAIL, Email);
+            writer.WriteElementString(RedmineKeys.MAIL_NOTIFICATION, MailNotification);
             writer.WriteElementString(RedmineKeys.PASSWORD, Password);
             writer.WriteValueOrEmpty(AuthenticationModeId, RedmineKeys.AUTH_SOURCE_ID);
             writer.WriteElementString(RedmineKeys.MUST_CHANGE_PASSWD, MustChangePassword.ToString().ToLowerInvariant());
@@ -225,6 +237,7 @@ namespace Redmine.Net.Api.Types
                 && FirstName.Equals(other.FirstName)
                 && LastName.Equals(other.LastName)
                 && Email.Equals(other.Email)
+                && MailNotification.Equals(other.MailNotification)
 				&& (ApiKey != null ? ApiKey.Equals(other.ApiKey) : other.ApiKey == null)
                 && AuthenticationModeId == other.AuthenticationModeId
                 && CreatedOn == other.CreatedOn
@@ -251,6 +264,7 @@ namespace Redmine.Net.Api.Types
                 hashCode = HashCodeHelper.GetHashCode(FirstName, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(LastName, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Email, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(MailNotification, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(AuthenticationModeId, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(CreatedOn, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(LastLoginOn, hashCode);
@@ -270,8 +284,8 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("[User: {14}, Login={0}, Password={1}, FirstName={2}, LastName={3}, Email={4}, AuthenticationModeId={5}, CreatedOn={6}, LastLoginOn={7}, ApiKey={8}, Status={9}, MustChangePassword={10}, CustomFields={11}, Memberships={12}, Groups={13}]",
-                Login, Password, FirstName, LastName, Email, AuthenticationModeId, CreatedOn, LastLoginOn, ApiKey, Status, MustChangePassword, CustomFields, Memberships, Groups, base.ToString());
+            return string.Format("[User: {14}, Login={0}, Password={1}, FirstName={2}, LastName={3}, Email={4}, EmailNotification={5}, AuthenticationModeId={6}, CreatedOn={7}, LastLoginOn={8}, ApiKey={9}, Status={10}, MustChangePassword={11}, CustomFields={12}, Memberships={13}, Groups={14}]",
+                Login, Password, FirstName, LastName, Email, MailNotification, AuthenticationModeId, CreatedOn, LastLoginOn, ApiKey, Status, MustChangePassword, CustomFields, Memberships, Groups, base.ToString());
         }
     }
 }

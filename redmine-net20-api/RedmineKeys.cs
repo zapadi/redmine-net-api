@@ -327,6 +327,10 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
+        public const string MAIL_NOTIFICATION = "mail_notification";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string MAX_LENGTH = "max_length";
         /// <summary>
         /// 
