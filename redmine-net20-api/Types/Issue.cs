@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2016 Adrian Popescu, Dorin Huzum.
+   Copyright 2011 - 2017 Adrian Popescu, Dorin Huzum.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -205,6 +205,20 @@ namespace Redmine.Net.Api.Types
         public bool IsPrivate { get; set; }
 
         /// <summary>
+        /// Returns the sum of spent hours of the task and all the subtasks.
+        /// </summary>
+        /// <remarks>Availability starting with redmine version 3.3</remarks>
+        [XmlElement(RedmineKeys.TOTAL_SPENT_HOURS)]
+        public float? TotalSpentHours { get; set; }
+
+        /// <summary>
+        /// Returns the sum of estimated hours of task and all the subtasks.
+        /// </summary>
+        /// <remarks>Availability starting with redmine version 3.3</remarks>
+        [XmlElement(RedmineKeys.TOTAL_ESTIMATED_HOURS)]
+        public float? TotalEstimatedHours { get; set; }
+
+        /// <summary>
         /// Gets or sets the journals.
         /// </summary>
         /// <value>
@@ -373,6 +387,14 @@ namespace Redmine.Net.Api.Types
 
                     case RedmineKeys.ESTIMATED_HOURS:
                         EstimatedHours = reader.ReadElementContentAsNullableFloat();
+                        break;
+
+                    case RedmineKeys.TOTAL_ESTIMATED_HOURS:
+                        TotalEstimatedHours = reader.ReadElementContentAsNullableFloat();
+                        break;
+
+                    case RedmineKeys.TOTAL_SPENT_HOURS:
+                        TotalSpentHours = reader.ReadElementContentAsNullableFloat();
                         break;
 
                     case RedmineKeys.SPENT_HOURS:

@@ -65,6 +65,9 @@
     <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\redmine-net20-api\Internals\HashCodeHelper.cs">
+      <Link>Internals\HashCodeHelper.cs</Link>
+    </Compile>
     <Compile Include="..\redmine-net20-api\Internals\DataHelper.cs">
       <Link>Internals\DataHelper.cs</Link>
     </Compile>
@@ -76,9 +79,6 @@
     </Compile>
     <Compile Include="..\redmine-net20-api\HttpVerbs.cs">
       <Link>HttpVerbs.cs</Link>
-    </Compile>
-    <Compile Include="..\redmine-net20-api\Internals\HashCodeExtensions.cs">
-      <Link>Logging\LogEntry.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net20-api\Internals\UrlHelper.cs">
       <Link>Internals\UrlHelper.cs</Link>

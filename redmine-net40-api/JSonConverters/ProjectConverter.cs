@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2016 Adrian Popescu.
+   Copyright 2011 - 2017 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -57,10 +57,9 @@ namespace Redmine.Net.Api.JSonConverters
                 project.CustomFields = dictionary.GetValueAsCollection<IssueCustomField>(RedmineKeys.CUSTOM_FIELDS);
                 project.IsPublic = dictionary.GetValue<bool>(RedmineKeys.IS_PUBLIC);
                 project.Parent = dictionary.GetValueAsIdentifiableName(RedmineKeys.PARENT);
-                project.IssueCategories =
-                    dictionary.GetValueAsCollection<ProjectIssueCategory>(RedmineKeys.ISSUE_CATEGORIES);
-                project.EnabledModules =
-                    dictionary.GetValueAsCollection<ProjectEnabledModule>(RedmineKeys.ENABLED_MODULES);
+                project.IssueCategories = dictionary.GetValueAsCollection<ProjectIssueCategory>(RedmineKeys.ISSUE_CATEGORIES);
+                project.EnabledModules = dictionary.GetValueAsCollection<ProjectEnabledModule>(RedmineKeys.ENABLED_MODULES);
+                project.TimeEntryActivities = dictionary.GetValueAsCollection<TimeEntryActivity>(RedmineKeys.TIME_ENTRY_ACTIVITIES);
                 return project;
             }
 
@@ -109,7 +108,7 @@ namespace Redmine.Net.Api.JSonConverters
         /// </summary>
         public override IEnumerable<Type> SupportedTypes
         {
-            get { return new List<Type>(new[] {typeof(Project)}); }
+            get { return new List<Type>(new[] { typeof(Project) }); }
         }
 
         #endregion

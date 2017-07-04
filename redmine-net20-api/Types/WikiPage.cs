@@ -1,5 +1,5 @@
 /*
-   Copyright 2011 - 2016 Adrian Popescu.
+   Copyright 2011 - 2017 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -84,6 +84,17 @@ namespace Redmine.Net.Api.Types
         [XmlArrayItem(RedmineKeys.ATTACHMENT)]
         public IList<Attachment> Attachments { get; set; }
 
+        /// <summary>
+        /// Sets the uploads.
+        /// </summary>
+        /// <value>
+        /// The uploads.
+        /// </value>
+        /// <remarks>Availability starting with redmine version 3.3</remarks>
+        [XmlArray(RedmineKeys.UPLOADS)]
+        [XmlArrayItem(RedmineKeys.UPLOAD)]
+        public IList<Attachment> Uploads { get; set; }
+
         #region Implementation of IXmlSerializable
 
         /// <summary>
@@ -141,6 +152,7 @@ namespace Redmine.Net.Api.Types
             writer.WriteElementString(RedmineKeys.TEXT, Text);
             writer.WriteElementString(RedmineKeys.COMMENTS, Comments);
             writer.WriteValueOrEmpty<int>(Version, RedmineKeys.VERSION);
+            writer.WriteArray(Uploads, RedmineKeys.UPLOADS);
         }
 
         #endregion
