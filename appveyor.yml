@@ -25,6 +25,8 @@ build_script:
   - Msbuild.exe redmine-net45-api-signed/redmine-net45-api-signed.csproj /verbosity:minimal /p:BuildNetFX45=true
   - Msbuild.exe redmine-net451-api/redmine-net451-api.csproj /verbosity:minimal /p:BuildNetFX451=true
   - Msbuild.exe redmine-net451-api-signed/redmine-net451-api-signed.csproj /verbosity:minimal /p:BuildNetFX451=true
+  - Msbuild.exe redmine-net452-api/redmine-net452-api.csproj /verbosity:minimal /p:BuildNetFX452=true
+  - Msbuild.exe redmine-net452-api-signed/redmine-net452-api-signed.csproj /verbosity:minimal /p:BuildNetFX452=true
 
 before_build:
 - nuget restore
