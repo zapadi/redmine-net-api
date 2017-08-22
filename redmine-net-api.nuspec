@@ -12,7 +12,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Redmine .NET API is a communication library for Redmine project management application.</description>
     
-    <copyright>Copyright 2011 - 2016</copyright>
+    <copyright>Copyright 2011 - 2017</copyright>
     <language>en-GB</language>
     <tags>Redmine API .NET C#</tags>
    
@@ -29,6 +29,9 @@
 
       <file src="redmine-net451-api\bin\Debug\redmine-net451-api.dll" target="lib\net451"/>
       <file src="redmine-net451-api\bin\Debug\redmine-net451-api.xml" target="lib\net451"/>
+
+      <file src="redmine-net452-api\bin\Debug\redmine-net452-api.dll" target="lib\net452"/>
+      <file src="redmine-net452-api\bin\Debug\redmine-net452-api.xml" target="lib\net452"/>
     </files>
 
 </package>
