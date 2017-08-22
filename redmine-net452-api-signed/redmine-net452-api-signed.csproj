@@ -7,7 +7,7 @@
     <ProjectGuid>{0AE35DA8-1D10-4FA4-8CF7-D1EC18A42FB7}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>redmine_net452_api_signed</RootNamespace>
+    <RootNamespace>Redmine.Net.Api</RootNamespace>
     <AssemblyName>redmine-net452-api-signed</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -125,10 +125,9 @@
     <Compile Include="..\redmine-net20-api\types\Error.cs">
       <Link>Types\Error.cs</Link>
     </Compile>
- <Compile Include="..\redmine-net20-api\Types\File.cs">
+    <Compile Include="..\redmine-net20-api\Types\File.cs">
       <Link>Types\File.cs</Link>
     </Compile>
-
     <Compile Include="..\redmine-net20-api\types\Group.cs">
       <Link>Types\Group.cs</Link>
     </Compile>
@@ -291,7 +290,7 @@
     <Compile Include="..\redmine-net40-api\jsonconverters\ErrorConverter.cs">
       <Link>JsonConverters\ErrorConverter.cs</Link>
     </Compile>
-<Compile Include="..\redmine-net40-api\JSonConverters\FileConverter.cs">
+    <Compile Include="..\redmine-net40-api\JSonConverters\FileConverter.cs">
       <Link>JsonConverters\FileConverter.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net40-api\jsonconverters\GroupConverter.cs">
