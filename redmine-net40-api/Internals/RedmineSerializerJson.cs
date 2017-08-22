@@ -71,7 +71,8 @@ namespace Redmine.Net.Api.Internals
             {typeof (ProjectEnabledModule), new ProjectEnabledModuleConverter()},
             {typeof (CustomField), new CustomFieldConverter()},
             {typeof (CustomFieldRole), new CustomFieldRoleConverter()},
-            {typeof (CustomFieldPossibleValue), new CustomFieldPossibleValueConverter()}
+            {typeof (CustomFieldPossibleValue), new CustomFieldPossibleValueConverter()},
+            {typeof (File), new FileConverter() }
         };
 
         /// <summary>

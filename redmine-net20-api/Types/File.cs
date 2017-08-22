@@ -102,7 +102,7 @@ namespace Redmine.Net.Api.Types
 
         public override string ToString()
         {
-            return $"[File: Id={Id}, Name={Filename}]";
+            return string.Format("[File: Id={0}, Name={1}]", Id, Filename);
         }
 
         public override bool Equals(object obj)

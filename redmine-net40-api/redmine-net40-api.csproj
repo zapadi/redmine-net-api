@@ -150,6 +150,9 @@
     <Compile Include="..\redmine-net20-api\Types\Error.cs">
       <Link>Types\Error.cs</Link>
     </Compile>
+    <Compile Include="..\redmine-net20-api\Types\File.cs">
+      <Link>Types\File.cs</Link>
+    </Compile>
     <Compile Include="..\redmine-net20-api\Types\Group.cs">
       <Link>Types\Group.cs</Link>
     </Compile>
@@ -277,6 +280,7 @@
     <Compile Include="JSonConverters\CustomFieldRoleConverter.cs" />
     <Compile Include="JSonConverters\DetailConverter.cs" />
     <Compile Include="JSonConverters\ErrorConverter.cs" />
+    <Compile Include="JSonConverters\FileConverter.cs" />
     <Compile Include="JSonConverters\GroupConverter.cs" />
     <Compile Include="JSonConverters\GroupUserConverter.cs" />
     <Compile Include="JSonConverters\IdentifiableNameConverter.cs" />

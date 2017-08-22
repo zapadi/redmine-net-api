@@ -134,6 +134,10 @@
     <Compile Include="..\redmine-net20-api\types\Error.cs">
       <Link>Types\Error.cs</Link>
     </Compile>
+ <Compile Include="..\redmine-net20-api\Types\File.cs">
+      <Link>Types\File.cs</Link>
+    </Compile>
+
     <Compile Include="..\redmine-net20-api\types\Group.cs">
       <Link>Types\Group.cs</Link>
     </Compile>
@@ -295,6 +299,9 @@
     </Compile>
     <Compile Include="..\redmine-net40-api\jsonconverters\ErrorConverter.cs">
       <Link>JsonConverters\ErrorConverter.cs</Link>
+    </Compile>
+<Compile Include="..\redmine-net40-api\JSonConverters\FileConverter.cs">
+      <Link>JsonConverters\FileConverter.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net40-api\jsonconverters\GroupConverter.cs">
       <Link>JsonConverters\GroupConverter.cs</Link>

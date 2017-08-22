@@ -71,7 +71,7 @@ namespace xUnitTestredminenet45api
             const string ISSUE_SUBJECT = "Issue with attachments";
 
             //read document from specified path
-            var documentData = File.ReadAllBytes(AppDomain.CurrentDomain.BaseDirectory + ATTACHMENT_LOCAL_PATH);
+            var documentData = System.IO.File.ReadAllBytes(AppDomain.CurrentDomain.BaseDirectory + ATTACHMENT_LOCAL_PATH);
 
             //upload attachment to redmine
             var attachment = fixture.RedmineManager.UploadFile(documentData);

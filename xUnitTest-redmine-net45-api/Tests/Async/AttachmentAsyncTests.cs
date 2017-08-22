@@ -34,7 +34,7 @@ namespace xUnitTestredminenet45api
 		{
 			//read document from specified path
 			string documentPath = AppDomain.CurrentDomain.BaseDirectory+ "/uploadAttachment.pages";
-			byte[] documentData = File.ReadAllBytes(documentPath);
+			byte[] documentData = System.IO.File.ReadAllBytes(documentPath);
 
 			//upload attachment to redmine
 			Upload attachment = await fixture.RedmineManager.UploadFileAsync(documentData);
