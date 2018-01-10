@@ -93,7 +93,7 @@ namespace Redmine.Net.Api.Types
         /// <remarks>Availability starting with redmine version 3.3</remarks>
         [XmlArray(RedmineKeys.UPLOADS)]
         [XmlArrayItem(RedmineKeys.UPLOAD)]
-        public IList<Attachment> Uploads { get; set; }
+        public IList<Upload> Uploads { get; set; }
 
         #region Implementation of IXmlSerializable
 
