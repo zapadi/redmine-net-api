@@ -1,0 +1,30 @@
+version: '2'
+
+services:
+  redmine:
+    ports:
+      - '8089:3000'
+    image: 'redmine:3.4.4'
+    container_name: 'redmine-web'
+    depends_on:
+      - postgres
+    links:
+      - postgres
+    restart: always
+    environment: 
+      POSTGRES_PORT_5432_TCP: 5432
+      POSTGRES_ENV_POSTGRES_USER: redmine
+      POSTGRES_ENV_POSTGRES_PASSWORD: redmine-pswd
+    volumes:
+      - ~/docker-vols/redmine/files/:/usr/src/redmine/files/
+  postgres:
+    environment:
+      POSTGRES_USER: redmine
+      POSTGRES_PASSWORD: redmine-pswd
+    container_name: 'redmine-db'
+    image: 'postgres:9.5'
+    #restart: always
+    ports: 
+      - '5432:5432'
+    volumes: 
+      - ~/docker-vols/redmine/postgres:/var/lib/postgresql/data    
