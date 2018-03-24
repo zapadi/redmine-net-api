@@ -607,6 +607,7 @@ namespace Redmine.Net.Api
         ///     Upload a file to server.
         /// </summary>
         /// <param name="data">The content of the file that will be uploaded on server.</param>
+        /// <param name="fileName"></param>
         /// <returns>
         ///     Returns the token for uploaded file.
         /// </returns>
@@ -617,9 +618,9 @@ namespace Redmine.Net.Api
         /// <exception cref="ForbiddenException"></exception>
         /// <exception cref="ConflictException"></exception>
         /// <exception cref="NotAcceptableException"></exception>
-        public Upload UploadFile(byte[] data)
+        public Upload UploadFile(byte[] data, string fileName)
         {
-            var url = UrlHelper.GetUploadFileUrl(this);
+            string url = UrlHelper.GetUploadFileUrl(this, fileName);
             return WebApiHelper.ExecuteUploadFile(this, url, data, "UploadFile");
         }
 

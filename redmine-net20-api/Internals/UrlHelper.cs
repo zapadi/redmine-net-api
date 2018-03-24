@@ -14,12 +14,14 @@
    limitations under the License.
 */
 
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Globalization;
 using Redmine.Net.Api.Exceptions;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Types;
+using Version = Redmine.Net.Api.Types.Version;
 
 namespace Redmine.Net.Api.Internals
 {
@@ -288,6 +290,28 @@ namespace Redmine.Net.Api.Internals
         {
             return string.Format(FORMAT, redmineManager.Host, RedmineKeys.UPLOADS,
                 redmineManager.MimeFormat.ToString().ToLower());
+        }
+
+        /// <summary>
+        /// Gets the upload file URL.
+        /// </summary>
+        /// <param name="redmineManager">The redmine manager.</param>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        public static string GetUploadFileUrl(RedmineManager redmineManager, string fileName)
+        {
+            if (string.IsNullOrEmpty(fileName))
+            {
+                throw new ArgumentNullException("fileName");
+            }
+
+            fileName = Uri.EscapeDataString(fileName);
+
+            string uriString = string.Format(FORMAT, redmineManager.Host, RedmineKeys.UPLOADS,
+                                 redmineManager.MimeFormat.ToString().ToLower()
+            ) + "?filename=" + fileName;
+
+            return Uri.EscapeUriString(uriString);
         }
 
         /// <summary>

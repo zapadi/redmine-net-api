@@ -235,10 +235,11 @@ namespace Redmine.Net.Api.Async
         /// </summary>
         /// <param name="redmineManager">The redmine manager.</param>
         /// <param name="data">The data.</param>
+        /// <param name="fileName"></param>
         /// <returns></returns>
-        public static Task<Upload> UploadFileAsync(this RedmineManager redmineManager, byte[] data)
+        public static Task<Upload> UploadFileAsync(this RedmineManager redmineManager, byte[] data, string fileName)
         {
-            return delegate { return redmineManager.UploadFile(data); };
+            return delegate { return redmineManager.UploadFile(data, fileName); };
         }
 
         /// <summary>
