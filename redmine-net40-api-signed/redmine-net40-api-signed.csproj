@@ -173,10 +173,10 @@
     <Compile Include="..\redmine-net20-api\Types\IdentifiableName.cs">
       <Link>Types\IdentifiableName.cs</Link>
     </Compile>
-    <Compile Include="..\redmine-net20-api\Types\IRedmineManager.cs">
+    <Compile Include="..\redmine-net20-api\IRedmineManager.cs">
       <Link>Types\IRedmineManager.cs</Link>
     </Compile>
-    <Compile Include="..\redmine-net20-api\Types\IRedmineWebClient.cs">
+    <Compile Include="..\redmine-net20-api\IRedmineWebClient.cs">
       <Link>Types\IRedmineWebClient.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net20-api\Types\Issue.cs">

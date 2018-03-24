@@ -36,7 +36,7 @@ namespace Redmine.Net.Api
     /// <summary>
     ///     The main class to access Redmine API.
     /// </summary>
-    public class RedmineManager
+    public class RedmineManager : IRedmineManager
     {
         /// <summary>
         /// </summary>
@@ -515,6 +515,28 @@ namespace Redmine.Net.Api
         /// </summary>
         /// <typeparam name="T">The type of object to create.</typeparam>
         /// <param name="obj">The object to create.</param>
+        /// <returns></returns>
+        /// <exception cref="RedmineException"></exception>
+        /// <exception cref="NotFoundException"></exception>
+        /// <exception cref="InternalServerErrorException"></exception>
+        /// <exception cref="UnauthorizedException"></exception>
+        /// <exception cref="ForbiddenException"></exception>
+        /// <exception cref="ConflictException"></exception>
+        /// <exception cref="NotAcceptableException"></exception>
+        /// <remarks>
+        ///     When trying to create an object with invalid or missing attribute parameters, you will get a 422 Unprocessable
+        ///     Entity response. That means that the object could not be created.
+        /// </remarks>
+        public T CreateObject<T>(T obj) where T : class, new()
+        {
+            return CreateObject(obj, null);
+        }
+
+        /// <summary>
+        ///     Creates a new Redmine object.
+        /// </summary>
+        /// <typeparam name="T">The type of object to create.</typeparam>
+        /// <param name="obj">The object to create.</param>
         /// <param name="ownerId">The owner identifier.</param>
         /// <returns></returns>
         /// <exception cref="RedmineException"></exception>
@@ -654,28 +676,6 @@ namespace Redmine.Net.Api
         public byte[] DownloadFile(string address)
         {
             return WebApiHelper.ExecuteDownloadFile(this, address, "DownloadFile");
-        }
-
-        /// <summary>
-        ///     Creates a new Redmine object.
-        /// </summary>
-        /// <typeparam name="T">The type of object to create.</typeparam>
-        /// <param name="obj">The object to create.</param>
-        /// <returns></returns>
-        /// <exception cref="RedmineException"></exception>
-        /// <exception cref="NotFoundException"></exception>
-        /// <exception cref="InternalServerErrorException"></exception>
-        /// <exception cref="UnauthorizedException"></exception>
-        /// <exception cref="ForbiddenException"></exception>
-        /// <exception cref="ConflictException"></exception>
-        /// <exception cref="NotAcceptableException"></exception>
-        /// <remarks>
-        ///     When trying to create an object with invalid or missing attribute parameters, you will get a 422 Unprocessable
-        ///     Entity response. That means that the object could not be created.
-        /// </remarks>
-        public T CreateObject<T>(T obj) where T : class, new()
-        {
-            return CreateObject(obj, null);
         }
 
         /// <summary>

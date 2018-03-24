@@ -48,10 +48,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-<Compile Include="..\redmine-net20-api\Internals\HashCodeHelper.cs">
+    <Compile Include="..\redmine-net20-api\Internals\HashCodeHelper.cs">
       <Link>Internals\HashCodeHelper.cs</Link>
     </Compile>
-
     <Compile Include="..\redmine-net20-api\Internals\DataHelper.cs">
       <Link>Internals\DataHelper.cs</Link>
     </Compile>
@@ -134,10 +133,9 @@
     <Compile Include="..\redmine-net20-api\types\Error.cs">
       <Link>Types\Error.cs</Link>
     </Compile>
- <Compile Include="..\redmine-net20-api\Types\File.cs">
+    <Compile Include="..\redmine-net20-api\Types\File.cs">
       <Link>Types\File.cs</Link>
     </Compile>
-
     <Compile Include="..\redmine-net20-api\types\Group.cs">
       <Link>Types\Group.cs</Link>
     </Compile>
@@ -150,10 +148,10 @@
     <Compile Include="..\redmine-net20-api\types\IdentifiableName.cs">
       <Link>Types\IdentifiableName.cs</Link>
     </Compile>
-    <Compile Include="..\redmine-net20-api\types\IRedmineManager.cs">
+    <Compile Include="..\redmine-net20-api\IRedmineManager.cs">
       <Link>Types\IRedmineManager.cs</Link>
     </Compile>
-    <Compile Include="..\redmine-net20-api\types\IRedmineWebClient.cs">
+    <Compile Include="..\redmine-net20-api\IRedmineWebClient.cs">
       <Link>Types\IRedmineWebClient.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net20-api\types\Issue.cs">
@@ -300,7 +298,7 @@
     <Compile Include="..\redmine-net40-api\jsonconverters\ErrorConverter.cs">
       <Link>JsonConverters\ErrorConverter.cs</Link>
     </Compile>
-<Compile Include="..\redmine-net40-api\JSonConverters\FileConverter.cs">
+    <Compile Include="..\redmine-net40-api\JSonConverters\FileConverter.cs">
       <Link>JsonConverters\FileConverter.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net40-api\jsonconverters\GroupConverter.cs">
