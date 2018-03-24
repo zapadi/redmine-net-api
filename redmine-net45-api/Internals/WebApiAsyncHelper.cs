@@ -38,7 +38,7 @@ namespace Redmine.Net.Api.Internals
         /// <param name="data">The data.</param>
         /// <param name="methodName">Name of the method.</param>
         /// <returns></returns>
-        public static async Task ExecuteUpload(RedmineManager redmineManager, string address, string actionType, string data,
+        public static async Task<string> ExecuteUpload(RedmineManager redmineManager, string address, string actionType, string data,
             string methodName)
         {
             using (var wc = redmineManager.CreateWebClient(null))
@@ -48,7 +48,7 @@ namespace Redmine.Net.Api.Internals
                     if (actionType == HttpVerbs.POST || actionType == HttpVerbs.DELETE || actionType == HttpVerbs.PUT ||
                         actionType == HttpVerbs.PATCH)
                     {
-                        await wc.UploadStringTaskAsync(address, actionType, data).ConfigureAwait(false);
+                        return await wc.UploadStringTaskAsync(address, actionType, data).ConfigureAwait(false);
                     }
                 }
                 catch (WebException webException)
@@ -56,40 +56,11 @@ namespace Redmine.Net.Api.Internals
                     webException.HandleWebException(methodName, redmineManager.MimeFormat);
                 }
             }
+
+            return null;
         }
 
-        /// <summary>
-        /// Executes the upload.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="redmineManager">The redmine manager.</param>
-        /// <param name="address">The address.</param>
-        /// <param name="actionType">Type of the action.</param>
-        /// <param name="data">The data.</param>
-        /// <param name="methodName">Name of the method.</param>
-        /// <returns></returns>
-        public static async Task<T> ExecuteUpload<T>(RedmineManager redmineManager, string address, string actionType, string data,
-            string methodName)
-            where T : class, new()
-        {
-            using (var wc = redmineManager.CreateWebClient(null))
-            {
-                try
-                {
-                    if (actionType == HttpVerbs.POST || actionType == HttpVerbs.DELETE || actionType == HttpVerbs.PUT ||
-                        actionType == HttpVerbs.PATCH)
-                    {
-                        var response = await wc.UploadStringTaskAsync(address, actionType, data).ConfigureAwait(false);
-                        return RedmineSerializer.Deserialize<T>(response, redmineManager.MimeFormat);
-                    }
-                }
-                catch (WebException webException)
-                {
-                    webException.HandleWebException(methodName, redmineManager.MimeFormat);
-                }
-                return default(T);
-            }
-        }
+        
 
         /// <summary>
         /// Executes the download.
