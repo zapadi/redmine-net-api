@@ -139,6 +139,9 @@ namespace Redmine.Net.Api.Types
         [XmlArrayItem(RedmineKeys.ENABLED_MODULE)]
         public IList<ProjectEnabledModule> EnabledModules { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [XmlArray(RedmineKeys.TIME_ENTRY_ACTIVITIES)]
         [XmlArrayItem(RedmineKeys.TIME_ENTRY_ACTIVITY)]
         public IList<TimeEntryActivity> TimeEntryActivities { get; set; }

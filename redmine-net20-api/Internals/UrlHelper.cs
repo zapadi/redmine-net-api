@@ -293,28 +293,6 @@ namespace Redmine.Net.Api.Internals
         }
 
         /// <summary>
-        /// Gets the upload file URL.
-        /// </summary>
-        /// <param name="redmineManager">The redmine manager.</param>
-        /// <param name="fileName"></param>
-        /// <returns></returns>
-        public static string GetUploadFileUrl(RedmineManager redmineManager, string fileName)
-        {
-            if (string.IsNullOrEmpty(fileName))
-            {
-                throw new ArgumentNullException("fileName");
-            }
-
-            fileName = Uri.EscapeDataString(fileName);
-
-            string uriString = string.Format(FORMAT, redmineManager.Host, RedmineKeys.UPLOADS,
-                                 redmineManager.MimeFormat.ToString().ToLower()
-            ) + "?filename=" + fileName;
-
-            return Uri.EscapeUriString(uriString);
-        }
-
-        /// <summary>
         /// Gets the current user URL.
         /// </summary>
         /// <param name="redmineManager">The redmine manager.</param>

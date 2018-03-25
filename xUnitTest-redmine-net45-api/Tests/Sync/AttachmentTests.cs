@@ -74,7 +74,7 @@ namespace xUnitTestredminenet45api
             var documentData = System.IO.File.ReadAllBytes(AppDomain.CurrentDomain.BaseDirectory + ATTACHMENT_LOCAL_PATH);
 
             //upload attachment to redmine
-            var attachment = fixture.RedmineManager.UploadFile(documentData, ATTACHMENT_LOCAL_PATH);
+            var attachment = fixture.RedmineManager.UploadFile(documentData);
 
             //set attachment properties
             attachment.FileName = ATTACHMENT_NAME;

@@ -45,7 +45,7 @@ namespace Redmine.Net.Api.Types
         List<WikiPage> GetAllWikiPages(string projectId);
         void DeleteWikiPage(string projectId, string pageName);
         
-        Upload UploadFile(byte[] data, string fileName);
+        Upload UploadFile(byte[] data);
         void UpdateAttachment(int issueId, Attachment attachment);
         byte[] DownloadFile(string address);
         
