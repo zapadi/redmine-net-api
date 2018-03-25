@@ -8,11 +8,11 @@
     <owners>Adrian Popescu</owners>
     <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
     <projectUrl>https://github.com/zapadi/redmine-net-api</projectUrl>
-    <iconUrl>https://github.com/zapadi/redmine-net-api/blob/master/logo.png</iconUrl>
+    <iconUrl>https://github.com/zapadi/redmine-net-api/raw/master/logo.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Redmine .NET API is a communication library for Redmine project management application.</description>
     
-    <copyright>Copyright 2011 - 2017</copyright>
+    <copyright>Copyright 2011 - 2018</copyright>
     <language>en-GB</language>
     <tags>Redmine API .NET Signed C#</tags>
   </metadata>
