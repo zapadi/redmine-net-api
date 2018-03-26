@@ -62,7 +62,6 @@ namespace xUnitTestredminenet45api
             Assert.NotNull(savedTimeEntry.SpentOn);
             Assert.True(DateTime.Compare(savedTimeEntry.SpentOn.Value.Date, NEW_TIME_ENTRY_DATE.Date) == 0,
                 "Date is invalid.");
-            Assert.NotNull(savedTimeEntry.Hours);
             Assert.True(savedTimeEntry.Hours == NEW_TIME_ENTRY_HOURS, "Hours value is not valid.");
             Assert.NotNull(savedTimeEntry.Activity);
             Assert.True(savedTimeEntry.Activity.Id == NEW_TIME_ENTRY_ACTIVITY_ID, "Activity id is invalid.");
@@ -103,7 +102,6 @@ namespace xUnitTestredminenet45api
             Assert.IsType<TimeEntry>(timeEntry);
             Assert.NotNull(timeEntry.Project);
             Assert.NotNull(timeEntry.SpentOn);
-            Assert.NotNull(timeEntry.Hours);
             Assert.NotNull(timeEntry.Activity);
         }
 

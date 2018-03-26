@@ -109,7 +109,7 @@ namespace xUnitTestredminenet45api
 		    var savedProject = fixture.RedmineManager.CreateObject(CreateTestProjectWithRequiredPropertiesSet());
 
 		    Assert.NotNull(savedProject);
-		    Assert.NotEqual(savedProject.Id, 0);
+		    Assert.NotEqual(0, savedProject.Id);
 		    Assert.True(savedProject.Name.Equals(PROJECT_NAME), "Project name is invalid.");
 		    Assert.True(savedProject.Identifier.Equals(PROJECT_IDENTIFIER), "Project identifier is invalid.");
 	    }
@@ -120,7 +120,7 @@ namespace xUnitTestredminenet45api
             var savedProject = fixture.RedmineManager.CreateObject(CreateTestProjectWithAllPropertiesSet());
 
             Assert.NotNull(savedProject);
-            Assert.NotEqual(savedProject.Id, 0);
+            Assert.NotEqual(0, savedProject.Id);
             Assert.True(savedProject.Identifier.Equals("rnaptap"), "Project identifier is invalid.");
             Assert.True(savedProject.Name.Equals("Redmine Net Api Project Test All Properties"),
                 "Project name is invalid.");

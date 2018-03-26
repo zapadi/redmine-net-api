@@ -62,7 +62,7 @@ namespace xUnitTestredminenet45api
 			var savedUser = fixture.RedmineManager.CreateObject(CreateTestUserWithRequiredPropertiesSet());
 
 			Assert.NotNull(savedUser);
-			Assert.NotEqual(savedUser.Id, 0);
+			Assert.NotEqual(0, savedUser.Id);
 
 			CREATED_USER_ID = savedUser.Id.ToString();
 
@@ -99,7 +99,7 @@ namespace xUnitTestredminenet45api
 			});
 
 			Assert.NotNull(savedUser);
-			Assert.NotEqual(savedUser.Id, 0);
+			Assert.NotEqual(0, savedUser.Id);
 
 			CREATED_USER_WITH_ALL_PROP_ID = savedUser.Id.ToString();
 
