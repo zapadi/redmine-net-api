@@ -1,15 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6E6E642E-F35A-4EA7-A2D7-16725156BD33}</ProjectGuid>
+    <ProjectGuid>{6CBF5FC3-7783-44E7-90CA-8D12B165B9C3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Redmine.Net.Api</RootNamespace>
-    <AssemblyName>redmine-net451-api-signed</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <AssemblyName>redmine-net452-api-signed</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -20,22 +20,15 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\redmine-net451-api-signed.XML</DocumentationFile>
+    <DocumentationFile>bin\Debug\redmine-net452-api-signed.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>none</DebugType>
+    <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\redmine-net451-api-signed.XML</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>redmine-net-api.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -54,11 +47,11 @@
     <Compile Include="..\redmine-net20-api\Internals\DataHelper.cs">
       <Link>Internals\DataHelper.cs</Link>
     </Compile>
-    <Compile Include="..\redmine-net20-api\Extensions\XmlWriterExtensions.cs">
-      <Link>Extensions\XmlWriterExtensions.cs</Link>
-    </Compile>
     <Compile Include="..\redmine-net20-api\Extensions\NameValueCollectionExtensions.cs">
       <Link>Extensions\NameValueCollectionExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\redmine-net20-api\Extensions\XmlWriterExtensions.cs">
+      <Link>Extensions\XmlWriterExtensions.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net20-api\HttpVerbs.cs">
       <Link>HttpVerbs.cs</Link>
@@ -445,14 +438,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="redmine-net-api.snk" />
+    <None Include="..\redmine-net40-api-signed\redmine-net-api.snk">
+      <Link>redmine-net-api.snk</Link>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

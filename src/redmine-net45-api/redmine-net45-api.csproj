@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{82796546-0F57-425B-BB77-751FA24D49D5}</ProjectGuid>
+    <ProjectGuid>{AEDFD095-F4B0-4630-B41A-9A22169456E9}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Redmine.Net.Api</RootNamespace>
-    <AssemblyName>redmine-net45-api-signed</AssemblyName>
+    <AssemblyName>redmine-net45-api</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -20,7 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\redmine-net45-api-signed.XML</DocumentationFile>
+    <DocumentationFile>bin\Debug\redmine-net45-api.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -29,13 +29,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\redmine-net45-api-signed.XML</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>redmine-net-api.snk</AssemblyOriginatorKeyFile>
+    <DocumentationFile>bin\Release\redmine-net45-api.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugXML|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -77,6 +71,9 @@
     <Compile Include="..\redmine-net20-api\Internals\DataHelper.cs">
       <Link>Internals\DataHelper.cs</Link>
     </Compile>
+    <Compile Include="..\redmine-net20-api\Extensions\XmlWriterExtensions.cs">
+      <Link>Extensions\XmlWriterExtensions.cs</Link>
+    </Compile>
     <Compile Include="..\redmine-net20-api\Extensions\NameValueCollectionExtensions.cs">
       <Link>Extensions\NameValueCollectionExtensions.cs</Link>
     </Compile>
@@ -86,37 +83,34 @@
     <Compile Include="..\redmine-net20-api\Internals\UrlHelper.cs">
       <Link>Internals\UrlHelper.cs</Link>
     </Compile>
-    <Compile Include="..\redmine-net20-api\Extensions\XmlWriterExtensions.cs">
-      <Link>Extensions\XmlWriterExtensions.cs</Link>
-    </Compile>
     <Compile Include="..\redmine-net20-api\Internals\WebApiHelper.cs">
       <Link>Internals\WebApiHelper.cs</Link>
     </Compile>
-    <Compile Include="..\redmine-net20-api\logging\ColorConsoleLogger.cs">
+    <Compile Include="..\redmine-net20-api\Logging\ColorConsoleLogger.cs">
       <Link>Logging\ColorConsoleLogger.cs</Link>
     </Compile>
-    <Compile Include="..\redmine-net20-api\logging\ConsoleLogger.cs">
+    <Compile Include="..\redmine-net20-api\Logging\ConsoleLogger.cs">
       <Link>Logging\ConsoleLogger.cs</Link>
     </Compile>
-    <Compile Include="..\redmine-net20-api\logging\ILogger.cs">
+    <Compile Include="..\redmine-net20-api\Logging\ILogger.cs">
       <Link>Logging\ILogger.cs</Link>
     </Compile>
-    <Compile Include="..\redmine-net20-api\logging\LogEntry.cs">
+    <Compile Include="..\redmine-net20-api\Logging\LogEntry.cs">
       <Link>Logging\LogEntry.cs</Link>
     </Compile>
-    <Compile Include="..\redmine-net20-api\logging\Logger.cs">
+    <Compile Include="..\redmine-net20-api\Logging\Logger.cs">
       <Link>Logging\Logger.cs</Link>
     </Compile>
-    <Compile Include="..\redmine-net20-api\logging\LoggerExtensions.cs">
+    <Compile Include="..\redmine-net20-api\Logging\LoggerExtensions.cs">
       <Link>Logging\LoggerExtensions.cs</Link>
     </Compile>
-    <Compile Include="..\redmine-net20-api\logging\LoggingEventType.cs">
+    <Compile Include="..\redmine-net20-api\Logging\LoggingEventType.cs">
       <Link>Logging\LoggingEventType.cs</Link>
     </Compile>
-    <Compile Include="..\redmine-net20-api\logging\RedmineConsoleTraceListener.cs">
+    <Compile Include="..\redmine-net20-api\Logging\RedmineConsoleTraceListener.cs">
       <Link>Logging\RedmineConsoleTraceListener.cs</Link>
     </Compile>
-    <Compile Include="..\redmine-net20-api\logging\TraceLogger.cs">
+    <Compile Include="..\redmine-net20-api\Logging\TraceLogger.cs">
       <Link>Logging\TraceLogger.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net20-api\RedmineKeys.cs">
@@ -200,9 +194,6 @@
     </Compile>
     <Compile Include="..\redmine-net20-api\Types\IssueStatus.cs">
       <Link>Types\IssueStatus.cs</Link>
-    </Compile>
-    <Compile Include="..\redmine-net20-api\Types\IValue.cs">
-      <Link>Types\IValue.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net20-api\Types\Journal.cs">
       <Link>Types\Journal.cs</Link>
@@ -298,147 +289,140 @@
       <Link>Internals\RedmineSerializerJson.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net40-api\JSonConverters\AttachmentConverter.cs">
-      <Link>JsonConverters\AttachmentConverter.cs</Link>
+      <Link>JSonConverters\AttachmentConverter.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net40-api\JSonConverters\AttachmentsConverter.cs">
-      <Link>JsonConverters\AttachmentsConverter.cs</Link>
+      <Link>JSonConverters\AttachmentsConverter.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net40-api\JSonConverters\ChangeSetConverter.cs">
-      <Link>JsonConverters\ChangeSetConverter.cs</Link>
+      <Link>JSonConverters\ChangeSetConverter.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net40-api\JSonConverters\CustomFieldConverter.cs">
-      <Link>JsonConverters\CustomFieldConverter.cs</Link>
+      <Link>JSonConverters\CustomFieldConverter.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net40-api\JSonConverters\CustomFieldPossibleValueConverter.cs">
-      <Link>JsonConverters\CustomFieldPossibleValueConverter.cs</Link>
+      <Link>JSonConverters\CustomFieldPossibleValueConverter.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net40-api\JSonConverters\CustomFieldRoleConverter.cs">
-      <Link>JsonConverters\CustomFieldRoleConverter.cs</Link>
+      <Link>JSonConverters\CustomFieldRoleConverter.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net40-api\JSonConverters\DetailConverter.cs">
-      <Link>JsonConverters\DetailConverter.cs</Link>
+      <Link>JSonConverters\DetailConverter.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net40-api\JSonConverters\ErrorConverter.cs">
-      <Link>JsonConverters\ErrorConverter.cs</Link>
+      <Link>JSonConverters\ErrorConverter.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net40-api\JSonConverters\FileConverter.cs">
       <Link>JsonConverters\FileConverter.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net40-api\JSonConverters\GroupConverter.cs">
-      <Link>JsonConverters\GroupConverter.cs</Link>
+      <Link>JSonConverters\GroupConverter.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net40-api\JSonConverters\GroupUserConverter.cs">
-      <Link>JsonConverters\GroupUserConverter.cs</Link>
+      <Link>JSonConverters\GroupUserConverter.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net40-api\JSonConverters\IdentifiableNameConverter.cs">
-      <Link>JsonConverters\IdentifiableNameConverter.cs</Link>
+      <Link>JSonConverters\IdentifiableNameConverter.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net40-api\JSonConverters\IssueCategoryConverter.cs">
-      <Link>JsonConverters\IssueCategoryConverter.cs</Link>
+      <Link>JSonConverters\IssueCategoryConverter.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net40-api\JSonConverters\IssueChildConverter.cs">
-      <Link>JsonConverters\IssueChildConverter.cs</Link>
+      <Link>JSonConverters\IssueChildConverter.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net40-api\JSonConverters\IssueConverter.cs">
-      <Link>JsonConverters\IssueConverter.cs</Link>
+      <Link>JSonConverters\IssueConverter.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net40-api\JSonConverters\IssueCustomFieldConverter.cs">
-      <Link>JsonConverters\IssueCustomFieldConverter.cs</Link>
+      <Link>JSonConverters\IssueCustomFieldConverter.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net40-api\JSonConverters\IssuePriorityConverter.cs">
-      <Link>JsonConverters\IssuePriorityConverter.cs</Link>
+      <Link>JSonConverters\IssuePriorityConverter.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net40-api\JSonConverters\IssueRelationConverter.cs">
-      <Link>JsonConverters\IssueRelationConverter.cs</Link>
+      <Link>JSonConverters\IssueRelationConverter.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net40-api\JSonConverters\IssueStatusConverter.cs">
-      <Link>JsonConverters\IssueStatusConverter.cs</Link>
+      <Link>JSonConverters\IssueStatusConverter.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net40-api\JSonConverters\JournalConverter.cs">
-      <Link>JsonConverters\JournalConverter.cs</Link>
+      <Link>JSonConverters\JournalConverter.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net40-api\JSonConverters\MembershipConverter.cs">
-      <Link>JsonConverters\MembershipConverter.cs</Link>
+      <Link>JSonConverters\MembershipConverter.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net40-api\JSonConverters\MembershipRoleConverter.cs">
-      <Link>JsonConverters\MembershipRoleConverter.cs</Link>
+      <Link>JSonConverters\MembershipRoleConverter.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net40-api\JSonConverters\NewsConverter.cs">
-      <Link>JsonConverters\NewsConverter.cs</Link>
+      <Link>JSonConverters\NewsConverter.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net40-api\JSonConverters\PermissionConverter.cs">
-      <Link>JsonConverters\PermissionConverter.cs</Link>
+      <Link>JSonConverters\PermissionConverter.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net40-api\JSonConverters\ProjectConverter.cs">
-      <Link>JsonConverters\ProjectConverter.cs</Link>
+      <Link>JSonConverters\ProjectConverter.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net40-api\JSonConverters\ProjectEnabledModuleConverter.cs">
-      <Link>JsonConverters\ProjectEnabledModuleConverter.cs</Link>
+      <Link>JSonConverters\ProjectEnabledModuleConverter.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net40-api\JSonConverters\ProjectIssueCategoryConverter.cs">
-      <Link>JsonConverters\ProjectIssueCategoryConverter.cs</Link>
+      <Link>JSonConverters\ProjectIssueCategoryConverter.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net40-api\JSonConverters\ProjectMembershipConverter.cs">
-      <Link>JsonConverters\ProjectMembershipConverter.cs</Link>
+      <Link>JSonConverters\ProjectMembershipConverter.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net40-api\JSonConverters\ProjectTrackerConverter.cs">
-      <Link>JsonConverters\ProjectTrackerConverter.cs</Link>
+      <Link>JSonConverters\ProjectTrackerConverter.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net40-api\JSonConverters\QueryConverter.cs">
-      <Link>JsonConverters\QueryConverter.cs</Link>
+      <Link>JSonConverters\QueryConverter.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net40-api\JSonConverters\RoleConverter.cs">
-      <Link>JsonConverters\RoleConverter.cs</Link>
+      <Link>JSonConverters\RoleConverter.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net40-api\JSonConverters\TimeEntryActivityConverter.cs">
-      <Link>JsonConverters\TimeEntryActivityConverter.cs</Link>
+      <Link>JSonConverters\TimeEntryActivityConverter.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net40-api\JSonConverters\TimeEntryConverter.cs">
-      <Link>JsonConverters\TimeEntryConverter.cs</Link>
+      <Link>JSonConverters\TimeEntryConverter.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net40-api\JSonConverters\TrackerConverter.cs">
-      <Link>JsonConverters\TrackerConverter.cs</Link>
+      <Link>JSonConverters\TrackerConverter.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net40-api\JSonConverters\TrackerCustomFieldConverter.cs">
-      <Link>JsonConverters\TrackerCustomFieldConverter.cs</Link>
+      <Link>JSonConverters\TrackerCustomFieldConverter.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net40-api\JSonConverters\UploadConverter.cs">
-      <Link>JsonConverters\UploadConverter.cs</Link>
+      <Link>JSonConverters\UploadConverter.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net40-api\JSonConverters\UserConverter.cs">
-      <Link>JsonConverters\UserConverter.cs</Link>
+      <Link>JSonConverters\UserConverter.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net40-api\JSonConverters\UserGroupConverter.cs">
-      <Link>JsonConverters\UserGroupConverter.cs</Link>
+      <Link>JSonConverters\UserGroupConverter.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net40-api\JSonConverters\VersionConverter.cs">
-      <Link>JsonConverters\VersionConverter.cs</Link>
+      <Link>JSonConverters\VersionConverter.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net40-api\JSonConverters\WatcherConverter.cs">
-      <Link>JsonConverters\WatcherConverter.cs</Link>
+      <Link>JSonConverters\WatcherConverter.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net40-api\JSonConverters\WikiPageConverter.cs">
-      <Link>JsonConverters\WikiPageConverter.cs</Link>
+      <Link>JSonConverters\WikiPageConverter.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net40-api\MimeFormat.cs">
       <Link>MimeFormat.cs</Link>
     </Compile>
-    <Compile Include="..\redmine-net45-api\Async\RedmineManagerAsync.cs">
-      <Link>Async\RedmineManagerAsync.cs</Link>
-    </Compile>
-    <Compile Include="..\redmine-net45-api\Extensions\DisposableExtension.cs">
-      <Link>Extensions\DisposableExtension.cs</Link>
-    </Compile>
-    <Compile Include="..\redmine-net45-api\Extensions\FunctionalExtensions.cs">
-      <Link>Extensions\FunctionalExtensions.cs</Link>
-    </Compile>
-    <Compile Include="..\redmine-net45-api\Extensions\TaskExtensions.cs">
-      <Link>Extensions\TaskExtensions.cs</Link>
-    </Compile>
-    <Compile Include="..\redmine-net45-api\Internals\WebApiAsyncHelper.cs">
-      <Link>Internals\WebApiAsyncHelper.cs</Link>
-    </Compile>
+    <Compile Include="Extensions\DisposableExtension.cs" />
+    <Compile Include="Extensions\FunctionalExtensions.cs" />
+    <Compile Include="Extensions\TaskExtensions.cs" />
+    <Compile Include="Internals\WebApiAsyncHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Async\RedmineManagerAsync.cs" />
+    <Compile Include="..\redmine-net20-api\Types\IValue.cs">
+      <Link>Types\IValue.cs</Link>
+    </Compile>
     <Compile Include="..\redmine-net20-api\Exceptions\NotFoundException.cs">
       <Link>Exceptions\NotFoundException.cs</Link>
     </Compile>
@@ -452,7 +436,7 @@
       <Link>Exceptions\NameResolutionFailureException.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net20-api\Exceptions\InternalServerErrorException.cs">
-      <Link>InternalServerErrorException.cs</Link>
+      <Link>Exceptions\InternalServerErrorException.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net20-api\Exceptions\UnauthorizedException.cs">
       <Link>Exceptions\UnauthorizedException.cs</Link>
@@ -466,9 +450,6 @@
     <Compile Include="..\redmine-net20-api\Exceptions\NotAcceptableException.cs">
       <Link>Exceptions\NotAcceptableException.cs</Link>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="redmine-net-api.snk" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

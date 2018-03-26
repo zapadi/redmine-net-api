@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{DA3E3C1B-2C01-4FB5-968B-3769BBF382BD}</ProjectGuid>
+    <ProjectGuid>{0E6B9B72-445D-4E71-8D29-48C4A009AB03}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Redmine.Net.Api</RootNamespace>
