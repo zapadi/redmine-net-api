@@ -22,7 +22,7 @@ namespace Redmine.Net.Api.Logging
     /// <summary>
     /// 
     /// </summary>
-    public class TraceLogger : ILogger
+    public sealed class TraceLogger : ILogger
     {
         /// <summary>
         /// Logs the specified entry.

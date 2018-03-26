@@ -22,7 +22,7 @@ namespace Redmine.Net.Api.Logging
     /// 
     /// </summary>
     /// <seealso cref="Redmine.Net.Api.Logging.ILogger" />
-    public class ColorConsoleLogger : ILogger
+    public sealed class ColorConsoleLogger : ILogger
     {
         private static readonly object locker = new object();
         private readonly ConsoleColor? defaultConsoleColor = null;

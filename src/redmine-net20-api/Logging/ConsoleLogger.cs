@@ -22,7 +22,7 @@ namespace Redmine.Net.Api.Logging
     /// 
     /// </summary>
     /// <seealso cref="Redmine.Net.Api.Logging.ILogger" />
-    public class ConsoleLogger : ILogger
+    public sealed class ConsoleLogger : ILogger
     {
         private static readonly object locker = new object();
         /// <summary>

@@ -22,7 +22,7 @@ namespace Redmine.Net.Api.Logging
     /// <summary>
     /// 
     /// </summary>
-	public class RedmineConsoleTraceListener : TraceListener
+	public sealed class RedmineConsoleTraceListener : TraceListener
 	{
 		#region implemented abstract members of TraceListener
 

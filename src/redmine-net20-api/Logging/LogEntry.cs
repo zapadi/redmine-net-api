@@ -21,7 +21,7 @@ namespace Redmine.Net.Api.Logging
     /// <summary>
     /// 
     /// </summary>
-    public class LogEntry
+    public sealed class LogEntry
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="LogEntry" /> class.

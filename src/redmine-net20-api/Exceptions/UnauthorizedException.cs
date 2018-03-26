@@ -23,7 +23,7 @@ namespace Redmine.Net.Api.Exceptions
     /// Thrown in case something went wrong while trying to login.
     /// </summary>
     /// <seealso cref="Redmine.Net.Api.Exceptions.RedmineException" />
-    public class UnauthorizedException : RedmineException
+    public sealed class UnauthorizedException : RedmineException
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="UnauthorizedException" /> class.
@@ -72,22 +72,6 @@ namespace Redmine.Net.Api.Exceptions
         /// <param name="args">The arguments.</param>
         public UnauthorizedException(string format, Exception innerException, params object[] args)
             : base(string.Format(format, args), innerException)
-        {
-        }
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="UnauthorizedException" /> class.
-        /// </summary>
-        /// <param name="info">
-        ///     The <see cref="T:System.Runtime.Serialization.SerializationInfo" /> that holds the serialized object
-        ///     data about the exception being thrown.
-        /// </param>
-        /// <param name="context">
-        ///     The <see cref="T:System.Runtime.Serialization.StreamingContext" /> that contains contextual
-        ///     information about the source or destination.
-        /// </param>
-        protected UnauthorizedException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
         {
         }
     }

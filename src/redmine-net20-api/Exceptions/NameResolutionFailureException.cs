@@ -22,7 +22,7 @@ namespace Redmine.Net.Api.Exceptions
     /// <summary>
     /// </summary>
     /// <seealso cref="Redmine.Net.Api.Exceptions.RedmineException" />
-    public class NameResolutionFailureException : RedmineException
+    public sealed class NameResolutionFailureException : RedmineException
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="NameResolutionFailureException" /> class.
@@ -71,14 +71,5 @@ namespace Redmine.Net.Api.Exceptions
         {
         }
 
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="NameResolutionFailureException" /> class.
-        /// </summary>
-        /// <param name="info"></param>
-        /// <param name="context"></param>
-        protected NameResolutionFailureException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-        }
     }
 }

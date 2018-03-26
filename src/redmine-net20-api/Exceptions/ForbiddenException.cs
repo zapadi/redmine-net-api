@@ -22,7 +22,7 @@ namespace Redmine.Net.Api.Exceptions
     /// <summary>
     /// </summary>
     /// <seealso cref="Redmine.Net.Api.Exceptions.RedmineException" />
-    public class ForbiddenException : RedmineException
+    public sealed class ForbiddenException : RedmineException
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="ForbiddenException" /> class.
@@ -71,14 +71,5 @@ namespace Redmine.Net.Api.Exceptions
         {
         }
 
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="ForbiddenException" /> class.
-        /// </summary>
-        /// <param name="info"></param>
-        /// <param name="context"></param>
-        protected ForbiddenException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-        }
     }
 }

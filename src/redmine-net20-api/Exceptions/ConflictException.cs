@@ -22,7 +22,7 @@ namespace Redmine.Net.Api.Exceptions
     /// <summary>
     /// </summary>
     /// <seealso cref="Redmine.Net.Api.Exceptions.RedmineException" />
-    public class ConflictException : RedmineException
+    public sealed class ConflictException : RedmineException
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="ConflictException" /> class.
@@ -71,14 +71,5 @@ namespace Redmine.Net.Api.Exceptions
         {
         }
 
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="ConflictException" /> class.
-        /// </summary>
-        /// <param name="info"></param>
-        /// <param name="context"></param>
-        protected ConflictException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-        }
     }
 }

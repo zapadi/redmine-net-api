@@ -22,7 +22,7 @@ namespace Redmine.Net.Api.Exceptions
     /// <summary>
     /// </summary>
     /// <seealso cref="Redmine.Net.Api.Exceptions.RedmineException" />
-    public class NotAcceptableException : RedmineException
+    public sealed class NotAcceptableException : RedmineException
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="NotAcceptableException" /> class.
@@ -71,14 +71,5 @@ namespace Redmine.Net.Api.Exceptions
         {
         }
 
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="NotAcceptableException" /> class.
-        /// </summary>
-        /// <param name="info"></param>
-        /// <param name="context"></param>
-        protected NotAcceptableException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-        }
     }
 }
