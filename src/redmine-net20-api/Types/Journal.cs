@@ -57,6 +57,9 @@ namespace Redmine.Net.Api.Types
         [XmlElement(RedmineKeys.CREATED_ON, IsNullable = true)]
         public DateTime? CreatedOn { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [XmlElement(RedmineKeys.PRIVATE_NOTES)]
         public bool PrivateNotes { get;  set; }
 

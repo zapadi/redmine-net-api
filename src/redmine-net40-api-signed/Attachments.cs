@@ -19,6 +19,9 @@ using Redmine.Net.Api.Types;
 
 namespace Redmine.Net.Api
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class Attachments : Dictionary<int, Attachment>
     {
 

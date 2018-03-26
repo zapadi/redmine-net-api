@@ -27,11 +27,17 @@ namespace Redmine.Net.Api
     {
         private const string UA = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:8.0) Gecko/20100101 Firefox/8.0";
 
+        /// <summary>
+        /// 
+        /// </summary>
         public RedmineWebClient()
         {
             UserAgent = UA;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public string UserAgent { get; set; }
 
         /// <summary>

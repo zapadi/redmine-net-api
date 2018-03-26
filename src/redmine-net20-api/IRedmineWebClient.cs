@@ -21,30 +21,69 @@ using System.Net.Cache;
 
 namespace Redmine.Net.Api.Types
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public interface IRedmineWebClient
     {
+        /// <summary>
+        /// 
+        /// </summary>
         string UserAgent { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         bool UseProxy { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         bool UseCookies { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         TimeSpan? Timeout { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         CookieContainer CookieContainer { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         bool PreAuthenticate { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         bool KeepAlive { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         NameValueCollection QueryString { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         bool UseDefaultCredentials { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         ICredentials Credentials { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         IWebProxy Proxy { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         RequestCachePolicy CachePolicy { get; set; }
     }
 }

@@ -629,7 +629,6 @@ namespace Redmine.Net.Api
         ///     Upload a file to server.
         /// </summary>
         /// <param name="data">The content of the file that will be uploaded on server.</param>
-        /// <param name="fileName"></param>
         /// <returns>
         ///     Returns the token for uploaded file.
         /// </returns>
