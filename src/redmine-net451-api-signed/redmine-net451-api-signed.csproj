@@ -400,19 +400,19 @@
     <Compile Include="..\redmine-net40-api\MimeFormat.cs">
       <Link>MimeFormat.cs</Link>
     </Compile>
-    <Compile Include="..\redmine-net45-api\async\RedmineManagerAsync.cs">
+    <Compile Include="..\redmine-net450-api\async\RedmineManagerAsync.cs">
       <Link>Async\RedmineManagerAsync.cs</Link>
     </Compile>
-    <Compile Include="..\redmine-net45-api\extensions\DisposableExtension.cs">
+    <Compile Include="..\redmine-net450-api\extensions\DisposableExtension.cs">
       <Link>Extensions\DisposableExtension.cs</Link>
     </Compile>
-    <Compile Include="..\redmine-net45-api\extensions\FunctionalExtensions.cs">
+    <Compile Include="..\redmine-net450-api\extensions\FunctionalExtensions.cs">
       <Link>Extensions\FunctionalExtensions.cs</Link>
     </Compile>
-    <Compile Include="..\redmine-net45-api\extensions\TaskExtensions.cs">
+    <Compile Include="..\redmine-net450-api\extensions\TaskExtensions.cs">
       <Link>Extensions\TaskExtensions.cs</Link>
     </Compile>
-    <Compile Include="..\redmine-net45-api\Internals\WebApiAsyncHelper.cs">
+    <Compile Include="..\redmine-net450-api\Internals\WebApiAsyncHelper.cs">
       <Link>Internals\WebApiAsyncHelper.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
