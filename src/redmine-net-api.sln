@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "redmine-net452-api-signed",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "redmine-net-api.Tests", "Y:\Redmine\redmine-net-api\src\redmine-net-api.Tests\redmine-net-api.Tests.csproj", "{900EF0B3-0233-45DA-811F-4C59483E8452}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "redmine-net-api.TestConsole", "redmine-net-api.TestConsole\redmine-net-api.TestConsole.csproj", "{5A5D51BC-2800-44B4-9E12-05264BDCEBF7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -115,6 +117,14 @@ Global
 		{900EF0B3-0233-45DA-811F-4C59483E8452}.DebugXML|Any CPU.Build.0 = Debug|Any CPU
 		{900EF0B3-0233-45DA-811F-4C59483E8452}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{900EF0B3-0233-45DA-811F-4C59483E8452}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A5D51BC-2800-44B4-9E12-05264BDCEBF7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A5D51BC-2800-44B4-9E12-05264BDCEBF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A5D51BC-2800-44B4-9E12-05264BDCEBF7}.DebugJSON|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A5D51BC-2800-44B4-9E12-05264BDCEBF7}.DebugJSON|Any CPU.Build.0 = Debug|Any CPU
+		{5A5D51BC-2800-44B4-9E12-05264BDCEBF7}.DebugXML|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A5D51BC-2800-44B4-9E12-05264BDCEBF7}.DebugXML|Any CPU.Build.0 = Debug|Any CPU
+		{5A5D51BC-2800-44B4-9E12-05264BDCEBF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A5D51BC-2800-44B4-9E12-05264BDCEBF7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -130,6 +140,7 @@ Global
 		{4EE7D8D8-AA65-442B-A928-580B4604B9AF} = {0DFF4758-5C19-4D8F-BA6C-76E618323F6A}
 		{6CBF5FC3-7783-44E7-90CA-8D12B165B9C3} = {0DFF4758-5C19-4D8F-BA6C-76E618323F6A}
 		{900EF0B3-0233-45DA-811F-4C59483E8452} = {F3F4278D-6271-4F77-BA88-41555D53CBD1}
+		{5A5D51BC-2800-44B4-9E12-05264BDCEBF7} = {F3F4278D-6271-4F77-BA88-41555D53CBD1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4AA87D90-ABD0-4793-BE47-955B35FAE2BB}
