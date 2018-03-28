@@ -30,6 +30,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>redmine-net-api.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -438,9 +444,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\redmine-net40-api-signed\redmine-net-api.snk">
-      <Link>redmine-net-api.snk</Link>
-    </None>
+    <None Include="redmine-net-api.snk" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
