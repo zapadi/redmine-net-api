@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Runtime.Remoting;
+using redmine.net.api.Tests.Infrastructure;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Exceptions;
 using Xunit;
 
-namespace xUnitTestredminenet45api.Tests
+namespace redmine.net.api.Tests.Tests
 {
     [Trait("Redmine-api", "Credentials")]
     [Collection("RedmineCollection")]

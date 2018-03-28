@@ -14,10 +14,11 @@
    limitations under the License.
 */
 
+using redmine.net.api.Tests.Infrastructure;
 using Redmine.Net.Api.Types;
 using Xunit;
 
-namespace xUnitTestredminenet45api
+namespace redmine.net.api.Tests.Tests.Sync
 {
 	[Trait("Redmine-Net-Api", "Roles")]
 	[Collection("RedmineCollection")]

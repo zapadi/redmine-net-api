@@ -1,11 +1,11 @@
-﻿using Xunit;
+﻿using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Threading.Tasks;
 using Redmine.Net.Api.Async;
 using Redmine.Net.Api.Types;
-using System.Threading.Tasks;
-using System.Collections.Specialized;
-using System.Collections.Generic;
+using Xunit;
 
-namespace xUnitTestredminenet45api
+namespace redmine.net.api.Tests.Tests.Async
 {
 	[Collection("RedmineCollection")]
 	public class IssueAsyncTests

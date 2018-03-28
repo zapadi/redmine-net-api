@@ -17,13 +17,13 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.IO;
+using redmine.net.api.Tests.Infrastructure;
 using Redmine.Net.Api;
+using Redmine.Net.Api.Exceptions;
 using Redmine.Net.Api.Types;
 using Xunit;
-using Redmine.Net.Api.Exceptions;
 
-namespace xUnitTestredminenet45api
+namespace redmine.net.api.Tests.Tests.Sync
 {
     [Trait("Redmine-Net-Api", "Attachments")]
     [Collection("RedmineCollection")]

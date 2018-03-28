@@ -1,6 +1,6 @@
 ﻿using Xunit;
 
-namespace xUnitTestredminenet45api
+namespace redmine.net.api.Tests.Infrastructure
 {
 	[CollectionDefinition("RedmineCollection")]
 	public class RedmineCollection : ICollectionFixture<RedmineFixture>

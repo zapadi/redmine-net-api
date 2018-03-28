@@ -16,13 +16,14 @@
 
 using System;
 using System.Collections.Specialized;
+using redmine.net.api.Tests.Infrastructure;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Exceptions;
 using Redmine.Net.Api.Types;
 using Xunit;
 using Version = Redmine.Net.Api.Types.Version;
 
-namespace xUnitTestredminenet45api
+namespace redmine.net.api.Tests.Tests.Sync
 {
 	[Trait("Redmine-Net-Api", "Versions")]
 	[Collection("RedmineCollection")]

@@ -1,5 +1,5 @@
 ﻿using System.Reflection;
-using xUnitTestredminenet45api;
+using redmine.net.api.Tests.Infrastructure;
 using Xunit;
 
 // Information about this assembly is defined by the following attributes.

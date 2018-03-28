@@ -5,15 +5,15 @@ using System.Reflection;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace xUnitTestredminenet45api
+namespace redmine.net.api.Tests.Infrastructure
 {
     /// <summary>
     ///     Custom xUnit test collection orderer that uses the OrderAttribute
     /// </summary>
     public class CollectionOrderer : ITestCollectionOrderer
     {
-        public const string TYPE_NAME = "xUnitTestredminenet45api.CollectionOrderer";
-        public const string ASSEMBY_NAME = "xUnitTest-redmine-net45-api";
+        public const string TYPE_NAME = "redmine.net.api.Tests.Infrastructure.CollectionOrderer";
+        public const string ASSEMBY_NAME = "redmine-net-api.Tests";
 
         public IEnumerable<ITestCollection> OrderTestCollections(IEnumerable<ITestCollection> testCollections)
         {

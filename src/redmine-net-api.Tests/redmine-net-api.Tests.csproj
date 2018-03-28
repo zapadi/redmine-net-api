@@ -8,8 +8,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{900EF0B3-0233-45DA-811F-4C59483E8452}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>xUnitTestredminenet45api</RootNamespace>
-    <AssemblyName>xUnitTest-redmine-net45-api</AssemblyName>
+    <RootNamespace>redmine.net.api.Tests</RootNamespace>
+    <AssemblyName>redmine-net-api.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>

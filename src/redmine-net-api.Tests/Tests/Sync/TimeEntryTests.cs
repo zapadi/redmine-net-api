@@ -15,11 +15,12 @@
 */
 
 using System;
+using redmine.net.api.Tests.Infrastructure;
 using Redmine.Net.Api.Exceptions;
 using Redmine.Net.Api.Types;
 using Xunit;
 
-namespace xUnitTestredminenet45api
+namespace redmine.net.api.Tests.Tests.Sync
 {
 	[Trait("Redmine-Net-Api", "TimeEntries")]
 	[Collection("RedmineCollection")]

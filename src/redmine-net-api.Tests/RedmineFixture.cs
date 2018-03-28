@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using Redmine.Net.Api;
 
-namespace xUnitTestredminenet45api
+namespace redmine.net.api.Tests
 {
 	public class RedmineFixture
 	{

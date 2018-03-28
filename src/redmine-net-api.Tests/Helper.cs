@@ -1,6 +1,6 @@
 ﻿using System.Configuration;
 
-namespace xUnitTestredminenet45api
+namespace redmine.net.api.Tests
 {
 	internal static class Helper
 	{
