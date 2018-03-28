@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace redmine_net_api.TestConsole
+﻿namespace redmine.net.api.TestConsole
 {
     class Program
     {

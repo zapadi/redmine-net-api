@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{5A5D51BC-2800-44B4-9E12-05264BDCEBF7}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>redmine_net_api.TestConsole</RootNamespace>
+    <RootNamespace>redmine.net.api.TestConsole</RootNamespace>
     <AssemblyName>redmine-net-api.TestConsole</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
