@@ -1,0 +1,71 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>    
+    <TargetFrameworks>net20;net30</TargetFrameworks>   
+
+    <RootNamespace>Redmine.Net.Api</RootNamespace>
+    <Product>redmine-net-api</Product>
+    <PackageId>redmine-net-api</PackageId>
+    <title>Redmine .NET API</title>
+    <Authors>Adrian Popescu</Authors>
+    <Company></Company>
+    <Owners>Adrian Popescu</Owners>
+    <LicenseUrl>http://www.apache.org/licenses/LICENSE-2.0</LicenseUrl>
+    <ProjectUrl>https://github.com/zapadi/redmine-net-api</ProjectUrl>
+    <IconUrl>https://github.com/zapadi/redmine-net-api/raw/master/logo.png</IconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <Description>Redmine .NET API is a communication library for Redmine project management application.</Description>
+    <Copyright>Copyright 2011 - 2018</Copyright>
+    <Language>en-GB</Language>
+    <Tags>Redmine API .NET C#</Tags>
+    
+    <Version>$(GitVersion_NuGetVersion)</Version>
+    
+    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+    <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
+    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>    
+  </PropertyGroup>
+
+  <Choose>
+    <When Condition="'$(Configuration)' == 'Release'">
+      <PropertyGroup>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+  
+  <!-- <Target Name="WriteVersion" AfterTargets="GetVersion">
+    <WriteLinesToFile File="$(SolutionDir)\obj\version.txt" Lines="$(GitVersion_NuGetVersion)" Overwrite="true" />
+  </Target>
+  <Target Name="SetPackageVersionFromFile" BeforeTargets="GenerateNuspec">
+    <ReadLinesFromFile File="$(SolutionDir)\obj\version.txt">
+      <Output TaskParameter="Lines" PropertyName="PackageVersion" />
+    </ReadLinesFromFile>
+  </Target> -->
+
+  <!-- <Target Name="PublishToNugetWithAPIKey" AfterTargets="GenerateNuspec">
+    <ReadLinesFromFile File="$(SolutionDir)\..\..\nugetapikey.txt">
+      <Output TaskParameter="Lines" PropertyName="NugetAPIKey" />
+    </ReadLinesFromFile>
+    <Exec WorkingDirectory="$(BaseDir)" Command="dotnet nuget push $(PackageOutputAbsolutePath)$(PackageId).$(PackageVersion).nupkg -k $(NugetAPIKey) -s https://api.nuget.org/v3/index.json" />
+  </Target> -->
+
+  <ItemGroup>
+    <PackageReference Include="GitVersionTask" Version="4.0.0-beta0008">
+      <PrivateAssets>All</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+  
+  <Content Remove="rest\**\*" />
+  <Content Remove="redmine-net-api.TestConsole\**\*" />
+  <Content Remove="redmine-net-api.Tests\**\*" />
+</ItemGroup>
+
+</Project>
