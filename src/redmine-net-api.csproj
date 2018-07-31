@@ -1,7 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>    
-    <TargetFrameworks>net20;net30</TargetFrameworks>   
+    <TargetFrameworks>net451;net452;net20;netcoreapp2.0;</TargetFrameworks>
+
+    <!--<TargetFramework>netcoreapp2.0</TargetFramework>-->
 
     <RootNamespace>Redmine.Net.Api</RootNamespace>
     <Product>redmine-net-api</Product>
@@ -19,11 +21,13 @@
     <Language>en-GB</Language>
     <Tags>Redmine API .NET C#</Tags>
     
-    <Version>$(GitVersion_NuGetVersion)</Version>
-    
+    <Version>$(GitVersion_NuGetVersion)</Version>  
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
     <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
-    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>    
+    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+
+    <JSON Condition="'$(TargetFramework)' != 'net20' AND '$(TargetFramework)' != 'netcoreapp2.0'">JSON</JSON>
+    <DefineConstants>$(JSON)</DefineConstants>
   </PropertyGroup>
 
   <Choose>
@@ -38,6 +42,14 @@
       </PropertyGroup>
     </Otherwise>
   </Choose>
+
+  <ItemGroup>
+    <Reference Include="System.Web.Extensions" Condition="'$(JSON)' == 'JSON'" />
+    <Compile Remove="JSonConverters\**" Condition="'$(JSON)' != 'JSON'" />
+    <None Remove="JSonConverters\**" Condition="'$(JSON)' != 'JSON'" />
+  </ItemGroup>
+
+ 
   
   <!-- <Target Name="WriteVersion" AfterTargets="GetVersion">
     <WriteLinesToFile File="$(SolutionDir)\obj\version.txt" Lines="$(GitVersion_NuGetVersion)" Overwrite="true" />
@@ -55,17 +67,15 @@
     <Exec WorkingDirectory="$(BaseDir)" Command="dotnet nuget push $(PackageOutputAbsolutePath)$(PackageId).$(PackageVersion).nupkg -k $(NugetAPIKey) -s https://api.nuget.org/v3/index.json" />
   </Target> -->
 
-  <ItemGroup>
-    <PackageReference Include="GitVersionTask" Version="4.0.0-beta0008">
+  <ItemGroup> 
+    <!--<PackageReference Include="GitVersionTask" Version="4.0.0-beta0008">
       <PrivateAssets>All</PrivateAssets>
-    </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup>
+    </PackageReference>--> 
+    
+  </ItemGroup>   
   
-  <Content Remove="rest\**\*" />
-  <Content Remove="redmine-net-api.TestConsole\**\*" />
-  <Content Remove="redmine-net-api.Tests\**\*" />
-</ItemGroup>
-
+  
+  <ItemGroup>
+    <None Remove="redmine-net-api.sln.DotSettings" />
+  </ItemGroup> 
 </Project>

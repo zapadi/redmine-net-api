@@ -83,7 +83,7 @@ namespace Redmine.Net.Api
         ///     or
         ///     The host is not valid!
         /// </exception>
-        public RedmineManager(string host, MimeFormat mimeFormat = MimeFormat.Xml, bool verifyServerCert = true,
+        public RedmineManager(string host, MimeFormat mimeFormat = MimeFormat.xml, bool verifyServerCert = true,
             IWebProxy proxy = null, SecurityProtocolType securityProtocolType = default(SecurityProtocolType))
         {
             if (string.IsNullOrEmpty(host)) throw new RedmineException("Host is not defined!");
@@ -126,7 +126,7 @@ namespace Redmine.Net.Api
         /// <param name="verifyServerCert">if set to <c>true</c> [verify server cert].</param>
         /// <param name="proxy">The proxy.</param>
         /// <param name="securityProtocolType">Use this parameter to specify a SecurityProtcolType. Note: it is recommended to leave this parameter at its default value as this setting also affects the calling application process.</param>
-        public RedmineManager(string host, string apiKey, MimeFormat mimeFormat = MimeFormat.Xml,
+        public RedmineManager(string host, string apiKey, MimeFormat mimeFormat = MimeFormat.xml,
             bool verifyServerCert = true, IWebProxy proxy = null,
             SecurityProtocolType securityProtocolType = default(SecurityProtocolType))
             : this(host, mimeFormat, verifyServerCert, proxy, securityProtocolType)
@@ -155,7 +155,7 @@ namespace Redmine.Net.Api
         /// <param name="verifyServerCert">if set to <c>true</c> [verify server cert].</param>
         /// <param name="proxy">The proxy.</param>
         /// <param name="securityProtocolType">Use this parameter to specify a SecurityProtcolType. Note: it is recommended to leave this parameter at its default value as this setting also affects the calling application process.</param>
-        public RedmineManager(string host, string login, string password, MimeFormat mimeFormat = MimeFormat.Xml,
+        public RedmineManager(string host, string login, string password, MimeFormat mimeFormat = MimeFormat.xml,
             bool verifyServerCert = true, IWebProxy proxy = null,
             SecurityProtocolType securityProtocolType = default(SecurityProtocolType))
             : this(host, mimeFormat, verifyServerCert, proxy, securityProtocolType)
@@ -689,7 +689,7 @@ namespace Redmine.Net.Api
             var webClient = new RedmineWebClient { Proxy = Proxy };
             if (!uploadFile)
             {
-                webClient.Headers.Add(HttpRequestHeader.ContentType, MimeFormat == MimeFormat.Xml
+                webClient.Headers.Add(HttpRequestHeader.ContentType, MimeFormat == MimeFormat.xml
                     ? "application/xml"
                     : "application/json");
                 webClient.Encoding = Encoding.UTF8;

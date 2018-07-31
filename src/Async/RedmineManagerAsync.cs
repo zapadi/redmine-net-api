@@ -1,36 +1,78 @@
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using Redmine.Net.Api.Types;
+﻿/*
+   Copyright 2011 - 2018 Adrian Popescu.
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
+
+#if NET20
+namespace System.Threading.Tasks
+{
+
+        public enum TaskCreationOptions
+        {
+            LongRunning
+        }
+
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <typeparam name="TRes">The type of the resource.</typeparam>
+        ///// <returns></returns>
+        public delegate TRes Task<out TRes>();
+
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        public delegate void Task();
+
+        public class Factory
+        {
+            public static Task<T> StartNew<T>(Task<T> task, TaskCreationOptions options)
+            {
+                return task;
+            }
+
+            public static Task StartNew(Task task, TaskCreationOptions options)
+            {
+                return task;
+            }
+        }
+}
+#endif
 
 namespace Redmine.Net.Api.Async
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    public delegate void Task();
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <typeparam name="TRes">The type of the resource.</typeparam>
-    /// <returns></returns>
-    public delegate TRes Task<out TRes>();
+    using System.Collections.Generic;
+    using System.Collections.Specialized;
+    using Redmine.Net.Api.Types;
+    using System.Threading.Tasks;
+    using static System.Threading.Tasks.Task;
 
     /// <summary>
     /// 
     /// </summary>
     public static class RedmineManagerAsync
     {
+
         /// <summary>
         /// Gets the current user asynchronous.
         /// </summary>
         /// <param name="redmineManager">The redmine manager.</param>
         /// <param name="parameters">The parameters.</param>
         /// <returns></returns>
-        public static Task<User> GetCurrentUserAsync(this RedmineManager redmineManager,
-            NameValueCollection parameters = null)
+        public static Task<User> GetCurrentUserAsync(this RedmineManager redmineManager, NameValueCollection parameters = null)
         {
-            return delegate { return redmineManager.GetCurrentUser(parameters); };
+            return Factory.StartNew(() => redmineManager.GetCurrentUser(parameters), TaskCreationOptions.LongRunning);
         }
 
         /// <summary>
@@ -41,10 +83,9 @@ namespace Redmine.Net.Api.Async
         /// <param name="pageName">Name of the page.</param>
         /// <param name="wikiPage">The wiki page.</param>
         /// <returns></returns>
-        public static Task<WikiPage> CreateOrUpdateWikiPageAsync(this RedmineManager redmineManager, string projectId,
-            string pageName, WikiPage wikiPage)
+        public static Task<WikiPage> CreateOrUpdateWikiPageAsync(this RedmineManager redmineManager, string projectId, string pageName, WikiPage wikiPage)
         {
-            return delegate { return redmineManager.CreateOrUpdateWikiPage(projectId, pageName, wikiPage); };
+            return Factory.StartNew(() => redmineManager.CreateOrUpdateWikiPage(projectId, pageName, wikiPage), TaskCreationOptions.LongRunning);
         }
 
         /// <summary>
@@ -56,7 +97,7 @@ namespace Redmine.Net.Api.Async
         /// <returns></returns>
         public static Task DeleteWikiPageAsync(this RedmineManager redmineManager, string projectId, string pageName)
         {
-            return delegate { redmineManager.DeleteWikiPage(projectId, pageName); };
+            return Factory.StartNew(() => redmineManager.DeleteWikiPage(projectId, pageName), TaskCreationOptions.LongRunning);
         }
 
         /// <summary>
@@ -68,23 +109,20 @@ namespace Redmine.Net.Api.Async
         /// <param name="pageName">Name of the page.</param>
         /// <param name="version">The version.</param>
         /// <returns></returns>
-        public static Task<WikiPage> GetWikiPageAsync(this RedmineManager redmineManager, string projectId,
-            NameValueCollection parameters, string pageName, uint version = 0)
+        public static Task<WikiPage> GetWikiPageAsync(this RedmineManager redmineManager, string projectId, NameValueCollection parameters, string pageName, uint version = 0)
         {
-            return delegate { return redmineManager.GetWikiPage(projectId, parameters, pageName, version); };
+            return Factory.StartNew(() => redmineManager.GetWikiPage(projectId, parameters, pageName, version), TaskCreationOptions.LongRunning);
         }
 
         /// <summary>
         /// Gets all wiki pages asynchronous.
         /// </summary>
         /// <param name="redmineManager">The redmine manager.</param>
-        /// <param name="parameters">The parameters.</param>
         /// <param name="projectId">The project identifier.</param>
         /// <returns></returns>
-        public static Task<IList<WikiPage>> GetAllWikiPagesAsync(this RedmineManager redmineManager,
-            NameValueCollection parameters, string projectId)
+        public static Task<List<WikiPage>> GetAllWikiPagesAsync(this RedmineManager redmineManager, string projectId)
         {
-            return delegate { return redmineManager.GetAllWikiPages(projectId); };
+            return Factory.StartNew(() => redmineManager.GetAllWikiPages(projectId), TaskCreationOptions.LongRunning);
         }
 
         /// <summary>
@@ -96,7 +134,7 @@ namespace Redmine.Net.Api.Async
         /// <returns></returns>
         public static Task AddUserToGroupAsync(this RedmineManager redmineManager, int groupId, int userId)
         {
-            return delegate { redmineManager.AddUserToGroup(groupId, userId); };
+            return Factory.StartNew(() => redmineManager.AddUserToGroup(groupId, userId), TaskCreationOptions.LongRunning);
         }
 
         /// <summary>
@@ -108,7 +146,7 @@ namespace Redmine.Net.Api.Async
         /// <returns></returns>
         public static Task RemoveUserFromGroupAsync(this RedmineManager redmineManager, int groupId, int userId)
         {
-            return delegate { redmineManager.RemoveUserFromGroup(groupId, userId); };
+            return Factory.StartNew(() => redmineManager.RemoveUserFromGroup(groupId, userId), TaskCreationOptions.LongRunning);
         }
 
         /// <summary>
@@ -120,7 +158,7 @@ namespace Redmine.Net.Api.Async
         /// <returns></returns>
         public static Task AddWatcherToIssueAsync(this RedmineManager redmineManager, int issueId, int userId)
         {
-            return delegate { redmineManager.AddWatcherToIssue(issueId, userId); };
+            return Factory.StartNew(() => redmineManager.AddWatcherToIssue(issueId, userId), TaskCreationOptions.LongRunning);
         }
 
         /// <summary>
@@ -132,7 +170,7 @@ namespace Redmine.Net.Api.Async
         /// <returns></returns>
         public static Task RemoveWatcherFromIssueAsync(this RedmineManager redmineManager, int issueId, int userId)
         {
-            return delegate { redmineManager.RemoveWatcherFromIssue(issueId, userId); };
+            return Factory.StartNew(() => redmineManager.RemoveWatcherFromIssue(issueId, userId), TaskCreationOptions.LongRunning);
         }
 
         /// <summary>
@@ -143,10 +181,9 @@ namespace Redmine.Net.Api.Async
         /// <param name="id">The identifier.</param>
         /// <param name="parameters">The parameters.</param>
         /// <returns></returns>
-        public static Task<T> GetObjectAsync<T>(this RedmineManager redmineManager, string id,
-            NameValueCollection parameters) where T : class, new()
+        public static Task<T> GetObjectAsync<T>(this RedmineManager redmineManager, string id, NameValueCollection parameters) where T : class, new()
         {
-            return delegate { return redmineManager.GetObject<T>(id, parameters); };
+            return Factory.StartNew(() => redmineManager.GetObject<T>(id, parameters), TaskCreationOptions.LongRunning);
         }
 
         /// <summary>
@@ -169,10 +206,9 @@ namespace Redmine.Net.Api.Async
         /// <param name="obj">The object.</param>
         /// <param name="ownerId">The owner identifier.</param>
         /// <returns></returns>
-        public static Task<T> CreateObjectAsync<T>(this RedmineManager redmineManager, T obj, string ownerId)
-            where T : class, new()
+        public static Task<T> CreateObjectAsync<T>(this RedmineManager redmineManager, T obj, string ownerId) where T : class, new()
         {
-            return delegate { return redmineManager.CreateObject(obj, ownerId); };
+            return Factory.StartNew(() => redmineManager.CreateObject(obj, ownerId), TaskCreationOptions.LongRunning);
         }
 
         /// <summary>
@@ -182,10 +218,9 @@ namespace Redmine.Net.Api.Async
         /// <param name="redmineManager">The redmine manager.</param>
         /// <param name="parameters">The parameters.</param>
         /// <returns></returns>
-        public static Task<PaginatedObjects<T>> GetPaginatedObjectsAsync<T>(this RedmineManager redmineManager,
-            NameValueCollection parameters) where T : class, new()
+        public static Task<PaginatedObjects<T>> GetPaginatedObjectsAsync<T>(this RedmineManager redmineManager, NameValueCollection parameters) where T : class, new()
         {
-            return delegate { return redmineManager.GetPaginatedObjects<T>(parameters); };
+            return Factory.StartNew(() => redmineManager.GetPaginatedObjects<T>(parameters), TaskCreationOptions.LongRunning);
         }
 
         /// <summary>
@@ -195,10 +230,9 @@ namespace Redmine.Net.Api.Async
         /// <param name="redmineManager">The redmine manager.</param>
         /// <param name="parameters">The parameters.</param>
         /// <returns></returns>
-        public static Task<List<T>> GetObjectsAsync<T>(this RedmineManager redmineManager,
-            NameValueCollection parameters) where T : class, new()
+        public static Task<List<T>> GetObjectsAsync<T>(this RedmineManager redmineManager, NameValueCollection parameters) where T : class, new()
         {
-            return delegate { return redmineManager.GetObjects<T>(parameters); };
+            return Factory.StartNew(() => redmineManager.GetObjects<T>(parameters), TaskCreationOptions.LongRunning);
         }
 
         /// <summary>
@@ -210,10 +244,9 @@ namespace Redmine.Net.Api.Async
         /// <param name="obj">The object.</param>
         /// <param name="projectId">The project identifier.</param>
         /// <returns></returns>
-        public static Task UpdateObjectAsync<T>(this RedmineManager redmineManager, string id, T obj,
-            string projectId = null) where T : class, new()
+        public static Task UpdateObjectAsync<T>(this RedmineManager redmineManager, string id, T obj, string projectId = null) where T : class, new()
         {
-            return delegate { redmineManager.UpdateObject(id, obj, projectId); };
+            return Factory.StartNew(() => redmineManager.UpdateObject(id, obj, projectId), TaskCreationOptions.LongRunning);
         }
 
         /// <summary>
@@ -224,10 +257,9 @@ namespace Redmine.Net.Api.Async
         /// <param name="id">The identifier.</param>
         /// <param name="parameters">The parameters.</param>
         /// <returns></returns>
-        public static Task DeleteObjectAsync<T>(this RedmineManager redmineManager, string id,
-            NameValueCollection parameters) where T : class, new()
+        public static Task DeleteObjectAsync<T>(this RedmineManager redmineManager, string id, NameValueCollection parameters) where T : class, new()
         {
-            return delegate { redmineManager.DeleteObject<T>(id); };
+            return Factory.StartNew(() => redmineManager.DeleteObject<T>(id), TaskCreationOptions.LongRunning);
         }
 
         /// <summary>
@@ -238,7 +270,7 @@ namespace Redmine.Net.Api.Async
         /// <returns></returns>
         public static Task<Upload> UploadFileAsync(this RedmineManager redmineManager, byte[] data)
         {
-            return delegate { return redmineManager.UploadFile(data); };
+            return Factory.StartNew(() => redmineManager.UploadFile(data), TaskCreationOptions.LongRunning);
         }
 
         /// <summary>
@@ -249,7 +281,7 @@ namespace Redmine.Net.Api.Async
         /// <returns></returns>
         public static Task<byte[]> DownloadFileAsync(this RedmineManager redmineManager, string address)
         {
-            return delegate { return redmineManager.DownloadFile(address); };
+            return Factory.StartNew(() => redmineManager.DownloadFile(address), TaskCreationOptions.LongRunning);
         }
     }
 }

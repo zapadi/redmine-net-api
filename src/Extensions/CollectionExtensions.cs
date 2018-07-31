@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2016 Adrian Popescu
+   Copyright 2011 - 2018 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -22,10 +22,12 @@ namespace Redmine.Net.Api.Extensions
     /// <summary>
     /// 
     /// </summary>
+
+
     public static class CollectionExtensions
     {
         /// <summary>
-        /// Clones the specified list to clone.
+        ///     Clones the specified list to clone.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="listToClone">The list to clone.</param>
@@ -34,13 +36,14 @@ namespace Redmine.Net.Api.Extensions
         {
             if (listToClone == null) return null;
             IList<T> clonedList = new List<T>();
-            foreach (T item in listToClone)
-                clonedList.Add((T)item.Clone());
+            foreach (var item in listToClone)
+                clonedList.Add((T) item.Clone());
             return clonedList;
         }
 
+
         /// <summary>
-        /// Equalses the specified list to compare.
+        ///     Equalses the specified list to compare.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="list">The list.</param>
@@ -50,12 +53,17 @@ namespace Redmine.Net.Api.Extensions
         {
             if (listToCompare == null) return false;
 
-            if (list.Count != listToCompare.Count) return false;
+#if !NET20
+            var set = new HashSet<T>(list);
+            var setToCompare = new HashSet<T>(listToCompare);
 
+            return set.SetEquals(setToCompare);
+#else                    
             var index = 0;
-            while (index < list.Count &&  (list[index] as T).Equals(listToCompare[index] as T)) index++;
-            
+            while (index < list.Count && (list[index] as T).Equals(listToCompare[index] as T)) index++;
+
             return index == list.Count;
+#endif
         }
     }
 }

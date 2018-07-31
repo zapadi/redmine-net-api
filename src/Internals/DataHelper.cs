@@ -29,7 +29,7 @@ namespace Redmine.Net.Api.Internals
         /// <returns></returns>
         public static string UserData(int userId, MimeFormat mimeFormat)
         {
-            return mimeFormat == MimeFormat.Xml
+            return mimeFormat == MimeFormat.xml
                 ? "<user_id>" + userId + "</user_id>"
                 : "{\"user_id\":\"" + userId + "\"}";
         }

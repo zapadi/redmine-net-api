@@ -23,6 +23,12 @@ namespace Redmine.Net.Api
     {
         /// <summary>
         /// </summary>
-        Xml
+        xml,
+#if JSON
+        /// <summary>
+        /// The json
+        /// </summary>
+        Json,
+#endif
     }
 }

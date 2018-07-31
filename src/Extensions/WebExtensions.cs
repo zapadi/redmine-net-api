@@ -14,18 +14,17 @@
    limitations under the License.
 */
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
-using Redmine.Net.Api.Exceptions;
 using Redmine.Net.Api.Internals;
-using Redmine.Net.Api.Logging;
 using Redmine.Net.Api.Types;
+using Redmine.Net.Api.Exceptions;
 
 namespace Redmine.Net.Api.Extensions
 {
     /// <summary>
+    /// 
     /// </summary>
     public static class WebExtensions
     {
@@ -35,65 +34,63 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="exception">The exception.</param>
         /// <param name="method">The method.</param>
         /// <param name="mimeFormat">The MIME format.</param>
-        /// <exception cref="Redmine.Net.Api.Exceptions.RedmineTimeoutException">Timeout!</exception>
-        /// <exception cref="Redmine.Net.Api.Exceptions.NameResolutionFailureException">Bad domain name!</exception>
-        /// <exception cref="Redmine.Net.Api.Exceptions.NotFoundException"></exception>
-        /// <exception cref="Redmine.Net.Api.Exceptions.InternalServerErrorException"></exception>
-        /// <exception cref="Redmine.Net.Api.Exceptions.UnauthorizedException"></exception>
-        /// <exception cref="Redmine.Net.Api.Exceptions.ForbiddenException"></exception>
-        /// <exception cref="Redmine.Net.Api.Exceptions.ConflictException">The page that you are trying to update is staled!</exception>
-        /// <exception cref="Redmine.Net.Api.Exceptions.RedmineException">
+        /// <exception cref="RedmineTimeoutException">Timeout!</exception>
+        /// <exception cref="NameResolutionFailureException">Bad domain name!</exception>
+        /// <exception cref="NotFoundException"></exception>
+        /// <exception cref="InternalServerErrorException"></exception>
+        /// <exception cref="UnauthorizedException"></exception>
+        /// <exception cref="ForbiddenException"></exception>
+        /// <exception cref="ConflictException">The page that you are trying to update is staled!</exception>
+        /// <exception cref="RedmineException">
         /// </exception>
-        /// <exception cref="Redmine.Net.Api.Exceptions.NotAcceptableException"></exception>
+        /// <exception cref="NotAcceptableException"></exception>
         public static void HandleWebException(this WebException exception, string method, MimeFormat mimeFormat)
         {
             if (exception == null) return;
 
             switch (exception.Status)
             {
-                case WebExceptionStatus.Timeout:
-                    throw new RedmineTimeoutException("Timeout!", exception);
-                case WebExceptionStatus.NameResolutionFailure:
-                    throw new NameResolutionFailureException("Bad domain name!", exception);
+			    case WebExceptionStatus.Timeout: throw new RedmineTimeoutException("Timeout!", exception);
+			    case WebExceptionStatus.NameResolutionFailure: throw new NameResolutionFailureException("Bad domain name!", exception);
                 case WebExceptionStatus.ProtocolError:
-                {
-                    var response = (HttpWebResponse) exception.Response;
-                    switch ((int) response.StatusCode)
                     {
-                        case (int) HttpStatusCode.NotFound:
-                            throw new NotFoundException(response.StatusDescription, exception);
+                        var response = (HttpWebResponse)exception.Response;
+                        switch ((int)response.StatusCode)
+                        {
 
-                        case (int) HttpStatusCode.InternalServerError:
-                            throw new InternalServerErrorException(response.StatusDescription, exception);
+							case (int)HttpStatusCode.NotFound:
+								throw new NotFoundException (response.StatusDescription, exception);
 
-                        case (int) HttpStatusCode.Unauthorized:
-                            throw new UnauthorizedException(response.StatusDescription, exception);
+							case (int)HttpStatusCode.InternalServerError:
+								throw new InternalServerErrorException(response.StatusDescription, exception);
 
-                        case (int) HttpStatusCode.Forbidden:
-                            throw new ForbiddenException(response.StatusDescription, exception);
+							case (int)HttpStatusCode.Unauthorized:
+								throw new UnauthorizedException(response.StatusDescription, exception);
 
-                        case (int) HttpStatusCode.Conflict:
-                            throw new ConflictException("The page that you are trying to update is staled!", exception);
+							case (int)HttpStatusCode.Forbidden:
+								throw new ForbiddenException(response.StatusDescription, exception);
 
-                        case 422:
-                            var errors = GetRedmineExceptions(exception.Response, mimeFormat);
-                            var message = string.Empty;
-                            if (errors != null)
-                            {
-                                foreach (var error in errors)
-                                    message = message + error.Info + "\n";
-                            }
-                            throw new RedmineException(
-                                method + " has invalid or missing attribute parameters: " + message, exception);
+		                    case (int)HttpStatusCode.Conflict:
+								throw new ConflictException("The page that you are trying to update is staled!", exception);
 
-                        case (int) HttpStatusCode.NotAcceptable:
-                            throw new NotAcceptableException(response.StatusDescription, exception);
+                            case 422:
+
+                                var errors = GetRedmineExceptions(exception.Response, mimeFormat);
+                                string message = string.Empty;
+                                if (errors != null)
+                                {
+                                    foreach (var item in errors)
+                                        message += item.Info + "\n";
+                                    //message = errors.Aggregate(message, (current, error) => current + (error.Info + "\n"));
+                                }
+                                throw new RedmineException(method + " has invalid or missing attribute parameters: " + message, exception);
+
+							case (int)HttpStatusCode.NotAcceptable: throw new NotAcceptableException(response.StatusDescription, exception);
+                        }
                     }
-                }
                     break;
 
-                default:
-                    throw new RedmineException(exception.Message, exception);
+                default: throw new RedmineException(exception.Message, exception);
             }
         }
 
@@ -112,15 +109,10 @@ namespace Redmine.Net.Api.Extensions
                 {
                     var responseFromServer = reader.ReadToEnd();
 
-                    if (string.IsNullOrEmpty(responseFromServer.Trim())) return null;
-                    try
+                    if (responseFromServer.Trim().Length > 0)
                     {
-                        var result = RedmineSerializer.DeserializeList<Error>(responseFromServer, mimeFormat);
-                        return result.Objects;
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Current.Error(ex.Message);
+                        var errors = RedmineSerializer.DeserializeList<Error>(responseFromServer, mimeFormat);
+                        return errors.Objects;
                     }
                 }
                 return null;
