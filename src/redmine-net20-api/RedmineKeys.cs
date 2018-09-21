@@ -618,10 +618,14 @@ namespace Redmine.Net.Api
         /// 
         /// </summary>
         public const string VALUE = "value";
-        /// <summary>
-        /// 
-        /// </summary>
-        public const string VERSION = "version";
+		/// <summary>
+		/// 
+		/// </summary>
+		public const string LABEL = "label";
+		/// <summary>
+		/// 
+		/// </summary>
+		public const string VERSION = "version";
         /// <summary>
         /// 
         /// </summary>

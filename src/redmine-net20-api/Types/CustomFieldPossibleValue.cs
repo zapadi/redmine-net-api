@@ -32,12 +32,18 @@ namespace Redmine.Net.Api.Types
         [XmlElement(RedmineKeys.VALUE)]
         public string Value { get; set; }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public bool Equals(CustomFieldPossibleValue other)
+		/// <summary>
+		/// 
+		/// </summary>
+		[XmlElement( RedmineKeys.LABEL )]
+		public string Label { get; set; }
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="other"></param>
+		/// <returns></returns>
+		public bool Equals(CustomFieldPossibleValue other)
         {
             if (other == null) return false;
             return (Value == other.Value);
