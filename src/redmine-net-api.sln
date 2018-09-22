@@ -7,25 +7,25 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{0DFF4758-5C1
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{F3F4278D-6271-4F77-BA88-41555D53CBD1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "redmine-net20-api", "Y:\Redmine\redmine-net-api\src\redmine-net20-api\redmine-net20-api.csproj", "{0E6B9B72-445D-4E71-8D29-48C4A009AB03}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "redmine-net20-api", "redmine-net20-api\redmine-net20-api.csproj", "{0E6B9B72-445D-4E71-8D29-48C4A009AB03}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "redmine-net40-api", "Y:\Redmine\redmine-net-api\src\redmine-net40-api\redmine-net40-api.csproj", "{22492A69-B890-4D5B-A2FC-E2F6C63935B8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "redmine-net40-api", "redmine-net40-api\redmine-net40-api.csproj", "{22492A69-B890-4D5B-A2FC-E2F6C63935B8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "redmine-net40-api-signed", "Y:\Redmine\redmine-net-api\src\redmine-net40-api-signed\redmine-net40-api-signed.csproj", "{00F410C6-E398-4F58-869B-34CD7275096A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "redmine-net40-api-signed", "redmine-net40-api-signed\redmine-net40-api-signed.csproj", "{00F410C6-E398-4F58-869B-34CD7275096A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "redmine-net450-api", "Y:\Redmine\redmine-net-api\src\redmine-net450-api\redmine-net450-api.csproj", "{AEDFD095-F4B0-4630-B41A-9A22169456E9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "redmine-net450-api", "redmine-net450-api\redmine-net450-api.csproj", "{AEDFD095-F4B0-4630-B41A-9A22169456E9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "redmine-net450-api-signed", "Y:\Redmine\redmine-net-api\src\redmine-net450-api-signed\redmine-net450-api-signed.csproj", "{028B9120-A7FC-4B23-AA9C-F18087058F76}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "redmine-net450-api-signed", "redmine-net450-api-signed\redmine-net450-api-signed.csproj", "{028B9120-A7FC-4B23-AA9C-F18087058F76}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "redmine-net451-api", "Y:\Redmine\redmine-net-api\src\redmine-net451-api\redmine-net451-api.csproj", "{B67F0035-336C-4CDA-80A8-DE94EEDF5627}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "redmine-net451-api", "redmine-net451-api\redmine-net451-api.csproj", "{B67F0035-336C-4CDA-80A8-DE94EEDF5627}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "redmine-net451-api-signed", "Y:\Redmine\redmine-net-api\src\redmine-net451-api-signed\redmine-net451-api-signed.csproj", "{7FB65A2A-946B-4ACD-A6A2-85FA6D517CC2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "redmine-net451-api-signed", "redmine-net451-api-signed\redmine-net451-api-signed.csproj", "{7FB65A2A-946B-4ACD-A6A2-85FA6D517CC2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "redmine-net452-api", "Y:\Redmine\redmine-net-api\src\redmine-net452-api\redmine-net452-api.csproj", "{4EE7D8D8-AA65-442B-A928-580B4604B9AF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "redmine-net452-api", "redmine-net452-api\redmine-net452-api.csproj", "{4EE7D8D8-AA65-442B-A928-580B4604B9AF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "redmine-net452-api-signed", "Y:\Redmine\redmine-net-api\src\redmine-net452-api-signed\redmine-net452-api-signed.csproj", "{6CBF5FC3-7783-44E7-90CA-8D12B165B9C3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "redmine-net452-api-signed", "redmine-net452-api-signed\redmine-net452-api-signed.csproj", "{6CBF5FC3-7783-44E7-90CA-8D12B165B9C3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "redmine-net-api.Tests", "Y:\Redmine\redmine-net-api\src\redmine-net-api.Tests\redmine-net-api.Tests.csproj", "{900EF0B3-0233-45DA-811F-4C59483E8452}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "redmine-net-api.Tests", "redmine-net-api.Tests\redmine-net-api.Tests.csproj", "{900EF0B3-0233-45DA-811F-4C59483E8452}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "redmine-net-api.TestConsole", "redmine-net-api.TestConsole\redmine-net-api.TestConsole.csproj", "{5A5D51BC-2800-44B4-9E12-05264BDCEBF7}"
 EndProject
