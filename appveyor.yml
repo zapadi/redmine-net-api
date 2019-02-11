@@ -1,4 +1,4 @@
-os: Visual Studio 2015
+os: Visual Studio 2017
 version: 2.0.{build}
 # environment:
 #    COVERALLS_REPO_TOKEN:  
@@ -18,15 +18,15 @@ assembly_info:
   assembly_informational_version: '{version}'
 
 build_script:
-  - Msbuild.exe redmine-net20-api/redmine-net20-api.csproj /verbosity:minimal /p:BuildNetFX20=true 
-  - Msbuild.exe redmine-net40-api/redmine-net40-api.csproj /verbosity:minimal /p:BuildNetFX40=true 
-  - Msbuild.exe redmine-net40-api-signed/redmine-net40-api-signed.csproj /verbosity:minimal /p:BuildNetFX40=true
-  - Msbuild.exe redmine-net45-api/redmine-net45-api.csproj /verbosity:minimal /p:BuildNetFX45=true
-  - Msbuild.exe redmine-net45-api-signed/redmine-net45-api-signed.csproj /verbosity:minimal /p:BuildNetFX45=true
-  - Msbuild.exe redmine-net451-api/redmine-net451-api.csproj /verbosity:minimal /p:BuildNetFX451=true
-  - Msbuild.exe redmine-net451-api-signed/redmine-net451-api-signed.csproj /verbosity:minimal /p:BuildNetFX451=true
-  - Msbuild.exe redmine-net452-api/redmine-net452-api.csproj /verbosity:minimal /p:BuildNetFX452=true
-  - Msbuild.exe redmine-net452-api-signed/redmine-net452-api-signed.csproj /verbosity:minimal /p:BuildNetFX452=true
+  - Msbuild.exe src/redmine-net20-api/redmine-net20-api.csproj /verbosity:minimal /p:BuildNetFX20=true 
+  - Msbuild.exe src/redmine-net40-api/redmine-net40-api.csproj /verbosity:minimal /p:BuildNetFX40=true 
+  - Msbuild.exe src/redmine-net40-api-signed/redmine-net40-api-signed.csproj /verbosity:minimal /p:BuildNetFX40=true
+  - Msbuild.exe src/redmine-net45-api/redmine-net45-api.csproj /verbosity:minimal /p:BuildNetFX45=true
+  - Msbuild.exe src/redmine-net45-api-signed/redmine-net45-api-signed.csproj /verbosity:minimal /p:BuildNetFX45=true
+  - Msbuild.exe src/redmine-net451-api/redmine-net451-api.csproj /verbosity:minimal /p:BuildNetFX451=true
+  - Msbuild.exe src/redmine-net451-api-signed/redmine-net451-api-signed.csproj /verbosity:minimal /p:BuildNetFX451=true
+  - Msbuild.exe src/redmine-net452-api/redmine-net452-api.csproj /verbosity:minimal /p:BuildNetFX452=true
+  - Msbuild.exe src/redmine-net452-api-signed/redmine-net452-api-signed.csproj /verbosity:minimal /p:BuildNetFX452=true
 
 before_build:
 - nuget restore
@@ -37,8 +37,8 @@ build:
   verbosity: detailed
 
 after_build:
-- ps: nuget pack redmine-net-api.nuspec -Version $env:appveyor_build_version
-- ps: nuget pack redmine-net-api-signed.nuspec -Version $env:appveyor_build_version
+- ps: nuget pack build/redmine-net-api.nuspec -Version $env:appveyor_build_version
+- ps: nuget pack build/redmine-net-api-signed.nuspec -Version $env:appveyor_build_version
 
 nuget:
   account_feed: true
