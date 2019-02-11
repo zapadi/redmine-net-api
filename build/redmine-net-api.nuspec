@@ -7,31 +7,34 @@
     <authors>Adrian Popescu</authors>
     <owners>Adrian Popescu</owners>
     <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+    <license type="expression">Apache-2.0</license>
     <projectUrl>https://github.com/zapadi/redmine-net-api</projectUrl>
     <iconUrl>https://github.com/zapadi/redmine-net-api/raw/master/logo.png</iconUrl>
-    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>Redmine .NET API is a communication library for Redmine project management application.</description>
-    
-    <copyright>Copyright 2011 - 2018</copyright>
-    <language>en-GB</language>
+
+    <copyright>Copyright ©2011-2019 Adrian Popescu</copyright>
+    <language>en-US</language>
     <tags>Redmine API .NET C#</tags>
-   
+    <releaseNotes>
+      Bug fixes and performance improvements
+    </releaseNotes>
   </metadata>
-    <files>
-      <file src="redmine-net20-api\bin\Debug\redmine-net20-api.dll" target="lib\net20"/>
-      <file src="redmine-net20-api\bin\Debug\redmine-net20-api.xml" target="lib\net20"/>
+  <files>
+    <file src="..\src\redmine-net20-api\bin\$configuration$\$id$.dll" target="lib\net20"/>
+    <file src="..\src\redmine-net20-api\bin\$configuration$\$id$.xml" target="lib\net20"/>
 
-      <file src="redmine-net40-api\bin\Debug\redmine-net40-api.dll" target="lib\net40"/>
-      <file src="redmine-net40-api\bin\Debug\redmine-net40-api.xml" target="lib\net40"/>
+    <file src="..\src\redmine-net40-api\bin\$configuration$\$id$.dll" target="lib\net40"/>
+    <file src="..\src\redmine-net40-api\bin\$configuration$\$id$.xml" target="lib\net40"/>
 
-      <file src="redmine-net45-api\bin\Debug\redmine-net45-api.dll" target="lib\net45"/>
-      <file src="redmine-net45-api\bin\Debug\redmine-net45-api.xml" target="lib\net45"/>
+    <file src="..\src\redmine-net45-api\bin\$configuration$\$id$.dll" target="lib\net45"/>
+    <file src="..\src\redmine-net45-api\bin\$configuration$\$id$.xml" target="lib\net45"/>
 
-      <file src="redmine-net451-api\bin\Debug\redmine-net451-api.dll" target="lib\net451"/>
-      <file src="redmine-net451-api\bin\Debug\redmine-net451-api.xml" target="lib\net451"/>
+    <file src="..\src\redmine-net451-api\bin\$configuration$\$id$.dll" target="lib\net451"/>
+    <file src="..\src\redmine-net451-api\bin\$configuration$\$id$.xml" target="lib\net451"/>
 
-      <file src="redmine-net452-api\bin\Debug\redmine-net452-api.dll" target="lib\net452"/>
-      <file src="redmine-net452-api\bin\Debug\redmine-net452-api.xml" target="lib\net452"/>
-    </files>
+    <file src="..\src\redmine-net452-api\bin\$configuration$\$id$.dll" target="lib\net452"/>
+    <file src="..\src\redmine-net452-api\bin\$configuration$\$id$.xml" target="lib\net452"/>
+  </files>
 
 </package>
