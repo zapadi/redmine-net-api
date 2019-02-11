@@ -188,7 +188,7 @@ namespace Redmine.Net.Api
             get { return host; }
             private set
             {
-	            host = value;
+                host = value;
 
                 Uri uriResult;
                 if (!Uri.TryCreate(host, UriKind.Absolute, out uriResult) ||
@@ -369,6 +369,34 @@ namespace Redmine.Net.Api
             WebApiHelper.ExecuteUpload(this, url, HttpVerbs.DELETE, string.Empty, "DeleteWikiPage");
         }
 
+        public int Count<T>(NameValueCollection parameters) where T : class, new()
+        {
+            int totalCount = 0, pageSize = 1, offset = 0;
+
+            if (parameters == null)
+            {
+                parameters = new NameValueCollection();
+            }
+
+            parameters.Set(RedmineKeys.LIMIT, pageSize.ToString(CultureInfo.InvariantCulture));
+            parameters.Set(RedmineKeys.OFFSET, offset.ToString(CultureInfo.InvariantCulture));
+
+            try
+            {
+                var tempResult = GetPaginatedObjects<T>(parameters);
+                if (tempResult != null)
+                {
+                    totalCount = tempResult.TotalCount;
+                }
+            }
+            catch (WebException wex)
+            {
+                wex.HandleWebException("CountAsync", MimeFormat);
+            }
+
+            return totalCount;
+        }
+
         /// <summary>
         ///     Gets the redmine object based on id.
         /// </summary>
@@ -405,6 +433,18 @@ namespace Redmine.Net.Api
         {
             var url = UrlHelper.GetListUrl<T>(this, parameters);
             return WebApiHelper.ExecuteDownloadList<T>(this, url, "GetObjectList", parameters);
+        }
+
+        public int Count<T>(params string[] include) where T : class, new()
+        {
+            var parameters = new NameValueCollection();
+
+            if (include != null)
+            {
+                parameters.Add(RedmineKeys.INCLUDE, string.Join(",", include));
+            }
+
+            return Count<T>(parameters);
         }
 
         /// <summary>
@@ -610,15 +650,15 @@ namespace Redmine.Net.Api
             DeleteObject<T>(id, null);
         }
 
-	    /// <summary>
-	    /// Deletes the Redmine object.
-	    /// </summary>
-	    /// <typeparam name="T">The type of objects to delete.</typeparam>
-	    /// <param name="id">The id of the object to delete</param>
-	    /// <param name="parameters">The parameters</param>
-	    /// <exception cref="RedmineException"></exception>
-	    /// <code></code>
-	    public void DeleteObject<T>(string id, NameValueCollection parameters = null) where T : class, new()
+        /// <summary>
+        /// Deletes the Redmine object.
+        /// </summary>
+        /// <typeparam name="T">The type of objects to delete.</typeparam>
+        /// <param name="id">The id of the object to delete</param>
+        /// <param name="parameters">The parameters</param>
+        /// <exception cref="RedmineException"></exception>
+        /// <code></code>
+        public void DeleteObject<T>(string id, NameValueCollection parameters = null) where T : class, new()
         {
             var url = UrlHelper.GetDeleteUrl<T>(this, id);
             WebApiHelper.ExecuteUpload(this, url, HttpVerbs.DELETE, string.Empty, "DeleteObject", parameters);

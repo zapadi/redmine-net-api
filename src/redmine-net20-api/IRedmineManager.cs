@@ -149,6 +149,22 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// 
         /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="include"></param>
+        /// <returns></returns>
+        int Count<T>(params string[] include) where T : class, new();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        int Count<T>(NameValueCollection parameters) where T : class, new();
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="id"></param>
         /// <param name="parameters"></param>
         /// <typeparam name="T"></typeparam>

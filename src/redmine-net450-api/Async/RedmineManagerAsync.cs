@@ -186,6 +186,48 @@ namespace Redmine.Net.Api.Async
             await WebApiAsyncHelper.ExecuteUpload(redmineManager, uri, HttpVerbs.DELETE, string.Empty, "RemoveWatcherAsync").ConfigureAwait(false);
         }
 
+
+        public static async Task<int> CountAsync<T>(this RedmineManager redmineManager, params string[] include) where T : class, new()
+        {
+            var parameters = new NameValueCollection();
+
+            if (include != null)
+            {
+                parameters.Add(RedmineKeys.INCLUDE, string.Join(",", include));
+            }
+
+            return await CountAsync<T>(redmineManager,parameters).ConfigureAwait(false);
+        }
+
+        public static async Task<int> CountAsync<T>(this RedmineManager redmineManager, NameValueCollection parameters) where T : class, new()
+        {
+            int totalCount = 0, pageSize = 1, offset = 0;
+
+            if (parameters == null)
+            {
+                parameters = new NameValueCollection();
+            }
+
+            parameters.Set(RedmineKeys.LIMIT, pageSize.ToString(CultureInfo.InvariantCulture));
+            parameters.Set(RedmineKeys.OFFSET, offset.ToString(CultureInfo.InvariantCulture));
+
+            try
+            {
+                var tempResult = await GetPaginatedObjectsAsync<T>(redmineManager,parameters);
+                if (tempResult != null)
+                {
+                    totalCount = tempResult.TotalCount;
+                }
+            }
+            catch (WebException wex)
+            {
+                wex.HandleWebException("CountAsync", redmineManager.MimeFormat);
+            }
+
+            return totalCount;
+        }
+
+
         /// <summary>
         ///     Gets the paginated objects asynchronous.
         /// </summary>
