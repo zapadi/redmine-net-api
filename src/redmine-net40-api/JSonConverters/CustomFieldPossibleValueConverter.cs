@@ -41,6 +41,7 @@ namespace Redmine.Net.Api.JSonConverters
                 var entity = new CustomFieldPossibleValue();
 
                 entity.Value = dictionary.GetValue<string>(RedmineKeys.VALUE);
+                entity.Label = dictionary.GetValue<string>(RedmineKeys.LABEL);
 
                 return entity;
             }
