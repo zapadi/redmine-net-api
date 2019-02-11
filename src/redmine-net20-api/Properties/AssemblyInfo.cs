@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("redmine-net20-api")]
-[assembly: AssemblyCopyright("Copyright © Adrian Popescu 2011 - 2017")]
+[assembly: AssemblyCopyright("Copyright © Adrian Popescu 2011 - 2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
