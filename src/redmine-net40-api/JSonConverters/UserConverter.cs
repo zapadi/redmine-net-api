@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Web.Script.Serialization;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Types;
@@ -88,6 +89,7 @@ namespace Redmine.Net.Api.JSonConverters
                 result.Add(RedmineKeys.MAIL_NOTIFICATION, entity.MailNotification);
                 result.Add(RedmineKeys.PASSWORD, entity.Password);
                 result.Add(RedmineKeys.MUST_CHANGE_PASSWD, entity.MustChangePassword.ToString().ToLowerInvariant());
+                result.Add(RedmineKeys.STATUS, ((int)entity.Status).ToString(CultureInfo.InvariantCulture));
                 result.WriteValueOrEmpty(entity.AuthenticationModeId, RedmineKeys.AUTH_SOURCE_ID);
                 result.WriteArray(RedmineKeys.CUSTOM_FIELDS, entity.CustomFields, new IssueCustomFieldConverter(),
                     serializer);
