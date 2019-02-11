@@ -6,7 +6,7 @@
     <title>Redmine .NET API</title>
     <authors>Adrian Popescu</authors>
     <owners>Adrian Popescu</owners>
-    <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+
     <license type="expression">Apache-2.0</license>
     <projectUrl>https://github.com/zapadi/redmine-net-api</projectUrl>
     <iconUrl>https://github.com/zapadi/redmine-net-api/raw/master/logo.png</iconUrl>
