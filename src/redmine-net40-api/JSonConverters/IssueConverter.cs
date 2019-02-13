@@ -66,10 +66,10 @@ namespace Redmine.Net.Api.JSonConverters
                 issue.StartDate = dictionary.GetValue<DateTime?>(RedmineKeys.START_DATE);
                 issue.DueDate = dictionary.GetValue<DateTime?>(RedmineKeys.DUE_DATE);
                 issue.SpentHours = dictionary.GetValue<float?>(RedmineKeys.SPENT_HOURS);
-                issue.TotalSpentHours = dictionary.GetValue<float>(RedmineKeys.TOTAL_SPENT_HOURS);
-                issue.DoneRatio = dictionary.GetValue<float>(RedmineKeys.DONE_RATIO);
+                issue.TotalSpentHours = dictionary.GetValue<float?>(RedmineKeys.TOTAL_SPENT_HOURS);
+                issue.DoneRatio = dictionary.GetValue<float?>(RedmineKeys.DONE_RATIO);
                 issue.EstimatedHours = dictionary.GetValue<float?>(RedmineKeys.ESTIMATED_HOURS);
-                issue.TotalEstimatedHours = dictionary.GetValue<float>(RedmineKeys.TOTAL_ESTIMATED_HOURS);
+                issue.TotalEstimatedHours = dictionary.GetValue<float?>(RedmineKeys.TOTAL_ESTIMATED_HOURS);
                 issue.ParentIssue = dictionary.GetValueAsIdentifiableName(RedmineKeys.PARENT);
 
                 issue.CustomFields = dictionary.GetValueAsCollection<IssueCustomField>(RedmineKeys.CUSTOM_FIELDS);
@@ -91,7 +91,7 @@ namespace Redmine.Net.Api.JSonConverters
         /// <param name="obj">The object to serialize.</param>
         /// <param name="serializer">The object that is responsible for the serialization.</param>
         /// <returns>
-        ///     An object that contains key/value pairs that represent the object’s data.
+        ///     An object that contains key/value pairs that represent the objectï¿½s data.
         /// </returns>
         public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer)
         {

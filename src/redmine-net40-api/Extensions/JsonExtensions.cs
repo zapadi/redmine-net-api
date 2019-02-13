@@ -155,10 +155,10 @@ namespace Redmine.Net.Api.Extensions
             var type = typeof(T);
             if (!dict.TryGetValue(key, out val)) return default(T);
 
+            if (val == null) return default(T);
+
             if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
             {
-                if (val == null) return default(T);
-
                 type = Nullable.GetUnderlyingType(type);
             }
 
