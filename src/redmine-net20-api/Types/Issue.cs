@@ -477,7 +477,7 @@ namespace Redmine.Net.Api.Types
             writer.WriteIdIfNotNull(FixedVersion, RedmineKeys.FIXED_VERSION_ID);
 
             writer.WriteValueOrEmpty(EstimatedHours, RedmineKeys.ESTIMATED_HOURS);
-            writer.WriteIfNotDefaultOrNull(DoneRatio, RedmineKeys.DONE_RATIO);
+            writer.WriteValueOrEmpty(DoneRatio, RedmineKeys.DONE_RATIO);
             writer.WriteDateOrEmpty(StartDate, RedmineKeys.START_DATE);
             writer.WriteDateOrEmpty(DueDate, RedmineKeys.DUE_DATE);
             writer.WriteDateOrEmpty(UpdatedOn, RedmineKeys.UPDATED_ON);
