@@ -65,6 +65,16 @@ namespace Redmine.Net.Api
             {typeof(IssueCustomField), "custom_fields"},
             {typeof(CustomField), "custom_fields"}
         };
+        
+        private static readonly Dictionary<Type, bool> typesWithOffset = new Dictionary<Type, bool>{
+            {typeof(Issue), true},
+            {typeof(Project), true},
+            {typeof(User), true},
+            {typeof(News), true},
+            {typeof(Query), true},
+            {typeof(TimeEntry), true},
+            {typeof(ProjectMembership), true},
+        }
 
         private readonly string basicAuthorization;
         private readonly CredentialCache cache;
@@ -524,24 +534,36 @@ namespace Redmine.Net.Api
 
             try
             {
-                do
+                var hasOffset = typesWithOffset.ContainsKey(typeof(T));
+                if(hasOffset)
                 {
-                    parameters.Set(RedmineKeys.OFFSET, offset.ToString(CultureInfo.InvariantCulture));
-                    var tempResult = GetPaginatedObjects<T>(parameters);
-                    if (tempResult != null)
+                   do
+                   {
+                       parameters.Set(RedmineKeys.OFFSET, offset.ToString(CultureInfo.InvariantCulture));
+                       var tempResult = GetPaginatedObjects<T>(parameters);
+                       if (tempResult != null)
+                       {
+                           if (resultList == null)
+                           {
+                               resultList = tempResult.Objects;
+                               totalCount = isLimitSet ? pageSize : tempResult.TotalCount;
+                           }
+                           else
+                           {
+                               resultList.AddRange(tempResult.Objects);
+                           }
+                       }
+                       offset += pageSize;
+                   } while (offset < totalCount);
+                }
+                else
+                {
+                    var result = GetPaginatedObjects<T>(parameters);
+                    if (result != null)
                     {
-                        if (resultList == null)
-                        {
-                            resultList = tempResult.Objects;
-                            totalCount = isLimitSet ? pageSize : tempResult.TotalCount;
-                        }
-                        else
-                        {
-                            resultList.AddRange(tempResult.Objects);
-                        }
-                    }
-                    offset += pageSize;
-                } while (offset < totalCount);
+                        return result.Objects;
+                    } 
+                }
             }
             catch (WebException wex)
             {
