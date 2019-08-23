@@ -74,7 +74,7 @@ namespace Redmine.Net.Api
             {typeof(Query), true},
             {typeof(TimeEntry), true},
             {typeof(ProjectMembership), true},
-        }
+        };
 
         private readonly string basicAuthorization;
         private readonly CredentialCache cache;
