@@ -86,11 +86,23 @@ namespace Redmine.Net.Api.JSonConverters
                 result.Add(RedmineKeys.FIRSTNAME, entity.FirstName);
                 result.Add(RedmineKeys.LASTNAME, entity.LastName);
                 result.Add(RedmineKeys.MAIL, entity.Email);
-                result.Add(RedmineKeys.MAIL_NOTIFICATION, entity.MailNotification);
-                result.Add(RedmineKeys.PASSWORD, entity.Password);
+                if(!string.IsNullOrWhiteSpace(entity.MailNotification))
+                {
+                    result.Add(RedmineKeys.MAIL_NOTIFICATION, entity.MailNotification);
+                }
+
+                if(!string.IsNullOrWhiteSpace(entity.Password))
+                { 
+                    result.Add(RedmineKeys.PASSWORD, entity.Password); 
+                }
+
                 result.Add(RedmineKeys.MUST_CHANGE_PASSWD, entity.MustChangePassword.ToString().ToLowerInvariant());
                 result.Add(RedmineKeys.STATUS, ((int)entity.Status).ToString(CultureInfo.InvariantCulture));
-                result.WriteValueOrEmpty(entity.AuthenticationModeId, RedmineKeys.AUTH_SOURCE_ID);
+
+                if(entity.AuthenticationModeId.HasValue)
+                {
+                    result.WriteValueOrEmpty(entity.AuthenticationModeId, RedmineKeys.AUTH_SOURCE_ID);
+                }
                 result.WriteArray(RedmineKeys.CUSTOM_FIELDS, entity.CustomFields, new IssueCustomFieldConverter(),
                     serializer);
 

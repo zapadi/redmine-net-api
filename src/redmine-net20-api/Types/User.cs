@@ -215,12 +215,27 @@ namespace Redmine.Net.Api.Types
             writer.WriteElementString(RedmineKeys.FIRSTNAME, FirstName);
             writer.WriteElementString(RedmineKeys.LASTNAME, LastName);
             writer.WriteElementString(RedmineKeys.MAIL, Email);
-            writer.WriteElementString(RedmineKeys.MAIL_NOTIFICATION, MailNotification);
-            writer.WriteElementString(RedmineKeys.PASSWORD, Password);
-            writer.WriteValueOrEmpty(AuthenticationModeId, RedmineKeys.AUTH_SOURCE_ID);
+            if(!string.IsNullOrEmpty(MailNotification))
+            {
+                writer.WriteElementString(RedmineKeys.MAIL_NOTIFICATION, MailNotification);
+            }
+
+            if (!string.IsNullOrEmpty(Password))
+            {
+                writer.WriteElementString(RedmineKeys.PASSWORD, Password);
+            }
+
+            if(AuthenticationModeId.HasValue)
+            { 
+                writer.WriteValueOrEmpty(AuthenticationModeId, RedmineKeys.AUTH_SOURCE_ID);
+            }
+            
             writer.WriteElementString(RedmineKeys.MUST_CHANGE_PASSWD, MustChangePassword.ToString().ToLowerInvariant());
             writer.WriteElementString(RedmineKeys.STATUS, ((int)Status).ToString(CultureInfo.InvariantCulture));
-            writer.WriteArray(CustomFields, RedmineKeys.CUSTOM_FIELDS);
+            if(CustomFields != null)
+            { 
+                writer.WriteArray(CustomFields, RedmineKeys.CUSTOM_FIELDS);
+            }
         }
 
         /// <summary>
