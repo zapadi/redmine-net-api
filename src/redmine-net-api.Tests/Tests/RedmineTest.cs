@@ -47,5 +47,14 @@ namespace redmine.net.api.Tests.Tests
             Assert.NotNull(currentUser);
             Assert.True(currentUser.ApiKey.Equals(Helper.ApiKey),"api keys not equals.");
         }
+
+        [Fact]
+        public void Should_Connect_With_Username_And_Password_And_Api_Key()
+        {
+            var a = new RedmineManager(Helper.Uri, Helper.Username, Helper.Password, Helper.ApiKey);
+            var currentUser = a.GetCurrentUser();
+            Assert.NotNull(currentUser);
+            Assert.True(currentUser.ApiKey.Equals(Helper.ApiKey), "api keys not equals.");
+        }
     }
 }

@@ -177,6 +177,36 @@ namespace Redmine.Net.Api
         }
 
         /// <summary>
+        ///     Initializes a new instance of the <see cref="RedmineManager" /> class.
+        ///     Most of the time, the API requires authentication. To enable the API-style authentication, you have to check Enable
+        ///     REST API in Administration -&gt; Settings -&gt; Authentication. Then, authentication can be done in 2 different
+        ///     ways:
+        ///     using your regular login/password via HTTP Basic authentication.
+        ///     using your API key which is a handy way to avoid putting a password in a script. 
+        ///     This way is HTTP Basic authentication and Redmine API key authentication.    
+        ///     passed in as a "key" parameter
+        ///     passed in as a username with a random password via HTTP Basic authentication
+        ///     passed in as a "X-Redmine-API-Key" HTTP header (added in Redmine 1.1.0)
+        ///     You can find your API key on your account page ( /my/account ) when logged in, on the right-hand pane of the
+        ///     default layout.
+        /// </summary>
+        /// <param name="host">The host.</param>
+        /// <param name="login">The login.</param>
+        /// <param name="password">The password.</param>
+        /// <param name="apiKey">The API key.</param>
+        /// <param name="mimeFormat">The MIME format.</param>
+        /// <param name="verifyServerCert">if set to <c>true</c> [verify server cert].</param>
+        /// <param name="proxy">The proxy.</param>
+        /// <param name="securityProtocolType">Use this parameter to specify a SecurityProtcolType. Note: it is recommended to leave this parameter at its default value as this setting also affects the calling application process.</param>
+        public RedmineManager(string host, string login, string password, string apiKey, MimeFormat mimeFormat = MimeFormat.Xml,
+            bool verifyServerCert = true, IWebProxy proxy = null,
+            SecurityProtocolType securityProtocolType = default(SecurityProtocolType))
+            : this(host, login, password, mimeFormat, verifyServerCert, proxy, securityProtocolType)
+        {
+            ApiKey = apiKey;
+        }
+
+        /// <summary>
         ///     Gets the sufixes.
         /// </summary>
         /// <value>
@@ -766,7 +796,23 @@ namespace Redmine.Net.Api
                 webClient.QueryString = parameters;
             }
 
-            if (!string.IsNullOrEmpty(ApiKey))
+            if(!string.IsNullOrEmpty(ApiKey) && !string.IsNullOrEmpty(basicAuthorization))
+            {
+                webClient.QueryString[RedmineKeys.KEY] = ApiKey;
+
+                if (cache != null)
+                {
+                    webClient.PreAuthenticate = true;
+                    webClient.Credentials = cache;
+                    webClient.Headers[HttpRequestHeader.Authorization] = basicAuthorization;
+                }
+                else
+                {
+                    webClient.UseDefaultCredentials = true;
+                    webClient.Credentials = CredentialCache.DefaultCredentials;
+                }
+            }
+            else if (!string.IsNullOrEmpty(ApiKey))
             {
                 webClient.QueryString[RedmineKeys.KEY] = ApiKey;
             }
