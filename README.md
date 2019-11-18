@@ -1,7 +1,11 @@
-![](https://github.com/zapadi/redmine-net-api/blob/master/logo.png)
+
 ![Nuget](https://img.shields.io/nuget/dt/redmine-net-api)
+![alt text](https://ci.appveyor.com/api/projects/status/github/zapadi/redmine-net-api?branch=master&svg=true)
+[![NuGet package](https://img.shields.io/nuget/v/redmine-api.svg)](https://www.nuget.org/packages/redmine-api)  
 <a href="https://www.buymeacoffee.com/vXCNnz9" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/lato-yellow.png" alt="Buy Me A Coffee" height="37" ></a>
-# redmine-net-api  
+
+
+# redmine-net-api   ![](https://github.com/zapadi/redmine-net-api/blob/master/logo.png) 
 
 redmine-net-api is a library for communicating with a Redmine project management application.
 
@@ -31,13 +35,6 @@ Resource | Read | Create | Update | Delete
  Versions |x|x|x|x
  Wiki Pages |x|x|x|x
  Files |x|x|-|-
-
-## Packages and Status
-
-Build status | Nuget
- ------------ | -------
-![alt text](https://ci.appveyor.com/api/projects/status/github/zapadi/redmine-net-api?branch=master&svg=true) | [![NuGet package](https://img.shields.io/nuget/v/redmine-api.svg)](https://www.nuget.org/packages/redmine-api)  
-
 
 ## WIKI
 
