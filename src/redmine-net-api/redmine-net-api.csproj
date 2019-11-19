@@ -14,8 +14,6 @@
 
     <DefineConstants>TRACE</DefineConstants>
 
-    <Platform>x64 or x86</Platform>
-
     <Configurations>Debug;Release</Configurations>
 
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
