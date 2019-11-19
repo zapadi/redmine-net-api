@@ -7,9 +7,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{0DFF4758-5C1
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{F3F4278D-6271-4F77-BA88-41555D53CBD1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "redmine-net-api", "redmine-net-api\redmine-net-api.csproj", "{0E6B9B72-445D-4E71-8D29-48C4A009AB03}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "redmine-net-api", "src\redmine-net-api\redmine-net-api.csproj", "{0E6B9B72-445D-4E71-8D29-48C4A009AB03}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "redmine-net-api.Tests", "redmine-net-api.Tests\redmine-net-api.Tests.csproj", "{900EF0B3-0233-45DA-811F-4C59483E8452}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "redmine-net-api.Tests", "tests\redmine-net-api.Tests\redmine-net-api.Tests.csproj", "{900EF0B3-0233-45DA-811F-4C59483E8452}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionFolder", "SolutionFolder", "{E8C35EC2-DD90-46E8-9B63-84EFD5F2FDE3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
