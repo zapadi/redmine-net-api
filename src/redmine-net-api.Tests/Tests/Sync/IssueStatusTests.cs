@@ -20,7 +20,9 @@ using Xunit;
 namespace redmine.net.api.Tests.Tests.Sync
 {
 	[Trait("Redmine-Net-Api", "IssueStatuses")]
-	[Collection("RedmineCollection")]
+#if !(NET20 || NET40)
+    [Collection("RedmineCollection")]
+#endif
     public class IssueStatusTests
     {
         public IssueStatusTests(RedmineFixture fixture)
@@ -37,7 +39,6 @@ namespace redmine.net.api.Tests.Tests.Sync
             var issueStatuses = fixture.RedmineManager.GetObjects<IssueStatus>();
 
             Assert.NotNull(issueStatuses);
-            Assert.All(issueStatuses, i => Assert.IsType<IssueStatus>(i));
             Assert.True(issueStatuses.Count == NUMBER_OF_ISSUE_STATUSES,
                 "Issue statuses count(" + issueStatuses.Count + ") != " + NUMBER_OF_ISSUE_STATUSES);
         }

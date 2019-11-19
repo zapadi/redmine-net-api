@@ -57,6 +57,7 @@ namespace Redmine.Net.Api.Types
         /// <param name="reader"></param>
         public void ReadXml(XmlReader reader)
         {
+            if (reader == null) throw new ArgumentNullException(nameof(reader));
             reader.Read();
             while (!reader.EOF)
             {
@@ -95,7 +96,7 @@ namespace Redmine.Net.Api.Types
             if (other == null) return false;
             return (Id == other.Id && 
                 (Project != null ? Project.Equals(other.Project) : other.Project == null) && 
-                    (Roles != null ? Roles.Equals<MembershipRole>(other.Roles) : other.Roles == null));
+                    (Roles?.Equals<MembershipRole>(other.Roles) ?? other.Roles == null));
         }
 
         /// <summary>

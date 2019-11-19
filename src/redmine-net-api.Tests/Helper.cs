@@ -14,11 +14,13 @@ namespace redmine.net.api.Tests
 
 		static Helper()
 		{
-			Uri = ConfigurationManager.AppSettings["uri"];
-			ApiKey = ConfigurationManager.AppSettings["apiKey"];
+            Uri = "http://192.168.1.53:8089";
 
-			Username = ConfigurationManager.AppSettings["username"];
-			Password = ConfigurationManager.AppSettings["password"];
+            ApiKey = "a96e35d02bc6a6dbe655b83a2f6db57b82df2dff";
+
+
+            Username = "zapadi";
+			Password = "1qaz2wsx";
 		}
 	}
 }

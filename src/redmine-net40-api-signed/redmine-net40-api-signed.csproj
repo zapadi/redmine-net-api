@@ -281,8 +281,8 @@
     <Compile Include="..\redmine-net20-api\Types\WikiPage.cs">
       <Link>Types\WikiPage.cs</Link>
     </Compile>
-    <Compile Include="..\redmine-net40-api\Async\RedmineManagerAsync.cs">
-      <Link>Async\RedmineManagerAsync.cs</Link>
+    <Compile Include="..\redmine-net40-api\Async\RedmineManagerAsync40.cs">
+      <Link>Async\RedmineManagerAsync40.cs</Link>
     </Compile>
     <Compile Include="..\redmine-net40-api\Extensions\CollectionExtensions.cs">
       <Link>Extensions\CollectionExtensions.cs</Link>

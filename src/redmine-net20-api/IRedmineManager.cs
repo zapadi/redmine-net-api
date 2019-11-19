@@ -254,8 +254,8 @@ namespace Redmine.Net.Api.Types
         /// <param name="sender"></param>
         /// <param name="cert"></param>
         /// <param name="chain"></param>
-        /// <param name="error"></param>
+        /// <param name="sslPolicyErrors"></param>
         /// <returns></returns>
-        bool RemoteCertValidate(object sender, X509Certificate cert, X509Chain chain, SslPolicyErrors error);
+        bool RemoteCertValidate(object sender, X509Certificate cert, X509Chain chain, SslPolicyErrors sslPolicyErrors);
     }
 }

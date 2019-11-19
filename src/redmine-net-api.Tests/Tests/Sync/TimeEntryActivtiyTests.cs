@@ -21,7 +21,9 @@ using Xunit;
 namespace redmine.net.api.Tests.Tests.Sync
 {
 	[Trait("Redmine-Net-Api", "TimeEntryActivities")]
-	[Collection("RedmineCollection")]
+#if !(NET20 || NET40)
+    [Collection("RedmineCollection")]
+#endif
     public class TimeEntryActivityTests
     {
         public TimeEntryActivityTests(RedmineFixture fixture)
@@ -39,7 +41,6 @@ namespace redmine.net.api.Tests.Tests.Sync
             var timeEntryActivities = fixture.RedmineManager.GetObjects<TimeEntryActivity>();
 
             Assert.NotNull(timeEntryActivities);
-            Assert.All(timeEntryActivities, t => Assert.IsType<TimeEntryActivity>(t));
             Assert.True(timeEntryActivities.Count == NUMBER_OF_TIME_ENTRY_ACTIVITIES,
                 "Time entry activities count ( "+ timeEntryActivities.Count +" ) != " + NUMBER_OF_TIME_ENTRY_ACTIVITIES);
         }

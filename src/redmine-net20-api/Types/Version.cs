@@ -41,7 +41,7 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <value>The description.</value>
         [XmlElement(RedmineKeys.DESCRIPTION)]
-        public String Description { get; set; }
+        public string Description { get; set; }
 
         /// <summary>
         /// Gets or sets the status.
@@ -158,7 +158,7 @@ namespace Redmine.Net.Api.Types
                 && Sharing == other.Sharing
                 && CreatedOn == other.CreatedOn
                 && UpdatedOn == other.UpdatedOn
-                && (CustomFields != null ? CustomFields.Equals<IssueCustomField>(other.CustomFields) : other.CustomFields == null));
+                && (CustomFields?.Equals<IssueCustomField>(other.CustomFields) ?? other.CustomFields == null));
         }
 
         /// <summary>

@@ -82,20 +82,10 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <value>The comments.</value>
         [XmlAttribute(RedmineKeys.COMMENTS)]
-        public String Comments
+        public string Comments
         {
             get { return comments; }
-            set
-            {
-                if (!string.IsNullOrEmpty(value))
-                {
-                    if (value.Length > 255)
-                    {
-                        value = value.Substring(0, 255);
-                    }
-                }
-                comments = value;
-            }
+            set { comments = value.Truncate(255); }
         }
 
         /// <summary>
@@ -224,7 +214,7 @@ namespace Redmine.Net.Api.Types
                 && User == other.User
                 && CreatedOn == other.CreatedOn
                 && UpdatedOn == other.UpdatedOn
-                && (CustomFields != null ? CustomFields.Equals<IssueCustomField>(other.CustomFields) : other.CustomFields == null));
+                && (CustomFields?.Equals<IssueCustomField>(other.CustomFields) ?? other.CustomFields == null));
         }
 
         /// <summary>

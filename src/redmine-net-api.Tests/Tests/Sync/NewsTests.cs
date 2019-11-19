@@ -23,7 +23,9 @@ using Xunit;
 namespace redmine.net.api.Tests.Tests.Sync
 {
 	[Trait("Redmine-Net-Api", "News")]
-	[Collection("RedmineCollection")]
+#if !(NET20 || NET40)
+    [Collection("RedmineCollection")]
+#endif
     public class NewsTests
     {
         public NewsTests(RedmineFixture fixture)
@@ -40,7 +42,6 @@ namespace redmine.net.api.Tests.Tests.Sync
             var news = fixture.RedmineManager.GetObjects<News>();
 
             Assert.NotNull(news);
-            Assert.All(news, n => Assert.IsType<News>(n));
             Assert.True(news.Count == NUMBER_OF_NEWS, "News count(" + news.Count + ") != " + NUMBER_OF_NEWS);
         }
 
@@ -53,7 +54,6 @@ namespace redmine.net.api.Tests.Tests.Sync
                 fixture.RedmineManager.GetObjects<News>(new NameValueCollection {{RedmineKeys.PROJECT_ID, PROJECT_ID}});
 
             Assert.NotNull(news);
-            Assert.All(news, n => Assert.IsType<News>(n));
             Assert.True(news.Count == NUMBER_OF_NEWS_BY_PROJECT_ID,
                 "News count(" + news.Count + ") != " + NUMBER_OF_NEWS_BY_PROJECT_ID);
         }

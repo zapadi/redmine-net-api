@@ -25,7 +25,9 @@ using Xunit;
 namespace redmine.net.api.Tests.Tests.Sync
 {
     [Trait("Redmine-Net-Api", "Projects")]
+#if !(NET20 || NET40)
     [Collection("RedmineCollection")]
+#endif
     [Order(1)]
     public class ProjectTests
     {
@@ -169,12 +171,10 @@ namespace redmine.net.api.Tests.Tests.Sync
 
 		    Assert.NotNull(project.Trackers);
 		    Assert.True(project.Trackers.Count == 2, "Trackers count != " + 2);
-		    Assert.All(project.Trackers, t => Assert.IsType<ProjectTracker>(t));
 
 		    Assert.NotNull(project.EnabledModules);
 		    Assert.True(project.EnabledModules.Count == 2,
 			    "Enabled modules count (" + project.EnabledModules.Count + ") != " + 2);
-		    Assert.All(project.EnabledModules, em => Assert.IsType<ProjectEnabledModule>(em));
 	    }
 
 	    [Fact, Order(5)]

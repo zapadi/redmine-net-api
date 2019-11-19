@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-
+#if !NET20
 using System;
 using System.Collections.Generic;
 using System.Web.Script.Serialization;
@@ -149,7 +149,7 @@ namespace Redmine.Net.Api.Internals
         /// <exception cref="InvalidOperationException"></exception>
         public static object JsonDeserialize(string jsonString, Type type, string root)
         {
-            if (string.IsNullOrEmpty(jsonString)) throw new ArgumentNullException("jsonString");
+            if (string.IsNullOrEmpty(jsonString)) throw new ArgumentNullException(nameof(jsonString));
 
             var serializer = new JavaScriptSerializer();
             serializer.RegisterConverters(new[] { jsonConverters[type] });
@@ -198,7 +198,7 @@ namespace Redmine.Net.Api.Internals
         {
             totalCount = 0;
             offset = 0;
-            if (string.IsNullOrEmpty(jsonString)) throw new ArgumentNullException("jsonString");
+            if (string.IsNullOrEmpty(jsonString)) throw new ArgumentNullException(nameof(jsonString));
 
             var serializer = new JavaScriptSerializer();
             serializer.RegisterConverters(new[] { jsonConverters[type] });
@@ -227,7 +227,7 @@ namespace Redmine.Net.Api.Internals
                     }
                     else
                     {
-                        info += item as string + " ";
+                        info += $"{item as string} ";
                     }
                 }
                 var err = new Error { Info = info };
@@ -241,3 +241,4 @@ namespace Redmine.Net.Api.Internals
         }
     }
 }
+#endif

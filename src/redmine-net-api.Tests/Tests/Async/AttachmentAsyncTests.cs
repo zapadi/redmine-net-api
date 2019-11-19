@@ -1,9 +1,11 @@
-﻿using System;
+﻿#if !(NET20 || NET40)
+using Redmine.Net.Api.Async;
+using Redmine.Net.Api.Types;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Threading.Tasks;
-using Redmine.Net.Api.Async;
-using Redmine.Net.Api.Types;
+
 using Xunit;
 
 namespace redmine.net.api.Tests.Tests.Async
@@ -92,3 +94,4 @@ namespace redmine.net.api.Tests.Tests.Async
 		}
 	}
 }
+#endif

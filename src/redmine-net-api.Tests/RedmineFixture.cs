@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿
+using System.Diagnostics;
 using Redmine.Net.Api;
 
 namespace redmine.net.api.Tests

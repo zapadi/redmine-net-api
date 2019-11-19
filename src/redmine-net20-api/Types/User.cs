@@ -36,7 +36,7 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <value>The login.</value>
         [XmlElement(RedmineKeys.LOGIN)]
-        public String Login { get; set; }
+        public string Login { get; set; }
 
         /// <summary>
         /// Gets or sets the user password.
@@ -50,21 +50,21 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <value>The first name.</value>
         [XmlElement(RedmineKeys.FIRSTNAME)]
-        public String FirstName { get; set; }
+        public string FirstName { get; set; }
 
         /// <summary>
         /// Gets or sets the last name.
         /// </summary>
         /// <value>The last name.</value>
         [XmlElement(RedmineKeys.LASTNAME)]
-        public String LastName { get; set; }
+        public string LastName { get; set; }
 
         /// <summary>
         /// Gets or sets the email.
         /// </summary>
         /// <value>The email.</value>
         [XmlElement(RedmineKeys.MAIL)]
-        public String Email { get; set; }
+        public string Email { get; set; }
 
         /// <summary>
         /// Gets or sets the authentication mode id.
@@ -73,7 +73,7 @@ namespace Redmine.Net.Api.Types
         /// The authentication mode id.
         /// </value>
         [XmlElement(RedmineKeys.AUTH_SOURCE_ID, IsNullable = true)]
-        public Int32? AuthenticationModeId { get; set; }
+        public int? AuthenticationModeId { get; set; }
 
         /// <summary>
         /// Gets or sets the created on.
@@ -230,7 +230,7 @@ namespace Redmine.Net.Api.Types
                 writer.WriteValueOrEmpty(AuthenticationModeId, RedmineKeys.AUTH_SOURCE_ID);
             }
             
-            writer.WriteElementString(RedmineKeys.MUST_CHANGE_PASSWD, MustChangePassword.ToString().ToLowerInvariant());
+            writer.WriteElementString(RedmineKeys.MUST_CHANGE_PASSWD, MustChangePassword.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
             writer.WriteElementString(RedmineKeys.STATUS, ((int)Status).ToString(CultureInfo.InvariantCulture));
             if(CustomFields != null)
             { 
@@ -248,21 +248,21 @@ namespace Redmine.Net.Api.Types
             if (other == null) return false;
             return (
                 Id == other.Id
-                && Login.Equals(other.Login)
+                && Login.Equals(other.Login, StringComparison.OrdinalIgnoreCase)
                 //&& Password.Equals(other.Password)
-                && FirstName.Equals(other.FirstName)
-                && LastName.Equals(other.LastName)
-                && Email.Equals(other.Email)
-                && MailNotification.Equals(other.MailNotification)
-				&& (ApiKey != null ? ApiKey.Equals(other.ApiKey) : other.ApiKey == null)
+                && FirstName.Equals(other.FirstName, StringComparison.OrdinalIgnoreCase)
+                && LastName.Equals(other.LastName, StringComparison.OrdinalIgnoreCase)
+                && Email.Equals(other.Email, StringComparison.OrdinalIgnoreCase)
+                && MailNotification.Equals(other.MailNotification, StringComparison.OrdinalIgnoreCase)
+				&& (ApiKey?.Equals(other.ApiKey, StringComparison.OrdinalIgnoreCase) ?? other.ApiKey == null)
                 && AuthenticationModeId == other.AuthenticationModeId
                 && CreatedOn == other.CreatedOn
                 && LastLoginOn == other.LastLoginOn
                 && Status == other.Status
                 && MustChangePassword == other.MustChangePassword
-                && (CustomFields != null ? CustomFields.Equals<IssueCustomField>(other.CustomFields) : other.CustomFields == null)
-                && (Memberships != null ? Memberships.Equals<Membership>(other.Memberships): other.Memberships == null)
-                && (Groups != null ? Groups.Equals<UserGroup>(other.Groups) : other.Groups == null)
+                && (CustomFields?.Equals<IssueCustomField>(other.CustomFields) ?? other.CustomFields == null)
+                && (Memberships?.Equals<Membership>(other.Memberships) ?? other.Memberships == null)
+                && (Groups?.Equals<UserGroup>(other.Groups) ?? other.Groups == null)
             );
         }
 

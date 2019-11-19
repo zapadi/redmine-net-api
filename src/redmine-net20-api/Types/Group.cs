@@ -112,9 +112,9 @@ namespace Redmine.Net.Api.Types
             if (other == null) return false;
             return Id == other.Id
                 && Name == other.Name
-                && (Users != null ? Users.Equals<GroupUser>(other.Users) : other.Users == null)
-                && (CustomFields != null ? CustomFields.Equals<IssueCustomField>(other.CustomFields) : other.CustomFields == null)
-                && (Memberships != null ? Memberships.Equals<Membership>(other.Memberships) : other.Memberships == null);
+                && (Users?.Equals<GroupUser>(other.Users) ?? other.Users == null)
+                && (CustomFields?.Equals<IssueCustomField>(other.CustomFields) ?? other.CustomFields == null)
+                && (Memberships?.Equals<Membership>(other.Memberships) ?? other.Memberships == null);
         }
 
         /// <summary>
@@ -164,7 +164,7 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <param name="gu"></param>
         /// <returns></returns>
-        public int GetGroupUserId(object gu)
+        public static int GetGroupUserId(object gu)
         {
             return ((GroupUser)gu).Id;
         }

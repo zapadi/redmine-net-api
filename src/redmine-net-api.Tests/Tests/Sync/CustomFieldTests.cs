@@ -21,7 +21,9 @@ using Xunit;
 namespace redmine.net.api.Tests.Tests.Sync
 {
 	[Trait("Redmine-Net-Api", "CustomFields")]
-	[Collection("RedmineCollection")]
+#if !(NET20 || NET40)
+    [Collection("RedmineCollection")]
+#endif
     public class CustomFieldTests
     {
         public CustomFieldTests(RedmineFixture fixture)
@@ -39,7 +41,6 @@ namespace redmine.net.api.Tests.Tests.Sync
             var customFields = fixture.RedmineManager.GetObjects<CustomField>();
 
             Assert.NotNull(customFields);
-            Assert.All(customFields, cf => Assert.IsType<CustomField>(cf));
             Assert.True(customFields.Count == NUMBER_OF_CUSTOM_FIELDS,
                 "Custom fields count(" + customFields.Count + ") != " + NUMBER_OF_CUSTOM_FIELDS);
         }

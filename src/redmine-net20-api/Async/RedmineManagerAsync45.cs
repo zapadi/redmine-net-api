@@ -14,6 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+#if !(NET20 || NET40)
+
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Globalization;
@@ -152,7 +154,7 @@ namespace Redmine.Net.Api.Async
         /// <param name="groupId">The group id.</param>
         /// <param name="userId">The user id.</param>
         /// <returns></returns>
-        public static async Task DeleteUserFromGroupAsync(this RedmineManager redmineManager, int groupId, int userId)
+        public static async Task RemoveUserFromGroupAsync(this RedmineManager redmineManager, int groupId, int userId)
         {
             var uri = UrlHelper.GetRemoveUserFromGroupUrl(redmineManager, groupId, userId);
             await WebApiAsyncHelper.ExecuteUpload(redmineManager, uri, HttpVerbs.DELETE, string.Empty, "DeleteUserFromGroupAsync").ConfigureAwait(false);
@@ -165,7 +167,7 @@ namespace Redmine.Net.Api.Async
         /// <param name="issueId">The issue identifier.</param>
         /// <param name="userId">The user identifier.</param>
         /// <returns></returns>
-        public static async Task AddWatcherAsync(this RedmineManager redmineManager, int issueId, int userId)
+        public static async Task AddWatcherToIssueAsync(this RedmineManager redmineManager, int issueId, int userId)
         {
             var data = DataHelper.UserData(userId, redmineManager.MimeFormat);
             var uri = UrlHelper.GetAddWatcherUrl(redmineManager, issueId, userId);
@@ -180,13 +182,19 @@ namespace Redmine.Net.Api.Async
         /// <param name="issueId">The issue identifier.</param>
         /// <param name="userId">The user identifier.</param>
         /// <returns></returns>
-        public static async Task RemoveWatcherAsync(this RedmineManager redmineManager, int issueId, int userId)
+        public static async Task RemoveWatcherFromIssueAsync(this RedmineManager redmineManager, int issueId, int userId)
         {
             var uri = UrlHelper.GetRemoveWatcherUrl(redmineManager, issueId, userId);
             await WebApiAsyncHelper.ExecuteUpload(redmineManager, uri, HttpVerbs.DELETE, string.Empty, "RemoveWatcherAsync").ConfigureAwait(false);
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="redmineManager"></param>
+        /// <param name="include"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public static async Task<int> CountAsync<T>(this RedmineManager redmineManager, params string[] include) where T : class, new()
         {
             var parameters = new NameValueCollection();
@@ -199,6 +207,13 @@ namespace Redmine.Net.Api.Async
             return await CountAsync<T>(redmineManager,parameters).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="redmineManager"></param>
+        /// <param name="parameters"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public static async Task<int> CountAsync<T>(this RedmineManager redmineManager, NameValueCollection parameters) where T : class, new()
         {
             int totalCount = 0, pageSize = 1, offset = 0;
@@ -376,3 +391,4 @@ namespace Redmine.Net.Api.Async
         }
     }
 }
+#endif

@@ -33,7 +33,7 @@ namespace Redmine.Net.Api.Extensions
         {
             if (parameters == null) return null;
             var value = parameters.Get(parameterName);
-            return string.IsNullOrEmpty(value) ? null : value;
+            return value.IsNullOrWhiteSpace() ? null : value;
         }
     }
 }

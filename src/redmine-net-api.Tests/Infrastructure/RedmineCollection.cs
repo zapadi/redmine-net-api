@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿#if !(NET20 || NET40)
+using Xunit;
 
 namespace redmine.net.api.Tests.Infrastructure
 {
@@ -8,3 +9,4 @@ namespace redmine.net.api.Tests.Infrastructure
 		
 	}
 }
+#endif

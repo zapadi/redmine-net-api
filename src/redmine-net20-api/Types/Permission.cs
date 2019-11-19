@@ -39,7 +39,7 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
         public bool Equals(Permission other)
         {
-            return Info == other.Info;
+            return other != null && Info == other.Info;
         }
 
         /// <summary>

@@ -80,14 +80,14 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <value>The subject.</value>
         [XmlElement(RedmineKeys.SUBJECT)]
-        public String Subject { get; set; }
+        public string Subject { get; set; }
 
         /// <summary>
         /// Gets or sets the description.
         /// </summary>
         /// <value>The description.</value>
         [XmlElement(RedmineKeys.DESCRIPTION)]
-        public String Description { get; set; }
+        public string Description { get; set; }
 
         /// <summary>
         /// Gets or sets the start date.
@@ -540,21 +540,21 @@ namespace Redmine.Net.Api.Types
             && DueDate == other.DueDate
             && DoneRatio == other.DoneRatio
             && EstimatedHours == other.EstimatedHours
-            && (CustomFields != null ? CustomFields.Equals<IssueCustomField>(other.CustomFields) : other.CustomFields == null)
+            && (CustomFields?.Equals<IssueCustomField>(other.CustomFields) ?? other.CustomFields == null)
             && CreatedOn == other.CreatedOn
             && UpdatedOn == other.UpdatedOn
             && AssignedTo == other.AssignedTo
             && FixedVersion == other.FixedVersion
             && Notes == other.Notes
-            && (Watchers != null ? Watchers.Equals<Watcher>(other.Watchers) : other.Watchers == null)
+            && (Watchers?.Equals<Watcher>(other.Watchers) ?? other.Watchers == null)
             && ClosedOn == other.ClosedOn
             && SpentHours == other.SpentHours
             && PrivateNotes == other.PrivateNotes
-            && (Attachments != null ? Attachments.Equals<Attachment>(other.Attachments) : other.Attachments == null)
-            && (Changesets!= null ? Changesets.Equals<ChangeSet>(other.Changesets) : other.Changesets == null)
-            && (Children != null ?  Children.Equals<IssueChild>(other.Children) : other.Children == null)
-            && (Journals != null ? Journals.Equals<Journal>(other.Journals) : other.Journals == null)
-            && (Relations != null ? Relations.Equals<IssueRelation>(other.Relations) : other.Relations == null)
+            && (Attachments?.Equals<Attachment>(other.Attachments) ?? other.Attachments == null)
+            && (Changesets?.Equals<ChangeSet>(other.Changesets) ?? other.Changesets == null)
+            && (Children?.Equals<IssueChild>(other.Children) ?? other.Children == null)
+            && (Journals?.Equals<Journal>(other.Journals) ?? other.Journals == null)
+            && (Relations?.Equals<IssueRelation>(other.Relations) ?? other.Relations == null)
             );
         }
 

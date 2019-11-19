@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿#if !(NET20 || NET40)
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Threading.Tasks;
 using Redmine.Net.Api.Async;
@@ -22,7 +23,7 @@ namespace redmine.net.api.Tests.Tests.Async
 		[Fact]
 		public async Task Should_Add_Watcher_To_Issue()
 		{
-			await fixture.RedmineManager.AddWatcherAsync(WATCHER_ISSUE_ID, WATCHER_USER_ID);
+			await fixture.RedmineManager.AddWatcherToIssueAsync(WATCHER_ISSUE_ID, WATCHER_USER_ID);
 
 			Issue issue = await fixture.RedmineManager.GetObjectAsync<Issue>(WATCHER_ISSUE_ID.ToString(), new NameValueCollection { { "include", "watchers" } });
 
@@ -34,7 +35,7 @@ namespace redmine.net.api.Tests.Tests.Async
 		[Fact]
 		public async Task Should_Remove_Watcher_From_Issue()
 		{
-			await fixture.RedmineManager.RemoveWatcherAsync(WATCHER_ISSUE_ID, WATCHER_USER_ID);
+			await fixture.RedmineManager.RemoveWatcherFromIssueAsync(WATCHER_ISSUE_ID, WATCHER_USER_ID);
 
 			Issue issue = await fixture.RedmineManager.GetObjectAsync<Issue>(WATCHER_ISSUE_ID.ToString(), new NameValueCollection { { "include", "watchers" } });
 
@@ -42,3 +43,4 @@ namespace redmine.net.api.Tests.Tests.Async
 		}
 	}
 }
+#endif

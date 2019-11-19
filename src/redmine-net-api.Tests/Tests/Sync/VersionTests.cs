@@ -16,9 +16,9 @@
 
 using System;
 using System.Collections.Specialized;
-using redmine.net.api.Tests.Infrastructure;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Exceptions;
+using redmine.net.api.Tests.Infrastructure;
 using Redmine.Net.Api.Types;
 using Xunit;
 using Version = Redmine.Net.Api.Types.Version;
@@ -26,7 +26,9 @@ using Version = Redmine.Net.Api.Types.Version;
 namespace redmine.net.api.Tests.Tests.Sync
 {
 	[Trait("Redmine-Net-Api", "Versions")]
-	[Collection("RedmineCollection")]
+#if !(NET20 || NET40)
+    [Collection("RedmineCollection")]
+#endif
     public class VersionTests
     {
         public VersionTests(RedmineFixture fixture)
@@ -104,7 +106,6 @@ namespace redmine.net.api.Tests.Tests.Sync
                 });
 
             Assert.NotNull(versions);
-            Assert.All(versions, v => Assert.IsType<Version>(v));
             Assert.True(versions.Count == NUMBER_OF_VERSIONS, "Versions count ( "+versions.Count+" ) != " + NUMBER_OF_VERSIONS);
         }
 

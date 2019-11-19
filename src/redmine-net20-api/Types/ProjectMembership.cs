@@ -94,6 +94,7 @@ namespace Redmine.Net.Api.Types
         /// <param name="reader"></param>
         public void ReadXml(XmlReader reader)
         {
+            if (reader == null) throw new ArgumentNullException(nameof(reader));
             reader.Read();
             while (!reader.EOF)
             {

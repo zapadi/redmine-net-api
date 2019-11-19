@@ -38,7 +38,7 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// Generates an object from its XML representation.
         /// </summary>
-        /// <param name="reader">The <see cref="T:System.Xml.XmlReader"/> stream from which the object is deserialized.</param>
+        /// <param name="reader">The <see cref="System.Xml.XmlReader"/> stream from which the object is deserialized.</param>
         public override void ReadXml(XmlReader reader)
         {
             reader.Read();

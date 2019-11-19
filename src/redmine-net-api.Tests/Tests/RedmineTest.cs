@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using redmine.net.api.Tests.Infrastructure;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Exceptions;
@@ -7,7 +8,9 @@ using Xunit;
 namespace redmine.net.api.Tests.Tests
 {
     [Trait("Redmine-api", "Credentials")]
+#if !(NET20 || NET40)
     [Collection("RedmineCollection")]
+#endif
     [Order(1)]
     public class RedmineTest
     {
@@ -21,7 +24,7 @@ namespace redmine.net.api.Tests.Tests
 	    [Fact]
 	    public void Should_Throw_Redmine_Exception_When_Host_Is_Empty()
 	    {
-		    Assert.Throws<RedmineException>(() => new RedmineManager(String.Empty, Helper.Username, Helper.Password));
+		    Assert.Throws<RedmineException>(() => new RedmineManager(string.Empty, Helper.Username, Helper.Password));
 	    }
 
 	    [Fact]

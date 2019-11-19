@@ -26,7 +26,9 @@ using Xunit;
 namespace redmine.net.api.Tests.Tests.Sync
 {
     [Trait("Redmine-Net-Api", "Attachments")]
+#if !(NET20 || NET40)
     [Collection("RedmineCollection")]
+#endif
     public class AttachmentTests
     {
         public AttachmentTests(RedmineFixture fixture)
@@ -100,7 +102,6 @@ namespace redmine.net.api.Tests.Tests.Sync
 
             Assert.NotNull(issue);
             Assert.NotNull(issue.Attachments);
-            Assert.All(issue.Attachments, a => Assert.IsType<Attachment>(a));
             Assert.True(issue.Attachments.Count == 1, "Number of attachments ( " + issue.Attachments.Count + " ) != 1");
 
             var firstAttachment = issue.Attachments[0];

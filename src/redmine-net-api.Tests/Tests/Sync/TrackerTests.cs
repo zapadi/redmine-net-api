@@ -20,7 +20,9 @@ using Xunit;
 namespace redmine.net.api.Tests.Tests.Sync
 {
 	[Trait("Redmine-Net-Api", "Trackers")]
-	[Collection("RedmineCollection")]
+#if !(NET20 || NET40)
+    [Collection("RedmineCollection")]
+#endif
     public class TrackerTests
     {
         public TrackerTests(RedmineFixture fixture)
@@ -38,7 +40,6 @@ namespace redmine.net.api.Tests.Tests.Sync
             var trackers = fixture.RedmineManager.GetObjects<Tracker>();
 
             Assert.NotNull(trackers);
-            Assert.All(trackers, t => Assert.IsType<Tracker>(t));
             Assert.True(trackers.Count == NUMBER_OF_TRACKERS, "Trackers count(" + trackers.Count + ") != " + NUMBER_OF_TRACKERS);
         }
     }

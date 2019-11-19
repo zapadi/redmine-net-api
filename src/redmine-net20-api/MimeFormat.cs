@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+
 namespace Redmine.Net.Api
 {
     /// <summary>
@@ -23,6 +24,10 @@ namespace Redmine.Net.Api
     {
         /// <summary>
         /// </summary>
-        Xml
+        Xml,
+        /// <summary>
+        /// The json
+        /// </summary>
+        Json
     }
 }

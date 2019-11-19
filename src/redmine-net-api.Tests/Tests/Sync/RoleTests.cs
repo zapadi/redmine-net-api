@@ -21,7 +21,9 @@ using Xunit;
 namespace redmine.net.api.Tests.Tests.Sync
 {
 	[Trait("Redmine-Net-Api", "Roles")]
-	[Collection("RedmineCollection")]
+#if !(NET20 || NET40)
+    [Collection("RedmineCollection")]
+#endif
     public class RoleTests
     {
         public RoleTests(RedmineFixture fixture)
@@ -38,7 +40,6 @@ namespace redmine.net.api.Tests.Tests.Sync
             var roles = fixture.RedmineManager.GetObjects<Role>();
 
             Assert.NotNull(roles);
-            Assert.All(roles, r => Assert.IsType<Role>(r));
             Assert.True(roles.Count == NUMBER_OF_ROLES, "Roles count(" + roles.Count + ") != " + NUMBER_OF_ROLES);
         }
 
@@ -55,7 +56,6 @@ namespace redmine.net.api.Tests.Tests.Sync
             Assert.True(role.Name.Equals(ROLE_NAME), "Role name is invalid.");
 
             Assert.NotNull(role.Permissions);
-            Assert.All(role.Permissions, p => Assert.IsType<Permission>(p));
             Assert.True(role.Permissions.Count == NUMBER_OF_ROLE_PERMISSIONS,
                 "Permissions count(" + role.Permissions.Count + ") != " + NUMBER_OF_ROLE_PERMISSIONS);
         }

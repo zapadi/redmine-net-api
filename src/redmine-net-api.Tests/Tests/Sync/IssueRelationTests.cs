@@ -24,7 +24,9 @@ using Xunit;
 namespace redmine.net.api.Tests.Tests.Sync
 {
 	[Trait("Redmine-Net-Api", "IssueRelations")]
-	[Collection("RedmineCollection")]
+#if !(NET20 || NET40)
+    [Collection("RedmineCollection")]
+#endif
     public class IssueRelationTests
     {
         public IssueRelationTests(RedmineFixture fixture)

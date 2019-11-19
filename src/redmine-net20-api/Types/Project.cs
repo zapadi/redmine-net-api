@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Xml;
 using System.Xml.Serialization;
 using Redmine.Net.Api.Extensions;
@@ -34,14 +35,14 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <value>The identifier.</value>
         [XmlElement(RedmineKeys.IDENTIFIER)]
-        public String Identifier { get; set; }
+        public string Identifier { get; set; }
 
         /// <summary>
         /// Gets or sets the description.
         /// </summary>
         /// <value>The description.</value>
         [XmlElement(RedmineKeys.DESCRIPTION)]
-        public String Description { get; set; }
+        public string Description { get; set; }
 
         /// <summary>
         /// Gets or sets the parent.
@@ -55,7 +56,7 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <value>The home page.</value>
         [XmlElement(RedmineKeys.HOMEPAGE)]
-        public String HomePage { get; set; }
+        public string HomePage { get; set; }
 
         /// <summary>
         /// Gets or sets the created on.
@@ -152,6 +153,7 @@ namespace Redmine.Net.Api.Types
         /// <param name="reader">The <see cref="T:System.Xml.XmlReader"/> stream from which the object is deserialized.</param>
         public override void ReadXml(XmlReader reader)
         {
+            if (reader == null) throw new ArgumentNullException(nameof(reader));
             reader.Read();
             while (!reader.EOF)
             {
@@ -205,11 +207,12 @@ namespace Redmine.Net.Api.Types
         /// <param name="writer"></param>
         public override void WriteXml(XmlWriter writer)
         {
+            if (writer == null) throw new ArgumentNullException(nameof(writer));
             writer.WriteElementString(RedmineKeys.NAME, Name);
             writer.WriteElementString(RedmineKeys.IDENTIFIER, Identifier);
             writer.WriteElementString(RedmineKeys.DESCRIPTION, Description);
             //writer.WriteElementString(RedmineKeys.INHERIT_MEMBERS, InheritMembers.ToString().ToLowerInvariant());
-            writer.WriteElementString(RedmineKeys.IS_PUBLIC, IsPublic.ToString().ToLowerInvariant());
+            writer.WriteElementString(RedmineKeys.IS_PUBLIC, IsPublic.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
             writer.WriteIdOrEmpty(Parent, RedmineKeys.PARENT_ID);
             writer.WriteElementString(RedmineKeys.HOMEPAGE, HomePage);
 
@@ -243,19 +246,19 @@ namespace Redmine.Net.Api.Types
             if (other == null) return false;
             return (
                 Id == other.Id
-                && Identifier.Equals(other.Identifier)
-                && Description.Equals(other.Description)
+                && Identifier.Equals(other.Identifier, StringComparison.OrdinalIgnoreCase)
+                && Description.Equals(other.Description, StringComparison.OrdinalIgnoreCase)
                 && (Parent != null ? Parent.Equals(other.Parent) : other.Parent == null)
-				&& (HomePage != null ? HomePage.Equals(other.HomePage) : other.HomePage == null)
+				&& (HomePage?.Equals(other.HomePage, StringComparison.OrdinalIgnoreCase) ?? other.HomePage == null)
                 && CreatedOn == other.CreatedOn
                 && UpdatedOn == other.UpdatedOn
                 && Status == other.Status
                 && IsPublic == other.IsPublic
                 && InheritMembers == other.InheritMembers
-                && (Trackers != null ? Trackers.Equals<ProjectTracker>(other.Trackers) : other.Trackers == null)
-                && (CustomFields != null ? CustomFields.Equals<IssueCustomField>(other.CustomFields) : other.CustomFields == null)
-                && (IssueCategories != null ? IssueCategories.Equals<ProjectIssueCategory>(other.IssueCategories) : other.IssueCategories == null)
-                && (EnabledModules != null ? EnabledModules.Equals<ProjectEnabledModule>(other.EnabledModules) : other.EnabledModules == null)
+                && (Trackers?.Equals<ProjectTracker>(other.Trackers) ?? other.Trackers == null)
+                && (CustomFields?.Equals<IssueCustomField>(other.CustomFields) ?? other.CustomFields == null)
+                && (IssueCategories?.Equals<ProjectIssueCategory>(other.IssueCategories) ?? other.IssueCategories == null)
+                && (EnabledModules?.Equals<ProjectEnabledModule>(other.EnabledModules) ?? other.EnabledModules == null)
             );
         }
 

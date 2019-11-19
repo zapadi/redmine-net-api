@@ -1,3 +1,5 @@
+
+#if NET20
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using Redmine.Net.Api.Types;
@@ -253,3 +255,4 @@ namespace Redmine.Net.Api.Async
         }
     }
 }
+#endif

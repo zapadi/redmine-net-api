@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-
+#if !(NET20 || NET40)
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Net;
@@ -199,3 +199,4 @@ namespace Redmine.Net.Api.Internals
         }
     }
 }
+#endif

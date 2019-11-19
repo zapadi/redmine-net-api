@@ -114,10 +114,10 @@ namespace Redmine.Net.Api.Types
         public bool Equals(Detail other)
         {
             if (other == null) return false;
-            return (Property != null ? Property.Equals(other.Property) : other.Property == null)
-                && (Name != null ? Name.Equals(other.Name) : other.Name == null)
-                && (OldValue != null ? OldValue.Equals(other.OldValue) : other.OldValue == null)
-                && (NewValue != null ? NewValue.Equals(other.NewValue) : other.NewValue == null);
+            return (Property?.Equals(other.Property, StringComparison.OrdinalIgnoreCase) ?? other.Property == null)
+                && (Name?.Equals(other.Name, StringComparison.OrdinalIgnoreCase) ?? other.Name == null)
+                && (OldValue?.Equals(other.OldValue, StringComparison.OrdinalIgnoreCase) ?? other.OldValue == null)
+                && (NewValue?.Equals(other.NewValue, StringComparison.OrdinalIgnoreCase) ?? other.NewValue == null);
         }
 
         /// <summary>

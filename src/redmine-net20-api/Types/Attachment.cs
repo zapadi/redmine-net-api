@@ -34,7 +34,7 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <value>The name of the file.</value>
         [XmlElement(RedmineKeys.FILENAME)]
-        public String FileName { get; set; }
+        public string FileName { get; set; }
 
         /// <summary>
         /// Gets or sets the size of the file.
@@ -48,21 +48,21 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <value>The type of the content.</value>
         [XmlElement(RedmineKeys.CONTENT_TYPE)]
-        public String ContentType { get; set; }
+        public string ContentType { get; set; }
 
         /// <summary>
         /// Gets or sets the description.
         /// </summary>
         /// <value>The description.</value>
         [XmlElement(RedmineKeys.DESCRIPTION)]
-        public String Description { get; set; }
+        public string Description { get; set; }
 
         /// <summary>
         /// Gets or sets the content URL.
         /// </summary>
         /// <value>The content URL.</value>
         [XmlElement(RedmineKeys.CONTENT_URL)]
-        public String ContentUrl { get; set; }
+        public string ContentUrl { get; set; }
 
         /// <summary>
         /// Gets or sets the author.

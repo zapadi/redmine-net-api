@@ -10,7 +10,9 @@ using Xunit;
 namespace redmine.net.api.Tests.Tests.Sync
 {
 	[Trait("Redmine-Net-Api", "Issues")]
-	[Collection("RedmineCollection")]
+#if !(NET20 || NET40)
+    [Collection("RedmineCollection")]
+#endif
 	public class IssueTests
 	{
 		public IssueTests(RedmineFixture fixture)
@@ -33,7 +35,6 @@ namespace redmine.net.api.Tests.Tests.Sync
 			var issues = fixture.RedmineManager.GetObjects<Issue>();
 
 			Assert.NotNull(issues);
-			Assert.All (issues, i => Assert.IsType<Issue> (i));
 		}
 
 		[Fact, Order(2)]
@@ -45,7 +46,6 @@ namespace redmine.net.api.Tests.Tests.Sync
 			var issues = fixture.RedmineManager.GetPaginatedObjects<Issue>(new NameValueCollection { { RedmineKeys.OFFSET, OFFSET.ToString() }, { RedmineKeys.LIMIT, NUMBER_OF_PAGINATED_ISSUES.ToString() }, { "sort", "id:desc" } });
 
 			Assert.NotNull(issues.Objects);
-			Assert.All (issues.Objects, i => Assert.IsType<Issue> (i));
 			Assert.True(issues.Objects.Count <= NUMBER_OF_PAGINATED_ISSUES, "number of issues ( "+ issues.Objects.Count +" ) != " + NUMBER_OF_PAGINATED_ISSUES.ToString());
 		}
 
@@ -55,7 +55,6 @@ namespace redmine.net.api.Tests.Tests.Sync
 			var issues = fixture.RedmineManager.GetObjects<Issue>(new NameValueCollection { { RedmineKeys.PROJECT_ID, PROJECT_ID } });
 
 			Assert.NotNull(issues);
-			Assert.All (issues, i => Assert.IsType<Issue> (i));
 		}
 
 		[Fact, Order(4)]
@@ -66,7 +65,6 @@ namespace redmine.net.api.Tests.Tests.Sync
 			var issues = fixture.RedmineManager.GetObjects<Issue>(new NameValueCollection { { RedmineKeys.SUBPROJECT_ID, SUBPROJECT_ID } });
 
 			Assert.NotNull(issues);
-			Assert.All (issues, i => Assert.IsType<Issue> (i));
 		}
 
 		[Fact, Order(5)]
@@ -77,7 +75,6 @@ namespace redmine.net.api.Tests.Tests.Sync
 			var issues = fixture.RedmineManager.GetObjects<Issue>(new NameValueCollection { { RedmineKeys.PROJECT_ID, PROJECT_ID }, { RedmineKeys.SUBPROJECT_ID, ALL_SUBPROJECTS } });
 
 			Assert.NotNull(issues);
-			Assert.All (issues, i => Assert.IsType<Issue> (i));
 		}
 
 		[Fact, Order(6)]
@@ -87,7 +84,6 @@ namespace redmine.net.api.Tests.Tests.Sync
 			var issues = fixture.RedmineManager.GetObjects<Issue>(new NameValueCollection { { RedmineKeys.TRACKER_ID, TRACKER_ID } });
 
 			Assert.NotNull(issues);
-			Assert.All (issues, i => Assert.IsType<Issue> (i));
 		}
 
 		[Fact, Order(7)]
@@ -96,7 +92,6 @@ namespace redmine.net.api.Tests.Tests.Sync
 			const string STATUS_ID = "*";
 			var issues = fixture.RedmineManager.GetObjects<Issue>(new NameValueCollection { { RedmineKeys.STATUS_ID, STATUS_ID } });
 			Assert.NotNull(issues);
-			Assert.All (issues, i => Assert.IsType<Issue> (i));
 		}
 
 		[Fact, Order(8)]
@@ -106,7 +101,6 @@ namespace redmine.net.api.Tests.Tests.Sync
 			var issues = fixture.RedmineManager.GetObjects<Issue>(new NameValueCollection { { RedmineKeys.ASSIGNED_TO_ID, ASSIGNED_TO_ID } });
 
 			Assert.NotNull(issues);
-			Assert.All (issues, i => Assert.IsType<Issue> (i));
 		}
 
 		[Fact, Order(9)]
@@ -118,7 +112,6 @@ namespace redmine.net.api.Tests.Tests.Sync
 			var issues = fixture.RedmineManager.GetObjects<Issue>(new NameValueCollection { { CUSTOM_FIELD_NAME, CUSTOM_FIELD_VALUE } });
 
 			Assert.NotNull(issues);
-			Assert.All (issues, i => Assert.IsType<Issue> (i));
 		}
 
 		[Fact, Order(10)]

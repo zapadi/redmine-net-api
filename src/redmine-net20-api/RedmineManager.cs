@@ -26,7 +26,7 @@ using System.Text.RegularExpressions;
 using Redmine.Net.Api.Exceptions;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Internals;
-using Redmine.Net.Api.Logging;
+
 using Redmine.Net.Api.Types;
 using Group = Redmine.Net.Api.Types.Group;
 using Version = Redmine.Net.Api.Types.Version;
@@ -204,7 +204,7 @@ namespace Redmine.Net.Api
                 if (!Uri.TryCreate(host, UriKind.Absolute, out uriResult) ||
                     !(uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps))
                 {
-                    host = "http://" + host;
+                    host = $"http://{host}";
                 }
 
                 if (!Uri.TryCreate(host, UriKind.Absolute, out uriResult))
@@ -364,7 +364,7 @@ namespace Redmine.Net.Api
         {
             var url = UrlHelper.GetWikisUrl(this, projectId);
             var result = WebApiHelper.ExecuteDownloadList<WikiPage>(this, url, "GetAllWikiPages");
-            return result != null ? result.Objects : null;
+            return result?.Objects;
         }
 
         /// <summary>
@@ -379,6 +379,12 @@ namespace Redmine.Net.Api
             WebApiHelper.ExecuteUpload(this, url, HttpVerbs.DELETE, string.Empty, "DeleteWikiPage");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parameters"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public int Count<T>(NameValueCollection parameters) where T : class, new()
         {
             int totalCount = 0, pageSize = 1, offset = 0;
@@ -445,6 +451,12 @@ namespace Redmine.Net.Api
             return WebApiHelper.ExecuteDownloadList<T>(this, url, "GetObjectList", parameters);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="include"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public int Count<T>(params string[] include) where T : class, new()
         {
             var parameters = new NameValueCollection();
@@ -799,17 +811,17 @@ namespace Redmine.Net.Api
         /// <param name="sender">The sender.</param>
         /// <param name="cert">The cert.</param>
         /// <param name="chain">The chain.</param>
-        /// <param name="error">The error.</param>
+        /// <param name="sslPolicyErrors">The error.</param>
         /// <returns></returns>
         /// <code></code>
-        public virtual bool RemoteCertValidate(object sender, X509Certificate cert, X509Chain chain, SslPolicyErrors error)
+        public virtual bool RemoteCertValidate(object sender, X509Certificate cert, X509Chain chain, SslPolicyErrors sslPolicyErrors)
         {
-            if (error == SslPolicyErrors.None)
+            if (sslPolicyErrors == SslPolicyErrors.None)
             {
                 return true;
             }
 
-            Logger.Current.Error("X509Certificate [{0}] Policy Error: '{1}'", cert.Subject, error);
+           // Logger.Current.Error("X509Certificate [{0}] Policy Error: '{1}'", cert.Subject, error);
 
             return false;
         }

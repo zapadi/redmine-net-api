@@ -85,6 +85,7 @@ namespace Redmine.Net.Api.Types
         /// <param name="reader"></param>
         public void ReadXml(XmlReader reader)
         {
+            if (reader == null) throw new ArgumentNullException(nameof(reader));
             Id = reader.ReadAttributeAsInt(RedmineKeys.ID);
             reader.Read();
 
@@ -131,7 +132,7 @@ namespace Redmine.Net.Api.Types
                 && User == other.User
                 && Notes == other.Notes
                 && CreatedOn == other.CreatedOn
-                && (Details != null ? Details.Equals<Detail>(other.Details) : other.Details == null );
+                && (Details?.Equals<Detail>(other.Details) ?? other.Details == null);
         }
 
         /// <summary>

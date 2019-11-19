@@ -48,21 +48,21 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <value>The title.</value>
         [XmlElement(RedmineKeys.TITLE)]
-        public String Title { get; set; }
+        public string Title { get; set; }
 
         /// <summary>
         /// Gets or sets the summary.
         /// </summary>
         /// <value>The summary.</value>
         [XmlElement(RedmineKeys.SUMMARY)]
-        public String Summary { get; set; }
+        public string Summary { get; set; }
 
         /// <summary>
         /// Gets or sets the description.
         /// </summary>
         /// <value>The description.</value>
         [XmlElement(RedmineKeys.DESCRIPTION)]
-        public String Description { get; set; }
+        public string Description { get; set; }
 
         /// <summary>
         /// Gets or sets the created on.
@@ -83,6 +83,7 @@ namespace Redmine.Net.Api.Types
         /// <param name="reader"></param>
         public void ReadXml(XmlReader reader)
         {
+            if (reader == null) throw new ArgumentNullException(nameof(reader));
             reader.Read();
             while (!reader.EOF)
             {

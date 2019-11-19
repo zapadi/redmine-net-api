@@ -43,7 +43,7 @@ namespace Redmine.Net.Api.Types
         {
             if (other == null) return false;
 
-            return Info.Equals(other.Info);
+            return Info.Equals(other.Info, StringComparison.OrdinalIgnoreCase);
         }
 
         /// <summary>

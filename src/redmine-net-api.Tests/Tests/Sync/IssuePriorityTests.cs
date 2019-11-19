@@ -20,7 +20,9 @@ using Xunit;
 namespace redmine.net.api.Tests.Tests.Sync
 {
 	[Trait("Redmine-Net-Api", "IssuePriorities")]
-	[Collection("RedmineCollection")]
+#if !(NET20 || NET40)
+    [Collection("RedmineCollection")]
+#endif
     public class IssuePriorityTests
     {
         public IssuePriorityTests(RedmineFixture fixture)
@@ -37,7 +39,6 @@ namespace redmine.net.api.Tests.Tests.Sync
             var issuePriorities = fixture.RedmineManager.GetObjects<IssuePriority>();
 
             Assert.NotNull(issuePriorities);
-            Assert.All(issuePriorities, ip => Assert.IsType<IssuePriority>(ip));
             Assert.True(issuePriorities.Count == NUMBER_OF_ISSUE_PRIORITIES,
                 "Issue priorities count(" + issuePriorities.Count + ") != " + NUMBER_OF_ISSUE_PRIORITIES);
         }

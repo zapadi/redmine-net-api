@@ -8,7 +8,9 @@ using Xunit;
 namespace redmine.net.api.Tests.Tests.Sync
 {
 	[Trait("Redmine-Net-Api", "IssueCategories")]
-	[Collection("RedmineCollection")]
+#if !(NET20 || NET40)
+    [Collection("RedmineCollection")]
+#endif
     public class IssueCategoryTests
     {
         public IssueCategoryTests(RedmineFixture fixture)
@@ -64,7 +66,6 @@ namespace redmine.net.api.Tests.Tests.Sync
                 });
 
             Assert.NotNull(issueCategories);
-            Assert.All(issueCategories, ic => Assert.IsType<IssueCategory>(ic));
             Assert.True(issueCategories.Count == NUMBER_OF_ISSUE_CATEGORIES,
                 "Number of issue categories ( "+issueCategories.Count+" ) != " + NUMBER_OF_ISSUE_CATEGORIES);
         }

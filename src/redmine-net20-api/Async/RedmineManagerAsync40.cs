@@ -14,6 +14,9 @@
    limitations under the License.
 */
 
+
+#if NET40
+
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Threading.Tasks;
@@ -161,11 +164,25 @@ namespace Redmine.Net.Api.Async
         }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="redmineManager"></param>
+        /// <param name="include"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public static Task<int> CountAsync<T>(this RedmineManager redmineManager, params string[] include) where T : class, new()
         {
             return Task.Factory.StartNew(()=> redmineManager.Count<T>(include));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="redmineManager"></param>
+        /// <param name="parameters"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public static Task<int> CountAsync<T>(this RedmineManager redmineManager, NameValueCollection parameters) where T : class, new()
         {
             return Task.Factory.StartNew(() => redmineManager.Count<T>(parameters));
@@ -258,3 +275,4 @@ namespace Redmine.Net.Api.Async
         }
     }
 }
+#endif

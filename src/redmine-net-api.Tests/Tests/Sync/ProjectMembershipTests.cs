@@ -25,7 +25,9 @@ using Xunit;
 namespace redmine.net.api.Tests.Tests.Sync
 {
 	[Trait("Redmine-Net-Api", "ProjectMemberships")]
-	[Collection("RedmineCollection")]
+#if !(NET20 || NET40)
+    [Collection("RedmineCollection")]
+#endif
     public class ProjectMembershipTests
     {
         public ProjectMembershipTests(RedmineFixture fixture)
@@ -86,7 +88,6 @@ namespace redmine.net.api.Tests.Tests.Sync
             Assert.NotNull(projectMemberships);
             Assert.True(projectMemberships.Count == NUMBER_OF_PROJECT_MEMBERSHIPS,
                 "Project memberships count ( "+ projectMemberships.Count +" ) != " + NUMBER_OF_PROJECT_MEMBERSHIPS);
-            Assert.All(projectMemberships, pm => Assert.IsType<ProjectMembership>(pm));
         }
 
         [Fact, Order(3)]
@@ -100,7 +101,6 @@ namespace redmine.net.api.Tests.Tests.Sync
             Assert.True(projectMembership.User != null || projectMembership.Group != null,
                 "User and group are both null.");
             Assert.NotNull(projectMembership.Roles);
-            Assert.All(projectMembership.Roles, r => Assert.IsType<MembershipRole>(r));
         }
 
         [Fact, Order(4)]
@@ -118,7 +118,6 @@ namespace redmine.net.api.Tests.Tests.Sync
 
             Assert.NotNull(updatedPm);
             Assert.NotNull(updatedPm.Roles);
-            Assert.All(updatedPm.Roles, r => Assert.IsType<MembershipRole>(r));
             Assert.True(updatedPm.Roles.Find(r => r.Id == UPDATED_PROJECT_MEMBERSHIP_ROLE_ID) != null,
                 string.Format("Role with id {0} was not found in roles list.", UPDATED_PROJECT_MEMBERSHIP_ROLE_ID));
         }

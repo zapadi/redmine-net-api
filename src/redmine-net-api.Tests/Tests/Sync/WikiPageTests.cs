@@ -26,7 +26,9 @@ using Xunit;
 namespace redmine.net.api.Tests.Tests.Sync
 {
 	[Trait("Redmine-Net-Api", "WikiPages")]
-	[Collection("RedmineCollection")]
+#if !(NET20 || NET40)
+    [Collection("RedmineCollection")]
+#endif
     public class WikiPageTests
     {
         public WikiPageTests(RedmineFixture fixture)
@@ -69,7 +71,6 @@ namespace redmine.net.api.Tests.Tests.Sync
 	        var pages = (List<WikiPage>) fixture.RedmineManager.GetAllWikiPages(PROJECT_ID);
 
             Assert.NotNull(pages);
-            Assert.All(pages, p => Assert.IsType<WikiPage>(p));
             Assert.True(pages.Count == NUMBER_OF_WIKI_PAGES, "Wiki pages count != " + NUMBER_OF_WIKI_PAGES);
             Assert.True(pages.Exists(p => p.Title == WIKI_PAGE_NAME),
                 string.Format("Wiki page {0} does not exist", WIKI_PAGE_NAME));
@@ -95,7 +96,6 @@ namespace redmine.net.api.Tests.Tests.Sync
             Assert.NotNull(page);
             Assert.Equal(page.Title, WIKI_PAGE_NAME);
             Assert.NotNull(page.Attachments.ToList());
-            Assert.All(page.Attachments.ToList(), a => Assert.IsType<Attachment>(a));
         }
 
         [Fact, Order(5)]

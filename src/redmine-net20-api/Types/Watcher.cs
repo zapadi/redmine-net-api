@@ -15,6 +15,7 @@
 */
 
 using System;
+using System.Globalization;
 using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Types
@@ -33,7 +34,7 @@ namespace Redmine.Net.Api.Types
         {
             get
             {
-                return Id.ToString();
+                return Id.ToString(CultureInfo.InvariantCulture);
             }
         }
 

@@ -417,9 +417,7 @@
     <Compile Include="Extensions\DisposableExtension.cs" />
     <Compile Include="Extensions\FunctionalExtensions.cs" />
     <Compile Include="Extensions\TaskExtensions.cs" />
-    <Compile Include="Internals\WebApiAsyncHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Async\RedmineManagerAsync.cs" />
     <Compile Include="..\redmine-net20-api\Types\IValue.cs">
       <Link>Types\IValue.cs</Link>
     </Compile>
@@ -452,6 +450,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Async\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

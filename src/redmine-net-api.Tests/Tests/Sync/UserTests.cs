@@ -25,7 +25,9 @@ using Xunit;
 namespace redmine.net.api.Tests.Tests.Sync
 {
 	[Trait("Redmine-Net-Api", "Users")]
-	[Collection("RedmineCollection")]
+#if !(NET20 || NET40)
+    [Collection("RedmineCollection")]
+#endif
 	[Order(2)]
 	public class UserTests
 	{
@@ -42,9 +44,9 @@ namespace redmine.net.api.Tests.Tests.Sync
 		private const string USER_EMAIL = "testUser@mail.com";
 
 		private static string CREATED_USER_ID;
-		private static string CREATED_USER_WITH_ALL_PROP_ID;
+        private static string CREATED_USER_WITH_ALL_PROP_ID;
 
-		private static User CreateTestUserWithRequiredPropertiesSet()
+        private static User CreateTestUserWithRequiredPropertiesSet()
 		{
 			var user = new User()
 			{
@@ -131,24 +133,26 @@ namespace redmine.net.api.Tests.Tests.Sync
 			const string UPDATED_USER_LAST_NAME = "UpdatedLastName";
 			const string UPDATED_USER_EMAIL = "updatedEmail@mail.com";
 
-			var user = fixture.RedmineManager.GetObject<User>(CREATED_USER_ID, null);
+			var user = fixture.RedmineManager.GetObject<User>("8", null);
 			user.FirstName = UPDATED_USER_FIRST_NAME;
 			user.LastName = UPDATED_USER_LAST_NAME;
 			user.Email = UPDATED_USER_EMAIL;
 
 			var exception =
 				(RedmineException)
-				Record.Exception(() => fixture.RedmineManager.UpdateObject(CREATED_USER_ID, user));
+				Record.Exception(() => fixture.RedmineManager.UpdateObject("8", user));
 			Assert.Null(exception);
 
-			var updatedUser = fixture.RedmineManager.GetObject<User>(CREATED_USER_ID, null);
+			var updatedUser = fixture.RedmineManager.GetObject<User>("8", null);
 
 			Assert.True(updatedUser.FirstName.Equals(UPDATED_USER_FIRST_NAME), "User first name was not updated.");
 			Assert.True(updatedUser.LastName.Equals(UPDATED_USER_LAST_NAME), "User last name was not updated.");
 			Assert.True(updatedUser.Email.Equals(UPDATED_USER_EMAIL), "User email was not updated.");
-		}
 
-		[Fact, Order(6)]
+            // curl -v --user zapadi:1qaz2wsx -H 'Content-Type: application/json' -X PUT -d '{"user":{"login":"testuser","firstname":"UpdatedFirstName","lastname":"UpdatedLastName","mail":"updatedEmail@mail.com","must_change_passwd":"false","status":"1"}}' http://192.168.1.53:8089/users/8.json
+        }
+
+        [Fact, Order(6)]
 		public void Should_Not_Update_User_With_Invalid_Properties()
 		{
 			var user = fixture.RedmineManager.GetObject<User>(CREATED_USER_ID, null);
@@ -199,7 +203,6 @@ namespace redmine.net.api.Tests.Tests.Sync
 			});
 
 			Assert.NotNull(result);
-			Assert.All(result.Objects, u => Assert.IsType<User>(u));
 		}
 
 		[Fact, Order(11)]
@@ -211,7 +214,6 @@ namespace redmine.net.api.Tests.Tests.Sync
 			});
 
 			Assert.NotNull(users);
-			Assert.All(users, u => Assert.IsType<User>(u));
 		}
 	}
 }

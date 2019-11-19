@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿#if !(NET20 || NET40)
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Threading.Tasks;
 using Redmine.Net.Api.Async;
@@ -72,3 +73,4 @@ namespace redmine.net.api.Tests.Tests.Async
 
 	}
 }
+#endif

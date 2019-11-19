@@ -15,6 +15,7 @@
 */
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -24,10 +25,14 @@ using System.Xml.Serialization;
 namespace Redmine.Net.Api.Extensions
 {
     /// <summary>
-    /// 
     /// </summary>
-    public static partial class XmlExtensions
+    public static class XmlReaderExtensions
     {
+        /// <summary>
+        /// Date time format for journals, attachments etc.
+        /// </summary>
+        private const string INCLUDE_DATE_TIME_FORMAT = "yyyy'-'MM'-'dd HH':'mm':'ss UTC";
+
         /// <summary>
         /// Reads the attribute as int.
         /// </summary>
@@ -37,8 +42,11 @@ namespace Redmine.Net.Api.Extensions
         public static int ReadAttributeAsInt(this XmlReader reader, string attributeName)
         {
             var attribute = reader.GetAttribute(attributeName);
-            int result;
-            if (string.IsNullOrEmpty(attribute) || !int.TryParse(attribute, NumberStyles.Any, NumberFormatInfo.InvariantInfo, out result)) return default(int);
+
+            if (attribute.IsNullOrWhiteSpace() || !int.TryParse(attribute, NumberStyles.Any, NumberFormatInfo.InvariantInfo, out var result))
+            {
+                return default(int);
+            }
 
             return result;
         }
@@ -52,8 +60,11 @@ namespace Redmine.Net.Api.Extensions
         public static int? ReadAttributeAsNullableInt(this XmlReader reader, string attributeName)
         {
             var attribute = reader.GetAttribute(attributeName);
-            int result;
-            if (string.IsNullOrEmpty(attribute) || !int.TryParse(attribute, NumberStyles.Any, NumberFormatInfo.InvariantInfo, out result)) return default(int?);
+
+            if (attribute.IsNullOrWhiteSpace() || !int.TryParse(attribute, NumberStyles.Any, NumberFormatInfo.InvariantInfo, out var result))
+            {
+                return default(int?);
+            }
 
             return result;
         }
@@ -67,8 +78,11 @@ namespace Redmine.Net.Api.Extensions
         public static bool ReadAttributeAsBoolean(this XmlReader reader, string attributeName)
         {
             var attribute = reader.GetAttribute(attributeName);
-            bool result;
-            if (string.IsNullOrEmpty(attribute) || !bool.TryParse(attribute, out result)) return false;
+
+            if (attribute.IsNullOrWhiteSpace() || !bool.TryParse(attribute, out var result))
+            {
+                return false;
+            }
             
             return result;
         }
@@ -80,9 +94,15 @@ namespace Redmine.Net.Api.Extensions
         /// <returns></returns>
         public static DateTime? ReadElementContentAsNullableDateTime(this XmlReader reader)
         {
-            var str = reader.ReadElementContentAsString();
-            DateTime result;
-            if (string.IsNullOrEmpty(str) || !DateTime.TryParse(str, out result)) return null;
+            var content = reader.ReadElementContentAsString();
+
+            if (content.IsNullOrWhiteSpace() || !DateTime.TryParse(content, out var result))
+            {
+                if (!DateTime.TryParseExact(content, INCLUDE_DATE_TIME_FORMAT, CultureInfo.InvariantCulture, DateTimeStyles.None, out result))
+                {
+                    return null;
+                }
+            }
 
             return result;
         }
@@ -94,9 +114,11 @@ namespace Redmine.Net.Api.Extensions
         /// <returns></returns>
         public static float? ReadElementContentAsNullableFloat(this XmlReader reader)
         {
-            var str = reader.ReadElementContentAsString();
-            float result;
-            if (string.IsNullOrEmpty(str) || !float.TryParse(str, NumberStyles.Any, NumberFormatInfo.InvariantInfo, out result)) return null;
+            var content = reader.ReadElementContentAsString();
+            if (content.IsNullOrWhiteSpace() || !float.TryParse(content, NumberStyles.Any, NumberFormatInfo.InvariantInfo, out var result))
+            {
+                return null;
+            }
 
             return result;
         }
@@ -108,9 +130,12 @@ namespace Redmine.Net.Api.Extensions
         /// <returns></returns>
         public static int? ReadElementContentAsNullableInt(this XmlReader reader)
         {
-            var str = reader.ReadElementContentAsString();
-            int result;
-            if (string.IsNullOrEmpty(str) || !int.TryParse(str, NumberStyles.Any, NumberFormatInfo.InvariantInfo, out result)) return null;
+            var content = reader.ReadElementContentAsString();
+
+            if (content.IsNullOrWhiteSpace() || !int.TryParse(content, NumberStyles.Any, NumberFormatInfo.InvariantInfo, out var result))
+            {
+                return null;
+            }
 
             return result;
         }
@@ -122,9 +147,12 @@ namespace Redmine.Net.Api.Extensions
         /// <returns></returns>
         public static decimal? ReadElementContentAsNullableDecimal(this XmlReader reader)
         {
-            var str = reader.ReadElementContentAsString();
-            decimal result;
-            if (string.IsNullOrEmpty(str) || !decimal.TryParse(str, NumberStyles.Any, NumberFormatInfo.InvariantInfo, out result)) return null;
+            var content = reader.ReadElementContentAsString();
+
+            if (content.IsNullOrWhiteSpace() || !decimal.TryParse(content, NumberStyles.Any, NumberFormatInfo.InvariantInfo, out var result))
+            {
+                return null;
+            }
 
             return result;
         }
@@ -137,12 +165,13 @@ namespace Redmine.Net.Api.Extensions
         /// <returns></returns>
         public static List<T> ReadElementContentAsCollection<T>(this XmlReader reader) where T : class
         {
-            var result = new List<T>();
-            var serializer = new XmlSerializer(typeof(T));
-            var xml = reader.ReadOuterXml();
-            using (var sr = new StringReader(xml))
+            List<T> result = null;
+            XmlSerializer serializer = null;
+            var outerXml = reader.ReadOuterXml();
+
+            using (var stringReader = new StringReader(outerXml))
             {
-                using (var xmlTextReader = new XmlTextReader(sr))
+                using (var xmlTextReader = new XmlTextReader(stringReader))
                 {
                     xmlTextReader.ReadStartElement();
                     while (!xmlTextReader.EOF)
@@ -153,26 +182,99 @@ namespace Redmine.Net.Api.Extensions
                             continue;
                         }
 
-                        T obj;
+                        T entity;
+
+                        if (serializer == null)
+                        {
+                            serializer = new XmlSerializer(typeof(T));
+                        }
 
                         if (xmlTextReader.IsEmptyElement && xmlTextReader.HasAttributes)
                         {
-                            obj = serializer.Deserialize(xmlTextReader) as T;
+                            entity = serializer.Deserialize(xmlTextReader) as T;
                         }
                         else
                         {
+                            if (xmlTextReader.NodeType != XmlNodeType.Element)
+                            {
+                                xmlTextReader.Read();
+                                continue;
+                            }
+
                             var subTree = xmlTextReader.ReadSubtree();
-                            obj = serializer.Deserialize(subTree) as T;
+                            entity = serializer.Deserialize(subTree) as T;
                         }
-                        if (obj != null)
-                            result.Add(obj);
+
+                        if (entity != null)
+                        {
+                            if (result == null)
+                            {
+                                result = new List<T>();
+                            }
+
+                            result.Add(entity);
+                        }
 
                         if (!xmlTextReader.IsEmptyElement)
+                        {
                             xmlTextReader.Read();
+                        }
                     }
                 }
             }
             return result;
+        }
+
+        /// <summary>
+        /// Reads the element content as enumerable.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="reader">The reader.</param>
+        /// <returns></returns>
+        public static IEnumerable<T> ReadElementContentAsEnumerable<T>(this XmlReader reader) where T : class
+        {
+            XmlSerializer serializer = null;
+            var outerXml = reader.ReadOuterXml();
+            using (var stringReader = new StringReader(outerXml))
+            {
+                using (var xmlTextReader = new XmlTextReader(stringReader))
+                {
+                    xmlTextReader.ReadStartElement();
+                    while (!xmlTextReader.EOF)
+                    {
+                        if (xmlTextReader.NodeType == XmlNodeType.EndElement)
+                        {
+                            xmlTextReader.ReadEndElement();
+                            continue;
+                        }
+
+                        T entity;
+                        if (serializer == null)
+                        {
+                            serializer = new XmlSerializer(typeof(T));
+                        }
+                        
+                        if (xmlTextReader.IsEmptyElement && xmlTextReader.HasAttributes)
+                        {
+                            entity = serializer.Deserialize(xmlTextReader) as T;
+                        }
+                        else
+                        {
+                            var subTree = xmlTextReader.ReadSubtree();
+                            entity = serializer.Deserialize(subTree) as T;
+                        }
+                        if (entity != null)
+                        {
+                           yield return entity;
+                        }
+
+                        if (!xmlTextReader.IsEmptyElement)
+                        {
+                            xmlTextReader.Read();
+                        }
+                    }
+                }
+            }
         }
     }
 }

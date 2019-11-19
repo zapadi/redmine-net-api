@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !(NET20 || NET40)
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Globalization;
@@ -155,7 +156,7 @@ namespace redmine.net.api.Tests.Tests.Async
 		[Fact]
 		public async Task Should_Remove_User_From_Group()
 		{
-			await fixture.RedmineManager.DeleteUserFromGroupAsync(GROUP_ID, int.Parse(USER_ID));
+			await fixture.RedmineManager.RemoveUserFromGroupAsync(GROUP_ID, int.Parse(USER_ID));
 
 			User user = await fixture.RedmineManager.GetObjectAsync<User>(USER_ID.ToString(CultureInfo.InvariantCulture), new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.GROUPS } });
 
@@ -205,3 +206,4 @@ namespace redmine.net.api.Tests.Tests.Async
 		}
 	}
 }
+#endif

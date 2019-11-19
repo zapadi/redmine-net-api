@@ -14,6 +14,7 @@
    limitations under the License.
 */
 
+using System.Globalization;
 using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Types
@@ -27,7 +28,7 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// 
         /// </summary>
-		public string Value{get{return Id.ToString ();}}
+		public string Value{get{return Id.ToString (CultureInfo.InvariantCulture);}}
 
         /// <summary>
         /// 

@@ -100,8 +100,13 @@ namespace Redmine.Net.Api.Extensions
 
             foreach (var item in collection)
             {
-                new XmlSerializer(type, new XmlAttributeOverrides(), new Type[] { }, new XmlRootAttribute(root),
+                #if (NET20 || NET40 || NET45 || NET451 || NET452)
+                 new XmlSerializer(type, new XmlAttributeOverrides(), new Type[]{}, new XmlRootAttribute(root),
                     defaultNamespace).Serialize(writer, item);
+#else
+                new XmlSerializer(type, new XmlAttributeOverrides(), Array.Empty<Type>(), new XmlRootAttribute(root),
+                    defaultNamespace).Serialize(writer, item);
+                #endif
             }
 
             writer.WriteEndElement();
@@ -165,7 +170,7 @@ namespace Redmine.Net.Api.Extensions
         {
             if (!val.HasValue) return;
             if (!EqualityComparer<T>.Default.Equals(val.Value, default(T)))
-                writer.WriteElementString(tag, string.Format(NumberFormatInfo.InvariantInfo, "{0}", val.Value));
+                writer.WriteElementString(tag, string.Format(NumberFormatInfo.InvariantInfo, "{0}", val.Value.ToString()));
         }
 
         /// <summary>
@@ -180,7 +185,7 @@ namespace Redmine.Net.Api.Extensions
             if (!val.HasValue || EqualityComparer<T>.Default.Equals(val.Value, default(T)))
                 writer.WriteElementString(tag, string.Empty);
             else
-                writer.WriteElementString(tag, string.Format(NumberFormatInfo.InvariantInfo, "{0}", val.Value));
+                writer.WriteElementString(tag, string.Format(NumberFormatInfo.InvariantInfo, "{0}", val.Value.ToString()));
         }
 
         /// <summary>

@@ -14,6 +14,7 @@
    limitations under the License.
 */
 
+#if !NET20
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -39,7 +40,7 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="key">The key.</param>
         public static void WriteIdIfNotNull(this Dictionary<string, object> dictionary, IdentifiableName ident, string key)
         {
-            if (ident != null) dictionary.Add(key, ident.Id);
+            if (ident != null) dictionary.Add(key, ident.Id.ToString(CultureInfo.InvariantCulture));
         }
 
         /// <summary>
@@ -51,7 +52,7 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="emptyValue">The empty value.</param>
         public static void WriteIdOrEmpty(this Dictionary<string, object> dictionary, IdentifiableName ident, string key, string emptyValue = null)
         {
-            if (ident != null) dictionary.Add(key, ident.Id);
+            if (ident != null) dictionary.Add(key, ident.Id.ToString(CultureInfo.InvariantCulture));
             else dictionary.Add(key, emptyValue);
         }
 
@@ -126,7 +127,7 @@ namespace Redmine.Net.Api.Extensions
             if (!val.HasValue || EqualityComparer<T>.Default.Equals(val.Value, default(T)))
                 dictionary.Add(tag, string.Empty);
             else
-                dictionary.Add(tag, val.Value);
+                dictionary.Add(tag, val.Value.ToString());
         }
 
         /// <summary>
@@ -138,7 +139,7 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="tag">The tag.</param>
         public static void WriteValueOrDefault<T>(this Dictionary<string, object> dictionary, T? val, string tag) where T : struct
         {
-            dictionary.Add(tag, val ?? default(T));
+            dictionary.Add(tag, val.GetValueOrDefault().ToString());
         }
 
         /// <summary>
@@ -150,10 +151,9 @@ namespace Redmine.Net.Api.Extensions
         /// <returns></returns>
         public static T GetValue<T>(this IDictionary<string, object> dictionary, string key)
         {
-            object val;
             var dict = dictionary;
             var type = typeof(T);
-            if (!dict.TryGetValue(key, out val)) return default(T);
+            if (!dict.TryGetValue(key, out var val)) return default(T);
 
             if (val == null) return default(T);
 
@@ -177,8 +177,7 @@ namespace Redmine.Net.Api.Extensions
         /// <returns></returns>
         public static IdentifiableName GetValueAsIdentifiableName(this IDictionary<string, object> dictionary, string key)
         {
-            object val;
-            if (!dictionary.TryGetValue(key, out val)) return null;
+            if (!dictionary.TryGetValue(key, out var val)) return null;
 
             var ser = new JavaScriptSerializer();
             ser.RegisterConverters(new[] { new IdentifiableNameConverter() });
@@ -196,8 +195,7 @@ namespace Redmine.Net.Api.Extensions
         /// <returns></returns>
         public static List<T> GetValueAsCollection<T>(this IDictionary<string, object> dictionary, string key) where T : new()
         {
-            object val;
-            if (!dictionary.TryGetValue(key, out val)) return null;
+            if (!dictionary.TryGetValue(key, out var val)) return null;
 
             var ser = new JavaScriptSerializer();
             ser.RegisterConverters(new[] { RedmineSerializer.JsonConverters[typeof(T)] });
@@ -221,3 +219,4 @@ namespace Redmine.Net.Api.Extensions
         }
     }
 }
+#endif

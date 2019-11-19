@@ -15,6 +15,7 @@
 */
 
 using System;
+using System.Globalization;
 using System.Xml;
 using System.Xml.Serialization;
 using Redmine.Net.Api.Extensions;
@@ -43,7 +44,8 @@ namespace Redmine.Net.Api.Types
         /// <param name="reader">The reader.</param>
         public override void ReadXml(XmlReader reader)
         {
-            Id = Convert.ToInt32(reader.GetAttribute(RedmineKeys.ID));
+            if (reader == null) throw new ArgumentNullException(nameof(reader));
+            Id = Convert.ToInt32(reader.GetAttribute(RedmineKeys.ID), CultureInfo.InvariantCulture);
             Name = reader.GetAttribute(RedmineKeys.NAME);
             Inherited = reader.ReadAttributeAsBoolean(RedmineKeys.INHERITED);
             reader.Read();
@@ -55,6 +57,7 @@ namespace Redmine.Net.Api.Types
         /// <param name="writer"></param>
         public override void WriteXml(XmlWriter writer)
         {
+            if (writer == null) throw new ArgumentNullException(nameof(writer));
             writer.WriteValue(Id);
         }
 

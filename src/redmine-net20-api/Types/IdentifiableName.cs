@@ -54,7 +54,7 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <value>The name.</value>
         [XmlAttribute(RedmineKeys.NAME)]
-        public String Name { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// 
@@ -68,7 +68,7 @@ namespace Redmine.Net.Api.Types
         /// <param name="reader"></param>
         public virtual void ReadXml(XmlReader reader)
         {
-            Id = Convert.ToInt32(reader.GetAttribute(RedmineKeys.ID));
+            Id = Convert.ToInt32(reader.GetAttribute(RedmineKeys.ID), CultureInfo.InvariantCulture);
             Name = reader.GetAttribute(RedmineKeys.NAME);
             reader.Read();
         }
@@ -88,7 +88,7 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("[IdentifiableName: Id={0}, Name={1}]", Id, Name);
+            return string.Format(CultureInfo.InvariantCulture,"[IdentifiableName: Id={0}, Name={1}]", Id.ToString(CultureInfo.InvariantCulture), Name);
         }
 
         /// <summary>

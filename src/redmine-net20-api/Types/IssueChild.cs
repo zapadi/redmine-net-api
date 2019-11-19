@@ -40,7 +40,7 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <value>The subject.</value>
         [XmlElement(RedmineKeys.SUBJECT)]
-        public String Subject { get; set; }
+        public string Subject { get; set; }
 
         /// <summary>
         /// 

@@ -4,8 +4,8 @@ services:
   redmine:
     ports:
       - '8089:3000'
-    image: 'redmine:3.4.4'
-    container_name: 'redmine-web'
+    image: 'redmine:4.0.4'
+    container_name: 'redmine-web-404'
     depends_on:
       - postgres
     links:
@@ -21,8 +21,8 @@ services:
     environment:
       POSTGRES_USER: redmine
       POSTGRES_PASSWORD: redmine-pswd
-    container_name: 'redmine-db'
-    image: 'postgres:9.5'
+    container_name: 'redmine-db-111'
+    image: 'postgres:11.1'
     #restart: always
     ports: 
       - '5432:5432'

@@ -191,13 +191,13 @@ namespace Redmine.Net.Api.Types
                 && Multiple == other.Multiple
                 && Searchable == other.Searchable
                 && Visible == other.Visible
-                && CustomizedType.Equals(other.CustomizedType)
-                && DefaultValue.Equals(other.DefaultValue)
-                && FieldFormat.Equals(other.FieldFormat)
+                && CustomizedType.Equals(other.CustomizedType, StringComparison.OrdinalIgnoreCase)
+                && DefaultValue.Equals(other.DefaultValue, StringComparison.OrdinalIgnoreCase)
+                && FieldFormat.Equals(other.FieldFormat, StringComparison.OrdinalIgnoreCase)
                 && MaxLength == other.MaxLength
                 && MinLength == other.MinLength
-                && Name.Equals(other.Name)
-                && Regexp.Equals(other.Regexp)
+                && Name.Equals(other.Name, StringComparison.OrdinalIgnoreCase)
+                && Regexp.Equals(other.Regexp, StringComparison.OrdinalIgnoreCase)
                 && PossibleValues.Equals(other.PossibleValues)
                 && Roles.Equals(other.Roles)
                 && Trackers.Equals(other.Trackers);

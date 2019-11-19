@@ -15,6 +15,7 @@
 */
 
 using System;
+using System.Globalization;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
@@ -69,6 +70,7 @@ namespace Redmine.Net.Api.Types
         /// <param name="reader"></param>
         public void ReadXml(XmlReader reader)
         {
+            if (reader == null) throw new ArgumentNullException(nameof(reader));
             if (!reader.IsEmptyElement) reader.Read();
             while (!reader.EOF)
             {
@@ -125,7 +127,8 @@ namespace Redmine.Net.Api.Types
         /// <param name="writer"></param>
         public void WriteXml(XmlWriter writer)
         {
-            writer.WriteElementString(RedmineKeys.ISSUE_TO_ID, IssueToId.ToString());
+            if (writer == null) throw new ArgumentNullException(nameof(writer));
+            writer.WriteElementString(RedmineKeys.ISSUE_TO_ID, IssueToId.ToString(CultureInfo.InvariantCulture));
             writer.WriteElementString(RedmineKeys.RELATION_TYPE, Type.ToString());
             if (Type == IssueRelationType.precedes || Type == IssueRelationType.follows)
                 writer.WriteValueOrEmpty(Delay, RedmineKeys.DELAY);

@@ -50,7 +50,7 @@ namespace Redmine.Net.Api.Types
         /// <param name="reader"></param>
         public override void ReadXml(XmlReader reader)
         {
-            Id = Convert.ToInt32(reader.GetAttribute(RedmineKeys.ID));
+            Id = Convert.ToInt32(reader.GetAttribute(RedmineKeys.ID), CultureInfo.InvariantCulture);
             Name = reader.GetAttribute(RedmineKeys.NAME);
 
             Multiple = reader.ReadAttributeAsBoolean(RedmineKeys.MULTIPLE);
@@ -139,8 +139,9 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        public string GetValue(object item)
+        public static string GetValue(object item)
         {
+            if (item == null) throw new ArgumentNullException(nameof(item));
             return ((CustomFieldValue)item).Info;
         }
     }

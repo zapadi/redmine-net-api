@@ -21,7 +21,9 @@ using Xunit;
 namespace redmine.net.api.Tests.Tests.Sync
 {
 	[Trait("Redmine-Net-Api", "Queries")]
-	[Collection("RedmineCollection")]
+#if !(NET20 || NET40)
+    [Collection("RedmineCollection")]
+#endif
     public class QueryTests
     {
         public QueryTests(RedmineFixture fixture)
@@ -38,7 +40,6 @@ namespace redmine.net.api.Tests.Tests.Sync
             var queries = fixture.RedmineManager.GetObjects<Query>();
 
             Assert.NotNull(queries);
-            Assert.All(queries, q => Assert.IsType<Query>(q));
             Assert.True(queries.Count == NUMBER_OF_QUERIES,
                 "Queries count(" + queries.Count + ") != " + NUMBER_OF_QUERIES);
         }

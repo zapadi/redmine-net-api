@@ -23,7 +23,9 @@ using Xunit;
 namespace redmine.net.api.Tests.Tests.Sync
 {
 	[Trait("Redmine-Net-Api", "TimeEntries")]
-	[Collection("RedmineCollection")]
+#if !(NET20 || NET40)
+    [Collection("RedmineCollection")]
+#endif
     public class TimeEntryTests
     {
         public TimeEntryTests(RedmineFixture fixture)
@@ -89,7 +91,6 @@ namespace redmine.net.api.Tests.Tests.Sync
 
             Assert.NotNull(timeEntries);
             Assert.NotEmpty(timeEntries);
-            Assert.All(timeEntries, t => Assert.IsType<TimeEntry>(t));
         }
 
         [Fact, Order(3)]

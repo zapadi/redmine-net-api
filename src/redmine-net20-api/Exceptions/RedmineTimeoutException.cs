@@ -15,6 +15,7 @@
 */
 
 using System;
+using System.Globalization;
 using System.Runtime.Serialization;
 
 namespace Redmine.Net.Api.Exceptions
@@ -46,7 +47,7 @@ namespace Redmine.Net.Api.Exceptions
         /// <param name="format">The format.</param>
         /// <param name="args">The arguments.</param>
         public RedmineTimeoutException(string format, params object[] args)
-            : base(string.Format(format, args))
+            : base(string.Format(CultureInfo.InvariantCulture,format, args))
         {
         }
 
@@ -70,7 +71,7 @@ namespace Redmine.Net.Api.Exceptions
         /// <param name="innerException">The inner exception.</param>
         /// <param name="args">The arguments.</param>
         public RedmineTimeoutException(string format, Exception innerException, params object[] args)
-            : base(string.Format(format, args), innerException)
+            : base(string.Format(CultureInfo.InvariantCulture,format, args), innerException)
         {
         }
     }
