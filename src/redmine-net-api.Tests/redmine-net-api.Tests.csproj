@@ -85,9 +85,8 @@
     </PackageReference>
   </ItemGroup>
 
-
-  <ItemGroup Label="Project References">
-    <ProjectReference Include="..\redmine-net20-api\redmine-net20-api.csproj" />
+  <ItemGroup>
+    <ProjectReference Include="..\redmine-net-api\redmine-net-api.csproj" />
   </ItemGroup>
 
 
