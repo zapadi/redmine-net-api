@@ -1,4 +1,4 @@
-﻿/*
+/*
    Copyright 2011 - 2019 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -106,6 +106,7 @@ namespace Redmine.Net.Api
 
             Host = host;
             MimeFormat = mimeFormat;
+            Format = mimeFormat == MimeFormat.Xml ? "xml" : "json";
             Proxy = proxy;
             SecurityProtocolType = securityProtocolType;
 
@@ -187,6 +188,11 @@ namespace Redmine.Net.Api
             get { return routes; }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Format { get; }
+        
         /// <summary>
         ///     Gets the host.
         /// </summary>
