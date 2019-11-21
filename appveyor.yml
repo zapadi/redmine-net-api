@@ -1,8 +1,6 @@
 version: '{build}'
 image:
-  - Ubuntu
-  - macos
-  - Visual Studio 2019
+   - Visual Studio 2019
 
 pull_requests:
   do_not_increment_build_number: true
@@ -21,10 +19,10 @@ init:
   - ps: >-
       $branch = @{ $true = $env:APPVEYOR_REPO_BRANCH; $false = $(git symbolic-ref --short -q HEAD) }[$env:APPVEYOR_REPO_BRANCH -ne $NULL];
       $revision = @{ $true = "{0:00000}" -f [convert]::ToInt32("0" + $env:APPVEYOR_BUILD_NUMBER, 10); $false = "local" }[$env:APPVEYOR_BUILD_NUMBER -ne $NULL];
-      $suffix = @{ $true = ""; $false = "$($branch.Substring(0, [math]::Min(10,$branch.Length)))-$revision"}[$branch -eq "master" -and $revision -ne "local"]
-      $commitHash = $($env:APPVEYOR_REPO_COMMIT.substring(0,7))
-      $buildSuffix = @{ $true = "$($suffix)-$($commitHash)"; $false = "$($branch)-$($commitHash)" }[$suffix -ne ""]
-      $versionSuffix = @{ $true = "--version-suffix=$($suffix)"; $false = ""}[$suffix -ne ""]
+      $suffix = @{ $true = ""; $false = "$($branch.Substring(0, [math]::Min(10,$branch.Length)))-$revision"}[$branch -eq "master" -and $revision -ne "local"];
+      $commitHash = $($env:APPVEYOR_REPO_COMMIT.substring(0,7));
+      $buildSuffix = @{ $true = "$($suffix)-$($commitHash)"; $false = "$($branch)-$($commitHash)" }[$suffix -ne ""];
+      $versionSuffix = @{ $true = "--version-suffix=$($suffix)"; $false = ""}[$suffix -ne ""];
     
 nuget:
   disable_publish_on_pr: true
