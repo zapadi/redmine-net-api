@@ -15,27 +15,16 @@ configuration: Release
 
 init:
   # Good practise, because Windows line endings are different from Unix/Linux ones
-  - cmd: git config --global core.autocrlf true
+  - ps: git config --global core.autocrlf true
 
   # Set "build version number" to "short-commit-hash" or when tagged to "tag name" (Travis style)
   - ps: >-
-
-
-      $prefix = "";
-      if ($env:APPVEYOR_REPO_TAG -eq "true")
-      {
-        $prefix = $env:APPVEYOR_REPO_TAG_NAME.TrimStart("v");
-        Update-AppveyorBuild -Version "$prefix";
-      }
-      else
-      {
-        $props = [xml](Get-Content Directory.Build.props);
-        $prefix = $props.Project.PropertyGroup.VersionPrefix + "-$($env:APPVEYOR_REPO_COMMIT.substring(0,7))";
-
-        echo "Build: Full version is $prefix";
-      }
-
-     
+      $branch = @{ $true = $env:APPVEYOR_REPO_BRANCH; $false = $(git symbolic-ref --short -q HEAD) }[$env:APPVEYOR_REPO_BRANCH -ne $NULL];
+      $revision = @{ $true = "{0:00000}" -f [convert]::ToInt32("0" + $env:APPVEYOR_BUILD_NUMBER, 10); $false = "local" }[$env:APPVEYOR_BUILD_NUMBER -ne $NULL];
+      $suffix = @{ $true = ""; $false = "$($branch.Substring(0, [math]::Min(10,$branch.Length)))-$revision"}[$branch -eq "master" -and $revision -ne "local"]
+      $commitHash = $(git rev-parse --short HEAD)
+      $buildSuffix = @{ $true = "$($suffix)-$($commitHash)"; $false = "$($branch)-$($commitHash)" }[$suffix -ne ""]
+      $versionSuffix = @{ $true = "--version-suffix=$($suffix)"; $false = ""}[$suffix -ne ""]
     
 nuget:
   disable_publish_on_pr: true
@@ -45,31 +34,25 @@ environment:
   DOTNET_CLI_TELEMETRY_OPTOUT: true
   APPVEYOR_YML_DISABLE_PS_LINUX: true
 
-dotnet_csproj:
-  patch: true
-  file: '**\*.csproj'
-  version_prefix: '${prefix}'
-
 install:
-  - cmd: dotnet restore redmine-net-api.sln
+  - ps: dotnet restore redmine-net-api.sln
 
 before_build:
-  - cmd: dotnet --version
+  - ps: dotnet --version
 
-build:
-  project: redmine-net-api.sln
-  verbosity: minimal
+build_script:
+  - ps: dotnet build redmine-net-api.sln -c Release --version-suffix=$buildSuffix
 
 after_build:
-  - cmd: dotnet pack src\redmine-net-api\redmine-net-api.csproj --output artifacts
+  - ps: dotnet pack src\redmine-net-api\redmine-net-api.csproj -c Release --output .\artifacts --include-symbols --no-build $versionSuffix
 
 test: off
 
 artifacts:
   - name: NuGet Packages
-    path: ./artifacts/**/*.nupkg
+    path: .\artifacts\**\*.nupkg
   - name: NuGet Symbol Packages
-    path: ./artifacts/**/*.snupkg
+    path: .\artifacts\**\*.snupkg
     
 skip_commits:
   files:
@@ -99,7 +82,7 @@ for:
         name: production
         api_key:
           secure: fo+5VNPIRQ98jFPBZSd4SsOVyXEsTxnQ52VWTrg3sgH1GwGXhi70Q561eimlmRhy
-        skip_symbols: false
+        skip_symbols: true
         on:
           branch: master
           APPVEYOR_REPO_TAG: true 
