@@ -68,7 +68,7 @@ namespace Redmine.Net.Api.Internals
         {
             if(xml.IsNullOrWhiteSpace()) throw  new ArgumentNullException(nameof(xml));
             
-            using (var text = new XmlTextReader(xml))
+            using (var text = XmlTextReaderBuilder.Create(xml))
             {
                 var sr = new XmlSerializer(typeof (T));
                 return sr.Deserialize(text) as T;
@@ -214,9 +214,9 @@ namespace Redmine.Net.Api.Internals
         {
             using (var stringReader = new StringReader(response))
             {
-                using (var xmlReader = new XmlTextReader(stringReader))
+                using (var xmlReader = XmlTextReaderBuilder.Create(stringReader))
                 {
-                    xmlReader.WhitespaceHandling = WhitespaceHandling.None;
+                   
                     xmlReader.Read();
                     xmlReader.Read();
 

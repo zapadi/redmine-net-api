@@ -21,6 +21,7 @@ using System.Globalization;
 using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
+using Redmine.Net.Api.Internals;
 
 namespace Redmine.Net.Api.Extensions
 {
@@ -171,7 +172,7 @@ namespace Redmine.Net.Api.Extensions
 
             using (var stringReader = new StringReader(outerXml))
             {
-                using (var xmlTextReader = new XmlTextReader(stringReader))
+                using (var xmlTextReader = XmlTextReaderBuilder.Create(stringReader))
                 {
                     xmlTextReader.ReadStartElement();
                     while (!xmlTextReader.EOF)
@@ -237,7 +238,7 @@ namespace Redmine.Net.Api.Extensions
             var outerXml = reader.ReadOuterXml();
             using (var stringReader = new StringReader(outerXml))
             {
-                using (var xmlTextReader = new XmlTextReader(stringReader))
+                using (var xmlTextReader = XmlTextReaderBuilder.Create(stringReader))
                 {
                     xmlTextReader.ReadStartElement();
                     while (!xmlTextReader.EOF)
