@@ -1,61 +1,101 @@
-os: Visual Studio 2017
-version: 2.0.{build}
-# environment:
-#    COVERALLS_REPO_TOKEN:  
-#       secure: 8JYxwCWszeAaWBr41pD17LB925K7Sk7utvKsIb1qz44i2anf9uLmvh2q0ilMQTBO
+version: '{build}'
+image:
+  - Ubuntu
+  - macos
+  - Visual Studio 2019
+
 pull_requests:
-  do_not_increment_build_number: false
+  do_not_increment_build_number: true
+
 branches:
   only:
-  - master
-#configuration: Release
-#platform: Any CPU
-assembly_info:
-  patch: true
-  file: '**\AssemblyInfo.*'
-  assembly_version: '{version}'
-  assembly_file_version: '{version}'
-  assembly_informational_version: '{version}'
+    - master
 
-build_script:
-  - Msbuild.exe src/redmine-net20-api/redmine-net20-api.csproj /verbosity:minimal /p:BuildNetFX20=true 
-  - Msbuild.exe src/redmine-net40-api/redmine-net40-api.csproj /verbosity:minimal /p:BuildNetFX40=true 
-  - Msbuild.exe src/redmine-net40-api-signed/redmine-net40-api-signed.csproj /verbosity:minimal /p:BuildNetFX40=true
-  - Msbuild.exe src/redmine-net45-api/redmine-net45-api.csproj /verbosity:minimal /p:BuildNetFX45=true
-  - Msbuild.exe src/redmine-net45-api-signed/redmine-net45-api-signed.csproj /verbosity:minimal /p:BuildNetFX45=true
-  - Msbuild.exe src/redmine-net451-api/redmine-net451-api.csproj /verbosity:minimal /p:BuildNetFX451=true
-  - Msbuild.exe src/redmine-net451-api-signed/redmine-net451-api-signed.csproj /verbosity:minimal /p:BuildNetFX451=true
-  - Msbuild.exe src/redmine-net452-api/redmine-net452-api.csproj /verbosity:minimal /p:BuildNetFX452=true
-  - Msbuild.exe src/redmine-net452-api-signed/redmine-net452-api-signed.csproj /verbosity:minimal /p:BuildNetFX452=true
+configuration: Release
+
+init:
+  # Good practise, because Windows line endings are different from Unix/Linux ones
+  - cmd: git config --global core.autocrlf true
+
+  # Set "build version number" to "short-commit-hash" or when tagged to "tag name" (Travis style)
+  - ps: >-
+      if ($env:APPVEYOR_REPO_TAG -eq "true")
+      {
+        Update-AppveyorBuild -Version "$($env:APPVEYOR_REPO_TAG_NAME.TrimStart("v"))"
+      }
+      else
+      {
+        Update-AppveyorBuild -Version "dev-$($env:APPVEYOR_REPO_COMMIT.substring(0,7))"
+      }
+    
+nuget:
+  disable_publish_on_pr: true
+
+environment:
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  APPVEYOR_YML_DISABLE_PS_LINUX: true
+
+dotnet_csproj:
+  patch: true
+  file: '**\*.csproj'
+  version: '{version}'
+  version_prefix: '{version}'
+  package_version: '{version}'
+  assembly_version: '{version}'
+  file_version: '{version}'
+  informational_version: '{version}'
+
+install:
+  - cmd: dotnet restore redmine-net-api.sln
 
 before_build:
-- nuget restore
+  - cmd: dotnet --version
 
 build:
   project: redmine-net-api.sln
-  publish_nuget: true
-  verbosity: detailed
+  verbosity: minimal
 
 after_build:
-- ps: nuget pack build/redmine-net-api.nuspec -Version $env:appveyor_build_version
-- ps: nuget pack build/redmine-net-api-signed.nuspec -Version $env:appveyor_build_version
-
-nuget:
-  account_feed: true
-  project_feed: true
+  - cmd: dotnet pack src\redmine-net-api\redmine-net-api.csproj --output artifacts
 
 test: off
 
 artifacts:
-- path: '*.nupkg'
+  - name: NuGet Packages
+    path: ./artifacts/**/*.nupkg
+  - name: NuGet Symbol Packages
+    path: ./artifacts/**/*.snupkg
+    
+skip_commits:
+  files:
+    - '**/*.md'
+    - '**/*.gif'
+    - '**/*.png'
+    - '**/*.yml'
+    - LICENSE
+    - tests/*
 
-# preserve "packages" directory in the root of build folder but will reset it if packages.config is modified
-cache:
-   - '%USERPROFILE%\.nuget\packages -> **\project.json'  # project.json cache
+for:
+  -
+    matrix:
+      only:
+        - image: Ubuntu
 
-deploy:
-- provider: NuGet
-  api_key:
-    secure: aOykHyBK5mqqlzZwbLgZnkB9qwmidaTFaLbc2ZKM2sSwBEuMV0VRF5OgKuoRehY0
-  artifact: /.*\.nupkg/
-  skip_symbols: true
+    deploy:
+      - provider: NuGet
+        name: dev
+        api_key:
+          secure: fo+5VNPIRQ98jFPBZSd4SsOVyXEsTxnQ52VWTrg3sgH1GwGXhi70Q561eimlmRhy
+        skip_symbols: true
+        on:
+          branch: master
+
+      - provider: NuGet
+        name: production
+        api_key:
+          secure: fo+5VNPIRQ98jFPBZSd4SsOVyXEsTxnQ52VWTrg3sgH1GwGXhi70Q561eimlmRhy
+        skip_symbols: false
+        on:
+          branch: master
+          APPVEYOR_REPO_TAG: true 
