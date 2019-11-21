@@ -105,9 +105,9 @@ namespace Redmine.Net.Api.JSonConverters
                 result.Add(RedmineKeys.NOTES, entity.Notes);
                 if (entity.Id != 0)
                 {
-                    result.Add(RedmineKeys.PRIVATE_NOTES, entity.PrivateNotes.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
+                    result.Add(RedmineKeys.PRIVATE_NOTES, entity.PrivateNotes.ToLowerInv());
                 }
-                result.Add(RedmineKeys.IS_PRIVATE, entity.IsPrivate.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
+                result.Add(RedmineKeys.IS_PRIVATE, entity.IsPrivate.ToLowerInv());
                 result.WriteIdIfNotNull(entity.Project, RedmineKeys.PROJECT_ID);
                 result.WriteIdIfNotNull(entity.Priority, RedmineKeys.PRIORITY_ID);
                 result.WriteIdIfNotNull(entity.Status, RedmineKeys.STATUS_ID);

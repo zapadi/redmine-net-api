@@ -21,6 +21,7 @@ using System.Collections;
 using System.Linq;
 using Redmine.Net.Api.JSonConverters;
 using Redmine.Net.Api.Types;
+using Redmine.Net.Api.Extensions;
 using Version = Redmine.Net.Api.Types.Version;
 
 namespace Redmine.Net.Api.Internals
@@ -158,7 +159,7 @@ namespace Redmine.Net.Api.Internals
             if (dictionary == null) return null;
 
             object obj;
-            return !dictionary.TryGetValue(root ?? type.Name.ToLowerInvariant(), out obj) ? null : serializer.ConvertToType(obj, type);
+            return !dictionary.TryGetValue(root ?? type.Name.ToLowerInv(), out obj) ? null : serializer.ConvertToType(obj, type);
         }
 
         /// <summary>
@@ -211,7 +212,7 @@ namespace Redmine.Net.Api.Internals
 
             if (dictionary.TryGetValue(RedmineKeys.OFFSET, out off)) offset = (int)off;
 
-            if (!dictionary.TryGetValue(root.ToLowerInvariant(), out obj)) return null;
+            if (!dictionary.TryGetValue(root.ToLowerInv(), out obj)) return null;
             
             var arrayList = new ArrayList();
             if (type == typeof(Error))

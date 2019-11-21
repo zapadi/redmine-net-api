@@ -217,6 +217,16 @@ namespace Redmine.Net.Api.Extensions
             }
             return list;
         }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static string ToLowerInv(this bool value)
+        {
+            return !value ? "false" : "true";
+        }
     }
 }
 #endif

@@ -49,5 +49,15 @@ namespace Redmine.Net.Api.Extensions
 
             return text;
         }
+
+        /// <summary>
+        /// Lower case based on invariant culture.
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        public static string ToLowerInv(this string text)
+        {
+            return text.IsNullOrWhiteSpace() ? text : text.ToLowerInvariant();
+        }
     }
 }

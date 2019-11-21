@@ -96,7 +96,7 @@ namespace Redmine.Net.Api.JSonConverters
                     result.Add(RedmineKeys.PASSWORD, entity.Password); 
                 }
 
-                result.Add(RedmineKeys.MUST_CHANGE_PASSWD, entity.MustChangePassword.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
+                result.Add(RedmineKeys.MUST_CHANGE_PASSWD, entity.MustChangePassword.ToLowerInv());
                 result.Add(RedmineKeys.STATUS, ((int)entity.Status).ToString(CultureInfo.InvariantCulture));
 
                 if(entity.AuthenticationModeId.HasValue)

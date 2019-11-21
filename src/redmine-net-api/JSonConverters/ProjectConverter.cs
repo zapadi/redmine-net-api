@@ -1,4 +1,4 @@
-/*
+﻿/*
    Copyright 2011 - 2019 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -87,8 +87,8 @@ namespace Redmine.Net.Api.JSonConverters
                 result.Add(RedmineKeys.IDENTIFIER, entity.Identifier);
                 result.Add(RedmineKeys.DESCRIPTION, entity.Description);
                 result.Add(RedmineKeys.HOMEPAGE, entity.HomePage);
-                //result.Add(RedmineKeys.INHERIT_MEMBERS, entity.InheritMembers.ToString().ToLowerInvariant());
-                result.Add(RedmineKeys.IS_PUBLIC, entity.IsPublic.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
+                //result.Add(RedmineKeys.INHERIT_MEMBERS, entity.InheritMembers.ToLowerInv());
+                result.Add(RedmineKeys.IS_PUBLIC, entity.IsPublic.ToLowerInv());
                 result.WriteIdOrEmpty(entity.Parent, RedmineKeys.PARENT_ID, string.Empty);
                 result.WriteIdsArray(RedmineKeys.TRACKER_IDS, entity.Trackers);
                 result.WriteNamesArray(RedmineKeys.ENABLED_MODULE_NAMES, entity.EnabledModules);
