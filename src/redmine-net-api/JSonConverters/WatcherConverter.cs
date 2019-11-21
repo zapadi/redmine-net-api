@@ -29,7 +29,7 @@ namespace Redmine.Net.Api.JSonConverters
         /// </summary>
         public override IEnumerable<Type> SupportedTypes
         {
-            get { return new List<Type>(new[] {typeof(Watcher)}); }
+            get { return new[] {typeof(Watcher)}; }
         }
 
         /// <summary>

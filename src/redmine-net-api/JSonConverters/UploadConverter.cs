@@ -84,7 +84,7 @@ namespace Redmine.Net.Api.JSonConverters
         /// </summary>
         public override IEnumerable<Type> SupportedTypes
         {
-            get { return new List<Type>(new[] {typeof(Upload)}); }
+            get { return new[] {typeof(Upload)}; }
         }
 
         #endregion

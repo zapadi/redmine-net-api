@@ -91,7 +91,10 @@ namespace Redmine.Net.Api.JSonConverters
         /// <summary>
         /// When overridden in a derived class, gets a collection of the supported types.
         /// </summary>
-        public override IEnumerable<Type> SupportedTypes { get { return new List<Type>(new[] { typeof(Attachment) }); } }
+        public override IEnumerable<Type> SupportedTypes
+        {
+            get { return new[] {typeof(Attachment)}; }
+        }
 
         #endregion
     }

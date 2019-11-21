@@ -69,7 +69,7 @@ namespace Redmine.Net.Api.JSonConverters
         /// </value>
         public override IEnumerable<Type> SupportedTypes
         {
-            get { return new List<Type>(new[] {typeof(GroupUser)}); }
+            get { return new[] {typeof(GroupUser)}; }
         }
 
         #endregion

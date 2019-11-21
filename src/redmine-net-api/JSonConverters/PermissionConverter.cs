@@ -29,7 +29,7 @@ namespace Redmine.Net.Api.JSonConverters
         /// </summary>
         public override IEnumerable<Type> SupportedTypes
         {
-            get { return new List<Type>(new[] {typeof(Permission)}); }
+            get { return new[] {typeof(Permission)}; }
         }
 
         /// <summary>

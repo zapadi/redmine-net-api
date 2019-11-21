@@ -1,4 +1,4 @@
-﻿/*
+/*
    Copyright 2011 - 2019 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -74,7 +74,10 @@ namespace Redmine.Net.Api.JSonConverters
         /// <summary>
         /// When overridden in a derived class, gets a collection of the supported types.
         /// </summary>
-        public override IEnumerable<Type> SupportedTypes { get { return new List<Type>(new[] { typeof(Attachments) }); } }
+        public override IEnumerable<Type> SupportedTypes
+        {
+            get { return new[] {typeof(Attachments)}; }
+        }
 
         #endregion
     }

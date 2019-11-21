@@ -84,7 +84,7 @@ namespace Redmine.Net.Api.JSonConverters
         /// </value>
         public override IEnumerable<Type> SupportedTypes
         {
-            get { return new List<Type>(new[] {typeof(CustomField)}); }
+            get { return new[] {typeof(CustomField)}; }
         }
 
         #endregion

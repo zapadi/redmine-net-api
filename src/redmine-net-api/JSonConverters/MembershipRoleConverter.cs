@@ -73,7 +73,7 @@ namespace Redmine.Net.Api.JSonConverters
         /// </summary>
         public override IEnumerable<Type> SupportedTypes
         {
-            get { return new List<Type>(new[] {typeof(MembershipRole)}); }
+            get { return new[] {typeof(MembershipRole)}; }
         }
 
         #endregion

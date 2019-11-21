@@ -69,7 +69,7 @@ namespace Redmine.Net.Api.JSonConverters
         /// </summary>
         public override IEnumerable<Type> SupportedTypes
         {
-            get { return new List<Type>(new[] {typeof(ProjectTracker)}); }
+            get { return new[] {typeof(ProjectTracker)}; }
         }
 
         #endregion
