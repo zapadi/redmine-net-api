@@ -24,6 +24,7 @@ namespace Redmine.Net.Api.Exceptions
     /// Thrown in case the objects requested for could not be found.
     /// </summary>
     /// <seealso cref="Redmine.Net.Api.Exceptions.RedmineException" />
+    [Serializable]
     public sealed class NotFoundException : RedmineException
     {
         /// <summary>
@@ -71,6 +72,16 @@ namespace Redmine.Net.Api.Exceptions
         public NotFoundException(string format, Exception innerException, params object[] args)
             : base(string.Format(CultureInfo.InvariantCulture,format, args), innerException)
         {
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="serializationInfo"></param>
+        /// <param name="streamingContext"></param>
+        private NotFoundException(SerializationInfo serializationInfo, StreamingContext streamingContext):base(serializationInfo, streamingContext)
+        {
+         
         }
     }
 }

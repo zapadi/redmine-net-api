@@ -24,6 +24,7 @@ namespace Redmine.Net.Api.Exceptions
     /// Thrown in case something went wrong while trying to login.
     /// </summary>
     /// <seealso cref="Redmine.Net.Api.Exceptions.RedmineException" />
+    [Serializable]
     public sealed class UnauthorizedException : RedmineException
     {
         /// <summary>
@@ -74,6 +75,17 @@ namespace Redmine.Net.Api.Exceptions
         public UnauthorizedException(string format, Exception innerException, params object[] args)
             : base(string.Format(CultureInfo.InvariantCulture,format, args), innerException)
         {
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="serializationInfo"></param>
+        /// <param name="streamingContext"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private UnauthorizedException(SerializationInfo serializationInfo, StreamingContext streamingContext):base(serializationInfo, streamingContext)
+        {
+         
         }
     }
 }

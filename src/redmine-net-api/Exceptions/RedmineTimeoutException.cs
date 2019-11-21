@@ -23,6 +23,7 @@ namespace Redmine.Net.Api.Exceptions
     /// <summary>
     /// </summary>
     /// <seealso cref="Redmine.Net.Api.Exceptions.RedmineException" />
+    [Serializable]
     public sealed class RedmineTimeoutException : RedmineException
     {
         /// <summary>
@@ -73,6 +74,16 @@ namespace Redmine.Net.Api.Exceptions
         public RedmineTimeoutException(string format, Exception innerException, params object[] args)
             : base(string.Format(CultureInfo.InvariantCulture,format, args), innerException)
         {
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="serializationInfo"></param>
+        /// <param name="streamingContext"></param>
+        private RedmineTimeoutException(SerializationInfo serializationInfo, StreamingContext streamingContext):base(serializationInfo, streamingContext)
+        {
+         
         }
     }
 }

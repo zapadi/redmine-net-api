@@ -24,6 +24,7 @@ namespace Redmine.Net.Api.Exceptions
     /// Thrown in case something went wrong in Redmine
     /// </summary>
     /// <seealso cref="System.Exception" />
+    [Serializable]
     public class RedmineException : Exception
     {
         /// <summary>
@@ -73,6 +74,14 @@ namespace Redmine.Net.Api.Exceptions
         {
         }
 
-        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="serializationInfo"></param>
+        /// <param name="streamingContext"></param>
+        protected RedmineException(SerializationInfo serializationInfo, StreamingContext streamingContext):base(serializationInfo, streamingContext)
+        {
+            
+        }
     }
 }

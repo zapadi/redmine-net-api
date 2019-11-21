@@ -23,6 +23,7 @@ namespace Redmine.Net.Api.Exceptions
     /// <summary>
     /// </summary>
     /// <seealso cref="Redmine.Net.Api.Exceptions.RedmineException" />
+    [Serializable]
     public sealed class NameResolutionFailureException : RedmineException
     {
         /// <summary>
@@ -72,5 +73,14 @@ namespace Redmine.Net.Api.Exceptions
         {
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="serializationInfo"></param>
+        /// <param name="streamingContext"></param>
+        private NameResolutionFailureException(SerializationInfo serializationInfo, StreamingContext streamingContext):base(serializationInfo, streamingContext)
+        {
+         
+        }
     }
 }
