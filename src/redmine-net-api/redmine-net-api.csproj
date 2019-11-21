@@ -17,21 +17,14 @@
   <PropertyGroup Label="Package">
 
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    
     <Authors>Adrian Popescu</Authors>
-
     <Description>Redmine Api is a .NET rest client for Redmine.</Description>
-
     <Company>p.adi</Company>
-    
     <Copyright>Adrian Popescu, 2011-2020 </Copyright>
-
     <FileVersion>1.0.0.0</FileVersion>
-    
     <InformationalVersion>1.0.0</InformationalVersion>
-    
     <NeutralLanguage>en-US</NeutralLanguage>
-    <PackageId>redmine-net-api</PackageId>
+    <PackageId>redmine-api</PackageId>
     <PackageIconUrl>https://github.com/zapadi/redmine-net-api/blob/master/logo.png</PackageIconUrl>
     <PackageLicenseUrl>https://github.com/zapadi/redmine-net-api/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/zapadi/redmine-net-api</PackageProjectUrl>
@@ -39,18 +32,15 @@
     <PackageReleaseNotes>Changed to new csproj format.</PackageReleaseNotes>
     <PackageTags>Redmine; REST; API; Client; .NET; Adrian Popescu; </PackageTags>
     <PackageVersion>1.0.0</PackageVersion>
-    
     <Product>Redmine .NET API Client</Product>
-
     <RepositoryType>git</RepositoryType>
-    
     <RepositoryUrl>https://github.com/zapadi/redmine-net-api</RepositoryUrl>
-
     <Summary>...</Summary>
     <Title>Redmine .NET API Client</Title> 
     <Version>1.0.0</Version>
     <VersionPrefix>2.0.0</VersionPrefix>
-    <VersionSuffix>$(VersionSuffix)</VersionSuffix>
+    <VersionSuffix Condition="'$(BuildNumber)' == ''">pre</VersionSuffix>
+    <VersionSuffix Condition="'$(BuildNumber)' != ''">pre-$(BuildNumber)</VersionSuffix>
 
   </PropertyGroup>
 
