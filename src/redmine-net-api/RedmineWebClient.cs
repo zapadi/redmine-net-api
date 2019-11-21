@@ -89,11 +89,11 @@ namespace Redmine.Net.Api
         public bool KeepAlive { get; set; }
 
         /// <summary>
-        ///     Returns a <see cref="T:System.Net.WebRequest" /> object for the specified resource.
+        ///     Returns a <see cref="System.Net.WebRequest" /> object for the specified resource.
         /// </summary>
-        /// <param name="address">A <see cref="T:System.Uri" /> that identifies the resource to request.</param>
+        /// <param name="address">A <see cref="System.Uri" /> that identifies the resource to request.</param>
         /// <returns>
-        ///     A new <see cref="T:System.Net.WebRequest" /> object for the specified resource.
+        ///     A new <see cref="System.Net.WebRequest" /> object for the specified resource.
         /// </returns>
         protected override WebRequest GetWebRequest(Uri address)
         {

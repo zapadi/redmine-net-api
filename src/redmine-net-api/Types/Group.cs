@@ -1,4 +1,4 @@
-/*
+﻿/*
    Copyright 2011 - 2019 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -57,7 +57,7 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// Generates an object from its XML representation.
         /// </summary>
-        /// <param name="reader">The <see cref="T:System.Xml.XmlReader"/> stream from which the object is deserialized. </param>
+        /// <param name="reader">The <see cref="System.Xml.XmlReader"/> stream from which the object is deserialized. </param>
         public override void ReadXml(XmlReader reader)
         {
             reader.Read();
@@ -89,7 +89,7 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// Converts an object into its XML representation.
         /// </summary>
-        /// <param name="writer">The <see cref="T:System.Xml.XmlWriter"/> stream to which the object is serialized. </param>
+        /// <param name="writer">The <see cref="System.Xml.XmlWriter"/> stream to which the object is serialized. </param>
         public override void WriteXml(XmlWriter writer)
         {
             writer.WriteElementString(RedmineKeys.NAME, Name);
