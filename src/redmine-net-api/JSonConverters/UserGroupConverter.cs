@@ -40,11 +40,11 @@ namespace Redmine.Net.Api.JSonConverters
         ///     When overridden in a derived class, converts the provided dictionary into an object of the specified type.
         /// </summary>
         /// <param name="dictionary">
-        ///     An <see cref="T:System.Collections.Generic.IDictionary`2" /> instance of property data stored
+        ///     An <see cref="System.Collections.Generic.IDictionary{TKey, TValue}" /> instance of property data stored
         ///     as name/value pairs.
         /// </param>
         /// <param name="type">The type of the resulting object.</param>
-        /// <param name="serializer">The <see cref="T:System.Web.Script.Serialization.JavaScriptSerializer" /> instance.</param>
+        /// <param name="serializer">The <see cref="System.Web.Script.Serialization.JavaScriptSerializer" /> instance.</param>
         /// <returns>
         ///     The deserialized object.
         /// </returns>
