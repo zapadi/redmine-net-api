@@ -1,4 +1,4 @@
-/*
+﻿/*
    Copyright 2011 - 2019 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -173,8 +173,10 @@ namespace Redmine.Net.Api
         {
             cache = new CredentialCache { { new Uri(host), "Basic", new NetworkCredential(login, password) } };
 
-            var token = Convert.ToBase64String(Encoding.UTF8.GetBytes(string.Format("{0}:{1}", login, password)));
-            basicAuthorization = string.Format("Basic {0}", token);
+            var token = Convert.ToBase64String(Encoding.UTF8.GetBytes(string.Format(CultureInfo.InvariantCulture,"{0}:{1}", login, password)));
+            basicAuthorization = string.Format(CultureInfo.InvariantCulture,"Basic {0}", token);
+
+            
         }
 
         /// <summary>

@@ -1,4 +1,4 @@
-/*
+﻿/*
    Copyright 2011 - 2019 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,6 +15,7 @@
 */
 
 using System;
+using System.Globalization;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
@@ -54,7 +55,7 @@ namespace Redmine.Net.Api.Types
         /// <param name="reader"></param>
         public void ReadXml(XmlReader reader)
         {
-            Id = Convert.ToInt32(reader.GetAttribute(RedmineKeys.ID));
+            Id = Convert.ToInt32(reader.GetAttribute(RedmineKeys.ID), CultureInfo.InvariantCulture);
             reader.Read();
 
             while (!reader.EOF)

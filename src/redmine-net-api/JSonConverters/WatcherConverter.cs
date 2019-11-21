@@ -13,6 +13,8 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
+
+using System.Globalization;
 #if !NET20
 using System;
 using System.Collections.Generic;
@@ -75,7 +77,7 @@ namespace Redmine.Net.Api.JSonConverters
 
             if (entity != null)
             {
-                result.Add(RedmineKeys.ID, entity.Id);
+                result.Add(RedmineKeys.ID, entity.Id.ToString(CultureInfo.InvariantCulture));
             }
 
             return result;

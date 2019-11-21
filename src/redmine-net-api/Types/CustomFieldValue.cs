@@ -1,4 +1,4 @@
-/*
+﻿/*
    Copyright 2011 - 2019 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -39,7 +39,7 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
         public bool Equals(CustomFieldValue other)
         {
-            return Info.Equals(other.Info);
+            return other != null && Info.Equals(other.Info, StringComparison.OrdinalIgnoreCase);
         }
 
         /// <summary>

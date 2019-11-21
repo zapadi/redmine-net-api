@@ -30,6 +30,10 @@ namespace Redmine.Net.Api.Extensions
     /// </summary>
     public static partial class XmlExtensions
     {
+
+        private static readonly Type[] emptyTypeArray = new Type[0];
+        private static readonly XmlAttributeOverrides xmlAttributeOverrides = new XmlAttributeOverrides();
+        
         /// <summary>
         /// Writes the id if not null.
         /// </summary>
@@ -71,13 +75,16 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="f">The f.</param>
         public static void WriteArrayIds(this XmlWriter writer, IEnumerable collection, string elementName, Type type, Func<object, int> f)
         {
-            if (collection == null) return;
+            if (collection == null || f == null) return;
+            
             writer.WriteStartElement(elementName);
             writer.WriteAttributeString("type", "array");
 
+            var serializer = new XmlSerializer(type);
+            
             foreach (var item in collection)
             {
-                new XmlSerializer(type).Serialize(writer, f.Invoke(item));
+                serializer.Serialize(writer, f.Invoke(item));
             }
 
             writer.WriteEndElement();
@@ -95,18 +102,18 @@ namespace Redmine.Net.Api.Extensions
         public static void WriteArray(this XmlWriter writer, IEnumerable collection, string elementName, Type type, string root, string defaultNamespace = null)
         {
             if (collection == null) return;
+            
             writer.WriteStartElement(elementName);
             writer.WriteAttributeString("type", "array");
 
+            var rootAttribute = new XmlRootAttribute(root);
+
+            var serializer = new XmlSerializer(type, xmlAttributeOverrides, emptyTypeArray, rootAttribute,
+                defaultNamespace);
+            
             foreach (var item in collection)
             {
-                #if (NET20 || NET40 || NET45 || NET451 || NET452)
-                 new XmlSerializer(type, new XmlAttributeOverrides(), new Type[]{}, new XmlRootAttribute(root),
-                    defaultNamespace).Serialize(writer, item);
-#else
-                new XmlSerializer(type, new XmlAttributeOverrides(), Array.Empty<Type>(), new XmlRootAttribute(root),
-                    defaultNamespace).Serialize(writer, item);
-                #endif
+                serializer.Serialize(writer, item);
             }
 
             writer.WriteEndElement();
@@ -121,7 +128,7 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="f">The func to invoke.</param>
         public static void WriteArrayStringElement(this XmlWriter writer, IEnumerable collection, string elementName, Func<object, string> f)
         {
-            if (collection == null) return;
+            if (collection == null || f == null) return;
             writer.WriteStartElement(elementName);
             writer.WriteAttributeString("type", "array");
 

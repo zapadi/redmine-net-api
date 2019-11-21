@@ -1,4 +1,4 @@
-/*
+﻿/*
    Copyright 2011 - 2019 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Xml;
 using System.Xml.Serialization;
 using Redmine.Net.Api.Extensions;
@@ -135,8 +136,8 @@ namespace Redmine.Net.Api.Types
         public override void WriteXml(XmlWriter writer)
         {
             writer.WriteElementString(RedmineKeys.NAME, Name);
-            writer.WriteElementString(RedmineKeys.STATUS, Status.ToString().ToLowerInvariant());
-            writer.WriteElementString(RedmineKeys.SHARING, Sharing.ToString().ToLowerInvariant());
+            writer.WriteElementString(RedmineKeys.STATUS, Status.ToString("G").ToLowerInv());
+            writer.WriteElementString(RedmineKeys.SHARING, Sharing.ToString("G").ToLowerInv());
 
             writer.WriteDateOrEmpty(DueDate, RedmineKeys.DUE_DATE);
             writer.WriteElementString(RedmineKeys.DESCRIPTION, Description);

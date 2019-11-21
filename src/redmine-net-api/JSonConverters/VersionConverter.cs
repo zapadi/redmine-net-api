@@ -13,6 +13,8 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
+
+using System.Globalization;
 #if !NET20
 using System;
 using System.Collections.Generic;
@@ -80,8 +82,8 @@ namespace Redmine.Net.Api.JSonConverters
             if (entity != null)
             {
                 result.Add(RedmineKeys.NAME, entity.Name);
-                result.Add(RedmineKeys.STATUS, entity.Status.ToString().ToLowerInvariant());
-                result.Add(RedmineKeys.SHARING, entity.Sharing.ToString().ToLowerInvariant());
+                result.Add(RedmineKeys.STATUS, entity.Status.ToString("G").ToLowerInv());
+                result.Add(RedmineKeys.SHARING, entity.Sharing.ToString("G").ToLowerInv());
                 result.Add(RedmineKeys.DESCRIPTION, entity.Description);
 
                 var root = new Dictionary<string, object>();
