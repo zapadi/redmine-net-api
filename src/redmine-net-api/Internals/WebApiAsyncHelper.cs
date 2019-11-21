@@ -162,7 +162,7 @@ namespace Redmine.Net.Api.Internals
             {
                 try
                 {
-                    return await wc.DownloadDataTaskAsync(address);
+                    return await wc.DownloadDataTaskAsync(address).ConfigureAwait(false);
                 }
                 catch (WebException webException)
                 {
@@ -186,7 +186,7 @@ namespace Redmine.Net.Api.Internals
             {
                 try
                 {
-                    var response = await wc.UploadDataTaskAsync(address, data);
+                    var response = await wc.UploadDataTaskAsync(address, data).ConfigureAwait(false);
                     var responseString = Encoding.ASCII.GetString(response);
                     return RedmineSerializer.Deserialize<Upload>(responseString, redmineManager.MimeFormat);
                 }

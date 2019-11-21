@@ -228,7 +228,7 @@ namespace Redmine.Net.Api.Async
 
             try
             {
-                var tempResult = await GetPaginatedObjectsAsync<T>(redmineManager,parameters);
+                var tempResult = await GetPaginatedObjectsAsync<T>(redmineManager,parameters).ConfigureAwait(false);
                 if (tempResult != null)
                 {
                     totalCount = tempResult.TotalCount;
