@@ -39,7 +39,7 @@
     <Summary>...</Summary>
     <Title>Redmine .NET API Client</Title> 
     
-    <VersionPrefix>2.0.43</VersionPrefix>
+    <Version>2.0.43</Version>
     <VersionSuffix Condition="'$(BuildNumber)' == ''">pre</VersionSuffix>
     <VersionSuffix Condition="'$(BuildNumber)' != ''">pre-$(BuildNumber)</VersionSuffix>
 
