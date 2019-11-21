@@ -1,4 +1,4 @@
-/*
+﻿/*
    Copyright 2011 - 2019 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -230,7 +230,7 @@ namespace Redmine.Net.Api.Types
                 writer.WriteValueOrEmpty(AuthenticationModeId, RedmineKeys.AUTH_SOURCE_ID);
             }
             
-            writer.WriteElementString(RedmineKeys.MUST_CHANGE_PASSWD, MustChangePassword.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
+            writer.WriteElementString(RedmineKeys.MUST_CHANGE_PASSWD, XmlConvert.ToString(MustChangePassword));
             writer.WriteElementString(RedmineKeys.STATUS, ((int)Status).ToString(CultureInfo.InvariantCulture));
             if(CustomFields != null)
             { 

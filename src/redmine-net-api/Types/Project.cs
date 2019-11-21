@@ -211,8 +211,8 @@ namespace Redmine.Net.Api.Types
             writer.WriteElementString(RedmineKeys.NAME, Name);
             writer.WriteElementString(RedmineKeys.IDENTIFIER, Identifier);
             writer.WriteElementString(RedmineKeys.DESCRIPTION, Description);
-            //writer.WriteElementString(RedmineKeys.INHERIT_MEMBERS, InheritMembers.ToString().ToLowerInvariant());
-            writer.WriteElementString(RedmineKeys.IS_PUBLIC, IsPublic.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
+            //writer.WriteElementString(RedmineKeys.INHERIT_MEMBERS, XmlConvert.ToString(InheritMembers));
+            writer.WriteElementString(RedmineKeys.IS_PUBLIC, XmlConvert.ToString(IsPublic));
             writer.WriteIdOrEmpty(Parent, RedmineKeys.PARENT_ID);
             writer.WriteElementString(RedmineKeys.HOMEPAGE, HomePage);
 

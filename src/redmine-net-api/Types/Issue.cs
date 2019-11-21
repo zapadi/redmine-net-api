@@ -1,4 +1,4 @@
-/*
+﻿/*
    Copyright 2011 - 2017 Adrian Popescu, Dorin Huzum.
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
@@ -459,12 +460,12 @@ namespace Redmine.Net.Api.Types
 
             if (Id != 0)
             {
-                writer.WriteElementString(RedmineKeys.PRIVATE_NOTES, PrivateNotes.ToString().ToLowerInvariant());
+                writer.WriteElementString(RedmineKeys.PRIVATE_NOTES, XmlConvert.ToString(PrivateNotes));
             }
 
             writer.WriteElementString(RedmineKeys.DESCRIPTION, Description);
             writer.WriteStartElement(RedmineKeys.IS_PRIVATE);
-            writer.WriteValue(IsPrivate.ToString().ToLowerInvariant());
+            writer.WriteValue(XmlConvert.ToString(IsPrivate));
             writer.WriteEndElement();
 
             writer.WriteIdIfNotNull(Project, RedmineKeys.PROJECT_ID);
