@@ -20,17 +20,19 @@ init:
   # Set "build version number" to "short-commit-hash" or when tagged to "tag name" (Travis style)
   - ps: >-
 
+
+      $prefix = "";
       if ($env:APPVEYOR_REPO_TAG -eq "true")
       {
-        Update-AppveyorBuild -Version "$($env:APPVEYOR_REPO_TAG_NAME.TrimStart("v"))";
+        $prefix = $env:APPVEYOR_REPO_TAG_NAME.TrimStart("v");
+        Update-AppveyorBuild -Version "$prefix";
       }
       else
       {
-        $props = [xml](Get-Content Directory.Build.props)
-        $prefix = $props.Project.PropertyGroup.VersionPrefix
-        $suffix = "-$($env:APPVEYOR_REPO_COMMIT.substring(0,7))";
+        $props = [xml](Get-Content Directory.Build.props);
+        $prefix = $props.Project.PropertyGroup.VersionPrefix + "-$($env:APPVEYOR_REPO_COMMIT.substring(0,7))";
 
-        echo "Build: Full version is $prefix-$suffix";
+        echo "Build: Full version is $prefix";
       }
 
      
@@ -46,8 +48,7 @@ environment:
 dotnet_csproj:
   patch: true
   file: '**\*.csproj'
-  version_suffix: '${suffix}'
-  version_prefix: '{version}'
+  version_prefix: '${prefix}'
 
 install:
   - cmd: dotnet restore redmine-net-api.sln
