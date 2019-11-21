@@ -113,7 +113,7 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("[Query: {2}, IsPublic={0}, ProjectId={1}]", IsPublic, ProjectId, base.ToString());
+            return $"[Query: {base.ToString()}, IsPublic={IsPublic}, ProjectId={ProjectId}]";
         }
     }
 }

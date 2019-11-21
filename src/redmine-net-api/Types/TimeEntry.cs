@@ -246,8 +246,8 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("[TimeEntry: {10}, Issue={0}, Project={1}, SpentOn={2}, Hours={3}, Activity={4}, User={5}, Comments={6}, CreatedOn={7}, UpdatedOn={8}, CustomFields={9}]",
-                Issue, Project, SpentOn, Hours, Activity, User, Comments, CreatedOn, UpdatedOn, CustomFields, base.ToString());
+            return
+                $"[TimeEntry: {base.ToString()}, Issue={Issue}, Project={Project}, SpentOn={SpentOn}, Hours={Hours}, Activity={Activity}, User={User}, Comments={Comments}, CreatedOn={CreatedOn}, UpdatedOn={UpdatedOn}, CustomFields={CustomFields}]";
         }
     }
 }

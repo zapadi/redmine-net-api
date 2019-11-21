@@ -122,7 +122,7 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("[TimeEntryActivity: Id={0}, Name={1}, IsDefault={2}]", Id, Name, IsDefault);
+            return $"[TimeEntryActivity: Id={Id}, Name={Name}, IsDefault={IsDefault}]";
         }
     }
 }

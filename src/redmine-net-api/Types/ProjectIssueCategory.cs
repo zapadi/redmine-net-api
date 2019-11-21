@@ -30,7 +30,7 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
         public override string ToString ()
 		{
-			return string.Format ("[ProjectIssueCategory: {0}]", base.ToString());
+			return $"[ProjectIssueCategory: {base.ToString()}]";
 		}
     }
 }

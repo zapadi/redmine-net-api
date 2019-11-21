@@ -114,7 +114,8 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("[Upload: Token={0}, FileName={1}, ContentType={2}, Description={3}]", Token, FileName, ContentType, Description);
+            return
+                $"[Upload: Token={Token}, FileName={FileName}, ContentType={ContentType}, Description={Description}]";
         }
     }
 }

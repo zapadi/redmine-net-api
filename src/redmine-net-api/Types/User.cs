@@ -1,4 +1,4 @@
-﻿/*
+/*
    Copyright 2011 - 2019 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -300,8 +300,8 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("[User: {14}, Login={0}, Password={1}, FirstName={2}, LastName={3}, Email={4}, EmailNotification={5}, AuthenticationModeId={6}, CreatedOn={7}, LastLoginOn={8}, ApiKey={9}, Status={10}, MustChangePassword={11}, CustomFields={12}, Memberships={13}, Groups={14}]",
-                Login, Password, FirstName, LastName, Email, MailNotification, AuthenticationModeId, CreatedOn, LastLoginOn, ApiKey, Status, MustChangePassword, CustomFields, Memberships, Groups, base.ToString());
+            return
+                $"[User: {Groups}, Login={Login}, Password={Password}, FirstName={FirstName}, LastName={LastName}, Email={Email}, EmailNotification={MailNotification}, AuthenticationModeId={AuthenticationModeId}, CreatedOn={CreatedOn}, LastLoginOn={LastLoginOn}, ApiKey={ApiKey}, Status={Status}, MustChangePassword={MustChangePassword}, CustomFields={CustomFields}, Memberships={Memberships}, Groups={Groups}]";
         }
     }
 }

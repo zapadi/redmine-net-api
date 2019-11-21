@@ -40,7 +40,7 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("[ProjectEnabledModule: {0}]", base.ToString());
+            return $"[ProjectEnabledModule: {base.ToString()}]";
         }
     }
 }

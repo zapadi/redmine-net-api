@@ -120,7 +120,7 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("[IssuePriority: Id={0}, Name={1}, IsDefault={2}]", Id, Name, IsDefault);
+            return $"[IssuePriority: Id={Id}, Name={Name}, IsDefault={IsDefault}]";
         }
 
         #endregion

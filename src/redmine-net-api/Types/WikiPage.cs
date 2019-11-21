@@ -205,8 +205,8 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("[WikiPage: {8}, Title={0}, Text={1}, Comments={2}, Version={3}, Author={4}, CreatedOn={5}, UpdatedOn={6}, Attachments={7}]",
-                Title, Text, Comments, Version, Author, CreatedOn, UpdatedOn, Attachments, base.ToString());
+            return
+                $"[WikiPage: {base.ToString()}, Title={Title}, Text={Text}, Comments={Comments}, Version={Version}, Author={Author}, CreatedOn={CreatedOn}, UpdatedOn={UpdatedOn}, Attachments={Attachments}]";
         }
 
         #endregion

@@ -146,7 +146,7 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("Revision: {0}, User: '{1}', CommitedOn: {2}, Comments: '{3}'", Revision, User, CommittedOn, Comments);
+            return $"Revision: {Revision}, User: '{User}', CommitedOn: {CommittedOn}, Comments: '{Comments}'";
         }
     }
 }

@@ -151,7 +151,7 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("[File: Id={0}, Name={1}]", Id, Filename);
+            return $"[File: Id={Id}, Name={Filename}]";
         }
 
         /// <summary>

@@ -101,7 +101,7 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("[Identifiable: Id={0}]", Id);
+            return $"[Identifiable: Id={Id}]";
         }
     }
 }

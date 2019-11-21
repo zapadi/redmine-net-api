@@ -173,8 +173,8 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("[Attachment: {7}, FileName={0}, FileSize={1}, ContentType={2}, Description={3}, ContentUrl={4}, Author={5}, CreatedOn={6}]",
-                FileName, FileSize, ContentType, Description, ContentUrl, Author, CreatedOn, base.ToString());
+            return
+                $"[Attachment: {base.ToString()}, FileName={FileName}, FileSize={FileSize}, ContentType={ContentType}, Description={Description}, ContentUrl={ContentUrl}, Author={Author}, CreatedOn={CreatedOn}]";
         }
     }
 }

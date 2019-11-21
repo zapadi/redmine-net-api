@@ -46,7 +46,7 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("[Watcher: {0}]", base.ToString());
+            return $"[Watcher: {base.ToString()}]";
         }
 
         /// <summary>

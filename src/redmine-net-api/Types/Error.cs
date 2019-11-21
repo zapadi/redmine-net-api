@@ -52,7 +52,7 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("[Error: Info={0}]", Info);
+            return $"[Error: Info={Info}]";
         }
 
         /// <summary>

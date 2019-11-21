@@ -120,7 +120,7 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("[Role: Id={0}, Name={1}, Permissions={2}]", Id, Name, Permissions);
+            return $"[Role: Id={Id}, Name={Name}, Permissions={Permissions}]";
         }
     }
 }

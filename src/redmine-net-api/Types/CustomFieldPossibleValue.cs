@@ -82,7 +82,7 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
 		public override string ToString ()
 		{
-			return string.Format ("[CustomFieldPossibleValue: {0}]", base.ToString());
+			return $"[CustomFieldPossibleValue: {base.ToString()}]";
 		}
     }
 }

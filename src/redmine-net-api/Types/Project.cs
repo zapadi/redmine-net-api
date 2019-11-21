@@ -1,4 +1,4 @@
-﻿/*
+/*
    Copyright 2011 - 2019 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -295,8 +295,8 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("[Project: {13}, Identifier={0}, Description={1}, Parent={2}, HomePage={3}, CreatedOn={4}, UpdatedOn={5}, Status={6}, IsPublic={7}, InheritMembers={8}, Trackers={9}, CustomFields={10}, IssueCategories={11}, EnabledModules={12}]",
-                Identifier, Description, Parent, HomePage, CreatedOn, UpdatedOn, Status, IsPublic, InheritMembers, Trackers, CustomFields, IssueCategories, EnabledModules, base.ToString());
+            return
+                $"[Project: {base.ToString()}, Identifier={Identifier}, Description={Description}, Parent={Parent}, HomePage={HomePage}, CreatedOn={CreatedOn}, UpdatedOn={UpdatedOn}, Status={Status}, IsPublic={IsPublic}, InheritMembers={InheritMembers}, Trackers={Trackers}, CustomFields={CustomFields}, IssueCategories={IssueCategories}, EnabledModules={EnabledModules}]";
         }
     }
 }

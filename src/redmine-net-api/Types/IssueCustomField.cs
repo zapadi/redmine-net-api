@@ -114,7 +114,7 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("[IssueCustomField: {2} Values={0}, Multiple={1}]", Values, Multiple, base.ToString());
+            return $"[IssueCustomField: {base.ToString()} Values={Values}, Multiple={Multiple}]";
         }
 
         /// <summary>

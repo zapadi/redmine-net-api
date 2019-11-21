@@ -30,7 +30,7 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
 		public override string ToString ()
 		{
-			return string.Format ("[CustomFieldRole: {0}]", base.ToString());
+			return $"[CustomFieldRole: {base.ToString()}]";
 		}
     }
 }

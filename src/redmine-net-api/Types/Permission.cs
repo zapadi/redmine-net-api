@@ -75,7 +75,7 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("[Permission: Info={0}]", Info);
+            return $"[Permission: Info={Info}]";
         }
     }
 }

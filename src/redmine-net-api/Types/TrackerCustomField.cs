@@ -43,7 +43,7 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
 		public override string ToString ()
 		{
-			return string.Format ("[TrackerCustomField: {0}]", base.ToString());
+			return $"[TrackerCustomField: {base.ToString()}]";
 		}
     }
 }

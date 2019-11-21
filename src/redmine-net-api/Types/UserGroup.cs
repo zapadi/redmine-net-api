@@ -30,7 +30,7 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
 		public override string ToString ()
 		{
-			return string.Format ("[UserGroup: {0}]", base.ToString());
+			return $"[UserGroup: {base.ToString()}]";
 		}
     }
 }

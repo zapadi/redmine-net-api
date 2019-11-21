@@ -169,7 +169,8 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("[IssueRelation: {4}, IssueId={0}, IssueToId={1}, Type={2}, Delay={3}]", IssueId, IssueToId, Type, Delay, base.ToString());
+            return
+                $"[IssueRelation: {base.ToString()}, IssueId={IssueId}, IssueToId={IssueToId}, Type={Type}, Delay={Delay}]";
         }
     }
 }

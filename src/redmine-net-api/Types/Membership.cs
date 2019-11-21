@@ -121,7 +121,7 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("[Membership: {2}, Project={0}, Roles={1}]", Project, Roles, base.ToString());
+            return $"[Membership: {base.ToString()}, Project={Project}, Roles={Roles}]";
         }
     }
 }
