@@ -38,7 +38,7 @@ install:
 
 before_build:
   - ps: write-host "Build Suffix=$env:BUILD_SUFFIX" -foregroundcolor Green  
-  - ps: write-host "Version suffix=$env:VERSION_SUFFIX" -foregroundcolor Orange 
+  - ps: write-host "Version suffix=$env:VERSION_SUFFIX" -foregroundcolor Magenta 
   - ps: dotnet --version
 
 build_script:
