@@ -48,7 +48,7 @@ build_script:
 after_build:
   - ps: echo "Build suffix= $env:BUILD_SUFFIX"
   - ps: echo "Version suffix= $env:VERSION_SUFFIX"
-  - ps: dotnet pack src\redmine-net-api\redmine-net-api.csproj -c Release --output .\artifacts --include-symbols --no-build $env:VERSION_SUFFIX
+  - ps: dotnet pack src\redmine-net-api\redmine-net-api.csproj -c Release --output .\artifacts --include-symbols -p:SymbolPackageFormat=snupkg --no-build $env:VERSION_SUFFIX
 
 test: off
 
