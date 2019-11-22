@@ -37,8 +37,8 @@ install:
   - ps: dotnet restore redmine-net-api.sln
 
 before_build:
-  - ps: echo "Build suffix: $env:BUILD_SUFFIX"
-  - ps: echo "Version suffix: $env:VERSION_SUFFIX"
+  - ps: write-host "Build Suffix=$env:BUILD_SUFFIX" -foregroundcolor Green  
+  - ps: write-host "Version suffix=$env:VERSION_SUFFIX" -foregroundcolor Orange 
   - ps: dotnet --version
 
 build_script:
