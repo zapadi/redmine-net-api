@@ -26,8 +26,8 @@ init:
   - ps: git config --global core.autocrlf true
 
   - ps: $branch =  $env:APPVEYOR_REPO_BRANCH;
-  - ps: $revision = @{ $true = "{0:00000}" -f [convert]::ToInt32("0" + $env:APPVEYOR_BUILD_NUMBER, 10); $false = "" }[$env:APPVEYOR_REPO_TAG -ne "true"];
-  - ps: $suffix = @{ $true = ""; $false = "$($branch.Substring(0, [math]::Min(10,$branch.Length)))-$revision"}[$branch -eq "master" -and $revision -ne ""];
+  - ps: $revision = @{ $true = ""; $false = "{0:00000}" -f [convert]::ToInt32("0" + $env:APPVEYOR_BUILD_NUMBER, 10) }[$env:APPVEYOR_REPO_TAG -eq "true"];
+  - ps: $suffix = @{ $true = ""; $false = "$($branch.Substring(0, [math]::Min(10,$branch.Length)))-$revision"}[$branch -eq "master" -and $revision -eq ""];
   - ps: $commitHash = $($env:APPVEYOR_REPO_COMMIT.substring(0,7));
   - ps: $env:BUILD_SUFFIX = @{ $true = "$($suffix)-$($commitHash)"; $false = "$($branch)-$($commitHash)" }[$suffix -ne ""];
   - ps: $env:VERSION_SUFFIX = @{ $true = "--version-suffix=$($suffix)"; $false = ""}[$suffix -ne ""];
