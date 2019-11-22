@@ -76,14 +76,6 @@ for:
 
     deploy:
       - provider: NuGet
-        name: dev
-        api_key:
-          secure: fo+5VNPIRQ98jFPBZSd4SsOVyXEsTxnQ52VWTrg3sgH1GwGXhi70Q561eimlmRhy
-        skip_symbols: true
-        on:
-          branch: master
-
-      - provider: NuGet
         name: production
         api_key:
           secure: fo+5VNPIRQ98jFPBZSd4SsOVyXEsTxnQ52VWTrg3sgH1GwGXhi70Q561eimlmRhy
