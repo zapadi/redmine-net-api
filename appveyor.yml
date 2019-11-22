@@ -2,36 +2,36 @@ version: '{build}'
 image:
    - Visual Studio 2019
 
+environment:
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  APPVEYOR_YML_DISABLE_PS_LINUX: false
+  BUILD_SUFFIX: ""
+  VERSION_SUFFIX: ""
+
+configuration: Release
+
 pull_requests:
   do_not_increment_build_number: true
+  
+nuget:
+  disable_publish_on_pr: true
 
 branches:
   only:
     - master
 
-configuration: Release
-
 init:
   # Good practise, because Windows line endings are different from Unix/Linux ones
   - ps: git config --global core.autocrlf true
 
-  - ps: >-
-      $branch =  $env:APPVEYOR_REPO_BRANCH;
-      $revision = @{ $true = "{0:00000}" -f [convert]::ToInt32("0" + $env:APPVEYOR_BUILD_NUMBER, 10); $false = "" }[$env:APPVEYOR_REPO_TAG -eq "false"];
-      $suffix = @{ $true = ""; $false = "$($branch.Substring(0, [math]::Min(10,$branch.Length)))-$revision"}[$branch -eq "master" -and $revision -ne ""];
-      $commitHash = $($env:APPVEYOR_REPO_COMMIT.substring(0,7));
-      $env:BUILD_SUFFIX = @{ $true = "$($suffix)-$($commitHash)"; $false = "$($branch)-$($commitHash)" }[$suffix -ne ""];
-      $env:VERSION_SUFFIX = @{ $true = "--version-suffix=$($suffix)"; $false = ""}[$suffix -ne ""];
+  - ps: $branch =  $env:APPVEYOR_REPO_BRANCH;
+  - ps: $revision = @{ $true = "{0:00000}" -f [convert]::ToInt32("0" + $env:APPVEYOR_BUILD_NUMBER, 10); $false = "" }[$env:APPVEYOR_REPO_TAG -eq "false"];
+  - ps: $suffix = @{ $true = ""; $false = "$($branch.Substring(0, [math]::Min(10,$branch.Length)))-$revision"}[$branch -eq "master" -and $revision -ne ""];
+  - ps: $commitHash = $($env:APPVEYOR_REPO_COMMIT.substring(0,7));
+  - ps: $env:BUILD_SUFFIX = @{ $true = "$($suffix)-$($commitHash)"; $false = "$($branch)-$($commitHash)" }[$suffix -ne ""];
+  - ps: $env:VERSION_SUFFIX = @{ $true = "--version-suffix=$($suffix)"; $false = ""}[$suffix -ne ""];
     
-nuget:
-  disable_publish_on_pr: true
-
-environment:
-  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
-  DOTNET_CLI_TELEMETRY_OPTOUT: true
-  APPVEYOR_YML_DISABLE_PS_LINUX: true
-  BUILD_SUFFIX: ""
-  VERSION_SUFFIX: ""
 
 install:
   - ps: dotnet restore redmine-net-api.sln
