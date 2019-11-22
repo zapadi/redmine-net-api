@@ -1,15 +1,14 @@
 version: '{build}'
 image:
    - Visual Studio 2019
-   - macos
    - Ubuntu
 
 environment:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
   DOTNET_CLI_TELEMETRY_OPTOUT: true
-  APPVEYOR_YML_DISABLE_PS_LINUX: false
-  BUILD_SUFFIX: " "
-  VERSION_SUFFIX: " "
+  APPVEYOR_YML_DISABLE_PS_LINUX: true
+  BUILD_SUFFIX: ""
+  VERSION_SUFFIX: ""
 
 configuration: Release
 
@@ -37,7 +36,8 @@ init:
 
 install:
   - ps: dotnet restore redmine-net-api.sln
-
+  - sh: dotnet restore redmine-net-api.sln
+      
 before_build:
   - ps: write-host "Build Suffix=$env:BUILD_SUFFIX" -foregroundcolor Green  
   - ps: write-host "Version suffix=$env:VERSION_SUFFIX" -foregroundcolor Magenta 
@@ -45,7 +45,8 @@ before_build:
 
 build_script:
   - ps: dotnet build redmine-net-api.sln -c Release --version-suffix=$env:BUILD_SUFFIX
-
+  - sh: dotnet build redmine-net-api.sln -c Release --version-suffix=$env:BUILD_SUFFIX
+    
 after_build:
   - ps: echo "Build suffix= $env:BUILD_SUFFIX"
   - ps: echo "Version suffix= $env:VERSION_SUFFIX"
