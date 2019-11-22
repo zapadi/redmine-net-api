@@ -37,16 +37,16 @@ install:
   - ps: dotnet restore redmine-net-api.sln
 
 before_build:
-  - ps: "echo 'Build suffix: $env:BUILD_SUFFIX'"
-  - ps: "echo 'Version suffix: $env:VERSION_SUFFIX'"
+  - ps: echo "Build suffix: $env:BUILD_SUFFIX"
+  - ps: echo "Version suffix: $env:VERSION_SUFFIX"
   - ps: dotnet --version
 
 build_script:
   - ps: dotnet build redmine-net-api.sln -c Release --version-suffix=$env:BUILD_SUFFIX
 
 after_build:
-  - ps: echo Build suffix= $env:BUILD_SUFFIX
-  - ps: echo Version suffix= $env:VERSION_SUFFIX
+  - ps: echo "Build suffix= $env:BUILD_SUFFIX"
+  - ps: echo "Version suffix= $env:VERSION_SUFFIX"
   - ps: dotnet pack src\redmine-net-api\redmine-net-api.csproj -c Release --output .\artifacts --include-symbols --no-build $env:VERSION_SUFFIX
 
 test: off
