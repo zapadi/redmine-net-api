@@ -144,5 +144,11 @@ namespace Redmine.Net.Api.Types
             if (item == null) throw new ArgumentNullException(nameof(item));
             return ((CustomFieldValue)item).Info;
         }
+
+        /// <inheritdoc />
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as IssueCustomField);
+        }
     }
 }

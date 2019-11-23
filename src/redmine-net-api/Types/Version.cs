@@ -192,6 +192,12 @@ namespace Redmine.Net.Api.Types
             return
                 $"[Version: {base.ToString()}, Project={Project}, Description={Description}, Status={Status}, DueDate={DueDate}, Sharing={Sharing}, CreatedOn={CreatedOn}, UpdatedOn={UpdatedOn}, CustomFields={CustomFields}]";
         }
+
+        /// <inheritdoc />
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as Version);
+        }
     }
 
     /// <summary>

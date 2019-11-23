@@ -165,5 +165,11 @@ namespace Redmine.Net.Api.Types
             return
                 $"[News: {base.ToString()}, Project={Project}, Author={Author}, Title={Title}, Summary={Summary}, Description={Description}, CreatedOn={CreatedOn}]";
         }
+
+        /// <inheritdoc />
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as News);
+        }
     }
 }

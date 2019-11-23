@@ -614,5 +614,11 @@ namespace Redmine.Net.Api.Types
 
             return hashCode;
         }
+
+        /// <inheritdoc />
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as Issue);
+        }
     }
 }

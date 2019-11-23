@@ -139,5 +139,11 @@ namespace Redmine.Net.Api.Types
         {
             return $"[IssueCategory: {base.ToString()}, Project={Project}, AsignTo={AsignTo}, Name={Name}]";
         }
+
+        /// <inheritdoc />
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as IssueCategory);
+        }
     }
 }

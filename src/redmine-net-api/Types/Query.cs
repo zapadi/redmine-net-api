@@ -115,5 +115,11 @@ namespace Redmine.Net.Api.Types
         {
             return $"[Query: {base.ToString()}, IsPublic={IsPublic}, ProjectId={ProjectId}]";
         }
+
+        /// <inheritdoc />
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as Query);
+        }
     }
 }

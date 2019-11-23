@@ -123,5 +123,11 @@ namespace Redmine.Net.Api.Types
         {
             return $"[Membership: {base.ToString()}, Project={Project}, Roles={Roles}]";
         }
+
+        /// <inheritdoc />
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as Membership);
+        }
     }
 }

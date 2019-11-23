@@ -303,5 +303,11 @@ namespace Redmine.Net.Api.Types
             return
                 $"[User: {Groups}, Login={Login}, Password={Password}, FirstName={FirstName}, LastName={LastName}, Email={Email}, EmailNotification={MailNotification}, AuthenticationModeId={AuthenticationModeId}, CreatedOn={CreatedOn}, LastLoginOn={LastLoginOn}, ApiKey={ApiKey}, Status={Status}, MustChangePassword={MustChangePassword}, CustomFields={CustomFields}, Memberships={Memberships}, Groups={Groups}]";
         }
+
+        /// <inheritdoc />
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as User);
+        }
     }
 }

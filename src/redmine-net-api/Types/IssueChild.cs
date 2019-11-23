@@ -128,5 +128,11 @@ namespace Redmine.Net.Api.Types
         {
             return $"[IssueChild: {base.ToString()}, Tracker={Tracker}, Subject={Subject}]";
         }
+
+        /// <inheritdoc />
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as IssueChild);
+        }
     }
 }

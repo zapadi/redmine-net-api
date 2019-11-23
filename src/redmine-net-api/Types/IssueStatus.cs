@@ -116,5 +116,11 @@ namespace Redmine.Net.Api.Types
         {
             return $"[IssueStatus: {base.ToString()}, IsDefault={IsDefault}, IsClosed={IsClosed}]";
         }
+
+        /// <inheritdoc />
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as IssueStatus);
+        }
     }
 }

@@ -172,5 +172,11 @@ namespace Redmine.Net.Api.Types
             return
                 $"[IssueRelation: {base.ToString()}, IssueId={IssueId}, IssueToId={IssueToId}, Type={Type}, Delay={Delay}]";
         }
+
+        /// <inheritdoc />
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as IssueRelation);
+        }
     }
 }

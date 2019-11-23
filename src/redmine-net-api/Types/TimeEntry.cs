@@ -249,5 +249,11 @@ namespace Redmine.Net.Api.Types
             return
                 $"[TimeEntry: {base.ToString()}, Issue={Issue}, Project={Project}, SpentOn={SpentOn}, Hours={Hours}, Activity={Activity}, User={User}, Comments={Comments}, CreatedOn={CreatedOn}, UpdatedOn={UpdatedOn}, CustomFields={CustomFields}]";
         }
+
+        /// <inheritdoc />
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as TimeEntry);
+        }
     }
 }

@@ -209,6 +209,12 @@ namespace Redmine.Net.Api.Types
                 $"[WikiPage: {base.ToString()}, Title={Title}, Text={Text}, Comments={Comments}, Version={Version}, Author={Author}, CreatedOn={CreatedOn}, UpdatedOn={UpdatedOn}, Attachments={Attachments}]";
         }
 
+        /// <inheritdoc />
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as WikiPage);
+        }
+
         #endregion
     }
 }

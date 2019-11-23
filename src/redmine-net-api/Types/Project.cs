@@ -305,5 +305,11 @@ namespace Redmine.Net.Api.Types
             return
                 $"[Project: {base.ToString()}, Identifier={Identifier}, Description={Description}, Parent={Parent}, HomePage={HomePage}, CreatedOn={CreatedOn}, UpdatedOn={UpdatedOn}, Status={Status}, IsPublic={IsPublic}, InheritMembers={InheritMembers}, Trackers={Trackers}, CustomFields={CustomFields}, IssueCategories={IssueCategories}, EnabledModules={EnabledModules}]";
         }
+
+        /// <inheritdoc />
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as Project);
+        }
     }
 }

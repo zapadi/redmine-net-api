@@ -176,5 +176,11 @@ namespace Redmine.Net.Api.Types
             return
                 $"[Attachment: {base.ToString()}, FileName={FileName}, FileSize={FileSize}, ContentType={ContentType}, Description={Description}, ContentUrl={ContentUrl}, Author={Author}, CreatedOn={CreatedOn}]";
         }
+
+        /// <inheritdoc />
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as Attachment);
+        }
     }
 }
