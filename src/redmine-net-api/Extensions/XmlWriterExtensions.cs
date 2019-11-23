@@ -31,7 +31,11 @@ namespace Redmine.Net.Api.Extensions
     public static partial class XmlExtensions
     {
 
+      //  #if !(NET20 || NET40 || NET45 || NET451 || NET452)
+      //  private static readonly Type[] emptyTypeArray = Array.Empty<Type>();
+      //  #else
         private static readonly Type[] emptyTypeArray = new Type[0];
+     //   #endif    
         private static readonly XmlAttributeOverrides xmlAttributeOverrides = new XmlAttributeOverrides();
         
         /// <summary>
