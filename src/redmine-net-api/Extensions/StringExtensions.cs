@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace Redmine.Net.Api.Extensions
 {
     /// <summary>
@@ -55,6 +57,7 @@ namespace Redmine.Net.Api.Extensions
         /// </summary>
         /// <param name="text"></param>
         /// <returns></returns>
+        [SuppressMessage("ReSharper", "CA1308")]
         public static string ToLowerInv(this string text)
         {
             return text.IsNullOrWhiteSpace() ? text : text.ToLowerInvariant();
