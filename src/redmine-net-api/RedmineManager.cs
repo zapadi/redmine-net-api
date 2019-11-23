@@ -1,4 +1,4 @@
-﻿/*
+/*
    Copyright 2011 - 2019 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -296,7 +296,7 @@ namespace Redmine.Net.Api
         /// <param name="userId">The user identifier.</param>
         public void AddWatcherToIssue(int issueId, int userId)
         {
-            var url = UrlHelper.GetAddWatcherUrl(this, issueId, userId);
+            var url = UrlHelper.GetAddWatcherUrl(this, issueId);
             WebApiHelper.ExecuteUpload(this, url, HttpVerbs.POST, DataHelper.UserData(userId, MimeFormat), "AddWatcher");
         }
 
@@ -359,7 +359,7 @@ namespace Redmine.Net.Api
         /// <returns></returns>
         public WikiPage GetWikiPage(string projectId, NameValueCollection parameters, string pageName, uint version = 0)
         {
-            var url = UrlHelper.GetWikiPageUrl(this, projectId, parameters, pageName, version);
+            var url = UrlHelper.GetWikiPageUrl(this, projectId,  pageName, version);
             return WebApiHelper.ExecuteDownload<WikiPage>(this, url, "GetWikiPage", parameters);
         }
 
@@ -674,7 +674,7 @@ namespace Redmine.Net.Api
         /// <code></code>
         public void UpdateObject<T>(string id, T obj, string projectId) where T : class, new()
         {
-            var url = UrlHelper.GetUploadUrl(this, id, obj, projectId);
+            var url = UrlHelper.GetUploadUrl<T>(this, id);
             var data = RedmineSerializer.Serialize(obj, MimeFormat);
             data = Regex.Replace(data, @"\r\n|\r|\n", "\r\n");
             WebApiHelper.ExecuteUpload(this, url, HttpVerbs.PUT, data, "UpdateObject");

@@ -73,11 +73,9 @@ namespace Redmine.Net.Api.Internals
         /// <typeparam name="T"></typeparam>
         /// <param name="redmineManager">The redmine manager.</param>
         /// <param name="id">The identifier.</param>
-        /// <param name="obj">The object.</param>
-        /// <param name="projectId">The project identifier.</param>
         /// <returns></returns>
         /// <exception cref="System.Collections.Generic.KeyNotFoundException"></exception>
-        public static string GetUploadUrl<T>(RedmineManager redmineManager, string id, T obj, string projectId = null)
+        public static string GetUploadUrl<T>(RedmineManager redmineManager, string id)
             where T : class, new()
         {
             var type = typeof(T);
@@ -240,12 +238,11 @@ namespace Redmine.Net.Api.Internals
         /// </summary>
         /// <param name="redmineManager">The redmine manager.</param>
         /// <param name="projectId">The project identifier.</param>
-        /// <param name="parameters">The parameters.</param>
         /// <param name="pageName">Name of the page.</param>
         /// <param name="version">The version.</param>
         /// <returns></returns>
         public static string GetWikiPageUrl(RedmineManager redmineManager, string projectId,
-            NameValueCollection parameters, string pageName, uint version = 0)
+            string pageName, uint version = 0)
         {
             var uri = version == 0
                 ? string.Format(CultureInfo.InvariantCulture,WIKI_PAGE_FORMAT, redmineManager.Host, projectId, pageName,
@@ -336,9 +333,8 @@ namespace Redmine.Net.Api.Internals
         /// </summary>
         /// <param name="redmineManager">The redmine manager.</param>
         /// <param name="issueId">The issue identifier.</param>
-        /// <param name="userId">The user identifier.</param>
         /// <returns></returns>
-        public static string GetAddWatcherUrl(RedmineManager redmineManager, int issueId, int userId)
+        public static string GetAddWatcherUrl(RedmineManager redmineManager, int issueId)
         {
             return string.Format(CultureInfo.InvariantCulture,REQUEST_FORMAT, redmineManager.Host,
                 RedmineManager.Sufixes[typeof(Issue)], $"{issueId.ToString(CultureInfo.InvariantCulture)}/watchers",

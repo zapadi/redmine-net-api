@@ -113,7 +113,7 @@ namespace Redmine.Net.Api.Async
         public static async Task<WikiPage> GetWikiPageAsync(this RedmineManager redmineManager, string projectId,
             NameValueCollection parameters, string pageName, uint version = 0)
         {
-            var uri = UrlHelper.GetWikiPageUrl(redmineManager, projectId, parameters, pageName, version);
+            var uri = UrlHelper.GetWikiPageUrl(redmineManager, projectId,  pageName, version);
             return await WebApiAsyncHelper.ExecuteDownload<WikiPage>(redmineManager, uri, "GetWikiPageAsync", parameters).ConfigureAwait(false);
         }
 
@@ -170,7 +170,7 @@ namespace Redmine.Net.Api.Async
         public static async Task AddWatcherToIssueAsync(this RedmineManager redmineManager, int issueId, int userId)
         {
             var data = DataHelper.UserData(userId, redmineManager.MimeFormat);
-            var uri = UrlHelper.GetAddWatcherUrl(redmineManager, issueId, userId);
+            var uri = UrlHelper.GetAddWatcherUrl(redmineManager, issueId);
 
             await WebApiAsyncHelper.ExecuteUpload(redmineManager, uri, HttpVerbs.POST, data, "AddWatcherAsync").ConfigureAwait(false);
         }
