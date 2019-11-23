@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup Label="Build">
@@ -48,7 +48,7 @@
     <Summary>...</Summary>
     <Title>Redmine .NET API Client</Title> 
     
-    <VersionPrefix>2.0.47</VersionPrefix>
+    <VersionPrefix>3.0.0</VersionPrefix>
 
   </PropertyGroup>
 
