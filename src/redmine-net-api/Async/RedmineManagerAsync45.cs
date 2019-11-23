@@ -1,4 +1,4 @@
-/*
+﻿/*
 Copyright 2011 - 2019 Adrian Popescu.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -363,7 +363,6 @@ namespace Redmine.Net.Api.Async
         /// <param name="redmineManager">The redmine manager.</param>
         /// <param name="id">The identifier.</param>
         /// <param name="entity">The object.</param>
-        /// <param name="projectId">The project identifier.</param>
         /// <returns></returns>
         public static async Task UpdateObjectAsync<T>(this RedmineManager redmineManager, string id, T entity)
             where T : class, new()
@@ -381,9 +380,8 @@ namespace Redmine.Net.Api.Async
         /// <typeparam name="T">The type of objects to delete.</typeparam>
         /// <param name="redmineManager">The redmine manager.</param>
         /// <param name="id">The id of the object to delete</param>
-        /// <param name="parameters">Optional filters and/or optional fetched data.</param>
         /// <returns></returns>
-        public static async Task DeleteObjectAsync<T>(this RedmineManager redmineManager, string id, NameValueCollection parameters)
+        public static async Task DeleteObjectAsync<T>(this RedmineManager redmineManager, string id)
             where T : class, new()
         {
             var uri = UrlHelper.GetDeleteUrl<T>(redmineManager, id);

@@ -200,7 +200,7 @@ namespace redmine.net.api.Tests.Tests.Async
 		public async Task Should_Delete_User()
 		{
 			var userId = 62.ToString();
-			await fixture.RedmineManager.DeleteObjectAsync<User>(userId, null);
+			await fixture.RedmineManager.DeleteObjectAsync<User>(userId);
 			await Assert.ThrowsAsync<NotFoundException>(async () => await fixture.RedmineManager.GetObjectAsync<User>(userId, null));
 
 		}
