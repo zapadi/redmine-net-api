@@ -85,7 +85,7 @@ namespace Redmine.Net.Api.Extensions
                 return null;
             }
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             foreach (var item in collection)
             {
                 sb.Append(",").Append(item);

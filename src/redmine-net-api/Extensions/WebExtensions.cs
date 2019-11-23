@@ -77,7 +77,7 @@ namespace Redmine.Net.Api.Extensions
                             case 422:
 
                                 var errors = GetRedmineExceptions(exception.Response, mimeFormat);
-                                string message = string.Empty;
+                                var message = string.Empty;
                                 if (errors != null)
                                 {
                                     for (var index = 0; index < errors.Count; index++)

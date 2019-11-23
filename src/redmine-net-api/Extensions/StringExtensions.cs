@@ -18,7 +18,7 @@ namespace Redmine.Net.Api.Extensions
                 return true;
             }
 
-            for (int index = 0; index < value.Length; ++index)
+            for (var index = 0; index < value.Length; ++index)
             {
                 if (!char.IsWhiteSpace(value[index]))
                 {

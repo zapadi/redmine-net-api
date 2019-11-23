@@ -723,7 +723,7 @@ namespace Redmine.Net.Api
         /// <exception cref="NotAcceptableException"></exception>
         public Upload UploadFile(byte[] data)
         {
-            string url = UrlHelper.GetUploadFileUrl(this);
+            var url = UrlHelper.GetUploadFileUrl(this);
             return WebApiHelper.ExecuteUploadFile(this, url, data, "UploadFile");
         }
 

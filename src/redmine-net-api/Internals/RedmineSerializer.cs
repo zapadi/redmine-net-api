@@ -87,12 +87,13 @@ namespace Redmine.Net.Api.Internals
         {
             try
             {
-#if !NET20
                 if (mimeFormat == MimeFormat.Json)
                 {
+#if !NET20
                     return JsonSerializer(obj);
-                }
 #endif
+                }
+
                 return ToXML(obj);
             }
             catch (Exception ex)
@@ -121,9 +122,9 @@ namespace Redmine.Net.Api.Internals
             if (string.IsNullOrEmpty(response)) throw new RedmineException("Could not deserialize null!");
             try
             {
-#if !NET20
                 if (mimeFormat == MimeFormat.Json)
                 {
+#if !NET20
                     var type = typeof (T);
                     var jsonRoot = (string) null;
                     if (type == typeof (IssueCategory)) jsonRoot = RedmineKeys.ISSUE_CATEGORY;
@@ -132,8 +133,8 @@ namespace Redmine.Net.Api.Internals
                     if (type == typeof (ProjectMembership)) jsonRoot = RedmineKeys.MEMBERSHIP;
                     if (type == typeof (WikiPage)) jsonRoot = RedmineKeys.WIKI_PAGE;
                     return JsonDeserialize<T>(response, jsonRoot);
-                }
 #endif
+                }
                 return FromXML<T>(response);
             }
             catch (Exception ex)
@@ -160,12 +161,12 @@ namespace Redmine.Net.Api.Internals
             try
             {
                 if (response.IsNullOrWhiteSpace()) throw new RedmineException("Could not deserialize null!");
-#if !NET20
                 if (mimeFormat == MimeFormat.Json)
                 {
+#if !NET20
                     return JSonDeserializeList<T>(response);
-                }
 #endif
+                }
                 return XmlDeserializeList<T>(response);
             }
 
@@ -194,7 +195,7 @@ namespace Redmine.Net.Api.Internals
             if (string.IsNullOrEmpty(jsonRoot))
                 jsonRoot = RedmineManager.Sufixes[type];
 
-            var result = JsonDeserializeToList<T>(response, jsonRoot, out int totalItems, out int offset);
+            var result = JsonDeserializeToList<T>(response, jsonRoot, out var totalItems, out var offset);
 
             return new PaginatedObjects<T>()
             {
@@ -216,7 +217,6 @@ namespace Redmine.Net.Api.Internals
             {
                 using (var xmlReader = XmlTextReaderBuilder.Create(stringReader))
                 {
-                   
                     xmlReader.Read();
                     xmlReader.Read();
 
