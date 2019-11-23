@@ -34,7 +34,7 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         [XmlArray(RedmineKeys.USERS)]
         [XmlArrayItem(RedmineKeys.USER)]
-        public List<GroupUser> Users { get; set; }
+        public List<GroupUser> Users { get; internal set; }
 
         /// <summary>
         /// Gets or sets the custom fields.
@@ -42,7 +42,7 @@ namespace Redmine.Net.Api.Types
         /// <value>The custom fields.</value>
         [XmlArray(RedmineKeys.CUSTOM_FIELDS)]
         [XmlArrayItem(RedmineKeys.CUSTOM_FIELD)]
-        public IList<IssueCustomField> CustomFields { get; set; }
+        public IList<IssueCustomField> CustomFields { get; internal set; }
 
         /// <summary>
         /// Gets or sets the custom fields.
@@ -50,7 +50,7 @@ namespace Redmine.Net.Api.Types
         /// <value>The custom fields.</value>
         [XmlArray(RedmineKeys.MEMBERSHIPS)]
         [XmlArrayItem(RedmineKeys.MEMBERSHIP)]
-        public IList<Membership> Memberships { get; set; }
+        public IList<Membership> Memberships { get; internal set; }
 
         #region Implementation of IXmlSerializable
 

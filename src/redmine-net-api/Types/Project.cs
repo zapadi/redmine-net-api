@@ -108,7 +108,7 @@ namespace Redmine.Net.Api.Types
         /// </value>
         [XmlArray(RedmineKeys.TRACKERS)]
         [XmlArrayItem(RedmineKeys.TRACKER)]
-        public IList<ProjectTracker> Trackers { get; set; }
+        public IList<ProjectTracker> Trackers { get; internal set; }
 
         /// <summary>
         /// Gets or sets the custom fields.
@@ -118,7 +118,7 @@ namespace Redmine.Net.Api.Types
         /// </value>
         [XmlArray(RedmineKeys.CUSTOM_FIELDS)]
         [XmlArrayItem(RedmineKeys.CUSTOM_FIELD)]
-        public IList<IssueCustomField> CustomFields { get; set; }
+        public IList<IssueCustomField> CustomFields { get; internal set; }
 
         /// <summary>
         /// Gets or sets the issue categories.
@@ -128,7 +128,7 @@ namespace Redmine.Net.Api.Types
         /// </value>
         [XmlArray(RedmineKeys.ISSUE_CATEGORIES)]
         [XmlArrayItem(RedmineKeys.ISSUE_CATEGORY)]
-        public IList<ProjectIssueCategory> IssueCategories { get; set; }
+        public IList<ProjectIssueCategory> IssueCategories { get; internal set; }
 
         /// <summary>
         /// since 2.6.0
@@ -138,14 +138,14 @@ namespace Redmine.Net.Api.Types
         /// </value>
         [XmlArray(RedmineKeys.ENABLED_MODULES)]
         [XmlArrayItem(RedmineKeys.ENABLED_MODULE)]
-        public IList<ProjectEnabledModule> EnabledModules { get; set; }
+        public IList<ProjectEnabledModule> EnabledModules { get; internal set; }
 
         /// <summary>
         /// 
         /// </summary>
         [XmlArray(RedmineKeys.TIME_ENTRY_ACTIVITIES)]
         [XmlArrayItem(RedmineKeys.TIME_ENTRY_ACTIVITY)]
-        public IList<TimeEntryActivity> TimeEntryActivities { get; set; }
+        public IList<TimeEntryActivity> TimeEntryActivities { get; internal set; }
 
         /// <summary>
         /// Generates an object from its XML representation.

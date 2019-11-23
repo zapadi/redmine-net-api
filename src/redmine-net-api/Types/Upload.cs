@@ -60,7 +60,7 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        public XmlSchema GetSchema() { return null; }
+        public static XmlSchema GetSchema() { return null; }
 
         /// <summary>
         /// Indicates whether the current object is equal to another object of the same type.

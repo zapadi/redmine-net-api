@@ -82,7 +82,7 @@ namespace Redmine.Net.Api.Types
         /// </value>
         [XmlArray(RedmineKeys.ATTACHMENTS)]
         [XmlArrayItem(RedmineKeys.ATTACHMENT)]
-        public IList<Attachment> Attachments { get; set; }
+        public IList<Attachment> Attachments { get; internal set; }
 
         /// <summary>
         /// Sets the uploads.
@@ -93,7 +93,7 @@ namespace Redmine.Net.Api.Types
         /// <remarks>Availability starting with redmine version 3.3</remarks>
         [XmlArray(RedmineKeys.UPLOADS)]
         [XmlArrayItem(RedmineKeys.UPLOAD)]
-        public IList<Upload> Uploads { get; set; }
+        public IList<Upload> Uploads { get; internal set; }
 
         #region Implementation of IXmlSerializable
 

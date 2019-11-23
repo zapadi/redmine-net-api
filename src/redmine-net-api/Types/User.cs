@@ -113,7 +113,7 @@ namespace Redmine.Net.Api.Types
         /// <value>The custom fields.</value>
         [XmlArray(RedmineKeys.CUSTOM_FIELDS)]
         [XmlArrayItem(RedmineKeys.CUSTOM_FIELD)]
-        public List<IssueCustomField> CustomFields { get; set; }
+        public List<IssueCustomField> CustomFields { get; internal set; }
 
         /// <summary>
         /// Gets or sets the memberships.
@@ -123,7 +123,7 @@ namespace Redmine.Net.Api.Types
         /// </value>
         [XmlArray(RedmineKeys.MEMBERSHIPS)]
         [XmlArrayItem(RedmineKeys.MEMBERSHIP)]
-        public List<Membership> Memberships { get; set; }
+        public List<Membership> Memberships { get; internal set; }
 
         /// <summary>
         /// Gets or sets the user's groups.
@@ -133,7 +133,7 @@ namespace Redmine.Net.Api.Types
         /// </value>
         [XmlArray(RedmineKeys.GROUPS)]
         [XmlArrayItem(RedmineKeys.GROUP)]
-        public List<UserGroup> Groups { get; set; }
+        public List<UserGroup> Groups { get; internal set; }
 
         /// <summary>
         /// Gets or sets the user's mail_notification.

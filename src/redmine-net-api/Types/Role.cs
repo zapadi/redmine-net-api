@@ -37,7 +37,7 @@ namespace Redmine.Net.Api.Types
         /// </value>
         [XmlArray(RedmineKeys.PERMISSIONS)]
         [XmlArrayItem(RedmineKeys.PERMISSION)]
-        public IList<Permission> Permissions { get; set; }
+        public IList<Permission> Permissions { get; internal set; }
 
         /// <summary>
         /// 

@@ -27,7 +27,7 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// 
         /// </summary>
-        public List<T> Objects { get; set; }
+        public List<T> Objects { get; internal set; }
         /// <summary>
         /// 
         /// </summary>

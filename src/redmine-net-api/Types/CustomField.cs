@@ -100,21 +100,21 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         [XmlArray(RedmineKeys.POSSIBLE_VALUES)]
         [XmlArrayItem(RedmineKeys.POSSIBLE_VALUE)]
-        public IList<CustomFieldPossibleValue> PossibleValues { get; set; }
+        public IList<CustomFieldPossibleValue> PossibleValues { get; internal set; }
 
         /// <summary>
         /// 
         /// </summary>
         [XmlArray(RedmineKeys.TRACKERS)]
         [XmlArrayItem(RedmineKeys.TRACKER)]
-        public IList<TrackerCustomField> Trackers { get; set; }
+        public IList<TrackerCustomField> Trackers { get; internal set; }
 
         /// <summary>
         /// 
         /// </summary>
         [XmlArray(RedmineKeys.ROLES)]
         [XmlArrayItem(RedmineKeys.ROLE)]
-        public IList<CustomFieldRole> Roles { get; set; }
+        public IList<CustomFieldRole> Roles { get; internal set; }
 
         /// <summary>
         /// 

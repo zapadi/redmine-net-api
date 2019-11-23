@@ -71,7 +71,7 @@ namespace Redmine.Net.Api.Types
         /// </value>
         [XmlArray(RedmineKeys.DETAILS)]
         [XmlArrayItem(RedmineKeys.DETAIL)]
-        public IList<Detail> Details { get; set; }
+        public IList<Detail> Details { get; internal set; }
 
         /// <summary>
         /// 

@@ -140,7 +140,7 @@ namespace Redmine.Net.Api.Types
         /// <value>The custom fields.</value>
         [XmlArray(RedmineKeys.CUSTOM_FIELDS)]
         [XmlArrayItem(RedmineKeys.CUSTOM_FIELD)]
-        public IList<IssueCustomField> CustomFields { get; set; }
+        public IList<IssueCustomField> CustomFields { get; internal set; }
 
         /// <summary>
         /// Gets or sets the created on.
@@ -227,7 +227,7 @@ namespace Redmine.Net.Api.Types
         /// </value>
         [XmlArray(RedmineKeys.JOURNALS)]
         [XmlArrayItem(RedmineKeys.JOURNAL)]
-        public IList<Journal> Journals { get; set; }
+        public IList<Journal> Journals { get; internal set; }
 
         /// <summary>
         /// Gets or sets the changesets.
@@ -237,7 +237,7 @@ namespace Redmine.Net.Api.Types
         /// </value>
         [XmlArray(RedmineKeys.CHANGESETS)]
         [XmlArrayItem(RedmineKeys.CHANGESET)]
-        public IList<ChangeSet> Changesets { get; set; }
+        public IList<ChangeSet> Changesets { get; internal set; }
 
         /// <summary>
         /// Gets or sets the attachments.
@@ -247,7 +247,7 @@ namespace Redmine.Net.Api.Types
         /// </value>
         [XmlArray(RedmineKeys.ATTACHMENTS)]
         [XmlArrayItem(RedmineKeys.ATTACHMENT)]
-        public IList<Attachment> Attachments { get; set; }
+        public IList<Attachment> Attachments { get; internal set; }
 
         /// <summary>
         /// Gets or sets the issue relations.
@@ -257,7 +257,7 @@ namespace Redmine.Net.Api.Types
         /// </value>
         [XmlArray(RedmineKeys.RELATIONS)]
         [XmlArrayItem(RedmineKeys.RELATION)]
-        public IList<IssueRelation> Relations { get; set; }
+        public IList<IssueRelation> Relations { get; internal set; }
 
         /// <summary>
         /// Gets or sets the issue children.
@@ -268,7 +268,7 @@ namespace Redmine.Net.Api.Types
         /// </value>
         [XmlArray(RedmineKeys.CHILDREN)]
         [XmlArrayItem(RedmineKeys.ISSUE)]
-        public IList<IssueChild> Children { get; set; }
+        public IList<IssueChild> Children { get; internal set; }
 
         /// <summary>
         /// Gets or sets the attachments.
@@ -278,14 +278,14 @@ namespace Redmine.Net.Api.Types
         /// </value>
         [XmlArray(RedmineKeys.UPLOADS)]
         [XmlArrayItem(RedmineKeys.UPLOAD)]
-        public IList<Upload> Uploads { get; set; }
+        public IList<Upload> Uploads { get; internal set; }
 
         /// <summary>
         /// 
         /// </summary>
         [XmlArray(RedmineKeys.WATCHERS)]
         [XmlArrayItem(RedmineKeys.WATCHER)]
-        public IList<Watcher> Watchers { get; set; }
+        public IList<Watcher> Watchers { get; internal set; }
 
         /// <summary>
         /// 

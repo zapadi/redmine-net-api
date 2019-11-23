@@ -64,7 +64,7 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// 
         /// </summary>
-        NameValueCollection QueryString { get; set; }
+        NameValueCollection QueryString { get;  }
 
         /// <summary>
         /// 
