@@ -198,34 +198,34 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="obj"></param>
+        /// <param name="entity"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        T CreateObject<T>(T obj) where T : class, new();
+        T CreateObject<T>(T entity) where T : class, new();
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="obj"></param>
+        /// <param name="entity"></param>
         /// <param name="ownerId"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        T CreateObject<T>(T obj, string ownerId) where T : class, new();
+        T CreateObject<T>(T entity, string ownerId) where T : class, new();
        
         /// <summary>
         /// 
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="obj"></param>
+        /// <param name="entity"></param>
         /// <typeparam name="T"></typeparam>
-        void UpdateObject<T>(string id, T obj) where T : class, new();
+        void UpdateObject<T>(string id, T entity) where T : class, new();
         /// <summary>
         /// 
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="obj"></param>
+        /// <param name="entity"></param>
         /// <param name="projectId"></param>
         /// <typeparam name="T"></typeparam>
-        void UpdateObject<T>(string id, T obj, string projectId) where T : class, new();
+        void UpdateObject<T>(string id, T entity, string projectId) where T : class, new();
         
         /// <summary>
         /// 

@@ -1,4 +1,4 @@
-﻿/*
+/*
    Copyright 2011 - 2019 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -156,11 +156,11 @@ namespace Redmine.Net.Api.Async
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="redmineManager">The redmine manager.</param>
-        /// <param name="obj">The object.</param>
+        /// <param name="entity">The object.</param>
         /// <returns></returns>
-        public static Task<T> CreateObjectAsync<T>(this RedmineManager redmineManager, T obj) where T : class, new()
+        public static Task<T> CreateObjectAsync<T>(this RedmineManager redmineManager, T entity) where T : class, new()
         {
-            return CreateObjectAsync(redmineManager, obj, null);
+            return CreateObjectAsync(redmineManager, entity, null);
         }
 
 
@@ -193,12 +193,12 @@ namespace Redmine.Net.Api.Async
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="redmineManager">The redmine manager.</param>
-        /// <param name="obj">The object.</param>
+        /// <param name="entity">The object.</param>
         /// <param name="ownerId">The owner identifier.</param>
         /// <returns></returns>
-        public static Task<T> CreateObjectAsync<T>(this RedmineManager redmineManager, T obj, string ownerId) where T : class, new()
+        public static Task<T> CreateObjectAsync<T>(this RedmineManager redmineManager, T entity, string ownerId) where T : class, new()
         {
-            return Task.Factory.StartNew(() => redmineManager.CreateObject(obj, ownerId), CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default);
+            return Task.Factory.StartNew(() => redmineManager.CreateObject(entity, ownerId), CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default);
         }
 
         /// <summary>
@@ -231,12 +231,12 @@ namespace Redmine.Net.Api.Async
         /// <typeparam name="T"></typeparam>
         /// <param name="redmineManager">The redmine manager.</param>
         /// <param name="id">The identifier.</param>
-        /// <param name="obj">The object.</param>
+        /// <param name="entity">The object.</param>
         /// <param name="projectId">The project identifier.</param>
         /// <returns></returns>
-        public static Task UpdateObjectAsync<T>(this RedmineManager redmineManager, string id, T obj, string projectId = null) where T : class, new()
+        public static Task UpdateObjectAsync<T>(this RedmineManager redmineManager, string id, T entity, string projectId = null) where T : class, new()
         {
-            return Task.Factory.StartNew(() => redmineManager.UpdateObject(id, obj, projectId), CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default);
+            return Task.Factory.StartNew(() => redmineManager.UpdateObject(id, entity, projectId), CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default);
         }
 
         /// <summary>

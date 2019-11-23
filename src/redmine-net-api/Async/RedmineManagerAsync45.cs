@@ -1,4 +1,4 @@
-﻿/*
+/*
 Copyright 2011 - 2019 Adrian Popescu.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -330,12 +330,12 @@ namespace Redmine.Net.Api.Async
         /// </summary>
         /// <typeparam name="T">The type of object to create.</typeparam>
         /// <param name="redmineManager">The redmine manager.</param>
-        /// <param name="obj">The object to create.</param>
+        /// <param name="entity">The object to create.</param>
         /// <returns></returns>
-        public static async Task<T> CreateObjectAsync<T>(this RedmineManager redmineManager, T obj)
+        public static async Task<T> CreateObjectAsync<T>(this RedmineManager redmineManager, T entity)
             where T : class, new()
         {
-            return await CreateObjectAsync(redmineManager, obj, null).ConfigureAwait(false);
+            return await CreateObjectAsync(redmineManager, entity, null).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -343,14 +343,14 @@ namespace Redmine.Net.Api.Async
         /// </summary>
         /// <typeparam name="T">The type of object to create.</typeparam>
         /// <param name="redmineManager">The redmine manager.</param>
-        /// <param name="obj">The object to create.</param>
+        /// <param name="entity">The object to create.</param>
         /// <param name="ownerId">The owner identifier.</param>
         /// <returns></returns>
-        public static async Task<T> CreateObjectAsync<T>(this RedmineManager redmineManager, T obj, string ownerId)
+        public static async Task<T> CreateObjectAsync<T>(this RedmineManager redmineManager, T entity, string ownerId)
             where T : class, new()
         {
             var uri = UrlHelper.GetCreateUrl<T>(redmineManager, ownerId);
-            var data = RedmineSerializer.Serialize(obj, redmineManager.MimeFormat);
+            var data = RedmineSerializer.Serialize(entity, redmineManager.MimeFormat);
 
             var response = await WebApiAsyncHelper.ExecuteUpload(redmineManager, uri, HttpVerbs.POST, data, "CreateObjectAsync").ConfigureAwait(false);
             return RedmineSerializer.Deserialize<T>(response, redmineManager.MimeFormat);
@@ -362,14 +362,14 @@ namespace Redmine.Net.Api.Async
         /// <typeparam name="T"></typeparam>
         /// <param name="redmineManager">The redmine manager.</param>
         /// <param name="id">The identifier.</param>
-        /// <param name="obj">The object.</param>
+        /// <param name="entity">The object.</param>
         /// <param name="projectId">The project identifier.</param>
         /// <returns></returns>
-        public static async Task UpdateObjectAsync<T>(this RedmineManager redmineManager, string id, T obj, string projectId = null)
+        public static async Task UpdateObjectAsync<T>(this RedmineManager redmineManager, string id, T entity)
             where T : class, new()
         {
-            var uri = UrlHelper.GetUploadUrl(redmineManager, id, obj, projectId);
-            var data = RedmineSerializer.Serialize(obj, redmineManager.MimeFormat);
+            var uri = UrlHelper.GetUploadUrl<T>(redmineManager, id);
+            var data = RedmineSerializer.Serialize(entity, redmineManager.MimeFormat);
             data = Regex.Replace(data, @"\r\n|\r|\n", "\r\n");
 
             await WebApiAsyncHelper.ExecuteUpload(redmineManager, uri, HttpVerbs.PUT, data, "UpdateObjectAsync").ConfigureAwait(false);
