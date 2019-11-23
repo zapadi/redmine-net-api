@@ -216,20 +216,27 @@ namespace Redmine.Net.Api.Types
             writer.WriteIdOrEmpty(Parent, RedmineKeys.PARENT_ID);
             writer.WriteElementString(RedmineKeys.HOMEPAGE, HomePage);
 
-            var trackers = new List<IValue>();
-            foreach (var tracker in Trackers)
+            if (Trackers != null)
             {
-                trackers.Add(tracker as IValue);
+                var trackers = new List<IValue>();
+                foreach (var tracker in Trackers)
+                {
+                    trackers.Add(tracker as IValue);
+                }
 
+                writer.WriteListElements(trackers, RedmineKeys.TRACKER_IDS);
             }
-            var enabledModules = new List<IValue>();
-            foreach (var enabledModule in EnabledModules)
+
+            if (EnabledModules != null)
             {
-                enabledModules.Add(enabledModule as IValue);
-            }
+                var enabledModules = new List<IValue>();
+                foreach (var enabledModule in EnabledModules)
+                {
+                    enabledModules.Add(enabledModule as IValue);
+                }
 
-            writer.WriteListElements(trackers, RedmineKeys.TRACKER_IDS);
-            writer.WriteListElements(enabledModules, RedmineKeys.ENABLED_MODULE_NAMES);
+                writer.WriteListElements(enabledModules, RedmineKeys.ENABLED_MODULE_NAMES);
+            }
 
             if (Id == 0) return;
 
