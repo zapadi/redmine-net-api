@@ -80,11 +80,9 @@ namespace Redmine.Net.Api.Async
         /// Gets all wiki pages asynchronous.
         /// </summary>
         /// <param name="redmineManager">The redmine manager.</param>
-        /// <param name="parameters">The parameters.</param>
         /// <param name="projectId">The project identifier.</param>
         /// <returns></returns>
-        public static Task<IList<WikiPage>> GetAllWikiPagesAsync(this RedmineManager redmineManager,
-            NameValueCollection parameters, string projectId)
+        public static Task<IList<WikiPage>> GetAllWikiPagesAsync(this RedmineManager redmineManager, string projectId)
         {
             return delegate { return redmineManager.GetAllWikiPages(projectId); };
         }
@@ -224,10 +222,8 @@ namespace Redmine.Net.Api.Async
         /// <typeparam name="T"></typeparam>
         /// <param name="redmineManager">The redmine manager.</param>
         /// <param name="id">The identifier.</param>
-        /// <param name="parameters">The parameters.</param>
         /// <returns></returns>
-        public static Task DeleteObjectAsync<T>(this RedmineManager redmineManager, string id,
-            NameValueCollection parameters) where T : class, new()
+        public static Task DeleteObjectAsync<T>(this RedmineManager redmineManager, string id) where T : class, new()
         {
             return delegate { redmineManager.DeleteObject<T>(id); };
         }
