@@ -363,7 +363,6 @@ namespace Redmine.Net.Api.Async
         /// <param name="redmineManager">The redmine manager.</param>
         /// <param name="id">The identifier.</param>
         /// <param name="entity">The object.</param>
-        /// <param name="projectId">The project identifier.</param>
         /// <returns></returns>
         public static async Task UpdateObjectAsync<T>(this RedmineManager redmineManager, string id, T entity)
             where T : class, new()
