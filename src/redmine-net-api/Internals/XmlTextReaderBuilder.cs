@@ -3,7 +3,7 @@ using System.Xml;
 
 namespace Redmine.Net.Api.Internals
 {
-    internal static class XmlTextReaderBuilder
+    public static class XmlTextReaderBuilder
     {
 #if NET20
         public static XmlReader Create(StringReader stringReader)
@@ -18,16 +18,18 @@ namespace Redmine.Net.Api.Internals
 
         }
         
-        public static XmlReader Create(string stringReader)
+        public static XmlReader Create(string xml)
         {
-            return XmlReader.Create(stringReader, new XmlReaderSettings()
+            using (var stringReader = new StringReader(xml))
             {
-                ProhibitDtd = true,
-                XmlResolver = null, 
-                IgnoreComments = true,
-                IgnoreWhitespace = true,
-            });
-
+                return XmlReader.Create(stringReader, new XmlReaderSettings()
+                {
+                    ProhibitDtd = true,
+                    XmlResolver = null,
+                    IgnoreComments = true,
+                    IgnoreWhitespace = true,
+                });
+            }
         }
 #else
         public static XmlTextReader Create(StringReader stringReader)
@@ -40,14 +42,17 @@ namespace Redmine.Net.Api.Internals
             };
         }
         
-        public static XmlTextReader Create(string stringReader)
+        public static XmlTextReader Create(string xml)
         {
-            return new XmlTextReader(stringReader)
+            using (var stringReader = new StringReader(xml))
             {
-                DtdProcessing = DtdProcessing.Prohibit, 
-                XmlResolver = null, 
-                WhitespaceHandling = WhitespaceHandling.None
-            };
+                return new XmlTextReader(stringReader)
+                {
+                    DtdProcessing = DtdProcessing.Prohibit,
+                    XmlResolver = null,
+                    WhitespaceHandling = WhitespaceHandling.None
+                };
+            }
         }
 #endif
     }
