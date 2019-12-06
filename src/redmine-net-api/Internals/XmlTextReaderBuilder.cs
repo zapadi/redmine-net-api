@@ -3,9 +3,17 @@ using System.Xml;
 
 namespace Redmine.Net.Api.Internals
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class XmlTextReaderBuilder
     {
 #if NET20
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="stringReader"></param>
+        /// <returns></returns>
         public static XmlReader Create(StringReader stringReader)
         {
             return XmlReader.Create(stringReader, new XmlReaderSettings()
@@ -18,6 +26,11 @@ namespace Redmine.Net.Api.Internals
 
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="xml"></param>
+        /// <returns></returns>
         public static XmlReader Create(string xml)
         {
             using (var stringReader = new StringReader(xml))
@@ -32,6 +45,11 @@ namespace Redmine.Net.Api.Internals
             }
         }
 #else
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="stringReader"></param>
+        /// <returns></returns>
         public static XmlTextReader Create(StringReader stringReader)
         {
             return new XmlTextReader(stringReader)
@@ -42,6 +60,12 @@ namespace Redmine.Net.Api.Internals
             };
         }
         
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="xml"></param>
+        /// <returns></returns>
         public static XmlTextReader Create(string xml)
         {
             using (var stringReader = new StringReader(xml))
