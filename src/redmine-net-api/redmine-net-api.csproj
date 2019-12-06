@@ -1,8 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-
+  
   <PropertyGroup Label="Build">
-    
     <TargetFrameworks>net20;net40;net45;net451;net452;net46;net461;net462;net47;net471;net472;net48;</TargetFrameworks>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <RootNamespace>Redmine.Net.Api</RootNamespace>
@@ -16,8 +15,6 @@
   </PropertyGroup>
 
   <PropertyGroup Label="Package">
-
-   
     <Authors>Adrian Popescu</Authors>
     <Description>Redmine Api is a .NET rest client for Redmine.</Description>
     <Company>p.adi</Company>
@@ -33,17 +30,18 @@
     <PackageLicenseUrl>https://github.com/zapadi/redmine-net-api/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/zapadi/redmine-net-api</PackageProjectUrl>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <PackageReleaseNotes>Changed to new csproj format.</PackageReleaseNotes>
+    <PackageReleaseNotes>
+      Add redmine-net-api.snk
+      Fix #242 - Invalid URI: The Uri scheme is too long
+      Fix package icon url.
+    </PackageReleaseNotes>
     <PackageTags>Redmine; REST; API; Client; .NET; Adrian Popescu; </PackageTags>
-   
     <Product>Redmine .NET API Client</Product>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/zapadi/redmine-net-api</RepositoryUrl>
     <Summary>...</Summary>
     <Title>Redmine .NET API Client</Title> 
-    
-    <VersionPrefix>2.0.47</VersionPrefix>
-
+    <VersionPrefix>2.0.48</VersionPrefix>
   </PropertyGroup>
    
   <PropertyGroup Label="Signing" Condition=" '$(Sign)' == 'true' ">
@@ -83,7 +81,6 @@
     <DefineConstants>NET462;NETFULL</DefineConstants>
   </PropertyGroup>
 
-
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net47'">
     <DefineConstants>NET47;NETFULL</DefineConstants>
   </PropertyGroup>
@@ -109,7 +106,6 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-   
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net20' " Label=".NET 2.0 Package References">
@@ -184,13 +180,11 @@
     <None Include="..\..\logo.png" Pack="true" PackagePath="\"/>
     <None Include="..\..\LICENSE" Pack="true" PackagePath=""/>
   </ItemGroup>
-
   
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DebugType>full</DebugType>
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
-
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <DebugType>full</DebugType>
@@ -208,7 +202,6 @@
     <DebugType>pdbonly</DebugType>
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
-
 
   <ItemGroup Label="Internals Visible To">
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
