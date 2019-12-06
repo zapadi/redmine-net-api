@@ -25,8 +25,10 @@
    
     <InformationalVersion>1.0.0</InformationalVersion>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <PackageId>redmine-api</PackageId>
-    <PackageIconUrl>https://github.com/zapadi/redmine-net-api/blob/master/logo.png</PackageIconUrl>
+
+    <PackageId Condition="'$(Sign)' == '' OR '$(Sign)' == 'false'">redmine-api</PackageId>
+    <PackageId Condition="'$(Sign)' == 'true'">redmine-api-signed</PackageId>
+    <PackageIconUrl>https://raw.githubusercontent.com/zapadi/redmine-net-api/master/logo.png</PackageIconUrl>
     <PackageLicenseUrl>https://github.com/zapadi/redmine-net-api/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/zapadi/redmine-net-api</PackageProjectUrl>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
@@ -41,6 +43,11 @@
     
     <VersionPrefix>2.0.47</VersionPrefix>
 
+  </PropertyGroup>
+   
+  <PropertyGroup Label="Signing" Condition=" '$(Sign)' == 'true' ">
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\redmine-net-api.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net20'">
@@ -170,6 +177,9 @@
     <None Remove="Logging\**" />
     <Compile Remove="Properties\AssemblyInfo.cs" />
     <Compile Remove="Extensions\LoggerExtensions.cs" />
+    <None Include="..\..\redmine-net-api.snk">
+    <Link>redmine-net-api.snk</Link>
+  </None>
   </ItemGroup>
 
   
@@ -199,7 +209,8 @@
 
   <ItemGroup Label="Internals Visible To">
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
-      <_Parameter1>$(MSBuildProjectName).Tests</_Parameter1>
+      <_Parameter1>"..\..\tests\$(MSBuildProjectName).Tests, PublicKey=0024000004800000940000000602000000240000525341310004000001000100678670c10a958cde6b74892d5207885bd2ab375255b85fd7794d60ff01ba1cf81aaff13f54d8a08a8f8c7816ef4fc0138de7941031e47b5b0c5d51f58cbfe6c5652e11cfa0865e2d0a860f47f73b701e6758e3e381665f7664f938462c9eb9bdc17312621e984981227fd9d38dbec5288e269d42836b9c8fc4c8ebd0282ca4d3"
+      </_Parameter1>
     </AssemblyAttribute>
   </ItemGroup>
 
