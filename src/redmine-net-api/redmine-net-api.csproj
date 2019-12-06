@@ -48,7 +48,7 @@
     <RepositoryUrl>https://github.com/zapadi/redmine-net-api</RepositoryUrl>
     <Summary>...</Summary>
     <Title>Redmine .NET API Client</Title> 
-    <VersionPrefix>3.0.0</VersionPrefix>
+    <VersionPrefix>3.0.1</VersionPrefix>
   </PropertyGroup>
    
   <PropertyGroup Label="Signing" Condition=" '$(Sign)' == 'true' ">
