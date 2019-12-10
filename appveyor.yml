@@ -31,7 +31,7 @@ init:
   - ps: $branch =  $env:APPVEYOR_REPO_BRANCH;
   - ps: $buildNumber = $env:APPVEYOR_BUILD_NUMBER;
   - ps: $isRepoTag = $env:APPVEYOR_REPO_TAG;
-  - ps: $revision = @{ $true = [string]::Empty; $false = "{0:00000}" -f [convert]::ToInt32("0" + $buildNumber, 10) }[[bool]::$isRepoTag -eq [bool]::true];
+  - ps: $revision = @{ $true = [string]::Empty; $false = "{0:00000}" -f [convert]::ToInt32("0" + $buildNumber, 10) }[$isRepoTag -eq "true"];
   - ps: $suffix = @{ $true = [string]::Empty; $false = "$($branch.Substring(0, [math]::Min(10,$branch.Length)))-$revision"}[$branch -eq "master" -and [string]::IsNullOrEmpty($revision)];
   - ps: $env:BUILD_SUFFIX = @{ $true = "$($suffix)-$($commitHash)"; $false = "$($branch)-$($commitHash)" }[ -not ([string]::IsNullOrEmpty($suffix))];
   - ps: $env:VERSION_SUFFIX = @{ $true = "--version-suffix=$($suffix)"; $false = ""}[ -not ([string]::IsNullOrEmpty($suffix))];
