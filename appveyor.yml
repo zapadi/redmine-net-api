@@ -21,7 +21,7 @@ nuget:
 branches:
   only:
     - master
-    - /\d\.\d\.\d/
+    - /v\d*\.\d*\.\d*/
 
 init:
   # Good practise, because Windows line endings are different from Unix/Linux ones
