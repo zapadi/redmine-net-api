@@ -31,8 +31,8 @@ init:
   - ps: $branch =  $env:APPVEYOR_REPO_BRANCH;
   - ps: $buildNumber = $env:APPVEYOR_BUILD_NUMBER;
   - ps: $isRepoTag = $env:APPVEYOR_REPO_TAG;
-  - ps: $revision = @{ $true = ""; $false = "{0:00000}" -f [convert]::ToInt32("0" + $buildNumber, 10) }[$isRepoTag -eq [bool]::true];
-  - ps: $suffix = @{ $true = ""; $false = "$($branch.Substring(0, [math]::Min(10,$branch.Length)))-$revision"}[$branch -eq "master" -and [string]::IsNullOrEmpty($revision)];
+  - ps: $revision = @{ $true = [string]::Empty; $false = "{0:00000}" -f [convert]::ToInt32("0" + $buildNumber, 10) }[[bool]::$isRepoTag -eq [bool]::true];
+  - ps: $suffix = @{ $true = [string]::Empty; $false = "$($branch.Substring(0, [math]::Min(10,$branch.Length)))-$revision"}[$branch -eq "master" -and [string]::IsNullOrEmpty($revision)];
   - ps: $env:BUILD_SUFFIX = @{ $true = "$($suffix)-$($commitHash)"; $false = "$($branch)-$($commitHash)" }[ -not ([string]::IsNullOrEmpty($suffix))];
   - ps: $env:VERSION_SUFFIX = @{ $true = "--version-suffix=$($suffix)"; $false = ""}[ -not ([string]::IsNullOrEmpty($suffix))];
 
@@ -40,8 +40,12 @@ install:
   - ps: dotnet restore redmine-net-api.sln
       
 before_build:
-  - ps: write-host "Build Suffix=$env:BUILD_SUFFIX" -foregroundcolor Green  
-  - ps: write-host "Version suffix=$env:VERSION_SUFFIX" -foregroundcolor Magenta 
+  - ps: write-host "Build Suffix = $env:BUILD_SUFFIX" -foregroundcolor Green  
+  - ps: write-host "Version suffix = $env:VERSION_SUFFIX" -foregroundcolor Magenta 
+  - ps: write-host "Branch = $branch" -foregroundcolor Cyan
+  - ps: write-host "Revision = $revision" -foregroundcolor Orange
+  - ps: write-host "Build suffix = $env:BUILD_SUFFIX" -foregroundcolor Yellow
+  - ps: write-host "Version suffix = $env:VERSION_SUFFIX" -foregroundcolor Red
   - ps: dotnet --version
 
 build_script:
@@ -49,10 +53,6 @@ build_script:
   - ps: dotnet build redmine-net-api.sln -c Release --version-suffix=$env:BUILD_SUFFIX -p:Sign=true
     
 after_build:
-  - ps: echo "Build number= $buildNumber"
-  - ps: echo "Is repository tag= $isRepoTag"
-  - ps: echo "Build suffix= $env:BUILD_SUFFIX"
-  - ps: echo "Version suffix= $env:VERSION_SUFFIX"
   - ps: dotnet pack src\redmine-net-api\redmine-net-api.csproj -c Release --output .\artifacts --include-symbols -p:SymbolPackageFormat=snupkg --no-build $env:VERSION_SUFFIX
   - ps: dotnet pack src\redmine-net-api\redmine-net-api.csproj -c Release --output .\artifacts --include-symbols -p:SymbolPackageFormat=snupkg --no-build $env:VERSION_SUFFIX -p:Sign=true
 
