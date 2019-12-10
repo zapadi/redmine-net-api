@@ -42,8 +42,8 @@ install:
 before_build:
   - ps: write-host "Build Suffix = $env:BUILD_SUFFIX" -foregroundcolor Green  
   - ps: write-host "Version suffix = $env:VERSION_SUFFIX" -foregroundcolor Magenta 
-  - ps: write-host "Branch = $branch" -foregroundcolor Cyan
-  - ps: write-host "Revision = $revision" -foregroundcolor Orange
+  - ps: write-host "Branch = $branch" -foregroundcolor DarkYellow
+  - ps: write-host "Revision = $revision" -foregroundcolor Cyan
   - ps: write-host "Build suffix = $env:BUILD_SUFFIX" -foregroundcolor Yellow
   - ps: write-host "Version suffix = $env:VERSION_SUFFIX" -foregroundcolor Red
   - ps: dotnet --version
