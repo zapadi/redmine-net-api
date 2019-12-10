@@ -27,12 +27,14 @@ init:
   # Good practise, because Windows line endings are different from Unix/Linux ones
   - ps: git config --global core.autocrlf true
 
-  - ps: $branch =  $env:APPVEYOR_REPO_BRANCH;
-  - ps: $revision = @{ $true = ""; $false = "{0:00000}" -f [convert]::ToInt32("0" + $env:APPVEYOR_BUILD_NUMBER, 10) }[$env:APPVEYOR_REPO_TAG -eq "true"];
-  - ps: $suffix = @{ $true = ""; $false = "$($branch.Substring(0, [math]::Min(10,$branch.Length)))-$revision"}[$branch -eq "master" -and $revision -eq ""];
   - ps: $commitHash = $($env:APPVEYOR_REPO_COMMIT.substring(0,7));
-  - ps: $env:BUILD_SUFFIX = @{ $true = "$($suffix)-$($commitHash)"; $false = "$($branch)-$($commitHash)" }[$suffix -ne ""];
-  - ps: $env:VERSION_SUFFIX = @{ $true = "--version-suffix=$($suffix)"; $false = ""}[$suffix -ne ""];
+  - ps: $branch =  $env:APPVEYOR_REPO_BRANCH;
+  - ps: $buildNumber = $env:APPVEYOR_BUILD_NUMBER;
+  - ps: $isRepoTag = $env:APPVEYOR_REPO_TAG;
+  - ps: $revision = @{ $true = ""; $false = "{0:00000}" -f [convert]::ToInt32("0" + $buildNumber, 10) }[$isRepoTag -eq [bool]::true];
+  - ps: $suffix = @{ $true = ""; $false = "$($branch.Substring(0, [math]::Min(10,$branch.Length)))-$revision"}[$branch -eq "master" -and [string]::IsNullOrEmpty($revision)];
+  - ps: $env:BUILD_SUFFIX = @{ $true = "$($suffix)-$($commitHash)"; $false = "$($branch)-$($commitHash)" }[ -not ([string]::IsNullOrEmpty($suffix))];
+  - ps: $env:VERSION_SUFFIX = @{ $true = "--version-suffix=$($suffix)"; $false = ""}[ -not ([string]::IsNullOrEmpty($suffix))];
 
 install:
   - ps: dotnet restore redmine-net-api.sln
@@ -44,8 +46,11 @@ before_build:
 
 build_script:
   - ps: dotnet build redmine-net-api.sln -c Release --version-suffix=$env:BUILD_SUFFIX
+  - ps: dotnet build redmine-net-api.sln -c Release --version-suffix=$env:BUILD_SUFFIX -p:Sign=true
     
 after_build:
+  - ps: echo "Build number= $buildNumber"
+  - ps: echo "Is repository tag= $isRepoTag"
   - ps: echo "Build suffix= $env:BUILD_SUFFIX"
   - ps: echo "Version suffix= $env:VERSION_SUFFIX"
   - ps: dotnet pack src\redmine-net-api\redmine-net-api.csproj -c Release --output .\artifacts --include-symbols -p:SymbolPackageFormat=snupkg --no-build $env:VERSION_SUFFIX
