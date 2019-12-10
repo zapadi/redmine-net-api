@@ -69,7 +69,6 @@ skip_commits:
     - '**/*.md'
     - '**/*.gif'
     - '**/*.png'
-    - '**/*.yml'
     - LICENSE
     - tests/*
 
