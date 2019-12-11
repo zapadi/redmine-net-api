@@ -108,7 +108,7 @@ namespace Redmine.Net.Api.Types
         /// </value>
         [XmlArray(RedmineKeys.TRACKERS)]
         [XmlArrayItem(RedmineKeys.TRACKER)]
-        public IList<ProjectTracker> Trackers { get; internal set; }
+        public IList<ProjectTracker> Trackers { get; set; }
 
         /// <summary>
         /// Gets or sets the custom fields.
@@ -118,7 +118,7 @@ namespace Redmine.Net.Api.Types
         /// </value>
         [XmlArray(RedmineKeys.CUSTOM_FIELDS)]
         [XmlArrayItem(RedmineKeys.CUSTOM_FIELD)]
-        public IList<IssueCustomField> CustomFields { get; internal set; }
+        public IList<IssueCustomField> CustomFields { get;  set; }
 
         /// <summary>
         /// Gets or sets the issue categories.
@@ -138,7 +138,7 @@ namespace Redmine.Net.Api.Types
         /// </value>
         [XmlArray(RedmineKeys.ENABLED_MODULES)]
         [XmlArrayItem(RedmineKeys.ENABLED_MODULE)]
-        public IList<ProjectEnabledModule> EnabledModules { get; internal set; }
+        public IList<ProjectEnabledModule> EnabledModules { get; set; }
 
         /// <summary>
         /// 

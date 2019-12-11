@@ -34,7 +34,7 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         [XmlArray(RedmineKeys.USERS)]
         [XmlArrayItem(RedmineKeys.USER)]
-        public List<GroupUser> Users { get; internal set; }
+        public List<GroupUser> Users { get;  set; }
 
         /// <summary>
         /// Gets or sets the custom fields.

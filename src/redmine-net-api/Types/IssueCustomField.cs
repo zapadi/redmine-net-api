@@ -36,7 +36,7 @@ namespace Redmine.Net.Api.Types
         /// <value>The value.</value>
         [XmlArray(RedmineKeys.VALUE)]
         [XmlArrayItem(RedmineKeys.VALUE)]
-        public IList<CustomFieldValue> Values { get; internal set; }
+        public IList<CustomFieldValue> Values { get; set; }
 
         /// <summary>
         /// 

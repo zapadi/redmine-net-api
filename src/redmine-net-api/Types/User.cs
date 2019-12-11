@@ -113,7 +113,7 @@ namespace Redmine.Net.Api.Types
         /// <value>The custom fields.</value>
         [XmlArray(RedmineKeys.CUSTOM_FIELDS)]
         [XmlArrayItem(RedmineKeys.CUSTOM_FIELD)]
-        public List<IssueCustomField> CustomFields { get; internal set; }
+        public List<IssueCustomField> CustomFields { get; set; }
 
         /// <summary>
         /// Gets or sets the memberships.

@@ -65,7 +65,7 @@ namespace Redmine.Net.Api.Types
         /// <value>The type.</value>
         [XmlArray(RedmineKeys.ROLES)]
         [XmlArrayItem(RedmineKeys.ROLE)]
-        public List<MembershipRole> Roles { get; internal set; }
+        public List<MembershipRole> Roles { get;  set; }
 
         /// <summary>
         /// 

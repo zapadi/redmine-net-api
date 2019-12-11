@@ -140,7 +140,7 @@ namespace Redmine.Net.Api.Types
         /// <value>The custom fields.</value>
         [XmlArray(RedmineKeys.CUSTOM_FIELDS)]
         [XmlArrayItem(RedmineKeys.CUSTOM_FIELD)]
-        public IList<IssueCustomField> CustomFields { get; internal set; }
+        public IList<IssueCustomField> CustomFields { get;  set; }
 
         /// <summary>
         /// Gets or sets the created on.
@@ -278,7 +278,7 @@ namespace Redmine.Net.Api.Types
         /// </value>
         [XmlArray(RedmineKeys.UPLOADS)]
         [XmlArrayItem(RedmineKeys.UPLOAD)]
-        public IList<Upload> Uploads { get; internal set; }
+        public IList<Upload> Uploads { get;  set; }
 
         /// <summary>
         /// 
