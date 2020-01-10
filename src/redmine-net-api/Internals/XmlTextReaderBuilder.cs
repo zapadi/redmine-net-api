@@ -33,7 +33,7 @@ namespace Redmine.Net.Api.Internals
         /// <returns></returns>
         public static XmlReader Create(string xml)
         {
-            using (var stringReader = new StringReader(xml))
+            var stringReader = new StringReader(xml);
             {
                 return XmlReader.Create(stringReader, new XmlReaderSettings()
                 {
@@ -68,7 +68,7 @@ namespace Redmine.Net.Api.Internals
         /// <returns></returns>
         public static XmlTextReader Create(string xml)
         {
-            using (var stringReader = new StringReader(xml))
+            var stringReader = new StringReader(xml);
             {
                 return new XmlTextReader(stringReader)
                 {
