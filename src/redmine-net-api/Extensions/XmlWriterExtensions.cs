@@ -190,6 +190,13 @@ namespace Redmine.Net.Api.Extensions
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+        /// <param name="elementName"></param>
+        /// <param name="collection"></param>
+        /// <param name="f"></param>
         public static void WriteArrayStringElement(this XmlWriter writer, string elementName, IEnumerable collection, Func<object, string> f)
         {
             if (collection == null)
