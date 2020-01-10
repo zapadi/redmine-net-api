@@ -23,10 +23,11 @@ using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Web;
 using Redmine.Net.Api.Exceptions;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Internals;
-
+using Redmine.Net.Api.Serialization;
 using Redmine.Net.Api.Types;
 using Group = Redmine.Net.Api.Types.Group;
 using Version = Redmine.Net.Api.Types.Version;
@@ -64,6 +65,7 @@ namespace Redmine.Net.Api
             {typeof(Watcher), "watchers"},
             {typeof(IssueCustomField), "custom_fields"},
             {typeof(CustomField), "custom_fields"}
+     //       {typeof(WikiPage), ""}
         };
         
         private static readonly Dictionary<Type, bool> typesWithOffset = new Dictionary<Type, bool>{
@@ -79,7 +81,7 @@ namespace Redmine.Net.Api
         private readonly string basicAuthorization;
         private readonly CredentialCache cache;
         private string host;
-
+        internal IRedmineSerializer Serializer { get; }
         /// <summary>
         ///     Initializes a new instance of the <see cref="RedmineManager" /> class.
         /// </summary>
@@ -106,7 +108,17 @@ namespace Redmine.Net.Api
 
             Host = host;
             MimeFormat = mimeFormat;
-            Format = mimeFormat == MimeFormat.Xml ? "xml" : "json";
+            if (mimeFormat == MimeFormat.Xml)
+            {
+                Format = "xml";
+                Serializer = new XmlRedmineSerializer();
+            }
+            else
+            {
+                Format = "json";
+                Serializer = new JsonRedmineSerializer();
+            }
+
             Proxy = proxy;
             SecurityProtocolType = securityProtocolType;
 
@@ -185,10 +197,7 @@ namespace Redmine.Net.Api
         /// <value>
         ///     The sufixes.
         /// </value>
-        public static Dictionary<Type, string> Sufixes
-        {
-            get { return routes; }
-        }
+        public static Dictionary<Type, string> Sufixes => routes;
 
         /// <summary>
         /// 
@@ -203,13 +212,12 @@ namespace Redmine.Net.Api
         /// </value>
         public string Host
         {
-            get { return host; }
+            get => host;
             private set
             {
                 host = value;
 
-                Uri uriResult;
-                if (!Uri.TryCreate(host, UriKind.Absolute, out uriResult) ||
+                if (!Uri.TryCreate(host, UriKind.Absolute, out Uri uriResult) ||
                     !(uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps))
                 {
                     host = $"http://{host}";
@@ -342,10 +350,13 @@ namespace Redmine.Net.Api
         /// <returns></returns>
         public WikiPage CreateOrUpdateWikiPage(string projectId, string pageName, WikiPage wikiPage)
         {
-            var result = RedmineSerializer.Serialize(wikiPage, MimeFormat);
+            var result = Serializer.Serialize(wikiPage);
             if (string.IsNullOrEmpty(result)) return null;
 
             var url = UrlHelper.GetWikiCreateOrUpdaterUrl(this, projectId, pageName);
+            
+            url = Uri.EscapeUriString(url);
+            
             return WebApiHelper.ExecuteUpload<WikiPage>(this, url, HttpVerbs.PUT, result, "CreateOrUpdateWikiPage");
         }
 
@@ -360,6 +371,7 @@ namespace Redmine.Net.Api
         public WikiPage GetWikiPage(string projectId, NameValueCollection parameters, string pageName, uint version = 0)
         {
             var url = UrlHelper.GetWikiPageUrl(this, projectId,  pageName, version);
+            url = Uri.EscapeUriString(url);
             return WebApiHelper.ExecuteDownload<WikiPage>(this, url, "GetWikiPage", parameters);
         }
 
@@ -372,7 +384,7 @@ namespace Redmine.Net.Api
         {
             var url = UrlHelper.GetWikisUrl(this, projectId);
             var result = WebApiHelper.ExecuteDownloadList<WikiPage>(this, url, "GetAllWikiPages");
-            return result?.Objects;
+            return result == null ? null :new List<WikiPage>(result.Items);
         }
 
         /// <summary>
@@ -384,6 +396,7 @@ namespace Redmine.Net.Api
         public void DeleteWikiPage(string projectId, string pageName)
         {
             var url = UrlHelper.GetDeleteWikirUrl(this, projectId, pageName);
+            url = Uri.EscapeUriString(url);
             WebApiHelper.ExecuteUpload(this, url, HttpVerbs.DELETE, string.Empty, "DeleteWikiPage");
         }
 
@@ -410,12 +423,12 @@ namespace Redmine.Net.Api
                 var tempResult = GetPaginatedObjects<T>(parameters);
                 if (tempResult != null)
                 {
-                    totalCount = tempResult.TotalCount;
+                    totalCount = tempResult.TotalItems;
                 }
             }
             catch (WebException wex)
             {
-                wex.HandleWebException("CountAsync", MimeFormat);
+                wex.HandleWebException(Serializer);
             }
 
             return totalCount;
@@ -453,7 +466,7 @@ namespace Redmine.Net.Api
         /// <typeparam name="T"></typeparam>
         /// <param name="parameters">The parameters.</param>
         /// <returns></returns>
-        public PaginatedObjects<T> GetPaginatedObjects<T>(NameValueCollection parameters) where T : class, new()
+        public PagedResults<T> GetPaginatedObjects<T>(NameValueCollection parameters) where T : class, new()
         {
             var url = UrlHelper.GetListUrl<T>(this, parameters);
             return WebApiHelper.ExecuteDownloadList<T>(this, url, "GetObjectList", parameters);
@@ -565,12 +578,12 @@ namespace Redmine.Net.Api
                        {
                            if (resultList == null)
                            {
-                               resultList = tempResult.Objects;
-                               totalCount = isLimitSet ? pageSize : tempResult.TotalCount;
+                               resultList = new List<T>(tempResult.Items);
+                               totalCount = isLimitSet ? pageSize : tempResult.TotalItems;
                            }
                            else
                            {
-                               resultList.AddRange(tempResult.Objects);
+                               resultList.AddRange(tempResult.Items);
                            }
                        }
                        offset += pageSize;
@@ -581,13 +594,13 @@ namespace Redmine.Net.Api
                     var result = GetPaginatedObjects<T>(parameters);
                     if (result != null)
                     {
-                        return result.Objects;
+                        return new List<T>(result.Items);
                     } 
                 }
             }
             catch (WebException wex)
             {
-                wex.HandleWebException("GetObjectsAsync", MimeFormat);
+                wex.HandleWebException( Serializer);
             }
             return resultList;
         }
@@ -638,7 +651,7 @@ namespace Redmine.Net.Api
         public T CreateObject<T>(T obj, string ownerId) where T : class, new()
         {
             var url = UrlHelper.GetCreateUrl<T>(this, ownerId);
-            var data = RedmineSerializer.Serialize(obj, MimeFormat);
+            var data = Serializer.Serialize(obj);
             return WebApiHelper.ExecuteUpload<T>(this, url, HttpVerbs.POST, data, "CreateObject");
         }
 
@@ -675,7 +688,7 @@ namespace Redmine.Net.Api
         public void UpdateObject<T>(string id, T obj, string projectId) where T : class, new()
         {
             var url = UrlHelper.GetUploadUrl<T>(this, id);
-            var data = RedmineSerializer.Serialize(obj, MimeFormat);
+            var data = Serializer.Serialize(obj);
             data = Regex.Replace(data, @"\r\n|\r|\n", "\r\n");
             WebApiHelper.ExecuteUpload(this, url, HttpVerbs.PUT, data, "UpdateObject");
         }
@@ -736,7 +749,7 @@ namespace Redmine.Net.Api
         {
             var address = UrlHelper.GetAttachmentUpdateUrl(this, issueId);
             var attachments = new Attachments { { attachment.Id, attachment } };
-            var data = RedmineSerializer.Serialize(attachments, MimeFormat);
+            var data = Serializer.Serialize(attachments);
 
             WebApiHelper.ExecuteUpload(this, address, HttpVerbs.PATCH, data, "UpdateAttachment");
         }

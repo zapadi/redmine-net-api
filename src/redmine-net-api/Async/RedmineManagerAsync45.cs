@@ -16,6 +16,7 @@ limitations under the License.
 
 #if !(NET20 || NET40)
 
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Globalization;
@@ -24,6 +25,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Internals;
+using Redmine.Net.Api.Serialization;
 using Redmine.Net.Api.Types;
 
 namespace Redmine.Net.Api.Async
@@ -54,11 +56,15 @@ namespace Redmine.Net.Api.Async
         /// <returns></returns>
         public static async Task<WikiPage> CreateOrUpdateWikiPageAsync(this RedmineManager redmineManager, string projectId, string pageName, WikiPage wikiPage)
         {
-            var uri = UrlHelper.GetWikiCreateOrUpdaterUrl(redmineManager, projectId, pageName);
-            var data = RedmineSerializer.Serialize(wikiPage, redmineManager.MimeFormat);
+            var data = redmineManager.Serializer.Serialize(wikiPage);
+            if (string.IsNullOrEmpty(data)) return null;
 
-            var response = await WebApiAsyncHelper.ExecuteUpload(redmineManager, uri, HttpVerbs.PUT, data, "CreateOrUpdateWikiPageAsync").ConfigureAwait(false);
-            return RedmineSerializer.Deserialize<WikiPage>(response, redmineManager.MimeFormat);
+            var url = UrlHelper.GetWikiCreateOrUpdaterUrl(redmineManager, projectId, pageName);
+
+            url = Uri.EscapeUriString(url);
+
+            var response = await WebApiAsyncHelper.ExecuteUpload(redmineManager, url, HttpVerbs.PUT, data, "CreateOrUpdateWikiPageAsync").ConfigureAwait(false);
+            return redmineManager.Serializer.Deserialize<WikiPage>(response);
         }
 
         /// <summary>
@@ -72,6 +78,7 @@ namespace Redmine.Net.Api.Async
             string pageName)
         {
             var uri = UrlHelper.GetDeleteWikirUrl(redmineManager, projectId, pageName);
+            uri = Uri.EscapeUriString(uri);
             await WebApiAsyncHelper.ExecuteUpload(redmineManager, uri, HttpVerbs.DELETE, string.Empty, "DeleteWikiPageAsync").ConfigureAwait(false);
         }
 
@@ -114,6 +121,7 @@ namespace Redmine.Net.Api.Async
             NameValueCollection parameters, string pageName, uint version = 0)
         {
             var uri = UrlHelper.GetWikiPageUrl(redmineManager, projectId,  pageName, version);
+            uri = Uri.EscapeUriString(uri);
             return await WebApiAsyncHelper.ExecuteDownload<WikiPage>(redmineManager, uri, "GetWikiPageAsync", parameters).ConfigureAwait(false);
         }
 
@@ -231,12 +239,12 @@ namespace Redmine.Net.Api.Async
                 var tempResult = await GetPaginatedObjectsAsync<T>(redmineManager,parameters).ConfigureAwait(false);
                 if (tempResult != null)
                 {
-                    totalCount = tempResult.TotalCount;
+                    totalCount = tempResult.TotalItems;
                 }
             }
             catch (WebException wex)
             {
-                wex.HandleWebException("CountAsync", redmineManager.MimeFormat);
+                wex.HandleWebException(redmineManager.Serializer);
             }
 
             return totalCount;
@@ -250,7 +258,7 @@ namespace Redmine.Net.Api.Async
         /// <param name="redmineManager">The redmine manager.</param>
         /// <param name="parameters">The parameters.</param>
         /// <returns></returns>
-        public static async Task<PaginatedObjects<T>> GetPaginatedObjectsAsync<T>(this RedmineManager redmineManager,
+        public static async Task<PagedResults<T>> GetPaginatedObjectsAsync<T>(this RedmineManager redmineManager,
             NameValueCollection parameters)
             where T : class, new()
         {
@@ -292,12 +300,12 @@ namespace Redmine.Net.Api.Async
                     {
                         if (resultList == null)
                         {
-                            resultList = tempResult.Objects;
-                            totalCount = tempResult.TotalCount;
+                            resultList = new List<T>(tempResult.Items);
+                            totalCount = tempResult.TotalItems;
                         }
                         else
                         {
-                            resultList.AddRange(tempResult.Objects);
+                            resultList.AddRange(tempResult.Items);
                         }
                     }
                     offset += pageSize;
@@ -305,7 +313,7 @@ namespace Redmine.Net.Api.Async
             }
             catch (WebException wex)
             {
-                wex.HandleWebException("GetObjectsAsync", redmineManager.MimeFormat);
+                wex.HandleWebException(redmineManager.Serializer);
             }
             return resultList;
         }
@@ -350,10 +358,10 @@ namespace Redmine.Net.Api.Async
             where T : class, new()
         {
             var uri = UrlHelper.GetCreateUrl<T>(redmineManager, ownerId);
-            var data = RedmineSerializer.Serialize(entity, redmineManager.MimeFormat);
+            var data = redmineManager.Serializer.Serialize(entity);
 
             var response = await WebApiAsyncHelper.ExecuteUpload(redmineManager, uri, HttpVerbs.POST, data, "CreateObjectAsync").ConfigureAwait(false);
-            return RedmineSerializer.Deserialize<T>(response, redmineManager.MimeFormat);
+            return redmineManager.Serializer.Deserialize<T>(response);
         }
 
         /// <summary>
@@ -368,7 +376,7 @@ namespace Redmine.Net.Api.Async
             where T : class, new()
         {
             var uri = UrlHelper.GetUploadUrl<T>(redmineManager, id);
-            var data = RedmineSerializer.Serialize(entity, redmineManager.MimeFormat);
+            var data = redmineManager.Serializer.Serialize(entity);
             data = Regex.Replace(data, @"\r\n|\r|\n", "\r\n");
 
             await WebApiAsyncHelper.ExecuteUpload(redmineManager, uri, HttpVerbs.PUT, data, "UpdateObjectAsync").ConfigureAwait(false);
