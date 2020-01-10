@@ -4,6 +4,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using Redmine.Net.Api.Exceptions;
 using Redmine.Net.Api.Extensions;
+using Redmine.Net.Api.Internals;
 
 namespace Redmine.Net.Api.Serialization
 {
@@ -163,16 +164,19 @@ namespace Redmine.Net.Api.Serialization
 
             using (var textReader = new StringReader(xml))
             {
-                var serializer = new XmlSerializer(typeof(TOut));
-
-                var entity = serializer.Deserialize(textReader);
-
-                if (entity is TOut t)
+                using (var xmlReader = XmlTextReaderBuilder.Create(textReader))
                 {
-                    return t;
-                }
+                    var serializer = new XmlSerializer(typeof(TOut));
 
-                return default;
+                    var entity = serializer.Deserialize(xmlReader);
+
+                    if (entity is TOut t)
+                    {
+                        return t;
+                    }
+
+                    return default;
+                }
             }
         }
     }
