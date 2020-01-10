@@ -20,8 +20,10 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Xml;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Internals;
+using Redmine.Net.Api.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
@@ -180,13 +182,73 @@ namespace Redmine.Net.Api.Types
             writer.WriteElementString(RedmineKeys.MAIL_NOTIFICATION, MailNotification);
             writer.WriteElementString(RedmineKeys.PASSWORD, Password);
             writer.WriteValueOrEmpty(RedmineKeys.AUTH_SOURCE_ID, AuthenticationModeId);
-            writer.WriteElementString(RedmineKeys.MUST_CHANGE_PASSWORD, MustChangePassword.ToString().ToLowerInvariant());
+            writer.WriteElementString(RedmineKeys.MUST_CHANGE_PASSWORD, MustChangePassword.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
             writer.WriteElementString(RedmineKeys.STATUS, ((int)Status).ToString(CultureInfo.InvariantCulture));
             writer.WriteArray(RedmineKeys.CUSTOM_FIELDS, CustomFields);
         }
         #endregion
 
-       
+        #region Implementation of IJsonSerialization
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        public override void ReadJson(JsonReader reader)
+        {
+            while (reader.Read())
+            {
+                if (reader.TokenType == JsonToken.EndObject)
+                {
+                    return;
+                }
+
+                if (reader.TokenType != JsonToken.PropertyName)
+                {
+                    continue;
+                }
+
+                switch (reader.Value)
+                {
+                    case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
+                    case RedmineKeys.API_KEY: ApiKey = reader.ReadAsString(); break;
+                    case RedmineKeys.AUTH_SOURCE_ID: AuthenticationModeId = reader.ReadAsInt32(); break;
+                    case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadAsDateTime(); break;
+                    case RedmineKeys.CUSTOM_FIELDS: CustomFields = reader.ReadAsCollection<IssueCustomField>(); break;
+                    case RedmineKeys.LAST_LOGIN_ON: LastLoginOn = reader.ReadAsDateTime(); break;
+                    case RedmineKeys.LASTNAME: LastName = reader.ReadAsString(); break;
+                    case RedmineKeys.LOGIN: Login = reader.ReadAsString(); break;
+                    case RedmineKeys.FIRSTNAME: FirstName = reader.ReadAsString(); break;
+                    case RedmineKeys.GROUPS: Groups = reader.ReadAsCollection<UserGroup>(); break;
+                    case RedmineKeys.MAIL: Email = reader.ReadAsString(); break;
+                    case RedmineKeys.MAIL_NOTIFICATION: MailNotification = reader.ReadAsString(); break;
+                    case RedmineKeys.MEMBERSHIPS: Memberships = reader.ReadAsCollection<Membership>(); break;
+                    case RedmineKeys.MUST_CHANGE_PASSWORD: MustChangePassword = reader.ReadAsBool(); break;
+                    case RedmineKeys.STATUS: Status = (UserStatus)reader.ReadAsInt(); break;
+                    default: reader.Read(); break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+        public override void WriteJson(JsonWriter writer)
+        {
+            using (new JsonObject(writer, RedmineKeys.USER))
+            {
+                writer.WriteProperty(RedmineKeys.LOGIN, Login);
+                writer.WriteProperty(RedmineKeys.FIRSTNAME, FirstName);
+                writer.WriteProperty(RedmineKeys.LASTNAME, LastName);
+                writer.WriteProperty(RedmineKeys.MAIL, Email);
+                writer.WriteProperty(RedmineKeys.MAIL_NOTIFICATION, MailNotification);
+                writer.WriteProperty(RedmineKeys.PASSWORD, Password);
+                writer.WriteProperty(RedmineKeys.MUST_CHANGE_PASSWORD, MustChangePassword.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
+                writer.WriteValueOrEmpty(RedmineKeys.AUTH_SOURCE_ID, AuthenticationModeId);
+                writer.WriteArray(RedmineKeys.CUSTOM_FIELDS, CustomFields);
+            }
+        }
+        #endregion
 
         #region Implementation of IEquatable<User>
         /// <summary>
@@ -197,14 +259,13 @@ namespace Redmine.Net.Api.Types
         public override bool Equals(User other)
         {
             if (other == null) return false;
-            return (
-                Id == other.Id
+            return Id == other.Id
                 && string.Equals(Login,other.Login, StringComparison.OrdinalIgnoreCase)
                 && string.Equals(FirstName,other.FirstName, StringComparison.OrdinalIgnoreCase)
                 && string.Equals(LastName,other.LastName, StringComparison.OrdinalIgnoreCase)
                 && string.Equals(Email,other.Email, StringComparison.OrdinalIgnoreCase)
                 && string.Equals(MailNotification,other.MailNotification, StringComparison.OrdinalIgnoreCase)
-                && (ApiKey != null ? string.Equals(ApiKey,other.ApiKey, StringComparison.OrdinalIgnoreCase) : other.ApiKey == null)
+                && string.Equals(ApiKey,other.ApiKey, StringComparison.OrdinalIgnoreCase)
                 && AuthenticationModeId == other.AuthenticationModeId
                 && CreatedOn == other.CreatedOn
                 && LastLoginOn == other.LastLoginOn
@@ -212,8 +273,7 @@ namespace Redmine.Net.Api.Types
                 && MustChangePassword == other.MustChangePassword
                 && (CustomFields != null ? CustomFields.Equals<IssueCustomField>(other.CustomFields) : other.CustomFields == null)
                 && (Memberships != null ? Memberships.Equals<Membership>(other.Memberships) : other.Memberships == null)
-                && (Groups != null ? Groups.Equals<UserGroup>(other.Groups) : other.Groups == null)
-            );
+                && (Groups != null ? Groups.Equals<UserGroup>(other.Groups) : other.Groups == null);
         }
 
         /// <summary>
@@ -256,7 +316,7 @@ AuthenticationModeId={AuthenticationModeId?.ToString(CultureInfo.InvariantCultur
 CreatedOn={CreatedOn?.ToString("u", CultureInfo.InvariantCulture)}, 
 LastLoginOn={LastLoginOn?.ToString("u", CultureInfo.InvariantCulture)}, 
 ApiKey={ApiKey}, 
-Status={Status.ToString("G")}, 
+Status={Status:G}, 
 MustChangePassword={MustChangePassword.ToString(CultureInfo.InvariantCulture)}, 
 CustomFields={CustomFields.Dump()}, 
 Memberships={Memberships.Dump()}, 

@@ -20,8 +20,10 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Xml;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Internals;
+using Redmine.Net.Api.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
@@ -320,11 +322,11 @@ namespace Redmine.Net.Api.Types
 
             if (Id != 0)
             {
-                writer.WriteElementString(RedmineKeys.PRIVATE_NOTES, PrivateNotes.ToString().ToLowerInvariant());
+                writer.WriteElementString(RedmineKeys.PRIVATE_NOTES, PrivateNotes.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
             }
 
             writer.WriteElementString(RedmineKeys.DESCRIPTION, Description);
-            writer.WriteElementString(RedmineKeys.IS_PRIVATE, IsPrivate.ToString().ToLowerInvariant());
+            writer.WriteElementString(RedmineKeys.IS_PRIVATE, IsPrivate.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
 
             writer.WriteIdIfNotNull(RedmineKeys.PROJECT_ID, Project);
             writer.WriteIdIfNotNull(RedmineKeys.PRIORITY_ID, Priority);
@@ -349,7 +351,113 @@ namespace Redmine.Net.Api.Types
         }
         #endregion
 
-       
+        #region Implementation of IJsonSerializable
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        public override void ReadJson(JsonReader reader)
+        {
+            while (reader.Read())
+            {
+                if (reader.TokenType == JsonToken.EndObject)
+                {
+                    return;
+                }
+
+                if (reader.TokenType != JsonToken.PropertyName)
+                {
+                    continue;
+                }
+
+                switch (reader.Value)
+                {
+                    case RedmineKeys.ID: Id = reader.ReadAsInt32().GetValueOrDefault(); break;
+                    case RedmineKeys.ASSIGNED_TO: AssignedTo = new IdentifiableName(reader); break;
+                    case RedmineKeys.ATTACHMENTS: Attachments = reader.ReadAsCollection<Attachment>(); break;
+                    case RedmineKeys.AUTHOR: Author = new IdentifiableName(reader); break;
+                    case RedmineKeys.CATEGORY: Category = new IdentifiableName(reader); break;
+                    case RedmineKeys.CHANGE_SETS: ChangeSets = reader.ReadAsCollection<ChangeSet>(); break;
+                    case RedmineKeys.CHILDREN: Children = reader.ReadAsCollection<IssueChild>(); break;
+                    case RedmineKeys.CLOSED_ON: ClosedOn = reader.ReadAsDateTime(); break;
+                    case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadAsDateTime(); break;
+                    case RedmineKeys.CUSTOM_FIELDS: CustomFields = reader.ReadAsCollection<IssueCustomField>(); break;
+                    case RedmineKeys.DESCRIPTION: Description = reader.ReadAsString(); break;
+                    case RedmineKeys.DONE_RATIO: DoneRatio = (float?)reader.ReadAsDouble(); break;
+                    case RedmineKeys.DUE_DATE: DueDate = reader.ReadAsDateTime(); break;
+                    case RedmineKeys.ESTIMATED_HOURS: EstimatedHours = (float?)reader.ReadAsDouble(); break;
+                    case RedmineKeys.FIXED_VERSION: FixedVersion = new IdentifiableName(reader); break;
+                    case RedmineKeys.IS_PRIVATE: IsPrivate = reader.ReadAsBoolean().GetValueOrDefault(); break;
+                    case RedmineKeys.JOURNALS: Journals = reader.ReadAsCollection<Journal>(); break;
+                    case RedmineKeys.NOTES: Notes = reader.ReadAsString(); break;
+                    case RedmineKeys.PARENT: ParentIssue = new IdentifiableName(reader); break;
+                    case RedmineKeys.PRIORITY: Priority = new IdentifiableName(reader); break;
+                    case RedmineKeys.PRIVATE_NOTES: PrivateNotes = reader.ReadAsBoolean().GetValueOrDefault(); break;
+                    case RedmineKeys.PROJECT: Project = new IdentifiableName(reader); break;
+                    case RedmineKeys.RELATIONS: Relations = reader.ReadAsCollection<IssueRelation>(); break;
+                    case RedmineKeys.SPENT_HOURS: SpentHours = (float?)reader.ReadAsDouble(); break;
+                    case RedmineKeys.START_DATE: StartDate = reader.ReadAsDateTime(); break;
+                    case RedmineKeys.STATUS: Status = new IdentifiableName(reader); break;
+                    case RedmineKeys.SUBJECT: Subject = reader.ReadAsString(); break;
+                    case RedmineKeys.TOTAL_ESTIMATED_HOURS: TotalEstimatedHours = (float?)reader.ReadAsDouble(); break;
+                    case RedmineKeys.TOTAL_SPENT_HOURS: TotalSpentHours = (float?)reader.ReadAsDouble(); break;
+                    case RedmineKeys.TRACKER: Tracker = new IdentifiableName(reader); break;
+                    case RedmineKeys.UPDATED_ON: UpdatedOn = reader.ReadAsDateTime(); break;
+                    case RedmineKeys.WATCHERS: Watchers = reader.ReadAsCollection<Watcher>(); break;
+                    default: reader.Read(); break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+        public override void WriteJson(JsonWriter writer)
+        {
+            using (new JsonObject(writer, RedmineKeys.ISSUE))
+            {
+                writer.WriteProperty(RedmineKeys.SUBJECT, Subject);
+                writer.WriteProperty(RedmineKeys.DESCRIPTION, Description);
+                writer.WriteProperty(RedmineKeys.NOTES, Notes);
+
+                if (Id != 0)
+                {
+                    writer.WriteProperty(RedmineKeys.PRIVATE_NOTES, PrivateNotes.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
+                }
+
+                writer.WriteProperty(RedmineKeys.IS_PRIVATE, IsPrivate.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
+                writer.WriteIdIfNotNull(RedmineKeys.PROJECT_ID, Project);
+                writer.WriteIdIfNotNull(RedmineKeys.PRIORITY_ID, Priority);
+                writer.WriteIdIfNotNull(RedmineKeys.STATUS_ID, Status);
+                writer.WriteIdIfNotNull(RedmineKeys.CATEGORY_ID, Category);
+                writer.WriteIdIfNotNull(RedmineKeys.TRACKER_ID, Tracker);
+                writer.WriteIdIfNotNull(RedmineKeys.ASSIGNED_TO_ID, AssignedTo);
+                writer.WriteIdIfNotNull(RedmineKeys.FIXED_VERSION_ID, FixedVersion);
+                writer.WriteValueOrEmpty(RedmineKeys.ESTIMATED_HOURS, EstimatedHours);
+
+                writer.WriteIdOrEmpty(RedmineKeys.PARENT_ISSUE_ID, ParentIssue);
+                writer.WriteDateOrEmpty(RedmineKeys.START_DATE, StartDate);
+                writer.WriteDateOrEmpty(RedmineKeys.DUE_DATE, DueDate);
+                writer.WriteDateOrEmpty(RedmineKeys.UPDATED_ON, UpdatedOn);
+
+                if (DoneRatio != null)
+                {
+                    writer.WriteProperty(RedmineKeys.DONE_RATIO, DoneRatio.Value.ToString(CultureInfo.InvariantCulture));
+                }
+
+                if (SpentHours != null)
+                {
+                    writer.WriteProperty(RedmineKeys.SPENT_HOURS, SpentHours.Value.ToString(CultureInfo.InvariantCulture));
+                }
+
+                writer.WriteArray(RedmineKeys.UPLOADS, Uploads);
+                writer.WriteArray(RedmineKeys.CUSTOM_FIELDS, CustomFields);
+
+                writer.WriteRepeatableElement(RedmineKeys.WATCHER_USER_IDS, (IEnumerable<IValue>)Watchers);
+            }
+        }
+        #endregion
 
         #region Implementation of IEquatable<Tracker>
         /// <summary>
@@ -360,36 +468,34 @@ namespace Redmine.Net.Api.Types
         public override bool Equals(Issue other)
         {
             if (other == null) return false;
-            return (
-                Id == other.Id
-            && Project == other.Project
-            && Tracker == other.Tracker
-            && Status == other.Status
-            && Priority == other.Priority
-            && Author == other.Author
-            && Category == other.Category
-            && Subject == other.Subject
-            && Description == other.Description
-            && StartDate == other.StartDate
-            && DueDate == other.DueDate
-            && DoneRatio == other.DoneRatio
-            && EstimatedHours == other.EstimatedHours
-            && (CustomFields != null ? CustomFields.Equals<IssueCustomField>(other.CustomFields) : other.CustomFields == null)
-            && CreatedOn == other.CreatedOn
-            && UpdatedOn == other.UpdatedOn
-            && AssignedTo == other.AssignedTo
-            && FixedVersion == other.FixedVersion
-            && Notes == other.Notes
-            && (Watchers != null ? Watchers.Equals<Watcher>(other.Watchers) : other.Watchers == null)
-            && ClosedOn == other.ClosedOn
-            && SpentHours == other.SpentHours
-            && PrivateNotes == other.PrivateNotes
-            && (Attachments != null ? Attachments.Equals<Attachment>(other.Attachments) : other.Attachments == null)
-            && (ChangeSets != null ? ChangeSets.Equals<ChangeSet>(other.ChangeSets) : other.ChangeSets == null)
-            && (Children != null ? Children.Equals<IssueChild>(other.Children) : other.Children == null)
-            && (Journals != null ? Journals.Equals<Journal>(other.Journals) : other.Journals == null)
-            && (Relations != null ? Relations.Equals<IssueRelation>(other.Relations) : other.Relations == null)
-            );
+            return Id == other.Id
+                && Project == other.Project
+                && Tracker == other.Tracker
+                && Status == other.Status
+                && Priority == other.Priority
+                && Author == other.Author
+                && Category == other.Category
+                && Subject == other.Subject
+                && Description == other.Description
+                && StartDate == other.StartDate
+                && DueDate == other.DueDate
+                && DoneRatio == other.DoneRatio
+                && EstimatedHours == other.EstimatedHours
+                && (CustomFields != null ? CustomFields.Equals<IssueCustomField>(other.CustomFields) : other.CustomFields == null)
+                && CreatedOn == other.CreatedOn
+                && UpdatedOn == other.UpdatedOn
+                && AssignedTo == other.AssignedTo
+                && FixedVersion == other.FixedVersion
+                && Notes == other.Notes
+                && (Watchers != null ? Watchers.Equals<Watcher>(other.Watchers) : other.Watchers == null)
+                && ClosedOn == other.ClosedOn
+                && SpentHours == other.SpentHours
+                && PrivateNotes == other.PrivateNotes
+                && (Attachments != null ? Attachments.Equals<Attachment>(other.Attachments) : other.Attachments == null)
+                && (ChangeSets != null ? ChangeSets.Equals<ChangeSet>(other.ChangeSets) : other.ChangeSets == null)
+                && (Children != null ? Children.Equals<IssueChild>(other.Children) : other.Children == null)
+                && (Journals != null ? Journals.Equals<Journal>(other.Journals) : other.Journals == null)
+                && (Relations != null ? Relations.Equals<IssueRelation>(other.Relations) : other.Relations == null);
         }
 
         /// <summary>

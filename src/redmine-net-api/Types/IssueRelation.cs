@@ -19,8 +19,10 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Xml;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Internals;
+using Redmine.Net.Api.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
@@ -129,7 +131,53 @@ namespace Redmine.Net.Api.Types
         }
         #endregion
 
-       
+        #region Implementation of IJsonSerialization
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+        public override void WriteJson(JsonWriter writer)
+        {
+            using (new JsonObject(writer, RedmineKeys.RELATION))
+            {
+                writer.WriteProperty(RedmineKeys.ISSUE_TO_ID, IssueToId);
+                writer.WriteProperty(RedmineKeys.RELATION_TYPE, Type);
+                if (Type == IssueRelationType.Precedes || Type == IssueRelationType.Follows)
+                {
+                    writer.WriteValueOrEmpty(RedmineKeys.DELAY, Delay);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        public override void ReadJson(JsonReader reader)
+        {
+            while (reader.Read())
+            {
+                if (reader.TokenType == JsonToken.EndObject)
+                {
+                    return;
+                }
+
+                if (reader.TokenType != JsonToken.PropertyName)
+                {
+                    continue;
+                }
+
+                switch (reader.Value)
+                {
+                    case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
+                    case RedmineKeys.DELAY: Delay = reader.ReadAsInt32(); break;
+                    case RedmineKeys.ISSUE_ID: IssueId = reader.ReadAsInt(); break;
+                    case RedmineKeys.ISSUE_TO_ID: IssueToId = reader.ReadAsInt(); break;
+                    case RedmineKeys.RELATION_TYPE: Type = (IssueRelationType)reader.ReadAsInt(); break;
+                }
+            }
+        }
+        #endregion
 
         #region Implementation of IEquatable<IssueRelation>
         /// <summary>
@@ -140,7 +188,7 @@ namespace Redmine.Net.Api.Types
         public override bool Equals(IssueRelation other)
         {
             if (other == null) return false;
-            return (Id == other.Id && IssueId == other.IssueId && IssueToId == other.IssueToId && Type == other.Type && Delay == other.Delay);
+            return Id == other.Id && IssueId == other.IssueId && IssueToId == other.IssueToId && Type == other.Type && Delay == other.Delay;
         }
 
         /// <summary>
@@ -169,7 +217,7 @@ namespace Redmine.Net.Api.Types
         private string DebuggerDisplay => $@"[{nameof(IssueRelation)}: {ToString()}, 
 IssueId={IssueId.ToString(CultureInfo.InvariantCulture)}, 
 IssueToId={IssueToId.ToString(CultureInfo.InvariantCulture)}, 
-Type={Type.ToString("G")},
+Type={Type:G},
 Delay={Delay?.ToString(CultureInfo.InvariantCulture)}]";
 
     }

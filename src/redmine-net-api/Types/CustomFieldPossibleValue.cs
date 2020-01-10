@@ -19,7 +19,9 @@ using System.Diagnostics;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Redmine.Net.Api.Internals;
+using Redmine.Net.Api.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
@@ -28,7 +30,7 @@ namespace Redmine.Net.Api.Types
     /// </summary>
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.POSSIBLE_VALUE)]
-    public sealed class CustomFieldPossibleValue : IXmlSerializable, IEquatable<CustomFieldPossibleValue>
+    public sealed class CustomFieldPossibleValue : IXmlSerializable, IJsonSerializable, IEquatable<CustomFieldPossibleValue>
     {
         #region Properties
         /// <summary>
@@ -87,7 +89,46 @@ namespace Redmine.Net.Api.Types
 
         #endregion
 
-       
+        #region Implementation of IJsonSerialization
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        public void ReadJson(JsonReader reader)
+        {
+            while (reader.Read())
+            {
+                if (reader.TokenType == JsonToken.EndObject)
+                {
+                    return;
+                }
+
+                if (reader.TokenType != JsonToken.PropertyName)
+                {
+                    continue;
+                }
+
+                switch (reader.Value)
+                {
+                    case RedmineKeys.LABEL:
+                        Label = reader.ReadAsString(); break;
+
+                    case RedmineKeys.VALUE:
+
+                        Value = reader.ReadAsString(); break;
+                    default:
+                        reader.Read(); break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+        public void WriteJson(JsonWriter writer) { }
+        #endregion
 
         #region Implementation of IEquatable<CustomFieldPossibleValue>
         /// <summary>
@@ -98,7 +139,7 @@ namespace Redmine.Net.Api.Types
         public bool Equals(CustomFieldPossibleValue other)
         {
             if (other == null) return false;
-            return (Value == other.Value);
+            return Value == other.Value;
         }
 
         /// <summary>

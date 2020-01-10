@@ -19,6 +19,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Xml;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Internals;
 
@@ -64,7 +65,45 @@ namespace Redmine.Net.Api.Types
         }
         #endregion
 
-       
+        #region Implementation of IJsonSerialization
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        public override void ReadJson(JsonReader reader)
+        {
+            while (reader.Read())
+            {
+                if (reader.TokenType == JsonToken.EndObject)
+                {
+                    return;
+                }
+
+                if (reader.TokenType != JsonToken.PropertyName)
+                {
+                    continue;
+                }
+
+                switch (reader.Value)
+                {
+                    case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
+                    case RedmineKeys.INHERITED: Inherited = reader.ReadAsBool(); break;
+                    case RedmineKeys.NAME: Name = reader.ReadAsString(); break;
+                    default: reader.Read(); break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+        public override void WriteJson(JsonWriter writer)
+        {
+            writer.WriteProperty(RedmineKeys.ID, Id.ToString(CultureInfo.InvariantCulture));
+        }
+
+        #endregion
 
         #region Implementation of IEquatable<MembershipRole>
         /// <summary>

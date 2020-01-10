@@ -19,7 +19,9 @@ using System.Diagnostics;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Redmine.Net.Api.Internals;
+using Redmine.Net.Api.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
@@ -28,7 +30,7 @@ namespace Redmine.Net.Api.Types
     /// </summary>
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.VALUE)]
-    public class CustomFieldValue : IXmlSerializable, IEquatable<CustomFieldValue>, ICloneable
+    public class CustomFieldValue : IXmlSerializable, IJsonSerializable, IEquatable<CustomFieldValue>, ICloneable
     {
         /// <summary>
         /// 
@@ -103,7 +105,34 @@ namespace Redmine.Net.Api.Types
 
         #endregion
 
-       
+        #region Implementation of IJsonSerialization
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        public void ReadJson(JsonReader reader)
+        {
+            if (reader.TokenType == JsonToken.PropertyName)
+            {
+                return;
+            }
+
+            if (reader.TokenType == JsonToken.String)
+            {
+                Info = reader.Value as string;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+        public void WriteJson(JsonWriter writer)
+        {
+        }
+
+        #endregion
 
         #region Implementation of IEquatable<CustomFieldValue>
 
@@ -115,7 +144,7 @@ namespace Redmine.Net.Api.Types
         public bool Equals(CustomFieldValue other)
         {
             if (other == null) return false;
-            return Info.Equals(other.Info);
+            return string.Equals(Info,other.Info,StringComparison.OrdinalIgnoreCase);
         }
 
         /// <summary>

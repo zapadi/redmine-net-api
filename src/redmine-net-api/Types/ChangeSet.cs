@@ -20,8 +20,10 @@ using System.Globalization;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Internals;
+using Redmine.Net.Api.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
@@ -30,7 +32,7 @@ namespace Redmine.Net.Api.Types
     /// </summary>
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.CHANGE_SET)]
-    public sealed class ChangeSet : IXmlSerializable, IEquatable<ChangeSet>
+    public sealed class ChangeSet : IXmlSerializable, IJsonSerializable, IEquatable<ChangeSet>
     {
         #region Properties
         /// <summary>
@@ -98,7 +100,46 @@ namespace Redmine.Net.Api.Types
         public void WriteXml(XmlWriter writer) { }
         #endregion
 
-       
+        #region Implementation of IJsonSerialization
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        public void ReadJson(JsonReader reader)
+        {
+            while (reader.Read())
+            {
+                if (reader.TokenType == JsonToken.EndObject)
+                {
+                    return;
+                }
+
+                if (reader.TokenType != JsonToken.PropertyName)
+                {
+                    continue;
+                }
+
+                switch (reader.Value)
+                {
+                    case RedmineKeys.COMMENTS: Comments = reader.ReadAsString(); break;
+
+                    case RedmineKeys.COMMITTED_ON: CommittedOn = reader.ReadAsDateTime(); break;
+
+                    case RedmineKeys.REVISION: Revision = reader.ReadAsInt(); break;
+
+                    case RedmineKeys.USER: User = new IdentifiableName(reader); break;
+
+                    default: reader.Read(); break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+        public void WriteJson(JsonWriter writer) { }
+        #endregion
 
         #region Implementation of IEquatable<ChangeSet>
         /// <summary>

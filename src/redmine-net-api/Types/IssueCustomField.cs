@@ -20,6 +20,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Xml;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Internals;
 
@@ -122,7 +123,80 @@ namespace Redmine.Net.Api.Types
         }
         #endregion
 
-       
+        #region Implementation of IJsonSerialization
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+        public override void WriteJson(JsonWriter writer)
+        {
+            if (Values == null)
+            {
+                return;
+            }
+
+            var itemsCount = Values.Count;
+
+            writer.WriteStartObject();
+            writer.WriteProperty(RedmineKeys.ID, Id);
+            writer.WriteProperty(RedmineKeys.NAME, Name);
+
+            if (itemsCount > 1)
+            {
+                writer.WritePropertyName(RedmineKeys.VALUE);
+                writer.WriteStartArray();
+                foreach (var cfv in Values)
+                {
+                    writer.WriteValue(cfv.Info);
+                }
+                writer.WriteEndArray();
+
+                writer.WriteProperty(RedmineKeys.MULTIPLE, Multiple.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
+            }
+            else
+            {
+                writer.WriteProperty(RedmineKeys.VALUE, itemsCount > 0 ? Values[0].Info : null);
+            }
+
+            writer.WriteEndObject();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        public override void ReadJson(JsonReader reader)
+        {
+            while (reader.Read())
+            {
+                if (reader.TokenType == JsonToken.EndObject)
+                {
+                    return;
+                }
+
+                switch (reader.Value)
+                {
+                    case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
+                    case RedmineKeys.MULTIPLE: Multiple = reader.ReadAsBool(); break;
+                    case RedmineKeys.NAME: Name = reader.ReadAsString(); break;
+                    case RedmineKeys.VALUE:
+                        reader.Read();
+                        switch (reader.TokenType)
+                        {
+                            case JsonToken.Null: break;
+                            case JsonToken.StartArray:
+                                Values = reader.ReadAsCollection<CustomFieldValue>();
+                                break;
+                            default:
+                                Values = new List<CustomFieldValue> { new CustomFieldValue { Info = reader.Value as string } };
+                                break;
+                        }
+                        break;
+                }
+            }
+        }
+
+        #endregion
 
         #region Implementation of IEquatable<IssueCustomField>
         /// <summary>
@@ -133,10 +207,10 @@ namespace Redmine.Net.Api.Types
         public bool Equals(IssueCustomField other)
         {
             if (other == null) return false;
-            return (Id == other.Id
+            return Id == other.Id
                 && Name == other.Name
                 && Multiple == other.Multiple
-                && (Values != null ? Values.Equals<CustomFieldValue>(other.Values) : other.Values == null));
+                && (Values != null ? Values.Equals<CustomFieldValue>(other.Values) : other.Values == null);
         }
 
         /// <summary>
@@ -182,7 +256,7 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        public string GetValue(object item)
+        public static string GetValue(object item)
         {
             return ((CustomFieldValue)item).Info;
         }
@@ -193,5 +267,14 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
         private string DebuggerDisplay => $"[{nameof(IssueCustomField)}: {ToString()} Values={Values.Dump()}, Multiple={Multiple.ToString(CultureInfo.InvariantCulture)}]";
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as IssueCustomField);
+        }
     }
 }

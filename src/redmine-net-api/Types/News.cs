@@ -19,6 +19,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Xml;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Internals;
 
@@ -100,7 +101,39 @@ namespace Redmine.Net.Api.Types
         }
         #endregion
 
-       
+        #region Implementation of IJsonSerialization
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        public override void ReadJson(JsonReader reader)
+        {
+            while (reader.Read())
+            {
+                if (reader.TokenType == JsonToken.EndObject)
+                {
+                    return;
+                }
+
+                if (reader.TokenType != JsonToken.PropertyName)
+                {
+                    continue;
+                }
+
+                switch (reader.Value)
+                {
+                    case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
+                    case RedmineKeys.AUTHOR: Author = new IdentifiableName(reader); break;
+                    case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadAsDateTime(); break;
+                    case RedmineKeys.DESCRIPTION: Description = reader.ReadAsString(); break;
+                    case RedmineKeys.PROJECT: Project = new IdentifiableName(reader); break;
+                    case RedmineKeys.SUMMARY: Summary = reader.ReadAsString(); break;
+                    case RedmineKeys.TITLE: Title = reader.ReadAsString(); break;
+                    default: reader.Read(); break;
+                }
+            }
+        }
+        #endregion
 
         #region Implementation of IEquatable<News>
         /// <summary>
@@ -111,13 +144,13 @@ namespace Redmine.Net.Api.Types
         public override bool Equals(News other)
         {
             if (other == null) return false;
-            return (Id == other.Id
+            return Id == other.Id
                 && Project == other.Project
                 && Author == other.Author
-                && Title == other.Title
-                && Summary == other.Summary
-                && Description == other.Description
-                && CreatedOn == other.CreatedOn);
+                && string.Equals(Title,other.Title,StringComparison.OrdinalIgnoreCase)
+                && string.Equals(Summary, other.Summary, StringComparison.OrdinalIgnoreCase)
+                && string.Equals(Description, other.Description, StringComparison.OrdinalIgnoreCase)
+                && CreatedOn == other.CreatedOn;
         }
 
         /// <summary>

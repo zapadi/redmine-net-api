@@ -19,7 +19,10 @@ using System.Diagnostics;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
+using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Internals;
+using Redmine.Net.Api.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
@@ -28,7 +31,7 @@ namespace Redmine.Net.Api.Types
     /// </summary>
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.UPLOAD)]
-    public sealed class Upload : IXmlSerializable, IEquatable<Upload>
+    public sealed class Upload : IXmlSerializable, IJsonSerializable, IEquatable<Upload>
     {
         #region Properties
         /// <summary>
@@ -103,7 +106,48 @@ namespace Redmine.Net.Api.Types
         }
         #endregion
 
-       
+        #region Implementation of IJsonSerialization
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        public void ReadJson(JsonReader reader)
+        {
+            while (reader.Read())
+            {
+                if (reader.TokenType == JsonToken.EndObject)
+                {
+                    return;
+                }
+
+                if (reader.TokenType != JsonToken.PropertyName)
+                {
+                    continue;
+                }
+
+                switch (reader.Value)
+                {
+                    case RedmineKeys.CONTENT_TYPE: ContentType = reader.ReadAsString(); break;
+                    case RedmineKeys.DESCRIPTION: Description = reader.ReadAsString(); break;
+                    case RedmineKeys.FILENAME: FileName = reader.ReadAsString(); break;
+                    case RedmineKeys.TOKEN: Token = reader.ReadAsString(); break;
+                    default: reader.Read(); break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+        public void WriteJson(JsonWriter writer)
+        {
+            writer.WriteProperty(RedmineKeys.TOKEN, Token);
+            writer.WriteProperty(RedmineKeys.CONTENT_TYPE, ContentType);
+            writer.WriteProperty(RedmineKeys.FILENAME, FileName);
+            writer.WriteProperty(RedmineKeys.DESCRIPTION, Description);
+        }
+        #endregion
 
         #region Implementation of IEquatable<Upload>
         /// <summary>
@@ -116,10 +160,10 @@ namespace Redmine.Net.Api.Types
         public bool Equals(Upload other)
         {
             return other != null
-                && string.Equals(Token,other.Token, StringComparison.OrdinalIgnoreCase)
-                && string.Equals(FileName,other.FileName, StringComparison.OrdinalIgnoreCase)
-                && string.Equals(Description,other.Description, StringComparison.OrdinalIgnoreCase)
-                && string.Equals(ContentType,other.ContentType, StringComparison.OrdinalIgnoreCase);
+                && string.Equals(Token, other.Token, StringComparison.OrdinalIgnoreCase)
+                && string.Equals(FileName, other.FileName, StringComparison.OrdinalIgnoreCase)
+                && string.Equals(Description, other.Description, StringComparison.OrdinalIgnoreCase)
+                && string.Equals(ContentType, other.ContentType, StringComparison.OrdinalIgnoreCase);
         }
 
         /// <summary>

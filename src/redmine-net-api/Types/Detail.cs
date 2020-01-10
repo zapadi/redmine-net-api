@@ -19,7 +19,9 @@ using System.Diagnostics;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Redmine.Net.Api.Internals;
+using Redmine.Net.Api.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
@@ -28,7 +30,7 @@ namespace Redmine.Net.Api.Types
     /// </summary>
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.DETAIL)]
-    public sealed class Detail : IXmlSerializable,  IEquatable<Detail>
+    public sealed class Detail : IXmlSerializable, IJsonSerializable, IEquatable<Detail>
     {
         /// <summary>
         /// 
@@ -121,7 +123,46 @@ namespace Redmine.Net.Api.Types
         public void WriteXml(XmlWriter writer) { }
         #endregion
 
-       
+        #region Implementation of IJsonSerialization
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+        public void WriteJson(JsonWriter writer) { }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        public void ReadJson(JsonReader reader)
+        {
+            while (reader.Read())
+            {
+                if (reader.TokenType == JsonToken.EndObject)
+                {
+                    return;
+                }
+
+                if (reader.TokenType != JsonToken.PropertyName)
+                {
+                    continue;
+                }
+
+                switch (reader.Value)
+                {
+                    case RedmineKeys.NAME: Name = reader.ReadAsString(); break;
+
+                    case RedmineKeys.PROPERTY: Property = reader.ReadAsString(); break;
+
+                    case RedmineKeys.NEW_VALUE: NewValue = reader.ReadAsString(); break;
+
+                    case RedmineKeys.OLD_VALUE: OldValue = reader.ReadAsString(); break;
+
+                    default: reader.Read(); break;
+                }
+            }
+        }
+        #endregion
 
         #region Implementation of IEquatable<Detail>
         /// <summary>
@@ -132,10 +173,10 @@ namespace Redmine.Net.Api.Types
         public bool Equals(Detail other)
         {
             if (other == null) return false;
-            return (Property != null ? string.Equals(Property,other.Property, StringComparison.InvariantCultureIgnoreCase) : other.Property == null)
-                && (Name != null ? string.Equals(Name,other.Name, StringComparison.InvariantCultureIgnoreCase) : other.Name == null)
-                && (OldValue != null ? string.Equals(OldValue,other.OldValue, StringComparison.InvariantCultureIgnoreCase) : other.OldValue == null)
-                && (NewValue != null ? string.Equals(NewValue,other.NewValue, StringComparison.InvariantCultureIgnoreCase) : other.NewValue == null);
+            return string.Equals(Property, other.Property, StringComparison.InvariantCultureIgnoreCase)
+                && string.Equals(Name, other.Name, StringComparison.InvariantCultureIgnoreCase)
+                && string.Equals(OldValue, other.OldValue, StringComparison.InvariantCultureIgnoreCase)
+                && string.Equals(NewValue, other.NewValue, StringComparison.InvariantCultureIgnoreCase);
         }
 
         /// <summary>

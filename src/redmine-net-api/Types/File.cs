@@ -22,6 +22,8 @@ using System;
 using System.Diagnostics;
 using System.Xml;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
+using Redmine.Net.Api.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
@@ -140,7 +142,63 @@ namespace Redmine.Net.Api.Types
         }
         #endregion
 
-       
+        #region Implementation of IJsonSerializable
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        public override void ReadJson(JsonReader reader)
+        {
+            while (reader.Read())
+            {
+                if (reader.TokenType == JsonToken.EndObject)
+                {
+                    return;
+                }
+
+                if (reader.TokenType != JsonToken.PropertyName)
+                {
+                    continue;
+                }
+
+                switch (reader.Value)
+                {
+                    case RedmineKeys.ID: Id = reader.ReadAsInt32().GetValueOrDefault(); break;
+                    case RedmineKeys.AUTHOR: Author = new IdentifiableName(reader); break;
+                    case RedmineKeys.CONTENT_TYPE: ContentType = reader.ReadAsString(); break;
+                    case RedmineKeys.CONTENT_URL: ContentUrl = reader.ReadAsString(); break;
+                    case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadAsDateTime(); break;
+                    case RedmineKeys.DESCRIPTION: Description = reader.ReadAsString(); break;
+                    case RedmineKeys.DIGEST: Digest = reader.ReadAsString(); break;
+                    case RedmineKeys.DOWNLOADS: Downloads = reader.ReadAsInt32().GetValueOrDefault(); break;
+                    case RedmineKeys.FILENAME: Filename = reader.ReadAsString(); break;
+                    case RedmineKeys.FILE_SIZE: FileSize = reader.ReadAsInt32().GetValueOrDefault(); break;
+                    case RedmineKeys.TOKEN: Token = reader.ReadAsString(); break;
+                    case RedmineKeys.VERSION: Version = new IdentifiableName(reader); break;
+                    case RedmineKeys.VERSION_ID: Version = new IdentifiableName() { Id = reader.ReadAsInt32().GetValueOrDefault() }; break;
+                    default: reader.Read(); break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+        public override void WriteJson(JsonWriter writer)
+        {
+            using (new JsonObject(writer, RedmineKeys.FILE))
+            {
+                using (new JsonObject(writer))
+                {
+                    writer.WriteProperty(RedmineKeys.TOKEN, Token);
+                    writer.WriteIdIfNotNull(RedmineKeys.VERSION_ID, Version);
+                    writer.WriteProperty(RedmineKeys.FILENAME, Filename);
+                    writer.WriteProperty(RedmineKeys.DESCRIPTION, Description);
+                }
+            }
+        }
+        #endregion
 
         #region Implementation of IEquatable<File>
         /// <summary>
@@ -151,7 +209,7 @@ namespace Redmine.Net.Api.Types
         public override bool Equals(File other)
         {
             if (other == null) return false;
-            return (Id == other.Id
+            return Id == other.Id
                 && Filename == other.Filename
                 && FileSize == other.FileSize
                 && Description == other.Description
@@ -162,8 +220,7 @@ namespace Redmine.Net.Api.Types
                 && Version == other.Version
                 && Digest == other.Digest
                 && Downloads == other.Downloads
-                && Token == other.Token
-                );
+                && Token == other.Token;
         }
 
         /// <summary>

@@ -15,14 +15,39 @@
 */
 
 using System.Collections.Generic;
+using System.Globalization;
+using Newtonsoft.Json;
+using Redmine.Net.Api.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
     /// <summary>
     /// 
     /// </summary>
-    internal class Attachments : Dictionary<int, Attachment>
+    internal class Attachments : Dictionary<int, Attachment>, IJsonSerializable
     {
-       
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        public void ReadJson(JsonReader reader) { }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+        public void WriteJson(JsonWriter writer)
+        {
+            using (new JsonObject(writer, RedmineKeys.ATTACHMENTS))
+            {
+                writer.WriteStartArray();
+                foreach (var item in this)
+                {
+                    writer.WritePropertyName(item.Key.ToString(CultureInfo.InvariantCulture));
+                    item.Value.WriteJson(writer);
+                }
+                writer.WriteEndArray();
+            }
+        }
     }
 }

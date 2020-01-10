@@ -20,7 +20,9 @@ using System.Globalization;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Redmine.Net.Api.Internals;
+using Redmine.Net.Api.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
@@ -29,7 +31,7 @@ namespace Redmine.Net.Api.Types
     /// </summary>
     /// <typeparam name="T"></typeparam>
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
-    public abstract class Identifiable<T> : IXmlSerializable,  IEquatable<T>, IEquatable<Identifiable<T>> where T : Identifiable<T>
+    public abstract class Identifiable<T> : IXmlSerializable, IJsonSerializable, IEquatable<T>, IEquatable<Identifiable<T>> where T : Identifiable<T>
     {
         #region Properties
         /// <summary>
@@ -59,7 +61,19 @@ namespace Redmine.Net.Api.Types
         public virtual void WriteXml(XmlWriter writer) { }
         #endregion
 
-       
+        #region Implementation of IJsonSerializable
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        public virtual void ReadJson(JsonReader reader) { }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+        public virtual void WriteJson(JsonWriter writer) { }
+        #endregion
 
         #region Implementation of IEquatable<Identifiable<T>>
         /// <summary>

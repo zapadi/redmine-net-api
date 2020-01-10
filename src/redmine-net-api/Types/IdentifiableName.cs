@@ -14,9 +14,11 @@
    limitations under the License.
 */
 
+using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.Xml;
+using Newtonsoft.Json;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Internals;
 
@@ -42,14 +44,24 @@ namespace Redmine.Net.Api.Types
             Initialize(reader);
         }
 
-       
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        public IdentifiableName(JsonReader reader)
+        {
+            InitializeJsonReader(reader);
+        }
 
         private void Initialize(XmlReader reader)
         {
             ReadXml(reader);
         }
 
-       
+        private void InitializeJsonReader(JsonReader reader)
+        {
+            ReadJson(reader);
+        }
 
         #region Properties
         /// <summary>
@@ -83,7 +95,45 @@ namespace Redmine.Net.Api.Types
 
         #endregion
 
-      
+        #region Implementation of IJsonSerializable
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        public override void ReadJson(JsonReader reader)
+        {
+            while (reader.Read())
+            {
+                if (reader.TokenType == JsonToken.EndObject)
+                {
+                    return;
+                }
+
+                if (reader.TokenType == JsonToken.PropertyName)
+                {
+                    switch (reader.Value)
+                    {
+                        case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
+                        case RedmineKeys.NAME: Name = reader.ReadAsString(); break;
+                        default: reader.Read(); break;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+        public override void WriteJson(JsonWriter writer)
+        {
+            writer.WriteIdIfNotNull(RedmineKeys.ID, this);
+            if (!Name.IsNullOrWhiteSpace())
+            {
+                writer.WriteProperty(RedmineKeys.NAME, Name);
+            }
+        }
+        #endregion
 
         #region Implementation of IEquatable<IdentifiableName>
         /// <summary>
@@ -94,7 +144,7 @@ namespace Redmine.Net.Api.Types
         public override bool Equals(IdentifiableName other)
         {
             if (other == null) return false;
-            return (Id == other.Id && Name == other.Name);
+            return Id == other.Id && string.Equals(Name, other.Name, StringComparison.OrdinalIgnoreCase);
         }
 
         /// <summary>
@@ -117,6 +167,5 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <returns></returns>
         private string DebuggerDisplay => $"[{nameof(IdentifiableName)}: {base.ToString()}, Name={Name}]";
-
     }
 }

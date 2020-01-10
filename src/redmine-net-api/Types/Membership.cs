@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Xml;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Internals;
 
@@ -71,7 +72,35 @@ namespace Redmine.Net.Api.Types
         }
         #endregion
 
-       
+        #region Implementation of IJsonSerialization
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        public override void ReadJson(JsonReader reader)
+        {
+            while (reader.Read())
+            {
+                if (reader.TokenType == JsonToken.EndObject)
+                {
+                    return;
+                }
+
+                if (reader.TokenType != JsonToken.PropertyName)
+                {
+                    continue;
+                }
+
+                switch (reader.Value)
+                {
+                    case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
+                    case RedmineKeys.PROJECT: Project = new IdentifiableName(reader); break;
+                    case RedmineKeys.ROLES: Roles = reader.ReadAsCollection<MembershipRole>(); break;
+                    default: reader.Read(); break;
+                }
+            }
+        }
+        #endregion
 
         #region Implementation of IEquatable<Membership>
         /// <summary>
@@ -82,10 +111,9 @@ namespace Redmine.Net.Api.Types
         public override bool Equals(Membership other)
         {
             if (other == null) return false;
-            return (
-                Id == other.Id &&
+            return Id == other.Id &&
                 Project != null ? Project.Equals(other.Project) : other.Project == null &&
-                Roles != null ? Roles.Equals<MembershipRole>(other.Roles) : other.Roles == null);
+                Roles != null ? Roles.Equals<MembershipRole>(other.Roles) : other.Roles == null;
         }
 
         /// <summary>

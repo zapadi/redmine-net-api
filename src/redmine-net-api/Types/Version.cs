@@ -20,8 +20,10 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Xml;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Internals;
+using Redmine.Net.Api.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
@@ -128,7 +130,58 @@ namespace Redmine.Net.Api.Types
         }
         #endregion
 
-       
+        #region Implementation of IJsonSerialization
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        public override void ReadJson(JsonReader reader)
+        {
+            while (reader.Read())
+            {
+                if (reader.TokenType == JsonToken.EndObject)
+                {
+                    return;
+                }
+
+                if (reader.TokenType != JsonToken.PropertyName)
+                {
+                    continue;
+                }
+
+                switch (reader.Value)
+                {
+                    case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
+                    case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadAsDateTime(); break;
+                    case RedmineKeys.CUSTOM_FIELDS: CustomFields = reader.ReadAsCollection<IssueCustomField>(); break;
+                    case RedmineKeys.DESCRIPTION: Description = reader.ReadAsString(); break;
+                    case RedmineKeys.DUE_DATE: DueDate = reader.ReadAsDateTime(); break;
+                    case RedmineKeys.NAME: Name = reader.ReadAsString(); break;
+                    case RedmineKeys.PROJECT: Project = new IdentifiableName(reader); break;
+                    case RedmineKeys.SHARING: Sharing = (VersionSharing)Enum.Parse(typeof(VersionSharing), reader.ReadAsString(), true); break;
+                    case RedmineKeys.STATUS: Status = (VersionStatus)Enum.Parse(typeof(VersionStatus), reader.ReadAsString(), true); break;
+                    case RedmineKeys.UPDATED_ON: UpdatedOn = reader.ReadAsDateTime(); break;
+                    default: reader.Read(); break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+        public override void WriteJson(JsonWriter writer)
+        {
+            using (new JsonObject(writer, RedmineKeys.VERSION))
+            {
+                writer.WriteProperty(RedmineKeys.NAME, Name);
+                writer.WriteProperty(RedmineKeys.STATUS, Status.ToString().ToLowerInvariant());
+                writer.WriteProperty(RedmineKeys.SHARING, Sharing.ToString().ToLowerInvariant());
+                writer.WriteProperty(RedmineKeys.DESCRIPTION, Description);
+                writer.WriteDateOrEmpty(RedmineKeys.DUE_DATE, DueDate);
+            }
+        }
+        #endregion
 
         #region Implementation of IEquatable<Version>
         /// <summary>
@@ -139,7 +192,7 @@ namespace Redmine.Net.Api.Types
         public override bool Equals(Version other)
         {
             if (other == null) return false;
-            return (Id == other.Id && Name == other.Name
+            return Id == other.Id && Name == other.Name
                 && Project == other.Project
                 && Description == other.Description
                 && Status == other.Status
@@ -147,7 +200,7 @@ namespace Redmine.Net.Api.Types
                 && Sharing == other.Sharing
                 && CreatedOn == other.CreatedOn
                 && UpdatedOn == other.UpdatedOn
-                && (CustomFields != null ? CustomFields.Equals<IssueCustomField>(other.CustomFields) : other.CustomFields == null));
+                && (CustomFields != null ? CustomFields.Equals<IssueCustomField>(other.CustomFields) : other.CustomFields == null);
         }
         /// <summary>
         /// 

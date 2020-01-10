@@ -20,8 +20,10 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Xml;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Internals;
+using Redmine.Net.Api.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
@@ -141,7 +143,7 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// Generates an object from its XML representation.
         /// </summary>
-        /// <param name="reader">The <see cref="T:System.Xml.XmlReader"/> stream from which the object is deserialized.</param>
+        /// <param name="reader">The <see cref="System.Xml.XmlReader"/> stream from which the object is deserialized.</param>
         public override void ReadXml(XmlReader reader)
         {
             reader.Read();
@@ -204,7 +206,78 @@ namespace Redmine.Net.Api.Types
         }
         #endregion
 
-       
+        #region Implementation of IJsonSerialization
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        public override void ReadJson(JsonReader reader)
+        {
+            while (reader.Read())
+            {
+                if (reader.TokenType == JsonToken.EndObject)
+                {
+                    return;
+                }
+
+                if (reader.TokenType != JsonToken.PropertyName)
+                {
+                    continue;
+                }
+
+                switch (reader.Value)
+                {
+                    case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
+                    case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadAsDateTime(); break;
+                    case RedmineKeys.CUSTOM_FIELDS: CustomFields = reader.ReadAsCollection<IssueCustomField>(); break;
+                    case RedmineKeys.DESCRIPTION: Description = reader.ReadAsString(); break;
+                    case RedmineKeys.ENABLED_MODULES: EnabledModules = reader.ReadAsCollection<ProjectEnabledModule>(); break;
+                    case RedmineKeys.HOMEPAGE: HomePage = reader.ReadAsString(); break;
+                    case RedmineKeys.IDENTIFIER: Identifier = reader.ReadAsString(); break;
+                    case RedmineKeys.INHERIT_MEMBERS: InheritMembers = reader.ReadAsBool(); break;
+                    case RedmineKeys.IS_PUBLIC: IsPublic = reader.ReadAsBool(); break;
+                    case RedmineKeys.ISSUE_CATEGORIES: IssueCategories = reader.ReadAsCollection<ProjectIssueCategory>(); break;
+                    case RedmineKeys.NAME: Name = reader.ReadAsString(); break;
+                    case RedmineKeys.PARENT: Parent = new IdentifiableName(reader); break;
+                    case RedmineKeys.STATUS: Status = (ProjectStatus)reader.ReadAsInt(); break;
+                    case RedmineKeys.TIME_ENTRY_ACTIVITIES: TimeEntryActivities = reader.ReadAsCollection<ProjectTimeEntryActivity>(); break;
+                    case RedmineKeys.TRACKERS: Trackers = reader.ReadAsCollection<ProjectTracker>(); break;
+                    case RedmineKeys.UPDATED_ON: UpdatedOn = reader.ReadAsDateTime(); break;
+                    default: reader.Read(); break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+        public override void WriteJson(JsonWriter writer)
+        {
+            using (new JsonObject(writer, RedmineKeys.PROJECT))
+            {
+                writer.WriteProperty(RedmineKeys.NAME, Name);
+                writer.WriteProperty(RedmineKeys.IDENTIFIER, Identifier);
+                writer.WriteIfNotDefaultOrNull(RedmineKeys.DESCRIPTION, Description);
+                writer.WriteIfNotDefaultOrNull(RedmineKeys.HOMEPAGE, HomePage);
+                writer.WriteIfNotDefaultOrNull(RedmineKeys.INHERIT_MEMBERS, InheritMembers);
+                writer.WriteIfNotDefaultOrNull(RedmineKeys.IS_PUBLIC, IsPublic);
+                writer.WriteIdIfNotNull(RedmineKeys.PARENT_ID, Parent);
+                writer.WriteRepeatableElement(RedmineKeys.TRACKER_IDS, (IEnumerable<IValue>)Trackers);
+                writer.WriteRepeatableElement(RedmineKeys.ENABLED_MODULE_NAMES, (IEnumerable<IValue>)EnabledModules);
+
+                if (Id == 0)
+                {
+                    writer.WriteRepeatableElement(RedmineKeys.ISSUE_CUSTOM_FIELD_IDS, (IEnumerable<IValue>)CustomFields);
+                    return;
+                }
+
+                writer.WriteArray(RedmineKeys.CUSTOM_FIELDS, CustomFields);
+            }
+        }
+        #endregion
 
         #region Implementation of IEquatable<Project>
         /// <summary>
@@ -219,12 +292,11 @@ namespace Redmine.Net.Api.Types
                 return false;
             }
 
-            return (
-                Id == other.Id
-                && string.Equals(Identifier,other.Identifier, StringComparison.OrdinalIgnoreCase)
-                && string.Equals(Description,other.Description, StringComparison.OrdinalIgnoreCase)
+            return Id == other.Id
+                && string.Equals(Identifier, other.Identifier, StringComparison.OrdinalIgnoreCase)
+                && string.Equals(Description, other.Description, StringComparison.OrdinalIgnoreCase)
                 && (Parent != null ? Parent.Equals(other.Parent) : other.Parent == null)
-                && (HomePage != null ? string.Equals(HomePage,other.HomePage, StringComparison.OrdinalIgnoreCase) : other.HomePage == null)
+                && string.Equals(HomePage, other.HomePage, StringComparison.OrdinalIgnoreCase)
                 && CreatedOn == other.CreatedOn
                 && UpdatedOn == other.UpdatedOn
                 && Status == other.Status
@@ -234,8 +306,7 @@ namespace Redmine.Net.Api.Types
                 && (CustomFields != null ? CustomFields.Equals<IssueCustomField>(other.CustomFields) : other.CustomFields == null)
                 && (IssueCategories != null ? IssueCategories.Equals<ProjectIssueCategory>(other.IssueCategories) : other.IssueCategories == null)
                 && (EnabledModules != null ? EnabledModules.Equals<ProjectEnabledModule>(other.EnabledModules) : other.EnabledModules == null)
-                && (TimeEntryActivities != null ? TimeEntryActivities.Equals<ProjectTimeEntryActivity>(other.TimeEntryActivities) : other.TimeEntryActivities == null)
-            );
+                && (TimeEntryActivities != null ? TimeEntryActivities.Equals<ProjectTimeEntryActivity>(other.TimeEntryActivities) : other.TimeEntryActivities == null);
         }
 
         /// <summary>
@@ -275,7 +346,7 @@ namespace Redmine.Net.Api.Types
                 $@"[Project: {ToString()}, Identifier={Identifier}, Description={Description}, Parent={Parent}, HomePage={HomePage}, 
 CreatedOn={CreatedOn?.ToString("u", CultureInfo.InvariantCulture)}, 
 UpdatedOn={UpdatedOn?.ToString("u", CultureInfo.InvariantCulture)}, 
-Status={Status.ToString("G")}, 
+Status={Status:G}, 
 IsPublic={IsPublic.ToString(CultureInfo.InvariantCulture)}, 
 InheritMembers={InheritMembers.ToString(CultureInfo.InvariantCulture)}, 
 Trackers={Trackers.Dump()}, 
@@ -284,5 +355,14 @@ IssueCategories={IssueCategories.Dump()},
 EnabledModules={EnabledModules.Dump()}, 
 TimeEntryActivities = {TimeEntryActivities.Dump()}]";
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as Project);
+        }
     }
 }

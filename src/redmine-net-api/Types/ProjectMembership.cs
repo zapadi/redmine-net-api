@@ -18,8 +18,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Xml;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Internals;
+using Redmine.Net.Api.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
@@ -105,7 +107,50 @@ namespace Redmine.Net.Api.Types
         }
         #endregion
 
-       
+        #region Implementation of IJsonSerialization
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        public override void ReadJson(JsonReader reader)
+        {
+            while (reader.Read())
+            {
+                if (reader.TokenType == JsonToken.EndObject)
+                {
+                    return;
+                }
+
+                if (reader.TokenType != JsonToken.PropertyName)
+                {
+                    continue;
+                }
+
+                switch (reader.Value)
+                {
+                    case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
+                    case RedmineKeys.GROUP: Group = new IdentifiableName(reader); break;
+                    case RedmineKeys.PROJECT: Project = new IdentifiableName(reader); break;
+                    case RedmineKeys.ROLES: Roles = reader.ReadAsCollection<MembershipRole>(); break;
+                    case RedmineKeys.USER: User = new IdentifiableName(reader); break;
+                    default: reader.Read(); break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+        public override void WriteJson(JsonWriter writer)
+        {
+            using (new JsonObject(writer, RedmineKeys.MEMBERSHIP))
+            {
+                writer.WriteIdIfNotNull(RedmineKeys.USER_ID, User);
+                writer.WriteRepeatableElement(RedmineKeys.ROLE_IDS, (IEnumerable<IValue>)Roles);
+            }
+        }
+        #endregion
 
         #region Implementation of IEquatable<ProjectMembership>
         /// <summary>
@@ -116,11 +161,11 @@ namespace Redmine.Net.Api.Types
         public override bool Equals(ProjectMembership other)
         {
             if (other == null) return false;
-            return (Id == other.Id
+            return Id == other.Id
                 && Project.Equals(other.Project)
                 && Roles.Equals<MembershipRole>(other.Roles)
                 && (User != null ? User.Equals(other.User) : other.User == null)
-                && (Group != null ? Group.Equals(other.Group) : other.Group == null));
+                && (Group != null ? Group.Equals(other.Group) : other.Group == null);
         }
 
         /// <summary>

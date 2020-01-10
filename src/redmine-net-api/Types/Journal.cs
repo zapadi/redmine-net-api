@@ -20,6 +20,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Xml;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Internals;
 
@@ -102,7 +103,40 @@ namespace Redmine.Net.Api.Types
         }
         #endregion
 
-       
+        #region Implementation of IJsonSerialization
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        public override void ReadJson(JsonReader reader)
+        {
+            while (reader.Read())
+            {
+                if (reader.TokenType == JsonToken.EndObject)
+                {
+                    return;
+                }
+
+                if (reader.TokenType != JsonToken.PropertyName)
+                {
+                    continue;
+                }
+
+                switch (reader.Value)
+                {
+                    case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
+                    case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadAsDateTime(); break;
+                    case RedmineKeys.DETAILS: Details = reader.ReadAsCollection<Detail>(); break;
+                    case RedmineKeys.NOTES: Notes = reader.ReadAsString(); break;
+                    case RedmineKeys.PRIVATE_NOTES: PrivateNotes = reader.ReadAsBool(); break;
+                    case RedmineKeys.USER: User = new IdentifiableName(reader); break;
+                    default: reader.Read(); break;
+                }
+            }
+        }
+        #endregion
 
         #region Implementation of IEquatable<Journal>
         /// <summary>

@@ -17,8 +17,10 @@
 using System.Diagnostics;
 using System.Xml;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Internals;
+using Redmine.Net.Api.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
@@ -94,7 +96,50 @@ namespace Redmine.Net.Api.Types
         }
         #endregion
 
-       
+        #region Implementation of IJsonSerialization
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        public override void ReadJson(JsonReader reader)
+        {
+            while (reader.Read())
+            {
+                if (reader.TokenType == JsonToken.EndObject)
+                {
+                    return;
+                }
+
+                if (reader.TokenType != JsonToken.PropertyName)
+                {
+                    continue;
+                }
+
+                switch (reader.Value)
+                {
+                    case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
+                    case RedmineKeys.ASSIGNED_TO: AssignTo = new IdentifiableName(reader); break;
+                    case RedmineKeys.NAME: Name = reader.ReadAsString(); break;
+                    case RedmineKeys.PROJECT: Project = new IdentifiableName(reader); break;
+                    default: reader.Read(); break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+        public override void WriteJson(JsonWriter writer)
+        {
+            using (new JsonObject(writer, RedmineKeys.ISSUE_CATEGORY))
+            {
+                writer.WriteIdIfNotNull(RedmineKeys.PROJECT_ID, Project);
+                writer.WriteProperty(RedmineKeys.NAME, Name);
+                writer.WriteIdIfNotNull(RedmineKeys.ASSIGNED_TO_ID, AssignTo);
+            }
+        }
+        #endregion
 
         #region Implementation of IEquatable<IssueCategory>
         /// <summary>
@@ -105,7 +150,7 @@ namespace Redmine.Net.Api.Types
         public override bool Equals(IssueCategory other)
         {
             if (other == null) return false;
-            return (Id == other.Id && Project == other.Project && AssignTo == other.AssignTo && Name == other.Name);
+            return Id == other.Id && Project == other.Project && AssignTo == other.AssignTo && Name == other.Name;
         }
 
         /// <summary>

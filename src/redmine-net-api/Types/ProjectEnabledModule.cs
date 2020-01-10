@@ -42,7 +42,7 @@ namespace Redmine.Net.Api.Types
         {
             if (moduleName.IsNullOrWhiteSpace())
             {
-                throw new ArgumentException(nameof(moduleName));
+                throw new ArgumentException("The module name should be one of: boards, calendar, documents, files, gant, issue_tracking, news, repository, time_tracking, wiki.", nameof(moduleName));
             }
 
             Name = moduleName;

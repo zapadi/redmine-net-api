@@ -19,6 +19,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Xml;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Internals;
 
@@ -73,7 +74,37 @@ namespace Redmine.Net.Api.Types
         }
         #endregion
 
-       
+        #region Implementation of IJsonSerialization
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        public override void ReadJson(JsonReader reader)
+        {
+            while (reader.Read())
+            {
+                if (reader.TokenType == JsonToken.EndObject)
+                {
+                    return;
+                }
+
+                if (reader.TokenType != JsonToken.PropertyName)
+                {
+                    continue;
+                }
+
+                switch (reader.Value)
+                {
+                    case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
+                    case RedmineKeys.IS_PUBLIC: IsPublic = reader.ReadAsBool(); break;
+                    case RedmineKeys.NAME: Name = reader.ReadAsString(); break;
+                    case RedmineKeys.PROJECT_ID: ProjectId = reader.ReadAsInt32(); break;
+                    default: reader.Read(); break;
+                }
+            }
+        }
+        #endregion
 
         #region Implementation of IEquatable<Query>
         /// <summary>
@@ -85,7 +116,7 @@ namespace Redmine.Net.Api.Types
         {
             if (other == null) return false;
 
-            return (other.Id == Id && other.Name == Name && other.IsPublic == IsPublic && other.ProjectId == ProjectId);
+            return other.Id == Id && other.Name == Name && other.IsPublic == IsPublic && other.ProjectId == ProjectId;
         }
 
         /// <summary>
@@ -112,5 +143,14 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
         private string DebuggerDisplay => $"[{nameof(Query)}: {ToString()}, IsPublic={IsPublic.ToString(CultureInfo.InvariantCulture)}, ProjectId={ProjectId?.ToString(CultureInfo.InvariantCulture)}]";
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as Query);
+        }
     }
 }

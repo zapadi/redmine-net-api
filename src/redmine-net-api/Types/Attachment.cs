@@ -19,8 +19,10 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Xml;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Internals;
+using Redmine.Net.Api.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
@@ -125,7 +127,55 @@ namespace Redmine.Net.Api.Types
 
         #endregion
 
-       
+        #region Implementation of IJsonSerializable
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        public override void ReadJson(JsonReader reader)
+        {
+            while (reader.Read())
+            {
+                if (reader.TokenType == JsonToken.EndObject)
+                {
+                    return;
+                }
+
+                if (reader.TokenType != JsonToken.PropertyName)
+                {
+                    continue;
+                }
+
+                switch (reader.Value)
+                {
+                    case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
+                    case RedmineKeys.AUTHOR: Author = new IdentifiableName(reader); break;
+                    case RedmineKeys.CONTENT_TYPE: ContentType = reader.ReadAsString(); break;
+                    case RedmineKeys.CONTENT_URL: ContentUrl = reader.ReadAsString(); break;
+                    case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadAsDateTime(); break;
+                    case RedmineKeys.DESCRIPTION: Description = reader.ReadAsString(); break;
+                    case RedmineKeys.FILENAME: FileName = reader.ReadAsString(); break;
+                    case RedmineKeys.FILE_SIZE: FileSize = reader.ReadAsInt(); break;
+                    case RedmineKeys.THUMBNAIL_URL: ThumbnailUrl = reader.ReadAsString(); break;
+                    default: reader.Read(); break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+
+        public override void WriteJson(JsonWriter writer)
+        {
+            using (new JsonObject(writer, RedmineKeys.ATTACHMENT))
+            {
+                writer.WriteProperty(RedmineKeys.FILENAME, FileName);
+                writer.WriteProperty(RedmineKeys.DESCRIPTION, Description);
+            }
+        }
+        #endregion
 
         #region Implementation of IEquatable<CustomFieldValue>
         /// <summary>
@@ -136,7 +186,7 @@ namespace Redmine.Net.Api.Types
         public override bool Equals(Attachment other)
         {
             if (other == null) return false;
-            return (Id == other.Id
+            return Id == other.Id
                 && FileName == other.FileName
                 && FileSize == other.FileSize
                 && ContentType == other.ContentType
@@ -144,7 +194,7 @@ namespace Redmine.Net.Api.Types
                 && ThumbnailUrl == other.ThumbnailUrl
                 && CreatedOn == other.CreatedOn
                 && Description == other.Description
-                && ContentUrl == other.ContentUrl);
+                && ContentUrl == other.ContentUrl;
         }
 
         /// <summary>

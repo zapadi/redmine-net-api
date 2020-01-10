@@ -19,8 +19,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Xml;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Internals;
+using Redmine.Net.Api.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
@@ -69,7 +71,7 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// Generates an object from its XML representation.
         /// </summary>
-        /// <param name="reader">The <see cref="T:System.Xml.XmlReader"/> stream from which the object is deserialized. </param>
+        /// <param name="reader">The <see cref="System.Xml.XmlReader"/> stream from which the object is deserialized. </param>
         public override void ReadXml(XmlReader reader)
         {
             reader.Read();
@@ -96,17 +98,59 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// Converts an object into its XML representation.
         /// </summary>
-        /// <param name="writer">The <see cref="T:System.Xml.XmlWriter"/> stream to which the object is serialized. </param>
+        /// <param name="writer">The <see cref="System.Xml.XmlWriter"/> stream to which the object is serialized. </param>
         public override void WriteXml(XmlWriter writer)
         {
             writer.WriteElementString(RedmineKeys.NAME, Name);
-            //TODO: change to repeatable elements
             writer.WriteArrayIds(RedmineKeys.USER_IDS, Users, typeof(int), GetGroupUserId);
         }
 
         #endregion
 
-       
+        #region Implementation of IJsonSerialization
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        public override void ReadJson(JsonReader reader)
+        {
+            while (reader.Read())
+            {
+                if (reader.TokenType == JsonToken.EndObject)
+                {
+                    return;
+                }
+
+                if (reader.TokenType != JsonToken.PropertyName)
+                {
+                    continue;
+                }
+
+                switch (reader.Value)
+                {
+                    case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
+                    case RedmineKeys.CUSTOM_FIELDS: CustomFields = reader.ReadAsCollection<IssueCustomField>(); break;
+                    case RedmineKeys.MEMBERSHIPS: Memberships = reader.ReadAsCollection<Membership>(); break;
+                    case RedmineKeys.NAME: Name = reader.ReadAsString(); break;
+                    case RedmineKeys.USERS: Users = reader.ReadAsCollection<GroupUser>(); break;
+                    default: reader.Read(); break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+        public override void WriteJson(JsonWriter writer)
+        {
+            using (new JsonObject(writer, RedmineKeys.GROUP))
+            {
+                writer.WriteProperty(RedmineKeys.NAME, Name);
+                writer.WriteRepeatableElement(RedmineKeys.USER_IDS, (IEnumerable<IValue>)Users);
+            }
+        }
+        #endregion
 
         #region Implementation of IEquatable<Group>
 
@@ -172,7 +216,7 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <param name="gu"></param>
         /// <returns></returns>
-        public int GetGroupUserId(object gu)
+        public static int GetGroupUserId(object gu)
         {
             return ((GroupUser)gu).Id;
         }
