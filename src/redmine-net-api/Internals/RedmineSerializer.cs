@@ -90,7 +90,7 @@ namespace Redmine.Net.Api.Internals
                 if (mimeFormat == MimeFormat.Json)
                 {
 #if !NET20
-                    return JsonSerializer(obj);
+                  //  return JsonSerializer(obj);
 #endif
                 }
 
@@ -125,14 +125,14 @@ namespace Redmine.Net.Api.Internals
                 if (mimeFormat == MimeFormat.Json)
                 {
 #if !NET20
-                    var type = typeof (T);
-                    var jsonRoot = (string) null;
-                    if (type == typeof (IssueCategory)) jsonRoot = RedmineKeys.ISSUE_CATEGORY;
-                    if (type == typeof (IssueRelation)) jsonRoot = RedmineKeys.RELATION;
-                    if (type == typeof (TimeEntry)) jsonRoot = RedmineKeys.TIME_ENTRY;
-                    if (type == typeof (ProjectMembership)) jsonRoot = RedmineKeys.MEMBERSHIP;
-                    if (type == typeof (WikiPage)) jsonRoot = RedmineKeys.WIKI_PAGE;
-                    return JsonDeserialize<T>(response, jsonRoot);
+                    //var type = typeof (T);
+                    //var jsonRoot = (string) null;
+                    //if (type == typeof (IssueCategory)) jsonRoot = RedmineKeys.ISSUE_CATEGORY;
+                    //if (type == typeof (IssueRelation)) jsonRoot = RedmineKeys.RELATION;
+                    //if (type == typeof (TimeEntry)) jsonRoot = RedmineKeys.TIME_ENTRY;
+                    //if (type == typeof (ProjectMembership)) jsonRoot = RedmineKeys.MEMBERSHIP;
+                    //if (type == typeof (WikiPage)) jsonRoot = RedmineKeys.WIKI_PAGE;
+                    //return JsonDeserialize<T>(response, jsonRoot);
 #endif
                 }
                 return FromXML<T>(response);
@@ -164,7 +164,7 @@ namespace Redmine.Net.Api.Internals
                 if (mimeFormat == MimeFormat.Json)
                 {
 #if !NET20
-                    return JSonDeserializeList<T>(response);
+                //    return JSonDeserializeList<T>(response);
 #endif
                 }
                 return XmlDeserializeList<T>(response);
@@ -177,33 +177,33 @@ namespace Redmine.Net.Api.Internals
         }
 
 #if !NET20
-        /// <summary>
-        /// js the son deserialize list.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="response">The response.</param>
-        /// <returns></returns>
-        private static PaginatedObjects<T> JSonDeserializeList<T>(string response) where T : class, new()
-        {
-            var type = typeof(T);
-            var jsonRoot = (string)null;
-            if (type == typeof(Error)) jsonRoot = RedmineKeys.ERRORS;
-            if (type == typeof(WikiPage)) jsonRoot = RedmineKeys.WIKI_PAGES;
-            if (type == typeof(IssuePriority)) jsonRoot = RedmineKeys.ISSUE_PRIORITIES;
-            if (type == typeof(TimeEntryActivity)) jsonRoot = RedmineKeys.TIME_ENTRY_ACTIVITIES;
+        ///// <summary>
+        ///// js the son deserialize list.
+        ///// </summary>
+        ///// <typeparam name="T"></typeparam>
+        ///// <param name="response">The response.</param>
+        ///// <returns></returns>
+        //private static PaginatedObjects<T> JSonDeserializeList<T>(string response) where T : class, new()
+        //{
+        //    var type = typeof(T);
+        //    var jsonRoot = (string)null;
+        //    if (type == typeof(Error)) jsonRoot = RedmineKeys.ERRORS;
+        //    if (type == typeof(WikiPage)) jsonRoot = RedmineKeys.WIKI_PAGES;
+        //    if (type == typeof(IssuePriority)) jsonRoot = RedmineKeys.ISSUE_PRIORITIES;
+        //    if (type == typeof(TimeEntryActivity)) jsonRoot = RedmineKeys.TIME_ENTRY_ACTIVITIES;
 
-            if (string.IsNullOrEmpty(jsonRoot))
-                jsonRoot = RedmineManager.Sufixes[type];
+        //    if (string.IsNullOrEmpty(jsonRoot))
+        //        jsonRoot = RedmineManager.Sufixes[type];
 
-            var result = JsonDeserializeToList<T>(response, jsonRoot, out var totalItems, out var offset);
+        //    var result = JsonDeserializeToList<T>(response, jsonRoot, out var totalItems, out var offset);
 
-            return new PaginatedObjects<T>()
-            {
-                TotalCount = totalItems,
-                Offset = offset,
-                Objects = result.ToList()
-            };
-        }
+        //    return new PaginatedObjects<T>()
+        //    {
+        //        TotalCount = totalItems,
+        //        Offset = offset,
+        //        Objects = result.ToList()
+        //    };
+        //}
 #endif
         /// <summary>
         /// XMLs the deserialize list.
