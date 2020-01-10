@@ -15,6 +15,8 @@
 */
 
 using System;
+using System.Diagnostics;
+using System.Globalization;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
@@ -26,33 +28,33 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// 
     /// </summary>
-    [XmlRoot(RedmineKeys.CHANGESET)]
-    public class ChangeSet : IXmlSerializable, IEquatable<ChangeSet>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
+    [XmlRoot(RedmineKeys.CHANGE_SET)]
+    public sealed class ChangeSet : IXmlSerializable, IEquatable<ChangeSet>
     {
+        #region Properties
         /// <summary>
         /// 
         /// </summary>
-        [XmlAttribute(RedmineKeys.REVISION)]
-        public int Revision { get; set; }
+        public int Revision { get; internal set; }
 
         /// <summary>
         /// 
         /// </summary>
-        [XmlElement(RedmineKeys.USER)]
-        public IdentifiableName User { get; set; }
+        public IdentifiableName User { get; internal set; }
 
         /// <summary>
         /// 
         /// </summary>
-        [XmlElement(RedmineKeys.COMMENTS)]
-        public string Comments { get; set; }
+        public string Comments { get; internal set; }
 
         /// <summary>
         /// 
         /// </summary>
-        [XmlElement(RedmineKeys.COMMITTED_ON, IsNullable = true)]
-        public DateTime? CommittedOn { get; set; }
+        public DateTime? CommittedOn { get; internal set; }
+        #endregion
 
+        #region Implementation of IXmlSerializable
         /// <summary>
         /// 
         /// </summary>
@@ -78,11 +80,11 @@ namespace Redmine.Net.Api.Types
 
                 switch (reader.Name)
                 {
-                    case RedmineKeys.USER: User = new IdentifiableName(reader); break;
-
                     case RedmineKeys.COMMENTS: Comments = reader.ReadElementContentAsString(); break;
 
                     case RedmineKeys.COMMITTED_ON: CommittedOn = reader.ReadElementContentAsNullableDateTime(); break;
+
+                    case RedmineKeys.USER: User = new IdentifiableName(reader); break;
 
                     default: reader.Read(); break;
                 }
@@ -94,7 +96,11 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <param name="writer"></param>
         public void WriteXml(XmlWriter writer) { }
+        #endregion
 
+       
+
+        #region Implementation of IEquatable<ChangeSet>
         /// <summary>
         /// 
         /// </summary>
@@ -139,14 +145,18 @@ namespace Redmine.Net.Api.Types
                 return hashCode;
             }
         }
+        #endregion
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return $"Revision: {Revision}, User: '{User}', CommitedOn: {CommittedOn}, Comments: '{Comments}'";
-        }
+        private string DebuggerDisplay =>
+             $@"[{nameof(ChangeSet)}: 
+Revision={Revision.ToString(CultureInfo.InvariantCulture)}, 
+User='{User}', 
+CommittedOn={CommittedOn?.ToString("u", CultureInfo.InvariantCulture)}, 
+Comments='{Comments}']";
+
     }
 }

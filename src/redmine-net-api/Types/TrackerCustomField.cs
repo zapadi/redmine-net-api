@@ -14,6 +14,7 @@
    limitations under the License.
 */
 
+using System.Diagnostics;
 using System.Xml;
 using System.Xml.Serialization;
 using Redmine.Net.Api.Extensions;
@@ -23,9 +24,11 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// 
     /// </summary>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.TRACKER)]
-    public class TrackerCustomField : Tracker
+    public sealed class TrackerCustomField : Tracker
     {
+        #region Implementation of IXmlSerialization
         /// <summary>
         /// 
         /// </summary>
@@ -36,14 +39,15 @@ namespace Redmine.Net.Api.Types
             Name = reader.GetAttribute(RedmineKeys.NAME);
             reader.Read();
         }
+        #endregion
+
+       
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-		public override string ToString ()
-		{
-			return $"[TrackerCustomField: {base.ToString()}]";
-		}
+        private string DebuggerDisplay => $"[{nameof(TrackerCustomField)}: {ToString()}]";
+
     }
 }

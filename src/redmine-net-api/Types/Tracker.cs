@@ -15,6 +15,7 @@
 */
 
 using System;
+using System.Diagnostics;
 using System.Xml;
 using System.Xml.Serialization;
 using Redmine.Net.Api.Internals;
@@ -24,18 +25,15 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// Availability 1.3
     /// </summary>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.TRACKER)]
     public class Tracker : IdentifiableName, IEquatable<Tracker>
     {
-        /// <summary>
-        /// </summary>
-        /// <param name="writer"></param>
-        public override void WriteXml(XmlWriter writer) { }
-
+        #region Implementation of IXmlSerialization
         /// <summary>
         /// Generates an object from its XML representation.
         /// </summary>
-        /// <param name="reader">The <see cref="System.Xml.XmlReader"/> stream from which the object is deserialized.</param>
+        /// <param name="reader">The <see cref="T:System.Xml.XmlReader"/> stream from which the object is deserialized.</param>
         public override void ReadXml(XmlReader reader)
         {
             reader.Read();
@@ -50,14 +48,16 @@ namespace Redmine.Net.Api.Types
                 switch (reader.Name)
                 {
                     case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
-
                     case RedmineKeys.NAME: Name = reader.ReadElementContentAsString(); break;
-
                     default: reader.Read(); break;
                 }
             }
         }
+        #endregion
 
+       
+
+        #region Implementation of IEquatable<Tracker>
         /// <summary>
         /// Indicates whether the current object is equal to another object of the same type.
         /// </summary>
@@ -99,14 +99,13 @@ namespace Redmine.Net.Api.Types
                 return hashCode;
             }
         }
+        #endregion
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return $"[Tracker: Id={Id}, Name={Name}]";
-        }
+        private string DebuggerDisplay => $"[{nameof(Tracker)}: {base.ToString()}]";
+
     }
 }

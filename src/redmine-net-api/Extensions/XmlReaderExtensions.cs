@@ -84,7 +84,7 @@ namespace Redmine.Net.Api.Extensions
             {
                 return false;
             }
-            
+
             return result;
         }
 
@@ -116,6 +116,7 @@ namespace Redmine.Net.Api.Extensions
         public static float? ReadElementContentAsNullableFloat(this XmlReader reader)
         {
             var content = reader.ReadElementContentAsString();
+
             if (content.IsNullOrWhiteSpace() || !float.TryParse(content, NumberStyles.Any, NumberFormatInfo.InvariantInfo, out var result))
             {
                 return null;
@@ -167,12 +168,12 @@ namespace Redmine.Net.Api.Extensions
         public static List<T> ReadElementContentAsCollection<T>(this XmlReader reader) where T : class
         {
             List<T> result = null;
-            XmlSerializer serializer = null;
+            var serializer = new XmlSerializer(typeof(T));
             var outerXml = reader.ReadOuterXml();
 
             using (var stringReader = new StringReader(outerXml))
             {
-                using (var xmlTextReader = XmlTextReaderBuilder.Create(stringReader))
+                using (var xmlTextReader =  XmlTextReaderBuilder.Create(stringReader))
                 {
                     xmlTextReader.ReadStartElement();
                     while (!xmlTextReader.EOF)
@@ -184,11 +185,6 @@ namespace Redmine.Net.Api.Extensions
                         }
 
                         T entity;
-
-                        if (serializer == null)
-                        {
-                            serializer = new XmlSerializer(typeof(T));
-                        }
 
                         if (xmlTextReader.IsEmptyElement && xmlTextReader.HasAttributes)
                         {
@@ -234,7 +230,7 @@ namespace Redmine.Net.Api.Extensions
         /// <returns></returns>
         public static IEnumerable<T> ReadElementContentAsEnumerable<T>(this XmlReader reader) where T : class
         {
-            XmlSerializer serializer = null;
+            var serializer = new XmlSerializer(typeof(T));
             var outerXml = reader.ReadOuterXml();
             using (var stringReader = new StringReader(outerXml))
             {
@@ -250,11 +246,7 @@ namespace Redmine.Net.Api.Extensions
                         }
 
                         T entity;
-                        if (serializer == null)
-                        {
-                            serializer = new XmlSerializer(typeof(T));
-                        }
-                        
+
                         if (xmlTextReader.IsEmptyElement && xmlTextReader.HasAttributes)
                         {
                             entity = serializer.Deserialize(xmlTextReader) as T;
@@ -266,7 +258,7 @@ namespace Redmine.Net.Api.Extensions
                         }
                         if (entity != null)
                         {
-                           yield return entity;
+                            yield return entity;
                         }
 
                         if (!xmlTextReader.IsEmptyElement)

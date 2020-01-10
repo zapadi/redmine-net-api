@@ -16,9 +16,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Xml;
-using System.Xml.Schema;
 using System.Xml.Serialization;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Internals;
@@ -28,42 +28,39 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// Availability 1.1
     /// </summary>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.USER)]
-    public class User : Identifiable<User>, IXmlSerializable, IEquatable<User>
+    public sealed class User : Identifiable<User>
     {
+        #region Properties
         /// <summary>
         /// Gets or sets the user login.
         /// </summary>
         /// <value>The login.</value>
-        [XmlElement(RedmineKeys.LOGIN)]
-        public string Login { get; set; }
+        public string Login { get; internal set; }
 
         /// <summary>
         /// Gets or sets the user password.
         /// </summary>
         /// <value>The password.</value>
-        [XmlElement(RedmineKeys.PASSWORD)]
         public string Password { get; set; }
 
         /// <summary>
         /// Gets or sets the first name.
         /// </summary>
         /// <value>The first name.</value>
-        [XmlElement(RedmineKeys.FIRSTNAME)]
         public string FirstName { get; set; }
 
         /// <summary>
         /// Gets or sets the last name.
         /// </summary>
         /// <value>The last name.</value>
-        [XmlElement(RedmineKeys.LASTNAME)]
         public string LastName { get; set; }
 
         /// <summary>
         /// Gets or sets the email.
         /// </summary>
         /// <value>The email.</value>
-        [XmlElement(RedmineKeys.MAIL)]
         public string Email { get; set; }
 
         /// <summary>
@@ -72,47 +69,39 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The authentication mode id.
         /// </value>
-        [XmlElement(RedmineKeys.AUTH_SOURCE_ID, IsNullable = true)]
         public int? AuthenticationModeId { get; set; }
 
         /// <summary>
         /// Gets or sets the created on.
         /// </summary>
         /// <value>The created on.</value>
-        [XmlElement(RedmineKeys.CREATED_ON, IsNullable = true)]
-        public DateTime? CreatedOn { get; set; }
+        public DateTime? CreatedOn { get; internal set; }
 
         /// <summary>
-        /// Gets or sets the last login on.
+        /// Gets the last login on.
         /// </summary>
         /// <value>The last login on.</value>
-        [XmlElement(RedmineKeys.LAST_LOGIN_ON, IsNullable = true)]
-        public DateTime? LastLoginOn { get; set; }
+        public DateTime? LastLoginOn { get; internal set; }
 
         /// <summary>
         /// Gets the API key of the user, visible for admins and for yourself (added in 2.3.0)
         /// </summary>
-        [XmlElement(RedmineKeys.API_KEY, IsNullable = true)]
-        public string ApiKey { get; set; }
+        public string ApiKey { get; internal set; }
 
         /// <summary>
         /// Gets the status of the user, visible for admins only (added in 2.4.0)
         /// </summary>
-        [XmlElement(RedmineKeys.STATUS, IsNullable = true)]
         public UserStatus Status { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
-        [XmlElement(RedmineKeys.MUST_CHANGE_PASSWD, IsNullable = true)]
         public bool MustChangePassword { get; set; }
 
         /// <summary>
         /// Gets or sets the custom fields.
         /// </summary>
         /// <value>The custom fields.</value>
-        [XmlArray(RedmineKeys.CUSTOM_FIELDS)]
-        [XmlArrayItem(RedmineKeys.CUSTOM_FIELD)]
         public List<IssueCustomField> CustomFields { get; set; }
 
         /// <summary>
@@ -121,8 +110,6 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The memberships.
         /// </value>
-        [XmlArray(RedmineKeys.MEMBERSHIPS)]
-        [XmlArrayItem(RedmineKeys.MEMBERSHIP)]
         public List<Membership> Memberships { get; internal set; }
 
         /// <summary>
@@ -131,8 +118,6 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The groups.
         /// </value>
-        [XmlArray(RedmineKeys.GROUPS)]
-        [XmlArrayItem(RedmineKeys.GROUP)]
         public List<UserGroup> Groups { get; internal set; }
 
         /// <summary>
@@ -141,23 +126,15 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// only_my_events, only_assigned, [...]
         /// </value>
-        [XmlElement(RedmineKeys.MAIL_NOTIFICATION)]
         public string MailNotification { get; set; }
+        #endregion
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public XmlSchema GetSchema()
-        {
-            return null;
-        }
-
+        #region Implementation of IXmlSerialization
         /// <summary>
         /// 
         /// </summary>
         /// <param name="reader"></param>
-        public void ReadXml(XmlReader reader)
+        public override void ReadXml(XmlReader reader)
         {
             reader.Read();
             while (!reader.EOF)
@@ -171,35 +148,20 @@ namespace Redmine.Net.Api.Types
                 switch (reader.Name)
                 {
                     case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
-
-                    case RedmineKeys.LOGIN: Login = reader.ReadElementContentAsString(); break;
-
-                    case RedmineKeys.FIRSTNAME: FirstName = reader.ReadElementContentAsString(); break;
-
-                    case RedmineKeys.LASTNAME: LastName = reader.ReadElementContentAsString(); break;
-
-                    case RedmineKeys.MAIL: Email = reader.ReadElementContentAsString(); break;
-
-                    case RedmineKeys.MAIL_NOTIFICATION: MailNotification = reader.ReadElementContentAsString(); break;
-
-                    case RedmineKeys.MUST_CHANGE_PASSWD: MustChangePassword = reader.ReadElementContentAsBoolean(); break;
-
-                    case RedmineKeys.AUTH_SOURCE_ID: AuthenticationModeId = reader.ReadElementContentAsNullableInt(); break;
-
-                    case RedmineKeys.LAST_LOGIN_ON: LastLoginOn = reader.ReadElementContentAsNullableDateTime(); break;
-
-                    case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
-
                     case RedmineKeys.API_KEY: ApiKey = reader.ReadElementContentAsString(); break;
-
-                    case RedmineKeys.STATUS: Status = (UserStatus)reader.ReadElementContentAsInt(); break;
-
+                    case RedmineKeys.AUTH_SOURCE_ID: AuthenticationModeId = reader.ReadElementContentAsNullableInt(); break;
+                    case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
                     case RedmineKeys.CUSTOM_FIELDS: CustomFields = reader.ReadElementContentAsCollection<IssueCustomField>(); break;
-
-                    case RedmineKeys.MEMBERSHIPS: Memberships = reader.ReadElementContentAsCollection<Membership>(); break;
-
+                    case RedmineKeys.FIRSTNAME: FirstName = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.GROUPS: Groups = reader.ReadElementContentAsCollection<UserGroup>(); break;
-
+                    case RedmineKeys.LAST_LOGIN_ON: LastLoginOn = reader.ReadElementContentAsNullableDateTime(); break;
+                    case RedmineKeys.LASTNAME: LastName = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.LOGIN: Login = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.MAIL: Email = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.MAIL_NOTIFICATION: MailNotification = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.MEMBERSHIPS: Memberships = reader.ReadElementContentAsCollection<Membership>(); break;
+                    case RedmineKeys.MUST_CHANGE_PASSWORD: MustChangePassword = reader.ReadElementContentAsBoolean(); break;
+                    case RedmineKeys.STATUS: Status = (UserStatus)reader.ReadElementContentAsInt(); break;
                     default: reader.Read(); break;
                 }
             }
@@ -209,60 +171,48 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <param name="writer"></param>
-        public void WriteXml(XmlWriter writer)
+        public override void WriteXml(XmlWriter writer)
         {
             writer.WriteElementString(RedmineKeys.LOGIN, Login);
             writer.WriteElementString(RedmineKeys.FIRSTNAME, FirstName);
             writer.WriteElementString(RedmineKeys.LASTNAME, LastName);
             writer.WriteElementString(RedmineKeys.MAIL, Email);
-            if(!string.IsNullOrEmpty(MailNotification))
-            {
-                writer.WriteElementString(RedmineKeys.MAIL_NOTIFICATION, MailNotification);
-            }
-
-            if (!string.IsNullOrEmpty(Password))
-            {
-                writer.WriteElementString(RedmineKeys.PASSWORD, Password);
-            }
-
-            if(AuthenticationModeId.HasValue)
-            { 
-                writer.WriteValueOrEmpty(AuthenticationModeId, RedmineKeys.AUTH_SOURCE_ID);
-            }
-            
-            writer.WriteElementString(RedmineKeys.MUST_CHANGE_PASSWD, XmlConvert.ToString(MustChangePassword));
+            writer.WriteElementString(RedmineKeys.MAIL_NOTIFICATION, MailNotification);
+            writer.WriteElementString(RedmineKeys.PASSWORD, Password);
+            writer.WriteValueOrEmpty(RedmineKeys.AUTH_SOURCE_ID, AuthenticationModeId);
+            writer.WriteElementString(RedmineKeys.MUST_CHANGE_PASSWORD, MustChangePassword.ToString().ToLowerInvariant());
             writer.WriteElementString(RedmineKeys.STATUS, ((int)Status).ToString(CultureInfo.InvariantCulture));
-            if(CustomFields != null)
-            { 
-                writer.WriteArray(CustomFields, RedmineKeys.CUSTOM_FIELDS);
-            }
+            writer.WriteArray(RedmineKeys.CUSTOM_FIELDS, CustomFields);
         }
+        #endregion
 
+       
+
+        #region Implementation of IEquatable<User>
         /// <summary>
         /// 
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public bool Equals(User other)
+        public override bool Equals(User other)
         {
             if (other == null) return false;
             return (
                 Id == other.Id
-                && Login.Equals(other.Login, StringComparison.OrdinalIgnoreCase)
-                //&& Password.Equals(other.Password)
-                && FirstName.Equals(other.FirstName, StringComparison.OrdinalIgnoreCase)
-                && LastName.Equals(other.LastName, StringComparison.OrdinalIgnoreCase)
-                && Email.Equals(other.Email, StringComparison.OrdinalIgnoreCase)
-                && MailNotification.Equals(other.MailNotification, StringComparison.OrdinalIgnoreCase)
-				&& (ApiKey?.Equals(other.ApiKey, StringComparison.OrdinalIgnoreCase) ?? other.ApiKey == null)
+                && string.Equals(Login,other.Login, StringComparison.OrdinalIgnoreCase)
+                && string.Equals(FirstName,other.FirstName, StringComparison.OrdinalIgnoreCase)
+                && string.Equals(LastName,other.LastName, StringComparison.OrdinalIgnoreCase)
+                && string.Equals(Email,other.Email, StringComparison.OrdinalIgnoreCase)
+                && string.Equals(MailNotification,other.MailNotification, StringComparison.OrdinalIgnoreCase)
+                && (ApiKey != null ? string.Equals(ApiKey,other.ApiKey, StringComparison.OrdinalIgnoreCase) : other.ApiKey == null)
                 && AuthenticationModeId == other.AuthenticationModeId
                 && CreatedOn == other.CreatedOn
                 && LastLoginOn == other.LastLoginOn
                 && Status == other.Status
                 && MustChangePassword == other.MustChangePassword
-                && (CustomFields?.Equals<IssueCustomField>(other.CustomFields) ?? other.CustomFields == null)
-                && (Memberships?.Equals<Membership>(other.Memberships) ?? other.Memberships == null)
-                && (Groups?.Equals<UserGroup>(other.Groups) ?? other.Groups == null)
+                && (CustomFields != null ? CustomFields.Equals<IssueCustomField>(other.CustomFields) : other.CustomFields == null)
+                && (Memberships != null ? Memberships.Equals<Membership>(other.Memberships) : other.Memberships == null)
+                && (Groups != null ? Groups.Equals<UserGroup>(other.Groups) : other.Groups == null)
             );
         }
 
@@ -293,21 +243,24 @@ namespace Redmine.Net.Api.Types
                 return hashCode;
             }
         }
+        #endregion
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return
-                $"[User: {Groups}, Login={Login}, Password={Password}, FirstName={FirstName}, LastName={LastName}, Email={Email}, EmailNotification={MailNotification}, AuthenticationModeId={AuthenticationModeId}, CreatedOn={CreatedOn}, LastLoginOn={LastLoginOn}, ApiKey={ApiKey}, Status={Status}, MustChangePassword={MustChangePassword}, CustomFields={CustomFields}, Memberships={Memberships}, Groups={Groups}]";
-        }
+        private string DebuggerDisplay =>
+               $@"[{nameof(User)}: {Groups}, Login={Login}, Password={Password}, FirstName={FirstName}, LastName={LastName}, Email={Email}, 
+EmailNotification={MailNotification}, 
+AuthenticationModeId={AuthenticationModeId?.ToString(CultureInfo.InvariantCulture)}, 
+CreatedOn={CreatedOn?.ToString("u", CultureInfo.InvariantCulture)}, 
+LastLoginOn={LastLoginOn?.ToString("u", CultureInfo.InvariantCulture)}, 
+ApiKey={ApiKey}, 
+Status={Status.ToString("G")}, 
+MustChangePassword={MustChangePassword.ToString(CultureInfo.InvariantCulture)}, 
+CustomFields={CustomFields.Dump()}, 
+Memberships={Memberships.Dump()}, 
+Groups={Groups.Dump()}]";
 
-        /// <inheritdoc />
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as User);
-        }
     }
 }

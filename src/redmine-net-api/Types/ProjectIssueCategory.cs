@@ -14,6 +14,7 @@
    limitations under the License.
 */
 
+using System.Diagnostics;
 using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Types
@@ -21,16 +22,26 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// 
     /// </summary>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.ISSUE_CATEGORY)]
-    public class ProjectIssueCategory : IdentifiableName
+    public sealed class ProjectIssueCategory : IdentifiableName
     {
         /// <summary>
         /// 
         /// </summary>
+        public ProjectIssueCategory() { }
+
+        internal ProjectIssueCategory(int id, string name)
+        {
+            Id = id;
+            Name = name;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <returns></returns>
-        public override string ToString ()
-		{
-			return $"[ProjectIssueCategory: {base.ToString()}]";
-		}
+        private string DebuggerDisplay => $"[{nameof(ProjectIssueCategory)}: {ToString()}]";
+
     }
 }

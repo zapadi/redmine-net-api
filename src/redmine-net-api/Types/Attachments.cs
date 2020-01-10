@@ -23,6 +23,6 @@ namespace Redmine.Net.Api.Types
     /// </summary>
     internal class Attachments : Dictionary<int, Attachment>
     {
-
+       
     }
 }

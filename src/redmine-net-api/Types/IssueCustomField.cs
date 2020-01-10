@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Xml;
 using System.Xml.Serialization;
@@ -27,22 +28,24 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// 
     /// </summary>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.CUSTOM_FIELD)]
-    public class IssueCustomField : IdentifiableName, IEquatable<IssueCustomField>, ICloneable
+    public sealed class IssueCustomField : IdentifiableName, IEquatable<IssueCustomField>, ICloneable, IValue
     {
+        #region Properties
         /// <summary>
         /// Gets or sets the value.
         /// </summary>
         /// <value>The value.</value>
-        [XmlArray(RedmineKeys.VALUE)]
-        [XmlArrayItem(RedmineKeys.VALUE)]
         public IList<CustomFieldValue> Values { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
-        [XmlAttribute(RedmineKeys.MULTIPLE)]
         public bool Multiple { get; set; }
+        #endregion
+
+        #region Implementation of IXmlSerializable
 
         /// <summary>
         /// 
@@ -52,18 +55,44 @@ namespace Redmine.Net.Api.Types
         {
             Id = Convert.ToInt32(reader.GetAttribute(RedmineKeys.ID), CultureInfo.InvariantCulture);
             Name = reader.GetAttribute(RedmineKeys.NAME);
-
             Multiple = reader.ReadAttributeAsBoolean(RedmineKeys.MULTIPLE);
+
             reader.Read();
 
-            if (string.IsNullOrEmpty(reader.GetAttribute("type")))
+            if (reader.NodeType == XmlNodeType.Whitespace)
             {
-                Values = new List<CustomFieldValue> { new CustomFieldValue { Info = reader.ReadElementContentAsString() } };
+                reader.Read();
+            }
+
+            if (reader.NodeType == XmlNodeType.Text)
+            {
+                Values = new List<CustomFieldValue>
+                {
+                    new CustomFieldValue(reader.Value)
+                };
+
+                reader.Read();
+                return;
+            }
+
+            var attributeExists = !reader.GetAttribute("type").IsNullOrWhiteSpace();
+
+            if (!attributeExists)
+            {
+                if (reader.IsEmptyElement)
+                {
+                    reader.Read();
+                    return;
+                }
+
+                Values = new List<CustomFieldValue>
+                {
+                    new CustomFieldValue(reader.ReadElementContentAsString())
+                };
             }
             else
             {
-                var result = reader.ReadElementContentAsCollection<CustomFieldValue>();
-                Values = result;
+                Values = reader.ReadElementContentAsCollection<CustomFieldValue>();
             }
         }
 
@@ -73,20 +102,29 @@ namespace Redmine.Net.Api.Types
         /// <param name="writer"></param>
         public override void WriteXml(XmlWriter writer)
         {
-            if (Values == null) return;
+            if (Values == null)
+            {
+                return;
+            }
+
             var itemsCount = Values.Count;
 
             writer.WriteAttributeString(RedmineKeys.ID, Id.ToString(CultureInfo.InvariantCulture));
+
             if (itemsCount > 1)
             {
-                writer.WriteArrayStringElement(Values, RedmineKeys.VALUE, GetValue);
+                writer.WriteArrayStringElement(RedmineKeys.VALUE, Values, GetValue);
             }
             else
             {
                 writer.WriteElementString(RedmineKeys.VALUE, itemsCount > 0 ? Values[0].Info : null);
             }
         }
+        #endregion
 
+       
+
+        #region Implementation of IEquatable<IssueCustomField>
         /// <summary>
         /// 
         /// </summary>
@@ -95,26 +133,10 @@ namespace Redmine.Net.Api.Types
         public bool Equals(IssueCustomField other)
         {
             if (other == null) return false;
-            return (Id == other.Id && Name == other.Name && Multiple == other.Multiple && Values.Equals<CustomFieldValue>(other.Values));
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public object Clone()
-        {
-            var issueCustomField = new IssueCustomField { Multiple = Multiple, Values = Values.Clone<CustomFieldValue>() };
-            return issueCustomField;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return $"[IssueCustomField: {base.ToString()} Values={Values}, Multiple={Multiple}]";
+            return (Id == other.Id
+                && Name == other.Name
+                && Multiple == other.Multiple
+                && (Values != null ? Values.Equals<CustomFieldValue>(other.Values) : other.Values == null));
         }
 
         /// <summary>
@@ -133,22 +155,43 @@ namespace Redmine.Net.Api.Types
                 return hashCode;
             }
         }
+        #endregion
+
+        #region Implementation of IClonable
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public object Clone()
+        {
+            var issueCustomField = new IssueCustomField { Multiple = Multiple, Values = Values.Clone<CustomFieldValue>() };
+            return issueCustomField;
+        }
+        #endregion
+
+        #region Implementation of IValue
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Value => Id.ToString(CultureInfo.InvariantCulture);
+
+        #endregion
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        public static string GetValue(object item)
+        public string GetValue(object item)
         {
-            if (item == null) throw new ArgumentNullException(nameof(item));
             return ((CustomFieldValue)item).Info;
         }
 
-        /// <inheritdoc />
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as IssueCustomField);
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        private string DebuggerDisplay => $"[{nameof(IssueCustomField)}: {ToString()} Values={Values.Dump()}, Multiple={Multiple.ToString(CultureInfo.InvariantCulture)}]";
+
     }
 }

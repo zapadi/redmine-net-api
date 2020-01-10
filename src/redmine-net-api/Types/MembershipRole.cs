@@ -15,6 +15,7 @@
 */
 
 using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.Xml;
 using System.Xml.Serialization;
@@ -26,28 +27,30 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// 
     /// </summary>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.ROLE)]
-    public class MembershipRole : IdentifiableName, IEquatable<MembershipRole>
+    public sealed class MembershipRole : IdentifiableName, IEquatable<MembershipRole>, IValue
     {
+        #region Properties
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="MembershipRole"/> is inherited.
         /// </summary>
         /// <value>
         ///   <c>true</c> if inherited; otherwise, <c>false</c>.
         /// </value>
-        [XmlAttribute(RedmineKeys.INHERITED)]
-        public bool Inherited { get; set; }
+        public bool Inherited { get; internal set; }
+        #endregion
 
+        #region Implementation of IXmlSerialization
         /// <summary>
         /// Reads the XML.
         /// </summary>
         /// <param name="reader">The reader.</param>
         public override void ReadXml(XmlReader reader)
         {
-            if (reader == null) throw new ArgumentNullException(nameof(reader));
-            Id = Convert.ToInt32(reader.GetAttribute(RedmineKeys.ID), CultureInfo.InvariantCulture);
-            Name = reader.GetAttribute(RedmineKeys.NAME);
+            Id = reader.ReadAttributeAsInt(RedmineKeys.ID);
             Inherited = reader.ReadAttributeAsBoolean(RedmineKeys.INHERITED);
+            Name = reader.GetAttribute(RedmineKeys.NAME);
             reader.Read();
         }
 
@@ -57,10 +60,13 @@ namespace Redmine.Net.Api.Types
         /// <param name="writer"></param>
         public override void WriteXml(XmlWriter writer)
         {
-            if (writer == null) throw new ArgumentNullException(nameof(writer));
             writer.WriteValue(Id);
         }
+        #endregion
 
+       
+
+        #region Implementation of IEquatable<MembershipRole>
         /// <summary>
         /// 
         /// </summary>
@@ -70,6 +76,19 @@ namespace Redmine.Net.Api.Types
         {
             if (other == null) return false;
             return Id == other.Id && Name == other.Name && Inherited == other.Inherited;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as MembershipRole);
         }
 
         /// <summary>
@@ -87,20 +106,20 @@ namespace Redmine.Net.Api.Types
                 return hashCode;
             }
         }
+        #endregion
+
+        #region Implementation of IClonable
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Value => Id.ToString(CultureInfo.InvariantCulture);
+        #endregion
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return $"[MembershipRole: {base.ToString()}, Inherited={Inherited}]";
-        }
+        private string DebuggerDisplay => $"[MembershipRole: {ToString()}, Inherited={Inherited.ToString(CultureInfo.InvariantCulture)}]";
 
-        /// <inheritdoc />
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as MembershipRole);
-        }
     }
 }

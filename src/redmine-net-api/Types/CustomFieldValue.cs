@@ -15,6 +15,9 @@
 */
 
 using System;
+using System.Diagnostics;
+using System.Xml;
+using System.Xml.Schema;
 using System.Xml.Serialization;
 using Redmine.Net.Api.Internals;
 
@@ -23,14 +26,86 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// 
     /// </summary>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.VALUE)]
-    public class CustomFieldValue : IEquatable<CustomFieldValue>, ICloneable
+    public class CustomFieldValue : IXmlSerializable, IEquatable<CustomFieldValue>, ICloneable
     {
         /// <summary>
         /// 
         /// </summary>
-        [XmlText]
-        public string Info { get; set; }
+        public CustomFieldValue()
+        {
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        public CustomFieldValue(string value)
+        {
+            Info = value;
+        }
+
+        #region Properties
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Info { get; internal set; }
+
+        #endregion
+
+        #region Implementation of IXmlSerializable
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public XmlSchema GetSchema()
+        {
+            return null;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        public void ReadXml(XmlReader reader)
+        {
+            while (!reader.EOF)
+            {
+                if (reader.IsEmptyElement)
+                {
+                    reader.Read();
+                    continue;
+                }
+
+                switch (reader.Name)
+                {
+                    case RedmineKeys.VALUE:
+                        Info = reader.ReadElementContentAsString();
+                        break;
+
+                    default:
+                        reader.Read();
+                        break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+        public void WriteXml(XmlWriter writer)
+        {
+        }
+
+        #endregion
+
+       
+
+        #region Implementation of IEquatable<CustomFieldValue>
 
         /// <summary>
         /// 
@@ -39,7 +114,8 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
         public bool Equals(CustomFieldValue other)
         {
-            return other != null && Info.Equals(other.Info, StringComparison.OrdinalIgnoreCase);
+            if (other == null) return false;
+            return Info.Equals(other.Info);
         }
 
         /// <summary>
@@ -69,14 +145,9 @@ namespace Redmine.Net.Api.Types
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return $"[CustomFieldValue: Info={Info}]";
-        }
+        #endregion
+
+        #region Implementation of IClonable
 
         /// <summary>
         /// 
@@ -84,8 +155,17 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
         public object Clone()
         {
-            var customFieldValue = new CustomFieldValue { Info = Info };
+            var customFieldValue = new CustomFieldValue {Info = Info};
             return customFieldValue;
         }
+
+        #endregion
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        private string DebuggerDisplay => $"[{nameof(CustomFieldValue)}: {Info}]";
+
     }
 }

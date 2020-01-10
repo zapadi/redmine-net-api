@@ -15,6 +15,7 @@
 */
 
 using System;
+using System.Diagnostics;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
@@ -25,45 +26,58 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// 
     /// </summary>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.DETAIL)]
-    public class Detail : IXmlSerializable, IEquatable<Detail>
+    public sealed class Detail : IXmlSerializable,  IEquatable<Detail>
     {
         /// <summary>
-        /// Gets or sets the property.
+        /// 
+        /// </summary>
+        public Detail() { }
+
+        internal Detail(string name = null, string property = null, string oldValue = null, string newValue = null)
+        {
+            Name = name;
+            Property = property;
+            OldValue = oldValue;
+            NewValue = newValue;
+        }
+
+        #region Properties
+        /// <summary>
+        /// Gets the property.
         /// </summary>
         /// <value>
         /// The property.
         /// </value>
-        [XmlAttribute(RedmineKeys.PROPERTY)]
-        public string Property { get; set; }
+        public string Property { get; internal set; }
 
         /// <summary>
-        /// Gets or sets the name.
+        /// Gets the name.
         /// </summary>
         /// <value>
         /// The name.
         /// </value>
-        [XmlAttribute(RedmineKeys.NAME)]
-        public string Name { get; set; }
+        public string Name { get; internal set; }
 
         /// <summary>
-        /// Gets or sets the old value.
+        /// Gets the old value.
         /// </summary>
         /// <value>
         /// The old value.
         /// </value>
-        [XmlElement(RedmineKeys.OLD_VALUE)]
-        public string OldValue { get; set; }
+        public string OldValue { get; internal set; }
 
         /// <summary>
-        /// Gets or sets the new value.
+        /// Gets the new value.
         /// </summary>
         /// <value>
         /// The new value.
         /// </value>
-        [XmlElement(RedmineKeys.NEW_VALUE)]
-        public string NewValue { get; set; }
+        public string NewValue { get; internal set; }
+        #endregion
 
+        #region Implementation of IXmlSerialization
         /// <summary>
         /// 
         /// </summary>
@@ -76,8 +90,8 @@ namespace Redmine.Net.Api.Types
         /// <param name="reader"></param>
         public void ReadXml(XmlReader reader)
         {
-            Property = reader.GetAttribute(RedmineKeys.PROPERTY);
             Name = reader.GetAttribute(RedmineKeys.NAME);
+            Property = reader.GetAttribute(RedmineKeys.PROPERTY);
 
             reader.Read();
 
@@ -91,9 +105,9 @@ namespace Redmine.Net.Api.Types
 
                 switch (reader.Name)
                 {
-                    case RedmineKeys.OLD_VALUE: OldValue = reader.ReadElementContentAsString(); break;
-
                     case RedmineKeys.NEW_VALUE: NewValue = reader.ReadElementContentAsString(); break;
+
+                    case RedmineKeys.OLD_VALUE: OldValue = reader.ReadElementContentAsString(); break;
 
                     default: reader.Read(); break;
                 }
@@ -105,7 +119,11 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <param name="writer"></param>
         public void WriteXml(XmlWriter writer) { }
+        #endregion
 
+       
+
+        #region Implementation of IEquatable<Detail>
         /// <summary>
         /// 
         /// </summary>
@@ -114,10 +132,10 @@ namespace Redmine.Net.Api.Types
         public bool Equals(Detail other)
         {
             if (other == null) return false;
-            return (Property?.Equals(other.Property, StringComparison.OrdinalIgnoreCase) ?? other.Property == null)
-                && (Name?.Equals(other.Name, StringComparison.OrdinalIgnoreCase) ?? other.Name == null)
-                && (OldValue?.Equals(other.OldValue, StringComparison.OrdinalIgnoreCase) ?? other.OldValue == null)
-                && (NewValue?.Equals(other.NewValue, StringComparison.OrdinalIgnoreCase) ?? other.NewValue == null);
+            return (Property != null ? string.Equals(Property,other.Property, StringComparison.InvariantCultureIgnoreCase) : other.Property == null)
+                && (Name != null ? string.Equals(Name,other.Name, StringComparison.InvariantCultureIgnoreCase) : other.Name == null)
+                && (OldValue != null ? string.Equals(OldValue,other.OldValue, StringComparison.InvariantCultureIgnoreCase) : other.OldValue == null)
+                && (NewValue != null ? string.Equals(NewValue,other.NewValue, StringComparison.InvariantCultureIgnoreCase) : other.NewValue == null);
         }
 
         /// <summary>
@@ -150,14 +168,13 @@ namespace Redmine.Net.Api.Types
                 return hashCode;
             }
         }
+        #endregion
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return $"[Detail: Property={Property}, Name={Name}, OldValue={OldValue}, NewValue={NewValue}]";
-        }
+        private string DebuggerDisplay => $"[{nameof(Detail)}: Property={Property}, Name={Name}, OldValue={OldValue}, NewValue={NewValue}]";
+
     }
 }

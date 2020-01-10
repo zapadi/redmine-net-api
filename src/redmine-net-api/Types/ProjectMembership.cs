@@ -14,10 +14,9 @@
    limitations under the License.
 */
 
-using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Xml;
-using System.Xml.Schema;
 using System.Xml.Serialization;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Internals;
@@ -26,20 +25,23 @@ namespace Redmine.Net.Api.Types
 {
     /// <summary>
     /// Availability 1.4
+    /// </summary>
+    /// <remarks>
     /// POST - Adds a project member.
     /// GET - Returns the membership of given :id.
     /// PUT - Updates the membership of given :id. Only the roles can be updated, the project and the user of a membership are read-only.
     /// DELETE - Deletes a memberships. Memberships inherited from a group membership can not be deleted. You must delete the group membership.
-    /// </summary>
+    /// </remarks>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.MEMBERSHIP)]
-    public class ProjectMembership : Identifiable<ProjectMembership>, IEquatable<ProjectMembership>, IXmlSerializable
+    public sealed class ProjectMembership : Identifiable<ProjectMembership>
     {
+        #region Properties
         /// <summary>
         /// Gets or sets the project.
         /// </summary>
         /// <value>The project.</value>
-        [XmlElement(RedmineKeys.PROJECT)]
-        public IdentifiableName Project { get; set; }
+        public IdentifiableName Project { get; internal set; }
 
         /// <summary>
         /// Gets or sets the user.
@@ -47,7 +49,6 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The user.
         /// </value>
-        [XmlElement(RedmineKeys.USER)]
         public IdentifiableName User { get; set; }
 
         /// <summary>
@@ -56,45 +57,22 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The group.
         /// </value>
-        [XmlElement(RedmineKeys.GROUP)]
-        public IdentifiableName Group { get; set; }
+        public IdentifiableName Group { get; internal set; }
 
         /// <summary>
         /// Gets or sets the type.
         /// </summary>
         /// <value>The type.</value>
-        [XmlArray(RedmineKeys.ROLES)]
-        [XmlArrayItem(RedmineKeys.ROLE)]
-        public List<MembershipRole> Roles { get;  set; }
+        public IList<MembershipRole> Roles { get; set; }
+        #endregion
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public bool Equals(ProjectMembership other)
-        {
-            if (other == null) return false;
-            return (Id == other.Id
-                && Project.Equals(other.Project)
-                && Roles.Equals<MembershipRole>(other.Roles)
-                && (User != null ? User.Equals(other.User) : other.User == null)
-                && (Group != null ? Group.Equals(other.Group) : other.Group == null));
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public XmlSchema GetSchema() { return null; }
-
+        #region Implementation of IXmlSerialization
         /// <summary>
         /// 
         /// </summary>
         /// <param name="reader"></param>
-        public void ReadXml(XmlReader reader)
+        public override void ReadXml(XmlReader reader)
         {
-            if (reader == null) throw new ArgumentNullException(nameof(reader));
             reader.Read();
             while (!reader.EOF)
             {
@@ -107,15 +85,10 @@ namespace Redmine.Net.Api.Types
                 switch (reader.Name)
                 {
                     case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
-
-                    case RedmineKeys.PROJECT: Project = new IdentifiableName(reader); break;
-
-                    case RedmineKeys.USER: User = new IdentifiableName(reader); break;
-
                     case RedmineKeys.GROUP: Group = new IdentifiableName(reader); break;
-
+                    case RedmineKeys.PROJECT: Project = new IdentifiableName(reader); break;
                     case RedmineKeys.ROLES: Roles = reader.ReadElementContentAsCollection<MembershipRole>(); break;
-
+                    case RedmineKeys.USER: User = new IdentifiableName(reader); break;
                     default: reader.Read(); break;
                 }
             }
@@ -125,10 +98,29 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <param name="writer"></param>
-        public void WriteXml(XmlWriter writer)
+        public override void WriteXml(XmlWriter writer)
         {
-            writer.WriteIdIfNotNull(User, RedmineKeys.USER_ID);
-            writer.WriteArray(Roles, RedmineKeys.ROLE_IDS, typeof(MembershipRole), RedmineKeys.ROLE_ID);
+            writer.WriteIdIfNotNull(RedmineKeys.USER_ID, User);
+            writer.WriteArray(RedmineKeys.ROLE_IDS, Roles, typeof(MembershipRole), RedmineKeys.ROLE_ID);
+        }
+        #endregion
+
+       
+
+        #region Implementation of IEquatable<ProjectMembership>
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public override bool Equals(ProjectMembership other)
+        {
+            if (other == null) return false;
+            return (Id == other.Id
+                && Project.Equals(other.Project)
+                && Roles.Equals<MembershipRole>(other.Roles)
+                && (User != null ? User.Equals(other.User) : other.User == null)
+                && (Group != null ? Group.Equals(other.Group) : other.Group == null));
         }
 
         /// <summary>
@@ -147,21 +139,13 @@ namespace Redmine.Net.Api.Types
                 return hashCode;
             }
         }
+        #endregion
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return
-                $"[ProjectMembership: {base.ToString()}, Project={Project}, User={User}, Group={Group}, Roles={Roles}]";
-        }
+        private string DebuggerDisplay => $"[{nameof(ProjectMembership)}: {ToString()}, Project={Project}, User={User}, Group={Group}, Roles={Roles.Dump()}]";
 
-        /// <inheritdoc />
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as ProjectMembership);
-        }
     }
 }

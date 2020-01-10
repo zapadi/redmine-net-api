@@ -19,8 +19,8 @@
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Internals;
 using System;
+using System.Diagnostics;
 using System.Xml;
-using System.Xml.Schema;
 using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Types
@@ -28,91 +28,136 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// 
     /// </summary>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.FILE)]
-    public class File : Identifiable<File>, IEquatable<File>, IXmlSerializable
+    public sealed class File : Identifiable<File>
     {
-
+        #region Properties
         /// <summary>
         /// 
         /// </summary>
-        [XmlElement(RedmineKeys.FILENAME)]
         public string Filename { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
-        [XmlElement(RedmineKeys.FILESIZE)]
-        public int Filesize { get; set; }
+        public int FileSize { get; internal set; }
 
         /// <summary>
         /// 
         /// </summary>
-        [XmlElement(RedmineKeys.CONTENT_TYPE)]
-        public string ContentType { get; set; }
+        public string ContentType { get; internal set; }
 
         /// <summary>
         /// 
         /// </summary>
-        [XmlElement(RedmineKeys.DESCRIPTION)]
         public string Description { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
-        [XmlElement(RedmineKeys.CONTENT_URL)]
-        public string ContentUrl { get; set; }
+        public string ContentUrl { get; internal set; }
 
         /// <summary>
         /// 
         /// </summary>
-        [XmlElement(RedmineKeys.AUTHOR)]
-        public IdentifiableName Author { get; set; }
+        public IdentifiableName Author { get; internal set; }
 
         /// <summary>
         /// 
         /// </summary>
-        [XmlElement(RedmineKeys.CREATED_ON)]
-        public DateTime? CreatedOn { get; set; }
+        public DateTime? CreatedOn { get; internal set; }
 
         /// <summary>
         /// 
         /// </summary>
-        [XmlElement(RedmineKeys.VERSION)]
         public IdentifiableName Version { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
-        [XmlElement(RedmineKeys.DIGEST)]
-        public string Digest { get; set; }
+        public string Digest { get; internal set; }
 
         /// <summary>
         /// 
         /// </summary>
-        [XmlElement(RedmineKeys.DOWNLOADS)]
-        public int Downloads { get; set; }
+        public int Downloads { get; internal set; }
 
         /// <summary>
         /// 
         /// </summary>
-        [XmlElement(RedmineKeys.TOKEN)]
         public string Token { get; set; }
-        
+        #endregion
+
+        #region Implementation of IXmlSerializable
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        public override void ReadXml(XmlReader reader)
+        {
+            reader.Read();
+
+            while (!reader.EOF)
+            {
+                if (reader.IsEmptyElement && !reader.HasAttributes)
+                {
+                    reader.Read();
+                    continue;
+                }
+
+                switch (reader.Name)
+                {
+                    case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
+                    case RedmineKeys.AUTHOR: Author = new IdentifiableName(reader); break;
+                    case RedmineKeys.CONTENT_TYPE: ContentType = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.CONTENT_URL: ContentUrl = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
+                    case RedmineKeys.DESCRIPTION: Description = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.DIGEST: Digest = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.DOWNLOADS: Downloads = reader.ReadElementContentAsInt(); break;
+                    case RedmineKeys.FILENAME: Filename = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.FILE_SIZE: FileSize = reader.ReadElementContentAsInt(); break;
+                    case RedmineKeys.TOKEN: Token = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.VERSION: Version = new IdentifiableName(reader); break;
+                    case RedmineKeys.VERSION_ID: Version = new IdentifiableName() { Id = reader.ReadElementContentAsInt() }; break;
+                    default: reader.Read(); break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+        public override void WriteXml(XmlWriter writer)
+        {
+            writer.WriteElementString(RedmineKeys.TOKEN, Token);
+            writer.WriteIdIfNotNull(RedmineKeys.VERSION_ID, Version);
+            writer.WriteElementString(RedmineKeys.FILENAME, Filename);
+            writer.WriteElementString(RedmineKeys.DESCRIPTION, Description);
+        }
+        #endregion
+
+       
+
+        #region Implementation of IEquatable<File>
         /// <summary>
         /// 
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public bool Equals(File other)
+        public override bool Equals(File other)
         {
             if (other == null) return false;
-            return (Id == other.Id 
-                && Filename == other.Filename 
-                && Filesize == other.Filesize 
+            return (Id == other.Id
+                && Filename == other.Filename
+                && FileSize == other.FileSize
                 && Description == other.Description
-                && ContentType == other.ContentType 
+                && ContentType == other.ContentType
                 && ContentUrl == other.ContentUrl
-                && Author ==other.Author
+                && Author == other.Author
                 && CreatedOn == other.CreatedOn
                 && Version == other.Version
                 && Digest == other.Digest
@@ -130,7 +175,7 @@ namespace Redmine.Net.Api.Types
             var hashCode = base.GetHashCode();
 
             hashCode = HashCodeHelper.GetHashCode(Filename, hashCode);
-            hashCode = HashCodeHelper.GetHashCode(Filesize, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(FileSize, hashCode);
             hashCode = HashCodeHelper.GetHashCode(ContentType, hashCode);
             hashCode = HashCodeHelper.GetHashCode(Description, hashCode);
             hashCode = HashCodeHelper.GetHashCode(Author, hashCode);
@@ -144,86 +189,13 @@ namespace Redmine.Net.Api.Types
 
             return hashCode;
         }
+        #endregion
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return $"[File: Id={Id}, Name={Filename}]";
-        }
+        private string DebuggerDisplay => $"[{nameof(File)}: {ToString()}, Name={Filename}]";
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != GetType()) return false;
-            return Equals(obj as File);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public XmlSchema GetSchema()
-        {
-            return null;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="reader"></param>
-        public void ReadXml(XmlReader reader)
-        {
-            reader.Read();
-
-            while (!reader.EOF)
-            {
-                if (reader.IsEmptyElement && !reader.HasAttributes)
-                {
-                    reader.Read();
-                    continue;
-                }
-
-                switch (reader.Name)
-                {
-                    case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
-                    case RedmineKeys.FILENAME: Filename = reader.ReadElementContentAsString(); break;
-                    case RedmineKeys.FILESIZE: Filesize = reader.ReadElementContentAsInt(); break;
-                    case RedmineKeys.CONTENT_TYPE: ContentType = reader.ReadElementContentAsString(); break;
-                    case RedmineKeys.DESCRIPTION: Description = reader.ReadElementContentAsString(); break;
-                    case RedmineKeys.CONTENT_URL: ContentUrl = reader.ReadElementContentAsString(); break;
-                    case RedmineKeys.AUTHOR: Author = new IdentifiableName(reader); break;
-                    case RedmineKeys.CREATED_ON:CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
-                    case RedmineKeys.VERSION: Version = new IdentifiableName(reader); break;
-                    case RedmineKeys.VERSION_ID: Version = new IdentifiableName() {Id = reader.ReadElementContentAsInt()}; break;
-                    case RedmineKeys.DIGEST: Digest = reader.ReadElementContentAsString(); break;
-                    case RedmineKeys.DOWNLOADS: Downloads = reader.ReadElementContentAsInt(); break;
-                    case RedmineKeys.TOKEN:Token = reader.ReadElementContentAsString(); break;
-                    default:
-                        reader.Read();
-                        break;
-                }
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="writer"></param>
-        public void WriteXml(XmlWriter writer)
-        {
-            writer.WriteElementString(RedmineKeys.TOKEN, Token);
-            writer.WriteIdIfNotNull(Version, RedmineKeys.VERSION_ID);
-            writer.WriteElementString(RedmineKeys.FILENAME, Filename);
-            writer.WriteElementString(RedmineKeys.DESCRIPTION, Description);
-        }
     }
 }

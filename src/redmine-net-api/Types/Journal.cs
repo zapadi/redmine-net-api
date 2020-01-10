@@ -16,8 +16,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
 using System.Xml;
-using System.Xml.Schema;
 using System.Xml.Serialization;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Internals;
@@ -27,17 +28,18 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// 
     /// </summary>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.JOURNAL)]
-    public class Journal : Identifiable<Journal>, IEquatable<Journal>, IXmlSerializable
+    public sealed class Journal : Identifiable<Journal>
     {
+        #region Properties
         /// <summary>
         /// Gets or sets the user.
         /// </summary>
         /// <value>
         /// The user.
         /// </value>
-        [XmlElement(RedmineKeys.USER)]
-        public IdentifiableName User { get; set; }
+        public IdentifiableName User { get; internal set; }
 
         /// <summary>
         /// Gets or sets the notes.
@@ -45,8 +47,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The notes.
         /// </value>
-        [XmlElement(RedmineKeys.NOTES)]
-        public string Notes { get; set; }
+        public string Notes { get; internal set; }
 
         /// <summary>
         /// Gets or sets the created on.
@@ -54,14 +55,12 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The created on.
         /// </value>
-        [XmlElement(RedmineKeys.CREATED_ON, IsNullable = true)]
-        public DateTime? CreatedOn { get; set; }
+        public DateTime? CreatedOn { get; internal set; }
 
         /// <summary>
         /// 
         /// </summary>
-        [XmlElement(RedmineKeys.PRIVATE_NOTES)]
-        public bool PrivateNotes { get;  set; }
+        public bool PrivateNotes { get; internal set; }
 
         /// <summary>
         /// Gets or sets the details.
@@ -69,23 +68,16 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The details.
         /// </value>
-        [XmlArray(RedmineKeys.DETAILS)]
-        [XmlArrayItem(RedmineKeys.DETAIL)]
         public IList<Detail> Details { get; internal set; }
+        #endregion
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public XmlSchema GetSchema() { return null; }
-
+        #region Implementation of IXmlSerialization
         /// <summary>
         /// 
         /// </summary>
         /// <param name="reader"></param>
-        public void ReadXml(XmlReader reader)
+        public override void ReadXml(XmlReader reader)
         {
-            if (reader == null) throw new ArgumentNullException(nameof(reader));
             Id = reader.ReadAttributeAsInt(RedmineKeys.ID);
             reader.Read();
 
@@ -99,53 +91,33 @@ namespace Redmine.Net.Api.Types
 
                 switch (reader.Name)
                 {
-                    case RedmineKeys.USER: User = new IdentifiableName(reader); break;
-
-                    case RedmineKeys.NOTES: Notes = reader.ReadElementContentAsString(); break;
-
                     case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
-
-                    case RedmineKeys.PRIVATE_NOTES: PrivateNotes = reader.ReadElementContentAsBoolean(); break;
-
                     case RedmineKeys.DETAILS: Details = reader.ReadElementContentAsCollection<Detail>(); break;
-
+                    case RedmineKeys.NOTES: Notes = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.PRIVATE_NOTES: PrivateNotes = reader.ReadElementContentAsBoolean(); break;
+                    case RedmineKeys.USER: User = new IdentifiableName(reader); break;
                     default: reader.Read(); break;
                 }
             }
         }
+        #endregion
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="writer"></param>
-        public void WriteXml(XmlWriter writer) { }
+       
 
+        #region Implementation of IEquatable<Journal>
         /// <summary>
         /// 
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public bool Equals(Journal other)
+        public override bool Equals(Journal other)
         {
             if (other == null) return false;
             return Id == other.Id
                 && User == other.User
                 && Notes == other.Notes
                 && CreatedOn == other.CreatedOn
-                && (Details?.Equals<Detail>(other.Details) ?? other.Details == null);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != GetType()) return false;
-            return Equals(obj as Journal);
+                && (Details != null ? Details.Equals<Detail>(other.Details) : other.Details == null);
         }
 
         /// <summary>
@@ -165,14 +137,13 @@ namespace Redmine.Net.Api.Types
                 return hashCode;
             }
         }
+        #endregion
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return $"[Journal: Id={Id}, User={User}, Notes={Notes}, CreatedOn={CreatedOn}, Details={Details}]";
-        }
+        private string DebuggerDisplay => $"[{nameof(Journal)}: {ToString()}, User={User}, Notes={Notes}, CreatedOn={CreatedOn?.ToString("u", CultureInfo.InvariantCulture)}, Details={Details.Dump()}]";
+
     }
 }
