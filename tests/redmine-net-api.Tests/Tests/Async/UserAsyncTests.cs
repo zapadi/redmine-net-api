@@ -65,7 +65,7 @@ namespace redmine.net.api.Tests.Tests.Async
 			});
 
 			Assert.NotNull(result);
-			Assert.All (result.Objects, u => Assert.IsType<User> (u));
+			Assert.All (result.Items, u => Assert.IsType<User> (u));
 		}
 
 		[Fact]

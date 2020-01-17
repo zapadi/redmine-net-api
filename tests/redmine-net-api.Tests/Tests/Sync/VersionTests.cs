@@ -45,8 +45,8 @@ namespace redmine.net.api.Tests.Tests.Sync
         public void Should_Create_Version()
         {
 	        const string NEW_VERSION_NAME = "VersionTesting";
-	        const VersionStatus NEW_VERSION_STATUS = VersionStatus.locked;
-	        const VersionSharing NEW_VERSION_SHARING = VersionSharing.hierarchy;
+	        const VersionStatus NEW_VERSION_STATUS = VersionStatus.Locked;
+	        const VersionSharing NEW_VERSION_SHARING = VersionSharing.Hierarchy;
 	        DateTime NEW_VERSION_DUE_DATE = DateTime.Now.AddDays(7);
 	        const string NEW_VERSION_DESCRIPTION = "Version description";
 
@@ -115,8 +115,8 @@ namespace redmine.net.api.Tests.Tests.Sync
         {
 	        const string UPDATED_VERSION_ID = "15";
 	        const string UPDATED_VERSION_NAME = "Updated version";
-	        const VersionStatus UPDATED_VERSION_STATUS = VersionStatus.closed;
-	        const VersionSharing UPDATED_VERSION_SHARING = VersionSharing.system;
+	        const VersionStatus UPDATED_VERSION_STATUS = VersionStatus.Closed;
+	        const VersionSharing UPDATED_VERSION_SHARING = VersionSharing.System;
 	        const string UPDATED_VERSION_DESCRIPTION = "Updated description";
 
             DateTime UPDATED_VERSION_DUE_DATE = DateTime.Now.AddMonths(1);

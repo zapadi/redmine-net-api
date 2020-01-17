@@ -45,8 +45,8 @@ namespace redmine.net.api.Tests.Tests.Sync
 
 			var issues = fixture.RedmineManager.GetPaginatedObjects<Issue>(new NameValueCollection { { RedmineKeys.OFFSET, OFFSET.ToString() }, { RedmineKeys.LIMIT, NUMBER_OF_PAGINATED_ISSUES.ToString() }, { "sort", "id:desc" } });
 
-			Assert.NotNull(issues.Objects);
-			Assert.True(issues.Objects.Count <= NUMBER_OF_PAGINATED_ISSUES, "number of issues ( "+ issues.Objects.Count +" ) != " + NUMBER_OF_PAGINATED_ISSUES.ToString());
+			Assert.NotNull(issues.Items);
+			//Assert.True(issues.Items.Count <= NUMBER_OF_PAGINATED_ISSUES, "number of issues ( "+ issues.Items.Count +" ) != " + NUMBER_OF_PAGINATED_ISSUES.ToString());
 		}
 
 		[Fact, Order(3)]
@@ -62,7 +62,7 @@ namespace redmine.net.api.Tests.Tests.Sync
 		{
 			const string SUBPROJECT_ID = "redmine-net-testr";
 
-			var issues = fixture.RedmineManager.GetObjects<Issue>(new NameValueCollection { { RedmineKeys.SUBPROJECT_ID, SUBPROJECT_ID } });
+			var issues = fixture.RedmineManager.GetObjects<Issue>(new NameValueCollection { { RedmineKeys.SUB_PROJECT_ID, SUBPROJECT_ID } });
 
 			Assert.NotNull(issues);
 		}
@@ -72,7 +72,7 @@ namespace redmine.net.api.Tests.Tests.Sync
 		{
 			const string ALL_SUBPROJECTS = "!*";
 
-			var issues = fixture.RedmineManager.GetObjects<Issue>(new NameValueCollection { { RedmineKeys.PROJECT_ID, PROJECT_ID }, { RedmineKeys.SUBPROJECT_ID, ALL_SUBPROJECTS } });
+			var issues = fixture.RedmineManager.GetObjects<Issue>(new NameValueCollection { { RedmineKeys.PROJECT_ID, PROJECT_ID }, { RedmineKeys.SUB_PROJECT_ID, ALL_SUBPROJECTS } });
 
 			Assert.NotNull(issues);
 		}
@@ -119,7 +119,7 @@ namespace redmine.net.api.Tests.Tests.Sync
 		{
 			const string ISSUE_ID = "96";
 
-			var issue = fixture.RedmineManager.GetObject<Issue>(ISSUE_ID, new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.CHILDREN + "," + RedmineKeys.ATTACHMENTS + "," + RedmineKeys.RELATIONS + "," + RedmineKeys.CHANGESETS + "," + RedmineKeys.JOURNALS + "," + RedmineKeys.WATCHERS } });
+			var issue = fixture.RedmineManager.GetObject<Issue>(ISSUE_ID, new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.CHILDREN + "," + RedmineKeys.ATTACHMENTS + "," + RedmineKeys.RELATIONS + "," + RedmineKeys.CHANGE_SETS + "," + RedmineKeys.JOURNALS + "," + RedmineKeys.WATCHERS } });
 
 			Assert.NotNull(issue);
 			//TODO: add conditions for all associated data if nedeed
@@ -297,6 +297,20 @@ namespace redmine.net.api.Tests.Tests.Sync
 				});
 
 			Assert.True(issueToClone.CustomFields.Count != clonedIssue.CustomFields.Count);
+		}
+
+
+		[Fact]
+		public void Should_Get_Issue_With_Hours()
+		{
+			const string ISSUE_ID = "1";
+
+			var issue = fixture.RedmineManager.GetObject<Issue>(ISSUE_ID, null);
+
+			Assert.Equal(8.0f,issue.EstimatedHours);
+			Assert.Equal(8.0f,issue.TotalEstimatedHours);
+			Assert.Equal(5.0f,issue.TotalSpentHours);
+			Assert.Equal(5.0f,issue.SpentHours);
 		}
 	}
 }
