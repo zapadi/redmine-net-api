@@ -31,8 +31,13 @@ namespace Redmine.Net.Api.Extensions
         /// <returns></returns>
         public static string GetParameterValue(this NameValueCollection parameters, string parameterName)
         {
-            if (parameters == null) return null;
+            if (parameters == null)
+            {
+                return null;
+            }
+
             var value = parameters.Get(parameterName);
+            
             return value.IsNullOrWhiteSpace() ? null : value;
         }
     }

@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Threading.Tasks;
 using Redmine.Net.Api.Types;
+using Redmine.Net.Api.Serialization;
 
 namespace Redmine.Net.Api.Async
 {
@@ -208,7 +209,7 @@ namespace Redmine.Net.Api.Async
         /// <param name="redmineManager">The redmine manager.</param>
         /// <param name="parameters">The parameters.</param>
         /// <returns></returns>
-        public static Task<PaginatedObjects<T>> GetPaginatedObjectsAsync<T>(this RedmineManager redmineManager, NameValueCollection parameters) where T : class, new()
+        public static Task<PagedResults<T>> GetPaginatedObjectsAsync<T>(this RedmineManager redmineManager, NameValueCollection parameters) where T : class, new()
         {
             return Task.Factory.StartNew(() => redmineManager.GetPaginatedObjects<T>(parameters), CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default);
         }

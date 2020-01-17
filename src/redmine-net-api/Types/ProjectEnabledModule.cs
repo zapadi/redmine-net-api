@@ -14,33 +14,55 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System;
+using System.Diagnostics;
 using System.Xml.Serialization;
+using Redmine.Net.Api.Extensions;
 
 namespace Redmine.Net.Api.Types
 {
     /// <summary>
-    /// the module name: boards, calendar, documents, files, gantt, issue_tracking, news, repository, time_tracking, wiki.
+    /// the module name: boards, calendar, documents, files, gant, issue_tracking, news, repository, time_tracking, wiki.
     /// </summary>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.ENABLED_MODULE)]
- public class ProjectEnabledModule : IdentifiableName, IValue
+    public sealed class ProjectEnabledModule : IdentifiableName, IValue
     {
-        #region IValue implementation
+        #region Ctors
         /// <summary>
         /// 
         /// </summary>
-        public string Value
+        public ProjectEnabledModule() { }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="moduleName"></param>
+        public ProjectEnabledModule(string moduleName)
         {
-            get { return Name; }
+            if (moduleName.IsNullOrWhiteSpace())
+            {
+                throw new ArgumentException("The module name should be one of: boards, calendar, documents, files, gant, issue_tracking, news, repository, time_tracking, wiki.", nameof(moduleName));
+            }
+
+            Name = moduleName;
         }
 
         #endregion
+
+        #region Implementation of IValue
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Value => Name;
+
+        #endregion
+
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return $"[ProjectEnabledModule: {base.ToString()}]";
-        }
+        private string DebuggerDisplay => $"[{nameof(ProjectEnabledModule)}: {ToString()}]";
+
     }
 }

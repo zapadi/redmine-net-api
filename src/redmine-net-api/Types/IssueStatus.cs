@@ -15,8 +15,12 @@
 */
 
 using System;
+using System.Diagnostics;
+using System.Globalization;
 using System.Xml;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
+using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Internals;
 
 namespace Redmine.Net.Api.Types
@@ -24,32 +28,33 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// Availability 1.3
     /// </summary>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.ISSUE_STATUS)]
-    public class IssueStatus : IdentifiableName, IEquatable<IssueStatus>
+    public sealed class IssueStatus : IdentifiableName, IEquatable<IssueStatus>
     {
+        #region Properties
         /// <summary>
         /// Gets or sets a value indicating whether IssueStatus is default.
         /// </summary>
         /// <value>
         /// 	<c>true</c> if IssueStatus is default; otherwise, <c>false</c>.
         /// </value>
-        [XmlElement(RedmineKeys.IS_DEFAULT)]
-        public bool IsDefault { get; set; }
+        public bool IsDefault { get; internal set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether IssueStatus is closed.
         /// </summary>
         /// <value><c>true</c> if IssueStatus is closed; otherwise, <c>false</c>.</value>
-        [XmlElement(RedmineKeys.IS_CLOSED)]
-        public bool IsClosed { get; set; }
+        public bool IsClosed { get; internal set; }
+        #endregion
 
+        #region Implementation of IXmlSerialization
         /// <summary>
         /// 
         /// </summary>
         /// <param name="reader"></param>
         public override void ReadXml(XmlReader reader)
         {
-            if (reader == null) throw new ArgumentNullException(nameof(reader));
             reader.Read();
             while (!reader.EOF)
             {
@@ -62,24 +67,47 @@ namespace Redmine.Net.Api.Types
                 switch (reader.Name)
                 {
                     case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
-
-                    case RedmineKeys.NAME: Name = reader.ReadElementContentAsString(); break;
-
-                    case RedmineKeys.IS_DEFAULT: IsDefault = reader.ReadElementContentAsBoolean(); break;
-
                     case RedmineKeys.IS_CLOSED: IsClosed = reader.ReadElementContentAsBoolean(); break;
-
+                    case RedmineKeys.IS_DEFAULT: IsDefault = reader.ReadElementContentAsBoolean(); break;
+                    case RedmineKeys.NAME: Name = reader.ReadElementContentAsString(); break;
                     default: reader.Read(); break;
                 }
             }
         }
+        #endregion
 
+        #region Implementation of IJsonSerialization
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="writer"></param>
-        public override void WriteXml(XmlWriter writer) { }
+        /// <param name="reader"></param>
+        public override void ReadJson(JsonReader reader)
+        {
+            while (reader.Read())
+            {
+                if (reader.TokenType == JsonToken.EndObject)
+                {
+                    return;
+                }
 
+                if (reader.TokenType != JsonToken.PropertyName)
+                {
+                    continue;
+                }
+
+                switch (reader.Value)
+                {
+                    case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
+                    case RedmineKeys.IS_CLOSED: IsClosed = reader.ReadAsBool(); break;
+                    case RedmineKeys.IS_DEFAULT: IsDefault = reader.ReadAsBool(); break;
+                    case RedmineKeys.NAME: Name = reader.ReadAsString(); break;
+                    default: reader.Read(); break;
+                }
+            }
+        }
+        #endregion
+
+        #region Implementation of IEquatable<IssueStatus>
         /// <summary>
         /// 
         /// </summary>
@@ -88,7 +116,20 @@ namespace Redmine.Net.Api.Types
         public bool Equals(IssueStatus other)
         {
             if (other == null) return false;
-            return (Id == other.Id && Name == other.Name && IsClosed == other.IsClosed && IsDefault == other.IsDefault);
+            return Id == other.Id && Name == other.Name && IsClosed == other.IsClosed && IsDefault == other.IsDefault;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as IssueStatus);
         }
 
         /// <summary>
@@ -107,20 +148,13 @@ namespace Redmine.Net.Api.Types
                 return hashCode;
             }
         }
+        #endregion
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return $"[IssueStatus: {base.ToString()}, IsDefault={IsDefault}, IsClosed={IsClosed}]";
-        }
+        private string DebuggerDisplay => $"[{nameof(IssueStatus)}: {ToString()}, IsDefault={IsDefault.ToString(CultureInfo.InvariantCulture)}, IsClosed={IsClosed.ToString(CultureInfo.InvariantCulture)}]";
 
-        /// <inheritdoc />
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as IssueStatus);
-        }
     }
 }

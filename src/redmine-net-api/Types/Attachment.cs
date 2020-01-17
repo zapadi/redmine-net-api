@@ -15,80 +15,80 @@
 */
 
 using System;
+using System.Diagnostics;
+using System.Globalization;
 using System.Xml;
-using System.Xml.Schema;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Internals;
+using Redmine.Net.Api.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
     /// <summary>
     /// Availability 1.3
     /// </summary>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.ATTACHMENT)]
-    public class Attachment : Identifiable<Attachment>, IXmlSerializable, IEquatable<Attachment>
+    public sealed class Attachment : Identifiable<Attachment>
     {
+        #region Properties
         /// <summary>
         /// Gets or sets the name of the file.
         /// </summary>
         /// <value>The name of the file.</value>
-        [XmlElement(RedmineKeys.FILENAME)]
         public string FileName { get; set; }
 
         /// <summary>
-        /// Gets or sets the size of the file.
+        /// Gets the size of the file.
         /// </summary>
         /// <value>The size of the file.</value>
-        [XmlElement(RedmineKeys.FILESIZE)]
-        public int FileSize { get; set; }
+        public int FileSize { get; internal set; }
 
         /// <summary>
-        /// Gets or sets the type of the content.
+        /// Gets the type of the content.
         /// </summary>
         /// <value>The type of the content.</value>
-        [XmlElement(RedmineKeys.CONTENT_TYPE)]
-        public string ContentType { get; set; }
+        public string ContentType { get; internal set; }
 
         /// <summary>
         /// Gets or sets the description.
         /// </summary>
         /// <value>The description.</value>
-        [XmlElement(RedmineKeys.DESCRIPTION)]
         public string Description { get; set; }
 
         /// <summary>
-        /// Gets or sets the content URL.
+        /// Gets the content URL.
         /// </summary>
         /// <value>The content URL.</value>
-        [XmlElement(RedmineKeys.CONTENT_URL)]
-        public string ContentUrl { get; set; }
+        public string ContentUrl { get; internal set; }
 
         /// <summary>
-        /// Gets or sets the author.
+        /// Gets the author.
         /// </summary>
         /// <value>The author.</value>
-        [XmlElement(RedmineKeys.AUTHOR)]
-        public IdentifiableName Author { get; set; }
+        public IdentifiableName Author { get; internal set; }
 
         /// <summary>
-        /// Gets or sets the created on.
+        /// Gets the created on.
         /// </summary>
         /// <value>The created on.</value>
-        [XmlElement(RedmineKeys.CREATED_ON)]
-        public DateTime? CreatedOn { get; set; }
+        public DateTime? CreatedOn { get; internal set; }
 
         /// <summary>
-        /// 
+        /// Gets the thumbnail url.
         /// </summary>
-        /// <returns></returns>
-        public XmlSchema GetSchema() { return null; }
+        public string ThumbnailUrl { get; internal set; }
+        #endregion
+
+        #region Implementation of IXmlSerializable
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="reader"></param>
-        public void ReadXml(XmlReader reader)
+        public override void ReadXml(XmlReader reader)
         {
             reader.Read();
             while (!reader.EOF)
@@ -102,21 +102,14 @@ namespace Redmine.Net.Api.Types
                 switch (reader.Name)
                 {
                     case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
-
-                    case RedmineKeys.FILENAME: FileName = reader.ReadElementContentAsString(); break;
-
-                    case RedmineKeys.FILESIZE: FileSize = reader.ReadElementContentAsInt(); break;
-
-                    case RedmineKeys.CONTENT_TYPE: ContentType = reader.ReadElementContentAsString(); break;
-
                     case RedmineKeys.AUTHOR: Author = new IdentifiableName(reader); break;
-
-                    case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
-
-                    case RedmineKeys.DESCRIPTION: Description = reader.ReadElementContentAsString(); break;
-
+                    case RedmineKeys.CONTENT_TYPE: ContentType = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.CONTENT_URL: ContentUrl = reader.ReadElementContentAsString(); break;
-
+                    case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
+                    case RedmineKeys.DESCRIPTION: Description = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.FILENAME: FileName = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.FILE_SIZE: FileSize = reader.ReadElementContentAsInt(); break;
+                    case RedmineKeys.THUMBNAIL_URL: ThumbnailUrl = reader.ReadElementContentAsString(); break;
                     default: reader.Read(); break;
                 }
             }
@@ -126,24 +119,82 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <param name="writer"></param>
-        public void WriteXml(XmlWriter writer) { }
+        public override void WriteXml(XmlWriter writer)
+        {
+            writer.WriteElementString(RedmineKeys.DESCRIPTION, Description);
+            writer.WriteElementString(RedmineKeys.FILENAME, FileName);
+        }
 
+        #endregion
+
+        #region Implementation of IJsonSerializable
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        public override void ReadJson(JsonReader reader)
+        {
+            while (reader.Read())
+            {
+                if (reader.TokenType == JsonToken.EndObject)
+                {
+                    return;
+                }
+
+                if (reader.TokenType != JsonToken.PropertyName)
+                {
+                    continue;
+                }
+
+                switch (reader.Value)
+                {
+                    case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
+                    case RedmineKeys.AUTHOR: Author = new IdentifiableName(reader); break;
+                    case RedmineKeys.CONTENT_TYPE: ContentType = reader.ReadAsString(); break;
+                    case RedmineKeys.CONTENT_URL: ContentUrl = reader.ReadAsString(); break;
+                    case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadAsDateTime(); break;
+                    case RedmineKeys.DESCRIPTION: Description = reader.ReadAsString(); break;
+                    case RedmineKeys.FILENAME: FileName = reader.ReadAsString(); break;
+                    case RedmineKeys.FILE_SIZE: FileSize = reader.ReadAsInt(); break;
+                    case RedmineKeys.THUMBNAIL_URL: ThumbnailUrl = reader.ReadAsString(); break;
+                    default: reader.Read(); break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+
+        public override void WriteJson(JsonWriter writer)
+        {
+            using (new JsonObject(writer, RedmineKeys.ATTACHMENT))
+            {
+                writer.WriteProperty(RedmineKeys.FILENAME, FileName);
+                writer.WriteProperty(RedmineKeys.DESCRIPTION, Description);
+            }
+        }
+        #endregion
+
+        #region Implementation of IEquatable<CustomFieldValue>
         /// <summary>
         /// 
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public bool Equals(Attachment other)
+        public override bool Equals(Attachment other)
         {
             if (other == null) return false;
-            return (Id == other.Id
+            return Id == other.Id
                 && FileName == other.FileName
                 && FileSize == other.FileSize
                 && ContentType == other.ContentType
                 && Author == other.Author
+                && ThumbnailUrl == other.ThumbnailUrl
                 && CreatedOn == other.CreatedOn
                 && Description == other.Description
-                && ContentUrl == other.ContentUrl);
+                && ContentUrl == other.ContentUrl;
         }
 
         /// <summary>
@@ -162,25 +213,27 @@ namespace Redmine.Net.Api.Types
                 hashCode = HashCodeHelper.GetHashCode(CreatedOn, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Description, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(ContentUrl, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(ThumbnailUrl, hashCode);
 
                 return hashCode;
             }
         }
+        #endregion
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return
-                $"[Attachment: {base.ToString()}, FileName={FileName}, FileSize={FileSize}, ContentType={ContentType}, Description={Description}, ContentUrl={ContentUrl}, Author={Author}, CreatedOn={CreatedOn}]";
-        }
+        private string DebuggerDisplay =>
+        $@"[{nameof(Attachment)}: 
+{ToString()}, 
+FileName={FileName}, 
+FileSize={FileSize.ToString(CultureInfo.InvariantCulture)}, 
+ContentType={ContentType}, 
+Description={Description}, 
+ContentUrl={ContentUrl}, 
+Author={Author}, 
+CreatedOn={CreatedOn?.ToString("u", CultureInfo.InvariantCulture)}]";
 
-        /// <inheritdoc />
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as Attachment);
-        }
     }
 }

@@ -15,62 +15,57 @@
 */
 
 using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.Xml;
-using System.Xml.Schema;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Internals;
+using Redmine.Net.Api.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
     /// <summary>
     /// Availability 1.3
     /// </summary>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.RELATION)]
-    public class IssueRelation : Identifiable<IssueRelation>, IXmlSerializable, IEquatable<IssueRelation>
+    public sealed class IssueRelation : Identifiable<IssueRelation>
     {
+        #region Properties
         /// <summary>
         /// Gets or sets the issue id.
         /// </summary>
         /// <value>The issue id.</value>
-        [XmlElement(RedmineKeys.ISSUE_ID)]
-        public int IssueId { get; set; }
+        public int IssueId { get; internal set; }
 
         /// <summary>
         /// Gets or sets the related issue id.
         /// </summary>
         /// <value>The issue to id.</value>
-        [XmlElement(RedmineKeys.ISSUE_TO_ID)]
         public int IssueToId { get; set; }
 
         /// <summary>
         /// Gets or sets the type of relation.
         /// </summary>
         /// <value>The type.</value>
-        [XmlElement(RedmineKeys.RELATION_TYPE)]
         public IssueRelationType Type { get; set; }
 
         /// <summary>
         /// Gets or sets the delay for a "precedes" or "follows" relation.
         /// </summary>
         /// <value>The delay.</value>
-        [XmlElement(RedmineKeys.DELAY, IsNullable = true)]
         public int? Delay { get; set; }
+        #endregion
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public XmlSchema GetSchema() { return null; }
-
+        #region Implementation of IXmlSerialization
         /// <summary>
         /// 
         /// </summary>
         /// <param name="reader"></param>
-        public void ReadXml(XmlReader reader)
+        public override void ReadXml(XmlReader reader)
         {
-            if (reader == null) throw new ArgumentNullException(nameof(reader));
             if (!reader.IsEmptyElement) reader.Read();
             while (!reader.EOF)
             {
@@ -88,16 +83,16 @@ namespace Redmine.Net.Api.Types
                         switch (reader.Name)
                         {
                             case RedmineKeys.ID: Id = reader.ReadAttributeAsInt(attributeName); break;
+                            case RedmineKeys.DELAY: Delay = reader.ReadAttributeAsNullableInt(attributeName); break;
                             case RedmineKeys.ISSUE_ID: IssueId = reader.ReadAttributeAsInt(attributeName); break;
                             case RedmineKeys.ISSUE_TO_ID: IssueToId = reader.ReadAttributeAsInt(attributeName); break;
                             case RedmineKeys.RELATION_TYPE:
-                                var rt = reader.GetAttribute(attributeName);
-                                if (!string.IsNullOrEmpty(rt))
+                                var issueRelationType = reader.GetAttribute(attributeName);
+                                if (!issueRelationType.IsNullOrWhiteSpace())
                                 {
-                                    Type = (IssueRelationType)Enum.Parse(typeof(IssueRelationType), rt, true);
+                                    Type = (IssueRelationType)Enum.Parse(typeof(IssueRelationType), issueRelationType, true);
                                 }
                                 break;
-                            case RedmineKeys.DELAY: Delay = reader.ReadAttributeAsNullableInt(attributeName); break;
                         }
                     }
                     return;
@@ -106,16 +101,16 @@ namespace Redmine.Net.Api.Types
                 switch (reader.Name)
                 {
                     case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
+                    case RedmineKeys.DELAY: Delay = reader.ReadElementContentAsNullableInt(); break;
                     case RedmineKeys.ISSUE_ID: IssueId = reader.ReadElementContentAsInt(); break;
                     case RedmineKeys.ISSUE_TO_ID: IssueToId = reader.ReadElementContentAsInt(); break;
                     case RedmineKeys.RELATION_TYPE:
-                        var rt = reader.ReadElementContentAsString();
-                        if (!string.IsNullOrEmpty(rt))
+                        var issueRelationType = reader.ReadElementContentAsString();
+                        if (!issueRelationType.IsNullOrWhiteSpace())
                         {
-                            Type = (IssueRelationType)Enum.Parse(typeof(IssueRelationType), rt, true);
+                            Type = (IssueRelationType)Enum.Parse(typeof(IssueRelationType), issueRelationType, true);
                         }
                         break;
-                    case RedmineKeys.DELAY: Delay = reader.ReadElementContentAsNullableInt(); break;
                     default: reader.Read(); break;
                 }
             }
@@ -125,24 +120,75 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <param name="writer"></param>
-        public void WriteXml(XmlWriter writer)
+        public override void WriteXml(XmlWriter writer)
         {
-            if (writer == null) throw new ArgumentNullException(nameof(writer));
             writer.WriteElementString(RedmineKeys.ISSUE_TO_ID, IssueToId.ToString(CultureInfo.InvariantCulture));
             writer.WriteElementString(RedmineKeys.RELATION_TYPE, Type.ToString());
-            if (Type == IssueRelationType.precedes || Type == IssueRelationType.follows)
-                writer.WriteValueOrEmpty(Delay, RedmineKeys.DELAY);
+            if (Type == IssueRelationType.Precedes || Type == IssueRelationType.Follows)
+            {
+                writer.WriteValueOrEmpty(RedmineKeys.DELAY, Delay);
+            }
+        }
+        #endregion
+
+        #region Implementation of IJsonSerialization
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+        public override void WriteJson(JsonWriter writer)
+        {
+            using (new JsonObject(writer, RedmineKeys.RELATION))
+            {
+                writer.WriteProperty(RedmineKeys.ISSUE_TO_ID, IssueToId);
+                writer.WriteProperty(RedmineKeys.RELATION_TYPE, Type);
+                if (Type == IssueRelationType.Precedes || Type == IssueRelationType.Follows)
+                {
+                    writer.WriteValueOrEmpty(RedmineKeys.DELAY, Delay);
+                }
+            }
         }
 
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="reader"></param>
+        public override void ReadJson(JsonReader reader)
+        {
+            while (reader.Read())
+            {
+                if (reader.TokenType == JsonToken.EndObject)
+                {
+                    return;
+                }
+
+                if (reader.TokenType != JsonToken.PropertyName)
+                {
+                    continue;
+                }
+
+                switch (reader.Value)
+                {
+                    case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
+                    case RedmineKeys.DELAY: Delay = reader.ReadAsInt32(); break;
+                    case RedmineKeys.ISSUE_ID: IssueId = reader.ReadAsInt(); break;
+                    case RedmineKeys.ISSUE_TO_ID: IssueToId = reader.ReadAsInt(); break;
+                    case RedmineKeys.RELATION_TYPE: Type = (IssueRelationType)reader.ReadAsInt(); break;
+                }
+            }
+        }
+        #endregion
+
+        #region Implementation of IEquatable<IssueRelation>
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public bool Equals(IssueRelation other)
+        public override bool Equals(IssueRelation other)
         {
             if (other == null) return false;
-            return (Id == other.Id && IssueId == other.IssueId && IssueToId == other.IssueToId && Type == other.Type && Delay == other.Delay);
+            return Id == other.Id && IssueId == other.IssueId && IssueToId == other.IssueToId && Type == other.Type && Delay == other.Delay;
         }
 
         /// <summary>
@@ -162,21 +208,17 @@ namespace Redmine.Net.Api.Types
                 return hashCode;
             }
         }
+        #endregion
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return
-                $"[IssueRelation: {base.ToString()}, IssueId={IssueId}, IssueToId={IssueToId}, Type={Type}, Delay={Delay}]";
-        }
+        private string DebuggerDisplay => $@"[{nameof(IssueRelation)}: {ToString()}, 
+IssueId={IssueId.ToString(CultureInfo.InvariantCulture)}, 
+IssueToId={IssueToId.ToString(CultureInfo.InvariantCulture)}, 
+Type={Type:G},
+Delay={Delay?.ToString(CultureInfo.InvariantCulture)}]";
 
-        /// <inheritdoc />
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as IssueRelation);
-        }
     }
 }

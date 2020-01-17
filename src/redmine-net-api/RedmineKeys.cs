@@ -71,11 +71,11 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
-        public const string CHANGESET = "changeset";
+        public const string CHANGE_SET = "changeset";
         /// <summary>
         /// 
         /// </summary>
-        public const string CHANGESETS = "changesets";
+        public const string CHANGE_SETS = "changesets";
         /// <summary>
         /// 
         /// </summary>
@@ -104,6 +104,12 @@ namespace Redmine.Net.Api
         /// 
         /// </summary>
         public const string CREATED_ON = "created_on";
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string CURRENT_USER = "current_user";
+
         /// <summary>
         /// 
         /// </summary>
@@ -191,7 +197,7 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
-        public const string FILESIZE = "filesize";
+        public const string FILE_SIZE = "filesize";
         /// <summary>
         /// 
         /// </summary>
@@ -260,6 +266,11 @@ namespace Redmine.Net.Api
         /// 
         /// </summary>
         public const string ISSUE_CATEGORY = "issue_category";
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string ISSUE_CUSTOM_FIELD_IDS = "issue_custom_field_ids";
         /// <summary>
         /// 
         /// </summary>
@@ -319,6 +330,10 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
+        public const string LABEL = "label";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string LASTNAME = "lastname";
         /// <summary>
         /// 
@@ -363,7 +378,7 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
-        public const string MUST_CHANGE_PASSWD = "must_change_passwd";
+        public const string MUST_CHANGE_PASSWORD = "must_change_passwd";
         /// <summary>
         /// 
         /// </summary>
@@ -453,6 +468,10 @@ namespace Redmine.Net.Api
         /// </summary>
         public const string QUERY = "query";
         /// <summary>
+        ///
+        /// </summary>
+        public const string REASSIGN_TO_ID = "reassign_to_id";
+        /// <summary>
         /// 
         /// </summary>
         public const string REGEXP = "regexp";
@@ -527,7 +546,7 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
-        public const string SUBPROJECT_ID = "subproject_id";
+        public const string SUB_PROJECT_ID = "subproject_id";
         /// <summary>
         /// 
         /// </summary>
@@ -555,6 +574,10 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
+        public const string THUMBNAIL_URL = "thumbnail_url";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string TOKEN = "token";
         /// <summary>
         /// 
@@ -564,12 +587,10 @@ namespace Redmine.Net.Api
         /// 
         /// </summary>
         public const string TOTAL_ESTIMATED_HOURS = "total_estimated_hours";
-
         /// <summary>
         /// 
         /// </summary>
         public const string TOTAL_SPENT_HOURS = "total_spent_hours";
-
         /// <summary>
         /// 
         /// </summary>
@@ -618,14 +639,10 @@ namespace Redmine.Net.Api
         /// 
         /// </summary>
         public const string VALUE = "value";
-		/// <summary>
-		/// 
-		/// </summary>
-		public const string LABEL = "label";
-		/// <summary>
-		/// 
-		/// </summary>
-		public const string VERSION = "version";
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string VERSION = "version";
         /// <summary>
         /// 
         /// </summary>
@@ -654,9 +671,5 @@ namespace Redmine.Net.Api
         /// 
         /// </summary>
         public const string WIKI_PAGES = "wiki_pages";
-	    /// <summary>
-	    ///
-	    /// </summary>
-	    public const string REASSIGN_TO_ID = "reassign_to_id";
     }
 }

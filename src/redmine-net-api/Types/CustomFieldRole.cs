@@ -14,6 +14,7 @@
    limitations under the License.
 */
 
+using System.Diagnostics;
 using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Types
@@ -21,16 +22,21 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// 
     /// </summary>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.ROLE)]
-    public class CustomFieldRole : IdentifiableName
+    public sealed class CustomFieldRole : IdentifiableName
     {
+        internal CustomFieldRole(int id, string name)
+        {
+            Id = id;
+            Name = name;
+        }
+
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-		public override string ToString ()
-		{
-			return $"[CustomFieldRole: {base.ToString()}]";
-		}
+        private string DebuggerDisplay => $"[{nameof(CustomFieldRole)}: {ToString()}]";
+
     }
 }

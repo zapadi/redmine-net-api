@@ -14,27 +14,26 @@
    limitations under the License.
 */
 
+using System;
 using System.Collections.Generic;
 using System.IO;
-
 using System.Net;
-using Redmine.Net.Api.Internals;
 using Redmine.Net.Api.Types;
 using Redmine.Net.Api.Exceptions;
+using Redmine.Net.Api.Serialization;
 
 namespace Redmine.Net.Api.Extensions
 {
     /// <summary>
     /// 
     /// </summary>
-    public static class WebExtensions
+    internal static class WebExceptionExtensions
     {
         /// <summary>
         /// Handles the web exception.
         /// </summary>
         /// <param name="exception">The exception.</param>
-        /// <param name="method">The method.</param>
-        /// <param name="mimeFormat">The MIME format.</param>
+        /// <param name="serializer"></param>
         /// <exception cref="RedmineTimeoutException">Timeout!</exception>
         /// <exception cref="NameResolutionFailureException">Bad domain name!</exception>
         /// <exception cref="NotFoundException"></exception>
@@ -45,56 +44,61 @@ namespace Redmine.Net.Api.Extensions
         /// <exception cref="RedmineException">
         /// </exception>
         /// <exception cref="NotAcceptableException"></exception>
-        public static void HandleWebException(this WebException exception, string method, MimeFormat mimeFormat)
+        public static void HandleWebException(this WebException exception, IRedmineSerializer serializer)
         {
-            if (exception == null) return;
+            if (exception == null)
+            {
+                return;
+            }
+
+            var innerException = exception.InnerException ?? exception;
 
             switch (exception.Status)
             {
-			    case WebExceptionStatus.Timeout: throw new RedmineTimeoutException("Timeout!", exception);
-			    case WebExceptionStatus.NameResolutionFailure: throw new NameResolutionFailureException("Bad domain name!", exception);
+                case WebExceptionStatus.Timeout:
+                    throw new RedmineTimeoutException(nameof(WebExceptionStatus.Timeout), innerException);
+                case WebExceptionStatus.NameResolutionFailure:
+                    throw new NameResolutionFailureException("Bad domain name.", innerException);
                 case WebExceptionStatus.ProtocolError:
                     {
                         var response = (HttpWebResponse)exception.Response;
                         switch ((int)response.StatusCode)
                         {
+                            case (int)HttpStatusCode.NotFound:
+                                throw new NotFoundException(response.StatusDescription, innerException);
 
-							case (int)HttpStatusCode.NotFound:
-								throw new NotFoundException (response.StatusDescription, exception);
+                            case (int)HttpStatusCode.InternalServerError:
+                                throw new InternalServerErrorException(response.StatusDescription, innerException);
 
-							case (int)HttpStatusCode.InternalServerError:
-								throw new InternalServerErrorException(response.StatusDescription, exception);
+                            case (int)HttpStatusCode.Unauthorized:
+                                throw new UnauthorizedException(response.StatusDescription, innerException);
 
-							case (int)HttpStatusCode.Unauthorized:
-								throw new UnauthorizedException(response.StatusDescription, exception);
+                            case (int)HttpStatusCode.Forbidden:
+                                throw new ForbiddenException(response.StatusDescription, innerException);
 
-							case (int)HttpStatusCode.Forbidden:
-								throw new ForbiddenException(response.StatusDescription, exception);
-
-		                    case (int)HttpStatusCode.Conflict:
-								throw new ConflictException("The page that you are trying to update is staled!", exception);
+                            case (int)HttpStatusCode.Conflict:
+                                throw new ConflictException("The page that you are trying to update is staled!", innerException);
 
                             case 422:
-
-                                var errors = GetRedmineExceptions(exception.Response, mimeFormat);
+                                var errors = GetRedmineExceptions(exception.Response, serializer);
                                 var message = string.Empty;
                                 if (errors != null)
                                 {
-                                    for (var index = 0; index < errors.Count; index++)
+                                    foreach (var error in errors)
                                     {
-                                        var error = errors[index];
-                                        message = message + (error.Info + "\n");
+                                        message = message + error.Info + Environment.NewLine;
                                     }
                                 }
-                                throw new RedmineException(
-                                    $"{method} has invalid or missing attribute parameters: {message}", exception);
+                                throw new RedmineException("Invalid or missing attribute parameters: " + message, innerException);
 
-							case (int)HttpStatusCode.NotAcceptable: throw new NotAcceptableException(response.StatusDescription, exception);
+                            case (int)HttpStatusCode.NotAcceptable:
+                                throw new NotAcceptableException(response.StatusDescription, innerException);
                         }
                     }
                     break;
 
-                default: throw new RedmineException(exception.Message, exception);
+                default:
+                    throw new RedmineException(exception.Message, innerException);
             }
         }
 
@@ -102,24 +106,36 @@ namespace Redmine.Net.Api.Extensions
         /// Gets the redmine exceptions.
         /// </summary>
         /// <param name="webResponse">The web response.</param>
-        /// <param name="mimeFormat">The MIME format.</param>
+        /// <param name="serializer"></param>
         /// <returns></returns>
-        private static List<Error> GetRedmineExceptions(this WebResponse webResponse, MimeFormat mimeFormat)
+        private static IEnumerable<Error> GetRedmineExceptions(this WebResponse webResponse, IRedmineSerializer serializer)
         {
-            using (var dataStream = webResponse.GetResponseStream())
+            using (var responseStream = webResponse.GetResponseStream())
             {
-                if (dataStream == null) return null;
-                using (var reader = new StreamReader(dataStream))
+                if (responseStream == null)
                 {
-                    var responseFromServer = reader.ReadToEnd();
+                    return null;
+                }
 
-                    if (!responseFromServer.IsNullOrWhiteSpace())
+                using (var streamReader = new StreamReader(responseStream))
+                {
+                    var responseContent = streamReader.ReadToEnd();
+
+                    if (responseContent.IsNullOrWhiteSpace())
                     {
-                        var errors = RedmineSerializer.DeserializeList<Error>(responseFromServer, mimeFormat);
-                        return errors.Objects;
+                        return null;
+                    }
+
+                    try
+                    {
+                        var result = serializer.DeserializeToPagedResults<Error>(responseContent);
+                        return result.Items;
+                    }
+                    catch (Exception)
+                    {
+                        throw;
                     }
                 }
-                return null;
             }
         }
     }

@@ -15,8 +15,11 @@
 */
 
 using System;
+using System.Diagnostics;
+using System.Globalization;
 using System.Xml;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Internals;
 
@@ -25,23 +28,25 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// Availability 1.3
     /// </summary>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.QUERY)]
-    public class Query : IdentifiableName, IEquatable<Query>
+    public sealed class Query : IdentifiableName, IEquatable<Query>
     {
+        #region Properties
         /// <summary>
-        /// Gets or sets a value indicating whether this instance is public.
+        /// Gets a value indicating whether this instance is public.
         /// </summary>
         /// <value><c>true</c> if this instance is public; otherwise, <c>false</c>.</value>
-        [XmlElement(RedmineKeys.IS_PUBLIC)]
-        public bool IsPublic { get; set; }
+        public bool IsPublic { get; internal set; }
 
         /// <summary>
-        /// Gets or sets the project id.
+        /// Gets  the project id.
         /// </summary>
         /// <value>The project id.</value>
-        [XmlElement(RedmineKeys.PROJECT_ID)]
-        public int? ProjectId { get; set; }
+        public int? ProjectId { get; internal set; }
+        #endregion
 
+        #region Implementation of IXmlSerialization
         /// <summary>
         /// 
         /// </summary>
@@ -60,24 +65,48 @@ namespace Redmine.Net.Api.Types
                 switch (reader.Name)
                 {
                     case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
-
-                    case RedmineKeys.NAME: Name = reader.ReadElementContentAsString(); break;
-
                     case RedmineKeys.IS_PUBLIC: IsPublic = reader.ReadElementContentAsBoolean(); break;
-
+                    case RedmineKeys.NAME: Name = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.PROJECT_ID: ProjectId = reader.ReadElementContentAsNullableInt(); break;
-
                     default: reader.Read(); break;
                 }
             }
         }
+        #endregion
+
+        #region Implementation of IJsonSerialization
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="writer"></param>
-        public override void WriteXml(XmlWriter writer) { }
+        /// <param name="reader"></param>
+        public override void ReadJson(JsonReader reader)
+        {
+            while (reader.Read())
+            {
+                if (reader.TokenType == JsonToken.EndObject)
+                {
+                    return;
+                }
 
+                if (reader.TokenType != JsonToken.PropertyName)
+                {
+                    continue;
+                }
+
+                switch (reader.Value)
+                {
+                    case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
+                    case RedmineKeys.IS_PUBLIC: IsPublic = reader.ReadAsBool(); break;
+                    case RedmineKeys.NAME: Name = reader.ReadAsString(); break;
+                    case RedmineKeys.PROJECT_ID: ProjectId = reader.ReadAsInt32(); break;
+                    default: reader.Read(); break;
+                }
+            }
+        }
+        #endregion
+
+        #region Implementation of IEquatable<Query>
         /// <summary>
         /// 
         /// </summary>
@@ -87,7 +116,7 @@ namespace Redmine.Net.Api.Types
         {
             if (other == null) return false;
 
-            return (other.Id == Id && other.Name == Name && other.IsPublic == IsPublic && other.ProjectId == ProjectId);
+            return other.Id == Id && other.Name == Name && other.IsPublic == IsPublic && other.ProjectId == ProjectId;
         }
 
         /// <summary>
@@ -106,17 +135,19 @@ namespace Redmine.Net.Api.Types
                 return hashCode;
             }
         }
+        #endregion
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return $"[Query: {base.ToString()}, IsPublic={IsPublic}, ProjectId={ProjectId}]";
-        }
+        private string DebuggerDisplay => $"[{nameof(Query)}: {ToString()}, IsPublic={IsPublic.ToString(CultureInfo.InvariantCulture)}, ProjectId={ProjectId?.ToString(CultureInfo.InvariantCulture)}]";
 
-        /// <inheritdoc />
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public override bool Equals(object obj)
         {
             return Equals(obj as Query);

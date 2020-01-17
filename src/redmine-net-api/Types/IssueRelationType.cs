@@ -24,31 +24,31 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// 
         /// </summary>
-        relates = 1,
+        Relates = 1,
         /// <summary>
         /// 
         /// </summary>
-        duplicates,
+        Duplicates,
         /// <summary>
         /// 
         /// </summary>
-        duplicated,
+        Duplicated,
         /// <summary>
         /// 
         /// </summary>
-        blocks,
+        Blocks,
         /// <summary>
         /// 
         /// </summary>
-        blocked,
+        Blocked,
         /// <summary>
         /// 
         /// </summary>
-        precedes,
+        Precedes,
         /// <summary>
         /// 
         /// </summary>
-        follows,
+        Follows,
         /// <summary>
         /// 
         /// </summary>

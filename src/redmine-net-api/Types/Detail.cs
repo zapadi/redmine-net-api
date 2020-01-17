@@ -15,55 +15,71 @@
 */
 
 using System;
+using System.Diagnostics;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Redmine.Net.Api.Internals;
+using Redmine.Net.Api.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
     /// <summary>
     /// 
     /// </summary>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.DETAIL)]
-    public class Detail : IXmlSerializable, IEquatable<Detail>
+    public sealed class Detail : IXmlSerializable, IJsonSerializable, IEquatable<Detail>
     {
         /// <summary>
-        /// Gets or sets the property.
+        /// 
+        /// </summary>
+        public Detail() { }
+
+        internal Detail(string name = null, string property = null, string oldValue = null, string newValue = null)
+        {
+            Name = name;
+            Property = property;
+            OldValue = oldValue;
+            NewValue = newValue;
+        }
+
+        #region Properties
+        /// <summary>
+        /// Gets the property.
         /// </summary>
         /// <value>
         /// The property.
         /// </value>
-        [XmlAttribute(RedmineKeys.PROPERTY)]
-        public string Property { get; set; }
+        public string Property { get; internal set; }
 
         /// <summary>
-        /// Gets or sets the name.
+        /// Gets the name.
         /// </summary>
         /// <value>
         /// The name.
         /// </value>
-        [XmlAttribute(RedmineKeys.NAME)]
-        public string Name { get; set; }
+        public string Name { get; internal set; }
 
         /// <summary>
-        /// Gets or sets the old value.
+        /// Gets the old value.
         /// </summary>
         /// <value>
         /// The old value.
         /// </value>
-        [XmlElement(RedmineKeys.OLD_VALUE)]
-        public string OldValue { get; set; }
+        public string OldValue { get; internal set; }
 
         /// <summary>
-        /// Gets or sets the new value.
+        /// Gets the new value.
         /// </summary>
         /// <value>
         /// The new value.
         /// </value>
-        [XmlElement(RedmineKeys.NEW_VALUE)]
-        public string NewValue { get; set; }
+        public string NewValue { get; internal set; }
+        #endregion
 
+        #region Implementation of IXmlSerialization
         /// <summary>
         /// 
         /// </summary>
@@ -76,8 +92,8 @@ namespace Redmine.Net.Api.Types
         /// <param name="reader"></param>
         public void ReadXml(XmlReader reader)
         {
-            Property = reader.GetAttribute(RedmineKeys.PROPERTY);
             Name = reader.GetAttribute(RedmineKeys.NAME);
+            Property = reader.GetAttribute(RedmineKeys.PROPERTY);
 
             reader.Read();
 
@@ -91,9 +107,9 @@ namespace Redmine.Net.Api.Types
 
                 switch (reader.Name)
                 {
-                    case RedmineKeys.OLD_VALUE: OldValue = reader.ReadElementContentAsString(); break;
-
                     case RedmineKeys.NEW_VALUE: NewValue = reader.ReadElementContentAsString(); break;
+
+                    case RedmineKeys.OLD_VALUE: OldValue = reader.ReadElementContentAsString(); break;
 
                     default: reader.Read(); break;
                 }
@@ -105,7 +121,50 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <param name="writer"></param>
         public void WriteXml(XmlWriter writer) { }
+        #endregion
 
+        #region Implementation of IJsonSerialization
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+        public void WriteJson(JsonWriter writer) { }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        public void ReadJson(JsonReader reader)
+        {
+            while (reader.Read())
+            {
+                if (reader.TokenType == JsonToken.EndObject)
+                {
+                    return;
+                }
+
+                if (reader.TokenType != JsonToken.PropertyName)
+                {
+                    continue;
+                }
+
+                switch (reader.Value)
+                {
+                    case RedmineKeys.NAME: Name = reader.ReadAsString(); break;
+
+                    case RedmineKeys.PROPERTY: Property = reader.ReadAsString(); break;
+
+                    case RedmineKeys.NEW_VALUE: NewValue = reader.ReadAsString(); break;
+
+                    case RedmineKeys.OLD_VALUE: OldValue = reader.ReadAsString(); break;
+
+                    default: reader.Read(); break;
+                }
+            }
+        }
+        #endregion
+
+        #region Implementation of IEquatable<Detail>
         /// <summary>
         /// 
         /// </summary>
@@ -114,10 +173,10 @@ namespace Redmine.Net.Api.Types
         public bool Equals(Detail other)
         {
             if (other == null) return false;
-            return (Property?.Equals(other.Property, StringComparison.OrdinalIgnoreCase) ?? other.Property == null)
-                && (Name?.Equals(other.Name, StringComparison.OrdinalIgnoreCase) ?? other.Name == null)
-                && (OldValue?.Equals(other.OldValue, StringComparison.OrdinalIgnoreCase) ?? other.OldValue == null)
-                && (NewValue?.Equals(other.NewValue, StringComparison.OrdinalIgnoreCase) ?? other.NewValue == null);
+            return string.Equals(Property, other.Property, StringComparison.InvariantCultureIgnoreCase)
+                && string.Equals(Name, other.Name, StringComparison.InvariantCultureIgnoreCase)
+                && string.Equals(OldValue, other.OldValue, StringComparison.InvariantCultureIgnoreCase)
+                && string.Equals(NewValue, other.NewValue, StringComparison.InvariantCultureIgnoreCase);
         }
 
         /// <summary>
@@ -150,14 +209,13 @@ namespace Redmine.Net.Api.Types
                 return hashCode;
             }
         }
+        #endregion
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return $"[Detail: Property={Property}, Name={Name}, OldValue={OldValue}, NewValue={NewValue}]";
-        }
+        private string DebuggerDisplay => $"[{nameof(Detail)}: Property={Property}, Name={Name}, OldValue={OldValue}, NewValue={NewValue}]";
+
     }
 }

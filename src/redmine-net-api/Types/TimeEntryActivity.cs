@@ -15,8 +15,12 @@
 */
 
 using System;
+using System.Diagnostics;
+using System.Globalization;
 using System.Xml;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
+using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Internals;
 
 namespace Redmine.Net.Api.Types
@@ -24,14 +28,27 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// Availability 2.2
     /// </summary>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.TIME_ENTRY_ACTIVITY)]
-    public class TimeEntryActivity : IdentifiableName, IEquatable<TimeEntryActivity>
+    public sealed class TimeEntryActivity : IdentifiableName, IEquatable<TimeEntryActivity>
     {
+        #region Properties
         /// <summary>
         /// 
         /// </summary>
-        [XmlElement(RedmineKeys.IS_DEFAULT)]
-        public bool IsDefault { get; set; }
+        public TimeEntryActivity() { }
+
+        internal TimeEntryActivity(int id, string name)
+        {
+            Id = id;
+            Name = name;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool IsDefault { get; internal set; }
+        #endregion
 
         #region Implementation of IXmlSerializable
 
@@ -53,11 +70,8 @@ namespace Redmine.Net.Api.Types
                 switch (reader.Name)
                 {
                     case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
-
-                    case RedmineKeys.NAME: Name = reader.ReadElementContentAsString(); break;
-
                     case RedmineKeys.IS_DEFAULT: IsDefault = reader.ReadElementContentAsBoolean(); break;
-
+                    case RedmineKeys.NAME: Name = reader.ReadElementContentAsString(); break;
                     default: reader.Read(); break;
                 }
             }
@@ -70,6 +84,36 @@ namespace Redmine.Net.Api.Types
         public override void WriteXml(XmlWriter writer) { }
 
         #endregion
+
+        #region Implementation of IJsonSerialization
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        public override void ReadJson(JsonReader reader)
+        {
+            while (reader.Read())
+            {
+                if (reader.TokenType == JsonToken.EndObject)
+                {
+                    return;
+                }
+
+                if (reader.TokenType != JsonToken.PropertyName)
+                {
+                    continue;
+                }
+
+                switch (reader.Value)
+                {
+                    case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
+                    case RedmineKeys.IS_DEFAULT: IsDefault = reader.ReadAsBool(); break;
+                    case RedmineKeys.NAME: Name = reader.ReadAsString(); break;
+                    default: reader.Read(); break;
+                }
+            }
+        }
+        #endregion 
 
         #region Implementation of IEquatable<TimeEntryActivity>
 
@@ -120,9 +164,7 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return $"[TimeEntryActivity: Id={Id}, Name={Name}, IsDefault={IsDefault}]";
-        }
+        private string DebuggerDisplay => $"[{nameof(TimeEntryActivity)}:{ToString()}, IsDefault={IsDefault.ToString(CultureInfo.InvariantCulture)}]";
+
     }
 }

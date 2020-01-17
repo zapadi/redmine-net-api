@@ -16,41 +16,55 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Xml;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Internals;
+using Redmine.Net.Api.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
     /// <summary>
     /// Availability 2.1
     /// </summary>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.GROUP)]
-    public class Group : IdentifiableName, IEquatable<Group>
+    public sealed class Group : IdentifiableName, IEquatable<Group>
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        public Group() { }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        public Group(string name)
+        {
+            Name = name;
+        }
+
+        #region Properties
         /// <summary>
         /// Represents the group's users.
         /// </summary>
-        [XmlArray(RedmineKeys.USERS)]
-        [XmlArrayItem(RedmineKeys.USER)]
-        public List<GroupUser> Users { get;  set; }
+        public IList<GroupUser> Users { get; internal set; }
 
         /// <summary>
         /// Gets or sets the custom fields.
         /// </summary>
         /// <value>The custom fields.</value>
-        [XmlArray(RedmineKeys.CUSTOM_FIELDS)]
-        [XmlArrayItem(RedmineKeys.CUSTOM_FIELD)]
         public IList<IssueCustomField> CustomFields { get; internal set; }
 
         /// <summary>
         /// Gets or sets the custom fields.
         /// </summary>
         /// <value>The custom fields.</value>
-        [XmlArray(RedmineKeys.MEMBERSHIPS)]
-        [XmlArrayItem(RedmineKeys.MEMBERSHIP)]
         public IList<Membership> Memberships { get; internal set; }
+        #endregion
 
         #region Implementation of IXmlSerializable
 
@@ -72,15 +86,10 @@ namespace Redmine.Net.Api.Types
                 switch (reader.Name)
                 {
                     case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
-
-                    case RedmineKeys.NAME: Name = reader.ReadElementContentAsString(); break;
-
-                    case RedmineKeys.USERS: Users = reader.ReadElementContentAsCollection<GroupUser>(); break;
-
                     case RedmineKeys.CUSTOM_FIELDS: CustomFields = reader.ReadElementContentAsCollection<IssueCustomField>(); break;
-
                     case RedmineKeys.MEMBERSHIPS: Memberships = reader.ReadElementContentAsCollection<Membership>(); break;
-
+                    case RedmineKeys.NAME: Name = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.USERS: Users = reader.ReadElementContentAsCollection<GroupUser>(); break;
                     default: reader.Read(); break;
                 }
             }
@@ -93,9 +102,54 @@ namespace Redmine.Net.Api.Types
         public override void WriteXml(XmlWriter writer)
         {
             writer.WriteElementString(RedmineKeys.NAME, Name);
-            writer.WriteArrayIds(Users, RedmineKeys.USER_IDS, typeof(int), GetGroupUserId);
+            writer.WriteArrayIds(RedmineKeys.USER_IDS, Users, typeof(int), GetGroupUserId);
         }
 
+        #endregion
+
+        #region Implementation of IJsonSerialization
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        public override void ReadJson(JsonReader reader)
+        {
+            while (reader.Read())
+            {
+                if (reader.TokenType == JsonToken.EndObject)
+                {
+                    return;
+                }
+
+                if (reader.TokenType != JsonToken.PropertyName)
+                {
+                    continue;
+                }
+
+                switch (reader.Value)
+                {
+                    case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
+                    case RedmineKeys.CUSTOM_FIELDS: CustomFields = reader.ReadAsCollection<IssueCustomField>(); break;
+                    case RedmineKeys.MEMBERSHIPS: Memberships = reader.ReadAsCollection<Membership>(); break;
+                    case RedmineKeys.NAME: Name = reader.ReadAsString(); break;
+                    case RedmineKeys.USERS: Users = reader.ReadAsCollection<GroupUser>(); break;
+                    default: reader.Read(); break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+        public override void WriteJson(JsonWriter writer)
+        {
+            using (new JsonObject(writer, RedmineKeys.GROUP))
+            {
+                writer.WriteProperty(RedmineKeys.NAME, Name);
+                writer.WriteRepeatableElement(RedmineKeys.USER_IDS, (IEnumerable<IValue>)Users);
+            }
+        }
         #endregion
 
         #region Implementation of IEquatable<Group>
@@ -112,9 +166,9 @@ namespace Redmine.Net.Api.Types
             if (other == null) return false;
             return Id == other.Id
                 && Name == other.Name
-                && (Users?.Equals<GroupUser>(other.Users) ?? other.Users == null)
-                && (CustomFields?.Equals<IssueCustomField>(other.CustomFields) ?? other.CustomFields == null)
-                && (Memberships?.Equals<Membership>(other.Memberships) ?? other.Memberships == null);
+                && (Users != null ? Users.Equals<GroupUser>(other.Users) : other.Users == null)
+                && (CustomFields != null ? CustomFields.Equals<IssueCustomField>(other.CustomFields) : other.CustomFields == null)
+                && (Memberships != null ? Memberships.Equals<Membership>(other.Memberships) : other.Memberships == null);
         }
 
         /// <summary>
@@ -154,11 +208,8 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return
-                $"[Group: Id={Id}, Name={Name}, Users={Users}, CustomFields={CustomFields}, Memberships={Memberships}]";
-        }
+        private string DebuggerDisplay => $"[{nameof(Group)}: {ToString()}, Users={Users.Dump()}, CustomFields={CustomFields.Dump()}, Memberships={Memberships.Dump()}]";
+
 
         /// <summary>
         /// 

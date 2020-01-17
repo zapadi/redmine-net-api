@@ -16,11 +16,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
 using System.Xml;
-using System.Xml.Schema;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Internals;
+using Redmine.Net.Api.Serialization;
 
 
 namespace Redmine.Net.Api.Types
@@ -28,109 +31,86 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// Availability 1.1
     /// </summary>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.TIME_ENTRY)]
-    public class TimeEntry : Identifiable<TimeEntry>, ICloneable, IEquatable<TimeEntry>, IXmlSerializable
+    public sealed class TimeEntry : Identifiable<TimeEntry>, ICloneable
     {
+        #region Properties
         private string comments;
 
         /// <summary>
         /// Gets or sets the issue id to log time on.
         /// </summary>
         /// <value>The issue id.</value>
-        [XmlAttribute(RedmineKeys.ISSUE)]
         public IdentifiableName Issue { get; set; }
 
         /// <summary>
         /// Gets or sets the project id to log time on.
         /// </summary>
         /// <value>The project id.</value>
-        [XmlAttribute(RedmineKeys.PROJECT)]
         public IdentifiableName Project { get; set; }
 
         /// <summary>
         /// Gets or sets the date the time was spent (default to the current date).
         /// </summary>
         /// <value>The spent on.</value>
-        [XmlAttribute(RedmineKeys.SPENT_ON)]
         public DateTime? SpentOn { get; set; }
 
         /// <summary>
         /// Gets or sets the number of spent hours.
         /// </summary>
         /// <value>The hours.</value>
-        [XmlAttribute(RedmineKeys.HOURS)]
         public decimal Hours { get; set; }
 
         /// <summary>
-        /// Gets or sets the activity id of the time activity. This parameter is required unless a default activity is defined in Redmine..
+        /// Gets or sets the activity id of the time activity. This parameter is required unless a default activity is defined in Redmine.
         /// </summary>
         /// <value>The activity id.</value>
-        [XmlAttribute(RedmineKeys.ACTIVITY)]
         public IdentifiableName Activity { get; set; }
 
         /// <summary>
-        /// Gets or sets the user.
+        /// Gets the user.
         /// </summary>
         /// <value>
         /// The user.
         /// </value>
-        [XmlAttribute(RedmineKeys.USER)]
-        public IdentifiableName User { get; set; }
+        public IdentifiableName User { get; internal set; }
 
         /// <summary>
         /// Gets or sets the short description for the entry (255 characters max).
         /// </summary>
         /// <value>The comments.</value>
-        [XmlAttribute(RedmineKeys.COMMENTS)]
         public string Comments
         {
-            get { return comments; }
-            set { comments = value.Truncate(255); }
+            get => comments;
+            set => comments = value.Truncate(255);
         }
 
         /// <summary>
-        /// Gets or sets the created on.
+        /// Gets the created on.
         /// </summary>
         /// <value>The created on.</value>
-        [XmlElement(RedmineKeys.CREATED_ON)]
-        public DateTime? CreatedOn { get; set; }
+        public DateTime? CreatedOn { get; internal set; }
 
         /// <summary>
-        /// Gets or sets the updated on.
+        /// Gets the updated on.
         /// </summary>
         /// <value>The updated on.</value>
-        [XmlElement(RedmineKeys.UPDATED_ON)]
-        public DateTime? UpdatedOn { get; set; }
+        public DateTime? UpdatedOn { get; internal set; }
 
         /// <summary>
         /// Gets or sets the custom fields.
         /// </summary>
         /// <value>The custom fields.</value>
-        [XmlArray(RedmineKeys.CUSTOM_FIELDS)]
-        [XmlArrayItem(RedmineKeys.CUSTOM_FIELD)]
-        public IList<IssueCustomField> CustomFields { get; internal set; }
+        public IList<IssueCustomField> CustomFields { get; set; }
+        #endregion
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public object Clone()
-        {
-            var timeEntry = new TimeEntry { Activity = Activity, Comments = Comments, Hours = Hours, Issue = Issue, Project = Project, SpentOn = SpentOn, User = User, CustomFields = CustomFields };
-            return timeEntry;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public XmlSchema GetSchema() { return null; }
-
+        #region Implementation of IXmlSerialization
         /// <summary>
         /// 
         /// </summary>
         /// <param name="reader"></param>
-        public void ReadXml(XmlReader reader)
+        public override void ReadXml(XmlReader reader)
         {
             reader.Read();
             while (!reader.EOF)
@@ -144,33 +124,19 @@ namespace Redmine.Net.Api.Types
                 switch (reader.Name)
                 {
                     case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
-
-                    case RedmineKeys.ISSUE_ID: Issue = new IdentifiableName(reader); break;
-
-                    case RedmineKeys.ISSUE: Issue = new IdentifiableName(reader); break;
-
-                    case RedmineKeys.PROJECT_ID: Project = new IdentifiableName(reader); break;
-
-                    case RedmineKeys.PROJECT: Project = new IdentifiableName(reader); break;
-
-                    case RedmineKeys.SPENT_ON: SpentOn = reader.ReadElementContentAsNullableDateTime(); break;
-
-                    case RedmineKeys.USER: User = new IdentifiableName(reader); break;
-
-                    case RedmineKeys.HOURS: Hours = reader.ReadElementContentAsDecimal(); break;
-
-                    case RedmineKeys.ACTIVITY_ID: Activity = new IdentifiableName(reader); break;
-
                     case RedmineKeys.ACTIVITY: Activity = new IdentifiableName(reader); break;
-
+                    case RedmineKeys.ACTIVITY_ID: Activity = new IdentifiableName(reader); break;
                     case RedmineKeys.COMMENTS: Comments = reader.ReadElementContentAsString(); break;
-
                     case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
-
-                    case RedmineKeys.UPDATED_ON: UpdatedOn = reader.ReadElementContentAsNullableDateTime(); break;
-
                     case RedmineKeys.CUSTOM_FIELDS: CustomFields = reader.ReadElementContentAsCollection<IssueCustomField>(); break;
-
+                    case RedmineKeys.HOURS: Hours = reader.ReadElementContentAsDecimal(); break;
+                    case RedmineKeys.ISSUE_ID: Issue = new IdentifiableName(reader); break;
+                    case RedmineKeys.ISSUE: Issue = new IdentifiableName(reader); break;
+                    case RedmineKeys.PROJECT: Project = new IdentifiableName(reader); break;
+                    case RedmineKeys.PROJECT_ID: Project = new IdentifiableName(reader); break;
+                    case RedmineKeys.SPENT_ON: SpentOn = reader.ReadElementContentAsNullableDateTime(); break;
+                    case RedmineKeys.UPDATED_ON: UpdatedOn = reader.ReadElementContentAsNullableDateTime(); break;
+                    case RedmineKeys.USER: User = new IdentifiableName(reader); break;
                     default: reader.Read(); break;
                 }
             }
@@ -180,31 +146,87 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <param name="writer"></param>
-        public void WriteXml(XmlWriter writer)
+        public override void WriteXml(XmlWriter writer)
         {
-            writer.WriteIdIfNotNull(Issue, RedmineKeys.ISSUE_ID);
-            writer.WriteIdIfNotNull(Project, RedmineKeys.PROJECT_ID);
-
-            if (!SpentOn.HasValue)
-                SpentOn = DateTime.Now;
-
-            writer.WriteDateOrEmpty(SpentOn, RedmineKeys.SPENT_ON);
-            writer.WriteValueOrEmpty<decimal>(Hours, RedmineKeys.HOURS);
-            writer.WriteIdIfNotNull(Activity, RedmineKeys.ACTIVITY_ID);
+            writer.WriteIdIfNotNull(RedmineKeys.ISSUE_ID, Issue);
+            writer.WriteIdIfNotNull(RedmineKeys.PROJECT_ID, Project);
+            writer.WriteDateOrEmpty(RedmineKeys.SPENT_ON, SpentOn.GetValueOrDefault(DateTime.Now));
+            writer.WriteValueOrEmpty<decimal>(RedmineKeys.HOURS, Hours);
+            writer.WriteIdIfNotNull(RedmineKeys.ACTIVITY_ID, Activity);
             writer.WriteElementString(RedmineKeys.COMMENTS, Comments);
+            writer.WriteArray(RedmineKeys.CUSTOM_FIELDS, CustomFields);
+        }
+        #endregion
 
-            writer.WriteArray(CustomFields, RedmineKeys.CUSTOM_FIELDS);
+        #region Implementation of IJsonSerialization
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        public override void ReadJson(JsonReader reader)
+        {
+            while (reader.Read())
+            {
+                if (reader.TokenType == JsonToken.EndObject)
+                {
+                    return;
+                }
+
+                if (reader.TokenType != JsonToken.PropertyName)
+                {
+                    continue;
+                }
+
+                switch (reader.Value)
+                {
+                    case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
+                    case RedmineKeys.ACTIVITY: Activity = new IdentifiableName(reader); break;
+                    case RedmineKeys.ACTIVITY_ID: Activity = new IdentifiableName(reader); break;
+                    case RedmineKeys.COMMENTS: Comments = reader.ReadAsString(); break;
+                    case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadAsDateTime(); break;
+                    case RedmineKeys.CUSTOM_FIELDS: CustomFields = reader.ReadAsCollection<IssueCustomField>(); break;
+                    case RedmineKeys.HOURS: Hours = reader.ReadAsDecimal().GetValueOrDefault(); break;
+                    case RedmineKeys.ISSUE: Issue = new IdentifiableName(reader); break;
+                    case RedmineKeys.ISSUE_ID: Issue = new IdentifiableName(reader); break;
+                    case RedmineKeys.PROJECT: Project = new IdentifiableName(reader); break;
+                    case RedmineKeys.PROJECT_ID: Project = new IdentifiableName(reader); break;
+                    case RedmineKeys.SPENT_ON: SpentOn = reader.ReadAsDateTime(); break;
+                    case RedmineKeys.UPDATED_ON: UpdatedOn = reader.ReadAsDateTime(); break;
+                    case RedmineKeys.USER: User = new IdentifiableName(reader); break;
+                    default: reader.Read(); break;
+                }
+            }
         }
 
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="writer"></param>
+        public override void WriteJson(JsonWriter writer)
+        {
+            using (new JsonObject(writer, RedmineKeys.TIME_ENTRY))
+            {
+                writer.WriteIdIfNotNull(RedmineKeys.ISSUE_ID, Issue);
+                writer.WriteIdIfNotNull(RedmineKeys.PROJECT_ID, Project);
+                writer.WriteIdIfNotNull(RedmineKeys.ACTIVITY_ID, Activity);
+                writer.WriteDateOrEmpty(RedmineKeys.SPENT_ON, SpentOn.GetValueOrDefault(DateTime.Now));
+                writer.WriteProperty(RedmineKeys.HOURS, Hours);
+                writer.WriteProperty(RedmineKeys.COMMENTS, Comments);
+                writer.WriteArray(RedmineKeys.CUSTOM_FIELDS, CustomFields);
+            }
+        }
+        #endregion
+
+        #region Implementation of IEquatable<TimeEntry>
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public bool Equals(TimeEntry other)
+        public override bool Equals(TimeEntry other)
         {
             if (other == null) return false;
-            return (Id == other.Id
+            return Id == other.Id
                 && Issue == other.Issue
                 && Project == other.Project
                 && SpentOn == other.SpentOn
@@ -214,7 +236,7 @@ namespace Redmine.Net.Api.Types
                 && User == other.User
                 && CreatedOn == other.CreatedOn
                 && UpdatedOn == other.UpdatedOn
-                && (CustomFields?.Equals<IssueCustomField>(other.CustomFields) ?? other.CustomFields == null));
+                && (CustomFields != null ? CustomFields.Equals<IssueCustomField>(other.CustomFields) : other.CustomFields == null);
         }
 
         /// <summary>
@@ -239,21 +261,44 @@ namespace Redmine.Net.Api.Types
                 return hashCode;
             }
         }
+        #endregion
+
+        #region Implementation of ICloneable 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public object Clone()
+        {
+            var timeEntry = new TimeEntry
+            {
+                Activity = Activity,
+                Comments = Comments,
+                Hours = Hours,
+                Issue = Issue,
+                Project = Project,
+                SpentOn = SpentOn,
+                User = User,
+                CustomFields = CustomFields
+            };
+            return timeEntry;
+        }
+        #endregion
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return
-                $"[TimeEntry: {base.ToString()}, Issue={Issue}, Project={Project}, SpentOn={SpentOn}, Hours={Hours}, Activity={Activity}, User={User}, Comments={Comments}, CreatedOn={CreatedOn}, UpdatedOn={UpdatedOn}, CustomFields={CustomFields}]";
-        }
+        private string DebuggerDisplay =>
+            $@"[{nameof(TimeEntry)}: {ToString()}, Issue={Issue}, Project={Project}, 
+SpentOn={SpentOn?.ToString("u", CultureInfo.InvariantCulture)}, 
+Hours={Hours.ToString("F", CultureInfo.InvariantCulture)}, 
+Activity={Activity}, 
+User={User}, 
+Comments={Comments}, 
+CreatedOn={CreatedOn?.ToString("u", CultureInfo.InvariantCulture)}, 
+UpdatedOn={UpdatedOn?.ToString("u", CultureInfo.InvariantCulture)}, 
+CustomFields={CustomFields.Dump()}]";
 
-        /// <inheritdoc />
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as TimeEntry);
-        }
     }
 }

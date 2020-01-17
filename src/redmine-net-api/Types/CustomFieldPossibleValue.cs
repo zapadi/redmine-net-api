@@ -15,38 +15,131 @@
 */
 
 using System;
+using System.Diagnostics;
+using System.Xml;
+using System.Xml.Schema;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Redmine.Net.Api.Internals;
+using Redmine.Net.Api.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
     /// <summary>
     /// 
     /// </summary>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.POSSIBLE_VALUE)]
-    public class CustomFieldPossibleValue : IEquatable<CustomFieldPossibleValue>
+    public sealed class CustomFieldPossibleValue : IXmlSerializable, IJsonSerializable, IEquatable<CustomFieldPossibleValue>
     {
+        #region Properties
         /// <summary>
         /// 
         /// </summary>
-        [XmlElement(RedmineKeys.VALUE)]
-        public string Value { get; set; }
+        public string Value { get; internal set; }
 
-		/// <summary>
-		/// 
-		/// </summary>
-		[XmlElement( RedmineKeys.LABEL )]
-		public string Label { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Label { get; internal set; }
+        #endregion
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="other"></param>
-		/// <returns></returns>
-		public bool Equals(CustomFieldPossibleValue other)
+        #region Implementation of IXmlSerializable
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public XmlSchema GetSchema()
+        {
+            return null;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        public void ReadXml(XmlReader reader)
+        {
+            reader.Read();
+            while (!reader.EOF)
+            {
+                if (reader.IsEmptyElement && !reader.HasAttributes)
+                {
+                    reader.Read();
+                    continue;
+                }
+
+                switch (reader.Name)
+                {
+                    case RedmineKeys.LABEL: Label = reader.ReadElementContentAsString(); break;
+
+                    case RedmineKeys.VALUE: Value = reader.ReadElementContentAsString(); break;
+
+                    default: reader.Read(); break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+        public void WriteXml(XmlWriter writer) { }
+
+        #endregion
+
+        #region Implementation of IJsonSerialization
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        public void ReadJson(JsonReader reader)
+        {
+            while (reader.Read())
+            {
+                if (reader.TokenType == JsonToken.EndObject)
+                {
+                    return;
+                }
+
+                if (reader.TokenType != JsonToken.PropertyName)
+                {
+                    continue;
+                }
+
+                switch (reader.Value)
+                {
+                    case RedmineKeys.LABEL:
+                        Label = reader.ReadAsString(); break;
+
+                    case RedmineKeys.VALUE:
+
+                        Value = reader.ReadAsString(); break;
+                    default:
+                        reader.Read(); break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+        public void WriteJson(JsonWriter writer) { }
+        #endregion
+
+        #region Implementation of IEquatable<CustomFieldPossibleValue>
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public bool Equals(CustomFieldPossibleValue other)
         {
             if (other == null) return false;
-            return (Value == other.Value);
+            return Value == other.Value;
         }
 
         /// <summary>
@@ -71,18 +164,17 @@ namespace Redmine.Net.Api.Types
             unchecked
             {
                 var hashCode = 13;
-				hashCode = HashCodeHelper.GetHashCode(Value,hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Value, hashCode);
                 return hashCode;
             }
         }
+        #endregion
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-		public override string ToString ()
-		{
-			return $"[CustomFieldPossibleValue: {base.ToString()}]";
-		}
+        private string DebuggerDisplay => $"[{nameof(CustomFieldPossibleValue)}: Label:{Label}, Value:{Value}]";
+
     }
 }

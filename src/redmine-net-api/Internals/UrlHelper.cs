@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Globalization;
+using System.Web;
 using Redmine.Net.Api.Exceptions;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Types;
@@ -241,9 +242,10 @@ namespace Redmine.Net.Api.Internals
         /// <param name="pageName">Name of the page.</param>
         /// <param name="version">The version.</param>
         /// <returns></returns>
-        public static string GetWikiPageUrl(RedmineManager redmineManager, string projectId,
-            string pageName, uint version = 0)
+        public static string GetWikiPageUrl(RedmineManager redmineManager, string projectId, string pageName, uint version = 0)
         {
+            pageName = Uri.EscapeUriString(pageName);
+            
             var uri = version == 0
                 ? string.Format(CultureInfo.InvariantCulture,WIKI_PAGE_FORMAT, redmineManager.Host, projectId, pageName,
                     redmineManager.Format)
