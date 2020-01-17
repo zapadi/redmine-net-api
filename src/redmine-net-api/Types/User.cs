@@ -154,10 +154,10 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.AUTH_SOURCE_ID: AuthenticationModeId = reader.ReadElementContentAsNullableInt(); break;
                     case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
                     case RedmineKeys.CUSTOM_FIELDS: CustomFields = reader.ReadElementContentAsCollection<IssueCustomField>(); break;
-                    case RedmineKeys.FIRSTNAME: FirstName = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.FIRST_NAME: FirstName = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.GROUPS: Groups = reader.ReadElementContentAsCollection<UserGroup>(); break;
                     case RedmineKeys.LAST_LOGIN_ON: LastLoginOn = reader.ReadElementContentAsNullableDateTime(); break;
-                    case RedmineKeys.LASTNAME: LastName = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.LAST_NAME: LastName = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.LOGIN: Login = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.MAIL: Email = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.MAIL_NOTIFICATION: MailNotification = reader.ReadElementContentAsString(); break;
@@ -176,8 +176,8 @@ namespace Redmine.Net.Api.Types
         public override void WriteXml(XmlWriter writer)
         {
             writer.WriteElementString(RedmineKeys.LOGIN, Login);
-            writer.WriteElementString(RedmineKeys.FIRSTNAME, FirstName);
-            writer.WriteElementString(RedmineKeys.LASTNAME, LastName);
+            writer.WriteElementString(RedmineKeys.FIRST_NAME, FirstName);
+            writer.WriteElementString(RedmineKeys.LAST_NAME, LastName);
             writer.WriteElementString(RedmineKeys.MAIL, Email);
             writer.WriteElementString(RedmineKeys.MAIL_NOTIFICATION, MailNotification);
             writer.WriteElementString(RedmineKeys.PASSWORD, Password);
@@ -215,9 +215,9 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadAsDateTime(); break;
                     case RedmineKeys.CUSTOM_FIELDS: CustomFields = reader.ReadAsCollection<IssueCustomField>(); break;
                     case RedmineKeys.LAST_LOGIN_ON: LastLoginOn = reader.ReadAsDateTime(); break;
-                    case RedmineKeys.LASTNAME: LastName = reader.ReadAsString(); break;
+                    case RedmineKeys.LAST_NAME: LastName = reader.ReadAsString(); break;
                     case RedmineKeys.LOGIN: Login = reader.ReadAsString(); break;
-                    case RedmineKeys.FIRSTNAME: FirstName = reader.ReadAsString(); break;
+                    case RedmineKeys.FIRST_NAME: FirstName = reader.ReadAsString(); break;
                     case RedmineKeys.GROUPS: Groups = reader.ReadAsCollection<UserGroup>(); break;
                     case RedmineKeys.MAIL: Email = reader.ReadAsString(); break;
                     case RedmineKeys.MAIL_NOTIFICATION: MailNotification = reader.ReadAsString(); break;
@@ -238,8 +238,8 @@ namespace Redmine.Net.Api.Types
             using (new JsonObject(writer, RedmineKeys.USER))
             {
                 writer.WriteProperty(RedmineKeys.LOGIN, Login);
-                writer.WriteProperty(RedmineKeys.FIRSTNAME, FirstName);
-                writer.WriteProperty(RedmineKeys.LASTNAME, LastName);
+                writer.WriteProperty(RedmineKeys.FIRST_NAME, FirstName);
+                writer.WriteProperty(RedmineKeys.LAST_NAME, LastName);
                 writer.WriteProperty(RedmineKeys.MAIL, Email);
                 writer.WriteProperty(RedmineKeys.MAIL_NOTIFICATION, MailNotification);
                 writer.WriteProperty(RedmineKeys.PASSWORD, Password);

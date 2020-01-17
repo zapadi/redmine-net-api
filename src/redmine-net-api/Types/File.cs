@@ -119,7 +119,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.DESCRIPTION: Description = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.DIGEST: Digest = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.DOWNLOADS: Downloads = reader.ReadElementContentAsInt(); break;
-                    case RedmineKeys.FILENAME: Filename = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.FILE_NAME: Filename = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.FILE_SIZE: FileSize = reader.ReadElementContentAsInt(); break;
                     case RedmineKeys.TOKEN: Token = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.VERSION: Version = new IdentifiableName(reader); break;
@@ -137,7 +137,7 @@ namespace Redmine.Net.Api.Types
         {
             writer.WriteElementString(RedmineKeys.TOKEN, Token);
             writer.WriteIdIfNotNull(RedmineKeys.VERSION_ID, Version);
-            writer.WriteElementString(RedmineKeys.FILENAME, Filename);
+            writer.WriteElementString(RedmineKeys.FILE_NAME, Filename);
             writer.WriteElementString(RedmineKeys.DESCRIPTION, Description);
         }
         #endregion
@@ -171,7 +171,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.DESCRIPTION: Description = reader.ReadAsString(); break;
                     case RedmineKeys.DIGEST: Digest = reader.ReadAsString(); break;
                     case RedmineKeys.DOWNLOADS: Downloads = reader.ReadAsInt32().GetValueOrDefault(); break;
-                    case RedmineKeys.FILENAME: Filename = reader.ReadAsString(); break;
+                    case RedmineKeys.FILE_NAME: Filename = reader.ReadAsString(); break;
                     case RedmineKeys.FILE_SIZE: FileSize = reader.ReadAsInt32().GetValueOrDefault(); break;
                     case RedmineKeys.TOKEN: Token = reader.ReadAsString(); break;
                     case RedmineKeys.VERSION: Version = new IdentifiableName(reader); break;
@@ -193,7 +193,7 @@ namespace Redmine.Net.Api.Types
                 {
                     writer.WriteProperty(RedmineKeys.TOKEN, Token);
                     writer.WriteIdIfNotNull(RedmineKeys.VERSION_ID, Version);
-                    writer.WriteProperty(RedmineKeys.FILENAME, Filename);
+                    writer.WriteProperty(RedmineKeys.FILE_NAME, Filename);
                     writer.WriteProperty(RedmineKeys.DESCRIPTION, Description);
                 }
             }
