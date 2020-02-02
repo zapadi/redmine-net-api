@@ -11,7 +11,7 @@
 redmine-net-api is a library for communicating with a Redmine project management application.
 
 * Uses [Redmine's REST API.](http://www.redmine.org/projects/redmine/wiki/Rest_api/)
-* Supports both XML and **JSON(requires .NET Framework 3.5 or higher)** formats.
+* Supports both XML and **JSON** formats.
 * Supports GZipped responses from servers.
 * This API provides access and basic CRUD operations (create, read, update, delete) for the resources described below:
 
