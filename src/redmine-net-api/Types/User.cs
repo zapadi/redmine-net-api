@@ -182,7 +182,7 @@ namespace Redmine.Net.Api.Types
             writer.WriteElementString(RedmineKeys.MAIL_NOTIFICATION, MailNotification);
             writer.WriteElementString(RedmineKeys.PASSWORD, Password);
             writer.WriteValueOrEmpty(RedmineKeys.AUTH_SOURCE_ID, AuthenticationModeId);
-            writer.WriteElementString(RedmineKeys.MUST_CHANGE_PASSWORD, MustChangePassword.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
+            writer.WriteElementString(RedmineKeys.MUST_CHANGE_PASSWORD, MustChangePassword.ToString(CultureInfo.InvariantCulture).ToLowerInv());
             writer.WriteElementString(RedmineKeys.STATUS, ((int)Status).ToString(CultureInfo.InvariantCulture));
             writer.WriteArray(RedmineKeys.CUSTOM_FIELDS, CustomFields);
         }
@@ -243,7 +243,7 @@ namespace Redmine.Net.Api.Types
                 writer.WriteProperty(RedmineKeys.MAIL, Email);
                 writer.WriteProperty(RedmineKeys.MAIL_NOTIFICATION, MailNotification);
                 writer.WriteProperty(RedmineKeys.PASSWORD, Password);
-                writer.WriteProperty(RedmineKeys.MUST_CHANGE_PASSWORD, MustChangePassword.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
+                writer.WriteProperty(RedmineKeys.MUST_CHANGE_PASSWORD, MustChangePassword.ToString(CultureInfo.InvariantCulture).ToLowerInv());
                 writer.WriteValueOrEmpty(RedmineKeys.AUTH_SOURCE_ID, AuthenticationModeId);
                 writer.WriteArray(RedmineKeys.CUSTOM_FIELDS, CustomFields);
             }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
@@ -45,7 +45,7 @@ namespace Redmine.Net.Api.Extensions
 
             if (value is bool)
             {
-                writer.WriteProperty(elementName, value.ToString().ToLowerInvariant());
+                writer.WriteProperty(elementName, value.ToString().ToLowerInv());
                 return;
             }
 
@@ -63,7 +63,7 @@ namespace Redmine.Net.Api.Extensions
         {
             if (ident != null)
             {
-                jsonWriter.WriteProperty(tag, ident.Id);
+                jsonWriter.WriteProperty(tag, ident.Id.ToString(CultureInfo.InvariantCulture));
             }
             else
             {
@@ -86,7 +86,7 @@ namespace Redmine.Net.Api.Extensions
             }
             else
             {
-                jsonWriter.WriteProperty(tag, string.Format(NumberFormatInfo.InvariantInfo, "{0}", val.Value.ToString(dateFormat, CultureInfo.InvariantCulture)));
+                jsonWriter.WriteProperty(tag,  val.Value.ToString(dateFormat, CultureInfo.InvariantCulture));
             }
         }
 
@@ -173,10 +173,10 @@ namespace Redmine.Net.Api.Extensions
 
             foreach (var identifiableName in collection)
             {
-                sb.Append(",").Append(identifiableName.Id.ToString(CultureInfo.InvariantCulture));
+                sb.Append(identifiableName.Id.ToString(CultureInfo.InvariantCulture)).Append(",");
             }
 
-            sb.Remove(0, 1);
+            sb.Length -= 1;
             jsonWriter.WriteValue(sb.ToString());
             sb= null;
 
@@ -203,10 +203,10 @@ namespace Redmine.Net.Api.Extensions
 
             foreach (var identifiableName in collection)
             {
-                sb.Append(",").Append(identifiableName.Name);
+                sb.Append(identifiableName.Name).Append(",");
             }
 
-            sb.Remove(0, 1);
+            sb.Length -= 1;
             jsonWriter.WriteValue(sb.ToString());
             sb = null;
 
