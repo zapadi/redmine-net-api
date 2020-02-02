@@ -14,6 +14,8 @@
    limitations under the License.
 */
 
+#if NET20
+
 namespace System.Runtime.CompilerServices
 {
     /// <summary>
@@ -25,3 +27,5 @@ namespace System.Runtime.CompilerServices
     {
     }
 }
+
+#endif
