@@ -15,6 +15,7 @@
 */
 
 using System.Collections.Specialized;
+using System.Globalization;
 using System.Text;
 
 namespace Redmine.Net.Api.Extensions
@@ -76,16 +77,23 @@ namespace Redmine.Net.Api.Extensions
 
             for (var index = 0; index < requestParameters.Count; ++index)
             {
-                stringBuilder.AppendFormat("{0}={1}&",requestParameters.AllKeys[index],requestParameters[index]);
-               
+                stringBuilder
+                    .Append(requestParameters.AllKeys[index].ToString(CultureInfo.InvariantCulture))
+                    .Append("=")
+                    .Append(requestParameters[index].ToString(CultureInfo.InvariantCulture))
+                    .Append("&");
             }
 
             stringBuilder.Length -= 1;
 
-            stringBuilder.Insert(0, "?");
+            var queryString = stringBuilder.ToString();
 
-            return stringBuilder.ToString();
-
+            #if !(NET20)
+            stringBuilder.Clear();
+            #endif
+            stringBuilder = null;
+            
+            return queryString;
         }
 
     }
