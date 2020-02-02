@@ -294,7 +294,7 @@ namespace Redmine.Net.Api
         public User GetCurrentUser(NameValueCollection parameters = null)
         {
             var url = UrlHelper.GetCurrentUserUrl(this);
-            return WebApiHelper.ExecuteDownload<User>(this, url, "GetCurrentUser", parameters);
+            return WebApiHelper.ExecuteDownload<User>(this, url,  parameters);
         }
 
         /// <summary>
@@ -305,7 +305,7 @@ namespace Redmine.Net.Api
         public void AddWatcherToIssue(int issueId, int userId)
         {
             var url = UrlHelper.GetAddWatcherUrl(this, issueId);
-            WebApiHelper.ExecuteUpload(this, url, HttpVerbs.POST, DataHelper.UserData(userId, MimeFormat), "AddWatcher");
+            WebApiHelper.ExecuteUpload(this, url, HttpVerbs.POST, DataHelper.UserData(userId, MimeFormat));
         }
 
         /// <summary>
@@ -316,7 +316,7 @@ namespace Redmine.Net.Api
         public void RemoveWatcherFromIssue(int issueId, int userId)
         {
             var url = UrlHelper.GetRemoveWatcherUrl(this, issueId, userId);
-            WebApiHelper.ExecuteUpload(this, url, HttpVerbs.DELETE, string.Empty, "RemoveWatcher");
+            WebApiHelper.ExecuteUpload(this, url, HttpVerbs.DELETE, string.Empty);
         }
 
         /// <summary>
@@ -327,7 +327,7 @@ namespace Redmine.Net.Api
         public void AddUserToGroup(int groupId, int userId)
         {
             var url = UrlHelper.GetAddUserToGroupUrl(this, groupId);
-            WebApiHelper.ExecuteUpload(this, url, HttpVerbs.POST, DataHelper.UserData(userId, MimeFormat), "AddUser");
+            WebApiHelper.ExecuteUpload(this, url, HttpVerbs.POST, DataHelper.UserData(userId, MimeFormat));
         }
 
         /// <summary>
@@ -338,7 +338,7 @@ namespace Redmine.Net.Api
         public void RemoveUserFromGroup(int groupId, int userId)
         {
             var url = UrlHelper.GetRemoveUserFromGroupUrl(this, groupId, userId);
-            WebApiHelper.ExecuteUpload(this, url, HttpVerbs.DELETE, string.Empty, "DeleteUser");
+            WebApiHelper.ExecuteUpload(this, url, HttpVerbs.DELETE, string.Empty);
         }
 
         /// <summary>
@@ -357,7 +357,7 @@ namespace Redmine.Net.Api
             
             url = Uri.EscapeUriString(url);
             
-            return WebApiHelper.ExecuteUpload<WikiPage>(this, url, HttpVerbs.PUT, result, "CreateOrUpdateWikiPage");
+            return WebApiHelper.ExecuteUpload<WikiPage>(this, url, HttpVerbs.PUT, result);
         }
 
         /// <summary>
@@ -372,7 +372,7 @@ namespace Redmine.Net.Api
         {
             var url = UrlHelper.GetWikiPageUrl(this, projectId,  pageName, version);
             url = Uri.EscapeUriString(url);
-            return WebApiHelper.ExecuteDownload<WikiPage>(this, url, "GetWikiPage", parameters);
+            return WebApiHelper.ExecuteDownload<WikiPage>(this, url,  parameters);
         }
 
         /// <summary>
@@ -383,7 +383,7 @@ namespace Redmine.Net.Api
         public List<WikiPage> GetAllWikiPages(string projectId)
         {
             var url = UrlHelper.GetWikisUrl(this, projectId);
-            var result = WebApiHelper.ExecuteDownloadList<WikiPage>(this, url, "GetAllWikiPages");
+            var result = WebApiHelper.ExecuteDownloadList<WikiPage>(this, url);
             return result == null ? null :new List<WikiPage>(result.Items);
         }
 
@@ -397,7 +397,7 @@ namespace Redmine.Net.Api
         {
             var url = UrlHelper.GetDeleteWikirUrl(this, projectId, pageName);
             url = Uri.EscapeUriString(url);
-            WebApiHelper.ExecuteUpload(this, url, HttpVerbs.DELETE, string.Empty, "DeleteWikiPage");
+            WebApiHelper.ExecuteUpload(this, url, HttpVerbs.DELETE, string.Empty);
         }
 
         /// <summary>
@@ -457,7 +457,7 @@ namespace Redmine.Net.Api
         public T GetObject<T>(string id, NameValueCollection parameters) where T : class, new()
         {
             var url = UrlHelper.GetGetUrl<T>(this, id);
-            return WebApiHelper.ExecuteDownload<T>(this, url, "GetObject", parameters);
+            return WebApiHelper.ExecuteDownload<T>(this, url, parameters);
         }
 
         /// <summary>
@@ -469,7 +469,7 @@ namespace Redmine.Net.Api
         public PagedResults<T> GetPaginatedObjects<T>(NameValueCollection parameters) where T : class, new()
         {
             var url = UrlHelper.GetListUrl<T>(this, parameters);
-            return WebApiHelper.ExecuteDownloadList<T>(this, url, "GetObjectList", parameters);
+            return WebApiHelper.ExecuteDownloadList<T>(this, url, parameters);
         }
 
         /// <summary>
@@ -652,7 +652,7 @@ namespace Redmine.Net.Api
         {
             var url = UrlHelper.GetCreateUrl<T>(this, ownerId);
             var data = Serializer.Serialize(obj);
-            return WebApiHelper.ExecuteUpload<T>(this, url, HttpVerbs.POST, data, "CreateObject");
+            return WebApiHelper.ExecuteUpload<T>(this, url, HttpVerbs.POST, data);
         }
 
         /// <summary>
@@ -690,7 +690,7 @@ namespace Redmine.Net.Api
             var url = UrlHelper.GetUploadUrl<T>(this, id);
             var data = Serializer.Serialize(obj);
             data = Regex.Replace(data, @"\r\n|\r|\n", "\r\n");
-            WebApiHelper.ExecuteUpload(this, url, HttpVerbs.PUT, data, "UpdateObject");
+            WebApiHelper.ExecuteUpload(this, url, HttpVerbs.PUT, data);
         }
 
         /// <summary>
@@ -716,7 +716,7 @@ namespace Redmine.Net.Api
         public void DeleteObject<T>(string id, NameValueCollection parameters = null) where T : class, new()
         {
             var url = UrlHelper.GetDeleteUrl<T>(this, id);
-            WebApiHelper.ExecuteUpload(this, url, HttpVerbs.DELETE, string.Empty, "DeleteObject", parameters);
+            WebApiHelper.ExecuteUpload(this, url, HttpVerbs.DELETE, string.Empty, parameters);
         }
 
         /// <summary>
@@ -737,7 +737,7 @@ namespace Redmine.Net.Api
         public Upload UploadFile(byte[] data)
         {
             var url = UrlHelper.GetUploadFileUrl(this);
-            return WebApiHelper.ExecuteUploadFile(this, url, data, "UploadFile");
+            return WebApiHelper.ExecuteUploadFile(this, url, data);
         }
 
         /// <summary>
@@ -751,7 +751,7 @@ namespace Redmine.Net.Api
             var attachments = new Attachments { { attachment.Id, attachment } };
             var data = Serializer.Serialize(attachments);
 
-            WebApiHelper.ExecuteUpload(this, address, HttpVerbs.PATCH, data, "UpdateAttachment");
+            WebApiHelper.ExecuteUpload(this, address, HttpVerbs.PATCH, data);
         }
 
         /// <summary>
@@ -769,7 +769,7 @@ namespace Redmine.Net.Api
         /// <exception cref="NotSupportedException"></exception>
         public byte[] DownloadFile(string address)
         {
-            return WebApiHelper.ExecuteDownloadFile(this, address, "DownloadFile");
+            return WebApiHelper.ExecuteDownloadFile(this, address);
         }
 
         /// <summary>
