@@ -40,12 +40,12 @@ namespace redmine.net.api.Tests.Tests.Sync
         private const int RELATED_ISSUE_ID = 94;
         private const int RELATION_DELAY = 2;
 
-        private const IssueRelationType OPPOSED_RELATION_TYPE = IssueRelationType.precedes;
+        private const IssueRelationType OPPOSED_RELATION_TYPE = IssueRelationType.Precedes;
 
         [Fact, Order(1)]
         public void Should_Add_Issue_Relation()
         {
-	        const IssueRelationType RELATION_TYPE = IssueRelationType.follows;
+	        const IssueRelationType RELATION_TYPE = IssueRelationType.Follows;
 	        var relation = new IssueRelation
             {
                 IssueToId = RELATED_ISSUE_ID,

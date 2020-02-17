@@ -43,7 +43,7 @@ namespace Redmine.Net.Api.Async
         public static async Task<User> GetCurrentUserAsync(this RedmineManager redmineManager, NameValueCollection parameters = null)
         {
             var uri = UrlHelper.GetCurrentUserUrl(redmineManager);
-            return await WebApiAsyncHelper.ExecuteDownload<User>(redmineManager, uri, "GetCurrentUserAsync", parameters).ConfigureAwait(false);
+            return await WebApiAsyncHelper.ExecuteDownload<User>(redmineManager, uri, parameters).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace Redmine.Net.Api.Async
 
             url = Uri.EscapeUriString(url);
 
-            var response = await WebApiAsyncHelper.ExecuteUpload(redmineManager, url, HttpVerbs.PUT, data, "CreateOrUpdateWikiPageAsync").ConfigureAwait(false);
+            var response = await WebApiAsyncHelper.ExecuteUpload(redmineManager, url, HttpVerbs.PUT, data).ConfigureAwait(false);
             return redmineManager.Serializer.Deserialize<WikiPage>(response);
         }
 
@@ -79,7 +79,7 @@ namespace Redmine.Net.Api.Async
         {
             var uri = UrlHelper.GetDeleteWikirUrl(redmineManager, projectId, pageName);
             uri = Uri.EscapeUriString(uri);
-            await WebApiAsyncHelper.ExecuteUpload(redmineManager, uri, HttpVerbs.DELETE, string.Empty, "DeleteWikiPageAsync").ConfigureAwait(false);
+            await WebApiAsyncHelper.ExecuteUpload(redmineManager, uri, HttpVerbs.DELETE, string.Empty).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace Redmine.Net.Api.Async
         public static async Task<Upload> UploadFileAsync(this RedmineManager redmineManager, byte[] data)
         {
             var uri = UrlHelper.GetUploadFileUrl(redmineManager);
-            return await WebApiAsyncHelper.ExecuteUploadFile(redmineManager, uri, data, "UploadFileAsync").ConfigureAwait(false);
+            return await WebApiAsyncHelper.ExecuteUploadFile(redmineManager, uri, data).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -105,7 +105,7 @@ namespace Redmine.Net.Api.Async
         /// <returns></returns>
         public static async Task<byte[]> DownloadFileAsync(this RedmineManager redmineManager, string address)
         {
-            return await WebApiAsyncHelper.ExecuteDownloadFile(redmineManager, address, "DownloadFileAsync").ConfigureAwait(false);
+            return await WebApiAsyncHelper.ExecuteDownloadFile(redmineManager, address).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -122,7 +122,7 @@ namespace Redmine.Net.Api.Async
         {
             var uri = UrlHelper.GetWikiPageUrl(redmineManager, projectId,  pageName, version);
             uri = Uri.EscapeUriString(uri);
-            return await WebApiAsyncHelper.ExecuteDownload<WikiPage>(redmineManager, uri, "GetWikiPageAsync", parameters).ConfigureAwait(false);
+            return await WebApiAsyncHelper.ExecuteDownload<WikiPage>(redmineManager, uri, parameters).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -135,7 +135,7 @@ namespace Redmine.Net.Api.Async
         public static async Task<List<WikiPage>> GetAllWikiPagesAsync(this RedmineManager redmineManager, NameValueCollection parameters, string projectId)
         {
             var uri = UrlHelper.GetWikisUrl(redmineManager, projectId);
-            return await WebApiAsyncHelper.ExecuteDownloadList<WikiPage>(redmineManager, uri, "GetAllWikiPagesAsync", parameters).ConfigureAwait(false);
+            return await WebApiAsyncHelper.ExecuteDownloadList<WikiPage>(redmineManager, uri, parameters).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -152,7 +152,7 @@ namespace Redmine.Net.Api.Async
             var data = DataHelper.UserData(userId, redmineManager.MimeFormat);
             var uri = UrlHelper.GetAddUserToGroupUrl(redmineManager, groupId);
 
-            await WebApiAsyncHelper.ExecuteUpload(redmineManager, uri, HttpVerbs.POST, data, "AddUserToGroupAsync").ConfigureAwait(false);
+            await WebApiAsyncHelper.ExecuteUpload(redmineManager, uri, HttpVerbs.POST, data).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -165,7 +165,7 @@ namespace Redmine.Net.Api.Async
         public static async Task RemoveUserFromGroupAsync(this RedmineManager redmineManager, int groupId, int userId)
         {
             var uri = UrlHelper.GetRemoveUserFromGroupUrl(redmineManager, groupId, userId);
-            await WebApiAsyncHelper.ExecuteUpload(redmineManager, uri, HttpVerbs.DELETE, string.Empty, "DeleteUserFromGroupAsync").ConfigureAwait(false);
+            await WebApiAsyncHelper.ExecuteUpload(redmineManager, uri, HttpVerbs.DELETE, string.Empty).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -180,7 +180,7 @@ namespace Redmine.Net.Api.Async
             var data = DataHelper.UserData(userId, redmineManager.MimeFormat);
             var uri = UrlHelper.GetAddWatcherUrl(redmineManager, issueId);
 
-            await WebApiAsyncHelper.ExecuteUpload(redmineManager, uri, HttpVerbs.POST, data, "AddWatcherAsync").ConfigureAwait(false);
+            await WebApiAsyncHelper.ExecuteUpload(redmineManager, uri, HttpVerbs.POST, data).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -193,7 +193,7 @@ namespace Redmine.Net.Api.Async
         public static async Task RemoveWatcherFromIssueAsync(this RedmineManager redmineManager, int issueId, int userId)
         {
             var uri = UrlHelper.GetRemoveWatcherUrl(redmineManager, issueId, userId);
-            await WebApiAsyncHelper.ExecuteUpload(redmineManager, uri, HttpVerbs.DELETE, string.Empty, "RemoveWatcherAsync").ConfigureAwait(false);
+            await WebApiAsyncHelper.ExecuteUpload(redmineManager, uri, HttpVerbs.DELETE, string.Empty).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -263,7 +263,7 @@ namespace Redmine.Net.Api.Async
             where T : class, new()
         {
             var uri = UrlHelper.GetListUrl<T>(redmineManager, parameters);
-            return await WebApiAsyncHelper.ExecuteDownloadPaginatedList<T>(redmineManager, uri, "GetPaginatedObjectsAsync", parameters).ConfigureAwait(false);
+            return await WebApiAsyncHelper.ExecuteDownloadPaginatedList<T>(redmineManager, uri, parameters).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -330,7 +330,7 @@ namespace Redmine.Net.Api.Async
             where T : class, new()
         {
             var uri = UrlHelper.GetGetUrl<T>(redmineManager, id);
-            return await WebApiAsyncHelper.ExecuteDownload<T>(redmineManager, uri, "GetobjectAsync", parameters).ConfigureAwait(false);
+            return await WebApiAsyncHelper.ExecuteDownload<T>(redmineManager, uri, parameters).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -360,7 +360,7 @@ namespace Redmine.Net.Api.Async
             var uri = UrlHelper.GetCreateUrl<T>(redmineManager, ownerId);
             var data = redmineManager.Serializer.Serialize(entity);
 
-            var response = await WebApiAsyncHelper.ExecuteUpload(redmineManager, uri, HttpVerbs.POST, data, "CreateObjectAsync").ConfigureAwait(false);
+            var response = await WebApiAsyncHelper.ExecuteUpload(redmineManager, uri, HttpVerbs.POST, data).ConfigureAwait(false);
             return redmineManager.Serializer.Deserialize<T>(response);
         }
 
@@ -379,7 +379,7 @@ namespace Redmine.Net.Api.Async
             var data = redmineManager.Serializer.Serialize(entity);
             data = Regex.Replace(data, @"\r\n|\r|\n", "\r\n");
 
-            await WebApiAsyncHelper.ExecuteUpload(redmineManager, uri, HttpVerbs.PUT, data, "UpdateObjectAsync").ConfigureAwait(false);
+            await WebApiAsyncHelper.ExecuteUpload(redmineManager, uri, HttpVerbs.PUT, data).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -393,7 +393,7 @@ namespace Redmine.Net.Api.Async
             where T : class, new()
         {
             var uri = UrlHelper.GetDeleteUrl<T>(redmineManager, id);
-            await WebApiAsyncHelper.ExecuteUpload(redmineManager, uri, HttpVerbs.DELETE, string.Empty, "DeleteObjectAsync").ConfigureAwait(false);
+            await WebApiAsyncHelper.ExecuteUpload(redmineManager, uri, HttpVerbs.DELETE, string.Empty).ConfigureAwait(false);
         }
     }
 }

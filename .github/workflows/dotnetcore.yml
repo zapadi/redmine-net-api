@@ -1,0 +1,37 @@
+name: Redmine .NET Api
+
+on: 
+  push:
+    paths-ignore:
+      - '**/*.md'
+      - '**/*.gif'
+      - '**/*.png'
+      - LICENSE
+      - tests/*
+  pull_request:
+    
+env:
+  DOTNET_CLI_TELEMETRY_OPTOUT:  1
+
+jobs:
+  build:
+
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+        dotnet: [ '3.1.100' ]
+    name: OS ${{ matrix.os }} - dotnet ${{ matrix.dotnet }}
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: ${{ matrix.dotnet }}
+    #- name: Get the version
+    #  id: get_version
+    #  run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+    # ${{ steps.get_version.outputs.VERSION }}
+    - name: Build with dotnet
+      run: dotnet build redmine-net-api.sln --configuration Release

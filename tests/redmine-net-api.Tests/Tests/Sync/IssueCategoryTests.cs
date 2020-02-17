@@ -32,7 +32,7 @@ namespace redmine.net.api.Tests.Tests.Sync
 	        var issueCategory = new IssueCategory
             {
                 Name = NEW_ISSUE_CATEGORY_NAME,
-                AsignTo = new IdentifiableName {Id = NEW_ISSUE_CATEGORY_ASIGNEE_ID}
+                AssignTo = new IdentifiableName {Id = NEW_ISSUE_CATEGORY_ASIGNEE_ID}
             };
 
             var savedIssueCategory = fixture.RedmineManager.CreateObject(issueCategory, PROJECT_ID);
@@ -80,8 +80,8 @@ namespace redmine.net.api.Tests.Tests.Sync
 
             Assert.NotNull(issueCategory);
             Assert.True(issueCategory.Name.Equals(NEW_ISSUE_CATEGORY_NAME), "Issue category name is invalid.");
-            Assert.NotNull(issueCategory.AsignTo);
-            Assert.True(issueCategory.AsignTo.Name.Contains(ISSUE_CATEGORY_ASIGNEE_NAME_TO_GET),
+            Assert.NotNull(issueCategory.AssignTo);
+            Assert.True(issueCategory.AssignTo.Name.Contains(ISSUE_CATEGORY_ASIGNEE_NAME_TO_GET),
                 "Asignee name is invalid.");
             Assert.NotNull(issueCategory.Project);
             Assert.True(issueCategory.Project.Name.Equals(ISSUE_CATEGORY_PROJECT_NAME_TO_GET),
@@ -96,7 +96,7 @@ namespace redmine.net.api.Tests.Tests.Sync
 
 	        var issueCategory = fixture.RedmineManager.GetObject<IssueCategory>(CREATED_ISSUE_CATEGORY_ID, null);
             issueCategory.Name = ISSUE_CATEGORY_NAME_TO_UPDATE;
-            issueCategory.AsignTo = new IdentifiableName {Id = ISSUE_CATEGORY_ASIGNEE_ID_TO_UPDATE};
+            issueCategory.AssignTo = new IdentifiableName {Id = ISSUE_CATEGORY_ASIGNEE_ID_TO_UPDATE};
 
             fixture.RedmineManager.UpdateObject(CREATED_ISSUE_CATEGORY_ID, issueCategory);
 
@@ -105,8 +105,8 @@ namespace redmine.net.api.Tests.Tests.Sync
             Assert.NotNull(updatedIssueCategory);
             Assert.True(updatedIssueCategory.Name.Equals(ISSUE_CATEGORY_NAME_TO_UPDATE),
                 "Issue category name was not updated.");
-            Assert.NotNull(updatedIssueCategory.AsignTo);
-            Assert.True(updatedIssueCategory.AsignTo.Id == ISSUE_CATEGORY_ASIGNEE_ID_TO_UPDATE,
+            Assert.NotNull(updatedIssueCategory.AssignTo);
+            Assert.True(updatedIssueCategory.AssignTo.Id == ISSUE_CATEGORY_ASIGNEE_ID_TO_UPDATE,
                 "Issue category asignee was not updated.");
         }
 

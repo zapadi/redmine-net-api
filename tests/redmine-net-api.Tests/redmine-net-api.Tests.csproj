@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 
 <Project Sdk="Microsoft.NET.Sdk">
 
@@ -9,6 +9,7 @@
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <RootNamespace>redmine.net.api.Tests</RootNamespace>
     <AssemblyName>redmine-net-api.Tests</AssemblyName>
+    <UserSecretsId>f8b9e946-b547-42f1-861c-f719dca00a84</UserSecretsId>
   </PropertyGroup>
 
   <PropertyGroup Label="Signing" Condition=" '$(Sign)' == 'true' ">

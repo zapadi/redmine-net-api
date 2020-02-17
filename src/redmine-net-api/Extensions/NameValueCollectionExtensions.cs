@@ -15,6 +15,8 @@
 */
 
 using System.Collections.Specialized;
+using System.Globalization;
+using System.Text;
 
 namespace Redmine.Net.Api.Extensions
 {
@@ -40,5 +42,59 @@ namespace Redmine.Net.Api.Extensions
             
             return value.IsNullOrWhiteSpace() ? null : value;
         }
+
+        /// <summary>
+        /// Gets the parameter value.
+        /// </summary>
+        /// <param name="parameters">The parameters.</param>
+        /// <param name="parameterName">Name of the parameter.</param>
+        /// <returns></returns>
+        public static string GetValue(this NameValueCollection parameters, string parameterName)
+        {
+            if (parameters == null)
+            {
+                return null;
+            }
+
+            var value = parameters.Get(parameterName);
+
+            return value.IsNullOrWhiteSpace() ? null : value;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="requestParameters"></param>
+        /// <returns></returns>
+        public static string ToQueryString(this NameValueCollection requestParameters)
+        {
+            if (requestParameters == null || requestParameters.Count == 0)
+            {
+                return null;
+            }
+
+            var stringBuilder = new StringBuilder();
+
+            for (var index = 0; index < requestParameters.Count; ++index)
+            {
+                stringBuilder
+                    .Append(requestParameters.AllKeys[index].ToString(CultureInfo.InvariantCulture))
+                    .Append("=")
+                    .Append(requestParameters[index].ToString(CultureInfo.InvariantCulture))
+                    .Append("&");
+            }
+
+            stringBuilder.Length -= 1;
+
+            var queryString = stringBuilder.ToString();
+
+            #if !(NET20)
+            stringBuilder.Clear();
+            #endif
+            stringBuilder = null;
+            
+            return queryString;
+        }
+
     }
 }

@@ -31,6 +31,10 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
+        public const string ADMIN = "admin";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string ALL = "*";
         /// <summary>
         /// 
@@ -104,6 +108,11 @@ namespace Redmine.Net.Api
         /// 
         /// </summary>
         public const string CREATED_ON = "created_on";
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string CURRENT = "current";
 
         /// <summary>
         /// 
@@ -193,15 +202,20 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
-        public const string FILENAME = "filename";
+        public const string FILE_NAME = "filename";
         /// <summary>
         /// 
         /// </summary>
         public const string FILE_SIZE = "filesize";
+
         /// <summary>
         /// 
         /// </summary>
-        public const string FIRSTNAME = "firstname";
+        public const string FILES = "files";
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string FIRST_NAME = "firstname";
         /// <summary>
         /// 
         /// </summary>
@@ -334,7 +348,7 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
-        public const string LASTNAME = "lastname";
+        public const string LAST_NAME = "lastname";
         /// <summary>
         /// 
         /// </summary>
@@ -650,6 +664,10 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
+        public const string VERSIONS = "versions";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string VISIBLE = "visible";
         /// <summary>
         /// 
@@ -666,10 +684,15 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
+        public const string WIKI = "wiki";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string WIKI_PAGE = "wiki_page";
         /// <summary>
         /// 
         /// </summary>
         public const string WIKI_PAGES = "wiki_pages";
+
     }
 }

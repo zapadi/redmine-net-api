@@ -37,10 +37,8 @@ namespace Redmine.Net.Api.Internals
         /// <param name="address">The address.</param>
         /// <param name="actionType">Type of the action.</param>
         /// <param name="data">The data.</param>
-        /// <param name="methodName">Name of the method.</param>
         /// <returns></returns>
-        public static async Task<string> ExecuteUpload(RedmineManager redmineManager, string address, string actionType, string data,
-            string methodName)
+        public static async Task<string> ExecuteUpload(RedmineManager redmineManager, string address, string actionType, string data)
         {
             using (var wc = redmineManager.CreateWebClient(null))
             {
@@ -69,10 +67,9 @@ namespace Redmine.Net.Api.Internals
         /// <typeparam name="T"></typeparam>
         /// <param name="redmineManager">The redmine manager.</param>
         /// <param name="address">The address.</param>
-        /// <param name="methodName">Name of the method.</param>
         /// <param name="parameters">The parameters.</param>
         /// <returns></returns>
-        public static async Task<T> ExecuteDownload<T>(RedmineManager redmineManager, string address, string methodName,
+        public static async Task<T> ExecuteDownload<T>(RedmineManager redmineManager, string address,
             NameValueCollection parameters = null)
             where T : class, new()
         {
@@ -97,11 +94,10 @@ namespace Redmine.Net.Api.Internals
         /// <typeparam name="T"></typeparam>
         /// <param name="redmineManager">The redmine manager.</param>
         /// <param name="address">The address.</param>
-        /// <param name="methodName">Name of the method.</param>
         /// <param name="parameters">The parameters.</param>
         /// <returns></returns>
         public static async Task<List<T>> ExecuteDownloadList<T>(RedmineManager redmineManager, string address,
-           string methodName,
+          
            NameValueCollection parameters = null) where T : class, new()
         {
             using (var wc = redmineManager.CreateWebClient(parameters))
@@ -128,11 +124,10 @@ namespace Redmine.Net.Api.Internals
         /// <typeparam name="T"></typeparam>
         /// <param name="redmineManager">The redmine manager.</param>
         /// <param name="address">The address.</param>
-        /// <param name="methodName">Name of the method.</param>
         /// <param name="parameters">The parameters.</param>
         /// <returns></returns>
         public static async Task<PagedResults<T>> ExecuteDownloadPaginatedList<T>(RedmineManager redmineManager, string address,
-            string methodName,
+           
             NameValueCollection parameters = null) where T : class, new()
         {
             using (var wc = redmineManager.CreateWebClient(parameters))
@@ -155,9 +150,8 @@ namespace Redmine.Net.Api.Internals
         /// </summary>
         /// <param name="redmineManager">The redmine manager.</param>
         /// <param name="address">The address.</param>
-        /// <param name="methodName">Name of the method.</param>
         /// <returns></returns>
-        public static async Task<byte[]> ExecuteDownloadFile(RedmineManager redmineManager, string address, string methodName)
+        public static async Task<byte[]> ExecuteDownloadFile(RedmineManager redmineManager, string address)
         {
             using (var wc = redmineManager.CreateWebClient(null, true))
             {
@@ -179,9 +173,8 @@ namespace Redmine.Net.Api.Internals
         /// <param name="redmineManager">The redmine manager.</param>
         /// <param name="address">The address.</param>
         /// <param name="data">The data.</param>
-        /// <param name="methodName">Name of the method.</param>
         /// <returns></returns>
-        public static async Task<Upload> ExecuteUploadFile(RedmineManager redmineManager, string address, byte[] data, string methodName)
+        public static async Task<Upload> ExecuteUploadFile(RedmineManager redmineManager, string address, byte[] data)
         {
             using (var wc = redmineManager.CreateWebClient(null, true))
             {

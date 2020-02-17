@@ -1,4 +1,6 @@
+using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Security;
 
 namespace Redmine.Net.Api.Extensions
 {
@@ -61,6 +63,33 @@ namespace Redmine.Net.Api.Extensions
         public static string ToLowerInv(this string text)
         {
             return text.IsNullOrWhiteSpace() ? text : text.ToLowerInvariant();
+        }
+
+        /// <summary>
+        /// Transforms a string into a SecureString.
+        /// </summary>
+        /// <param name = "value">
+        /// The string to transform.
+        /// </param>
+        /// <returns>
+        /// A secure string representing the contents of the original string.
+        /// </returns>
+        internal static SecureString ToSecureString(this string value)
+        {
+            if (value.IsNullOrWhiteSpace())
+            {
+                return null;
+            }
+
+            using (var rv = new SecureString())
+            {
+                foreach (var c in value)
+                {
+                    rv.AppendChar(c);
+                }
+
+                return rv;
+            }
         }
     }
 }

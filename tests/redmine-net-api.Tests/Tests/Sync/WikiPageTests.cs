@@ -108,5 +108,23 @@ namespace redmine.net.api.Tests.Tests.Sync
             Assert.Equal(oldPage.Title, WIKI_PAGE_NAME);
             Assert.True(oldPage.Version == WIKI_PAGE_VERSION, "Wiki page version is invalid.");
         }
+
+        [Fact]
+        public void Should_Create_Wiki()
+        {
+            var author = new IdentifiableName();
+            author.Id = 1;
+
+           var result = fixture.RedmineManager.CreateOrUpdateWikiPage("1","pagina2",new WikiPage
+           {
+               Text = "ana are mere multe si rosii!",
+               Comments = "asa",
+               Version = 1
+            });
+            
+           Assert.NotNull(result);
+           
+        }
+        
     }
 }

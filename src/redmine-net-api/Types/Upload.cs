@@ -86,7 +86,7 @@ namespace Redmine.Net.Api.Types
                 {
                     case RedmineKeys.CONTENT_TYPE: ContentType = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.DESCRIPTION: Description = reader.ReadElementContentAsString(); break;
-                    case RedmineKeys.FILENAME: FileName = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.FILE_NAME: FileName = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.TOKEN: Token = reader.ReadElementContentAsString(); break;
                     default: reader.Read(); break;
                 }
@@ -101,7 +101,7 @@ namespace Redmine.Net.Api.Types
         {
             writer.WriteElementString(RedmineKeys.TOKEN, Token);
             writer.WriteElementString(RedmineKeys.CONTENT_TYPE, ContentType);
-            writer.WriteElementString(RedmineKeys.FILENAME, FileName);
+            writer.WriteElementString(RedmineKeys.FILE_NAME, FileName);
             writer.WriteElementString(RedmineKeys.DESCRIPTION, Description);
         }
         #endregion
@@ -129,7 +129,7 @@ namespace Redmine.Net.Api.Types
                 {
                     case RedmineKeys.CONTENT_TYPE: ContentType = reader.ReadAsString(); break;
                     case RedmineKeys.DESCRIPTION: Description = reader.ReadAsString(); break;
-                    case RedmineKeys.FILENAME: FileName = reader.ReadAsString(); break;
+                    case RedmineKeys.FILE_NAME: FileName = reader.ReadAsString(); break;
                     case RedmineKeys.TOKEN: Token = reader.ReadAsString(); break;
                     default: reader.Read(); break;
                 }
@@ -144,7 +144,7 @@ namespace Redmine.Net.Api.Types
         {
             writer.WriteProperty(RedmineKeys.TOKEN, Token);
             writer.WriteProperty(RedmineKeys.CONTENT_TYPE, ContentType);
-            writer.WriteProperty(RedmineKeys.FILENAME, FileName);
+            writer.WriteProperty(RedmineKeys.FILE_NAME, FileName);
             writer.WriteProperty(RedmineKeys.DESCRIPTION, Description);
         }
         #endregion

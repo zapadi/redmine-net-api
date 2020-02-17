@@ -20,6 +20,7 @@
       CA1716;
       CA1724;
       CA1806;
+      CA2227;
     </NoWarn>
   </PropertyGroup>
 
@@ -113,6 +114,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net20' " Label=".NET 2.0 Package References">

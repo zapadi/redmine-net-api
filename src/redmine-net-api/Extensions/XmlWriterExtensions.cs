@@ -242,11 +242,11 @@ namespace Redmine.Net.Api.Extensions
 
             if (value is bool)
             {
-                writer.WriteElementString(elementName, value.ToString().ToLowerInvariant());
+                writer.WriteElementString(elementName, value.ToString().ToLowerInv());
                 return;
             }
 
-            writer.WriteElementString(elementName, string.Format(CultureInfo.InvariantCulture, "{0}", value.ToString()));
+            writer.WriteElementString(elementName, value.ToString());
         }
 
         /// <summary>
@@ -264,7 +264,7 @@ namespace Redmine.Net.Api.Extensions
             }
             else
             {
-                writer.WriteElementString(elementName, string.Format(NumberFormatInfo.InvariantInfo, "{0}", val.Value));
+                writer.WriteElementString(elementName, val.Value.ToString().ToLowerInv());
             }
         }
 
