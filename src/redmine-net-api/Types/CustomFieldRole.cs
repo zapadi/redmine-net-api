@@ -26,6 +26,12 @@ namespace Redmine.Net.Api.Types
     [XmlRoot(RedmineKeys.ROLE)]
     public sealed class CustomFieldRole : IdentifiableName
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CustomFieldRole"/> class.
+        /// </summary>
+        /// <remarks>Serialization</remarks>
+        public CustomFieldRole() { }
+
         internal CustomFieldRole(int id, string name)
         {
             Id = id;
