@@ -40,6 +40,11 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// 
         /// </summary>
+        new public string Name { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <returns></returns>
         private string DebuggerDisplay => $"[{nameof(ProjectIssueCategory)}: {ToString()}]";
 

@@ -35,6 +35,12 @@ namespace Redmine.Net.Api.Types
     public sealed class Project : IdentifiableName, IEquatable<Project>
     {
         #region Properties
+
+        /// <summary>
+        /// 
+        /// </summary>
+        new public string Name { get; set; }
+
         /// <summary>
         /// Gets or sets the identifier.
         /// </summary>

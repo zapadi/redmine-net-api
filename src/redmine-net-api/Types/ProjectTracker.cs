@@ -52,6 +52,11 @@ namespace Redmine.Net.Api.Types
             Id = trackerId;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        new public string Name { get; set; }
+
         #region Implementation of IValue
 
         /// <summary>

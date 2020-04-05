@@ -27,6 +27,11 @@ namespace Redmine.Net.Api.Types
     [XmlRoot(RedmineKeys.USER)]
     public sealed class GroupUser : IdentifiableName, IValue
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        new public string Name { get; set; }
+
         #region Implementation of IValue
         /// <summary>
         /// 

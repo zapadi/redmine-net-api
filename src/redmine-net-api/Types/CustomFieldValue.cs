@@ -47,13 +47,13 @@ namespace Redmine.Net.Api.Types
         {
             Info = value;
         }
-
+            
         #region Properties
 
         /// <summary>
         /// 
         /// </summary>
-        public string Info { get; internal set; }
+        public string Info { get; set; }
 
         #endregion
 
