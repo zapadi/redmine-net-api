@@ -35,6 +35,10 @@ namespace Redmine.Net.Api.Types
     {
         #region Properties
         /// <summary>
+        /// 
+        /// </summary>
+        new public string Name { get; set; }
+        /// <summary>
         /// Gets or sets the value.
         /// </summary>
         /// <value>The value.</value>

@@ -32,7 +32,6 @@ namespace Redmine.Net.Api.Types
     [XmlRoot(RedmineKeys.TIME_ENTRY_ACTIVITY)]
     public sealed class TimeEntryActivity : IdentifiableName, IEquatable<TimeEntryActivity>
     {
-        #region Properties
         /// <summary>
         /// 
         /// </summary>
@@ -43,6 +42,13 @@ namespace Redmine.Net.Api.Types
             Id = id;
             Name = name;
         }
+
+        #region Properties
+
+        /// <summary>
+        /// 
+        /// </summary>
+        new public string Name { get; set; }
 
         /// <summary>
         /// 

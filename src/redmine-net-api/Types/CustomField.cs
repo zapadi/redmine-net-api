@@ -37,6 +37,10 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// 
         /// </summary>
+        new public string Name { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
         public string CustomizedType { get; internal set; }
 
         /// <summary>
