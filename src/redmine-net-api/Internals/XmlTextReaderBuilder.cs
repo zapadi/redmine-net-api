@@ -9,6 +9,14 @@ namespace Redmine.Net.Api.Internals
     public static class XmlTextReaderBuilder
     {
 #if NET20
+        private static readonly XmlReaderSettings xmlReaderSettings = new XmlReaderSettings()
+        {
+            ProhibitDtd = true,
+            XmlResolver = null,
+            IgnoreComments = true,
+            IgnoreWhitespace = true,
+        };
+
         /// <summary>
         /// 
         /// </summary>
@@ -16,13 +24,7 @@ namespace Redmine.Net.Api.Internals
         /// <returns></returns>
         public static XmlReader Create(StringReader stringReader)
         {
-            return XmlReader.Create(stringReader, new XmlReaderSettings()
-            {
-                ProhibitDtd = true,
-                XmlResolver = null, 
-                IgnoreComments = true,
-                IgnoreWhitespace = true,
-            });
+            return XmlReader.Create(stringReader, xmlReaderSettings);
 
         }
         
@@ -35,13 +37,7 @@ namespace Redmine.Net.Api.Internals
         {
             var stringReader = new StringReader(xml);
             {
-                return XmlReader.Create(stringReader, new XmlReaderSettings()
-                {
-                    ProhibitDtd = true,
-                    XmlResolver = null,
-                    IgnoreComments = true,
-                    IgnoreWhitespace = true,
-                });
+                return XmlReader.Create(stringReader, xmlReaderSettings);
             }
         }
 #else
