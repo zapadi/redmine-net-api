@@ -573,8 +573,10 @@ namespace Redmine.Net.Api
                    do
                    {
                        parameters.Set(RedmineKeys.OFFSET, offset.ToString(CultureInfo.InvariantCulture));
+                       
                        var tempResult = GetPaginatedObjects<T>(parameters);
-                       if (tempResult != null)
+                       
+                       if (tempResult?.Items != null)
                        {
                            if (resultList == null)
                            {
@@ -592,7 +594,7 @@ namespace Redmine.Net.Api
                 else
                 {
                     var result = GetPaginatedObjects<T>(parameters);
-                    if (result != null)
+                    if (result?.Items != null)
                     {
                         return new List<T>(result.Items);
                     } 
