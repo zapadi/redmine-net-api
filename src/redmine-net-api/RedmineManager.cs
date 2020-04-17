@@ -1,4 +1,4 @@
-/*
+﻿/*
    Copyright 2011 - 2019 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,7 +23,6 @@ using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Web;
 using Redmine.Net.Api.Exceptions;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Internals;
@@ -43,7 +42,7 @@ namespace Redmine.Net.Api
         /// </summary>
         public const int DEFAULT_PAGE_SIZE_VALUE = 25;
 
-        private static readonly Dictionary<Type, string> routes = new Dictionary<Type, string>
+        private static readonly Dictionary<Type, string> Routes = new Dictionary<Type, string>
         {
             {typeof(Issue), "issues"},
             {typeof(Project), "projects"},
@@ -65,10 +64,9 @@ namespace Redmine.Net.Api
             {typeof(Watcher), "watchers"},
             {typeof(IssueCustomField), "custom_fields"},
             {typeof(CustomField), "custom_fields"}
-     //       {typeof(WikiPage), ""}
         };
-        
-        private static readonly Dictionary<Type, bool> typesWithOffset = new Dictionary<Type, bool>{
+
+        private static readonly Dictionary<Type, bool> TypesWithOffset = new Dictionary<Type, bool>{
             {typeof(Issue), true},
             {typeof(Project), true},
             {typeof(User), true},
@@ -81,7 +79,9 @@ namespace Redmine.Net.Api
         private readonly string basicAuthorization;
         private readonly CredentialCache cache;
         private string host;
+
         internal IRedmineSerializer Serializer { get; }
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="RedmineManager" /> class.
         /// </summary>
@@ -90,24 +90,23 @@ namespace Redmine.Net.Api
         /// <param name="verifyServerCert">if set to <c>true</c> [verify server cert].</param>
         /// <param name="proxy">The proxy.</param>
         /// <param name="securityProtocolType">Use this parameter to specify a SecurityProtcolType. Note: it is recommended to leave this parameter at its default value as this setting also affects the calling application process.</param>
+        /// <param name="scheme">http or https. Default is https</param>
         /// <exception cref="Redmine.Net.Api.Exceptions.RedmineException">
         ///     Host is not defined!
         ///     or
         ///     The host is not valid!
         /// </exception>
         public RedmineManager(string host, MimeFormat mimeFormat = MimeFormat.Xml, bool verifyServerCert = true,
-            IWebProxy proxy = null, SecurityProtocolType securityProtocolType = default(SecurityProtocolType))
+            IWebProxy proxy = null, SecurityProtocolType securityProtocolType = default, string scheme = "https")
         {
             if (string.IsNullOrEmpty(host)) throw new RedmineException("Host is not defined!");
+
             PageSize = 25;
-
-            if (default(SecurityProtocolType) == securityProtocolType)
-            {
-                securityProtocolType = ServicePointManager.SecurityProtocol;
-            }
-
+            Scheme = scheme;
             Host = host;
             MimeFormat = mimeFormat;
+            Proxy = proxy;
+
             if (mimeFormat == MimeFormat.Xml)
             {
                 Format = "xml";
@@ -119,10 +118,15 @@ namespace Redmine.Net.Api
                 Serializer = new JsonRedmineSerializer();
             }
 
-            Proxy = proxy;
+            if (default == securityProtocolType)
+            {
+                securityProtocolType = ServicePointManager.SecurityProtocol;
+            }
+
             SecurityProtocolType = securityProtocolType;
 
             ServicePointManager.SecurityProtocol = securityProtocolType;
+
             if (!verifyServerCert)
             {
                 ServicePointManager.ServerCertificateValidationCallback += RemoteCertValidate;
@@ -151,7 +155,7 @@ namespace Redmine.Net.Api
         /// <param name="securityProtocolType">Use this parameter to specify a SecurityProtcolType. Note: it is recommended to leave this parameter at its default value as this setting also affects the calling application process.</param>
         public RedmineManager(string host, string apiKey, MimeFormat mimeFormat = MimeFormat.Xml,
             bool verifyServerCert = true, IWebProxy proxy = null,
-            SecurityProtocolType securityProtocolType = default(SecurityProtocolType))
+            SecurityProtocolType securityProtocolType = default)
             : this(host, mimeFormat, verifyServerCert, proxy, securityProtocolType)
         {
             ApiKey = apiKey;
@@ -180,30 +184,33 @@ namespace Redmine.Net.Api
         /// <param name="securityProtocolType">Use this parameter to specify a SecurityProtcolType. Note: it is recommended to leave this parameter at its default value as this setting also affects the calling application process.</param>
         public RedmineManager(string host, string login, string password, MimeFormat mimeFormat = MimeFormat.Xml,
             bool verifyServerCert = true, IWebProxy proxy = null,
-            SecurityProtocolType securityProtocolType = default(SecurityProtocolType))
+            SecurityProtocolType securityProtocolType = default)
             : this(host, mimeFormat, verifyServerCert, proxy, securityProtocolType)
         {
             cache = new CredentialCache { { new Uri(host), "Basic", new NetworkCredential(login, password) } };
 
-            var token = Convert.ToBase64String(Encoding.UTF8.GetBytes(string.Format(CultureInfo.InvariantCulture,"{0}:{1}", login, password)));
-            basicAuthorization = string.Format(CultureInfo.InvariantCulture,"Basic {0}", token);
-
-            
+            var token = Convert.ToBase64String(Encoding.UTF8.GetBytes(string.Format(CultureInfo.InvariantCulture, "{0}:{1}", login, password)));
+            basicAuthorization = string.Format(CultureInfo.InvariantCulture, "Basic {0}", token);
         }
 
         /// <summary>
-        ///     Gets the sufixes.
+        ///     Gets the suffixes.
         /// </summary>
         /// <value>
-        ///     The sufixes.
+        ///     The suffixes.
         /// </value>
-        public static Dictionary<Type, string> Sufixes => routes;
+        public static Dictionary<Type, string> Suffixes => Routes;
 
         /// <summary>
         /// 
         /// </summary>
         public string Format { get; }
-        
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Scheme { get; private set; }
+
         /// <summary>
         ///     Gets the host.
         /// </summary>
@@ -217,14 +224,17 @@ namespace Redmine.Net.Api
             {
                 host = value;
 
-                if (!Uri.TryCreate(host, UriKind.Absolute, out Uri uriResult) ||
-                    !(uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps))
+                if (Uri.TryCreate(host, UriKind.Absolute, out Uri uriResult) &&
+                    (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps))
                 {
-                    host = $"http://{host}";
+                    return;
                 }
 
-                if (!Uri.TryCreate(host, UriKind.Absolute, out uriResult))
-                    throw new RedmineException("The host is not valid!");
+                host = $"{Scheme ?? "https"}://{host}";
+
+                if (!Uri.TryCreate(host, UriKind.Absolute, out uriResult)) throw new RedmineException("The host is not valid!");
+
+                Scheme = uriResult.Scheme;
             }
         }
 
@@ -234,7 +244,7 @@ namespace Redmine.Net.Api
         /// <value>
         ///     The API key.
         /// </value>
-        public string ApiKey { get; private set; }
+        public string ApiKey { get; }
 
         /// <summary>
         ///     Maximum page-size when retrieving complete object lists
@@ -264,7 +274,7 @@ namespace Redmine.Net.Api
         /// <value>
         ///     The MIME format.
         /// </value>
-        public MimeFormat MimeFormat { get; private set; }
+        public MimeFormat MimeFormat { get; }
 
         /// <summary>
         ///     Gets the proxy.
@@ -272,7 +282,7 @@ namespace Redmine.Net.Api
         /// <value>
         ///     The proxy.
         /// </value>
-        public IWebProxy Proxy { get; private set; }
+        public IWebProxy Proxy { get; }
 
         /// <summary>
         ///     Gets the type of the security protocol.
@@ -280,7 +290,7 @@ namespace Redmine.Net.Api
         /// <value>
         ///     The type of the security protocol.
         /// </value>
-        public SecurityProtocolType SecurityProtocolType { get; private set; }
+        public SecurityProtocolType SecurityProtocolType { get; }
 
         /// <summary>
         ///     Returns the user whose credentials are used to access the API.
@@ -294,7 +304,7 @@ namespace Redmine.Net.Api
         public User GetCurrentUser(NameValueCollection parameters = null)
         {
             var url = UrlHelper.GetCurrentUserUrl(this);
-            return WebApiHelper.ExecuteDownload<User>(this, url,  parameters);
+            return WebApiHelper.ExecuteDownload<User>(this, url, parameters);
         }
 
         /// <summary>
@@ -351,12 +361,16 @@ namespace Redmine.Net.Api
         public WikiPage CreateOrUpdateWikiPage(string projectId, string pageName, WikiPage wikiPage)
         {
             var result = Serializer.Serialize(wikiPage);
-            if (string.IsNullOrEmpty(result)) return null;
+
+            if (string.IsNullOrEmpty(result))
+            {
+                return null;
+            }
 
             var url = UrlHelper.GetWikiCreateOrUpdaterUrl(this, projectId, pageName);
-            
+
             url = Uri.EscapeUriString(url);
-            
+
             return WebApiHelper.ExecuteUpload<WikiPage>(this, url, HttpVerbs.PUT, result);
         }
 
@@ -370,9 +384,11 @@ namespace Redmine.Net.Api
         /// <returns></returns>
         public WikiPage GetWikiPage(string projectId, NameValueCollection parameters, string pageName, uint version = 0)
         {
-            var url = UrlHelper.GetWikiPageUrl(this, projectId,  pageName, version);
+            var url = UrlHelper.GetWikiPageUrl(this, projectId, pageName, version);
+
             url = Uri.EscapeUriString(url);
-            return WebApiHelper.ExecuteDownload<WikiPage>(this, url,  parameters);
+
+            return WebApiHelper.ExecuteDownload<WikiPage>(this, url, parameters);
         }
 
         /// <summary>
@@ -383,8 +399,10 @@ namespace Redmine.Net.Api
         public List<WikiPage> GetAllWikiPages(string projectId)
         {
             var url = UrlHelper.GetWikisUrl(this, projectId);
+
             var result = WebApiHelper.ExecuteDownloadList<WikiPage>(this, url);
-            return result == null ? null :new List<WikiPage>(result.Items);
+
+            return result == null ? null : new List<WikiPage>(result.Items);
         }
 
         /// <summary>
@@ -423,6 +441,7 @@ namespace Redmine.Net.Api
             try
             {
                 var tempResult = GetPaginatedObjects<T>(parameters);
+                
                 if (tempResult != null)
                 {
                     totalCount = tempResult.TotalItems;
@@ -484,7 +503,7 @@ namespace Redmine.Net.Api
         {
             var parameters = new NameValueCollection();
 
-            if (include != null)
+            if (include != null && include.Length > 0)
             {
                 parameters.Add(RedmineKeys.INCLUDE, string.Join(",", include));
             }
@@ -510,9 +529,11 @@ namespace Redmine.Net.Api
         public List<T> GetObjects<T>(int limit, int offset, params string[] include) where T : class, new()
         {
             var parameters = new NameValueCollection();
+            
             parameters.Add(RedmineKeys.LIMIT, limit.ToString(CultureInfo.InvariantCulture));
             parameters.Add(RedmineKeys.OFFSET, offset.ToString(CultureInfo.InvariantCulture));
-            if (include != null)
+            
+            if (include != null && include.Length > 0)
             {
                 parameters.Add(RedmineKeys.INCLUDE, string.Join(",", include));
             }
@@ -561,7 +582,7 @@ namespace Redmine.Net.Api
                 isLimitSet = int.TryParse(parameters[RedmineKeys.LIMIT], out pageSize);
                 int.TryParse(parameters[RedmineKeys.OFFSET], out offset);
             }
-            if (pageSize == default(int))
+            if (pageSize == default)
             {
                 pageSize = PageSize > 0 ? PageSize : DEFAULT_PAGE_SIZE_VALUE;
                 parameters.Set(RedmineKeys.LIMIT, pageSize.ToString(CultureInfo.InvariantCulture));
@@ -569,29 +590,33 @@ namespace Redmine.Net.Api
 
             try
             {
-                var hasOffset = typesWithOffset.ContainsKey(typeof(T));
-                if(hasOffset)
+                var hasOffset = TypesWithOffset.ContainsKey(typeof(T));
+                if (hasOffset)
                 {
-                   do
-                   {
-                       parameters.Set(RedmineKeys.OFFSET, offset.ToString(CultureInfo.InvariantCulture));
-                       
-                       var tempResult = GetPaginatedObjects<T>(parameters);
-                       
-                       if (tempResult?.Items != null)
-                       {
-                           if (resultList == null)
-                           {
-                               resultList = new List<T>(tempResult.Items);
-                               totalCount = isLimitSet ? pageSize : tempResult.TotalItems;
-                           }
-                           else
-                           {
-                               resultList.AddRange(tempResult.Items);
-                           }
-                       }
-                       offset += pageSize;
-                   } while (offset < totalCount);
+                    do
+                    {
+                        parameters.Set(RedmineKeys.OFFSET, offset.ToString(CultureInfo.InvariantCulture));
+
+                        var tempResult = GetPaginatedObjects<T>(parameters);
+
+                        totalCount = isLimitSet ? pageSize : tempResult.TotalItems;
+
+                        if (tempResult?.Items != null)
+                        {
+                            if (resultList == null)
+                            {
+                                resultList = new List<T>(tempResult.Items);
+                                
+                            }
+                            else
+                            {
+                                resultList.AddRange(tempResult.Items);
+                            }
+                        }
+
+                        offset += pageSize;
+
+                    } while (offset < totalCount);
                 }
                 else
                 {
@@ -599,12 +624,12 @@ namespace Redmine.Net.Api
                     if (result?.Items != null)
                     {
                         return new List<T>(result.Items);
-                    } 
+                    }
                 }
             }
             catch (WebException wex)
             {
-                wex.HandleWebException( Serializer);
+                wex.HandleWebException(Serializer);
             }
             return resultList;
         }
@@ -655,7 +680,9 @@ namespace Redmine.Net.Api
         public T CreateObject<T>(T obj, string ownerId) where T : class, new()
         {
             var url = UrlHelper.GetCreateUrl<T>(this, ownerId);
+            
             var data = Serializer.Serialize(obj);
+            
             return WebApiHelper.ExecuteUpload<T>(this, url, HttpVerbs.POST, data);
         }
 
@@ -692,8 +719,11 @@ namespace Redmine.Net.Api
         public void UpdateObject<T>(string id, T obj, string projectId) where T : class, new()
         {
             var url = UrlHelper.GetUploadUrl<T>(this, id);
+            
             var data = Serializer.Serialize(obj);
+            
             data = Regex.Replace(data, @"\r\n|\r|\n", "\r\n");
+            
             WebApiHelper.ExecuteUpload(this, url, HttpVerbs.PUT, data);
         }
 
@@ -740,7 +770,9 @@ namespace Redmine.Net.Api
         public void UpdateAttachment(int issueId, Attachment attachment)
         {
             var address = UrlHelper.GetAttachmentUpdateUrl(this, issueId);
+            
             var attachments = new Attachments { { attachment.Id, attachment } };
+            
             var data = Serializer.Serialize(attachments);
 
             WebApiHelper.ExecuteUpload(this, address, HttpVerbs.PATCH, data);
@@ -773,7 +805,8 @@ namespace Redmine.Net.Api
         /// <code></code>
         public virtual RedmineWebClient CreateWebClient(NameValueCollection parameters, bool uploadFile = false)
         {
-            var webClient = new RedmineWebClient { Proxy = Proxy };
+            var webClient = new RedmineWebClient { Proxy = Proxy, Scheme = Scheme, RedmineSerializer = Serializer};
+            
             if (!uploadFile)
             {
                 webClient.Headers.Add(HttpRequestHeader.ContentType, MimeFormat == MimeFormat.Xml
@@ -829,14 +862,7 @@ namespace Redmine.Net.Api
         /// <code></code>
         public virtual bool RemoteCertValidate(object sender, X509Certificate cert, X509Chain chain, SslPolicyErrors sslPolicyErrors)
         {
-            if (sslPolicyErrors == SslPolicyErrors.None)
-            {
-                return true;
-            }
-
-           // Logger.Current.Error("X509Certificate [{0}] Policy Error: '{1}'", cert.Subject, error);
-
-            return false;
+            return sslPolicyErrors == SslPolicyErrors.None;
         }
     }
 }
