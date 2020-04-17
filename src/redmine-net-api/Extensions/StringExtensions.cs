@@ -91,5 +91,18 @@ namespace Redmine.Net.Api.Extensions
                 return rv;
             }
         }
+
+        internal static string RemoveTrailingSlash(this string s)
+        {
+            if (string.IsNullOrEmpty(s))
+                return s;
+
+            if (s.EndsWith("/", StringComparison.OrdinalIgnoreCase) || s.EndsWith("\"", StringComparison.OrdinalIgnoreCase))
+            {
+                return s.Substring(0, s.Length - 1);
+            }
+
+            return s;
+        }
     }
 }
