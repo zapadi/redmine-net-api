@@ -31,6 +31,16 @@ namespace Redmine.Net.Api.Types
     public class IdentifiableName : Identifiable<IdentifiableName>
     {
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static IdentifiableName Create(int id)
+        {
+            return new IdentifiableName {Id = id};
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="IdentifiableName"/> class.
         /// </summary>
         public IdentifiableName() { }
