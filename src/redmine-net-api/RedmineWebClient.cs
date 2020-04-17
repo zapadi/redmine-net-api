@@ -16,7 +16,8 @@
 
 using System;
 using System.Net;
-using Redmine.Net.Api.Types;
+using Redmine.Net.Api.Extensions;
+using Redmine.Net.Api.Serialization;
 
 namespace Redmine.Net.Api
 {
@@ -25,8 +26,8 @@ namespace Redmine.Net.Api
     /// <seealso cref="System.Net.WebClient" />
     public class RedmineWebClient : WebClient
     {
-        private const string UA = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:8.0) Gecko/20100101 Firefox/8.0";
-
+        private const string UA = "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/14.0.835.163 Safari/535.1";
+        private string redirectUrl = string.Empty;
         /// <summary>
         /// 
         /// </summary>
@@ -57,7 +58,7 @@ namespace Redmine.Net.Api
         public bool UseCookies { get; set; }
 
         /// <summary>
-        ///     in miliseconds
+        ///     in milliseconds
         /// </summary>
         /// <value>
         ///     The timeout.
@@ -89,6 +90,21 @@ namespace Redmine.Net.Api
         public bool KeepAlive { get; set; }
 
         /// <summary>
+        /// 
+        /// </summary>
+        public string Scheme { get; set; } = "https";
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public RedirectType Redirect { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        internal IRedmineSerializer RedmineSerializer { get; set; }
+
+        /// <summary>
         ///     Returns a <see cref="System.Net.WebRequest" /> object for the specified resource.
         /// </summary>
         /// <param name="address">A <see cref="System.Uri" /> that identifies the resource to request.</param>
@@ -98,40 +114,175 @@ namespace Redmine.Net.Api
         protected override WebRequest GetWebRequest(Uri address)
         {
             var wr = base.GetWebRequest(address);
-            var httpWebRequest = wr as HttpWebRequest;
 
-            if (httpWebRequest != null)
+            if (!(wr is HttpWebRequest httpWebRequest))
             {
-                if (UseCookies)
-                {
-                    httpWebRequest.Headers.Add(HttpRequestHeader.Cookie, "redmineCookie");
-                    httpWebRequest.CookieContainer = CookieContainer;
-                }
-                httpWebRequest.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate |
-                                                        DecompressionMethods.None;
-                httpWebRequest.PreAuthenticate = PreAuthenticate;
-                httpWebRequest.KeepAlive = KeepAlive;
-                httpWebRequest.UseDefaultCredentials = UseDefaultCredentials;
-                httpWebRequest.Credentials = Credentials;
-                httpWebRequest.UserAgent = UA;
-                httpWebRequest.CachePolicy = CachePolicy;
-
-                if (UseProxy)
-                {
-                    if (Proxy != null)
-                    {
-                        Proxy.Credentials = Credentials;
-                    }
-                    httpWebRequest.Proxy = Proxy;
-                }
-
-                if (Timeout != null)
-                    httpWebRequest.Timeout = Timeout.Value.Milliseconds;
-
-                return httpWebRequest;
+                return base.GetWebRequest(address);
             }
 
-            return base.GetWebRequest(address);
+            if (UseCookies)
+            {
+                httpWebRequest.Headers.Add(HttpRequestHeader.Cookie, "redmineCookie");
+                httpWebRequest.CookieContainer = CookieContainer;
+            }
+
+            httpWebRequest.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate |
+                                                    DecompressionMethods.None;
+            httpWebRequest.PreAuthenticate = PreAuthenticate;
+            httpWebRequest.KeepAlive = KeepAlive;
+            httpWebRequest.UseDefaultCredentials = UseDefaultCredentials;
+            httpWebRequest.Credentials = Credentials;
+            httpWebRequest.UserAgent = UA;
+            httpWebRequest.CachePolicy = CachePolicy;
+
+            if (UseProxy)
+            {
+                if (Proxy != null)
+                {
+                    Proxy.Credentials = Credentials;
+                    httpWebRequest.Proxy = Proxy;
+                }
+            }
+
+            if (Timeout != null)
+            {
+                httpWebRequest.Timeout = Timeout.Value.Milliseconds;
+            }
+
+            return httpWebRequest;
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        protected override WebResponse GetWebResponse(WebRequest request)
+        {
+            WebResponse response = null;
+
+            try
+            {
+                response = base.GetWebResponse(request);
+            }
+            catch (WebException webException)
+            {
+                webException.HandleWebException(RedmineSerializer);
+            }
+
+            if (response == null)
+            {
+                return null;
+            }
+
+            if (response is HttpWebResponse)
+            {
+                HandleRedirect(request, response);
+                HandleCookies(request, response);
+            }
+
+            return response;
+        }
+
+        /// <summary>
+        /// Handles redirect response if needed
+        /// </summary>
+        /// <param name="request">Request</param>
+        /// <param name="response">Response</param>
+        protected void HandleRedirect(WebRequest request, WebResponse response)
+        {
+            var webResponse = response as HttpWebResponse;
+
+            if (Redirect == RedirectType.None)
+            {
+                return;
+            }
+
+            if (webResponse == null)
+            {
+                return;
+            }
+
+            var code = webResponse.StatusCode;
+
+            if (code == HttpStatusCode.Found || code == HttpStatusCode.SeeOther || code == HttpStatusCode.MovedPermanently || code == HttpStatusCode.Moved)
+            {
+                redirectUrl = webResponse.Headers["Location"];
+
+                var isAbsoluteUri = new Uri(redirectUrl).IsAbsoluteUri;
+
+                if (!isAbsoluteUri)
+                {
+                    var webRequest = request as HttpWebRequest;
+                    var host = webRequest?.Headers["Host"] ?? string.Empty;
+
+                    if (Redirect == RedirectType.All)
+                    {
+                        host = $"{host}{webRequest?.RequestUri.AbsolutePath}";
+
+                        host = host.Substring(0, host.LastIndexOf('/'));
+                    }
+
+                    // Have to make sure that the "/" symbol is between the "host" and "redirect" strings
+                    if (!redirectUrl.StartsWith("/", StringComparison.OrdinalIgnoreCase) && !host.EndsWith("/", StringComparison.OrdinalIgnoreCase))
+                    {
+                        redirectUrl = $"/{redirectUrl}";
+                    }
+
+                    redirectUrl = $"{host}{redirectUrl}";
+                }
+
+                if (!redirectUrl.StartsWith(Scheme, StringComparison.OrdinalIgnoreCase))
+                {
+                    redirectUrl = $"{Scheme}://{redirectUrl}";
+                }
+            }
+            else
+            {
+                redirectUrl = string.Empty;
+            }
+        }
+
+
+
+        /// <summary>
+        /// Handles additional cookies
+        /// </summary>
+        /// <param name="request">Request</param>
+        /// <param name="response">Response</param>
+        protected void HandleCookies(WebRequest request, WebResponse response)
+        {
+            if (!(response is HttpWebResponse webResponse)) return;
+
+            var webRequest = request as HttpWebRequest;
+            var col = new CookieCollection();
+
+            foreach (Cookie c in webResponse.Cookies)
+            {
+                col.Add(new Cookie(c.Name, c.Value, c.Path, webRequest?.Headers["Host"]));
+            }
+
+            CookieContainer.Add(col);
         }
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public enum RedirectType
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        None,
+        /// <summary>
+        /// 
+        /// </summary>
+        OnlyHost,
+        /// <summary>
+        /// 
+        /// </summary>
+        All
+    };
 }
