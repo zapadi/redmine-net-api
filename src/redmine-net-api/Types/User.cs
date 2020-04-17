@@ -39,7 +39,7 @@ namespace Redmine.Net.Api.Types
         /// Gets or sets the user login.
         /// </summary>
         /// <value>The login.</value>
-        public string Login { get; internal set; }
+        public string Login { get;  set; }
 
         /// <summary>
         /// Gets or sets the user password.
