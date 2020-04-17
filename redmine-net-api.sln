@@ -12,40 +12,35 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "redmine-net-api.Tests", "tests\redmine-net-api.Tests\redmine-net-api.Tests.csproj", "{900EF0B3-0233-45DA-811F-4C59483E8452}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionFolder", "SolutionFolder", "{E8C35EC2-DD90-46E8-9B63-84EFD5F2FDE3}"
-ProjectSection(SolutionItems) = preProject
-	appveyor.yml = appveyor.yml
-	docker-compose.yml = docker-compose.yml
-	CONTRIBUTING.md = CONTRIBUTING.md
-	LICENSE = LICENSE
-	logo.png = logo.png
-	README.md = README.md
-	redmine-net-api.snk = redmine-net-api.snk
-EndProjectSection
+	ProjectSection(SolutionItems) = preProject
+		appveyor.yml = appveyor.yml
+		CONTRIBUTING.md = CONTRIBUTING.md
+		docker-compose.yml = docker-compose.yml
+		LICENSE = LICENSE
+		logo.png = logo.png
+		README.md = README.md
+		redmine-net-api.snk = redmine-net-api.snk
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
-		DebugJSON|Any CPU = DebugJSON|Any CPU
-		DebugXML|Any CPU = DebugXML|Any CPU
+		DebugJson|Any CPU = DebugJson|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{0E6B9B72-445D-4E71-8D29-48C4A009AB03}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0E6B9B72-445D-4E71-8D29-48C4A009AB03}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0E6B9B72-445D-4E71-8D29-48C4A009AB03}.DebugJSON|Any CPU.ActiveCfg = Debug|Any CPU
-		{0E6B9B72-445D-4E71-8D29-48C4A009AB03}.DebugJSON|Any CPU.Build.0 = Debug|Any CPU
-		{0E6B9B72-445D-4E71-8D29-48C4A009AB03}.DebugXML|Any CPU.ActiveCfg = Debug|Any CPU
-		{0E6B9B72-445D-4E71-8D29-48C4A009AB03}.DebugXML|Any CPU.Build.0 = Debug|Any CPU
-		{0E6B9B72-445D-4E71-8D29-48C4A009AB03}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0E6B9B72-445D-4E71-8D29-48C4A009AB03}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E6B9B72-445D-4E71-8D29-48C4A009AB03}.DebugJson|Any CPU.ActiveCfg = DebugJson|Any CPU
+		{0E6B9B72-445D-4E71-8D29-48C4A009AB03}.DebugJson|Any CPU.Build.0 = DebugJson|Any CPU
+		{0E6B9B72-445D-4E71-8D29-48C4A009AB03}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E6B9B72-445D-4E71-8D29-48C4A009AB03}.Release|Any CPU.Build.0 = Debug|Any CPU
 		{900EF0B3-0233-45DA-811F-4C59483E8452}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{900EF0B3-0233-45DA-811F-4C59483E8452}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{900EF0B3-0233-45DA-811F-4C59483E8452}.DebugJSON|Any CPU.ActiveCfg = Debug|Any CPU
-		{900EF0B3-0233-45DA-811F-4C59483E8452}.DebugJSON|Any CPU.Build.0 = Debug|Any CPU
-		{900EF0B3-0233-45DA-811F-4C59483E8452}.DebugXML|Any CPU.ActiveCfg = Debug|Any CPU
-		{900EF0B3-0233-45DA-811F-4C59483E8452}.DebugXML|Any CPU.Build.0 = Debug|Any CPU
-		{900EF0B3-0233-45DA-811F-4C59483E8452}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{900EF0B3-0233-45DA-811F-4C59483E8452}.Release|Any CPU.Build.0 = Release|Any CPU
+		{900EF0B3-0233-45DA-811F-4C59483E8452}.DebugJson|Any CPU.ActiveCfg = DebugJson|Any CPU
+		{900EF0B3-0233-45DA-811F-4C59483E8452}.DebugJson|Any CPU.Build.0 = DebugJson|Any CPU
+		{900EF0B3-0233-45DA-811F-4C59483E8452}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{900EF0B3-0233-45DA-811F-4C59483E8452}.Release|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
