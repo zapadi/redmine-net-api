@@ -9,7 +9,7 @@ namespace Redmine.Net.Api.Internals
     public static class XmlTextReaderBuilder
     {
 #if NET20
-        private static readonly XmlReaderSettings xmlReaderSettings = new XmlReaderSettings()
+        private static readonly XmlReaderSettings XmlReaderSettings = new XmlReaderSettings()
         {
             ProhibitDtd = true,
             XmlResolver = null,
@@ -24,7 +24,7 @@ namespace Redmine.Net.Api.Internals
         /// <returns></returns>
         public static XmlReader Create(StringReader stringReader)
         {
-            return XmlReader.Create(stringReader, xmlReaderSettings);
+            return XmlReader.Create(stringReader, XmlReaderSettings);
 
         }
         
@@ -37,7 +37,7 @@ namespace Redmine.Net.Api.Internals
         {
             var stringReader = new StringReader(xml);
             {
-                return XmlReader.Create(stringReader, xmlReaderSettings);
+                return XmlReader.Create(stringReader, XmlReaderSettings);
             }
         }
 #else

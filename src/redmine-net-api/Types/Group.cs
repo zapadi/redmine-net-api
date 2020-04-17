@@ -1,4 +1,4 @@
-﻿/*
+/*
    Copyright 2011 - 2019 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -51,7 +51,7 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// 
         /// </summary>
-        new public string Name { get; set; }
+        public new string Name { get; set; }
         /// <summary>
         /// Represents the group's users.
         /// </summary>

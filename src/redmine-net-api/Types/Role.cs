@@ -36,7 +36,7 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// 
         /// </summary>
-        new public string Name { get; set; }
+        public new string Name { get; set; }
         /// <summary>
         /// Gets the permissions.
         /// </summary>

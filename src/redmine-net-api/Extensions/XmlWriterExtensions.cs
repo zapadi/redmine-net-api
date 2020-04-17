@@ -20,7 +20,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Xml;
 using System.Xml.Serialization;
-using Redmine.Net.Api.Internals;
 using Redmine.Net.Api.Types;
 
 namespace Redmine.Net.Api.Extensions
@@ -32,11 +31,11 @@ namespace Redmine.Net.Api.Extensions
     {
 
         #if !(NET20 || NET40 || NET45 || NET451 || NET452)
-        private static readonly Type[] emptyTypeArray = Array.Empty<Type>();
+        private static readonly Type[] EmptyTypeArray = Array.Empty<Type>();
         #else
-        private static readonly Type[] emptyTypeArray = new Type[0];
+        private static readonly Type[] EmptyTypeArray = new Type[0];
         #endif    
-        private static readonly XmlAttributeOverrides xmlAttributeOverrides = new XmlAttributeOverrides();
+        private static readonly XmlAttributeOverrides XmlAttributeOverrides = new XmlAttributeOverrides();
 
         /// <summary>
         /// Writes the id if not null.
@@ -60,7 +59,11 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="elementName">Name of the element.</param>
         public static void WriteArray(this XmlWriter writer, string elementName, IEnumerable collection)
         {
-            if (collection == null) return;
+            if (collection == null)
+            {
+                return;
+            }
+            
             writer.WriteStartElement(elementName);
             writer.WriteAttributeString("type", "array");
 
@@ -108,7 +111,10 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="f">The f.</param>
         public static void WriteArrayIds(this XmlWriter writer, string elementName, IEnumerable collection, Type type, Func<object, int> f)
         {
-            if (collection == null || f == null) return;
+            if (collection == null || f == null)
+            {
+                return;
+            }
             
             writer.WriteStartElement(elementName);
             writer.WriteAttributeString("type", "array");
@@ -134,14 +140,17 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="defaultNamespace">The default namespace.</param>
         public static void WriteArray(this XmlWriter writer, string elementName, IEnumerable collection,  Type type, string root, string defaultNamespace = null)
         {
-            if (collection == null) return;
+            if (collection == null)
+            {
+                return;
+            }
             
             writer.WriteStartElement(elementName);
             writer.WriteAttributeString("type", "array");
 
             var rootAttribute = new XmlRootAttribute(root);
 
-            var serializer = new XmlSerializer(type, xmlAttributeOverrides, emptyTypeArray, rootAttribute,
+            var serializer = new XmlSerializer(type, XmlAttributeOverrides, EmptyTypeArray, rootAttribute,
                 defaultNamespace);
             
             foreach (var item in collection)
@@ -235,7 +244,7 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="elementName">The tag.</param>
         public static void WriteIfNotDefaultOrNull<T>(this XmlWriter writer, string elementName, T value)
         {
-            if (EqualityComparer<T>.Default.Equals(value, default(T)))
+            if (EqualityComparer<T>.Default.Equals(value, default))
             {
                 return;
             }
@@ -258,7 +267,7 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="elementName">The tag.</param>
         public static void WriteValueOrEmpty<T>(this XmlWriter writer, string elementName, T? val) where T : struct
         {
-            if (!val.HasValue || EqualityComparer<T>.Default.Equals(val.Value, default(T)))
+            if (!val.HasValue || EqualityComparer<T>.Default.Equals(val.Value, default))
             {
                 writer.WriteElementString(elementName, string.Empty);
             }
@@ -277,7 +286,7 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="dateTimeFormat"></param>
         public static void WriteDateOrEmpty(this XmlWriter writer, string elementName, DateTime? val, string dateTimeFormat = "yyyy-MM-dd")
         {
-            if (!val.HasValue || val.Value.Equals(default(DateTime)))
+            if (!val.HasValue || val.Value.Equals(default))
             {
                 writer.WriteElementString(elementName, string.Empty);
             }

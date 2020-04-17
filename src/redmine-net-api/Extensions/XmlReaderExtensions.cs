@@ -45,7 +45,7 @@ namespace Redmine.Net.Api.Extensions
 
             if (attribute.IsNullOrWhiteSpace() || !int.TryParse(attribute, NumberStyles.Any, NumberFormatInfo.InvariantInfo, out var result))
             {
-                return default(int);
+                return default;
             }
 
             return result;
@@ -63,7 +63,7 @@ namespace Redmine.Net.Api.Extensions
 
             if (attribute.IsNullOrWhiteSpace() || !int.TryParse(attribute, NumberStyles.Any, NumberFormatInfo.InvariantInfo, out var result))
             {
-                return default(int?);
+                return default;
             }
 
             return result;
@@ -96,12 +96,14 @@ namespace Redmine.Net.Api.Extensions
         {
             var content = reader.ReadElementContentAsString();
 
-            if (content.IsNullOrWhiteSpace() || !DateTime.TryParse(content, out var result))
+            if (!content.IsNullOrWhiteSpace() && DateTime.TryParse(content, out var result))
             {
-                if (!DateTime.TryParseExact(content, INCLUDE_DATE_TIME_FORMAT, CultureInfo.InvariantCulture, DateTimeStyles.None, out result))
-                {
-                    return null;
-                }
+                return result;
+            }
+
+            if (!DateTime.TryParseExact(content, INCLUDE_DATE_TIME_FORMAT, CultureInfo.InvariantCulture, DateTimeStyles.None, out result))
+            {
+                return null;
             }
 
             return result;
@@ -170,6 +172,11 @@ namespace Redmine.Net.Api.Extensions
             var serializer = new XmlSerializer(typeof(T));
             var outerXml = reader.ReadOuterXml();
 
+            if (string.IsNullOrEmpty(outerXml))
+            {
+                return null;
+            }
+
             using (var stringReader = new StringReader(outerXml))
             {
                 using (var xmlTextReader =  XmlTextReaderBuilder.Create(stringReader))
@@ -231,6 +238,12 @@ namespace Redmine.Net.Api.Extensions
         {
             var serializer = new XmlSerializer(typeof(T));
             var outerXml = reader.ReadOuterXml();
+            
+            if (string.IsNullOrEmpty(outerXml))
+            {
+               yield return null;
+            }
+
             using (var stringReader = new StringReader(outerXml))
             {
                 using (var xmlTextReader = XmlTextReaderBuilder.Create(stringReader))

@@ -24,18 +24,18 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// 
         /// </summary>
-        STATUS_ANONYMOUS = 0,
+        StatusAnonymous = 0,
         /// <summary>
         /// 
         /// </summary>
-        STATUS_ACTIVE = 1,
+        StatusActive = 1,
         /// <summary>
         /// 
         /// </summary>
-        STATUS_REGISTERED = 2,
+        StatusRegistered = 2,
         /// <summary>
         /// 
         /// </summary>
-        STATUS_LOCKED = 3
+        StatusLocked = 3
     }
 }

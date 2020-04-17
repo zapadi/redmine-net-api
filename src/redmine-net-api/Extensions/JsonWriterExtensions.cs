@@ -22,11 +22,13 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="value"></param>
         public static void WriteIdIfNotNull(this JsonWriter jsonWriter, string tag, IdentifiableName value)
         {
-            if (value != null)
+            if (value == null)
             {
-                jsonWriter.WritePropertyName(tag);
-                jsonWriter.WriteValue(value.Id);
+                return;
             }
+
+            jsonWriter.WritePropertyName(tag);
+            jsonWriter.WriteValue(value.Id);
         }
 
         /// <summary>
@@ -38,7 +40,7 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="value"></param>
         public static void WriteIfNotDefaultOrNull<T>(this JsonWriter writer, string elementName, T value)
         {
-            if (EqualityComparer<T>.Default.Equals(value, default(T)))
+            if (EqualityComparer<T>.Default.Equals(value, default))
             {
                 return;
             }
@@ -61,14 +63,7 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="emptyValue"></param>
         public static void WriteIdOrEmpty(this JsonWriter jsonWriter, string tag, IdentifiableName ident, string emptyValue = null)
         {
-            if (ident != null)
-            {
-                jsonWriter.WriteProperty(tag, ident.Id.ToString(CultureInfo.InvariantCulture));
-            }
-            else
-            {
-                jsonWriter.WriteProperty(tag, emptyValue);
-            }
+            jsonWriter.WriteProperty(tag, ident != null ? ident.Id.ToString(CultureInfo.InvariantCulture) : emptyValue);
         }
 
         /// <summary>
@@ -80,7 +75,7 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="dateFormat"></param>
         public static void WriteDateOrEmpty(this JsonWriter jsonWriter, string tag, DateTime? val, string dateFormat = "yyyy-MM-dd")
         {
-            if (!val.HasValue || val.Value.Equals(default(DateTime)))
+            if (!val.HasValue || val.Value.Equals(default))
             {
                 jsonWriter.WriteProperty(tag, string.Empty);
             }
@@ -99,7 +94,7 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="val"></param>
         public static void WriteValueOrEmpty<T>(this JsonWriter jsonWriter, string tag, T? val) where T : struct
         {
-            if (!val.HasValue || EqualityComparer<T>.Default.Equals(val.Value, default(T)))
+            if (!val.HasValue || EqualityComparer<T>.Default.Equals(val.Value, default))
             {
                 jsonWriter.WriteProperty(tag, string.Empty);
             }
@@ -118,7 +113,7 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="val"></param>
         public static void WriteValueOrDefault<T>(this JsonWriter jsonWriter, string tag, T? val) where T : struct
         {
-            jsonWriter.WriteProperty(tag, val ?? default(T));
+            jsonWriter.WriteProperty(tag, val ?? default);
         }
 
         /// <summary>
@@ -169,7 +164,7 @@ namespace Redmine.Net.Api.Extensions
             jsonWriter.WritePropertyName(tag);
             jsonWriter.WriteStartArray();
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
             foreach (var identifiableName in collection)
             {
@@ -199,7 +194,7 @@ namespace Redmine.Net.Api.Extensions
             jsonWriter.WritePropertyName(tag);
             jsonWriter.WriteStartArray();
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
             foreach (var identifiableName in collection)
             {

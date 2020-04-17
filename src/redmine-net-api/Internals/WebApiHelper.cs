@@ -28,15 +28,15 @@ namespace Redmine.Net.Api.Internals
     /// </summary>
     internal static class WebApiHelper
     {
-	    /// <summary>
-	    /// Executes the upload.
-	    /// </summary>
-	    /// <param name="redmineManager">The redmine manager.</param>
-	    /// <param name="address">The address.</param>
-	    /// <param name="actionType">Type of the action.</param>
-	    /// <param name="data">The data.</param>
-	    /// <param name="parameters">The parameters</param>
-	    public static void ExecuteUpload(RedmineManager redmineManager, string address, string actionType, string data,
+        /// <summary>
+        /// Executes the upload.
+        /// </summary>
+        /// <param name="redmineManager">The redmine manager.</param>
+        /// <param name="address">The address.</param>
+        /// <param name="actionType">Type of the action.</param>
+        /// <param name="data">The data.</param>
+        /// <param name="parameters">The parameters</param>
+        public static void ExecuteUpload(RedmineManager redmineManager, string address, string actionType, string data,
              NameValueCollection parameters = null)
         {
             using (var wc = redmineManager.CreateWebClient(parameters))
@@ -95,7 +95,7 @@ namespace Redmine.Net.Api.Internals
         /// <param name="address">The address.</param>
         /// <param name="parameters">The parameters.</param>
         /// <returns></returns>
-        public static T ExecuteDownload<T>(RedmineManager redmineManager, string address, 
+        public static T ExecuteDownload<T>(RedmineManager redmineManager, string address,
             NameValueCollection parameters = null)
             where T : class, new()
         {
@@ -124,7 +124,6 @@ namespace Redmine.Net.Api.Internals
         /// <param name="parameters">The parameters.</param>
         /// <returns></returns>
         public static PagedResults<T> ExecuteDownloadList<T>(RedmineManager redmineManager, string address,
-            
             NameValueCollection parameters = null) where T : class, new()
         {
             using (var wc = redmineManager.CreateWebClient(parameters))

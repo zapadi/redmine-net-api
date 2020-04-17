@@ -21,12 +21,14 @@ namespace Redmine.Net.Api.Serialization
             Offset = offset;
             PageSize = pageSize;
 
-            if (pageSize > 0)
+            if (pageSize <= 0)
             {
-                CurrentPage = offset / pageSize + 1;
-
-                TotalPages = total / pageSize + 1;
+                return;
             }
+
+            CurrentPage = offset / pageSize + 1;
+
+            TotalPages = total / pageSize + 1;
         }
 
         /// <summary>

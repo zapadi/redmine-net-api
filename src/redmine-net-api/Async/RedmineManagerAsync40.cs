@@ -15,10 +15,10 @@
 */
 
 
-using System.Threading;
 #if NET40
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Threading;
 using System.Threading.Tasks;
 using Redmine.Net.Api.Types;
 using Redmine.Net.Api.Serialization;

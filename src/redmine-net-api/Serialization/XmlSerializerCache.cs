@@ -11,21 +11,21 @@ namespace Redmine.Net.Api.Serialization
    internal class XmlSerializerCache : IXmlSerializerCache
 	{
 		#if !(NET20 || NET40 || NET45 || NET451 || NET452)
-        private static readonly Type[] emptyTypes = Array.Empty<Type>();
+        private static readonly Type[] EmptyTypes = Array.Empty<Type>();
         #else
-        private static readonly Type[] emptyTypes = new Type[0];
+        private static readonly Type[] EmptyTypes = new Type[0];
         #endif
 		
 		public static XmlSerializerCache Instance { get; } = new XmlSerializerCache();
 
-		private readonly Dictionary<string, XmlSerializer> _serializers;		
+		private readonly Dictionary<string, XmlSerializer> serializers;		
 
-		private readonly object _syncRoot;
+		private readonly object syncRoot;
 
 		private XmlSerializerCache()
 		{
-			_syncRoot = new object();
-			_serializers = new Dictionary<string, XmlSerializer>();		
+			syncRoot = new object();
+			serializers = new Dictionary<string, XmlSerializer>();		
 		}
 
 		/// <summary>
@@ -40,7 +40,7 @@ namespace Redmine.Net.Api.Serialization
 		/// <returns></returns>
 		public XmlSerializer GetSerializer(Type type, string defaultNamespace)
 		{
-			return GetSerializer(type, null, emptyTypes, null, defaultNamespace);
+			return GetSerializer(type, null, EmptyTypes, null, defaultNamespace);
 		}
 
 		/// <summary>
@@ -55,7 +55,7 @@ namespace Redmine.Net.Api.Serialization
 		/// <returns></returns>
 		public XmlSerializer GetSerializer(Type type, XmlRootAttribute root)
 		{
-			return GetSerializer(type, null, emptyTypes, root, null);
+			return GetSerializer(type, null, EmptyTypes, root, null);
 		}
 
 		/// <summary>
@@ -70,7 +70,7 @@ namespace Redmine.Net.Api.Serialization
 		/// <returns></returns>
 		public XmlSerializer GetSerializer(Type type, XmlAttributeOverrides overrides)
 		{
-			return GetSerializer(type, overrides, emptyTypes, null, null);
+			return GetSerializer(type, overrides, EmptyTypes, null, null);
 		}
 
 		/// <summary>
@@ -106,22 +106,22 @@ namespace Redmine.Net.Api.Serialization
 			var key = CacheKeyFactory.Create(type, overrides, types, root, defaultNamespace);
 
 			XmlSerializer serializer = null;
-			lock (_syncRoot)
+			lock (syncRoot)
 			{
-				if (_serializers.ContainsKey(key) == false)
+				if (serializers.ContainsKey(key) == false)
 				{
-					lock (_syncRoot)
+					lock (syncRoot)
 					{
-						if (_serializers.ContainsKey(key) == false)
+						if (serializers.ContainsKey(key) == false)
 						{
 							serializer = new XmlSerializer(type, overrides, types, root, defaultNamespace);
-							_serializers.Add(key, serializer);
+							serializers.Add(key, serializer);
 						} 
 					} 
 				} 
 				else
 				{
-					serializer = _serializers[key];
+					serializer = serializers[key];
 				}
 
 				Debug.Assert(serializer != null);

@@ -18,9 +18,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
-using Redmine.Net.Api.Types;
 using Redmine.Net.Api.Exceptions;
 using Redmine.Net.Api.Serialization;
+using Redmine.Net.Api.Types;
 
 namespace Redmine.Net.Api.Extensions
 {
@@ -82,13 +82,15 @@ namespace Redmine.Net.Api.Extensions
                             case 422:
                                 var errors = GetRedmineExceptions(exception.Response, serializer);
                                 var message = string.Empty;
-                                if (errors != null)
+                                
+                                if (errors == null) 
+                                    throw new RedmineException($"Invalid or missing attribute parameters: {message}", innerException);
+                                
+                                foreach (var error in errors)
                                 {
-                                    foreach (var error in errors)
-                                    {
-                                        message = message + error.Info + Environment.NewLine;
-                                    }
+                                    message = message + error.Info + Environment.NewLine;
                                 }
+                                
                                 throw new RedmineException("Invalid or missing attribute parameters: " + message, innerException);
 
                             case (int)HttpStatusCode.NotAcceptable:
@@ -126,15 +128,8 @@ namespace Redmine.Net.Api.Extensions
                         return null;
                     }
 
-                    try
-                    {
-                        var result = serializer.DeserializeToPagedResults<Error>(responseContent);
-                        return result.Items;
-                    }
-                    catch (Exception)
-                    {
-                        throw;
-                    }
+                    var result = serializer.DeserializeToPagedResults<Error>(responseContent);
+                    return result.Items;
                 }
             }
         }

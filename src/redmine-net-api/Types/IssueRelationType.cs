@@ -52,10 +52,10 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// 
         /// </summary>
-        copied_to,
+        CopiedTo,
         /// <summary>
         /// 
         /// </summary>
-        copied_from
+        CopiedFrom
     }
 }
