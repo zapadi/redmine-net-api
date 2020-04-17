@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "redmine-net-api.Tests": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "BitVault410": "bitVault410",
+        "Local410": "local410"
+      }
+    }
+  }
+}

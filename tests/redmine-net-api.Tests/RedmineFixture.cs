@@ -1,29 +1,30 @@
-﻿
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using Redmine.Net.Api;
 
-namespace redmine.net.api.Tests
+namespace Padi.RedmineApi.Tests
 {
 	public class RedmineFixture
-	{
+    {
+        public RedmineCredentials Credentials { get; private set; }
 	    public RedmineManager RedmineManager { get; set; }
 
 	    public RedmineFixture ()
-		{
-			SetMimeTypeXML();
-			SetMimeTypeJSON();
+        {
+            Credentials = TestHelper.GetApplicationConfiguration();
+			SetMimeTypeXml();
+			SetMimeTypeJson();
 		}
 
-		[Conditional("JSON")]
-		private void SetMimeTypeJSON()
+		[Conditional("DEBUG_JSON")]
+		private void SetMimeTypeJson()
 		{
-			RedmineManager = new RedmineManager(Helper.Uri, Helper.ApiKey, MimeFormat.Json);
+			RedmineManager = new RedmineManager(Credentials.Uri, Credentials.ApiKey, MimeFormat.Json);
 		}
 
-		[Conditional("XML")]
-		private void SetMimeTypeXML()
+		[Conditional("DEBUG_XML")]
+		private void SetMimeTypeXml()
 		{
-			RedmineManager = new RedmineManager(Helper.Uri, Helper.ApiKey);
+			RedmineManager = new RedmineManager(Credentials.Uri, Credentials.ApiKey);
 		}
 	}
 }
