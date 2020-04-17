@@ -581,6 +581,16 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <returns></returns>
+        public IdentifiableName AsParent()
+        {
+            return IdentifiableName.Create(Id);
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         private string DebuggerDisplay =>
                $@"[{nameof(Issue)}: {ToString()}, Project={Project}, Tracker={Tracker}, Status={Status}, 
 Priority={Priority}, Author={Author}, Category={Category}, Subject={Subject}, Description={Description}, 
