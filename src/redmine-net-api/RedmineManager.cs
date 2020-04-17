@@ -1,4 +1,4 @@
-﻿/*
+/*
    Copyright 2011 - 2019 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -395,8 +395,10 @@ namespace Redmine.Net.Api
         /// <param name="pageName">The wiki page name.</param>
         public void DeleteWikiPage(string projectId, string pageName)
         {
-            var url = UrlHelper.GetDeleteWikirUrl(this, projectId, pageName);
+            var url = UrlHelper.GetDeleteWikiUrl(this, projectId, pageName);
+            
             url = Uri.EscapeUriString(url);
+            
             WebApiHelper.ExecuteUpload(this, url, HttpVerbs.DELETE, string.Empty);
         }
 

@@ -1,4 +1,4 @@
-/*
+﻿/*
    Copyright 2011 - 2019 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -317,13 +317,13 @@ namespace Redmine.Net.Api.Internals
         }
 
         /// <summary>
-        /// Gets the delete wikir URL.
+        /// Gets the delete wiki URL.
         /// </summary>
         /// <param name="redmineManager">The redmine manager.</param>
         /// <param name="projectId">The project identifier.</param>
         /// <param name="pageName">Name of the page.</param>
         /// <returns></returns>
-        public static string GetDeleteWikirUrl(RedmineManager redmineManager, string projectId, string pageName)
+        public static string GetDeleteWikiUrl(RedmineManager redmineManager, string projectId, string pageName)
         {
             return string.Format(CultureInfo.InvariantCulture,WIKI_PAGE_FORMAT, redmineManager.Host, projectId, pageName,
                 redmineManager.Format);

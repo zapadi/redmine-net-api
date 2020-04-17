@@ -77,7 +77,7 @@ namespace Redmine.Net.Api.Async
         public static async Task DeleteWikiPageAsync(this RedmineManager redmineManager, string projectId,
             string pageName)
         {
-            var uri = UrlHelper.GetDeleteWikirUrl(redmineManager, projectId, pageName);
+            var uri = UrlHelper.GetDeleteWikiUrl(redmineManager, projectId, pageName);
             uri = Uri.EscapeUriString(uri);
             await WebApiAsyncHelper.ExecuteUpload(redmineManager, uri, HttpVerbs.DELETE, string.Empty).ConfigureAwait(false);
         }
