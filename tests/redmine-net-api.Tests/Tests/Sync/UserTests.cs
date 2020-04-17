@@ -16,13 +16,13 @@
 
 using System.Collections.Specialized;
 using System.Globalization;
-using redmine.net.api.Tests.Infrastructure;
+using Padi.RedmineApi.Tests.Infrastructure;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Exceptions;
 using Redmine.Net.Api.Types;
 using Xunit;
 
-namespace redmine.net.api.Tests.Tests.Sync
+namespace Padi.RedmineApi.Tests.Tests.Sync
 {
 	[Trait("Redmine-Net-Api", "Users")]
 #if !(NET20 || NET40)
@@ -43,8 +43,8 @@ namespace redmine.net.api.Tests.Tests.Sync
 		private const string USER_LAST_NAME = "One";
 		private const string USER_EMAIL = "testUser@mail.com";
 
-		private static string CREATED_USER_ID;
-        private static string CREATED_USER_WITH_ALL_PROP_ID;
+		private static string createdUserId;
+        private static string createdUserWithAllPropId;
 
         private static User CreateTestUserWithRequiredPropertiesSet()
 		{
@@ -67,7 +67,7 @@ namespace redmine.net.api.Tests.Tests.Sync
 			Assert.NotNull(savedUser);
 			Assert.NotEqual(0, savedUser.Id);
 
-			CREATED_USER_ID = savedUser.Id.ToString();
+			createdUserId = savedUser.Id.ToString();
 
 			Assert.True(savedUser.Login.Equals(USER_LOGIN), "User login is invalid.");
 			Assert.True(savedUser.FirstName.Equals(USER_FIRST_NAME), "User first name is invalid.");
@@ -105,7 +105,7 @@ namespace redmine.net.api.Tests.Tests.Sync
 			Assert.NotNull(savedUser);
 			Assert.NotEqual(0, savedUser.Id);
 
-			CREATED_USER_WITH_ALL_PROP_ID = savedUser.Id.ToString();
+			createdUserWithAllPropId = savedUser.Id.ToString();
 
 			Assert.True(savedUser.Login.Equals(login), "User login is invalid.");
 			Assert.True(savedUser.FirstName.Equals(firstName), "User first name is invalid.");
@@ -116,7 +116,7 @@ namespace redmine.net.api.Tests.Tests.Sync
 		[Fact, Order(4)]
 		public void Should_Get_Created_User_With_Required_Fields()
 		{
-			var user = fixture.RedmineManager.GetObject<User>(CREATED_USER_ID, null);
+			var user = fixture.RedmineManager.GetObject<User>(createdUserId, null);
 
 			Assert.NotNull(user);
 			Assert.IsType<User>(user);
@@ -155,10 +155,10 @@ namespace redmine.net.api.Tests.Tests.Sync
         [Fact, Order(6)]
 		public void Should_Not_Update_User_With_Invalid_Properties()
 		{
-			var user = fixture.RedmineManager.GetObject<User>(CREATED_USER_ID, null);
+			var user = fixture.RedmineManager.GetObject<User>(createdUserId, null);
 			user.FirstName = "";
 
-			Assert.Throws<RedmineException>(() => fixture.RedmineManager.UpdateObject(CREATED_USER_ID, user));
+			Assert.Throws<RedmineException>(() => fixture.RedmineManager.UpdateObject(createdUserId, user));
 		}
 
 		[Fact, Order(7)]
@@ -166,9 +166,9 @@ namespace redmine.net.api.Tests.Tests.Sync
 		{
 			var exception =
 				(RedmineException)
-				Record.Exception(() => fixture.RedmineManager.DeleteObject<User>(CREATED_USER_ID));
+				Record.Exception(() => fixture.RedmineManager.DeleteObject<User>(createdUserId));
 			Assert.Null(exception);
-			Assert.Throws<NotFoundException>(() => fixture.RedmineManager.GetObject<User>(CREATED_USER_ID, null));
+			Assert.Throws<NotFoundException>(() => fixture.RedmineManager.GetObject<User>(createdUserId, null));
 
 		}
 
@@ -177,19 +177,19 @@ namespace redmine.net.api.Tests.Tests.Sync
 		{
 			var exception =
 				(RedmineException)
-				Record.Exception(() => fixture.RedmineManager.DeleteObject<User>(CREATED_USER_WITH_ALL_PROP_ID));
+				Record.Exception(() => fixture.RedmineManager.DeleteObject<User>(createdUserWithAllPropId));
 			Assert.Null(exception);
-			Assert.Throws<NotFoundException>(() => fixture.RedmineManager.GetObject<User>(CREATED_USER_WITH_ALL_PROP_ID, null));
+			Assert.Throws<NotFoundException>(() => fixture.RedmineManager.GetObject<User>(createdUserWithAllPropId, null));
 
 		}
 
 		[Fact, Order(9)]
 		public void Should_Get_Current_User()
 		{
-			User currentUser = fixture.RedmineManager.GetCurrentUser();
+			var currentUser = fixture.RedmineManager.GetCurrentUser();
 
 			Assert.NotNull(currentUser);
-			Assert.Equal(currentUser.ApiKey, Helper.ApiKey);
+			Assert.Equal(currentUser.ApiKey, fixture.Credentials.ApiKey);
 		}
 
 		[Fact, Order(10)]
@@ -210,7 +210,7 @@ namespace redmine.net.api.Tests.Tests.Sync
 		{
 			var users = fixture.RedmineManager.GetObjects<User>(new NameValueCollection()
 			{
-				{RedmineKeys.STATUS, ((int) UserStatus.STATUS_ACTIVE).ToString(CultureInfo.InvariantCulture)}
+				{RedmineKeys.STATUS, ((int) UserStatus.StatusActive).ToString(CultureInfo.InvariantCulture)}
 			});
 
 			Assert.NotNull(users);

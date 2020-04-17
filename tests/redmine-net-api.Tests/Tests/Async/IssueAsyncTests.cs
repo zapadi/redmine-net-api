@@ -6,7 +6,7 @@ using Redmine.Net.Api.Async;
 using Redmine.Net.Api.Types;
 using Xunit;
 
-namespace redmine.net.api.Tests.Tests.Async
+namespace Padi.RedmineApi.Tests.Tests.Async
 {
 	[Collection("RedmineCollection")]
 	public class IssueAsyncTests
@@ -25,7 +25,7 @@ namespace redmine.net.api.Tests.Tests.Async
 		{
 			await fixture.RedmineManager.AddWatcherToIssueAsync(WATCHER_ISSUE_ID, WATCHER_USER_ID);
 
-			Issue issue = await fixture.RedmineManager.GetObjectAsync<Issue>(WATCHER_ISSUE_ID.ToString(), new NameValueCollection { { "include", "watchers" } });
+			var issue = await fixture.RedmineManager.GetObjectAsync<Issue>(WATCHER_ISSUE_ID.ToString(), new NameValueCollection { { "include", "watchers" } });
 
 			Assert.NotNull(issue);
 			Assert.True(issue.Watchers.Count == 1, "Number of watchers != 1");
@@ -37,7 +37,7 @@ namespace redmine.net.api.Tests.Tests.Async
 		{
 			await fixture.RedmineManager.RemoveWatcherFromIssueAsync(WATCHER_ISSUE_ID, WATCHER_USER_ID);
 
-			Issue issue = await fixture.RedmineManager.GetObjectAsync<Issue>(WATCHER_ISSUE_ID.ToString(), new NameValueCollection { { "include", "watchers" } });
+			var issue = await fixture.RedmineManager.GetObjectAsync<Issue>(WATCHER_ISSUE_ID.ToString(), new NameValueCollection { { "include", "watchers" } });
 
 			Assert.True(issue.Watchers == null || ((List<Watcher>)issue.Watchers).Find(w => w.Id == WATCHER_USER_ID) == null);
 		}

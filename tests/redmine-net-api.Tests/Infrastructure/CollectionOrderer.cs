@@ -7,7 +7,7 @@ using System.Reflection;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace redmine.net.api.Tests.Infrastructure
+namespace Padi.RedmineApi.Tests.Infrastructure
 {
     /// <summary>
     ///     Custom xUnit test collection orderer that uses the OrderAttribute

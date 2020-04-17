@@ -16,14 +16,14 @@
 
 using System;
 using System.Collections.Specialized;
+using Padi.RedmineApi.Tests.Infrastructure;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Exceptions;
-using redmine.net.api.Tests.Infrastructure;
 using Redmine.Net.Api.Types;
 using Xunit;
 using Version = Redmine.Net.Api.Types.Version;
 
-namespace redmine.net.api.Tests.Tests.Sync
+namespace Padi.RedmineApi.Tests.Tests.Sync
 {
 	[Trait("Redmine-Net-Api", "Versions")]
 #if !(NET20 || NET40)
@@ -47,7 +47,7 @@ namespace redmine.net.api.Tests.Tests.Sync
 	        const string NEW_VERSION_NAME = "VersionTesting";
 	        const VersionStatus NEW_VERSION_STATUS = VersionStatus.Locked;
 	        const VersionSharing NEW_VERSION_SHARING = VersionSharing.Hierarchy;
-	        DateTime NEW_VERSION_DUE_DATE = DateTime.Now.AddDays(7);
+	        DateTime newVersionDueDate = DateTime.Now.AddDays(7);
 	        const string NEW_VERSION_DESCRIPTION = "Version description";
 
 	        var version = new Version
@@ -55,7 +55,7 @@ namespace redmine.net.api.Tests.Tests.Sync
                 Name = NEW_VERSION_NAME,
                 Status = NEW_VERSION_STATUS,
                 Sharing = NEW_VERSION_SHARING,
-                DueDate = NEW_VERSION_DUE_DATE,
+                DueDate = newVersionDueDate,
                 Description = NEW_VERSION_DESCRIPTION
             };
 
@@ -67,7 +67,7 @@ namespace redmine.net.api.Tests.Tests.Sync
             Assert.True(savedVersion.Status.Equals(NEW_VERSION_STATUS), "Version status is invalid.");
             Assert.True(savedVersion.Sharing.Equals(NEW_VERSION_SHARING), "Version sharing is invalid.");
             Assert.NotNull(savedVersion.DueDate);
-            Assert.True(savedVersion.DueDate.Value.Date.Equals(NEW_VERSION_DUE_DATE.Date), "Version due date is invalid.");
+            Assert.True(savedVersion.DueDate.Value.Date.Equals(newVersionDueDate.Date), "Version due date is invalid.");
             Assert.True(savedVersion.Description.Equals(NEW_VERSION_DESCRIPTION), "Version description is invalid.");
         }
 
@@ -119,13 +119,13 @@ namespace redmine.net.api.Tests.Tests.Sync
 	        const VersionSharing UPDATED_VERSION_SHARING = VersionSharing.System;
 	        const string UPDATED_VERSION_DESCRIPTION = "Updated description";
 
-            DateTime UPDATED_VERSION_DUE_DATE = DateTime.Now.AddMonths(1);
+            DateTime updatedVersionDueDate = DateTime.Now.AddMonths(1);
 
 	        var version = fixture.RedmineManager.GetObject<Version>(UPDATED_VERSION_ID, null);
             version.Name = UPDATED_VERSION_NAME;
             version.Status = UPDATED_VERSION_STATUS;
             version.Sharing = UPDATED_VERSION_SHARING;
-            version.DueDate = UPDATED_VERSION_DUE_DATE;
+            version.DueDate = updatedVersionDueDate;
             version.Description = UPDATED_VERSION_DESCRIPTION;
 
             fixture.RedmineManager.UpdateObject(UPDATED_VERSION_ID, version);

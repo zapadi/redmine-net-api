@@ -14,18 +14,17 @@
    limitations under the License.
 */
 
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
-using redmine.net.api.Tests.Infrastructure;
+using Padi.RedmineApi.Tests.Infrastructure;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Exceptions;
 using Redmine.Net.Api.Types;
 using Xunit;
 
-namespace redmine.net.api.Tests.Tests.Sync
+namespace Padi.RedmineApi.Tests.Tests.Sync
 {
-	[Trait("Redmine-Net-Api", "WikiPages")]
+    [Trait("Redmine-Net-Api", "WikiPages")]
 #if !(NET20 || NET40)
     [Collection("RedmineCollection")]
 #endif
@@ -36,19 +35,19 @@ namespace redmine.net.api.Tests.Tests.Sync
             this.fixture = fixture;
         }
 
-	    private readonly RedmineFixture fixture;
+        private readonly RedmineFixture fixture;
 
-	    private const string PROJECT_ID = "redmine-net-api";
+        private const string PROJECT_ID = "redmine-net-api";
         private const string WIKI_PAGE_NAME = "Wiki";
 
         [Fact, Order(1)]
         public void Should_Add_Or_Update_WikiPage()
         {
-	        const string WIKI_PAGE_UPDATED_TEXT = "Updated again and again wiki page";
-	        const string WIKI_PAGE_COMMENT = "I did it through code";
+            const string WIKI_PAGE_UPDATED_TEXT = "Updated again and again wiki page";
+            const string WIKI_PAGE_COMMENT = "I did it through code";
 
-	        var page = fixture.RedmineManager.CreateOrUpdateWikiPage(PROJECT_ID, WIKI_PAGE_NAME,
-                new WikiPage {Text = WIKI_PAGE_UPDATED_TEXT, Comments = WIKI_PAGE_COMMENT});
+            var page = fixture.RedmineManager.CreateOrUpdateWikiPage(PROJECT_ID, WIKI_PAGE_NAME,
+                new WikiPage { Text = WIKI_PAGE_UPDATED_TEXT, Comments = WIKI_PAGE_COMMENT });
 
             Assert.NotNull(page);
             Assert.True(page.Title.Equals(WIKI_PAGE_NAME), "Wiki page name is invalid.");
@@ -66,22 +65,21 @@ namespace redmine.net.api.Tests.Tests.Sync
         [Fact, Order(2)]
         public void Should_Get_All_Wiki_Pages_By_Project_Id()
         {
-	        const int NUMBER_OF_WIKI_PAGES = 2;
+            const int NUMBER_OF_WIKI_PAGES = 2;
 
-	        var pages = (List<WikiPage>) fixture.RedmineManager.GetAllWikiPages(PROJECT_ID);
+            var pages = fixture.RedmineManager.GetAllWikiPages(PROJECT_ID);
 
             Assert.NotNull(pages);
             Assert.True(pages.Count == NUMBER_OF_WIKI_PAGES, "Wiki pages count != " + NUMBER_OF_WIKI_PAGES);
-            Assert.True(pages.Exists(p => p.Title == WIKI_PAGE_NAME),
-                string.Format("Wiki page {0} does not exist", WIKI_PAGE_NAME));
+            Assert.True(pages.Exists(p => p.Title == WIKI_PAGE_NAME), $"Wiki page {WIKI_PAGE_NAME} does not exist");
         }
 
         [Fact, Order(3)]
         public void Should_Get_Wiki_Page_By_Title()
         {
-	        const string WIKI_PAGE_TITLE = "Wiki2";
+            const string WIKI_PAGE_TITLE = "Wiki2";
 
-	        var page = fixture.RedmineManager.GetWikiPage(PROJECT_ID, null, WIKI_PAGE_TITLE);
+            var page = fixture.RedmineManager.GetWikiPage(PROJECT_ID, null, WIKI_PAGE_TITLE);
 
             Assert.NotNull(page);
             Assert.True(page.Title.Equals(WIKI_PAGE_TITLE), "Wiki page title is invalid.");
@@ -91,7 +89,7 @@ namespace redmine.net.api.Tests.Tests.Sync
         public void Should_Get_Wiki_Page_By_Title_With_Attachments()
         {
             var page = fixture.RedmineManager.GetWikiPage(PROJECT_ID,
-                new NameValueCollection {{RedmineKeys.INCLUDE, RedmineKeys.ATTACHMENTS}}, WIKI_PAGE_NAME);
+                new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.ATTACHMENTS } }, WIKI_PAGE_NAME);
 
             Assert.NotNull(page);
             Assert.Equal(page.Title, WIKI_PAGE_NAME);
@@ -101,8 +99,8 @@ namespace redmine.net.api.Tests.Tests.Sync
         [Fact, Order(5)]
         public void Should_Get_Wiki_Page_By_Version()
         {
-	        const int WIKI_PAGE_VERSION = 1;
-	        var oldPage = fixture.RedmineManager.GetWikiPage(PROJECT_ID, null, WIKI_PAGE_NAME, WIKI_PAGE_VERSION);
+            const int WIKI_PAGE_VERSION = 1;
+            var oldPage = fixture.RedmineManager.GetWikiPage(PROJECT_ID, null, WIKI_PAGE_NAME, WIKI_PAGE_VERSION);
 
             Assert.NotNull(oldPage);
             Assert.Equal(oldPage.Title, WIKI_PAGE_NAME);
@@ -112,19 +110,16 @@ namespace redmine.net.api.Tests.Tests.Sync
         [Fact]
         public void Should_Create_Wiki()
         {
-            var author = new IdentifiableName();
-            author.Id = 1;
-
-           var result = fixture.RedmineManager.CreateOrUpdateWikiPage("1","pagina2",new WikiPage
-           {
-               Text = "ana are mere multe si rosii!",
-               Comments = "asa",
-               Version = 1
+            var result = fixture.RedmineManager.CreateOrUpdateWikiPage("1", "pagina2", new WikiPage
+            {
+                Text = "ana are mere multe si rosii!",
+                Comments = "asa",
+                Version = 1
             });
-            
-           Assert.NotNull(result);
-           
+
+            Assert.NotNull(result);
+
         }
-        
+
     }
 }

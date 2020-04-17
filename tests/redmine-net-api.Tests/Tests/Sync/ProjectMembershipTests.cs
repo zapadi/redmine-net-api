@@ -16,13 +16,13 @@
 
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using redmine.net.api.Tests.Infrastructure;
+using Padi.RedmineApi.Tests.Infrastructure;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Exceptions;
 using Redmine.Net.Api.Types;
 using Xunit;
 
-namespace redmine.net.api.Tests.Tests.Sync
+namespace Padi.RedmineApi.Tests.Tests.Sync
 {
 	[Trait("Redmine-Net-Api", "ProjectMemberships")]
 #if !(NET20 || NET40)
@@ -48,8 +48,8 @@ namespace redmine.net.api.Tests.Tests.Sync
 
 	        var pm = new ProjectMembership
             {
-                User = new IdentifiableName {Id = NEW_PROJECT_MEMBERSHIP_USER_ID},
-                Roles = new List<MembershipRole> {new MembershipRole {Id = NEW_PROJECT_MEMBERSHIP_ROLE_ID}}
+                User = IdentifiableName.Create(NEW_PROJECT_MEMBERSHIP_USER_ID),
+                Roles = new List<MembershipRole> { (MembershipRole)IdentifiableName.Create(NEW_PROJECT_MEMBERSHIP_ROLE_ID)}
             };
 
             var createdPm = fixture.RedmineManager.CreateObject(pm, PROJECT_IDENTIFIER);
@@ -110,7 +110,7 @@ namespace redmine.net.api.Tests.Tests.Sync
 	        const int UPDATED_PROJECT_MEMBERSHIP_ROLE_ID = 4;
 
 	        var pm = fixture.RedmineManager.GetObject<ProjectMembership>(UPDATED_PROJECT_MEMBERSHIP_ID, null);
-            pm.Roles.Add(new MembershipRole {Id = UPDATED_PROJECT_MEMBERSHIP_ROLE_ID});
+            pm.Roles.Add((MembershipRole)IdentifiableName.Create(UPDATED_PROJECT_MEMBERSHIP_ROLE_ID));
 
             fixture.RedmineManager.UpdateObject(UPDATED_PROJECT_MEMBERSHIP_ID, pm);
 

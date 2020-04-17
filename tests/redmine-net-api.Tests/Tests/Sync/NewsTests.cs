@@ -15,12 +15,12 @@
 */
 
 using System.Collections.Specialized;
-using redmine.net.api.Tests.Infrastructure;
+using Padi.RedmineApi.Tests.Infrastructure;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Types;
 using Xunit;
 
-namespace redmine.net.api.Tests.Tests.Sync
+namespace Padi.RedmineApi.Tests.Tests.Sync
 {
 	[Trait("Redmine-Net-Api", "News")]
 #if !(NET20 || NET40)

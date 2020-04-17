@@ -1,11 +1,11 @@
 ﻿using System.Collections.Specialized;
-using redmine.net.api.Tests.Infrastructure;
+using Padi.RedmineApi.Tests.Infrastructure;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Exceptions;
 using Redmine.Net.Api.Types;
 using Xunit;
 
-namespace redmine.net.api.Tests.Tests.Sync
+namespace Padi.RedmineApi.Tests.Tests.Sync
 {
 	[Trait("Redmine-Net-Api", "IssueCategories")]
 #if !(NET20 || NET40)
@@ -13,18 +13,17 @@ namespace redmine.net.api.Tests.Tests.Sync
 #endif
     public class IssueCategoryTests
     {
+        private readonly RedmineFixture fixture;
+
+        private const string PROJECT_ID = "redmine-net-testq";
+        private const string NEW_ISSUE_CATEGORY_NAME = "Test category";
+        private const int NEW_ISSUE_CATEGORY_ASIGNEE_ID = 1;
+        private static string createdIssueCategoryId;
+
         public IssueCategoryTests(RedmineFixture fixture)
         {
             this.fixture = fixture;
         }
-
-	    private readonly RedmineFixture fixture;
-
-	    const string PROJECT_ID = "redmine-net-testq";
-	    const string NEW_ISSUE_CATEGORY_NAME = "Test category";
-	    const int NEW_ISSUE_CATEGORY_ASIGNEE_ID = 1;
-
-	    private static string CREATED_ISSUE_CATEGORY_ID;
 
         [Fact, Order(1)]
         public void Should_Create_IssueCategory()
@@ -32,12 +31,12 @@ namespace redmine.net.api.Tests.Tests.Sync
 	        var issueCategory = new IssueCategory
             {
                 Name = NEW_ISSUE_CATEGORY_NAME,
-                AssignTo = new IdentifiableName {Id = NEW_ISSUE_CATEGORY_ASIGNEE_ID}
+                AssignTo =  IdentifiableName.Create(NEW_ISSUE_CATEGORY_ASIGNEE_ID)
             };
 
             var savedIssueCategory = fixture.RedmineManager.CreateObject(issueCategory, PROJECT_ID);
 
-	        CREATED_ISSUE_CATEGORY_ID = savedIssueCategory.Id.ToString();
+	        createdIssueCategoryId = savedIssueCategory.Id.ToString();
 
             Assert.NotNull(savedIssueCategory);
             Assert.True(savedIssueCategory.Name.Equals(NEW_ISSUE_CATEGORY_NAME), "Saved issue category name is invalid.");
@@ -49,10 +48,10 @@ namespace redmine.net.api.Tests.Tests.Sync
 	        var exception =
                 (RedmineException)
                     Record.Exception(
-                        () => fixture.RedmineManager.DeleteObject<IssueCategory>(CREATED_ISSUE_CATEGORY_ID));
+                        () => fixture.RedmineManager.DeleteObject<IssueCategory>(createdIssueCategoryId));
             Assert.Null(exception);
             Assert.Throws<NotFoundException>(
-                () => fixture.RedmineManager.GetObject<IssueCategory>(CREATED_ISSUE_CATEGORY_ID, null));
+                () => fixture.RedmineManager.GetObject<IssueCategory>(createdIssueCategoryId, null));
         }
 
         [Fact, Order(2)]
@@ -76,7 +75,7 @@ namespace redmine.net.api.Tests.Tests.Sync
 	        const string ISSUE_CATEGORY_PROJECT_NAME_TO_GET = "Redmine tests";
 	        const string ISSUE_CATEGORY_ASIGNEE_NAME_TO_GET = "Redmine";
 
-	        var issueCategory = fixture.RedmineManager.GetObject<IssueCategory>(CREATED_ISSUE_CATEGORY_ID, null);
+	        var issueCategory = fixture.RedmineManager.GetObject<IssueCategory>(createdIssueCategoryId, null);
 
             Assert.NotNull(issueCategory);
             Assert.True(issueCategory.Name.Equals(NEW_ISSUE_CATEGORY_NAME), "Issue category name is invalid.");
@@ -94,13 +93,13 @@ namespace redmine.net.api.Tests.Tests.Sync
 	        const string ISSUE_CATEGORY_NAME_TO_UPDATE = "Category updated";
 	        const int ISSUE_CATEGORY_ASIGNEE_ID_TO_UPDATE = 2;
 
-	        var issueCategory = fixture.RedmineManager.GetObject<IssueCategory>(CREATED_ISSUE_CATEGORY_ID, null);
+	        var issueCategory = fixture.RedmineManager.GetObject<IssueCategory>(createdIssueCategoryId, null);
             issueCategory.Name = ISSUE_CATEGORY_NAME_TO_UPDATE;
-            issueCategory.AssignTo = new IdentifiableName {Id = ISSUE_CATEGORY_ASIGNEE_ID_TO_UPDATE};
+            issueCategory.AssignTo = IdentifiableName.Create(ISSUE_CATEGORY_ASIGNEE_ID_TO_UPDATE);
 
-            fixture.RedmineManager.UpdateObject(CREATED_ISSUE_CATEGORY_ID, issueCategory);
+            fixture.RedmineManager.UpdateObject(createdIssueCategoryId, issueCategory);
 
-            var updatedIssueCategory = fixture.RedmineManager.GetObject<IssueCategory>(CREATED_ISSUE_CATEGORY_ID, null);
+            var updatedIssueCategory = fixture.RedmineManager.GetObject<IssueCategory>(createdIssueCategoryId, null);
 
             Assert.NotNull(updatedIssueCategory);
             Assert.True(updatedIssueCategory.Name.Equals(ISSUE_CATEGORY_NAME_TO_UPDATE),

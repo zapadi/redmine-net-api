@@ -17,13 +17,13 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using redmine.net.api.Tests.Infrastructure;
+using Padi.RedmineApi.Tests.Infrastructure;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Exceptions;
 using Redmine.Net.Api.Types;
 using Xunit;
 
-namespace redmine.net.api.Tests.Tests.Sync
+namespace Padi.RedmineApi.Tests.Tests.Sync
 {
     [Trait("Redmine-Net-Api", "Attachments")]
 #if !(NET20 || NET40)
@@ -44,7 +44,7 @@ namespace redmine.net.api.Tests.Tests.Sync
         [Fact, Order(1)]
         public void Should_Download_Attachment()
         {
-            var url = Helper.Uri + "/attachments/download/" + ATTACHMENT_ID + "/" + ATTACHMENT_FILE_NAME;
+            var url = fixture.Credentials.Uri + "/attachments/download/" + ATTACHMENT_ID + "/" + ATTACHMENT_FILE_NAME;
 
             var document = fixture.RedmineManager.DownloadFile(url);
 
@@ -89,7 +89,7 @@ namespace redmine.net.api.Tests.Tests.Sync
 
             var issue = new Issue
             {
-                Project = new Project { Id = PROJECT_ID },
+                Project = IdentifiableName.Create(PROJECT_ID ),
                 Subject = ISSUE_SUBJECT,
                 Uploads = attachments
             };

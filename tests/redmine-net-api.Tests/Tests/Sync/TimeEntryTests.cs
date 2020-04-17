@@ -15,12 +15,12 @@
 */
 
 using System;
-using redmine.net.api.Tests.Infrastructure;
+using Padi.RedmineApi.Tests.Infrastructure;
 using Redmine.Net.Api.Exceptions;
 using Redmine.Net.Api.Types;
 using Xunit;
 
-namespace redmine.net.api.Tests.Tests.Sync
+namespace Padi.RedmineApi.Tests.Tests.Sync
 {
 	[Trait("Redmine-Net-Api", "TimeEntries")]
 #if !(NET20 || NET40)
@@ -40,18 +40,18 @@ namespace redmine.net.api.Tests.Tests.Sync
         {
 	        const int NEW_TIME_ENTRY_ISSUE_ID = 18;
 	        const int NEW_TIME_ENTRY_PROJECT_ID = 9;
-	        DateTime NEW_TIME_ENTRY_DATE = DateTime.Now;
+	        var newTimeEntryDate = DateTime.Now;
 	        const int NEW_TIME_ENTRY_HOURS = 1;
 	        const int NEW_TIME_ENTRY_ACTIVITY_ID = 16;
 	        const string NEW_TIME_ENTRY_COMMENTS = "Added time entry on project";
 
 	        var timeEntry = new TimeEntry
             {
-                Issue = new IdentifiableName {Id = NEW_TIME_ENTRY_ISSUE_ID},
-                Project = new IdentifiableName {Id = NEW_TIME_ENTRY_PROJECT_ID},
-                SpentOn = NEW_TIME_ENTRY_DATE,
+                Issue = IdentifiableName.Create(NEW_TIME_ENTRY_ISSUE_ID),
+                Project = IdentifiableName.Create(NEW_TIME_ENTRY_PROJECT_ID),
+                SpentOn = newTimeEntryDate,
                 Hours = NEW_TIME_ENTRY_HOURS,
-                Activity = new IdentifiableName {Id = NEW_TIME_ENTRY_ACTIVITY_ID},
+                Activity = IdentifiableName.Create(NEW_TIME_ENTRY_ACTIVITY_ID),
                 Comments = NEW_TIME_ENTRY_COMMENTS
             };
 
@@ -63,7 +63,7 @@ namespace redmine.net.api.Tests.Tests.Sync
             Assert.NotNull(savedTimeEntry.Project);
             Assert.True(savedTimeEntry.Project.Id == NEW_TIME_ENTRY_PROJECT_ID, "Project id is invalid.");
             Assert.NotNull(savedTimeEntry.SpentOn);
-            Assert.True(DateTime.Compare(savedTimeEntry.SpentOn.Value.Date, NEW_TIME_ENTRY_DATE.Date) == 0,
+            Assert.True(DateTime.Compare(savedTimeEntry.SpentOn.Value.Date, newTimeEntryDate.Date) == 0,
                 "Date is invalid.");
             Assert.True(savedTimeEntry.Hours == NEW_TIME_ENTRY_HOURS, "Hours value is not valid.");
             Assert.NotNull(savedTimeEntry.Activity);
@@ -116,17 +116,16 @@ namespace redmine.net.api.Tests.Tests.Sync
 	        const int UPDATED_TIME_ENTRY_HOURS = 3;
 	        const int UPDATED_TIME_ENTRY_ACTIVITY_ID = 17;
 	        const string UPDATED_TIME_ENTRY_COMMENTS = "Time entry updated";
-	        DateTime UPDATED_TIME_ENTRY_DATE = DateTime.Now.AddDays(-2);
+	        var updatedTimeEntryDate = DateTime.Now.AddDays(-2);
 
 	        var timeEntry = fixture.RedmineManager.GetObject<TimeEntry>(UPDATED_TIME_ENTRY_ID, null);
-            timeEntry.Project.Id = UPDATED_TIME_ENTRY_PROJECT_ID;
-            timeEntry.Issue.Id = UPDATED_TIME_ENTRY_ISSUE_ID;
-            timeEntry.SpentOn = UPDATED_TIME_ENTRY_DATE;
+            timeEntry.Project = IdentifiableName.Create(UPDATED_TIME_ENTRY_PROJECT_ID);
+            timeEntry.Issue = IdentifiableName.Create(UPDATED_TIME_ENTRY_ISSUE_ID);
+            timeEntry.SpentOn = updatedTimeEntryDate;
             timeEntry.Hours = UPDATED_TIME_ENTRY_HOURS;
             timeEntry.Comments = UPDATED_TIME_ENTRY_COMMENTS;
 
-            if (timeEntry.Activity == null) timeEntry.Activity = new IdentifiableName();
-            timeEntry.Activity.Id = UPDATED_TIME_ENTRY_ACTIVITY_ID;
+            if (timeEntry.Activity == null) timeEntry.Activity = IdentifiableName.Create(UPDATED_TIME_ENTRY_ACTIVITY_ID);
 
             fixture.RedmineManager.UpdateObject(UPDATED_TIME_ENTRY_ID, timeEntry);
 
