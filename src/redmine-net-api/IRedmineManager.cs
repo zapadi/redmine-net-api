@@ -232,12 +232,6 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <param name="id"></param>
-        /// <typeparam name="T"></typeparam>
-        void DeleteObject<T>(string id) where T : class, new();
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="id"></param>
         /// <param name="parameters"></param>
         /// <typeparam name="T"></typeparam>
         void DeleteObject<T>(string id, NameValueCollection parameters) where T : class, new();

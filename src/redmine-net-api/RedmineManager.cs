@@ -698,18 +698,6 @@ namespace Redmine.Net.Api
         }
 
         /// <summary>
-        ///     Deletes the Redmine object.
-        /// </summary>
-        /// <typeparam name="T">The type of objects to delete.</typeparam>
-        /// <param name="id">The id of the object to delete</param>
-        /// <exception cref="RedmineException"></exception>
-        /// <code></code>
-        public void DeleteObject<T>(string id) where T : class, new()
-        {
-            DeleteObject<T>(id, null);
-        }
-
-        /// <summary>
         /// Deletes the Redmine object.
         /// </summary>
         /// <typeparam name="T">The type of objects to delete.</typeparam>
