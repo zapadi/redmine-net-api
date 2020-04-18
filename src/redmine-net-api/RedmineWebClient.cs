@@ -130,8 +130,8 @@ namespace Redmine.Net.Api
                                                     DecompressionMethods.None;
             httpWebRequest.PreAuthenticate = PreAuthenticate;
             httpWebRequest.KeepAlive = KeepAlive;
-            httpWebRequest.UseDefaultCredentials = UseDefaultCredentials;
             httpWebRequest.Credentials = Credentials;
+            httpWebRequest.UseDefaultCredentials =  (httpWebRequest.Credentials == null);
             httpWebRequest.UserAgent = UA;
             httpWebRequest.CachePolicy = CachePolicy;
 
@@ -171,15 +171,14 @@ namespace Redmine.Net.Api
                 webException.HandleWebException(RedmineSerializer);
             }
 
-            if (response == null)
+            switch (response)
             {
-                return null;
-            }
-
-            if (response is HttpWebResponse)
-            {
-                HandleRedirect(request, response);
-                HandleCookies(request, response);
+                case null:
+                    return null;
+                case HttpWebResponse _:
+                    HandleRedirect(request, response);
+                    HandleCookies(request, response);
+                    break;
             }
 
             return response;
@@ -243,9 +242,7 @@ namespace Redmine.Net.Api
                 redirectUrl = string.Empty;
             }
         }
-
-
-
+        
         /// <summary>
         /// Handles additional cookies
         /// </summary>
@@ -266,23 +263,4 @@ namespace Redmine.Net.Api
             CookieContainer.Add(col);
         }
     }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public enum RedirectType
-    {
-        /// <summary>
-        /// 
-        /// </summary>
-        None,
-        /// <summary>
-        /// 
-        /// </summary>
-        OnlyHost,
-        /// <summary>
-        /// 
-        /// </summary>
-        All
-    };
 }

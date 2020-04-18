@@ -42,24 +42,15 @@ namespace Redmine.Net.Api.Internals
         {
             using (var wc = redmineManager.CreateWebClient(null))
             {
-                try
+                if (actionType == HttpVerbs.POST || actionType == HttpVerbs.DELETE || actionType == HttpVerbs.PUT ||
+                    actionType == HttpVerbs.PATCH)
                 {
-                    if (actionType == HttpVerbs.POST || actionType == HttpVerbs.DELETE || actionType == HttpVerbs.PUT ||
-                        actionType == HttpVerbs.PATCH)
-                    {
-                        return await wc.UploadStringTaskAsync(address, actionType, data).ConfigureAwait(false);
-                    }
-                }
-                catch (WebException webException)
-                {
-                    webException.HandleWebException(redmineManager.Serializer);
+                    return await wc.UploadStringTaskAsync(address, actionType, data).ConfigureAwait(false);
                 }
             }
 
             return null;
         }
-
-        
 
         /// <summary>
         /// Executes the download.
@@ -75,16 +66,8 @@ namespace Redmine.Net.Api.Internals
         {
             using (var wc = redmineManager.CreateWebClient(parameters))
             {
-                try
-                {
-                    var response = await wc.DownloadStringTaskAsync(address).ConfigureAwait(false);
-                    return redmineManager.Serializer.Deserialize<T>(response);
-                }
-                catch (WebException webException)
-                {
-                    webException.HandleWebException(redmineManager.Serializer);
-                }
-                return default(T);
+                var response = await wc.DownloadStringTaskAsync(address).ConfigureAwait(false);
+                return redmineManager.Serializer.Deserialize<T>(response);
             }
         }
 
@@ -97,21 +80,15 @@ namespace Redmine.Net.Api.Internals
         /// <param name="parameters">The parameters.</param>
         /// <returns></returns>
         public static async Task<List<T>> ExecuteDownloadList<T>(RedmineManager redmineManager, string address,
-          
            NameValueCollection parameters = null) where T : class, new()
         {
             using (var wc = redmineManager.CreateWebClient(parameters))
             {
-                try
+                var response = await wc.DownloadStringTaskAsync(address).ConfigureAwait(false);
+                var result = redmineManager.Serializer.DeserializeToPagedResults<T>(response);
+                if (result != null)
                 {
-                    var response = await wc.DownloadStringTaskAsync(address).ConfigureAwait(false);
-                    var result = redmineManager.Serializer.DeserializeToPagedResults<T>(response);
-                    if (result != null)
-                        return new List<T>(result.Items);
-                }
-                catch (WebException webException)
-                {
-                    webException.HandleWebException(redmineManager.Serializer);
+                    return new List<T>(result.Items);
                 }
                 return null;
             }
@@ -127,21 +104,12 @@ namespace Redmine.Net.Api.Internals
         /// <param name="parameters">The parameters.</param>
         /// <returns></returns>
         public static async Task<PagedResults<T>> ExecuteDownloadPaginatedList<T>(RedmineManager redmineManager, string address,
-           
             NameValueCollection parameters = null) where T : class, new()
         {
             using (var wc = redmineManager.CreateWebClient(parameters))
             {
-                try
-                {
-                    var response = await wc.DownloadStringTaskAsync(address).ConfigureAwait(false);
-                    return redmineManager.Serializer.DeserializeToPagedResults<T>(response);
-                }
-                catch (WebException webException)
-                {
-                    webException.HandleWebException(redmineManager.Serializer);
-                }
-                return null;
+                var response = await wc.DownloadStringTaskAsync(address).ConfigureAwait(false);
+                return redmineManager.Serializer.DeserializeToPagedResults<T>(response);
             }
         }
 
@@ -155,15 +123,7 @@ namespace Redmine.Net.Api.Internals
         {
             using (var wc = redmineManager.CreateWebClient(null, true))
             {
-                try
-                {
-                    return await wc.DownloadDataTaskAsync(address).ConfigureAwait(false);
-                }
-                catch (WebException webException)
-                {
-                    webException.HandleWebException(redmineManager.Serializer);
-                }
-                return null;
+                return await wc.DownloadDataTaskAsync(address).ConfigureAwait(false);
             }
         }
 
@@ -178,17 +138,9 @@ namespace Redmine.Net.Api.Internals
         {
             using (var wc = redmineManager.CreateWebClient(null, true))
             {
-                try
-                {
-                    var response = await wc.UploadDataTaskAsync(address, data).ConfigureAwait(false);
-                    var responseString = Encoding.ASCII.GetString(response);
-                    return redmineManager.Serializer.Deserialize<Upload>(responseString);
-                }
-                catch (WebException webException)
-                {
-                    webException.HandleWebException(redmineManager.Serializer);
-                }
-                return null;
+                var response = await wc.UploadDataTaskAsync(address, data).ConfigureAwait(false);
+                var responseString = Encoding.ASCII.GetString(response);
+                return redmineManager.Serializer.Deserialize<Upload>(responseString);
             }
         }
     }

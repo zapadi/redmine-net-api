@@ -14,9 +14,12 @@
    limitations under the License.
 */
 
+using System;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Net;
 using System.Text;
+using System.Threading;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Serialization;
 using Redmine.Net.Api.Types;
@@ -41,17 +44,10 @@ namespace Redmine.Net.Api.Internals
         {
             using (var wc = redmineManager.CreateWebClient(parameters))
             {
-                try
+                if (actionType == HttpVerbs.POST || actionType == HttpVerbs.DELETE || actionType == HttpVerbs.PUT ||
+                    actionType == HttpVerbs.PATCH)
                 {
-                    if (actionType == HttpVerbs.POST || actionType == HttpVerbs.DELETE || actionType == HttpVerbs.PUT ||
-                        actionType == HttpVerbs.PATCH)
-                    {
-                        wc.UploadString(address, actionType, data);
-                    }
-                }
-                catch (WebException webException)
-                {
-                    webException.HandleWebException(redmineManager.Serializer);
+                    wc.UploadString(address, actionType, data);
                 }
             }
         }
@@ -70,20 +66,13 @@ namespace Redmine.Net.Api.Internals
         {
             using (var wc = redmineManager.CreateWebClient(null))
             {
-                try
+                if (actionType == HttpVerbs.POST || actionType == HttpVerbs.DELETE || actionType == HttpVerbs.PUT ||
+                         actionType == HttpVerbs.PATCH)
                 {
-                    if (actionType == HttpVerbs.POST || actionType == HttpVerbs.DELETE || actionType == HttpVerbs.PUT ||
-                        actionType == HttpVerbs.PATCH)
-                    {
-                        var response = wc.UploadString(address, actionType, data);
-                        return redmineManager.Serializer.Deserialize<T>(response);
-                    }
+                    var response = wc.UploadString(address, actionType, data);
+                    return redmineManager.Serializer.Deserialize<T>(response);
                 }
-                catch (WebException webException)
-                {
-                    webException.HandleWebException(redmineManager.Serializer);
-                }
-                return default(T);
+                return default;
             }
         }
 
@@ -101,17 +90,13 @@ namespace Redmine.Net.Api.Internals
         {
             using (var wc = redmineManager.CreateWebClient(parameters))
             {
-                try
+                var response = wc.DownloadString(address);
+                if (!string.IsNullOrEmpty(response))
                 {
-                    var response = wc.DownloadString(address);
-                    if (!string.IsNullOrEmpty(response))
-                        return redmineManager.Serializer.Deserialize<T>(response);
+                    return redmineManager.Serializer.Deserialize<T>(response);
                 }
-                catch (WebException webException)
-                {
-                    webException.HandleWebException(redmineManager.Serializer);
-                }
-                return default(T);
+
+                return default;
             }
         }
 
@@ -128,16 +113,35 @@ namespace Redmine.Net.Api.Internals
         {
             using (var wc = redmineManager.CreateWebClient(parameters))
             {
-                try
+                var response = wc.DownloadString(address);
+                return redmineManager.Serializer.DeserializeToPagedResults<T>(response);
+            }
+        }
+
+        /// <summary>
+        /// Executes the download file.
+        /// </summary>
+        /// <param name="redmineManager">The redmine manager.</param>
+        /// <param name="address">The address.</param>
+        /// <param name="filename">The name of the file to be placed on the local computer.</param>
+        /// <returns></returns>
+        public static void ExecuteDownloadFile(RedmineManager redmineManager, string address, string filename)
+        {
+            using (var wc = redmineManager.CreateWebClient(null, true))
+            {
+                wc.DownloadProgressChanged += HandleDownloadProgress;
+                wc.DownloadFileCompleted += HandleDownloadComplete;
+
+                var syncObject = new object();
+                lock (syncObject)
                 {
-                    var response = wc.DownloadString(address);
-                    return redmineManager.Serializer.DeserializeToPagedResults<T>(response);
+                    wc.DownloadFileAsync(new Uri(address), filename, syncObject);
+                    //This would block the thread until download completes
+                    Monitor.Wait(syncObject);
                 }
-                catch (WebException webException)
-                {
-                    webException.HandleWebException(redmineManager.Serializer);
-                }
-                return null;
+
+                wc.DownloadProgressChanged -= HandleDownloadProgress;
+                wc.DownloadFileCompleted -= HandleDownloadComplete;
             }
         }
 
@@ -151,16 +155,21 @@ namespace Redmine.Net.Api.Internals
         {
             using (var wc = redmineManager.CreateWebClient(null, true))
             {
-                try
-                {
-                    return wc.DownloadData(address);
-                }
-                catch (WebException webException)
-                {
-                    webException.HandleWebException(redmineManager.Serializer);
-                }
-                return null;
+                return wc.DownloadData(address);
             }
+        }
+
+        private static void HandleDownloadComplete(object sender, AsyncCompletedEventArgs e)
+        {
+            lock (e.UserState)
+            {
+                //releases blocked thread
+                Monitor.Pulse(e.UserState);
+            }
+        }
+
+        private static void HandleDownloadProgress(object sender, DownloadProgressChangedEventArgs e)
+        {
         }
 
         /// <summary>
@@ -174,17 +183,9 @@ namespace Redmine.Net.Api.Internals
         {
             using (var wc = redmineManager.CreateWebClient(null, true))
             {
-                try
-                {
-                    var response = wc.UploadData(address, data);
-                    var responseString = Encoding.ASCII.GetString(response);
-                    return redmineManager.Serializer.Deserialize<Upload>(responseString);
-                }
-                catch (WebException webException)
-                {
-                    webException.HandleWebException(redmineManager.Serializer);
-                }
-                return null;
+                var response = wc.UploadData(address, data);
+                var responseString = Encoding.ASCII.GetString(response);
+                return redmineManager.Serializer.Deserialize<Upload>(responseString);
             }
         }
     }
