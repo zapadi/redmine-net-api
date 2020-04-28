@@ -123,7 +123,11 @@ namespace Redmine.Net.Api.Types
         public override void WriteXml(XmlWriter writer)
         {
             writer.WriteElementString(RedmineKeys.ISSUE_TO_ID, IssueToId.ToString(CultureInfo.InvariantCulture));
-            writer.WriteElementString(RedmineKeys.RELATION_TYPE, Type.ToString());
+
+#pragma warning disable CA1308 // Redmine expects enum types as lower-case strings
+            writer.WriteElementString(RedmineKeys.RELATION_TYPE, Type.ToString().ToLowerInvariant());
+#pragma warning restore CA1308
+
             if (Type == IssueRelationType.Precedes || Type == IssueRelationType.Follows)
             {
                 writer.WriteValueOrEmpty(RedmineKeys.DELAY, Delay);
@@ -185,11 +189,15 @@ namespace Redmine.Net.Api.Types
         IssueRelationType ReadIssueRelationType(JsonReader reader)
         {
             var enumValue = reader.ReadAsString();
-            if (short.TryParse(enumValue, out short enumId))
+            if (!enumValue.IsNullOrWhiteSpace())
             {
-                return (IssueRelationType)enumId;
+                if (short.TryParse(enumValue, out short enumId))
+                {
+                    return (IssueRelationType)enumId;
+                }
+                return (IssueRelationType)Enum.Parse(typeof(IssueRelationType), enumValue, true);
             }
-            return (IssueRelationType)Enum.Parse(typeof(IssueRelationType), enumValue, true);
+            return default;
         }
         #endregion
 
