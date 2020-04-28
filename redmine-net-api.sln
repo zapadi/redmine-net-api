@@ -20,6 +20,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionFolder", "SolutionF
 		logo.png = logo.png
 		README.md = README.md
 		redmine-net-api.snk = redmine-net-api.snk
+		ISSUE_TEMPLATE.md = ISSUE_TEMPLATE.md
+		PULL_REQUEST_TEMPLATE.md = PULL_REQUEST_TEMPLATE.md
 	EndProjectSection
 EndProject
 Global
