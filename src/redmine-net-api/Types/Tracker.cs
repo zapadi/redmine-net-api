@@ -31,6 +31,16 @@ namespace Redmine.Net.Api.Types
     [XmlRoot(RedmineKeys.TRACKER)]
     public class Tracker : IdentifiableName, IEquatable<Tracker>
     {
+        /// <summary>
+        /// Gets the default (issue) status for this tracker.
+        /// </summary>
+        public IdentifiableName DefaultStatus { get; internal set; }
+
+        /// <summary>
+        /// Gets the description of this tracker.
+        /// </summary>
+        public string Description { get; internal set; }
+
         #region Implementation of IXmlSerialization
         /// <summary>
         /// Generates an object from its XML representation.
@@ -51,6 +61,8 @@ namespace Redmine.Net.Api.Types
                 {
                     case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
                     case RedmineKeys.NAME: Name = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.DEFAULT_STATUS: DefaultStatus = new IdentifiableName(reader); break;
+                    case RedmineKeys.DESCRIPTION: Description = reader.ReadElementContentAsString(); break;
                     default: reader.Read(); break;
                 }
             }
@@ -81,6 +93,8 @@ namespace Redmine.Net.Api.Types
                 {
                     case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
                     case RedmineKeys.NAME: Name = reader.ReadAsString(); break;
+                    case RedmineKeys.DEFAULT_STATUS: DefaultStatus = new IdentifiableName(reader); break;
+                    case RedmineKeys.DESCRIPTION: Description = reader.ReadAsString(); break;
                     default: reader.Read(); break;
                 }
             }
