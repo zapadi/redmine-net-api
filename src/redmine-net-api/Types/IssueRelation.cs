@@ -123,7 +123,7 @@ namespace Redmine.Net.Api.Types
         public override void WriteXml(XmlWriter writer)
         {
             writer.WriteElementString(RedmineKeys.ISSUE_TO_ID, IssueToId.ToString(CultureInfo.InvariantCulture));
-            writer.WriteElementString(RedmineKeys.RELATION_TYPE, Type.ToString());
+            writer.WriteElementString(RedmineKeys.RELATION_TYPE, Type.ToString().ToLowerInvariant());
             if (Type == IssueRelationType.Precedes || Type == IssueRelationType.Follows)
             {
                 writer.WriteValueOrEmpty(RedmineKeys.DELAY, Delay);
@@ -141,7 +141,7 @@ namespace Redmine.Net.Api.Types
             using (new JsonObject(writer, RedmineKeys.RELATION))
             {
                 writer.WriteProperty(RedmineKeys.ISSUE_TO_ID, IssueToId);
-                writer.WriteProperty(RedmineKeys.RELATION_TYPE, Type);
+                writer.WriteProperty(RedmineKeys.RELATION_TYPE, Type.ToString().ToLowerInvariant());
                 if (Type == IssueRelationType.Precedes || Type == IssueRelationType.Follows)
                 {
                     writer.WriteValueOrEmpty(RedmineKeys.DELAY, Delay);
