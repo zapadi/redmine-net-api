@@ -173,9 +173,19 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.DELAY: Delay = reader.ReadAsInt32(); break;
                     case RedmineKeys.ISSUE_ID: IssueId = reader.ReadAsInt(); break;
                     case RedmineKeys.ISSUE_TO_ID: IssueToId = reader.ReadAsInt(); break;
-                    case RedmineKeys.RELATION_TYPE: Type = (IssueRelationType)reader.ReadAsInt(); break;
+                    case RedmineKeys.RELATION_TYPE: Type = ReadIssueRelationType(reader); break;
                 }
             }
+        }
+
+        IssueRelationType ReadIssueRelationType(JsonReader reader)
+        {
+            var enumValue = reader.ReadAsString();
+            if (short.TryParse(enumValue, out short enumId))
+            {
+                return (IssueRelationType)enumId;
+            }
+            return (IssueRelationType)Enum.Parse(typeof(IssueRelationType), enumValue, true);
         }
         #endregion
 
