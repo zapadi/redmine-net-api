@@ -141,7 +141,11 @@ namespace Redmine.Net.Api.Types
             using (new JsonObject(writer, RedmineKeys.RELATION))
             {
                 writer.WriteProperty(RedmineKeys.ISSUE_TO_ID, IssueToId);
-                writer.WriteProperty(RedmineKeys.RELATION_TYPE, Type);
+
+#pragma warning disable CA1308 // Redmine expects enum types as lower-case strings
+                writer.WriteProperty(RedmineKeys.RELATION_TYPE, Type.ToString().ToLowerInvariant());
+#pragma warning restore CA1308
+
                 if (Type == IssueRelationType.Precedes || Type == IssueRelationType.Follows)
                 {
                     writer.WriteValueOrEmpty(RedmineKeys.DELAY, Delay);
