@@ -20,6 +20,7 @@ using System.Globalization;
 using System.Xml;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
+using Redmine.Net.Api.Exceptions;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Internals;
 using Redmine.Net.Api.Serialization;
@@ -122,6 +123,8 @@ namespace Redmine.Net.Api.Types
         /// <param name="writer"></param>
         public override void WriteXml(XmlWriter writer)
         {
+            AssertValidIssueRelationType();
+
             writer.WriteElementString(RedmineKeys.ISSUE_TO_ID, IssueToId.ToString(CultureInfo.InvariantCulture));
 
 #pragma warning disable CA1308 // Redmine expects enum types as lower-case strings
@@ -142,6 +145,8 @@ namespace Redmine.Net.Api.Types
         /// <param name="writer"></param>
         public override void WriteJson(JsonWriter writer)
         {
+            AssertValidIssueRelationType();
+
             using (new JsonObject(writer, RedmineKeys.RELATION))
             {
                 writer.WriteProperty(RedmineKeys.ISSUE_TO_ID, IssueToId);
@@ -186,6 +191,16 @@ namespace Redmine.Net.Api.Types
             }
         }
 
+        void AssertValidIssueRelationType()
+        {
+#pragma warning disable CS0618 // Use of internal enumeration value is allowed here for error handling
+            if (Type == IssueRelationType.Undefined)
+            {
+                throw new RedmineException($"The value `{nameof(IssueRelationType)}.`{nameof(IssueRelationType.Undefined)}` is not allowed to create relations!");
+            }
+#pragma warning restore CS0618
+        }
+
         IssueRelationType ReadIssueRelationType(JsonReader reader)
         {
             var enumValue = reader.ReadAsString();
@@ -197,7 +212,10 @@ namespace Redmine.Net.Api.Types
                 }
                 return (IssueRelationType)Enum.Parse(typeof(IssueRelationType), enumValue, true);
             }
-            return default;
+
+#pragma warning disable CS0618 // Use of internal enumeration value is allowed here to have a fallback
+            return IssueRelationType.Undefined;
+#pragma warning restore CS0618
         }
         #endregion
 
