@@ -126,15 +126,8 @@ namespace Redmine.Net.Api.Types
             AssertValidIssueRelationType();
 
             writer.WriteElementString(RedmineKeys.ISSUE_TO_ID, IssueToId.ToString(CultureInfo.InvariantCulture));
-<<<<<<< HEAD
-            writer.WriteElementString(RedmineKeys.RELATION_TYPE, Type.ToString().ToLowerInvariant());
-=======
+            writer.WriteElementString(RedmineKeys.RELATION_TYPE, Type.ToString().ToLowerInv());
 
-#pragma warning disable CA1308 // Redmine expects enum types as lower-case strings
-            writer.WriteElementString(RedmineKeys.RELATION_TYPE, Type.ToString().ToLowerInvariant());
-#pragma warning restore CA1308
-
->>>>>>> master
             if (Type == IssueRelationType.Precedes || Type == IssueRelationType.Follows)
             {
                 writer.WriteValueOrEmpty(RedmineKeys.DELAY, Delay);
@@ -154,15 +147,8 @@ namespace Redmine.Net.Api.Types
             using (new JsonObject(writer, RedmineKeys.RELATION))
             {
                 writer.WriteProperty(RedmineKeys.ISSUE_TO_ID, IssueToId);
-<<<<<<< HEAD
-                writer.WriteProperty(RedmineKeys.RELATION_TYPE, Type.ToString().ToLowerInvariant());
-=======
+                writer.WriteProperty(RedmineKeys.RELATION_TYPE, Type.ToString().ToLowerInv());
 
-#pragma warning disable CA1308 // Redmine expects enum types as lower-case strings
-                writer.WriteProperty(RedmineKeys.RELATION_TYPE, Type.ToString().ToLowerInvariant());
-#pragma warning restore CA1308
-
->>>>>>> master
                 if (Type == IssueRelationType.Precedes || Type == IssueRelationType.Follows)
                 {
                     writer.WriteValueOrEmpty(RedmineKeys.DELAY, Delay);
@@ -199,31 +185,28 @@ namespace Redmine.Net.Api.Types
             }
         }
 
-        void AssertValidIssueRelationType()
+        private void AssertValidIssueRelationType()
         {
-#pragma warning disable CS0618 // Use of internal enumeration value is allowed here for error handling
             if (Type == IssueRelationType.Undefined)
             {
                 throw new RedmineException($"The value `{nameof(IssueRelationType)}.`{nameof(IssueRelationType.Undefined)}` is not allowed to create relations!");
             }
-#pragma warning restore CS0618
         }
 
-        IssueRelationType ReadIssueRelationType(JsonReader reader)
+        private IssueRelationType ReadIssueRelationType(JsonReader reader)
         {
             var enumValue = reader.ReadAsString();
-            if (!enumValue.IsNullOrWhiteSpace())
+            if (enumValue.IsNullOrWhiteSpace())
             {
-                if (short.TryParse(enumValue, out short enumId))
-                {
-                    return (IssueRelationType)enumId;
-                }
-                return (IssueRelationType)Enum.Parse(typeof(IssueRelationType), enumValue, true);
+                return IssueRelationType.Undefined;
             }
-
-#pragma warning disable CS0618 // Use of internal enumeration value is allowed here to have a fallback
-            return IssueRelationType.Undefined;
-#pragma warning restore CS0618
+            
+            if (short.TryParse(enumValue, out var enumId))
+            {
+                return (IssueRelationType)enumId;
+            }
+            
+            return (IssueRelationType)Enum.Parse(typeof(IssueRelationType), enumValue, true);
         }
         #endregion
 

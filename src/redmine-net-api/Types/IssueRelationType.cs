@@ -23,11 +23,12 @@ namespace Redmine.Net.Api.Types
     /// </summary>
     public enum IssueRelationType
     {
+#pragma warning disable CS0618 // Use of internal enumeration value is allowed here to have a fallback
         /// <summary>
         /// Fallback value for deserialization purposes in case the deserialization fails. Do not use to create new relations!
         /// </summary>
-        [Obsolete("Fallback value for deserialization purposes in case the deserialization fails. Do not use to create new relations!")]
-        Undefined = 0,
+       Undefined = 0,
+#pragma warning restore CS0618
         /// <summary>
         /// 
         /// </summary>
