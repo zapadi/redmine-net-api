@@ -14,6 +14,8 @@
    limitations under the License.
 */
 
+using System;
+
 namespace Redmine.Net.Api.Types
 {
     /// <summary>
@@ -21,6 +23,11 @@ namespace Redmine.Net.Api.Types
     /// </summary>
     public enum IssueRelationType
     {
+        /// <summary>
+        /// Fallback value for deserialization purposes in case the deserialization fails. Do not use to create new relations!
+        /// </summary>
+        [Obsolete("Fallback value for deserialization purposes in case the deserialization fails. Do not use to create new relations!")]
+        Undefined = 0,
         /// <summary>
         /// 
         /// </summary>
