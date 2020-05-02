@@ -819,6 +819,8 @@ namespace Redmine.Net.Api
             return WebApiHelper.ExecuteDownloadFile(this, address);
         }
 
+        private const string UA = "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/14.0.835.163 Safari/535.1";
+        
         /// <summary>
         ///     Creates the Redmine web client.
         /// </summary>
@@ -828,8 +830,8 @@ namespace Redmine.Net.Api
         /// <code></code>
         public virtual RedmineWebClient CreateWebClient(NameValueCollection parameters, bool uploadFile = false)
         {
-            var webClient = new RedmineWebClient { Proxy = Proxy, Scheme = Scheme, RedmineSerializer = Serializer};
-            
+            var webClient = new RedmineWebClient { Scheme = Scheme, RedmineSerializer = Serializer};
+            webClient.UserAgent = UA;
             if (!uploadFile)
             {
                 webClient.Headers.Add(HttpRequestHeader.ContentType, MimeFormat == MimeFormat.Xml
@@ -866,6 +868,13 @@ namespace Redmine.Net.Api
                 }
             }
 
+            if (Proxy != null)
+            {
+                Proxy.Credentials = cache;
+                webClient.Proxy = Proxy;
+                webClient.UseProxy = true;
+            }
+            
             if (!string.IsNullOrEmpty(ImpersonateUser))
             {
                 webClient.Headers.Add("X-Redmine-Switch-User", ImpersonateUser);

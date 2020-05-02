@@ -26,16 +26,8 @@ namespace Redmine.Net.Api
     /// <seealso cref="System.Net.WebClient" />
     public class RedmineWebClient : WebClient
     {
-        private const string UA = "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/14.0.835.163 Safari/535.1";
         private string redirectUrl = string.Empty;
-        /// <summary>
-        /// 
-        /// </summary>
-        public RedmineWebClient()
-        {
-            UserAgent = UA;
-        }
-
+       
         /// <summary>
         /// 
         /// </summary>
@@ -120,37 +112,24 @@ namespace Redmine.Net.Api
                 return base.GetWebRequest(address);
             }
 
+            httpWebRequest.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate |
+                                                    DecompressionMethods.None;
+
             if (UseCookies)
             {
                 httpWebRequest.Headers.Add(HttpRequestHeader.Cookie, "redmineCookie");
                 httpWebRequest.CookieContainer = CookieContainer;
             }
-
-            httpWebRequest.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate |
-                                                    DecompressionMethods.None;
-            httpWebRequest.PreAuthenticate = PreAuthenticate;
+            
             httpWebRequest.KeepAlive = KeepAlive;
-            httpWebRequest.Credentials = Credentials;
-            httpWebRequest.UseDefaultCredentials =  (httpWebRequest.Credentials == null);
-            httpWebRequest.UserAgent = UA;
             httpWebRequest.CachePolicy = CachePolicy;
-
-            if (UseProxy)
-            {
-                if (Proxy != null)
-                {
-                    Proxy.Credentials = Credentials;
-                    httpWebRequest.Proxy = Proxy;
-                }
-            }
-
+          
             if (Timeout != null)
             {
                 httpWebRequest.Timeout = Timeout.Value.Milliseconds;
             }
-
+            
             return httpWebRequest;
-
         }
 
         /// <summary>
@@ -253,11 +232,19 @@ namespace Redmine.Net.Api
             if (!(response is HttpWebResponse webResponse)) return;
 
             var webRequest = request as HttpWebRequest;
+
+            if (webResponse.Cookies.Count <= 0) return;
+            
             var col = new CookieCollection();
 
             foreach (Cookie c in webResponse.Cookies)
             {
                 col.Add(new Cookie(c.Name, c.Value, c.Path, webRequest?.Headers["Host"]));
+            }
+
+            if (CookieContainer == null)
+            {
+                CookieContainer = new CookieContainer();
             }
 
             CookieContainer.Add(col);
