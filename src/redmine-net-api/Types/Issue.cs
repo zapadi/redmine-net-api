@@ -1,4 +1,4 @@
-﻿/*
+/*
    Copyright 2011 - 2017 Adrian Popescu, Dorin Huzum.
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -583,7 +583,7 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
         public IdentifiableName AsParent()
         {
-            return IdentifiableName.Create(Id);
+            return IdentifiableName.Create<IdentifiableName>(Id);
         }
 
 

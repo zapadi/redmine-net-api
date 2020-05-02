@@ -31,7 +31,7 @@ namespace Padi.RedmineApi.Tests.Tests.Sync
 	        var issueCategory = new IssueCategory
             {
                 Name = NEW_ISSUE_CATEGORY_NAME,
-                AssignTo =  IdentifiableName.Create(NEW_ISSUE_CATEGORY_ASIGNEE_ID)
+                AssignTo =  IdentifiableName.Create<IdentifiableName>(NEW_ISSUE_CATEGORY_ASIGNEE_ID)
             };
 
             var savedIssueCategory = fixture.RedmineManager.CreateObject(issueCategory, PROJECT_ID);
@@ -95,7 +95,7 @@ namespace Padi.RedmineApi.Tests.Tests.Sync
 
 	        var issueCategory = fixture.RedmineManager.GetObject<IssueCategory>(createdIssueCategoryId, null);
             issueCategory.Name = ISSUE_CATEGORY_NAME_TO_UPDATE;
-            issueCategory.AssignTo = IdentifiableName.Create(ISSUE_CATEGORY_ASIGNEE_ID_TO_UPDATE);
+            issueCategory.AssignTo = IdentifiableName.Create<IdentifiableName>(ISSUE_CATEGORY_ASIGNEE_ID_TO_UPDATE);
 
             fixture.RedmineManager.UpdateObject(createdIssueCategoryId, issueCategory);
 

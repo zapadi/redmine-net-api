@@ -47,11 +47,11 @@ namespace Padi.RedmineApi.Tests.Tests.Sync
 
 	        var timeEntry = new TimeEntry
             {
-                Issue = IdentifiableName.Create(NEW_TIME_ENTRY_ISSUE_ID),
-                Project = IdentifiableName.Create(NEW_TIME_ENTRY_PROJECT_ID),
+                Issue = IdentifiableName.Create<IdentifiableName>(NEW_TIME_ENTRY_ISSUE_ID),
+                Project = IdentifiableName.Create<IdentifiableName>(NEW_TIME_ENTRY_PROJECT_ID),
                 SpentOn = newTimeEntryDate,
                 Hours = NEW_TIME_ENTRY_HOURS,
-                Activity = IdentifiableName.Create(NEW_TIME_ENTRY_ACTIVITY_ID),
+                Activity = IdentifiableName.Create<IdentifiableName>(NEW_TIME_ENTRY_ACTIVITY_ID),
                 Comments = NEW_TIME_ENTRY_COMMENTS
             };
 
@@ -119,13 +119,13 @@ namespace Padi.RedmineApi.Tests.Tests.Sync
 	        var updatedTimeEntryDate = DateTime.Now.AddDays(-2);
 
 	        var timeEntry = fixture.RedmineManager.GetObject<TimeEntry>(UPDATED_TIME_ENTRY_ID, null);
-            timeEntry.Project = IdentifiableName.Create(UPDATED_TIME_ENTRY_PROJECT_ID);
-            timeEntry.Issue = IdentifiableName.Create(UPDATED_TIME_ENTRY_ISSUE_ID);
+            timeEntry.Project = IdentifiableName.Create<IdentifiableName>(UPDATED_TIME_ENTRY_PROJECT_ID);
+            timeEntry.Issue = IdentifiableName.Create<IdentifiableName>(UPDATED_TIME_ENTRY_ISSUE_ID);
             timeEntry.SpentOn = updatedTimeEntryDate;
             timeEntry.Hours = UPDATED_TIME_ENTRY_HOURS;
             timeEntry.Comments = UPDATED_TIME_ENTRY_COMMENTS;
 
-            if (timeEntry.Activity == null) timeEntry.Activity = IdentifiableName.Create(UPDATED_TIME_ENTRY_ACTIVITY_ID);
+            if (timeEntry.Activity == null) timeEntry.Activity = IdentifiableName.Create<IdentifiableName>(UPDATED_TIME_ENTRY_ACTIVITY_ID);
 
             fixture.RedmineManager.UpdateObject(UPDATED_TIME_ENTRY_ID, timeEntry);
 

@@ -48,8 +48,8 @@ namespace Padi.RedmineApi.Tests.Tests.Sync
 
 	        var pm = new ProjectMembership
             {
-                User = IdentifiableName.Create(NEW_PROJECT_MEMBERSHIP_USER_ID),
-                Roles = new List<MembershipRole> { (MembershipRole)IdentifiableName.Create(NEW_PROJECT_MEMBERSHIP_ROLE_ID)}
+                User = IdentifiableName.Create<IdentifiableName>(NEW_PROJECT_MEMBERSHIP_USER_ID),
+                Roles = new List<MembershipRole> { (MembershipRole)IdentifiableName.Create<MembershipRole>(NEW_PROJECT_MEMBERSHIP_ROLE_ID)}
             };
 
             var createdPm = fixture.RedmineManager.CreateObject(pm, PROJECT_IDENTIFIER);
@@ -110,7 +110,7 @@ namespace Padi.RedmineApi.Tests.Tests.Sync
 	        const int UPDATED_PROJECT_MEMBERSHIP_ROLE_ID = 4;
 
 	        var pm = fixture.RedmineManager.GetObject<ProjectMembership>(UPDATED_PROJECT_MEMBERSHIP_ID, null);
-            pm.Roles.Add((MembershipRole)IdentifiableName.Create(UPDATED_PROJECT_MEMBERSHIP_ROLE_ID));
+            pm.Roles.Add((MembershipRole)IdentifiableName.Create<MembershipRole>(UPDATED_PROJECT_MEMBERSHIP_ROLE_ID));
 
             fixture.RedmineManager.UpdateObject(UPDATED_PROJECT_MEMBERSHIP_ID, pm);
 

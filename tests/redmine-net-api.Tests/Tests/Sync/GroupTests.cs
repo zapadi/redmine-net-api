@@ -33,7 +33,7 @@ namespace Padi.RedmineApi.Tests.Tests.Sync
 
             var group = new Group();
             group.Name = NEW_GROUP_NAME;
-            group.Users = new List<GroupUser> { (GroupUser)IdentifiableName.Create(NEW_GROUP_USER_ID )};
+            group.Users = new List<GroupUser> { (GroupUser)IdentifiableName.Create<GroupUser>(NEW_GROUP_USER_ID )};
 
             Group savedGroup = null;
             var exception =
@@ -54,7 +54,7 @@ namespace Padi.RedmineApi.Tests.Tests.Sync
             var group = fixture.RedmineManager.GetObject<Group>(UPDATED_GROUP_ID,
                 new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.USERS } });
             group.Name = UPDATED_GROUP_NAME;
-            group.Users.Add((GroupUser)IdentifiableName.Create(UPDATED_GROUP_USER_ID));
+            group.Users.Add((GroupUser)IdentifiableName.Create<GroupUser>(UPDATED_GROUP_USER_ID));
 
             fixture.RedmineManager.UpdateObject(UPDATED_GROUP_ID, group);
 

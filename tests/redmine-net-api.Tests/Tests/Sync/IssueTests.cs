@@ -138,9 +138,9 @@ namespace Padi.RedmineApi.Tests.Tests.Sync
         {
             const bool NEW_ISSUE_IS_PRIVATE = true;
 
-            const int NEW_ISSUE_PROJECT_ID = 9;
-            const int NEW_ISSUE_TRACKER_ID = 3;
-            const int NEW_ISSUE_STATUS_ID = 6;
+            const int NEW_ISSUE_PROJECT_ID = 1;
+            const int NEW_ISSUE_TRACKER_ID = 1;
+            const int NEW_ISSUE_STATUS_ID = 1;
             const int NEW_ISSUE_PRIORITY_ID = 9;
             const int NEW_ISSUE_CATEGORY_ID = 18;
             const int NEW_ISSUE_FIXED_VERSION_ID = 9;
@@ -158,39 +158,43 @@ namespace Padi.RedmineApi.Tests.Tests.Sync
             var newIssueStartDate = DateTime.Now;
             var newIssueDueDate = DateTime.Now.AddDays(10);
 
-            var icf = (IssueCustomField)IdentifiableName.Create(NEW_ISSUE_CUSTOM_FIELD_ID);
-            icf.Values = new List<CustomFieldValue> { new CustomFieldValue { Info = NEW_ISSUE_CUSTOM_FIELD_VALUE } };
+            var  icf = IdentifiableName.Create<IssueCustomField>(NEW_ISSUE_CUSTOM_FIELD_ID);
+            if (icf != null)
+            {
+                icf.Values = new List<CustomFieldValue> {new CustomFieldValue {Info = NEW_ISSUE_CUSTOM_FIELD_VALUE}};
+            }
 
             var issue = new Issue
-            {
-                Project = IdentifiableName.Create(NEW_ISSUE_PROJECT_ID),
-                Tracker = IdentifiableName.Create(NEW_ISSUE_TRACKER_ID),
-                Status = IdentifiableName.Create(NEW_ISSUE_STATUS_ID),
-                Priority = IdentifiableName.Create(NEW_ISSUE_PRIORITY_ID),
-                Subject = NEW_ISSUE_SUBJECT,
-                Description = NEW_ISSUE_DESCRIPTION,
-                Category = IdentifiableName.Create(NEW_ISSUE_CATEGORY_ID),
-                FixedVersion = IdentifiableName.Create(NEW_ISSUE_FIXED_VERSION_ID),
-                AssignedTo = IdentifiableName.Create(NEW_ISSUE_ASSIGNED_TO_ID),
-                ParentIssue = IdentifiableName.Create(NEW_ISSUE_PARENT_ISSUE_ID),
-
-                CustomFields = new List<IssueCustomField> { icf },
-                IsPrivate = NEW_ISSUE_IS_PRIVATE,
-                EstimatedHours = NEW_ISSUE_ESTIMATED_HOURS,
-                StartDate = newIssueStartDate,
-                DueDate = newIssueDueDate,
-                Watchers = new List<Watcher>
                 {
-                    (Watcher) IdentifiableName.Create(NEW_ISSUE_FIRST_WATCHER_ID),
-                    (Watcher) IdentifiableName.Create(NEW_ISSUE_SECOND_WATCHER_ID)
-                }
-            };
+                    Project = IdentifiableName.Create<IdentifiableName>(NEW_ISSUE_PROJECT_ID),
+                    Tracker = IdentifiableName.Create<IdentifiableName>(NEW_ISSUE_TRACKER_ID),
+                    Status = IdentifiableName.Create<IdentifiableName>(NEW_ISSUE_STATUS_ID),
+                    Priority = IdentifiableName.Create<IdentifiableName>(NEW_ISSUE_PRIORITY_ID),
+                    Subject = NEW_ISSUE_SUBJECT,
+                    Description = NEW_ISSUE_DESCRIPTION,
+                    Category = IdentifiableName.Create<IdentifiableName>(NEW_ISSUE_CATEGORY_ID),
+                    FixedVersion = IdentifiableName.Create<IdentifiableName>(NEW_ISSUE_FIXED_VERSION_ID),
+                    AssignedTo = IdentifiableName.Create<IdentifiableName>(NEW_ISSUE_ASSIGNED_TO_ID),
+                    ParentIssue = IdentifiableName.Create<IdentifiableName>(NEW_ISSUE_PARENT_ISSUE_ID),
 
-            var savedIssue = fixture.RedmineManager.CreateObject(issue);
+                    CustomFields = new List<IssueCustomField> {icf},
+                    IsPrivate = NEW_ISSUE_IS_PRIVATE,
+                    EstimatedHours = NEW_ISSUE_ESTIMATED_HOURS,
+                    StartDate = newIssueStartDate,
+                    DueDate = newIssueDueDate,
+                    Watchers = new List<Watcher>
+                    {
+                         IdentifiableName.Create<Watcher>(NEW_ISSUE_FIRST_WATCHER_ID),
+                         IdentifiableName.Create<Watcher>(NEW_ISSUE_SECOND_WATCHER_ID)
+                    }
+                };
 
-            Assert.NotNull(savedIssue);
-            Assert.True(issue.Subject.Equals(savedIssue.Subject), "Issue subject is invalid.");
-            Assert.NotEqual(issue, savedIssue);
+                var savedIssue = fixture.RedmineManager.CreateObject(issue);
+
+                Assert.NotNull(savedIssue);
+                Assert.True(issue.Subject.Equals(savedIssue.Subject), "Issue subject is invalid.");
+                Assert.NotEqual(issue, savedIssue);
+            
         }
 
         [Fact, Order(12)]
@@ -224,14 +228,14 @@ namespace Padi.RedmineApi.Tests.Tests.Sync
             issue.Description = UPDATED_ISSUE_DESCRIPTION;
             issue.StartDate = updatedIssueStartDate;
             issue.DueDate = updatedIssueDueDate;
-            issue.Project = IdentifiableName.Create(UPDATED_ISSUE_PROJECT_ID);
-            issue.Tracker = IdentifiableName.Create(UPDATED_ISSUE_TRACKER_ID);
-            issue.Priority = IdentifiableName.Create(UPDATED_ISSUE_PRIORITY_ID);
-            issue.Category = IdentifiableName.Create(UPDATED_ISSUE_CATEGORY_ID);
-            issue.AssignedTo = IdentifiableName.Create(UPDATED_ISSUE_ASSIGNED_TO_ID);
-            issue.ParentIssue = IdentifiableName.Create(UPDATED_ISSUE_PARENT_ISSUE_ID);
+            issue.Project = IdentifiableName.Create<IdentifiableName>(UPDATED_ISSUE_PROJECT_ID);
+            issue.Tracker = IdentifiableName.Create<IdentifiableName>(UPDATED_ISSUE_TRACKER_ID);
+            issue.Priority = IdentifiableName.Create<IdentifiableName>(UPDATED_ISSUE_PRIORITY_ID);
+            issue.Category = IdentifiableName.Create<IdentifiableName>(UPDATED_ISSUE_CATEGORY_ID);
+            issue.AssignedTo = IdentifiableName.Create<IdentifiableName>(UPDATED_ISSUE_ASSIGNED_TO_ID);
+            issue.ParentIssue = IdentifiableName.Create<IdentifiableName>(UPDATED_ISSUE_PARENT_ISSUE_ID);
 
-            var icf = (IssueCustomField)IdentifiableName.Create(UPDATED_ISSUE_CUSTOM_FIELD_ID);
+            var icf = (IssueCustomField)IdentifiableName.Create<IssueCustomField>(UPDATED_ISSUE_CUSTOM_FIELD_ID);
             icf.Values = new List<CustomFieldValue> { new CustomFieldValue { Info = UPDATED_ISSUE_CUSTOM_FIELD_VALUE } };
 
             issue.CustomFields?.Add(icf);
@@ -293,7 +297,7 @@ namespace Padi.RedmineApi.Tests.Tests.Sync
             const int CLONED_ISSUE_CUSTOM_FIELD_ID = 13;
             const string CLONED_ISSUE_CUSTOM_FIELD_VALUE = "Cloned issue custom field value";
 
-            var icfc = (IssueCustomField)IdentifiableName.Create(ISSUE_TO_CLONE_CUSTOM_FIELD_ID);
+            var icfc = (IssueCustomField)IdentifiableName.Create<IssueCustomField>(ISSUE_TO_CLONE_CUSTOM_FIELD_ID);
             icfc.Values = new List<CustomFieldValue> { new CustomFieldValue { Info = ISSUE_TO_CLONE_CUSTOM_FIELD_VALUE } };
 
             var issueToClone = new Issue
@@ -304,14 +308,13 @@ namespace Padi.RedmineApi.Tests.Tests.Sync
 
             var clonedIssue = (Issue)issueToClone.Clone();
 
-            var icf = (IssueCustomField)IdentifiableName.Create(CLONED_ISSUE_CUSTOM_FIELD_ID);
+            var icf = (IssueCustomField)IdentifiableName.Create<IssueCustomField>(CLONED_ISSUE_CUSTOM_FIELD_ID);
             icf.Values = new List<CustomFieldValue> { new CustomFieldValue { Info = CLONED_ISSUE_CUSTOM_FIELD_VALUE } };
 
             clonedIssue.CustomFields.Add(icf);
 
             Assert.True(issueToClone.CustomFields.Count != clonedIssue.CustomFields.Count);
         }
-
 
         [Fact]
         public void Should_Get_Issue_With_Hours()

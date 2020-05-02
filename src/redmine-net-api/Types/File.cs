@@ -123,7 +123,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.FILE_SIZE: FileSize = reader.ReadElementContentAsInt(); break;
                     case RedmineKeys.TOKEN: Token = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.VERSION: Version = new IdentifiableName(reader); break;
-                    case RedmineKeys.VERSION_ID: Version = IdentifiableName.Create(reader.ReadElementContentAsInt()); break;
+                    case RedmineKeys.VERSION_ID: Version = IdentifiableName.Create<IdentifiableName>(reader.ReadElementContentAsInt()); break;
                     default: reader.Read(); break;
                 }
             }
@@ -175,7 +175,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.FILE_SIZE: FileSize = reader.ReadAsInt32().GetValueOrDefault(); break;
                     case RedmineKeys.TOKEN: Token = reader.ReadAsString(); break;
                     case RedmineKeys.VERSION: Version = new IdentifiableName(reader); break;
-                    case RedmineKeys.VERSION_ID: Version = IdentifiableName.Create(reader.ReadAsInt32().GetValueOrDefault()); break;
+                    case RedmineKeys.VERSION_ID: Version = IdentifiableName.Create<IdentifiableName>(reader.ReadAsInt32().GetValueOrDefault()); break;
                     default: reader.Read(); break;
                 }
             }

@@ -89,7 +89,7 @@ namespace Padi.RedmineApi.Tests.Tests.Sync
 
             var issue = new Issue
             {
-                Project = IdentifiableName.Create(PROJECT_ID ),
+                Project = IdentifiableName.Create<IdentifiableName>(PROJECT_ID ),
                 Subject = ISSUE_SUBJECT,
                 Uploads = attachments
             };

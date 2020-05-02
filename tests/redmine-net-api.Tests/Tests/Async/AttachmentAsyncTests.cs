@@ -50,21 +50,21 @@ namespace Padi.RedmineApi.Tests.Tests.Async
             attachments.Add(attachment);
 
 
-            var icf = (IssueCustomField)IdentifiableName.Create(13);
+            var icf = (IssueCustomField)IdentifiableName.Create<IssueCustomField>(13);
             icf.Values = new List<CustomFieldValue> { new CustomFieldValue { Info = "Issue custom field completed" } };
 
             var issue = new Issue
             {
-                Project = IdentifiableName.Create(9),
-                Tracker = IdentifiableName.Create(3),
-                Status = IdentifiableName.Create(6),
-                Priority = IdentifiableName.Create(9),
+                Project = IdentifiableName.Create<IdentifiableName>(9),
+                Tracker = IdentifiableName.Create<IdentifiableName>(3),
+                Status = IdentifiableName.Create<IdentifiableName>(6),
+                Priority = IdentifiableName.Create<IdentifiableName>(9),
                 Subject = "Issue with attachments",
                 Description = "Issue description...",
-                Category = IdentifiableName.Create(18),
-                FixedVersion = IdentifiableName.Create(9),
-                AssignedTo = IdentifiableName.Create(8),
-                ParentIssue = IdentifiableName.Create(96),
+                Category = IdentifiableName.Create<IdentifiableName>(18),
+                FixedVersion = IdentifiableName.Create<IdentifiableName>(9),
+                AssignedTo = IdentifiableName.Create<IdentifiableName>(8),
+                ParentIssue = IdentifiableName.Create<IdentifiableName>(96),
                 CustomFields = new List<IssueCustomField> {icf},
                 IsPrivate = true,
                 EstimatedHours = 12,
@@ -73,8 +73,8 @@ namespace Padi.RedmineApi.Tests.Tests.Async
                 Uploads = attachments,
                 Watchers = new List<Watcher>
                 {
-                    (Watcher) IdentifiableName.Create(8),
-                    (Watcher) IdentifiableName.Create(2)
+                    (Watcher) IdentifiableName.Create<Watcher>(8),
+                    (Watcher) IdentifiableName.Create<Watcher>(2)
                 }
             };
 

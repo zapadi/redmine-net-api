@@ -178,7 +178,7 @@ namespace Padi.RedmineApi.Tests.Tests.Async
             };
 
 
-            var icf = (IssueCustomField)IdentifiableName.Create(4);
+            var icf = (IssueCustomField)IdentifiableName.Create<IssueCustomField>(4);
             icf.Values = new List<CustomFieldValue> { new CustomFieldValue { Info = "userTestCustomField:" + DateTime.UtcNow } };
 
             user.CustomFields = new List<IssueCustomField>();

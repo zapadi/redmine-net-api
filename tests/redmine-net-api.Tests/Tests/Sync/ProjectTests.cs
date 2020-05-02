@@ -69,8 +69,8 @@ namespace Padi.RedmineApi.Tests.Tests.Sync
                 },
                 Trackers = new List<ProjectTracker>
                 {
-                    (ProjectTracker) IdentifiableName.Create( 1),
-                    (ProjectTracker) IdentifiableName.Create(2)
+                    (ProjectTracker) IdentifiableName.Create<ProjectTracker>( 1),
+                    (ProjectTracker) IdentifiableName.Create<ProjectTracker>(2)
                 }
             };
 
@@ -85,8 +85,8 @@ namespace Padi.RedmineApi.Tests.Tests.Sync
                 Identifier = "rnaptit",
                 Trackers = new List<ProjectTracker>
                 {
-                    (ProjectTracker) IdentifiableName.Create(999999),
-                    (ProjectTracker) IdentifiableName.Create(999998)
+                    (ProjectTracker) IdentifiableName.Create<ProjectTracker>(999999),
+                    (ProjectTracker) IdentifiableName.Create<ProjectTracker>(999998)
                 }
             };
 
@@ -99,7 +99,7 @@ namespace Padi.RedmineApi.Tests.Tests.Sync
             {
                 Name = "Redmine Net Api Project With Parent Set",
                 Identifier = "rnapwps",
-                Parent = IdentifiableName.Create(parentId)
+                Parent = IdentifiableName.Create<IdentifiableName>(parentId)
             };
 
             return project;
