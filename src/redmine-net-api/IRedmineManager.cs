@@ -89,7 +89,7 @@ namespace Redmine.Net.Api.Types
         /// <param name="issueId"></param>
         /// <param name="userId"></param>
         void RemoveWatcherFromIssue(int issueId, int userId);
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -97,7 +97,16 @@ namespace Redmine.Net.Api.Types
         /// <param name="pageName"></param>
         /// <param name="wikiPage"></param>
         /// <returns></returns>
-        WikiPage CreateOrUpdateWikiPage(string projectId, string pageName, WikiPage wikiPage);
+        WikiPage CreateWikiPage(string projectId, string pageName, WikiPage wikiPage);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <param name="pageName"></param>
+        /// <param name="wikiPage"></param>
+        void UpdateWikiPage(string projectId, string pageName, WikiPage wikiPage);
+     
         /// <summary>
         /// 
         /// </summary>

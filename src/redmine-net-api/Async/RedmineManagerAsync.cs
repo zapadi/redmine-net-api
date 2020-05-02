@@ -44,10 +44,24 @@ namespace Redmine.Net.Api.Async
         /// <param name="pageName">Name of the page.</param>
         /// <param name="wikiPage">The wiki page.</param>
         /// <returns></returns>
-        public static Task<WikiPage> CreateOrUpdateWikiPageAsync(this RedmineManager redmineManager, string projectId,
+        public static Task<WikiPage> CreateWikiPageAsync(this RedmineManager redmineManager, string projectId,
             string pageName, WikiPage wikiPage)
         {
-            return delegate { return redmineManager.CreateOrUpdateWikiPage(projectId, pageName, wikiPage); };
+            return delegate { return redmineManager.CreateWikiPage(projectId, pageName, wikiPage); };
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="redmineManager"></param>
+        /// <param name="projectId"></param>
+        /// <param name="pageName"></param>
+        /// <param name="wikiPage"></param>
+        /// <returns></returns>
+        public static Task UpdateWikiPageAsync(this RedmineManager redmineManager, string projectId,
+            string pageName, WikiPage wikiPage)
+        {
+            return delegate {  redmineManager.UpdateWikiPage(projectId, pageName, wikiPage); };
         }
 
         /// <summary>

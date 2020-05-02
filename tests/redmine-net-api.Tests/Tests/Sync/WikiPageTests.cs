@@ -37,22 +37,32 @@ namespace Padi.RedmineApi.Tests.Tests.Sync
 
         private readonly RedmineFixture fixture;
 
-        private const string PROJECT_ID = "redmine-net-api";
+        private const string PROJECT_ID = "redmine-net-api-project-test";
         private const string WIKI_PAGE_NAME = "Wiki";
 
         [Fact, Order(1)]
-        public void Should_Add_Or_Update_WikiPage()
+        public void Should_Add_WikiPage()
         {
-            const string WIKI_PAGE_UPDATED_TEXT = "Updated again and again wiki page";
+            const string WIKI_PAGE_TEXT = "Create wiki page";
             const string WIKI_PAGE_COMMENT = "I did it through code";
 
-            var page = fixture.RedmineManager.CreateOrUpdateWikiPage(PROJECT_ID, WIKI_PAGE_NAME,
-                new WikiPage { Text = WIKI_PAGE_UPDATED_TEXT, Comments = WIKI_PAGE_COMMENT });
+            var page = fixture.RedmineManager.CreateWikiPage(PROJECT_ID, "Wiki test page name",
+                new WikiPage { Text = WIKI_PAGE_TEXT, Comments = WIKI_PAGE_COMMENT });
 
             Assert.NotNull(page);
-            Assert.True(page.Title.Equals(WIKI_PAGE_NAME), "Wiki page name is invalid.");
-            Assert.True(page.Text.Equals(WIKI_PAGE_UPDATED_TEXT), "Wiki page text is invalid.");
+            Assert.True(page.Title.Equals("Wiki test page name"), "Wiki page name is invalid.");
+            Assert.True(page.Text.Equals(WIKI_PAGE_TEXT), "Wiki page text is invalid.");
             Assert.True(page.Comments.Equals(WIKI_PAGE_COMMENT), "Wiki page comments are invalid.");
+        }
+        
+        [Fact, Order(2)]
+        public void Should_Update_WikiPage()
+        {
+            const string WIKI_PAGE_UPDATED_TEXT = "Updated again and again wiki page and again";
+            const string WIKI_PAGE_COMMENT = "I did it through code";
+
+             fixture.RedmineManager.UpdateWikiPage(PROJECT_ID, "Wiki test page name",
+                new WikiPage { Text = WIKI_PAGE_UPDATED_TEXT, Comments = WIKI_PAGE_COMMENT });
         }
 
         [Fact, Order(99)]
@@ -106,20 +116,5 @@ namespace Padi.RedmineApi.Tests.Tests.Sync
             Assert.Equal(oldPage.Title, WIKI_PAGE_NAME);
             Assert.True(oldPage.Version == WIKI_PAGE_VERSION, "Wiki page version is invalid.");
         }
-
-        [Fact]
-        public void Should_Create_Wiki()
-        {
-            var result = fixture.RedmineManager.CreateOrUpdateWikiPage("1", "pagina2", new WikiPage
-            {
-                Text = "ana are mere multe si rosii!",
-                Comments = "asa",
-                Version = 1
-            });
-
-            Assert.NotNull(result);
-
-        }
-
     }
 }

@@ -26,13 +26,19 @@ namespace Padi.RedmineApi.Tests.Tests.Async
 		}
 
 		[Fact]
-		public  async Task Should_Add_Or_Update_Page()
+		public  async Task Should_Add_Wiki_Page()
 		{
-			var page = await fixture.RedmineManager.CreateOrUpdateWikiPageAsync(PROJECT_ID, WIKI_PAGE_NAME, new WikiPage { Text = WIKI_PAGE_UPDATED_TEXT, Comments = WIKI_PAGE_COMMENT });
+			var page = await fixture.RedmineManager.CreateWikiPageAsync(PROJECT_ID, WIKI_PAGE_NAME, new WikiPage { Text = WIKI_PAGE_UPDATED_TEXT, Comments = WIKI_PAGE_COMMENT });
 
 			Assert.NotNull(page);
 			Assert.True(page.Title == WIKI_PAGE_NAME, "Wiki page " + WIKI_PAGE_NAME + " does not exist.");
 		}
+        
+        [Fact]
+        public  async Task Should_Update_Wiki_Page()
+        {
+             await fixture.RedmineManager.UpdateWikiPageAsync(PROJECT_ID, WIKI_PAGE_NAME, new WikiPage { Text = WIKI_PAGE_UPDATED_TEXT, Comments = WIKI_PAGE_COMMENT });
+        }
 
 		[Fact]
 		public async Task Should_Get_All_Pages()

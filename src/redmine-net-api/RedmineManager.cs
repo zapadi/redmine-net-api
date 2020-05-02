@@ -1,4 +1,4 @@
-﻿/*
+/*
    Copyright 2011 - 2019 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -358,7 +358,30 @@ namespace Redmine.Net.Api
         /// <param name="pageName">The wiki page name.</param>
         /// <param name="wikiPage">The wiki page to create or update.</param>
         /// <returns></returns>
-        public WikiPage CreateOrUpdateWikiPage(string projectId, string pageName, WikiPage wikiPage)
+        public void UpdateWikiPage(string projectId, string pageName, WikiPage wikiPage)
+        {
+            var result = Serializer.Serialize(wikiPage);
+
+            if (string.IsNullOrEmpty(result))
+            {
+                return;
+            }
+
+            var url = UrlHelper.GetWikiCreateOrUpdaterUrl(this, projectId, pageName);
+
+             url = Uri.EscapeUriString(url);
+
+             WebApiHelper.ExecuteUpload(this, url, HttpVerbs.PUT, result);
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <param name="pageName"></param>
+        /// <param name="wikiPage"></param>
+        /// <returns></returns>
+        public WikiPage CreateWikiPage(string projectId, string pageName, WikiPage wikiPage)
         {
             var result = Serializer.Serialize(wikiPage);
 
