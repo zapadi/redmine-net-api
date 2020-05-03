@@ -49,8 +49,8 @@ before_build:
   - ps: dotnet --version
 
 build_script:
-  - ps: dotnet build redmine-net-api.sln -c Release --version-suffix=$env:BUILD_SUFFIX src\redmine-net-api\redmine-net-api.csproj
-  - ps: dotnet build redmine-net-api.sln -c Release --version-suffix=$env:BUILD_SUFFIX -p:Sign=true src\redmine-net-api\redmine-net-api.csproj
+  - ps: dotnet build src\redmine-net-api\redmine-net-api.csproj -c Release --version-suffix=$env:BUILD_SUFFIX 
+  - ps: dotnet build src\redmine-net-api\redmine-net-api.csproj -c Release --version-suffix=$env:BUILD_SUFFIX -p:Sign=true
     
 after_build:
   - ps: dotnet pack src\redmine-net-api\redmine-net-api.csproj -c Release --output .\artifacts --include-symbols -p:SymbolPackageFormat=snupkg --no-build $env:VERSION_SUFFIX
