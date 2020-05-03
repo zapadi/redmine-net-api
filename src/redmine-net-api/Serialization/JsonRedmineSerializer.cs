@@ -85,6 +85,7 @@ namespace Redmine.Net.Api.Serialization
             }
         }
 
+        #pragma warning disable CA1822
         public int Count<T>(string jsonResponse) where T : class, new()
         {
             if (jsonResponse.IsNullOrWhiteSpace())
@@ -116,7 +117,8 @@ namespace Redmine.Net.Api.Serialization
                 }
             }
         }
-
+        #pragma warning restore CA1822
+        
         public string Type { get; } = "json";
 
         public string Serialize<T>(T entity) where T : class

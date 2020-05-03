@@ -50,6 +50,7 @@ namespace Redmine.Net.Api.Serialization
             }
         }
 
+#pragma warning disable CA1822
         public int Count<T>(string xmlResponse) where T : class, new()
         {
             try
@@ -62,6 +63,7 @@ namespace Redmine.Net.Api.Serialization
                 throw new RedmineException(ex.Message, ex);
             }
         }
+#pragma warning restore CA1822
 
         public string Type { get; } = "xml";
 
