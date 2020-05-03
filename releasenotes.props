@@ -1,0 +1,24 @@
+<Project>
+    <PropertyGroup>
+        <PackageReleaseNotes Condition="'$(VersionPrefix)' == '4.0.0'">
+            <![CDATA[
+            
+Breaking changes:
+* Split CreateOrUpdateWikiPage into CreateWikiPage & UpdateWikiPage
+* Add IdentifiableName.Create<T>(id) in order to create identifiablename types with id. 
+  
+Features:
+* Add support for .NET Standard 2.0 and 2.1
+
+Fixes:
+* Trackers - Cannot retreive List of trackers: Malformed objects (#265) (thanks NecatiMeral)
+* IssueRelation - `relation_type` cannot be parsed (#263) (thanks NecatiMeral)
+* Issue with 'relates" relation (#262) (thanks NecatiMeral)
+* RedmineManager.GetObjects<>(params string[]) only retrieves 25 objects (#260)
+* Unexpected ArgumentNullException in RedmineManager.cs:581 (#259)
+]]>
+        </PackageReleaseNotes>
+        <PackageReleaseNotes>$(PackageReleaseNotes)
+            See $(PackageProjectUrl)/blob/master/CHANGELOG.md#v$(VersionPrefix.Replace('.','')) for more details.</PackageReleaseNotes>
+    </PropertyGroup>
+</Project>

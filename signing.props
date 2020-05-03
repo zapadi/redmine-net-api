@@ -1,0 +1,6 @@
+<Project>
+    <PropertyGroup Label="Signing" Condition=" '$(Sign)' == 'true' ">
+        <SignAssembly>true</SignAssembly>
+        <AssemblyOriginatorKeyFile>..\..\redmine-net-api.snk</AssemblyOriginatorKeyFile>
+    </PropertyGroup>
+</Project>

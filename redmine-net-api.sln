@@ -22,6 +22,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionFolder", "SolutionF
 		redmine-net-api.snk = redmine-net-api.snk
 		ISSUE_TEMPLATE.md = ISSUE_TEMPLATE.md
 		PULL_REQUEST_TEMPLATE.md = PULL_REQUEST_TEMPLATE.md
+		CHANGELOG.md = CHANGELOG.md
+		Directory.Build.props = Directory.Build.props
+		releasenotes.props = releasenotes.props
+		signing.props = signing.props
+		version.props = version.props
 	EndProjectSection
 EndProject
 Global

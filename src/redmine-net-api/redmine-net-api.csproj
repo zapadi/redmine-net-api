@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   
   <PropertyGroup Label="Build">
@@ -23,40 +23,6 @@
       CA1806;
       CA2227;
     </NoWarn>
-  </PropertyGroup>
-
-  <PropertyGroup Label="Package">
-    <Authors>Adrian Popescu</Authors>
-    <Description>Redmine Api is a .NET rest client for Redmine.</Description>
-    <Company>p.adi</Company>
-    <Copyright>Adrian Popescu, 2011 - $([System.DateTime]::Now.Year.ToString()) </Copyright>
-    <InformationalVersion>1.0.0</InformationalVersion>
-    <NeutralLanguage>en-US</NeutralLanguage>
-    <PackageId Condition="'$(Sign)' == '' OR '$(Sign)' == 'false'">redmine-api</PackageId>
-    <PackageId Condition="'$(Sign)' == 'true'">redmine-api-signed</PackageId>
-    <PackageIconUrl>https://raw.githubusercontent.com/zapadi/redmine-net-api/master/logo.png</PackageIconUrl>
-    <PackageIcon>logo.png</PackageIcon>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <PackageProjectUrl>https://github.com/zapadi/redmine-net-api</PackageProjectUrl>
-    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <PackageReleaseNotes>
-      Add redmine-net-api.snk
-      Fix #242 - Invalid URI: The Uri scheme is too long
-      Fix package icon url.
-    </PackageReleaseNotes>
-    <PackageTags>Redmine; REST; API; Client; .NET; Adrian Popescu; </PackageTags>
-    <Product>Redmine .NET API Client</Product>
-    <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/zapadi/redmine-net-api</RepositoryUrl>
-    <Summary>...</Summary>
-    <Title>Redmine .NET API Client</Title> 
-    <VersionPrefix>3.0.6</VersionPrefix> 
-    <Version>3.0.6.1</Version>
-  </PropertyGroup>
-   
-  <PropertyGroup Label="Signing" Condition=" '$(Sign)' == 'true' ">
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\..\redmine-net-api.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net20'">

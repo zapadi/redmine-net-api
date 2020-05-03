@@ -1,0 +1,39 @@
+<Project>
+
+    <Import Project="version.props" />
+
+    <PropertyGroup Label="Package">
+        <Authors>Adrian Popescu</Authors>
+        <Description>Redmine Api is a .NET rest client for Redmine.</Description>
+        <Company>p.adi</Company>
+        <Copyright>Adrian Popescu, 2011 - $([System.DateTime]::Now.Year.ToString()) </Copyright>
+        <NeutralLanguage>en-US</NeutralLanguage>
+        
+        <PackageId Condition="'$(Sign)' == '' OR '$(Sign)' == 'false'">redmine-api</PackageId>
+        <PackageId Condition="'$(Sign)' == 'true'">redmine-api-signed</PackageId>
+        <PackageIconUrl>https://raw.githubusercontent.com/zapadi/redmine-net-api/master/logo.png</PackageIconUrl>
+        <PackageIcon>logo.png</PackageIcon>
+        <PackageLicense>LICENSE</PackageLicense>
+        <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+        <PackageProjectUrl>https://github.com/zapadi/redmine-net-api</PackageProjectUrl>
+        <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+        <PackageTags>Redmine; REST; API; Client; .NET; Adrian Popescu; </PackageTags>
+        <Product>Redmine .NET API Client</Product>
+        <RepositoryType>git</RepositoryType>
+        <RepositoryUrl>https://github.com/zapadi/redmine-net-api</RepositoryUrl>
+        <Summary>...</Summary>
+        <Title>Redmine .NET API Client</Title>
+    </PropertyGroup>
+
+    <PropertyGroup>
+<!--        <DebugType>embedded</DebugType>-->
+<!--        <NoPackageAnalysis>true</NoPackageAnalysis>-->
+        <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+        <PackageOutputPath>$(SolutionDir)/.artifacts</PackageOutputPath>
+    </PropertyGroup>
+ 
+    <Import Project="signing.props" />
+    
+    <Import Project="releasenotes.props" />
+
+</Project>
