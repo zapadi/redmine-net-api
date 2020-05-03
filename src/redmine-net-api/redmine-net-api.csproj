@@ -2,8 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   
   <PropertyGroup Label="Build">
-    <!--<TargetFramework>net20</TargetFramework>-->
-    <TargetFrameworks>net20;net40;net45;net451;net452;net46;net461;net462;net47;net471;net472;net48;</TargetFrameworks>
+    <TargetFrameworks>net20;net40;net45;net451;net452;net46;net461;net462;net47;net471;net472;net48;netstandard2.0;netstandard2.1</TargetFrameworks>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <RootNamespace>Redmine.Net.Api</RootNamespace>
     <AssemblyName>redmine-net-api</AssemblyName>
@@ -12,6 +11,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <Configurations>Debug;Release;DebugJson</Configurations>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <LangVersion>7.3</LangVersion>
     <NoWarn>
       NU5105;
       CA1303;
@@ -71,6 +71,18 @@
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net48'">
     <DefineConstants>NET48;NETFULL</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.3'">
+    <DefineConstants>NETSTANDARD13;NETSTANDARD</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0'">
+    <DefineConstants>NETSTANDARD20;NETSTANDARD</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.1'">
+    <DefineConstants>NETSTANDARD21;NETSTANDARD</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup Label="Package References">
@@ -146,14 +158,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Logging\**" />
     <EmbeddedResource Remove="Logging\**" />
-    <None Remove="Logging\**" />
     <Compile Remove="Properties\AssemblyInfo.cs" />
     <Compile Remove="Extensions\LoggerExtensions.cs" />
+    <Compile Remove="Logging\**" />
+    <None Remove="Logging\**" />
     <None Include="..\..\redmine-net-api.snk">
-    <Link>redmine-net-api.snk</Link>
-  </None>
+      <Link>redmine-net-api.snk</Link>
+    </None>
     <None Include="..\..\logo.png" Pack="true" PackagePath="\" />
     <None Include="..\..\LICENSE" Pack="true" PackagePath="" />
   </ItemGroup>
