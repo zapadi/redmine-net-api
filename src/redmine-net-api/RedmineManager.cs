@@ -1,4 +1,4 @@
-/*
+﻿/*
    Copyright 2011 - 2019 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -599,7 +599,7 @@ namespace Redmine.Net.Api
         /// </returns>
         public List<T> GetObjects<T>(NameValueCollection parameters) where T : class, new()
         {
-            int totalCount = 0, pageSize = 0, offset = 0;
+            int pageSize = 0, offset = 0;
             var isLimitSet = false;
             List<T> resultList = null;
 
@@ -623,6 +623,7 @@ namespace Redmine.Net.Api
                 var hasOffset = TypesWithOffset.ContainsKey(typeof(T));
                 if (hasOffset)
                 {
+                    var totalCount = 0;
                     do
                     {
                         parameters.Set(RedmineKeys.OFFSET, offset.ToString(CultureInfo.InvariantCulture));
@@ -901,7 +902,15 @@ namespace Redmine.Net.Api
         /// <code></code>
         public virtual bool RemoteCertValidate(object sender, X509Certificate cert, X509Chain chain, SslPolicyErrors sslPolicyErrors)
         {
-            return sslPolicyErrors == SslPolicyErrors.None;
+            const SslPolicyErrors ignoredErrors =
+                SslPolicyErrors.RemoteCertificateChainErrors |
+                SslPolicyErrors.RemoteCertificateNameMismatch;
+ 
+            if ((sslPolicyErrors & ~ignoredErrors) == SslPolicyErrors.None)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

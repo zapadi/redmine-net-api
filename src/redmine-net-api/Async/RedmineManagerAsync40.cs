@@ -54,6 +54,14 @@ namespace Redmine.Net.Api.Async
             return Task.Factory.StartNew(() => redmineManager.CreateWikiPage(projectId, pageName, wikiPage), CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="redmineManager"></param>
+        /// <param name="projectId"></param>
+        /// <param name="pageName"></param>
+        /// <param name="wikiPage"></param>
+        /// <returns></returns>
         public static Task UpdateWikiPageAsync(this RedmineManager redmineManager, string projectId, string pageName, WikiPage wikiPage)
         {
             return Task.Factory.StartNew(() => redmineManager.UpdateWikiPage(projectId, pageName, wikiPage), CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default);

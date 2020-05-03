@@ -29,7 +29,7 @@
 <!--        <DebugType>embedded</DebugType>-->
 <!--        <NoPackageAnalysis>true</NoPackageAnalysis>-->
         <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-        <PackageOutputPath>$(SolutionDir)/.artifacts</PackageOutputPath>
+        <PackageOutputPath>$(SolutionDir)/artifacts</PackageOutputPath>
     </PropertyGroup>
  
     <Import Project="signing.props" />

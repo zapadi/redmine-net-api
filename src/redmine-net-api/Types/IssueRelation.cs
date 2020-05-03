@@ -193,7 +193,7 @@ namespace Redmine.Net.Api.Types
             }
         }
 
-        private IssueRelationType ReadIssueRelationType(JsonReader reader)
+        private static IssueRelationType ReadIssueRelationType(JsonReader reader)
         {
             var enumValue = reader.ReadAsString();
             if (enumValue.IsNullOrWhiteSpace())

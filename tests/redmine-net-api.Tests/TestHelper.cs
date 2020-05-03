@@ -31,7 +31,7 @@ namespace Padi.RedmineApi.Tests
             var iConfig = GetIConfigurationRoot(outputPath);
 
             iConfig
-                .GetSection("Credentials")
+                .GetSection("Credentials-Local")
                 .Bind(credentials);
                 
             return credentials;

@@ -38,7 +38,9 @@ namespace Redmine.Net.Api.Extensions
             if (listToClone == null) return null;
             IList<T> clonedList = new List<T>();
             foreach (var item in listToClone)
+            {
                 clonedList.Add((T) item.Clone());
+            }
             return clonedList;
         }
 

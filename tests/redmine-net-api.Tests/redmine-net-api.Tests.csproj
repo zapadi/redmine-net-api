@@ -8,7 +8,7 @@
     <TargetFrameworks>net451;net452;net46;net461;net462;net47;net471;net472;net48;</TargetFrameworks>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <RootNamespace>Padi.RedmineApi.Tests</RootNamespace>
-    <AssemblyName>Padi.RedmineApi.Tests</AssemblyName>
+
     <UserSecretsId>f8b9e946-b547-42f1-861c-f719dca00a84</UserSecretsId>
     <Configurations>Release;Debug;DebugJson</Configurations>
   </PropertyGroup>
