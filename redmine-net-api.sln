@@ -1,4 +1,3 @@
-﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29503.13
@@ -14,16 +13,16 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionFolder", "SolutionFolder", "{E8C35EC2-DD90-46E8-9B63-84EFD5F2FDE3}"
 	ProjectSection(SolutionItems) = preProject
 		appveyor.yml = appveyor.yml
+		CHANGELOG.md = CHANGELOG.md
 		CONTRIBUTING.md = CONTRIBUTING.md
+		Directory.Build.props = Directory.Build.props
 		docker-compose.yml = docker-compose.yml
+		ISSUE_TEMPLATE.md = ISSUE_TEMPLATE.md
 		LICENSE = LICENSE
 		logo.png = logo.png
+		PULL_REQUEST_TEMPLATE.md = PULL_REQUEST_TEMPLATE.md
 		README.md = README.md
 		redmine-net-api.snk = redmine-net-api.snk
-		ISSUE_TEMPLATE.md = ISSUE_TEMPLATE.md
-		PULL_REQUEST_TEMPLATE.md = PULL_REQUEST_TEMPLATE.md
-		CHANGELOG.md = CHANGELOG.md
-		Directory.Build.props = Directory.Build.props
 		releasenotes.props = releasenotes.props
 		signing.props = signing.props
 		version.props = version.props
@@ -47,7 +46,6 @@ Global
 		{900EF0B3-0233-45DA-811F-4C59483E8452}.DebugJson|Any CPU.ActiveCfg = DebugJson|Any CPU
 		{900EF0B3-0233-45DA-811F-4C59483E8452}.DebugJson|Any CPU.Build.0 = DebugJson|Any CPU
 		{900EF0B3-0233-45DA-811F-4C59483E8452}.Release|Any CPU.ActiveCfg = Debug|Any CPU
-		{900EF0B3-0233-45DA-811F-4C59483E8452}.Release|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

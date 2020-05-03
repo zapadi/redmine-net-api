@@ -11,6 +11,9 @@
 
     <UserSecretsId>f8b9e946-b547-42f1-861c-f719dca00a84</UserSecretsId>
     <Configurations>Release;Debug;DebugJson</Configurations>
+
+      <PackageId Condition="'$(Sign)' == '' OR '$(Sign)' == 'false'">redmine-api-test</PackageId>
+      <PackageId Condition="'$(Sign)' == 'true'">redmine-api-test-signed</PackageId>
   </PropertyGroup>
 
   <PropertyGroup Label="Signing" Condition=" '$(Sign)' == 'true' ">
