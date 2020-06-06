@@ -1,5 +1,11 @@
 # Changelog
 
+## [v4.0.1]
+
+Fixes:
+
+* JSON serialization exception for issues with uploads (missing WriteStart/EndObject calls) (#271) (thanks muffmolch)
+
 ## [v4.0.0]
 
 Features:
