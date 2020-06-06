@@ -142,10 +142,12 @@ namespace Redmine.Net.Api.Types
         /// <param name="writer"></param>
         public void WriteJson(JsonWriter writer)
         {
+            writer.WriteStartObject();
             writer.WriteProperty(RedmineKeys.TOKEN, Token);
             writer.WriteProperty(RedmineKeys.CONTENT_TYPE, ContentType);
             writer.WriteProperty(RedmineKeys.FILE_NAME, FileName);
             writer.WriteProperty(RedmineKeys.DESCRIPTION, Description);
+            writer.WriteEndObject();
         }
         #endregion
 
