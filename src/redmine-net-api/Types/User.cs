@@ -179,12 +179,29 @@ namespace Redmine.Net.Api.Types
             writer.WriteElementString(RedmineKeys.FIRST_NAME, FirstName);
             writer.WriteElementString(RedmineKeys.LAST_NAME, LastName);
             writer.WriteElementString(RedmineKeys.MAIL, Email);
-            writer.WriteElementString(RedmineKeys.MAIL_NOTIFICATION, MailNotification);
-            writer.WriteElementString(RedmineKeys.PASSWORD, Password);
-            writer.WriteValueOrEmpty(RedmineKeys.AUTH_SOURCE_ID, AuthenticationModeId);
+            
+            if(!string.IsNullOrEmpty(MailNotification))
+            {
+                writer.WriteElementString(RedmineKeys.MAIL_NOTIFICATION, MailNotification);
+            }
+
+            if (!string.IsNullOrEmpty(Password))
+            {
+                writer.WriteElementString(RedmineKeys.PASSWORD, Password);
+            }
+
+            if(AuthenticationModeId.HasValue)
+            { 
+                writer.WriteValueOrEmpty(RedmineKeys.AUTH_SOURCE_ID, AuthenticationModeId);
+            }
+            
             writer.WriteElementString(RedmineKeys.MUST_CHANGE_PASSWORD, MustChangePassword.ToString(CultureInfo.InvariantCulture).ToLowerInv());
             writer.WriteElementString(RedmineKeys.STATUS, ((int)Status).ToString(CultureInfo.InvariantCulture));
-            writer.WriteArray(RedmineKeys.CUSTOM_FIELDS, CustomFields);
+            
+            if(CustomFields != null)
+            { 
+                writer.WriteArray(RedmineKeys.CUSTOM_FIELDS, CustomFields);
+            }
         }
         #endregion
 
@@ -241,11 +258,29 @@ namespace Redmine.Net.Api.Types
                 writer.WriteProperty(RedmineKeys.FIRST_NAME, FirstName);
                 writer.WriteProperty(RedmineKeys.LAST_NAME, LastName);
                 writer.WriteProperty(RedmineKeys.MAIL, Email);
-                writer.WriteProperty(RedmineKeys.MAIL_NOTIFICATION, MailNotification);
-                writer.WriteProperty(RedmineKeys.PASSWORD, Password);
+                
+                if(!string.IsNullOrEmpty(MailNotification))
+                {
+                    writer.WriteProperty(RedmineKeys.MAIL_NOTIFICATION, MailNotification);
+                }
+
+                if (!string.IsNullOrEmpty(Password))
+                {
+                    writer.WriteProperty(RedmineKeys.PASSWORD, Password);
+                }
+
+                if(AuthenticationModeId.HasValue)
+                { 
+                    writer.WriteValueOrEmpty(RedmineKeys.AUTH_SOURCE_ID, AuthenticationModeId);
+                }
+            
                 writer.WriteProperty(RedmineKeys.MUST_CHANGE_PASSWORD, MustChangePassword.ToString(CultureInfo.InvariantCulture).ToLowerInv());
-                writer.WriteValueOrEmpty(RedmineKeys.AUTH_SOURCE_ID, AuthenticationModeId);
-                writer.WriteArray(RedmineKeys.CUSTOM_FIELDS, CustomFields);
+                writer.WriteProperty(RedmineKeys.STATUS, ((int)Status).ToString(CultureInfo.InvariantCulture));
+            
+                if(CustomFields != null)
+                { 
+                    writer.WriteArray(RedmineKeys.CUSTOM_FIELDS, CustomFields);
+                }
             }
         }
         #endregion
