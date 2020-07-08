@@ -1,9 +1,9 @@
 <Project>
     <PropertyGroup>
-        <PackageReleaseNotes Condition="'$(VersionPrefix)' == '4.0.1'">
+        <PackageReleaseNotes Condition="'$(VersionPrefix)' == '4.0.2'">
             <![CDATA[
 Fixes:
-* JSON serialization exception for issues with uploads (missing WriteStart/EndObject calls) (#271) (thanks muffmolch)
+* Add #236 to current version.
 ]]>
         </PackageReleaseNotes>
         <PackageReleaseNotes>$(PackageReleaseNotes)

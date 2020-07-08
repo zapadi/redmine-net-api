@@ -1,5 +1,9 @@
 # Changelog
 
+## [v4.0.2]
+
+Fixes: Add #236 to current version. 
+
 ## [v4.0.1]
 
 Fixes:
