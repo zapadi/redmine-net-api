@@ -1,4 +1,5 @@
 ﻿#if !(NET20 || NET40)
+using System;
 using System.Collections.Specialized;
 using System.Threading.Tasks;
 using Redmine.Net.Api.Async;
@@ -75,6 +76,25 @@ namespace Padi.RedmineApi.Tests.Tests.Async
 			await fixture.RedmineManager.DeleteWikiPageAsync(PROJECT_ID, WIKI_PAGE_NAME);
 			await Assert.ThrowsAsync<NotFoundException>(async () => await fixture.RedmineManager.GetWikiPageAsync(PROJECT_ID, null, WIKI_PAGE_NAME));
 		}
+        
+        [Fact]
+        public async Task Should_Get_Wiki_Page_With_Special_Chars()
+        {
+            var wikiPageName = "some-page-with-umlauts-and-other-special-chars-äöüÄÖÜß"; 
+            
+            var wikiPage = await fixture.RedmineManager.CreateWikiPageAsync(PROJECT_ID, wikiPageName,
+                new WikiPage { Text = "WIKI_PAGE_TEXT", Comments = "WIKI_PAGE_COMMENT" });
+            
+            WikiPage page = await fixture.RedmineManager.GetWikiPageAsync
+            (
+                PROJECT_ID, 
+                null,
+                wikiPageName
+            );
+
+            Assert.NotNull(page);
+            Assert.True(string.Equals(page.Title,wikiPageName, StringComparison.OrdinalIgnoreCase),$"Wiki page {wikiPageName} does not exist.");
+        }
 
 	}
 }

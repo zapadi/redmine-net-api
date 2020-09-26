@@ -243,8 +243,6 @@ namespace Redmine.Net.Api.Internals
         /// <returns></returns>
         public static string GetWikiPageUrl(RedmineManager redmineManager, string projectId, string pageName, uint version = 0)
         {
-            pageName = Uri.EscapeUriString(pageName);
-            
             var uri = version == 0
                 ? string.Format(CultureInfo.InvariantCulture,WIKI_PAGE_FORMAT, redmineManager.Host, projectId, pageName,
                     redmineManager.Format)

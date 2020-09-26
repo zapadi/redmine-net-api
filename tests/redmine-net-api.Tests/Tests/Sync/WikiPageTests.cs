@@ -14,6 +14,7 @@
    limitations under the License.
 */
 
+using System;
 using System.Collections.Specialized;
 using System.Linq;
 using Padi.RedmineApi.Tests.Infrastructure;
@@ -115,6 +116,25 @@ namespace Padi.RedmineApi.Tests.Tests.Sync
             Assert.NotNull(oldPage);
             Assert.Equal(oldPage.Title, WIKI_PAGE_NAME);
             Assert.True(oldPage.Version == WIKI_PAGE_VERSION, "Wiki page version is invalid.");
+        }
+        
+        [Fact, Order(6)]
+        public void Should_Get_Wiki_Page_With_Special_Chars()
+        {
+            var wikiPageName = "some-page-with-umlauts-and-other-special-chars-äöüÄÖÜß"; 
+            
+            var wikiPage = fixture.RedmineManager.CreateWikiPage(PROJECT_ID, wikiPageName,
+                new WikiPage { Text = "WIKI_PAGE_TEXT", Comments = "WIKI_PAGE_COMMENT" });
+            
+            WikiPage page = fixture.RedmineManager.GetWikiPage
+            (
+                PROJECT_ID, 
+               null,
+                wikiPageName
+            );
+
+            Assert.NotNull(page);
+            Assert.True(string.Equals(page.Title,wikiPageName, StringComparison.OrdinalIgnoreCase),$"Wiki page {wikiPageName} does not exist.");
         }
     }
 }
