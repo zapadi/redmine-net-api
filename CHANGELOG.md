@@ -2,6 +2,10 @@
 
 ## [v4.1.0]
 
+* Small refactoring
+
+## [v4.1.0]
+
 Fixes: 
 
 * Assigning IssueCustomFields to a project should be supported (#277)
