@@ -1,5 +1,13 @@
 # Changelog
 
+## [v4.1.0]
+
+Fixes: 
+
+* Assigning IssueCustomFields to a project should be supported (#277)
+* How to add a custom field to a project (#276)
+* Wrong encoding of special characters in URLs causes 404 (#274)
+
 ## [v4.0.2]
 
 Fixes: Add #236 to current version. 

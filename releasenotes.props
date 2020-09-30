@@ -1,9 +1,10 @@
 <Project>
     <PropertyGroup>
-        <PackageReleaseNotes Condition="'$(VersionPrefix)' == '4.0.2'">
+        <PackageReleaseNotes Condition="'$(VersionPrefix)' == '4.1.0'">
             <![CDATA[
 Fixes:
-* Add #236 to current version.
+* Wrong encoding of special characters in URLs causes 404 (#274).
+* Adding custom fileds to project (#276,#277).
 ]]>
         </PackageReleaseNotes>
         <PackageReleaseNotes>$(PackageReleaseNotes)
