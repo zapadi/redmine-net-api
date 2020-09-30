@@ -1,6 +1,6 @@
 # Changelog
 
-## [v4.1.0]
+## [v4.2.0]
 
 * Small refactoring
 
