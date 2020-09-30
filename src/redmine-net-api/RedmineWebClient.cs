@@ -26,7 +26,6 @@ namespace Redmine.Net.Api
     /// <seealso cref="System.Net.WebClient" />
     public class RedmineWebClient : WebClient
     {
-        private const string UA = "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/14.0.835.163 Safari/535.1";
         private string redirectUrl = string.Empty;
        
         /// <summary>

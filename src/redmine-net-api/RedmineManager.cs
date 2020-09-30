@@ -362,7 +362,7 @@ namespace Redmine.Net.Api
         {
             var result = Serializer.Serialize(wikiPage);
 
-            if (result.IsNullOrWhiteSpace())
+            if (string.IsNullOrEmpty(result))
             {
                 return;
             }
@@ -385,7 +385,7 @@ namespace Redmine.Net.Api
         {
             var result = Serializer.Serialize(wikiPage);
 
-            if (result.IsNullOrWhiteSpace())
+            if (string.IsNullOrEmpty(result))
             {
                 return null;
             }
@@ -451,17 +451,15 @@ namespace Redmine.Net.Api
         /// <returns></returns>
         public int Count<T>(NameValueCollection parameters) where T : class, new()
         {
-            var totalCount = 0;
-            const int PAGE_SIZE = 1;
-            const int OFFSET = 0;
+            int totalCount = 0, pageSize = 1, offset = 0;
 
             if (parameters == null)
             {
                 parameters = new NameValueCollection();
             }
 
-            parameters.Set(RedmineKeys.LIMIT, PAGE_SIZE.ToString(CultureInfo.InvariantCulture));
-            parameters.Set(RedmineKeys.OFFSET, OFFSET.ToString(CultureInfo.InvariantCulture));
+            parameters.Set(RedmineKeys.LIMIT, pageSize.ToString(CultureInfo.InvariantCulture));
+            parameters.Set(RedmineKeys.OFFSET, offset.ToString(CultureInfo.InvariantCulture));
 
             try
             {
@@ -829,6 +827,8 @@ namespace Redmine.Net.Api
             return WebApiHelper.ExecuteDownloadFile(this, address);
         }
 
+        private const string UA = "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/14.0.835.163 Safari/535.1";
+        
         /// <summary>
         ///     Creates the Redmine web client.
         /// </summary>
@@ -839,7 +839,7 @@ namespace Redmine.Net.Api
         public virtual RedmineWebClient CreateWebClient(NameValueCollection parameters, bool uploadFile = false)
         {
             var webClient = new RedmineWebClient { Scheme = Scheme, RedmineSerializer = Serializer};
-         
+            webClient.UserAgent = UA;
             if (!uploadFile)
             {
                 webClient.Headers.Add(HttpRequestHeader.ContentType, MimeFormat == MimeFormat.Xml
