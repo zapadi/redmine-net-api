@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Net;
 using Padi.RedmineApi.Tests.Infrastructure;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Exceptions;
@@ -135,6 +136,37 @@ namespace Padi.RedmineApi.Tests.Tests.Sync
 
             Assert.NotNull(page);
             Assert.True(string.Equals(page.Title,wikiPageName, StringComparison.OrdinalIgnoreCase),$"Wiki page {wikiPageName} does not exist.");
+        }
+    }
+
+    [Trait("Redmine-Net-Api", "Download")]
+#if !(NET20 || NET40)
+    [Collection("RedmineCollection")]
+#endif
+    public class DownloadTests
+    {
+        private readonly RedmineFixture fixture;
+
+        public DownloadTests(RedmineFixture fixture)
+        {
+            this.fixture = fixture;
+        }      
+        
+        [Fact]
+        public void Should_Get_Gant_File()
+        {
+            using (WebClient client = fixture.RedmineManager.CreateWebClient(new NameValueCollection()))
+            {
+                var queryString =
+                    "utf8=%E2%9C%93&set_filter=1&gant=1&f%5B%5D=status_id&f%5B%5D=project_id&f%5B%5D=&op%5Bstatus_id%5D=o&op%5Bproject_id%5D=%3D&v%5Bproject_id%5D%5B%5D=40&v%5Bproject_id%5D%5B%5D=6&v%5Bproject_id%5D%5B%5D=7&v%5Bproject_id%5D%5B%5D=13&v%5Bproject_id%5D%5B%5D=3&v%5Bproject_id%5D%5B%5D=14&v%5Bproject_id%5D%5B%5D=4&v%5Bproject_id%5D%5B%5D=8&query%5Bdraw_relations%5D=0&query%5Bdraw_relations%5D=1&query%5Bdraw_progress_line%5D=0&months=4&month=5&year=2017&zoom=4";
+
+
+                var decode = Uri.UnescapeDataString(queryString);
+
+                var address = $"{fixture.RedmineManager.Host}/issues/gantt.png?{queryString}";
+                
+               // byte[] gantFile = client.DownloadData(address);
+            }
         }
     }
 }
