@@ -59,6 +59,7 @@ namespace Redmine.Net.Api.Extensions
                     throw new RedmineTimeoutException(nameof(WebExceptionStatus.Timeout), innerException);
                 case WebExceptionStatus.NameResolutionFailure:
                     throw new NameResolutionFailureException("Bad domain name.", innerException);
+                
                 case WebExceptionStatus.ProtocolError:
                     {
                         var response = (HttpWebResponse)exception.Response;
@@ -66,9 +67,6 @@ namespace Redmine.Net.Api.Extensions
                         {
                             case (int)HttpStatusCode.NotFound:
                                 throw new NotFoundException(response.StatusDescription, innerException);
-
-                            case (int)HttpStatusCode.InternalServerError:
-                                throw new InternalServerErrorException(response.StatusDescription, innerException);
 
                             case (int)HttpStatusCode.Unauthorized:
                                 throw new UnauthorizedException(response.StatusDescription, innerException);
@@ -95,10 +93,12 @@ namespace Redmine.Net.Api.Extensions
 
                             case (int)HttpStatusCode.NotAcceptable:
                                 throw new NotAcceptableException(response.StatusDescription, innerException);
+
+                            default:
+                                throw new RedmineException(response.StatusDescription, innerException);
                         }
                     }
-                    break;
-
+                    
                 default:
                     throw new RedmineException(exception.Message, innerException);
             }
