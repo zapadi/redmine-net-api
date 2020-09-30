@@ -85,5 +85,4 @@ for:
           secure: iQKBODPsLcVrf7JQV5IR1jDHq01NiqEDmgj8N0Ahktuu76dKCs827tLggGMO9Mkd
         skip_symbols: true
         on:
-          branch: master
           APPVEYOR_REPO_TAG: true 
