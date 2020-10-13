@@ -9,6 +9,7 @@ on:
       - LICENSE
       - tests/*
   pull_request:
+  workflow_dispatch:  
     
 env:
   DOTNET_CLI_TELEMETRY_OPTOUT:  1
@@ -20,18 +21,33 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
-        dotnet: [ '3.1.100' ]
+        dotnet: [ '3.1.301' ]
     name: OS ${{ matrix.os }} - dotnet ${{ matrix.dotnet }}
 
     steps:
     - uses: actions/checkout@v2
+    
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: ${{ matrix.dotnet }}
+            
+    - name: Install dependencies
+      run: dotnet restore redmine-net-api.sln
+    
     #- name: Get the version
     #  id: get_version
     #  run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
     # ${{ steps.get_version.outputs.VERSION }}
-    - name: Build with dotnet
-      run: dotnet build redmine-net-api.sln --configuration Release
+    
+    - name: Build
+      run: dotnet build redmine-net-api.sln --configuration Release --no-restore
+      
+    #- name: Test
+    #  run: dotnet test --no-restore --verbosity normal
+    
+    #- name: Generate a NuGet package
+    #  run: dotnet pack --no-build -c Release -o .
+  
+    #- name: Push to GitHub package registry
+    #  run: dotnet nuget push *.nupkg
