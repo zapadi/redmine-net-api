@@ -323,8 +323,10 @@ namespace Redmine.Net.Api.Async
                     {
                         if (resultList == null)
                         {
-                            resultList = new List<T>(tempResult.Items);
                             totalCount = tempResult.TotalItems;
+                            resultList = totalCount > 0 
+                                ? new List<T>(tempResult.Items) 
+                                : new List<T>();
                         }
                         else
                         {
