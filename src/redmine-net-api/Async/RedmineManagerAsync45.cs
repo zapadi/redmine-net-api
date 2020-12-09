@@ -299,13 +299,20 @@ namespace Redmine.Net.Api.Async
         public static async Task<List<T>> GetObjectsAsync<T>(this RedmineManager redmineManager, NameValueCollection parameters)
             where T : class, new()
         {
-            int totalCount = 0, pageSize, offset;
+            int  pageSize = 0, offset = 0;
+            var isLimitSet = false;
             List<T> resultList = null;
 
-            if (parameters == null) parameters = new NameValueCollection();
-
-            int.TryParse(parameters[RedmineKeys.LIMIT], out pageSize);
-            int.TryParse(parameters[RedmineKeys.OFFSET], out offset);
+            if (parameters == null)
+            {
+                parameters = new NameValueCollection();
+            }
+            else
+            {
+                isLimitSet = int.TryParse(parameters[RedmineKeys.LIMIT], out pageSize);
+                int.TryParse(parameters[RedmineKeys.OFFSET], out offset);
+            }
+            
             if (pageSize == default(int))
             {
                 pageSize = redmineManager.PageSize > 0
@@ -315,18 +322,21 @@ namespace Redmine.Net.Api.Async
             }
             try
             {
+                var hasOffset = RedmineManager.TypesWithOffset.ContainsKey(typeof(T));
+                if (hasOffset)
+                {
+                    var totalCount = 0;
                 do
                 {
                     parameters.Set(RedmineKeys.OFFSET, offset.ToString(CultureInfo.InvariantCulture));
                     var tempResult = await redmineManager.GetPaginatedObjectsAsync<T>(parameters).ConfigureAwait(false);
-                    if (tempResult != null)
+                    totalCount = isLimitSet ? pageSize : tempResult.TotalItems;
+
+                    if (tempResult?.Items != null)
                     {
                         if (resultList == null)
                         {
-                            totalCount = tempResult.TotalItems;
-                            resultList = totalCount > 0 
-                                ? new List<T>(tempResult.Items) 
-                                : new List<T>();
+                            resultList = new List<T>(tempResult.Items);
                         }
                         else
                         {
@@ -335,6 +345,15 @@ namespace Redmine.Net.Api.Async
                     }
                     offset += pageSize;
                 } while (offset < totalCount);
+                }
+                else
+                {
+                    var result = await redmineManager.GetPaginatedObjectsAsync<T>(parameters).ConfigureAwait(false);
+                    if (result?.Items != null)
+                    {
+                        return new List<T>(result.Items);
+                    }
+                }
             }
             catch (WebException wex)
             {

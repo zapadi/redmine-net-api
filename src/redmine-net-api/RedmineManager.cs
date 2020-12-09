@@ -66,14 +66,14 @@ namespace Redmine.Net.Api
             {typeof(CustomField), "custom_fields"}
         };
 
-        private static readonly Dictionary<Type, bool> TypesWithOffset = new Dictionary<Type, bool>{
+        public static readonly Dictionary<Type, bool> TypesWithOffset = new Dictionary<Type, bool>{
             {typeof(Issue), true},
             {typeof(Project), true},
             {typeof(User), true},
             {typeof(News), true},
             {typeof(Query), true},
             {typeof(TimeEntry), true},
-            {typeof(ProjectMembership), true},
+            {typeof(ProjectMembership), true}
         };
 
         private readonly string basicAuthorization;
