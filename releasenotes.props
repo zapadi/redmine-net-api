@@ -1,6 +1,6 @@
 <Project>
     <PropertyGroup>
-        <PackageReleaseNotes Condition="'$(VersionPrefix)' == '4.2.0'">
+        <PackageReleaseNotes Condition="'$(VersionPrefix)' == '4.2.2'">
             <![CDATA[
 Small refactoring
 ]]>

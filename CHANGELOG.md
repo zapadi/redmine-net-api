@@ -1,5 +1,15 @@
 # Changelog
 
+## [v4.2.2]
+
+Fixes:
+
+* GetObjectsAsync<T> raises ArgumentNullException when should return null (#280)
+
+## [v4.2.1]
+
+* Small fixes.
+
 ## [v4.2.0]
 
 * Small refactoring
