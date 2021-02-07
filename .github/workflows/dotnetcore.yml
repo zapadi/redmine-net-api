@@ -87,6 +87,7 @@ jobs:
         path: .\artifacts\**\*.snupkg
 
   deploy:
+    runs-on: macOS-latest
     needs: build
     name: Deploy Packages
     steps:
