@@ -32,6 +32,7 @@ env:
   DOTNET_GENERATE_ASPNET_CERTIFICATE: false
   DOTNET_ADD_GLOBAL_TOOLS_TO_PATH: false
   DOTNET_MULTILEVEL_LOOKUP: 0
+  VERSION: git.sha
 
 jobs:
   build:
@@ -55,24 +56,25 @@ jobs:
       run: dotnet restore redmine-net-api.sln
     
     - name: Get the version
-      id: get_version
-      run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+      #id: get_version
+      #run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
       #${{ steps.get_version.outputs.VERSION }}
+      run: echo "VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
     
     - name: Build
-      run: dotnet build redmine-net-api.sln --configuration Release --no-restore --version-suffix=${{ steps.get_version.outputs.VERSION }}
+      run: dotnet build redmine-net-api.sln --configuration Release --no-restore --version-suffix=${{ env.VERSION }}
 
     - name: Build Signed
-      run: dotnet build redmine-net-api.sln --configuration Release --no-restore --version-suffix=${{ steps.get_version.outputs.VERSION }} -p:Sign=true
+      run: dotnet build redmine-net-api.sln --configuration Release --no-restore --version-suffix=${{ env.VERSION }} -p:Sign=true
       
     #- name: Test
     #  run: dotnet test redmine-net-api.sln --no-restore --verbosity normal
 
     - name: Pack
-      run: dotnet pack redmine-net-api.sln --configuration Release -o .\artifacts --include-symbols -p:SymbolPackageFormat=snupkg --no-build ${{ steps.get_version.outputs.VERSION }}
+      run: dotnet pack redmine-net-api.sln --configuration Release -o .\artifacts --include-symbols -p:SymbolPackageFormat=snupkg --no-build ${{ env.VERSION }}
 
     - name: Pack Signed
-      run: dotnet pack redmine-net-api.sln --configuration Release -o .\artifacts --include-symbols -p:SymbolPackageFormat=snupkg --no-build ${{ steps.get_version.outputs.VERSION }} -p:Sign=true
+      run: dotnet pack redmine-net-api.sln --configuration Release -o .\artifacts --include-symbols -p:SymbolPackageFormat=snupkg --no-build ${{ env.VERSION }} -p:Sign=true
 
     - name: Publish NuGet Packages
       uses: actions/upload-artifact@master
