@@ -57,7 +57,7 @@ jobs:
     - name: Get the version
       id: get_version
       run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
-      ${{ steps.get_version.outputs.VERSION }}
+      #${{ steps.get_version.outputs.VERSION }}
     
     - name: Build
       run: dotnet build redmine-net-api.sln --configuration Release --no-restore --version-suffix=${{ steps.get_version.outputs.VERSION }}
