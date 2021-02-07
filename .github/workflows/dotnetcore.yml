@@ -32,7 +32,6 @@ env:
   DOTNET_GENERATE_ASPNET_CERTIFICATE: false
   DOTNET_ADD_GLOBAL_TOOLS_TO_PATH: false
   DOTNET_MULTILEVEL_LOOKUP: 0
-  VERSION: git.sha
 
 jobs:
   build:
@@ -60,7 +59,10 @@ jobs:
       #run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
       #${{ steps.get_version.outputs.VERSION }}
       run: echo "VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
-    
+    - name: Test
+      run: |
+          echo $VERSION
+          echo ${{ env.VERSION }}
     - name: Build
       run: dotnet build redmine-net-api.sln --configuration Release --no-restore --version-suffix=${{ env.VERSION }}
 
