@@ -50,7 +50,10 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: ${{ matrix.dotnet }}
-            
+    # Fetches all tags for the repo
+    - name: Fetch tags
+      run: git fetch --depth=1 origin +refs/tags/*:refs/tags/* 
+     
     - name: Install dependencies
       run: dotnet restore redmine-net-api.sln
     
@@ -58,73 +61,68 @@ jobs:
       #id: get_version
       #run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
       #${{ steps.get_version.outputs.VERSION }}
-      run: |
-        echo "VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
-         # Get the version number
-        XVERSION=$(dotnet minver -t v -v e -d preview)
-    
+      run: echo "VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
     
     - name: Test
       run: |
           echo $VERSION
           echo ${{ env.VERSION }}
-          echo $XVERSION
           echo $github.run_number
     
-    - name: Build
-      run: dotnet build redmine-net-api.sln --configuration Release --no-restore --version-suffix=${{ env.VERSION }}
+#     - name: Build
+#       run: dotnet build redmine-net-api.sln --configuration Release --no-restore --version-suffix=${{ env.VERSION }}
 
-    - name: Build Signed
-      run: dotnet build redmine-net-api.sln --configuration Release --no-restore --version-suffix=${{ env.VERSION }} -p:Sign=true
+#     - name: Build Signed
+#       run: dotnet build redmine-net-api.sln --configuration Release --no-restore --version-suffix=${{ env.VERSION }} -p:Sign=true
       
-    #- name: Test
-    #  run: dotnet test redmine-net-api.sln --no-restore --verbosity normal
+#     #- name: Test
+#     #  run: dotnet test redmine-net-api.sln --no-restore --verbosity normal
 
-    - name: Pack
-      run: dotnet pack redmine-net-api.sln --configuration Release -o .\artifacts --include-symbols -p:SymbolPackageFormat=snupkg --no-build ${{ env.VERSION }}
-      if: runner.os != 'Windows'
+#     - name: Pack
+#       run: dotnet pack redmine-net-api.sln --configuration Release -o .\artifacts --include-symbols -p:SymbolPackageFormat=snupkg --no-build ${{ env.VERSION }}
+#       if: runner.os != 'Windows'
 
-    - name: Pack Signed
-      run: dotnet pack redmine-net-api.sln --configuration Release -o .\artifacts --include-symbols -p:SymbolPackageFormat=snupkg --no-build ${{ env.VERSION }} -p:Sign=true
-      if: runner.os != 'Windows'
+#     - name: Pack Signed
+#       run: dotnet pack redmine-net-api.sln --configuration Release -o .\artifacts --include-symbols -p:SymbolPackageFormat=snupkg --no-build ${{ env.VERSION }} -p:Sign=true
+#       if: runner.os != 'Windows'
 
-    - name: Publish NuGet Packages
-      uses: actions/upload-artifact@master
-      with:
-        name: nupkg
-        path: .\artifacts\**\*.nupkg
+#     - name: Publish NuGet Packages
+#       uses: actions/upload-artifact@master
+#       with:
+#         name: nupkg
+#         path: .\artifacts\**\*.nupkg
 
-    - name: Publish Symbol Packages
-      uses: actions/upload-artifact@master
-      with:
-        name: snupkg
-        path: .\artifacts\**\*.snupkg
+#     - name: Publish Symbol Packages
+#       uses: actions/upload-artifact@master
+#       with:
+#         name: snupkg
+#         path: .\artifacts\**\*.snupkg
 
-  deploy:
-    runs-on: macOS-latest
-    needs: build
-    name: Deploy Packages
-    steps:
-      - name: Download Package artifact
-        uses: actions/download-artifact@master
-        with:
-          name: nupkg
-      - name: Download Package artifact
-        uses: actions/download-artifact@master
-        with:
-          name: snupkg
+#   deploy:
+#     runs-on: macOS-latest
+#     needs: build
+#     name: Deploy Packages
+#     steps:
+#       - name: Download Package artifact
+#         uses: actions/download-artifact@master
+#         with:
+#           name: nupkg
+#       - name: Download Package artifact
+#         uses: actions/download-artifact@master
+#         with:
+#           name: snupkg
      
-      - name: Setup NuGet
-        uses: NuGet/setup-nuget@v1.0.2
-        with:
-          nuget-api-key: ${{ secrets.NUGET_API_KEY }}
-          nuget-version: latest
+#       - name: Setup NuGet
+#         uses: NuGet/setup-nuget@v1.0.2
+#         with:
+#           nuget-api-key: ${{ secrets.NUGET_API_KEY }}
+#           nuget-version: latest
  
-      - name: Setup .NET Core SDK
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: '3.1.x'
+#       - name: Setup .NET Core SDK
+#         uses: actions/setup-dotnet@v1
+#         with:
+#           dotnet-version: '3.1.x'
 
-      - name: Push to NuGet
-        run: dotnet nuget push nupkg\*.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://nuget.org
+#       - name: Push to NuGet
+#         run: dotnet nuget push nupkg\*.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://nuget.org
     
