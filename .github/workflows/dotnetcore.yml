@@ -58,11 +58,19 @@ jobs:
       #id: get_version
       #run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
       #${{ steps.get_version.outputs.VERSION }}
-      run: echo "VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+      run: |
+        echo "VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+         # Get the version number
+        XVERSION=$(dotnet minver -t v -v e -d preview)
+    
+    
     - name: Test
       run: |
           echo $VERSION
           echo ${{ env.VERSION }}
+          echo $XVERSION
+          echo $github.run_number
+    
     - name: Build
       run: dotnet build redmine-net-api.sln --configuration Release --no-restore --version-suffix=${{ env.VERSION }}
 
@@ -74,9 +82,11 @@ jobs:
 
     - name: Pack
       run: dotnet pack redmine-net-api.sln --configuration Release -o .\artifacts --include-symbols -p:SymbolPackageFormat=snupkg --no-build ${{ env.VERSION }}
+      if: runner.os != 'Windows'
 
     - name: Pack Signed
       run: dotnet pack redmine-net-api.sln --configuration Release -o .\artifacts --include-symbols -p:SymbolPackageFormat=snupkg --no-build ${{ env.VERSION }} -p:Sign=true
+      if: runner.os != 'Windows'
 
     - name: Publish NuGet Packages
       uses: actions/upload-artifact@master
