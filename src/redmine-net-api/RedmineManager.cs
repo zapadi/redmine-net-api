@@ -91,20 +91,25 @@ namespace Redmine.Net.Api
         /// <param name="proxy">The proxy.</param>
         /// <param name="securityProtocolType">Use this parameter to specify a SecurityProtcolType. Note: it is recommended to leave this parameter at its default value as this setting also affects the calling application process.</param>
         /// <param name="scheme">http or https. Default is https</param>
+        /// <param name="timeout"></param>
         /// <exception cref="Redmine.Net.Api.Exceptions.RedmineException">
         ///     Host is not defined!
         ///     or
         ///     The host is not valid!
         /// </exception>
         public RedmineManager(string host, MimeFormat mimeFormat = MimeFormat.Xml, bool verifyServerCert = true,
-            IWebProxy proxy = null, SecurityProtocolType securityProtocolType = default, string scheme = "https")
+            IWebProxy proxy = null, SecurityProtocolType securityProtocolType = default, string scheme = "https", TimeSpan? timeout = null)
         {
-            if (string.IsNullOrEmpty(host)) throw new RedmineException("Host is not defined!");
+            if (string.IsNullOrEmpty(host))
+            {
+                throw new RedmineException("Host is not defined!");
+            }
 
             PageSize = 25;
             Scheme = scheme;
             Host = host;
             MimeFormat = mimeFormat;
+            Timeout = timeout;
             Proxy = proxy;
 
             if (mimeFormat == MimeFormat.Xml)
@@ -118,7 +123,7 @@ namespace Redmine.Net.Api
                 Serializer = new JsonRedmineSerializer();
             }
 
-            if (default == securityProtocolType)
+            if (securityProtocolType == default)
             {
                 securityProtocolType = ServicePointManager.SecurityProtocol;
             }
@@ -155,8 +160,8 @@ namespace Redmine.Net.Api
         /// <param name="securityProtocolType">Use this parameter to specify a SecurityProtcolType. Note: it is recommended to leave this parameter at its default value as this setting also affects the calling application process.</param>
         public RedmineManager(string host, string apiKey, MimeFormat mimeFormat = MimeFormat.Xml,
             bool verifyServerCert = true, IWebProxy proxy = null,
-            SecurityProtocolType securityProtocolType = default)
-            : this(host, mimeFormat, verifyServerCert, proxy, securityProtocolType)
+            SecurityProtocolType securityProtocolType = default, TimeSpan? timeout = null)
+            : this(host, mimeFormat, verifyServerCert, proxy, securityProtocolType, timeout: timeout)
         {
             ApiKey = apiKey;
         }
@@ -184,8 +189,8 @@ namespace Redmine.Net.Api
         /// <param name="securityProtocolType">Use this parameter to specify a SecurityProtcolType. Note: it is recommended to leave this parameter at its default value as this setting also affects the calling application process.</param>
         public RedmineManager(string host, string login, string password, MimeFormat mimeFormat = MimeFormat.Xml,
             bool verifyServerCert = true, IWebProxy proxy = null,
-            SecurityProtocolType securityProtocolType = default)
-            : this(host, mimeFormat, verifyServerCert, proxy, securityProtocolType)
+            SecurityProtocolType securityProtocolType = default, TimeSpan? timeout = null)
+            : this(host, mimeFormat, verifyServerCert, proxy, securityProtocolType, timeout: timeout)
         {
             cache = new CredentialCache { { new Uri(host), "Basic", new NetworkCredential(login, password) } };
 
@@ -210,6 +215,8 @@ namespace Redmine.Net.Api
         /// 
         /// </summary>
         public string Scheme { get; private set; }
+        
+        public TimeSpan? Timeout { get; private set; }
 
         /// <summary>
         ///     Gets the host.
@@ -840,6 +847,7 @@ namespace Redmine.Net.Api
         {
             var webClient = new RedmineWebClient { Scheme = Scheme, RedmineSerializer = Serializer};
             webClient.UserAgent = UA;
+            webClient.Timeout = Timeout;
             if (!uploadFile)
             {
                 webClient.Headers.Add(HttpRequestHeader.ContentType, MimeFormat == MimeFormat.Xml
