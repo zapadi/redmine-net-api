@@ -82,7 +82,7 @@ for:
       - provider: NuGet
         name: production
         api_key:
-          secure: iQKBODPsLcVrf7JQV5IR1jDHq01NiqEDmgj8N0Ahktuu76dKCs827tLggGMO9Mkd
+          secure: fEZylRkHvyJqjgeQ+i9TfL/JOPjLKr43k+a8Oy5MIy54IkFC8ZECaEfskcWOyqcg
         skip_symbols: true
         on:
           APPVEYOR_REPO_TAG: true 

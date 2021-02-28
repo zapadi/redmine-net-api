@@ -221,6 +221,9 @@ namespace Redmine.Net.Api
         /// </summary>
         public string Scheme { get; private set; }
         
+        /// <summary>
+        /// 
+        /// </summary>
         public TimeSpan? Timeout { get; private set; }
 
         /// <summary>
