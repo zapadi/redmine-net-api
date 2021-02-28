@@ -32,7 +32,7 @@ init:
   - ps: $buildNumber = $env:APPVEYOR_BUILD_NUMBER;
   - ps: $isRepoTag = $env:APPVEYOR_REPO_TAG;
   - ps: $revision = $(If ($isRepoTag -eq "true") {[string]::Empty} Else {"{0:00000}" -f [convert]::ToInt32("0" + $buildNumber, 10)});
-  - ps: $suffix = $(If ($branch -eq "master" -and [string]::IsNullOrEmpty($revision)) {[string]::Empty} Else {$branch.Substring(0, [math]::Min(10,$branch.Length))});
+  - ps: $suffix = $(If ([string]::IsNullOrEmpty($revision)) {[string]::Empty} Else {$branch.Substring(0, [math]::Min(10,$branch.Length))});
   - ps: $env:BUILD_SUFFIX =  $(If ([string]::IsNullOrEmpty($suffix)) {"$branch-$commitHash"} Else {"$suffix-$commitHash"});
   - ps: $env:VERSION_SUFFIX = $(If ([string]::IsNullOrEmpty($suffix)) {[string]::Empty} Else {"--version-suffix=$suffix"});
 
@@ -85,5 +85,4 @@ for:
           secure: iQKBODPsLcVrf7JQV5IR1jDHq01NiqEDmgj8N0Ahktuu76dKCs827tLggGMO9Mkd
         skip_symbols: true
         on:
-          branch: master
           APPVEYOR_REPO_TAG: true 
