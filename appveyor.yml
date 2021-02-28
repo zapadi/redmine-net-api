@@ -32,9 +32,9 @@ init:
   - ps: $buildNumber = $env:APPVEYOR_BUILD_NUMBER;
   - ps: $isRepoTag = $env:APPVEYOR_REPO_TAG;
   - ps: $revision = @{ $true = [string]::Empty; $false = "{0:00000}" -f [convert]::ToInt32("0" + $buildNumber, 10) }[$isRepoTag -eq "true"];
-  - ps: $suffix = @{ $true = [string]::Empty; $false = "$($branch.Substring(0, [math]::Min(10,$branch.Length)))-$revision"}[$branch -eq "master" -and [string]::IsNullOrEmpty($revision)];
-  - ps: $env:BUILD_SUFFIX = @{ $true = "$($suffix)-$($commitHash)"; $false = "$($branch)-$($commitHash)" }[ -not ([string]::IsNullOrEmpty($suffix))];
-  - ps: $env:VERSION_SUFFIX = @{ $true = "--version-suffix=$($suffix)"; $false = ""}[ -not ([string]::IsNullOrEmpty($suffix))];
+  - ps: $suffix = @{ $true = [string]::Empty; $false = "$($branch.Substring(0, [math]::Min(10,$branch.Length)))$([string]::IsNullOrEmpty($revision) ? [string]::Empty : -$revision)"}[$branch -eq "master" -and [string]::IsNullOrEmpty($revision)];
+  - ps: $env:BUILD_SUFFIX = @{ $true = "$($branch)-$($commitHash)"; $false = "$($suffix)-$($commitHash)" }[[string]::IsNullOrEmpty($suffix)];
+  - ps: $env:VERSION_SUFFIX = @{ $true = ""; $false = "--version-suffix=$($suffix)"}[[string]::IsNullOrEmpty($suffix)];
 
 install:
   - ps: dotnet restore redmine-net-api.sln
@@ -85,4 +85,5 @@ for:
           secure: iQKBODPsLcVrf7JQV5IR1jDHq01NiqEDmgj8N0Ahktuu76dKCs827tLggGMO9Mkd
         skip_symbols: true
         on:
+          branch: master
           APPVEYOR_REPO_TAG: true 
