@@ -1,5 +1,5 @@
 /*
-   Copyright 2011 - 2019 Adrian Popescu.
+   Copyright 2011 - 2021 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -66,13 +66,20 @@ namespace Redmine.Net.Api.Internals
         {
             using (var wc = redmineManager.CreateWebClient(null))
             {
-                if (actionType == HttpVerbs.POST || actionType == HttpVerbs.DELETE || actionType == HttpVerbs.PUT ||
-                         actionType == HttpVerbs.PATCH)
+                switch (actionType)
                 {
-                    var response = wc.UploadString(address, actionType, data);
-                    return redmineManager.Serializer.Deserialize<T>(response);
+                    case HttpVerbs.POST:
+                    case HttpVerbs.DELETE:
+                    case HttpVerbs.PUT:
+                    case HttpVerbs.PATCH:
+                    {
+                        var response = wc.UploadString(address, actionType, data);
+                        return redmineManager.Serializer.Deserialize<T>(response);
+                    }
+
+                    default:
+                        return default;
                 }
-                return default;
             }
         }
 

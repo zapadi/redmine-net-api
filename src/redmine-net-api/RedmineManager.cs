@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2019 Adrian Popescu.
+   Copyright 2011 - 2021 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -857,9 +857,11 @@ namespace Redmine.Net.Api
             webClient.Timeout = Timeout;
             if (!uploadFile)
             {
-                webClient.Headers.Add(HttpRequestHeader.ContentType, MimeFormat == MimeFormat.Xml
-                    ? "application/xml"
-                    : "application/json");
+                webClient.Headers.Add(HttpRequestHeader.ContentType, MimeFormat switch
+                {
+                    MimeFormat.Xml => "application/xml",
+                    _ => "application/json"
+                });
                 webClient.Encoding = Encoding.UTF8;
             }
             else
