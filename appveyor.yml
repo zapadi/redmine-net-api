@@ -31,10 +31,10 @@ init:
   - ps: $branch =  $env:APPVEYOR_REPO_BRANCH;
   - ps: $buildNumber = $env:APPVEYOR_BUILD_NUMBER;
   - ps: $isRepoTag = $env:APPVEYOR_REPO_TAG;
-  - ps: $revision = @{ $true = [string]::Empty; $false = "{0:00000}" -f [convert]::ToInt32("0" + $buildNumber, 10) }[$isRepoTag -eq "true"];
-  - ps: $suffix = @{ $true = [string]::Empty; $false = "$($branch.Substring(0, [math]::Min(10,$branch.Length)))$([string]::IsNullOrEmpty($revision) ? [string]::Empty : -$revision)"}[$branch -eq "master" -and [string]::IsNullOrEmpty($revision)];
-  - ps: $env:BUILD_SUFFIX = @{ $true = "$($branch)-$($commitHash)"; $false = "$($suffix)-$($commitHash)" }[[string]::IsNullOrEmpty($suffix)];
-  - ps: $env:VERSION_SUFFIX = @{ $true = ""; $false = "--version-suffix=$($suffix)"}[[string]::IsNullOrEmpty($suffix)];
+  - ps: $revision = $(If ($isRepoTag -eq "true") {[string]::Empty} Else {"{0:00000}" -f [convert]::ToInt32("0" + $buildNumber, 10)});
+  - ps: $suffix = $(If ($branch -eq "master" -and [string]::IsNullOrEmpty($revision)) {[string]::Empty} Else {$branch.Substring(0, [math]::Min(10,$branch.Length))});
+  - ps: $env:BUILD_SUFFIX =  $(If ([string]::IsNullOrEmpty($suffix)) {"$branch-$commitHash"} Else {"$suffix-$commitHash"});
+  - ps: $env:VERSION_SUFFIX = $(If ([string]::IsNullOrEmpty($suffix)) {[string]::Empty} Else {"--version-suffix=$suffix"});
 
 install:
   - ps: dotnet restore redmine-net-api.sln
