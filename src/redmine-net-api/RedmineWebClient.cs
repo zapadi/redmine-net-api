@@ -126,7 +126,7 @@ namespace Redmine.Net.Api
           
             if (Timeout != null)
             {
-                httpWebRequest.Timeout = Timeout.Value.Milliseconds;
+                httpWebRequest.Timeout = (int)Timeout.Value.TotalMilliseconds;
             }
             
             return httpWebRequest;
