@@ -1,5 +1,10 @@
 # Changelog
 
+## [v4.2.3]
+
+Fixes:
+* The only milliseconds component is set to Timeout. (#284)
+
 ## [v4.2.2]
 
 Fixes:

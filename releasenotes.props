@@ -1,10 +1,5 @@
 <Project>
     <PropertyGroup>
-        <PackageReleaseNotes Condition="'$(VersionPrefix)' == '4.2.2'">
-            <![CDATA[
-Small refactoring
-]]>
-        </PackageReleaseNotes>
         <PackageReleaseNotes>$(PackageReleaseNotes)
             See $(PackageProjectUrl)/blob/master/CHANGELOG.md#v$(VersionPrefix.Replace('.','')) for more details.</PackageReleaseNotes>
     </PropertyGroup>
