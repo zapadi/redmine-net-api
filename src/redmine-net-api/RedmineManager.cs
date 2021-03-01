@@ -857,11 +857,8 @@ namespace Redmine.Net.Api
             webClient.Timeout = Timeout;
             if (!uploadFile)
             {
-                webClient.Headers.Add(HttpRequestHeader.ContentType, MimeFormat switch
-                {
-                    MimeFormat.Xml => "application/xml",
-                    _ => "application/json"
-                });
+                webClient.Headers.Add(HttpRequestHeader.ContentType,
+                    MimeFormat is MimeFormat.Xml ? "application/xml" : "application/json");
                 webClient.Encoding = Encoding.UTF8;
             }
             else
