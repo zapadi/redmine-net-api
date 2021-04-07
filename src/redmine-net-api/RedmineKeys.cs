@@ -107,6 +107,14 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
+        public const string COPIED_FROM = "copied_from";
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string COPIED_TO = "copied_to";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string CREATED_ON = "created_on";
 
         /// <summary>

@@ -87,13 +87,7 @@ namespace Redmine.Net.Api.Types
                             case RedmineKeys.DELAY: Delay = reader.ReadAttributeAsNullableInt(attributeName); break;
                             case RedmineKeys.ISSUE_ID: IssueId = reader.ReadAttributeAsInt(attributeName); break;
                             case RedmineKeys.ISSUE_TO_ID: IssueToId = reader.ReadAttributeAsInt(attributeName); break;
-                            case RedmineKeys.RELATION_TYPE:
-                                var issueRelationType = reader.GetAttribute(attributeName);
-                                if (!issueRelationType.IsNullOrWhiteSpace())
-                                {
-                                    Type = (IssueRelationType)Enum.Parse(typeof(IssueRelationType), issueRelationType, true);
-                                }
-                                break;
+                            case RedmineKeys.RELATION_TYPE: Type = ReadIssueRelationType(reader.GetAttribute(attributeName)); break;
                         }
                     }
                     return;
@@ -105,13 +99,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.DELAY: Delay = reader.ReadElementContentAsNullableInt(); break;
                     case RedmineKeys.ISSUE_ID: IssueId = reader.ReadElementContentAsInt(); break;
                     case RedmineKeys.ISSUE_TO_ID: IssueToId = reader.ReadElementContentAsInt(); break;
-                    case RedmineKeys.RELATION_TYPE:
-                        var issueRelationType = reader.ReadElementContentAsString();
-                        if (!issueRelationType.IsNullOrWhiteSpace())
-                        {
-                            Type = (IssueRelationType)Enum.Parse(typeof(IssueRelationType), issueRelationType, true);
-                        }
-                        break;
+                    case RedmineKeys.RELATION_TYPE: Type = ReadIssueRelationType(reader.ReadElementContentAsString()); break;
                     default: reader.Read(); break;
                 }
             }
@@ -180,7 +168,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.DELAY: Delay = reader.ReadAsInt32(); break;
                     case RedmineKeys.ISSUE_ID: IssueId = reader.ReadAsInt(); break;
                     case RedmineKeys.ISSUE_TO_ID: IssueToId = reader.ReadAsInt(); break;
-                    case RedmineKeys.RELATION_TYPE: Type = ReadIssueRelationType(reader); break;
+                    case RedmineKeys.RELATION_TYPE: Type = ReadIssueRelationType(reader.ReadAsString()); break;
                 }
             }
         }
@@ -192,22 +180,32 @@ namespace Redmine.Net.Api.Types
                 throw new RedmineException($"The value `{nameof(IssueRelationType)}.`{nameof(IssueRelationType.Undefined)}` is not allowed to create relations!");
             }
         }
-
-        private static IssueRelationType ReadIssueRelationType(JsonReader reader)
+        
+        private static IssueRelationType ReadIssueRelationType(string value)
         {
-            var enumValue = reader.ReadAsString();
-            if (enumValue.IsNullOrWhiteSpace())
+            if (value.IsNullOrWhiteSpace())
             {
                 return IssueRelationType.Undefined;
             }
             
-            if (short.TryParse(enumValue, out var enumId))
+            if (short.TryParse(value, out var enumId))
             {
                 return (IssueRelationType)enumId;
             }
-            
-            return (IssueRelationType)Enum.Parse(typeof(IssueRelationType), enumValue, true);
+
+            if (RedmineKeys.COPIED_TO.Equals(value, StringComparison.OrdinalIgnoreCase))
+            {
+                return IssueRelationType.CopiedTo;
+            }
+
+            if (RedmineKeys.COPIED_FROM.Equals(value, StringComparison.OrdinalIgnoreCase))
+            {
+                return IssueRelationType.CopiedFrom;
+            }
+
+            return (IssueRelationType)Enum.Parse(typeof(IssueRelationType), value, true);
         }
+        
         #endregion
 
         #region Implementation of IEquatable<IssueRelation>
