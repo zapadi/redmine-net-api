@@ -49,10 +49,6 @@ namespace Redmine.Net.Api.Types
 
         #region Properties
         /// <summary>
-        /// 
-        /// </summary>
-        public new string Name { get; set; }
-        /// <summary>
         /// Represents the group's users.
         /// </summary>
         public IList<GroupUser> Users { get;  set; }

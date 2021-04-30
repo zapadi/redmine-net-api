@@ -29,11 +29,6 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// 
         /// </summary>
-        public new string Name { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <returns></returns>
         private string DebuggerDisplay => $"[{nameof(UserGroup)}: {ToString()}]";
 

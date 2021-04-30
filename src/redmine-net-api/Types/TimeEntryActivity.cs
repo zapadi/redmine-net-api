@@ -38,18 +38,11 @@ namespace Redmine.Net.Api.Types
         public TimeEntryActivity() { }
 
         internal TimeEntryActivity(int id, string name)
+            : base(id, name)
         {
-            Id = id;
-            Name = name;
         }
 
         #region Properties
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public new string Name { get; set; }
-
         /// <summary>
         /// 
         /// </summary>

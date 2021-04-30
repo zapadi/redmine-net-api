@@ -50,11 +50,6 @@ namespace Redmine.Net.Api.Types
 
         #endregion
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public new string Name { get; set; }
-
         #region Implementation of IValue
         /// <summary>
         /// 
