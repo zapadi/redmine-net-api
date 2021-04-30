@@ -155,7 +155,7 @@ namespace Redmine.Net.Api.Types
                 }
                 writer.WriteEndArray();
 
-                writer.WriteProperty(RedmineKeys.MULTIPLE, Multiple.ToString(CultureInfo.InvariantCulture).ToLowerInv());
+                writer.WriteBoolean(RedmineKeys.MULTIPLE, Multiple);
             }
             else
             {
