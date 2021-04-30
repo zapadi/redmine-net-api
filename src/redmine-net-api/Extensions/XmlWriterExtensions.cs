@@ -262,7 +262,6 @@ namespace Redmine.Net.Api.Extensions
         /// <summary>
         /// Writes the boolean value
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <param name="writer">The writer.</param>
         /// <param name="value">The value.</param>
         /// <param name="elementName">The tag.</param>
