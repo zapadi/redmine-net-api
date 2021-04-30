@@ -30,11 +30,11 @@ namespace Redmine.Net.Api.Extensions
     public static partial class XmlExtensions
     {
 
-        #if !(NET20 || NET40 || NET45 || NET451 || NET452)
+#if !(NET20 || NET40 || NET45 || NET451 || NET452)
         private static readonly Type[] EmptyTypeArray = Array.Empty<Type>();
-        #else
+#else
         private static readonly Type[] EmptyTypeArray = new Type[0];
-        #endif    
+#endif
         private static readonly XmlAttributeOverrides XmlAttributeOverrides = new XmlAttributeOverrides();
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace Redmine.Net.Api.Extensions
             {
                 return;
             }
-            
+
             writer.WriteStartElement(elementName);
             writer.WriteAttributeString("type", "array");
 
@@ -115,12 +115,12 @@ namespace Redmine.Net.Api.Extensions
             {
                 return;
             }
-            
+
             writer.WriteStartElement(elementName);
             writer.WriteAttributeString("type", "array");
 
             var serializer = new XmlSerializer(type);
-            
+
             foreach (var item in collection)
             {
                 serializer.Serialize(writer, f.Invoke(item));
@@ -138,13 +138,13 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="type">The type.</param>
         /// <param name="root">The root.</param>
         /// <param name="defaultNamespace">The default namespace.</param>
-        public static void WriteArray(this XmlWriter writer, string elementName, IEnumerable collection,  Type type, string root, string defaultNamespace = null)
+        public static void WriteArray(this XmlWriter writer, string elementName, IEnumerable collection, Type type, string root, string defaultNamespace = null)
         {
             if (collection == null)
             {
                 return;
             }
-            
+
             writer.WriteStartElement(elementName);
             writer.WriteAttributeString("type", "array");
 
@@ -152,7 +152,7 @@ namespace Redmine.Net.Api.Extensions
 
             var serializer = new XmlSerializer(type, XmlAttributeOverrides, EmptyTypeArray, rootAttribute,
                 defaultNamespace);
-            
+
             foreach (var item in collection)
             {
                 serializer.Serialize(writer, item);
@@ -252,10 +252,23 @@ namespace Redmine.Net.Api.Extensions
             if (value is bool)
             {
                 writer.WriteElementString(elementName, value.ToString().ToLowerInv());
-                return;
             }
+            else
+            {
+                writer.WriteElementString(elementName, value.ToString());
+            }
+        }
 
-            writer.WriteElementString(elementName, value.ToString());
+        /// <summary>
+        /// Writes the boolean value
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="writer">The writer.</param>
+        /// <param name="value">The value.</param>
+        /// <param name="elementName">The tag.</param>
+        public static void WriteBoolean(this XmlWriter writer, string elementName, bool value)
+        {
+            writer.WriteElementString(elementName, value.ToString().ToLowerInv());
         }
 
         /// <summary>
