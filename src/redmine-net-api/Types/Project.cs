@@ -193,8 +193,8 @@ namespace Redmine.Net.Api.Types
             writer.WriteElementString(RedmineKeys.IDENTIFIER, Identifier);
 
             writer.WriteIfNotDefaultOrNull(RedmineKeys.DESCRIPTION, Description);
-            writer.WriteIfNotDefaultOrNull(RedmineKeys.INHERIT_MEMBERS, InheritMembers);
-            writer.WriteIfNotDefaultOrNull(RedmineKeys.IS_PUBLIC, IsPublic);
+            writer.WriteBoolean(RedmineKeys.INHERIT_MEMBERS, InheritMembers);
+            writer.WriteBoolean(RedmineKeys.IS_PUBLIC, IsPublic);
             writer.WriteIfNotDefaultOrNull(RedmineKeys.HOMEPAGE, HomePage);
 
             writer.WriteIdIfNotNull(RedmineKeys.PARENT_ID, Parent);
@@ -268,8 +268,8 @@ namespace Redmine.Net.Api.Types
                 writer.WriteProperty(RedmineKeys.IDENTIFIER, Identifier);
                 writer.WriteIfNotDefaultOrNull(RedmineKeys.DESCRIPTION, Description);
                 writer.WriteIfNotDefaultOrNull(RedmineKeys.HOMEPAGE, HomePage);
-                writer.WriteIfNotDefaultOrNull(RedmineKeys.INHERIT_MEMBERS, InheritMembers);
-                writer.WriteIfNotDefaultOrNull(RedmineKeys.IS_PUBLIC, IsPublic);
+                writer.WriteBoolean(RedmineKeys.INHERIT_MEMBERS, InheritMembers);
+                writer.WriteBoolean(RedmineKeys.IS_PUBLIC, IsPublic);
                 writer.WriteIdIfNotNull(RedmineKeys.PARENT_ID, Parent);
                 writer.WriteRepeatableElement(RedmineKeys.TRACKER_IDS, (IEnumerable<IValue>)Trackers);
                 writer.WriteRepeatableElement(RedmineKeys.ENABLED_MODULE_NAMES, (IEnumerable<IValue>)EnabledModules);

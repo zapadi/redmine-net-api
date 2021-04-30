@@ -32,12 +32,12 @@ namespace Redmine.Net.Api.Extensions
         }
 
         /// <summary>
-        /// 
+        /// Writes if not default or null.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="writer"></param>
-        /// <param name="elementName"></param>
-        /// <param name="value"></param>
+        /// <param name="writer">The writer.</param>
+        /// <param name="value">The value.</param>
+        /// <param name="elementName">The property name.</param>
         public static void WriteIfNotDefaultOrNull<T>(this JsonWriter writer, string elementName, T value)
         {
             if (EqualityComparer<T>.Default.Equals(value, default))
@@ -48,10 +48,22 @@ namespace Redmine.Net.Api.Extensions
             if (value is bool)
             {
                 writer.WriteProperty(elementName, value.ToString().ToLowerInv());
-                return;
             }
+            else
+            {
+                writer.WriteProperty(elementName, value.ToString());
+            }
+        }
 
-            writer.WriteProperty(elementName, string.Format(CultureInfo.InvariantCulture, "{0}", value.ToString()));
+        /// <summary>
+        /// Writes the boolean value
+        /// </summary>
+        /// <param name="writer">The writer.</param>
+        /// <param name="value">The value.</param>
+        /// <param name="elementName">The property name.</param>
+        public static void WriteBoolean(this JsonWriter writer, string elementName, bool value)
+        {
+            writer.WriteProperty(elementName, value.ToString().ToLowerInv());
         }
 
         /// <summary>
