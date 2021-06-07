@@ -322,7 +322,7 @@ namespace Redmine.Net.Api.Types
 
             if (Id != 0)
             {
-                writer.WriteElementString(RedmineKeys.PRIVATE_NOTES, PrivateNotes.ToString(CultureInfo.InvariantCulture).ToLowerInv());
+                writer.WriteBoolean(RedmineKeys.PRIVATE_NOTES, PrivateNotes);
             }
 
             writer.WriteElementString(RedmineKeys.DESCRIPTION, Description);
@@ -423,10 +423,10 @@ namespace Redmine.Net.Api.Types
 
                 if (Id != 0)
                 {
-                    writer.WriteProperty(RedmineKeys.PRIVATE_NOTES, PrivateNotes.ToString(CultureInfo.InvariantCulture).ToLowerInv());
+                    writer.WriteBoolean(RedmineKeys.PRIVATE_NOTES, PrivateNotes);
                 }
 
-                writer.WriteProperty(RedmineKeys.IS_PRIVATE, IsPrivate.ToString(CultureInfo.InvariantCulture).ToLowerInv());
+                writer.WriteBoolean(RedmineKeys.IS_PRIVATE, IsPrivate);
                 writer.WriteIdIfNotNull(RedmineKeys.PROJECT_ID, Project);
                 writer.WriteIdIfNotNull(RedmineKeys.PRIORITY_ID, Priority);
                 writer.WriteIdIfNotNull(RedmineKeys.STATUS_ID, Status);
