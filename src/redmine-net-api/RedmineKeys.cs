@@ -702,7 +702,11 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
-        public const string WIKI_PAGE = "wiki_page";
+        public const string WIKI_PAGE = "wiki_page"; 
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string WIKI_PAGE_TITLE = "wiki_page_title";
         /// <summary>
         /// 
         /// </summary>

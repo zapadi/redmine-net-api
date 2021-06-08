@@ -69,6 +69,21 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <value>The sharing.</value>
         public VersionSharing Sharing { get; set; }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public string WikiPageTitle { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public float? EstimatedHours { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public float? SpentHours { get; set; }
 
         /// <summary>
         /// Gets the created on.
@@ -111,6 +126,9 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.SHARING: Sharing = (VersionSharing)Enum.Parse(typeof(VersionSharing), reader.ReadElementContentAsString(), true); break;
                     case RedmineKeys.STATUS: Status = (VersionStatus)Enum.Parse(typeof(VersionStatus), reader.ReadElementContentAsString(), true); break;
                     case RedmineKeys.UPDATED_ON: UpdatedOn = reader.ReadElementContentAsNullableDateTime(); break;
+                    case RedmineKeys.WIKI_PAGE_TITLE: WikiPageTitle = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.ESTIMATED_HOURS: EstimatedHours = reader.ReadElementContentAsNullableFloat(); break;
+                    case RedmineKeys.SPENT_HOURS: SpentHours = reader.ReadElementContentAsNullableFloat(); break;
                     default: reader.Read(); break;
                 }
             }
@@ -158,9 +176,14 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.DUE_DATE: DueDate = reader.ReadAsDateTime(); break;
                     case RedmineKeys.NAME: Name = reader.ReadAsString(); break;
                     case RedmineKeys.PROJECT: Project = new IdentifiableName(reader); break;
-                    case RedmineKeys.SHARING: Sharing = (VersionSharing)Enum.Parse(typeof(VersionSharing), reader.ReadAsString(), true); break;
-                    case RedmineKeys.STATUS: Status = (VersionStatus)Enum.Parse(typeof(VersionStatus), reader.ReadAsString(), true); break;
+                    case RedmineKeys.SHARING: Sharing = (VersionSharing)Enum.Parse(typeof(VersionSharing), reader.ReadAsString() ?? string.Empty, true); break;
+                    case RedmineKeys.STATUS: Status = (VersionStatus)Enum.Parse(typeof(VersionStatus), reader.ReadAsString() ?? string.Empty, true); break;
                     case RedmineKeys.UPDATED_ON: UpdatedOn = reader.ReadAsDateTime(); break;
+                    case RedmineKeys.WIKI_PAGE_TITLE: WikiPageTitle = reader.ReadAsString(); break;
+                    case RedmineKeys.ESTIMATED_HOURS: EstimatedHours = (float?)reader.ReadAsDouble(); break;
+                    case RedmineKeys.SPENT_HOURS: SpentHours = (float?)reader.ReadAsDouble(); break;
+                    
+                    
                     default: reader.Read(); break;
                 }
             }
@@ -200,7 +223,11 @@ namespace Redmine.Net.Api.Types
                 && Sharing == other.Sharing
                 && CreatedOn == other.CreatedOn
                 && UpdatedOn == other.UpdatedOn
-                && (CustomFields != null ? CustomFields.Equals<IssueCustomField>(other.CustomFields) : other.CustomFields == null);
+                && (CustomFields != null ? CustomFields.Equals<IssueCustomField>(other.CustomFields) : other.CustomFields == null)
+                && string.Equals(WikiPageTitle,other.WikiPageTitle, StringComparison.InvariantCultureIgnoreCase)
+                && EstimatedHours == other.EstimatedHours
+                && SpentHours == other.SpentHours
+                ;
         }
         /// <summary>
         /// 
@@ -219,6 +246,9 @@ namespace Redmine.Net.Api.Types
                 hashCode = HashCodeHelper.GetHashCode(CreatedOn, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(UpdatedOn, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(CustomFields, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(WikiPageTitle, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(EstimatedHours, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(SpentHours, hashCode);
                 return hashCode;
             }
         }
@@ -228,12 +258,17 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        private string DebuggerDisplay => $@"[{nameof(Version)}: {ToString()}, Project={Project}, Description={Description}, 
+        private string DebuggerDisplay => $@"[{nameof(Version)}: {ToString()}, 
+Project={Project}, 
+Description={Description}, 
 Status={Status:G},
- DueDate={DueDate?.ToString("u", CultureInfo.InvariantCulture)}, 
+DueDate={DueDate?.ToString("u", CultureInfo.InvariantCulture)}, 
 Sharing={Sharing:G}, 
 CreatedOn={CreatedOn?.ToString("u", CultureInfo.InvariantCulture)}, 
 UpdatedOn={UpdatedOn?.ToString("u", CultureInfo.InvariantCulture)}, 
+EstimatedHours={EstimatedHours?.ToString("F", CultureInfo.InvariantCulture)},
+SpentHours={SpentHours?.ToString("F", CultureInfo.InvariantCulture)},
+WikiPageTitle={WikiPageTitle}
 CustomFields={CustomFields.Dump()}]";
 
     }
