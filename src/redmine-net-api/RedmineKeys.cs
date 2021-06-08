@@ -43,6 +43,10 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
+        public const string ALLOWED_STATUSES = "allowed_statuses";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string API_KEY = "api_key";
         /// <summary>
         /// 

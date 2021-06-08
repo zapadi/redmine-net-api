@@ -253,6 +253,11 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         public IList<Watcher> Watchers { get; set; }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public List<IssueAllowedStatus> AllowedStatuses { get; set; }
         #endregion
 
         #region Implementation of IXmlSerialization
@@ -275,6 +280,7 @@ namespace Redmine.Net.Api.Types
                 switch (reader.Name)
                 {
                     case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
+                    case RedmineKeys.ALLOWED_STATUSES: AllowedStatuses = reader.ReadElementContentAsCollection<IssueAllowedStatus>(); break;
                     case RedmineKeys.ASSIGNED_TO: AssignedTo = new IdentifiableName(reader); break;
                     case RedmineKeys.ATTACHMENTS: Attachments = reader.ReadElementContentAsCollection<Attachment>(); break;
                     case RedmineKeys.AUTHOR: Author = new IdentifiableName(reader); break;
@@ -373,6 +379,7 @@ namespace Redmine.Net.Api.Types
                 switch (reader.Value)
                 {
                     case RedmineKeys.ID: Id = reader.ReadAsInt32().GetValueOrDefault(); break;
+                    case RedmineKeys.ALLOWED_STATUSES: AllowedStatuses = reader.ReadAsCollection<IssueAllowedStatus>(); break;
                     case RedmineKeys.ASSIGNED_TO: AssignedTo = new IdentifiableName(reader); break;
                     case RedmineKeys.ATTACHMENTS: Attachments = reader.ReadAsCollection<Attachment>(); break;
                     case RedmineKeys.AUTHOR: Author = new IdentifiableName(reader); break;
