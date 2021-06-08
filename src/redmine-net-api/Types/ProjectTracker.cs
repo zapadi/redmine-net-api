@@ -38,9 +38,8 @@ namespace Redmine.Net.Api.Types
         /// <param name="trackerId">the tracker id: 1 for Bug, etc.</param>
         /// <param name="name"></param>
         public ProjectTracker(int trackerId, string name)
+            : base(trackerId, name)
         {
-            Id = trackerId;
-            Name = name;
         }
 
         /// <summary>
@@ -51,11 +50,6 @@ namespace Redmine.Net.Api.Types
         {
             Id = trackerId;
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public new string Name { get; set; }
 
         #region Implementation of IValue
 

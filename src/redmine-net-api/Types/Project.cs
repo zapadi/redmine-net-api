@@ -37,11 +37,6 @@ namespace Redmine.Net.Api.Types
         #region Properties
 
         /// <summary>
-        /// 
-        /// </summary>
-        public new string Name { get; set; }
-
-        /// <summary>
         /// Gets or sets the identifier.
         /// </summary>
         /// <remarks>Required for create</remarks>
