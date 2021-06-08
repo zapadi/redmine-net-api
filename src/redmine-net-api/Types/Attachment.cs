@@ -220,10 +220,6 @@ namespace Redmine.Net.Api.Types
         }
         #endregion
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
         private string DebuggerDisplay =>
         $@"[{nameof(Attachment)}: 
 {ToString()}, 

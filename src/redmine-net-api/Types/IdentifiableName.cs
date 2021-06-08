@@ -29,7 +29,6 @@ namespace Redmine.Net.Api.Types
     /// </summary>
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     public class IdentifiableName : Identifiable<IdentifiableName>
-    
     {
         /// <summary>
         /// 

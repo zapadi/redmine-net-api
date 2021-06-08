@@ -33,10 +33,10 @@ namespace Redmine.Net.Api.Types
     public sealed class CustomFieldPossibleValue : IXmlSerializable, IJsonSerializable, IEquatable<CustomFieldPossibleValue>
     {
         #region Properties
-        /// <summary>
-        /// 
-        /// </summary>
-        public string Value { get; internal set; }
+            /// <summary>
+            /// 
+            /// </summary>
+            public string Value { get; internal set; }
 
         /// <summary>
         /// 
