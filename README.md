@@ -16,26 +16,29 @@ redmine-net-api is a library for communicating with a Redmine project management
 * This API provides access and basic CRUD operations (create, read, update, delete) for the resources described below:
 
 |Resource  | Read   | Create   | Update   | Delete  |
-|:---------|:------:|:--------:|:--------:|:-------:|
- Attachments|x|x|-|-
- Custom Fields|x|-|-|-
- Enumerations  |x|-|-|-
- Files |x|x|-|-
- Groups|x|x|x|x
- Issues  |x|x|x|x
- Issue Categories|x|x|x|x
- Issue Relations|x|x|x|x
- Issue Statuses|x|-|-|-
- News|x|-|-|-
- Projects|x|x|x|x
- Project Memberships|x|x|x|x
- Queries  |x|-|-|-
- Roles |x|-|-|-
- Time Entries |x|x|x|x
- Trackers |x|-|-|-
- Users |x|x|x|x
- Versions |x|x|x|x
- Wiki Pages |x|x|x|x
+|:---------|:------:|:----------:|:---------:|:-------:|
+ Attachments        |   &check;  |  &check;  | &cross; |   &cross;|
+ Custom Fields      |   &check;      |    &cross;     |   &cross;     |   &cross;
+ Enumerations       |   &check;      |    &cross;     |   &cross;     |   &cross;
+ Files              |&check;|&check;|&cross;|&cross;
+ Groups             |&check;|&check;|&check;|&check;
+ Issues             |&check;|&check;|&check;|&check;
+ Issue Categories   |&check;|&check;|&check;|&check;
+ Issue Relations    |&check;|&check;|&check;|&check;
+ Issue Statuses     |&check;|&cross;|&cross;|&cross;
+ My account         |&check;|&cross;|&check;|&cross;
+ News               |&check;|&cross;|&cross;|&cross;
+ Projects           |&check;|&check;|&check;|&check;
+ Project Memberships|&check;|&check;|&check;|&check;
+ Queries            |&check;|&cross;|&cross;|&cross;
+ Roles              |&check;|&cross;|&cross;|&cross;
+ Search             |
+ Time Entries       |&check;|&check;|&check;|&check;
+ Trackers           |&check;|&cross;|&cross;|&cross;
+ Users              |&check;|&check;|&check;|&check;
+ Versions           |&check;|&check;|&check;|&check;
+ Wiki Pages         |&check;|&check;|&check;|&check;
+ 
 
 ## WIKI
 
