@@ -1,5 +1,22 @@
 # Changelog
 
+## [v4.3.0]
+
+Added:
+* Added WikiPageTitle, EstimatedHours & SpentHours to version
+* Added IsAdmin, TwoFactorAuthenticationScheme, PasswordChangedOn, UpdatedOn to user
+* Added IsActive to time entry activity
+* Added IssuesVisibility, TimeEntriesVisibility, UsersVisibility & IsAssignable to role
+* Added DefaultAssignee & DefaultVersion to project
+* Added MyAccount type
+* Added attachments & comments to news
+* Added AllowedStatuses to issue
+* Added search type
+
+Fixes:
+* Issue Relations Read Error for Copied Issues (Relation Type : copied_to) (#288)
+
+
 ## [v4.2.3]
 
 Fixes:
