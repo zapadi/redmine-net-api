@@ -99,11 +99,19 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
+        public const string COMMENT = "comment";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string COMMENTS = "comments";
         /// <summary>
         /// 
         /// </summary>
         public const string COMMITTED_ON = "committed_on";
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string CONTENT = "content";
         /// <summary>
         /// 
         /// </summary>

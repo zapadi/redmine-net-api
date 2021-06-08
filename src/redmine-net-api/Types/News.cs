@@ -15,6 +15,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Xml;
@@ -68,6 +69,16 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <value>The created on.</value>
         public DateTime? CreatedOn { get; internal set; }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public List<Attachment> Attachments { get; internal set; }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public List<NewsComment> Comments { get; internal set; }
         #endregion
 
         #region Implementation of IXmlSerialization
@@ -95,6 +106,10 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.PROJECT: Project = new IdentifiableName(reader); break;
                     case RedmineKeys.SUMMARY: Summary = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.TITLE: Title = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.ATTACHMENTS: Attachments = reader.ReadElementContentAsCollection<Attachment>();
+                        break;
+                    case RedmineKeys.COMMENTS: Comments = reader.ReadElementContentAsCollection<NewsComment>();
+                        break;
                     default: reader.Read(); break;
                 }
             }
@@ -129,6 +144,10 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.PROJECT: Project = new IdentifiableName(reader); break;
                     case RedmineKeys.SUMMARY: Summary = reader.ReadAsString(); break;
                     case RedmineKeys.TITLE: Title = reader.ReadAsString(); break;
+                    case RedmineKeys.ATTACHMENTS: Attachments = reader.ReadAsCollection<Attachment>();
+                        break;
+                    case RedmineKeys.COMMENTS: Comments = reader.ReadAsCollection<NewsComment>();
+                        break;
                     default: reader.Read(); break;
                 }
             }
