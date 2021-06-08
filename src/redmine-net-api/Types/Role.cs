@@ -40,6 +40,26 @@ namespace Redmine.Net.Api.Types
         /// The issue relations.
         /// </value>
         public IList<Permission> Permissions { get; internal set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string IssuesVisibility { get; set; }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public string TimeEntriesVisibility { get; set; }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public string UsersVisibility { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool IsAssignable { get; set; }
         #endregion
 
         #region Implementation of IXmlSerialization

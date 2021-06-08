@@ -55,6 +55,10 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
+        public const string ASSIGNABLE = "Assignable";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string ATTACHMENT = "attachment";
         /// <summary>
         /// 
@@ -323,6 +327,11 @@ namespace Redmine.Net.Api
         /// 
         /// </summary>
         public const string ISSUE_TO_ID = "issue_to_id";
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string ISSUES_VISIBILITY = "issues_visibility";
+
         /// <summary>
         /// 
         /// </summary>
@@ -606,6 +615,10 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
+        public const string TIME_ENTRIES_VISIBILITY = "time_entries_visibility";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string TITLE = "title";
         /// <summary>
         /// 
@@ -675,6 +688,10 @@ namespace Redmine.Net.Api
         /// 
         /// </summary>
         public const string USER_IDS = "user_ids";
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string USERS_VISIBILITY = "users_visibility";
         /// <summary>
         /// 
         /// </summary>
