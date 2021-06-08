@@ -66,6 +66,16 @@ namespace Redmine.Net.Api.Types
         public string Email { get; set; }
 
         /// <summary>
+        /// 
+        /// </summary>
+        public bool IsAdmin { get; set; }
+
+        /// <summary>
+        /// twofa_scheme
+        /// </summary>
+        public string TwoFactorAuthenticationScheme { get; set; }
+        
+        /// <summary>
         /// Gets or sets the authentication mode id.
         /// </summary>
         /// <value>
@@ -74,7 +84,7 @@ namespace Redmine.Net.Api.Types
         public int? AuthenticationModeId { get; set; }
 
         /// <summary>
-        /// Gets or sets the created on.
+        /// Gets the created on.
         /// </summary>
         /// <value>The created on.</value>
         public DateTime? CreatedOn { get; internal set; }
@@ -99,6 +109,17 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         public bool MustChangePassword { get; set; }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public DateTime? PasswordChangedOn { get; set; }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public DateTime? UpdatedOn { get; set; }
 
         /// <summary>
         /// Gets or sets the custom fields.
@@ -150,6 +171,7 @@ namespace Redmine.Net.Api.Types
                 switch (reader.Name)
                 {
                     case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
+                    case RedmineKeys.ADMIN: IsAdmin = reader.ReadElementContentAsBoolean(); break;
                     case RedmineKeys.API_KEY: ApiKey = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.AUTH_SOURCE_ID: AuthenticationModeId = reader.ReadElementContentAsNullableInt(); break;
                     case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
@@ -163,7 +185,10 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.MAIL_NOTIFICATION: MailNotification = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.MEMBERSHIPS: Memberships = reader.ReadElementContentAsCollection<Membership>(); break;
                     case RedmineKeys.MUST_CHANGE_PASSWORD: MustChangePassword = reader.ReadElementContentAsBoolean(); break;
+                    case RedmineKeys.PASSWORD_CHANGED_ON: PasswordChangedOn = reader.ReadElementContentAsNullableDateTime(); break;
                     case RedmineKeys.STATUS: Status = (UserStatus)reader.ReadElementContentAsInt(); break;
+                    case RedmineKeys.TWO_FA_SCHEME: TwoFactorAuthenticationScheme = reader.ReadContentAsString(); break;
+                    case RedmineKeys.UPDATED_ON: UpdatedOn = reader.ReadElementContentAsNullableDateTime(); break;
                     default: reader.Read(); break;
                 }
             }
@@ -227,6 +252,7 @@ namespace Redmine.Net.Api.Types
                 switch (reader.Value)
                 {
                     case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
+                    case RedmineKeys.ADMIN: IsAdmin = reader.ReadAsBool(); break;
                     case RedmineKeys.API_KEY: ApiKey = reader.ReadAsString(); break;
                     case RedmineKeys.AUTH_SOURCE_ID: AuthenticationModeId = reader.ReadAsInt32(); break;
                     case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadAsDateTime(); break;
@@ -240,7 +266,10 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.MAIL_NOTIFICATION: MailNotification = reader.ReadAsString(); break;
                     case RedmineKeys.MEMBERSHIPS: Memberships = reader.ReadAsCollection<Membership>(); break;
                     case RedmineKeys.MUST_CHANGE_PASSWORD: MustChangePassword = reader.ReadAsBool(); break;
+                    case RedmineKeys.PASSWORD_CHANGED_ON: PasswordChangedOn = reader.ReadAsDateTime(); break;
                     case RedmineKeys.STATUS: Status = (UserStatus)reader.ReadAsInt(); break;
+                    case RedmineKeys.TWO_FA_SCHEME: TwoFactorAuthenticationScheme = reader.ReadAsString(); break;
+                    case RedmineKeys.UPDATED_ON: UpdatedOn = reader.ReadAsDateTime(); break;
                     default: reader.Read(); break;
                 }
             }
@@ -308,7 +337,12 @@ namespace Redmine.Net.Api.Types
                 && MustChangePassword == other.MustChangePassword
                 && (CustomFields != null ? CustomFields.Equals<IssueCustomField>(other.CustomFields) : other.CustomFields == null)
                 && (Memberships != null ? Memberships.Equals<Membership>(other.Memberships) : other.Memberships == null)
-                && (Groups != null ? Groups.Equals<UserGroup>(other.Groups) : other.Groups == null);
+                && (Groups != null ? Groups.Equals<UserGroup>(other.Groups) : other.Groups == null)
+                && string.Equals(TwoFactorAuthenticationScheme,other.TwoFactorAuthenticationScheme, StringComparison.OrdinalIgnoreCase)
+                && IsAdmin == other.IsAdmin
+                && PasswordChangedOn == other.PasswordChangedOn
+                && UpdatedOn == other.UpdatedOn
+                ;
         }
 
         /// <summary>
@@ -335,6 +369,10 @@ namespace Redmine.Net.Api.Types
                 hashCode = HashCodeHelper.GetHashCode(CustomFields, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Memberships, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Groups, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(TwoFactorAuthenticationScheme, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(IsAdmin, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(PasswordChangedOn, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(UpdatedOn, hashCode);
                 return hashCode;
             }
         }
@@ -345,10 +383,18 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <returns></returns>
         private string DebuggerDisplay =>
-               $@"[{nameof(User)}: {Groups}, Login={Login}, Password={Password}, FirstName={FirstName}, LastName={LastName}, Email={Email}, 
+               $@"[{nameof(User)}: {Groups}, 
+Login={Login}, Password={Password}, 
+FirstName={FirstName}, 
+LastName={LastName}, 
+IsAdmin={IsAdmin.ToString(CultureInfo.InvariantCulture)},
+TwoFactorAuthenticationScheme={TwoFactorAuthenticationScheme}
+Email={Email}, 
 EmailNotification={MailNotification}, 
 AuthenticationModeId={AuthenticationModeId?.ToString(CultureInfo.InvariantCulture)}, 
 CreatedOn={CreatedOn?.ToString("u", CultureInfo.InvariantCulture)}, 
+UpdatedOn={UpdatedOn?.ToString("u", CultureInfo.InvariantCulture)}
+PasswordChangedOn={PasswordChangedOn?.ToString("u", CultureInfo.InvariantCulture)}
 LastLoginOn={LastLoginOn?.ToString("u", CultureInfo.InvariantCulture)}, 
 ApiKey={ApiKey}, 
 Status={Status:G}, 

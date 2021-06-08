@@ -450,6 +450,10 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
+        public const string PASSWORD_CHANGED_ON = "passwd_changed_on";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string PERMISSION = "permission";
         /// <summary>
         /// 
@@ -635,6 +639,10 @@ namespace Redmine.Net.Api
         /// 
         /// </summary>
         public const string TRACKER_IDS = "tracker_ids";
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string TWO_FA_SCHEME = "twofa_scheme";
         /// <summary>
         /// 
         /// </summary>
