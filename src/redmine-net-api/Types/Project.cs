@@ -138,6 +138,16 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <remarks>Available in Redmine starting with 3.4.0 version.</remarks>
         public IList<ProjectTimeEntryActivity> TimeEntryActivities { get; internal set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public IdentifiableName DefaultVersion { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public IdentifiableName DefaultAssignee { get; set; }
         #endregion
 
         #region Implementation of IXmlSerializer
@@ -174,6 +184,8 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.TIME_ENTRY_ACTIVITIES: TimeEntryActivities = reader.ReadElementContentAsCollection<ProjectTimeEntryActivity>(); break;
                     case RedmineKeys.TRACKERS: Trackers = reader.ReadElementContentAsCollection<ProjectTracker>(); break;
                     case RedmineKeys.UPDATED_ON: UpdatedOn = reader.ReadElementContentAsNullableDateTime(); break;
+                    case RedmineKeys.DEFAULT_ASSIGNEE: DefaultAssignee = new IdentifiableName(reader); break;
+                    case RedmineKeys.DEFAULT_VERSION: DefaultVersion = new IdentifiableName(reader); break;
                     default: reader.Read(); break;
                 }
             }
@@ -246,6 +258,8 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.TIME_ENTRY_ACTIVITIES: TimeEntryActivities = reader.ReadAsCollection<ProjectTimeEntryActivity>(); break;
                     case RedmineKeys.TRACKERS: Trackers = reader.ReadAsCollection<ProjectTracker>(); break;
                     case RedmineKeys.UPDATED_ON: UpdatedOn = reader.ReadAsDateTime(); break;
+                    case RedmineKeys.DEFAULT_ASSIGNEE: DefaultAssignee = new IdentifiableName(reader); break;
+                    case RedmineKeys.DEFAULT_VERSION: DefaultVersion = new IdentifiableName(reader); break;
                     default: reader.Read(); break;
                 }
             }
@@ -307,7 +321,9 @@ namespace Redmine.Net.Api.Types
                 && (CustomFields != null ? CustomFields.Equals<IssueCustomField>(other.CustomFields) : other.CustomFields == null)
                 && (IssueCategories != null ? IssueCategories.Equals<ProjectIssueCategory>(other.IssueCategories) : other.IssueCategories == null)
                 && (EnabledModules != null ? EnabledModules.Equals<ProjectEnabledModule>(other.EnabledModules) : other.EnabledModules == null)
-                && (TimeEntryActivities != null ? TimeEntryActivities.Equals<ProjectTimeEntryActivity>(other.TimeEntryActivities) : other.TimeEntryActivities == null);
+                && (TimeEntryActivities != null ? TimeEntryActivities.Equals<ProjectTimeEntryActivity>(other.TimeEntryActivities) : other.TimeEntryActivities == null)
+                && (DefaultAssignee != null ? DefaultAssignee.Equals(other.DefaultAssignee) : other.DefaultAssignee == null)
+                && (DefaultVersion != null ? DefaultVersion.Equals(other.DefaultVersion) : other.DefaultVersion == null);
         }
 
         /// <summary>
@@ -333,6 +349,8 @@ namespace Redmine.Net.Api.Types
                 hashCode = HashCodeHelper.GetHashCode(IssueCategories, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(EnabledModules, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(TimeEntryActivities, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(DefaultAssignee, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(DefaultVersion, hashCode);
 
                 return hashCode;
             }
@@ -344,12 +362,18 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <returns></returns>
         private string DebuggerDisplay =>
-                $@"[Project: {ToString()}, Identifier={Identifier}, Description={Description}, Parent={Parent}, HomePage={HomePage}, 
+                $@"[Project: {ToString()}, 
+Identifier={Identifier}, 
+Description={Description}, 
+Parent={Parent}, 
+HomePage={HomePage}, 
 CreatedOn={CreatedOn?.ToString("u", CultureInfo.InvariantCulture)}, 
 UpdatedOn={UpdatedOn?.ToString("u", CultureInfo.InvariantCulture)}, 
 Status={Status:G}, 
 IsPublic={IsPublic.ToString(CultureInfo.InvariantCulture)}, 
 InheritMembers={InheritMembers.ToString(CultureInfo.InvariantCulture)}, 
+DefaultAssignee={DefaultAssignee},
+DefaultVersion={DefaultVersion},
 Trackers={Trackers.Dump()}, 
 CustomFields={CustomFields.Dump()}, 
 IssueCategories={IssueCategories.Dump()}, 

@@ -151,12 +151,20 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
+        public const string DEFAULT_ASSIGNEE = "default_assignee";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string DEFAULT_STATUS = "default_status";
 
         /// <summary>
         /// 
         /// </summary>
         public const string DEFAULT_VALUE = "default_value";
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string DEFAULT_VERSION = "default_version";
         /// <summary>
         /// 
         /// </summary>
