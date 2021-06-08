@@ -33,15 +33,9 @@ namespace Redmine.Net.Api.Types
         public CustomFieldRole() { }
 
         internal CustomFieldRole(int id, string name)
+            : base(id, name)
         {
-            Id = id;
-            Name = name;
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public new string Name { get; set; }
 
         /// <summary>
         /// 

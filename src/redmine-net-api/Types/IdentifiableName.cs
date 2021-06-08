@@ -48,6 +48,17 @@ namespace Redmine.Net.Api.Types
         public IdentifiableName() { }
 
         /// <summary>
+        /// Initializes the class by using the given Id and Name.
+        /// </summary>
+        /// <param name="id">The Id.</param>
+        /// <param name="name">The Name.</param>
+        internal IdentifiableName(int id, string name)
+        {
+            Id = id;
+            Name = name;
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="IdentifiableName"/> class.
         /// </summary>
         /// <param name="reader">The reader.</param>
@@ -79,7 +90,7 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// Gets or sets the name.
         /// </summary>
-        public string Name { get; internal set; }
+        public virtual string Name { get; set; }
         #endregion
 
         #region Implementation of IXmlSerializable
