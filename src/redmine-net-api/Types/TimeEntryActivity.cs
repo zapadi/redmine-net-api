@@ -47,6 +47,11 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         public bool IsDefault { get; internal set; }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool IsActive { get; internal set; }
         #endregion
 
         #region Implementation of IXmlSerializable
@@ -71,6 +76,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
                     case RedmineKeys.IS_DEFAULT: IsDefault = reader.ReadElementContentAsBoolean(); break;
                     case RedmineKeys.NAME: Name = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.ACTIVE: IsActive = reader.ReadElementContentAsBoolean(); break;
                     default: reader.Read(); break;
                 }
             }
@@ -108,6 +114,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
                     case RedmineKeys.IS_DEFAULT: IsDefault = reader.ReadAsBool(); break;
                     case RedmineKeys.NAME: Name = reader.ReadAsString(); break;
+                    case RedmineKeys.ACTIVE: IsActive = reader.ReadAsBool(); break;
                     default: reader.Read(); break;
                 }
             }
@@ -125,7 +132,7 @@ namespace Redmine.Net.Api.Types
         {
             if (other == null) return false;
 
-            return Id == other.Id && Name == other.Name && IsDefault == other.IsDefault;
+            return Id == other.Id && Name == other.Name && IsDefault == other.IsDefault && IsActive == other.IsActive;
         }
 
         /// <summary>
@@ -153,6 +160,7 @@ namespace Redmine.Net.Api.Types
                 hashCode = HashCodeHelper.GetHashCode(Id, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Name, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(IsDefault, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(IsActive, hashCode);
                 return hashCode;
             }
         }
@@ -163,7 +171,7 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        private string DebuggerDisplay => $"[{nameof(TimeEntryActivity)}:{ToString()}, IsDefault={IsDefault.ToString(CultureInfo.InvariantCulture)}]";
+        private string DebuggerDisplay => $"[{nameof(TimeEntryActivity)}:{ToString()}, IsDefault={IsDefault.ToString(CultureInfo.InvariantCulture)}, IsActive={IsActive.ToString(CultureInfo.InvariantCulture)}]";
 
     }
 }
