@@ -323,6 +323,16 @@ namespace Redmine.Net.Api
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>Returns the my account details.</returns>
+        public MyAccount GetMyAccount()
+        {
+            var url = UrlHelper.GetMyAccountUrl(this);
+            return WebApiHelper.ExecuteDownload<MyAccount>(this, url);
+        }
+        
+        /// <summary>
         ///     Adds the watcher to issue.
         /// </summary>
         /// <param name="issueId">The issue identifier.</param>

@@ -63,8 +63,10 @@ namespace Redmine.Net.Api.Internals
         /// </summary>
         private const string FILE_URL_FORMAT = "{0}/projects/{1}/files.{2}";
 
+        private const string MY_ACCOUNT_FORMAT = "{0}/my/account.{1}";
+    
 
-        /// <summary>
+    /// <summary>
         /// </summary>
         private const string CURRENT_USER_URI = "current";
         /// <summary>
@@ -299,6 +301,11 @@ namespace Redmine.Net.Api.Internals
             return string.Format(CultureInfo.InvariantCulture,REQUEST_FORMAT, redmineManager.Host,
                 RedmineManager.Suffixes[typeof(User)], CURRENT_USER_URI,
                 redmineManager.Format);
+        }
+
+        public static string GetMyAccountUrl(RedmineManager redmineManager)
+        {
+            return string.Format(CultureInfo.InvariantCulture,MY_ACCOUNT_FORMAT, redmineManager.Host, redmineManager.Format);
         }
 
         /// <summary>
