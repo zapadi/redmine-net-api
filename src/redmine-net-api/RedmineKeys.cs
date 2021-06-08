@@ -159,6 +159,11 @@ namespace Redmine.Net.Api
         /// 
         /// </summary>
         public const string CUSTOM_FIELDS = "custom_fields";
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string DATE_TIME = "datetime";
         
         /// <summary>
         /// 
@@ -555,6 +560,10 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
+        public const string RESULT = "result";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string REVISION = "revision";
         /// <summary>
         /// 
@@ -676,6 +685,11 @@ namespace Redmine.Net.Api
         /// 
         /// </summary>
         public const string TRACKER_IDS = "tracker_ids";
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string TYPE = "type";
         /// <summary>
         /// 
         /// </summary>
@@ -692,6 +706,10 @@ namespace Redmine.Net.Api
         /// 
         /// </summary>
         public const string UPLOADS = "uploads";
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string URL = "url";
         /// <summary>
         /// 
         /// </summary>
