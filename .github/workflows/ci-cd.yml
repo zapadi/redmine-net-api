@@ -1,0 +1,120 @@
+
+name: "CI/CD"
+on:
+  workflow_dispatch:
+  push:
+    branches: [ master ]
+    paths-ignore:
+      - '**/*.md'
+      - '**/*.gif'
+      - '**/*.png'
+      - '**/*.gitignore'
+      - '**/*.gitattributes'
+      - LICENSE
+      - tests/*
+    tags:
+      - v[1-9].[0-9]+.[0-9]+
+  pull_request:
+    branches: [ master ]
+    paths-ignore:
+      - '**/*.md'
+      - '**/*.gif'
+      - '**/*.png'
+      - '**/*.gitignore'
+      - '**/*.gitattributes'
+      - LICENSE
+      - tests/*
+
+env:
+  # Disable the .NET logo in the console output.
+  DOTNET_NOLOGO: true
+
+  # Stop wasting time caching packages
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  
+  # Disable sending usage data to Microsoft
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  
+  DOTNET_ADD_GLOBAL_TOOLS_TO_PATH: false
+  
+  DOTNET_MULTILEVEL_LOOKUP: 0
+  
+  # Project name to pack and publish
+  PROJECT_NAME: redmine-net-api
+
+  BUILD_CONFIGURATION: Release
+
+  # Set the build number in MinVer.
+  MINVERBUILDMETADATA: build.${{github.run_number}}
+
+jobs:
+  build:
+    name: OS ${{ matrix.os }} - dotnet ${{ matrix.dotnet }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
+        dotnet: [ '3.1.x', '5.x.x', '6.x.x' ]
+       
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2.4.0
+      with:
+        lfs: true
+        fetch-depth: 0
+    
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1.9.0
+      with:
+        dotnet-version: ${{ matrix.dotnet }}
+
+    - name: Get Version
+      #run: echo "VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+      run: |
+        arrTag=(${GITHUB_REF//\// })
+        VERSION="${arrTag[2]}"
+        echo "1. Version = ${VERSION}"
+        echo "VERSION="${VERSION//v}""  >> $GITHUB_ENV
+        
+    - name: Restore
+      run: dotnet restore
+    
+    - name: Build
+      run: dotnet build --no-restore --configuration $BUILD_CONFIGURATION --version-suffix=${{ env.VERSION }}
+
+    - name: Build Signed
+      if: runner.os == 'Ubuntu'
+      run: dotnet build redmine-net-api.sln --no-restore --configuration $BUILD_CONFIGURATION --version-suffix=${{ env.VERSION }} -p:Sign=true    
+    
+    - name: Test
+      run: dotnet test --no-restore --no-build --configuration $BUILD_CONFIGURATION
+
+    - name: Pack
+      if: runner.os == 'Ubuntu'
+      run: |
+        dotnet pack --output ./artifacts --configuration $BUILD_CONFIG --version-suffix $VERSION --include-symbols --include-source
+        
+    - name: Pack Signed
+      if: runner.os == 'Ubuntu'
+      run: |
+        dotnet pack --output ./artifacts --configuration $BUILD_CONFIG --version-suffix $VERSION --include-symbols --include-source -p:Sign=true
+        
+    - uses: actions/upload-artifact@v1
+      if: runner.os == 'Ubuntu'
+      with:
+        name: artifacts
+        path: ./artifacts
+  
+  deploy:
+     runs-on: ubuntu-latest
+     if: startsWith(github.ref, 'refs/tags/v')
+     needs: build
+     name: Deploy Packages
+     steps:
+       - uses: actions/download-artifact@v1
+         with:
+           name: artifacts
+           path: ./artifacts
+
+       - name: Publish packages
+         run: dotnet nuget push ./artifacts/**.nupkg --source nuget.org --api-key ${{secrets.NUGET_TOKEN}}
