@@ -71,16 +71,17 @@ jobs:
     - name: Get Version
       run: |
         echo "VERSION = $(git describe --abbrev=0)" >> $GITHUB_ENV
+        echo $VERSION
         
     - name: Restore
       run: dotnet restore
     
     - name: Build
-      run: dotnet build --no-restore --configuration $BUILD_CONFIGURATION /p:Version="${{env.VERSION}}"
+      run: dotnet build --no-restore --configuration $BUILD_CONFIGURATION -p:Version=$VERSION
 
     - name: Build Signed
       if: runner.os == 'Ubuntu'
-      run: dotnet build redmine-net-api.sln --no-restore --configuration $BUILD_CONFIGURATION /p:Version="${{env.VERSION}}" -p:Sign=true    
+      run: dotnet build redmine-net-api.sln --no-restore --configuration $BUILD_CONFIGURATION -p:Version=$VERSION -p:Sign=true    
     
     - name: Test
       run: dotnet test --no-restore --no-build --configuration $BUILD_CONFIGURATION
@@ -88,12 +89,12 @@ jobs:
     - name: Pack
       if: runner.os == 'Ubuntu' && startsWith(github.ref, 'refs/tags')
       run: |
-        dotnet pack --output ./artifacts --configuration $BUILD_CONFIGURATION /p:Version="${{env.VERSION}}" --include-symbols --include-source
+        dotnet pack --output ./artifacts --configuration $BUILD_CONFIGURATION -p:Version=$VERSION --include-symbols --include-source
         
     - name: Pack Signed && startsWith(github.ref, 'refs/tags')
       if: runner.os == 'Ubuntu'
       run: |
-        dotnet pack --output ./artifacts --configuration $BUILD_CONFIGURATION /p:Version="${{env.VERSION}}" --include-symbols --include-source -p:Sign=true
+        dotnet pack --output ./artifacts --configuration $BUILD_CONFIGURATION -p:Version=$VERSION --include-symbols --include-source -p:Sign=true
         
     - uses: actions/upload-artifact@v1
       if: runner.os == 'Ubuntu'
