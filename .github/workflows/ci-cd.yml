@@ -76,11 +76,11 @@ jobs:
       run: dotnet restore
     
     - name: Build
-      run: dotnet build --no-restore --configuration $BUILD_CONFIGURATION --version-suffix $VERSION
+      run: dotnet build --no-restore --configuration $BUILD_CONFIGURATION --version-suffix ${{env.VERSION}}
 
     - name: Build Signed
       if: runner.os == 'Ubuntu'
-      run: dotnet build redmine-net-api.sln --no-restore --configuration $BUILD_CONFIGURATION --version-suffix $VERSION -p:Sign=true    
+      run: dotnet build redmine-net-api.sln --no-restore --configuration $BUILD_CONFIGURATION --version-suffix ${{env.VERSION}} -p:Sign=true    
     
     - name: Test
       run: dotnet test --no-restore --no-build --configuration $BUILD_CONFIGURATION
@@ -88,12 +88,12 @@ jobs:
     - name: Pack
       if: runner.os == 'Ubuntu'
       run: |
-        dotnet pack --output ./artifacts --configuration $BUILD_CONFIGURATION --version-suffix $VERSION --include-symbols --include-source
+        dotnet pack --output ./artifacts --configuration $BUILD_CONFIGURATION --version-suffix ${{env.VERSION}} --include-symbols --include-source
         
     - name: Pack Signed
       if: runner.os == 'Ubuntu'
       run: |
-        dotnet pack --output ./artifacts --configuration $BUILD_CONFIGURATION --version-suffix $VERSION --include-symbols --include-source -p:Sign=true
+        dotnet pack --output ./artifacts --configuration $BUILD_CONFIGURATION --version-suffix ${{env.VERSION}} --include-symbols --include-source -p:Sign=true
         
     - uses: actions/upload-artifact@v1
       if: runner.os == 'Ubuntu'
