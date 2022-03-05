@@ -13,7 +13,7 @@ on:
       - LICENSE
       - tests/*
     tags:
-      - v[1-9].[0-9]+.[0-9]+
+      - [1-9].[0-9]+.[0-9]+
   pull_request:
     branches: [ master ]
     paths-ignore:
@@ -69,12 +69,8 @@ jobs:
         dotnet-version: ${{ matrix.dotnet }}
 
     - name: Get Version
-      #run: echo "VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
       run: |
-        arrTag=(${GITHUB_REF//\// })
-        VERSION="${arrTag[2]}"
-        echo "1. Version = ${VERSION}"
-        echo "VERSION="${VERSION//v}""  >> $GITHUB_ENV
+        echo "VERSION = $(git describe --tags --dirty)" >> $GITHUB_ENV
         
     - name: Restore
       run: dotnet restore
