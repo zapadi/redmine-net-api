@@ -53,8 +53,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ ubuntu-latest, windows-latest, macos-latest ]
-        dotnet: [ '3.1.x', '5.x.x', '6.x.x' ]
+        os: [ ubuntu-latest]#, windows-latest, macos-latest ]
+        dotnet: [ '3.1.x']#, '5.x.x', '6.x.x' ]
        
     steps:
     - name: Checkout
@@ -70,13 +70,13 @@ jobs:
 
     - name: Get Version
       run: |
-        echo "VERSION = $(git describe --abbrev=0)" >> $GITHUB_ENV
+        echo "VERSION=$(git describe --abbrev=0)" >> $GITHUB_ENV
 
     - name: Display VERSION env variable (shell)
       run:  echo "Version=$VERSION"
     
     - name: Display VERSION env variable 
-      run:  echo "Version = ${{ env.VERSION }}"
+      run:  echo "Version=${{ env.VERSION }}"
         
     - name: Restore
       run: dotnet restore
