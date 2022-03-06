@@ -70,7 +70,7 @@ jobs:
 
     - name: Get Version
       run: |
-        echo "VERSION = ${git describe --abbrev=0}" >> $GITHUB_ENV
+        echo "VERSION = ${(git describe --abbrev=0)}" >> $GITHUB_ENV
         echo "$VERSION"
         
     - name: Restore
