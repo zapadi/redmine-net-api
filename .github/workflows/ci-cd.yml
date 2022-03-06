@@ -71,14 +71,20 @@ jobs:
     - name: Get Version
       run: |
         echo "VERSION = $(git describe --abbrev=0)" >> $GITHUB_ENV
-     
-    - run:  echo ${{ env.VERSION }}
+
+    - name: Display VERSION env variable (shell)
+      run:  echo "Version=$VERSION"
+    
+    - name: Display VERSION env variable 
+      run:  echo "Version = ${{ env.VERSION }}"
         
     - name: Restore
       run: dotnet restore
     
     - name: Build
-      run: dotnet build --no-restore --configuration $BUILD_CONFIGURATION -p:Version=${{env.VERSION}}
+      run: |
+        echo "Version=$VERSION"
+        dotnet build --no-restore --configuration $BUILD_CONFIGURATION -p:Version=${{env.VERSION}}
 
     - name: Build Signed
       if: runner.os == 'Ubuntu'
