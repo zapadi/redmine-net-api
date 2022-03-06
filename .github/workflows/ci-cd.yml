@@ -70,8 +70,8 @@ jobs:
 
     - name: Get Version
       run: |
-        echo "VERSION = $(git describe --abbrev=0)" >> $GITHUB_ENV
-        echo $VERSION
+        echo "VERSION = ${git describe --abbrev=0}" >> $GITHUB_ENV
+        echo "$VERSION"
         
     - name: Restore
       run: dotnet restore
