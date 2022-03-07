@@ -536,6 +536,10 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
+        public const string Q = "q";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string QUERY = "query";
         /// <summary>
         ///
