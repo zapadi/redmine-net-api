@@ -141,6 +141,20 @@ namespace Redmine.Net.Api.Types
         /// <param name="issueId"></param>
         /// <param name="attachment"></param>
         void UpdateAttachment(int issueId, Attachment attachment);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="q">query strings. enable to specify multiple values separated by a space " ".</param>
+        /// <param name="limit">number of results in response.</param>
+        /// <param name="offset">skip this number of results in response</param>
+        /// <param name="searchFilter">Optional filters.</param>
+        /// <returns>
+        /// Returns the search results by the specified condition parameters.
+        /// </returns>
+        PagedResults<Search> Search(string q, int limit , int offset = 0,
+            SearchFilterBuilder searchFilter = null);
+        
         /// <summary>
         /// 
         /// </summary>

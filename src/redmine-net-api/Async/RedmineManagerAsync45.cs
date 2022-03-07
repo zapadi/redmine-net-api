@@ -439,6 +439,40 @@ namespace Redmine.Net.Api.Async
             var uri = UrlHelper.GetDeleteUrl<T>(redmineManager, id);
             await WebApiAsyncHelper.ExecuteUpload(redmineManager, uri, HttpVerbs.DELETE, string.Empty).ConfigureAwait(false);
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="redmineManager"></param>
+        /// <param name="q"></param>
+        /// <param name="limit"></param>
+        /// <param name="offset"></param>
+        /// <param name="searchFilter"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static async Task<PagedResults<Search>> SearchAsync(this RedmineManager redmineManager, string q, int limit = RedmineManager.DEFAULT_PAGE_SIZE_VALUE, int offset = 0, SearchFilterBuilder searchFilter = null)
+        {
+            if (q.IsNullOrWhiteSpace())
+            {
+                throw new ArgumentNullException(nameof(q));
+            }
+
+            var parameters = new NameValueCollection
+            {
+                {RedmineKeys.Q, q},
+                {RedmineKeys.LIMIT, limit.ToString(CultureInfo.InvariantCulture)},
+                {RedmineKeys.OFFSET, offset.ToString(CultureInfo.InvariantCulture)},
+            };
+
+            if (searchFilter != null)
+            {
+               parameters = searchFilter.Build(parameters);
+            }
+            
+            var result = await redmineManager.GetPaginatedObjectsAsync<Search>(parameters).ConfigureAwait(false);
+
+            return result;
+        }
     }
 }
 #endif

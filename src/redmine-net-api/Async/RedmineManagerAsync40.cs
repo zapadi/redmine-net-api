@@ -16,10 +16,13 @@
 
 
 #if NET40
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
+using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Types;
 using Redmine.Net.Api.Serialization;
 
@@ -285,6 +288,40 @@ namespace Redmine.Net.Api.Async
         public static Task<byte[]> DownloadFileAsync(this RedmineManager redmineManager, string address)
         {
             return Task.Factory.StartNew(() => redmineManager.DownloadFile(address), CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default);
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="redmineManager"></param>
+        /// <param name="q"></param>
+        /// <param name="limit"></param>
+        /// <param name="offset"></param>
+        /// <param name="searchFilter"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static Task<PagedResults<Search>> SearchAsync(this RedmineManager redmineManager, string q, int limit = RedmineManager.DEFAULT_PAGE_SIZE_VALUE, int offset = 0, SearchFilterBuilder searchFilter = null)
+        {
+            if (q.IsNullOrWhiteSpace())
+            {
+                throw new ArgumentNullException(nameof(q));
+            }
+
+            var parameters = new NameValueCollection
+            {
+                {RedmineKeys.Q, q},
+                {RedmineKeys.LIMIT, limit.ToString(CultureInfo.InvariantCulture)},
+                {RedmineKeys.OFFSET, offset.ToString(CultureInfo.InvariantCulture)},
+            };
+
+            if (searchFilter != null)
+            {
+                parameters = searchFilter.Build(parameters);
+            }
+            
+            var result =  redmineManager.GetPaginatedObjectsAsync<Search>(parameters);
+
+            return result;
         }
     }
 }

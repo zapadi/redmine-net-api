@@ -63,7 +63,8 @@ namespace Redmine.Net.Api
             {typeof(IssuePriority), "enumerations/issue_priorities"},
             {typeof(Watcher), "watchers"},
             {typeof(IssueCustomField), "custom_fields"},
-            {typeof(CustomField), "custom_fields"}
+            {typeof(CustomField), "custom_fields"},
+            {typeof(Search), "search"}
         };
 
         /// <summary>
@@ -76,7 +77,8 @@ namespace Redmine.Net.Api
             {typeof(News), true},
             {typeof(Query), true},
             {typeof(TimeEntry), true},
-            {typeof(ProjectMembership), true}
+            {typeof(ProjectMembership), true},
+            {typeof(Search), true}
         };
 
         private readonly string basicAuthorization;
@@ -851,6 +853,42 @@ namespace Redmine.Net.Api
             return WebApiHelper.ExecuteDownloadFile(this, address);
         }
 
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="q">query strings. enable to specify multiple values separated by a space " ".</param>
+        /// <param name="limit">number of results in response.</param>
+        /// <param name="offset">skip this number of results in response</param>
+        /// <param name="searchFilter">Optional filters.</param>
+        /// <returns>
+        /// Returns the search results by the specified condition parameters.
+        /// </returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public PagedResults<Search> Search(string q, int limit = DEFAULT_PAGE_SIZE_VALUE, int offset = 0, SearchFilterBuilder searchFilter = null)
+        {
+            if (q.IsNullOrWhiteSpace())
+            {
+                throw new ArgumentNullException(nameof(q));
+            }
+
+            var parameters = new NameValueCollection
+            {
+                {RedmineKeys.Q, q},
+                {RedmineKeys.LIMIT, limit.ToString(CultureInfo.InvariantCulture)},
+                {RedmineKeys.OFFSET, offset.ToString(CultureInfo.InvariantCulture)},
+            };
+
+            if (searchFilter != null)
+            {
+               parameters = searchFilter.Build(parameters);
+            }
+            
+            var result = GetPaginatedObjects<Search>(parameters);
+
+            return result;
+        }
+        
         private const string UA = "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/14.0.835.163 Safari/535.1";
 
         /// <summary>
