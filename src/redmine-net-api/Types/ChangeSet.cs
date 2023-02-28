@@ -38,7 +38,7 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// 
         /// </summary>
-        public int Revision { get; internal set; }
+        public string Revision { get; internal set; }
 
         /// <summary>
         /// 
@@ -78,7 +78,7 @@ namespace Redmine.Net.Api.Types
                     continue;
                 }
 
-                Revision = reader.ReadAttributeAsInt(RedmineKeys.REVISION);
+                Revision = reader.GetAttribute(RedmineKeys.REVISION);
 
                 switch (reader.Name)
                 {
@@ -125,7 +125,7 @@ namespace Redmine.Net.Api.Types
 
                     case RedmineKeys.COMMITTED_ON: CommittedOn = reader.ReadAsDateTime(); break;
 
-                    case RedmineKeys.REVISION: Revision = reader.ReadAsInt(); break;
+                    case RedmineKeys.REVISION: Revision = reader.ReadAsString(); break;
 
                     case RedmineKeys.USER: User = new IdentifiableName(reader); break;
 
