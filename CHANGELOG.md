@@ -1,5 +1,14 @@
 # Changelog
 
+## [v4.4.0]
+
+Added:
+* Added ParentTitle to wiki page
+
+Breaking Changes:
+
+* Changed ChangeSet revision type from int to string
+
 ## [v4.3.0]
 
 Added:
