@@ -39,7 +39,12 @@ namespace Redmine.Net.Api.Types
         /// Gets the title.
         /// </summary>
         public string Title { get; internal set; }
-
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public string ParentTitle { get; internal set; }
+        
         /// <summary>
         /// Gets or sets the text.
         /// </summary>
@@ -118,6 +123,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.TITLE: Title = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.UPDATED_ON: UpdatedOn = reader.ReadElementContentAsNullableDateTime(); break;
                     case RedmineKeys.VERSION: Version = reader.ReadElementContentAsInt(); break;
+                    case RedmineKeys.PARENT: ParentTitle = reader.GetAttribute(RedmineKeys.PARENT); break;
                     default: reader.Read(); break;
                 }
             }
@@ -167,6 +173,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.TITLE: Title = reader.ReadAsString(); break;
                     case RedmineKeys.UPDATED_ON: UpdatedOn = reader.ReadAsDateTime(); break;
                     case RedmineKeys.VERSION: Version = reader.ReadAsInt(); break;
+                    case RedmineKeys.PARENT: ParentTitle = reader.ReadAsString(); break;
                     default: reader.Read(); break;
                 }
             }
