@@ -54,17 +54,17 @@ jobs:
     strategy:
       matrix:
         os: [ ubuntu-latest]#, windows-latest, macos-latest ]
-        dotnet: [ '3.1.x']#, '5.x.x', '6.x.x' ]
+        dotnet: [ '7.x.x' ]
        
     steps:
     - name: Checkout
-      uses: actions/checkout@v2.4.0
+      uses: actions/checkout@v3
       with:
         lfs: true
         fetch-depth: 0
     
     - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1.9.0
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: ${{ matrix.dotnet }}
 
@@ -77,7 +77,7 @@ jobs:
     
     - name: Build
       run: |
-        dotnet build --no-restore --configuration $BUILD_CONFIGURATION -p:Version=${{env.VERSION}}
+        dotnet build --no-restore --configuration $BUILD_CONFIGURATION -p:Version=$VERSION
 
     - name: Build Signed
       if: runner.os == 'Linux'
@@ -86,17 +86,17 @@ jobs:
     - name: Test
       run: dotnet test --no-restore --no-build --configuration $BUILD_CONFIGURATION
 
-    - name: Pack
-      if: runner.os == 'Linux' && startsWith(github.ref, 'refs/tags')
+    - name: Pack && startsWith(github.ref, 'refs/tags')
+      if: runner.os == 'Linux'
       run: |
-        dotnet pack --output ./artifacts --configuration $BUILD_CONFIGURATION -p:Version=$VERSION --include-symbols --include-source
+        dotnet pack --output ./artifacts --configuration $BUILD_CONFIGURATION -p:Version=$VERSION --include-symbols --include-source -p:SymbolPackageFormat=snupkg
         
     - name: Pack Signed && startsWith(github.ref, 'refs/tags')
       if: runner.os == 'Linux'
       run: |
-        dotnet pack --output ./artifacts --configuration $BUILD_CONFIGURATION -p:Version=$VERSION --include-symbols --include-source -p:Sign=true
+        dotnet pack --output ./artifacts --configuration $BUILD_CONFIGURATION -p:Version=$VERSION --include-symbols --include-source -p:Sign=true -p:SymbolPackageFormat=snupkg
         
-    - uses: actions/upload-artifact@v1
+    - uses: actions/upload-artifact@v3
       if: runner.os == 'Linux'
       with:
         name: artifacts
@@ -108,10 +108,10 @@ jobs:
      needs: build
      name: Deploy Packages
      steps:
-       - uses: actions/download-artifact@v1
+       - uses: actions/download-artifact@v3
          with:
            name: artifacts
            path: ./artifacts
 
        - name: Publish packages
-         run: dotnet nuget push ./artifacts/**.nupkg --source nuget.org --api-key ${{secrets.NUGET_TOKEN}}
+         run: dotnet nuget push ./artifacts/**.nupkg --source nuget.org -k ${{secrets.NUGET_TOKEN}}
