@@ -23,6 +23,7 @@ using System.Xml.Serialization;
 using Newtonsoft.Json;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Internals;
+using Redmine.Net.Api.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
@@ -79,6 +80,12 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         public List<NewsComment> Comments { get; internal set; }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public List<Upload> Uploads { get; set; }
+        
         #endregion
 
         #region Implementation of IXmlSerialization
@@ -114,6 +121,22 @@ namespace Redmine.Net.Api.Types
                 }
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+        public override void WriteXml(XmlWriter writer)
+        {
+            writer.WriteElementString(RedmineKeys.TITLE, Title);
+            writer.WriteElementString(RedmineKeys.SUMMARY, Summary);
+            writer.WriteElementString(RedmineKeys.DESCRIPTION, Description);
+            if (Uploads != null)
+            {
+                writer.WriteArray(RedmineKeys.UPLOADS, Uploads);
+            }
+        }
+
         #endregion
 
         #region Implementation of IJsonSerialization
@@ -152,6 +175,25 @@ namespace Redmine.Net.Api.Types
                 }
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+        public override void WriteJson(JsonWriter writer)
+        {
+            using (new JsonObject(writer, RedmineKeys.NEWS))
+            {
+                writer.WriteProperty(RedmineKeys.TITLE, Title);
+                writer.WriteProperty(RedmineKeys.SUMMARY, Summary);
+                writer.WriteProperty(RedmineKeys.DESCRIPTION, Description);
+                if (Uploads != null)
+                {
+                    writer.WriteArray(RedmineKeys.UPLOADS, Uploads);
+                }
+            }
+        }
+
         #endregion
 
         #region Implementation of IEquatable<News>
