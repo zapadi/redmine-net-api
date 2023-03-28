@@ -105,7 +105,7 @@ namespace Redmine.Net.Api
         public RedmineManager(string host, MimeFormat mimeFormat = MimeFormat.Xml, bool verifyServerCert = true,
             IWebProxy proxy = null, SecurityProtocolType securityProtocolType = default, string scheme = "https", TimeSpan? timeout = null)
         {
-            if (string.IsNullOrEmpty(host))
+            if (host.IsNullOrWhiteSpace())
             {
                 throw new RedmineException("Host is not defined!");
             }
@@ -163,11 +163,12 @@ namespace Redmine.Net.Api
         /// <param name="verifyServerCert">if set to <c>true</c> [verify server cert].</param>
         /// <param name="proxy">The proxy.</param>
         /// <param name="securityProtocolType">Use this parameter to specify a SecurityProtcolType. Note: it is recommended to leave this parameter at its default value as this setting also affects the calling application process.</param>
+        /// <param name="scheme"></param>
         /// <param name="timeout">The webclient timeout. Default is 100 seconds.</param>
         public RedmineManager(string host, string apiKey, MimeFormat mimeFormat = MimeFormat.Xml,
-            bool verifyServerCert = true, IWebProxy proxy = null,
-            SecurityProtocolType securityProtocolType = default, TimeSpan? timeout = null)
-            : this(host, mimeFormat, verifyServerCert, proxy, securityProtocolType, timeout: timeout)
+                              bool verifyServerCert = true, IWebProxy proxy = null,
+                              SecurityProtocolType securityProtocolType = default, string scheme = "https", TimeSpan? timeout = null)
+            : this(host, mimeFormat, verifyServerCert, proxy, securityProtocolType, scheme, timeout: timeout)
         {
             ApiKey = apiKey;
         }
@@ -193,11 +194,13 @@ namespace Redmine.Net.Api
         /// <param name="verifyServerCert">if set to <c>true</c> [verify server cert].</param>
         /// <param name="proxy">The proxy.</param>
         /// <param name="securityProtocolType">Use this parameter to specify a SecurityProtcolType. Note: it is recommended to leave this parameter at its default value as this setting also affects the calling application process.</param>
+        /// <param name="scheme"></param>
         /// <param name="timeout">The webclient timeout. Default is 100 seconds.</param>
         public RedmineManager(string host, string login, string password, MimeFormat mimeFormat = MimeFormat.Xml,
-            bool verifyServerCert = true, IWebProxy proxy = null,
-            SecurityProtocolType securityProtocolType = default, TimeSpan? timeout = null)
-            : this(host, mimeFormat, verifyServerCert, proxy, securityProtocolType, timeout: timeout)
+                              bool verifyServerCert = true, IWebProxy proxy = null,
+                              SecurityProtocolType securityProtocolType = default, string scheme = "https", TimeSpan? timeout = null)
+            : this(host, mimeFormat, verifyServerCert, proxy, securityProtocolType, scheme, timeout: timeout)
+
         {
             cache = new CredentialCache { { new Uri(host), "Basic", new NetworkCredential(login, password) } };
 
@@ -244,6 +247,11 @@ namespace Redmine.Net.Api
                 if (Uri.TryCreate(host, UriKind.Absolute, out Uri uriResult) &&
                     (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps))
                 {
+                    if (Scheme.IsNullOrWhiteSpace())
+                    {
+                        Scheme = uriResult.Scheme;
+                    }
+
                     return;
                 }
 
