@@ -60,5 +60,15 @@ namespace Redmine.Net.Api.Extensions
             
             return WebApiHelper.ExecuteUpload<News>(redmineManager, Uri.EscapeUriString($"{redmineManager.Host}/project/{projectIdentifier}/news.{redmineManager.Format}"), HttpVerbs.POST, data);
         }
+        
+        public static PagedResults<ProjectMembership> GetProjectMemberships(this RedmineManager redmineManager, string projectIdentifier, NameValueCollection nameValueCollection)
+        {
+            if (projectIdentifier.IsNullOrWhiteSpace())
+            {
+                throw new RedmineException($"Argument '{nameof(projectIdentifier)}' is null");
+            }
+            
+            return WebApiHelper.ExecuteDownloadList<ProjectMembership>(redmineManager, Uri.EscapeUriString($"{redmineManager.Host}/project/{projectIdentifier}/memberships.{redmineManager.Format}"), nameValueCollection);
+        }
     }
 }
