@@ -145,6 +145,10 @@ namespace Redmine.Net.Api.Types
             writer.WriteElementString(RedmineKeys.SHARING, Sharing.ToString().ToLowerInv());
             writer.WriteDateOrEmpty(RedmineKeys.DUE_DATE, DueDate);
             writer.WriteElementString(RedmineKeys.DESCRIPTION, Description);
+            if (CustomFields != null)
+            {
+               writer.WriteArray(RedmineKeys.CUSTOM_FIELDS, CustomFields);
+            }
         }
         #endregion
 
