@@ -187,7 +187,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.MUST_CHANGE_PASSWORD: MustChangePassword = reader.ReadElementContentAsBoolean(); break;
                     case RedmineKeys.PASSWORD_CHANGED_ON: PasswordChangedOn = reader.ReadElementContentAsNullableDateTime(); break;
                     case RedmineKeys.STATUS: Status = (UserStatus)reader.ReadElementContentAsInt(); break;
-                    case RedmineKeys.TWO_FA_SCHEME: TwoFactorAuthenticationScheme = reader.ReadContentAsString(); break;
+                    case RedmineKeys.TWO_FA_SCHEME: TwoFactorAuthenticationScheme = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.UPDATED_ON: UpdatedOn = reader.ReadElementContentAsNullableDateTime(); break;
                     default: reader.Read(); break;
                 }
