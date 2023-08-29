@@ -33,10 +33,19 @@ namespace Redmine.Net.Api.Types
     {
         #region Properties
         /// <summary>
+        /// Gets the group.
+        /// </summary>
+        public IdentifiableName Group { get; internal set; }
+        /// <summary>
         /// Gets or sets the project.
         /// </summary>
         /// <value>The project.</value>
         public IdentifiableName Project { get; internal set; }
+        
+        /// <summary>
+        /// Gets the user.
+        /// </summary>
+        public IdentifiableName User { get; internal set; }
 
         /// <summary>
         /// Gets or sets the type.
@@ -64,7 +73,9 @@ namespace Redmine.Net.Api.Types
                 switch (reader.Name)
                 {
                     case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
+                    case RedmineKeys.GROUP: Group = new IdentifiableName(reader); break; 
                     case RedmineKeys.PROJECT: Project = new IdentifiableName(reader); break;
+                    case RedmineKeys.USER: User = new IdentifiableName(reader); break;
                     case RedmineKeys.ROLES: Roles = reader.ReadElementContentAsCollection<MembershipRole>(); break;
                     default: reader.Read(); break;
                 }
@@ -94,7 +105,9 @@ namespace Redmine.Net.Api.Types
                 switch (reader.Value)
                 {
                     case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
+                    case RedmineKeys.GROUP: Project = new IdentifiableName(reader); break;
                     case RedmineKeys.PROJECT: Project = new IdentifiableName(reader); break;
+                    case RedmineKeys.USER: Project = new IdentifiableName(reader); break;
                     case RedmineKeys.ROLES: Roles = reader.ReadAsCollection<MembershipRole>(); break;
                     default: reader.Read(); break;
                 }
@@ -111,9 +124,9 @@ namespace Redmine.Net.Api.Types
         public override bool Equals(Membership other)
         {
             if (other == null) return false;
-            return Id == other.Id &&
-                Project != null ? Project.Equals(other.Project) : other.Project == null &&
-                Roles != null ? Roles.Equals<MembershipRole>(other.Roles) : other.Roles == null;
+            return Id == other.Id
+                && Project != null ? Project.Equals(other.Project) : other.Project == null 
+                && Roles != null ? Roles.Equals<MembershipRole>(other.Roles) : other.Roles == null;
         }
 
         /// <summary>
@@ -126,7 +139,9 @@ namespace Redmine.Net.Api.Types
             {
                 var hashCode = 13;
                 hashCode = HashCodeHelper.GetHashCode(Id, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Group, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Project, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(User, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Roles, hashCode);
                 return hashCode;
             }
@@ -137,7 +152,6 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        private string DebuggerDisplay => $"[{nameof(Membership)}: {ToString()}, Project={Project}, Roles={Roles.Dump()}]";
-
+        private string DebuggerDisplay => $"[{nameof(Membership)}: {ToString()}, Group={Group},  Project={Project}, User={User}, Roles={Roles.Dump()}]";
     }
 }
