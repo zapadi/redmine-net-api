@@ -210,6 +210,10 @@ namespace Redmine.Net.Api.Types
                 writer.WriteProperty(RedmineKeys.SHARING, Sharing.ToString().ToLowerInv());
                 writer.WriteProperty(RedmineKeys.DESCRIPTION, Description);
                 writer.WriteDateOrEmpty(RedmineKeys.DUE_DATE, DueDate);
+                if (CustomFields != null)
+                {
+                    writer.WriteArray(RedmineKeys.CUSTOM_FIELDS, CustomFields);
+                }
             }
         }
         #endregion
