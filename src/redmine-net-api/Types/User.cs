@@ -36,6 +36,11 @@ namespace Redmine.Net.Api.Types
     {
         #region Properties
         /// <summary>
+        /// Gets or sets the user avatar url.
+        /// </summary>
+        public string AvatarUrl { get; set; }
+        
+        /// <summary>
         /// Gets or sets the user login.
         /// </summary>
         /// <value>The login.</value>
@@ -174,6 +179,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.ADMIN: IsAdmin = reader.ReadElementContentAsBoolean(); break;
                     case RedmineKeys.API_KEY: ApiKey = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.AUTH_SOURCE_ID: AuthenticationModeId = reader.ReadElementContentAsNullableInt(); break;
+                    case RedmineKeys.AVATAR_URL: AvatarUrl = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
                     case RedmineKeys.CUSTOM_FIELDS: CustomFields = reader.ReadElementContentAsCollection<IssueCustomField>(); break;
                     case RedmineKeys.FIRST_NAME: FirstName = reader.ReadElementContentAsString(); break;
@@ -255,6 +261,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.ADMIN: IsAdmin = reader.ReadAsBool(); break;
                     case RedmineKeys.API_KEY: ApiKey = reader.ReadAsString(); break;
                     case RedmineKeys.AUTH_SOURCE_ID: AuthenticationModeId = reader.ReadAsInt32(); break;
+                    case RedmineKeys.AVATAR_URL: AvatarUrl = reader.ReadAsString(); break;
                     case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadAsDateTime(); break;
                     case RedmineKeys.CUSTOM_FIELDS: CustomFields = reader.ReadAsCollection<IssueCustomField>(); break;
                     case RedmineKeys.LAST_LOGIN_ON: LastLoginOn = reader.ReadAsDateTime(); break;
@@ -324,6 +331,7 @@ namespace Redmine.Net.Api.Types
         {
             if (other == null) return false;
             return Id == other.Id
+                && string.Equals(AvatarUrl,other.AvatarUrl, StringComparison.OrdinalIgnoreCase)
                 && string.Equals(Login,other.Login, StringComparison.OrdinalIgnoreCase)
                 && string.Equals(FirstName,other.FirstName, StringComparison.OrdinalIgnoreCase)
                 && string.Equals(LastName,other.LastName, StringComparison.OrdinalIgnoreCase)
@@ -354,6 +362,7 @@ namespace Redmine.Net.Api.Types
             unchecked
             {
                 var hashCode = base.GetHashCode();
+                hashCode = HashCodeHelper.GetHashCode(AvatarUrl, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Login, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Password, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(FirstName, hashCode);
@@ -387,6 +396,7 @@ namespace Redmine.Net.Api.Types
 Login={Login}, Password={Password}, 
 FirstName={FirstName}, 
 LastName={LastName}, 
+AvatarUrl={AvatarUrl},
 IsAdmin={IsAdmin.ToString(CultureInfo.InvariantCulture)},
 TwoFactorAuthenticationScheme={TwoFactorAuthenticationScheme}
 Email={Email}, 
