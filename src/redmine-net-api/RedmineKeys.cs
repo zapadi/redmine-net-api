@@ -67,7 +67,7 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
-        public const string ASSIGNABLE = "Assignable";
+        public const string ASSIGNABLE = "assignable";
         /// <summary>
         /// 
         /// </summary>
