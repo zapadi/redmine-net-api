@@ -54,19 +54,9 @@ namespace Redmine.Net.Api.Types
         public void ReadXml(XmlReader reader)
         {
             reader.Read();
-            while (!reader.EOF)
+            if (reader.NodeType == XmlNodeType.Text)
             {
-                if (reader.IsEmptyElement && !reader.HasAttributes)
-                {
-                    reader.Read();
-                    continue;
-                }
-
-                switch (reader.Name)
-                {
-                    case RedmineKeys.PERMISSION: Info = reader.ReadElementContentAsString(); break;
-                    default: reader.Read(); break;
-                }
+                Info = reader.Value;
             }
         }
 

@@ -50,7 +50,7 @@ namespace Redmine.Net.Api.Serialization
             }
             catch (Exception ex)
             {
-                throw new RedmineException(ex.Message, ex);
+                throw new RedmineException(ex.GetBaseException().Message, ex);
             }
         }
 
@@ -62,7 +62,7 @@ namespace Redmine.Net.Api.Serialization
             }
             catch (Exception ex)
             {
-                throw new RedmineException(ex.Message, ex);
+                throw new RedmineException(ex.GetBaseException().Message, ex);
             }
         }
 
@@ -76,7 +76,7 @@ namespace Redmine.Net.Api.Serialization
             }
             catch (Exception ex)
             {
-                throw new RedmineException(ex.Message, ex);
+                throw new RedmineException(ex.GetBaseException().Message, ex);
             }
         }
 #pragma warning restore CA1822
@@ -91,7 +91,7 @@ namespace Redmine.Net.Api.Serialization
             }
             catch (Exception ex)
             {
-                throw new RedmineException(ex.Message, ex);
+                throw new RedmineException(ex.GetBaseException().Message, ex);
             }
         }
 
@@ -109,12 +109,14 @@ namespace Redmine.Net.Api.Serialization
                 throw new ArgumentNullException(nameof(xmlResponse), $"Could not deserialize null or empty input for type '{typeof(T).Name}'.");
             }
 
-            using (TextReader stringReader = new StringReader(xmlResponse))
+            using (var stringReader = new StringReader(xmlResponse))
             {
-                using (var xmlReader = XmlReader.Create(stringReader))
+                using (var xmlReader = XmlTextReaderBuilder.Create(stringReader))
                 {
-                    xmlReader.Read();
-                    xmlReader.Read();
+                    while (xmlReader.NodeType == XmlNodeType.None || xmlReader.NodeType == XmlNodeType.XmlDeclaration)
+                    {
+                        xmlReader.Read();
+                    }
 
                     var totalItems = xmlReader.ReadAttributeAsInt(RedmineKeys.TOTAL_COUNT);
                     
