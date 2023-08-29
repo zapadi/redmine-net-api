@@ -88,6 +88,23 @@ namespace Redmine.Net.Api.Extensions
         }
 
         /// <summary>
+        /// Reads the element content as nullable boolean.
+        /// </summary>
+        /// <param name="reader">The reader.</param>
+        /// <returns></returns>
+        public static bool? ReadElementContentAsNullableBoolean(this XmlReader reader)
+        {
+            var content = reader.ReadElementContentAsString();
+
+            if (content.IsNullOrWhiteSpace() || !bool.TryParse(content, out var result))
+            {
+                return null;
+            }
+
+            return result;
+        }
+        
+        /// <summary>
         /// Reads the element content as nullable date time.
         /// </summary>
         /// <param name="reader">The reader.</param>
