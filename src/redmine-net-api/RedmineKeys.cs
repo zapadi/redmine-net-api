@@ -84,6 +84,11 @@ namespace Redmine.Net.Api
         /// 
         /// </summary>
         public const string AUTH_SOURCE_ID = "auth_source_id";
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string AVATAR_URL = "avatar_url";
         /// <summary>
         /// 
         /// </summary>
