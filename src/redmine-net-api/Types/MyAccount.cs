@@ -23,6 +23,7 @@ using System.Xml.Serialization;
 using Newtonsoft.Json;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Internals;
+using Redmine.Net.Api.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
@@ -122,7 +123,15 @@ namespace Redmine.Net.Api.Types
                 }
             }
         }
-        
+
+        /// <inheritdoc />
+        public override void WriteXml(XmlWriter writer)
+        {
+            writer.WriteElementString(RedmineKeys.FIRST_NAME, FirstName);
+            writer.WriteElementString(RedmineKeys.LAST_NAME, LastName);
+            writer.WriteElementString(RedmineKeys.MAIL, Email);
+        }
+
         #endregion
         
         #region Implementation of IJsonSerializable
@@ -158,7 +167,18 @@ namespace Redmine.Net.Api.Types
                 }
             }
         }
-        
+
+        /// <inheritdoc />
+        public override void WriteJson(JsonWriter writer)
+        {
+            using (new JsonObject(writer, RedmineKeys.USER))
+            {
+                writer.WriteProperty(RedmineKeys.FIRST_NAME, FirstName);
+                writer.WriteProperty(RedmineKeys.LAST_NAME, LastName);
+                writer.WriteProperty(RedmineKeys.MAIL, Email);
+            }
+        }
+
         #endregion
 
         /// <inheritdoc />
