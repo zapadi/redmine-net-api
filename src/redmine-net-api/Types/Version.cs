@@ -149,9 +149,10 @@ namespace Redmine.Net.Api.Types
 
             writer.WriteDateOrEmpty(RedmineKeys.DUE_DATE, DueDate);
             writer.WriteElementString(RedmineKeys.DESCRIPTION, Description);
+            writer.WriteElementString(RedmineKeys.WIKI_PAGE_TITLE, WikiPageTitle);
             if (CustomFields != null)
             {
-               writer.WriteArray(RedmineKeys.CUSTOM_FIELDS, CustomFields);
+                writer.WriteArray(RedmineKeys.CUSTOM_FIELDS, CustomFields);
             }
         }
         #endregion
@@ -214,6 +215,8 @@ namespace Redmine.Net.Api.Types
                 {
                     writer.WriteArray(RedmineKeys.CUSTOM_FIELDS, CustomFields);
                 }
+                
+                writer.WriteProperty(RedmineKeys.WIKI_PAGE_TITLE, WikiPageTitle);
             }
         }
         #endregion
