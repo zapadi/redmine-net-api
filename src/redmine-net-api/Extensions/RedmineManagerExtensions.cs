@@ -61,6 +61,14 @@ namespace Redmine.Net.Api.Extensions
             return WebApiHelper.ExecuteUpload<News>(redmineManager, Uri.EscapeUriString($"{redmineManager.Host}/project/{projectIdentifier}/news.{redmineManager.Format}"), HttpVerbs.POST, data);
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="redmineManager"></param>
+        /// <param name="projectIdentifier"></param>
+        /// <param name="nameValueCollection"></param>
+        /// <returns></returns>
+        /// <exception cref="RedmineException"></exception>
         public static PagedResults<ProjectMembership> GetProjectMemberships(this RedmineManager redmineManager, string projectIdentifier, NameValueCollection nameValueCollection)
         {
             if (projectIdentifier.IsNullOrWhiteSpace())
@@ -69,6 +77,24 @@ namespace Redmine.Net.Api.Extensions
             }
             
             return WebApiHelper.ExecuteDownloadList<ProjectMembership>(redmineManager, Uri.EscapeUriString($"{redmineManager.Host}/project/{projectIdentifier}/memberships.{redmineManager.Format}"), nameValueCollection);
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="redmineManager"></param>
+        /// <param name="projectIdentifier"></param>
+        /// <param name="nameValueCollection"></param>
+        /// <returns></returns>
+        /// <exception cref="RedmineException"></exception>
+        public static PagedResults<File> GetProjectFiles(this RedmineManager redmineManager, string projectIdentifier, NameValueCollection nameValueCollection)
+        {
+            if (projectIdentifier.IsNullOrWhiteSpace())
+            {
+                throw new RedmineException($"Argument '{nameof(projectIdentifier)}' is null");
+            }
+            
+            return WebApiHelper.ExecuteDownloadList<File>(redmineManager, Uri.EscapeUriString($"{redmineManager.Host}/project/{projectIdentifier}/files.{redmineManager.Format}"), nameValueCollection);
         }
     }
 }
