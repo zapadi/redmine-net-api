@@ -64,7 +64,8 @@ namespace Redmine.Net.Api
             {typeof(Watcher), "watchers"},
             {typeof(IssueCustomField), "custom_fields"},
             {typeof(CustomField), "custom_fields"},
-            {typeof(Search), "search"}
+            {typeof(Search), "search"},
+            {typeof(Journal), "journals"}
         };
 
         /// <summary>

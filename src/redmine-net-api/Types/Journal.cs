@@ -48,7 +48,9 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The notes.
         /// </value>
-        public string Notes { get; internal set; }
+        /// <remarks> Setting Notes to string.empty or null will destroy the journal
+        /// </remarks>
+        public string Notes { get; set; }
 
         /// <summary>
         /// Gets or sets the created on.
@@ -101,6 +103,13 @@ namespace Redmine.Net.Api.Types
                 }
             }
         }
+
+        /// <inheritdoc />
+        public override void WriteXml(XmlWriter writer)
+        { 
+            writer.WriteElementString(RedmineKeys.NOTES, Notes);
+        }
+
         #endregion
 
         #region Implementation of IJsonSerialization
@@ -136,6 +145,13 @@ namespace Redmine.Net.Api.Types
                 }
             }
         }
+
+        /// <inheritdoc />
+        public override void WriteJson(JsonWriter writer)
+        {
+            writer.WriteProperty(RedmineKeys.NOTES, Notes);
+        }
+
         #endregion
 
         #region Implementation of IEquatable<Journal>
