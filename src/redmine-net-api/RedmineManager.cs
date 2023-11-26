@@ -351,7 +351,7 @@ namespace Redmine.Net.Api
         public void AddWatcherToIssue(int issueId, int userId)
         {
             var url = UrlHelper.GetAddWatcherUrl(this, issueId);
-            WebApiHelper.ExecuteUpload(this, url, HttpVerbs.POST, DataHelper.UserData(userId, MimeFormat));
+            WebApiHelper.ExecuteUpload(this, url, HttpVerbs.POST, SerializationHelper.SerializeUserId(userId, MimeFormat));
         }
 
         /// <summary>
@@ -373,7 +373,7 @@ namespace Redmine.Net.Api
         public void AddUserToGroup(int groupId, int userId)
         {
             var url = UrlHelper.GetAddUserToGroupUrl(this, groupId);
-            WebApiHelper.ExecuteUpload(this, url, HttpVerbs.POST, DataHelper.UserData(userId, MimeFormat));
+            WebApiHelper.ExecuteUpload(this, url, HttpVerbs.POST, SerializationHelper.SerializeUserId(userId, MimeFormat));
         }
 
         /// <summary>

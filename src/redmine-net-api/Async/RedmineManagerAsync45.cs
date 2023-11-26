@@ -172,7 +172,7 @@ namespace Redmine.Net.Api.Async
         /// </returns>
         public static async Task AddUserToGroupAsync(this RedmineManager redmineManager, int groupId, int userId)
         {
-            var data = DataHelper.UserData(userId, redmineManager.MimeFormat);
+            var data = SerializationHelper.SerializeUserId(userId, redmineManager.MimeFormat);
             var uri = UrlHelper.GetAddUserToGroupUrl(redmineManager, groupId);
 
             await WebApiAsyncHelper.ExecuteUpload(redmineManager, uri, HttpVerbs.POST, data).ConfigureAwait(false);
@@ -200,7 +200,7 @@ namespace Redmine.Net.Api.Async
         /// <returns></returns>
         public static async Task AddWatcherToIssueAsync(this RedmineManager redmineManager, int issueId, int userId)
         {
-            var data = DataHelper.UserData(userId, redmineManager.MimeFormat);
+            var data = SerializationHelper.SerializeUserId(userId, redmineManager.MimeFormat);
             var uri = UrlHelper.GetAddWatcherUrl(redmineManager, issueId);
 
             await WebApiAsyncHelper.ExecuteUpload(redmineManager, uri, HttpVerbs.POST, data).ConfigureAwait(false);
