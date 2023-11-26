@@ -23,7 +23,7 @@ namespace System.Runtime.CompilerServices
     /// </summary>
     /// <seealso cref="System.Attribute" />
     [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Method, AllowMultiple=false, Inherited=false)]
-    public class ExtensionAttribute: Attribute
+    public sealed class ExtensionAttribute: Attribute
     {
     }
 }
