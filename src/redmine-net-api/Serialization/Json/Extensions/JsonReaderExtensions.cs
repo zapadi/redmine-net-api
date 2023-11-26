@@ -63,7 +63,7 @@ namespace Redmine.Net.Api.Extensions
                 throw new RedmineException($"Entity of type '{typeof(T)}' should implement IJsonSerializable.");
             }
 
-            var col = new List<T>();
+            List<T> collection = null;
 
             while (reader.Read())
             {
@@ -89,12 +89,11 @@ namespace Redmine.Net.Api.Extensions
 
                 ((IJsonSerializable)entity).ReadJson(reader);
 
-                var des = entity;
-
-                col.Add(des);
+                collection ??= new List<T>();
+                collection.Add(entity);
             }
 
-            return col;
+            return collection;
         }
     }
 }

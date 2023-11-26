@@ -61,14 +61,7 @@ namespace Redmine.Net.Api.Extensions
                 return;
             }
 
-            if (value is bool)
-            {
-                writer.WriteProperty(elementName, value.ToString().ToLowerInv());
-            }
-            else
-            {
-                writer.WriteProperty(elementName, value.ToString());
-            }
+            writer.WriteProperty(elementName, typeof(T) == typeof(bool) ? value.ToString().ToLowerInv() : value.ToString());
         }
 
         /// <summary>
@@ -155,6 +148,30 @@ namespace Redmine.Net.Api.Extensions
             jsonWriter.WritePropertyName(tag);
             jsonWriter.WriteValue(value);
         }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="jsonWriter"></param>
+        /// <param name="tag"></param>
+        /// <param name="value"></param>
+        public static void WriteProperty(this JsonWriter jsonWriter, string tag, int value)
+        {
+            jsonWriter.WritePropertyName(tag);
+            jsonWriter.WriteValue(value);
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="jsonWriter"></param>
+        /// <param name="tag"></param>
+        /// <param name="value"></param>
+        public static void WriteProperty(this JsonWriter jsonWriter, string tag, bool value)
+        {
+            jsonWriter.WritePropertyName(tag);
+            jsonWriter.WriteValue(value);
+        }
 
         /// <summary>
         /// 
@@ -171,8 +188,7 @@ namespace Redmine.Net.Api.Extensions
 
             foreach (var value in collection)
             {
-                jsonWriter.WritePropertyName(tag);
-                jsonWriter.WriteValue(value.Value);
+                jsonWriter.WriteProperty(tag, value.Value);
             }
         }
 
@@ -196,12 +212,17 @@ namespace Redmine.Net.Api.Extensions
 
             foreach (var identifiableName in collection)
             {
-                sb.Append(identifiableName.Id.ToString(CultureInfo.InvariantCulture)).Append(",");
+                sb.Append(identifiableName.Id.ToString(CultureInfo.InvariantCulture)).Append(',');
             }
 
-            sb.Length -= 1;
+            if (sb.Length > 1)
+            {
+                sb.Length -= 1;
+            }
+            
             jsonWriter.WriteValue(sb.ToString());
-            sb= null;
+            
+            sb.Length = 0;
 
             jsonWriter.WriteEndArray();
         }
@@ -226,12 +247,17 @@ namespace Redmine.Net.Api.Extensions
 
             foreach (var identifiableName in collection)
             {
-                sb.Append(identifiableName.Name).Append(",");
+                sb.Append(identifiableName.Name).Append(',');
             }
 
-            sb.Length -= 1;
+            if (sb.Length > 1)
+            {
+                sb.Length -= 1;
+            }
+
             jsonWriter.WriteValue(sb.ToString());
-            sb = null;
+            
+            sb.Length = 0;
 
             jsonWriter.WriteEndArray();
         }

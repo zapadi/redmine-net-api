@@ -79,19 +79,16 @@ namespace Redmine.Net.Api.Extensions
             {
                 stringBuilder
                     .Append(requestParameters.AllKeys[index].ToString(CultureInfo.InvariantCulture))
-                    .Append("=")
+                    .Append('=')
                     .Append(requestParameters[index].ToString(CultureInfo.InvariantCulture))
-                    .Append("&");
+                    .Append('&');
             }
 
             stringBuilder.Length -= 1;
 
             var queryString = stringBuilder.ToString();
 
-            #if !(NET20)
-            stringBuilder.Clear();
-            #endif
-            stringBuilder = null;
+            stringBuilder.Length = 0;
             
             return queryString;
         }

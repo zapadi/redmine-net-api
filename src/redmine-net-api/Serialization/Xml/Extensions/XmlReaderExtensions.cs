@@ -210,10 +210,7 @@ namespace Redmine.Net.Api.Extensions
 
                         if (entity != null)
                         {
-                            if (result == null)
-                            {
-                                result = new List<T>();
-                            }
+                            result ??= new List<T>();
 
                             result.Add(entity);
                         }

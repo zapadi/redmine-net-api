@@ -23,7 +23,7 @@ namespace Redmine.Net.Api.Extensions
     /// <summary>
     /// 
     /// </summary>
-    public static class StringExtensions
+    public static partial class StringExtensions
     {
         /// <summary>
         /// 
@@ -59,15 +59,12 @@ namespace Redmine.Net.Api.Extensions
         /// <returns></returns>
         public static string Truncate(this string text, int maximumLength)
         {
-            if (!text.IsNullOrWhiteSpace())
+            if (text.IsNullOrWhiteSpace())
             {
-                if (text.Length > maximumLength)
-                {
-                    text = text.Substring(0, maximumLength);
-                }
+                return text;
             }
-
-            return text;
+            
+            return text.Length > maximumLength ? text.Substring(0, maximumLength) : text;
         }
 
         /// <summary>
@@ -97,23 +94,23 @@ namespace Redmine.Net.Api.Extensions
                 return null;
             }
 
-            using (var rv = new SecureString())
+            var rv = new SecureString();
+            foreach (var c in value)
             {
-                foreach (var c in value)
-                {
-                    rv.AppendChar(c);
-                }
-
-                return rv;
+                rv.AppendChar(c);
             }
+
+            return rv;
         }
 
         internal static string RemoveTrailingSlash(this string s)
         {
             if (string.IsNullOrEmpty(s))
+            {
                 return s;
+            }
 
-            if (s.EndsWith("/", StringComparison.OrdinalIgnoreCase) || s.EndsWith("\"", StringComparison.OrdinalIgnoreCase))
+            if (s.EndsWith("/", StringComparison.OrdinalIgnoreCase) || s.EndsWith(@"\", StringComparison.OrdinalIgnoreCase))
             {
                 return s.Substring(0, s.Length - 1);
             }
