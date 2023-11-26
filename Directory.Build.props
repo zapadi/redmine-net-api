@@ -26,6 +26,8 @@
     </PropertyGroup>
 
     <PropertyGroup>
+        <LangVersion>11</LangVersion>
+        <Features>strict</Features>
         <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
         <DebugType>embedded</DebugType>
         <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
