@@ -15,7 +15,6 @@ namespace Padi.RedmineApi.Tests
                 .AddJsonFile("appsettings.json", optional: true)
                 .AddJsonFile($"appsettings.{environment}.json", optional: true)
                 .AddUserSecrets("f8b9e946-b547-42f1-861c-f719dca00a84")
-                .AddEnvironmentVariables()
                 .Build();
         }
 

@@ -26,12 +26,16 @@
     </PropertyGroup>
 
     <PropertyGroup>
-<!--        <DebugType>embedded</DebugType>-->
-<!--        <NoPackageAnalysis>true</NoPackageAnalysis>-->
+        <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+        <DebugType>embedded</DebugType>
         <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
         <PackageOutputPath>$(SolutionDir)/artifacts</PackageOutputPath>
     </PropertyGroup>
- 
+
+    <ItemGroup Label="Package References">
+        <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
+    </ItemGroup>
+
     <Import Project="signing.props" />
     
     <Import Project="releasenotes.props" />
