@@ -1,4 +1,5 @@
 using System;
+using Redmine.Net.Api.Net;
 using Redmine.Net.Api.Serialization;
 
 namespace Redmine.Net.Api
@@ -11,7 +12,7 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
-        public string BaseAddress { get; init; }
+        public Uri BaseAddress { get; init; }
         
         /// <summary>
         /// Gets or sets the page size for paginated Redmine API responses.
