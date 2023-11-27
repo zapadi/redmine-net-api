@@ -50,7 +50,7 @@ namespace Redmine.Net.Api
                             _internalScope = "subprojects";
                             break;
                         default:
-                            throw new ArgumentOutOfRangeException();
+                            throw new ArgumentOutOfRangeException(nameof(value));
                     }
                 }
             }

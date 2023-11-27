@@ -73,19 +73,20 @@ namespace Redmine.Net.Api.Extensions
                 return null;
             }
 
+            var delimiter = string.Empty;
+            
             var stringBuilder = new StringBuilder();
 
             for (var index = 0; index < requestParameters.Count; ++index)
             {
                 stringBuilder
+                    .Append(delimiter)
                     .Append(requestParameters.AllKeys[index].ToString(CultureInfo.InvariantCulture))
                     .Append('=')
-                    .Append(requestParameters[index].ToString(CultureInfo.InvariantCulture))
-                    .Append('&');
+                    .Append(requestParameters[index].ToString(CultureInfo.InvariantCulture));
+                delimiter = "&";
             }
-
-            stringBuilder.Length -= 1;
-
+            
             var queryString = stringBuilder.ToString();
 
             stringBuilder.Length = 0;

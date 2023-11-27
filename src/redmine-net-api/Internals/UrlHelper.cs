@@ -82,9 +82,9 @@ namespace Redmine.Net.Api.Internals
         {
             var type = typeof(T);
 
-            if (!RedmineManager.Suffixes.ContainsKey(type)) throw new KeyNotFoundException(type.Name);
+            if (!RedmineManager.Suffixes.TryGetValue(type, out string value)) throw new KeyNotFoundException(type.Name);
 
-            return string.Format(CultureInfo.InvariantCulture,REQUEST_FORMAT, redmineManager.Host, RedmineManager.Suffixes[type], id,
+            return string.Format(CultureInfo.InvariantCulture,REQUEST_FORMAT, redmineManager.Host, value, id,
                 redmineManager.Format);
         }
 
@@ -105,19 +105,19 @@ namespace Redmine.Net.Api.Internals
         {
             var type = typeof(T);
 
-            if (!RedmineManager.Suffixes.ContainsKey(type)) throw new KeyNotFoundException(type.Name);
+            if (!RedmineManager.Suffixes.TryGetValue(type, out string value)) throw new KeyNotFoundException(type.Name);
 
             if (type == typeof(Version) || type == typeof(IssueCategory) || type == typeof(ProjectMembership))
             {
                 if (string.IsNullOrEmpty(ownerId)) throw new RedmineException("The owner id(project id) is mandatory!");
                 return string.Format(CultureInfo.InvariantCulture,ENTITY_WITH_PARENT_FORMAT, redmineManager.Host, RedmineKeys.PROJECTS,
-                    ownerId, RedmineManager.Suffixes[type], redmineManager.Format);
+                    ownerId, value, redmineManager.Format);
             }
             if (type == typeof(IssueRelation))
             {
                 if (string.IsNullOrEmpty(ownerId)) throw new RedmineException("The owner id(issue id) is mandatory!");
                 return string.Format(CultureInfo.InvariantCulture,ENTITY_WITH_PARENT_FORMAT, redmineManager.Host, RedmineKeys.ISSUES,
-                    ownerId, RedmineManager.Suffixes[type], redmineManager.Format);
+                    ownerId, value, redmineManager.Format);
             }
 
             if (type == typeof(File))
@@ -129,7 +129,7 @@ namespace Redmine.Net.Api.Internals
                 return string.Format(CultureInfo.InvariantCulture,FILE_URL_FORMAT, redmineManager.Host, ownerId, redmineManager.Format);
             }
 
-            return string.Format(CultureInfo.InvariantCulture,FORMAT, redmineManager.Host, RedmineManager.Suffixes[type],
+            return string.Format(CultureInfo.InvariantCulture,FORMAT, redmineManager.Host, value,
                 redmineManager.Format);
         }
 
@@ -146,9 +146,9 @@ namespace Redmine.Net.Api.Internals
         {
             var type = typeof(T);
 
-            if (!RedmineManager.Suffixes.ContainsKey(type)) throw new KeyNotFoundException(type.Name);
+            if (!RedmineManager.Suffixes.TryGetValue(type, out string value)) throw new KeyNotFoundException(type.Name);
 
-            return string.Format(CultureInfo.InvariantCulture,REQUEST_FORMAT, redmineManager.Host, RedmineManager.Suffixes[type], id,
+            return string.Format(CultureInfo.InvariantCulture,REQUEST_FORMAT, redmineManager.Host, value, id,
                 redmineManager.Format);
         }
 
@@ -164,9 +164,9 @@ namespace Redmine.Net.Api.Internals
         {
             var type = typeof(T);
 
-            if (!RedmineManager.Suffixes.ContainsKey(type)) throw new KeyNotFoundException(type.Name);
+            if (!RedmineManager.Suffixes.TryGetValue(type, out string value)) throw new KeyNotFoundException(type.Name);
 
-            return string.Format(CultureInfo.InvariantCulture,REQUEST_FORMAT, redmineManager.Host, RedmineManager.Suffixes[type], id,
+            return string.Format(CultureInfo.InvariantCulture,REQUEST_FORMAT, redmineManager.Host, value, id,
                 redmineManager.Format);
         }
 
@@ -188,7 +188,7 @@ namespace Redmine.Net.Api.Internals
         {
             var type = typeof(T);
 
-            if (!RedmineManager.Suffixes.ContainsKey(type)) throw new KeyNotFoundException(type.Name);
+            if (!RedmineManager.Suffixes.TryGetValue(type, out string value)) throw new KeyNotFoundException(type.Name);
 
             if (type == typeof(Version) || type == typeof(IssueCategory) || type == typeof(ProjectMembership))
             {
@@ -197,7 +197,7 @@ namespace Redmine.Net.Api.Internals
                     throw new RedmineException("The project id is mandatory! \nCheck if you have included the parameter project_id to parameters.");
 
                 return string.Format(CultureInfo.InvariantCulture,ENTITY_WITH_PARENT_FORMAT, redmineManager.Host, RedmineKeys.PROJECTS,
-                    projectId, RedmineManager.Suffixes[type], redmineManager.Format);
+                    projectId, value, redmineManager.Format);
             }
             if (type == typeof(IssueRelation))
             {
@@ -206,7 +206,7 @@ namespace Redmine.Net.Api.Internals
                     throw new RedmineException("The issue id is mandatory! \nCheck if you have included the parameter issue_id to parameters");
 
                 return string.Format(CultureInfo.InvariantCulture,ENTITY_WITH_PARENT_FORMAT, redmineManager.Host, RedmineKeys.ISSUES,
-                    issueId, RedmineManager.Suffixes[type], redmineManager.Format);
+                    issueId, value, redmineManager.Format);
             }
 
             if (type == typeof(File))
@@ -219,7 +219,7 @@ namespace Redmine.Net.Api.Internals
                 return string.Format(CultureInfo.InvariantCulture,FILE_URL_FORMAT, redmineManager.Host, projectId, redmineManager.Format);
             }
             
-            return string.Format(CultureInfo.InvariantCulture,FORMAT, redmineManager.Host, RedmineManager.Suffixes[type],
+            return string.Format(CultureInfo.InvariantCulture,FORMAT, redmineManager.Host, value,
                 redmineManager.Format);
         }
 

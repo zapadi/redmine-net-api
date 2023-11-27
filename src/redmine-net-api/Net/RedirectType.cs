@@ -33,5 +33,5 @@ namespace Redmine.Net.Api
         /// 
         /// </summary>
         All
-    };
+    }
 }

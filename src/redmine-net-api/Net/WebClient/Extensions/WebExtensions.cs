@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Text;
 using Redmine.Net.Api.Exceptions;
 using Redmine.Net.Api.Serialization;
 using Redmine.Net.Api.Types;
@@ -78,18 +79,26 @@ namespace Redmine.Net.Api.Extensions
                                 throw new ConflictException("The page that you are trying to update is staled!", innerException);
 
                             case 422:
+                                RedmineException redmineException;
                                 var errors = GetRedmineExceptions(exception.Response, serializer);
-                                var message = string.Empty;
-                                
-                                if (errors == null) 
-                                    throw new RedmineException($"Invalid or missing attribute parameters: {message}", innerException);
-                                
-                                foreach (var error in errors)
+
+                                if (errors != null)
                                 {
-                                    message = message + error.Info + Environment.NewLine;
+                                    var sb = new StringBuilder();
+                                    foreach (var error in errors)
+                                    {
+                                        sb.Append(error.Info).Append(Environment.NewLine);
+                                    }
+                                    
+                                    redmineException = new RedmineException($"Invalid or missing attribute parameters: {sb}", innerException, "Unprocessable Content");
+                                    sb.Length = 0;
                                 }
-                                
-                                throw new RedmineException("Invalid or missing attribute parameters: " + message, innerException);
+                                else
+                                {
+                                    redmineException = new RedmineException("Invalid or missing attribute parameters", innerException);
+                                }
+                               
+                                throw redmineException;
 
                             case (int)HttpStatusCode.NotAcceptable:
                                 throw new NotAcceptableException(response.StatusDescription, innerException);
