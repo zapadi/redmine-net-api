@@ -5,7 +5,7 @@ using System.Net.Cache;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 
-namespace Redmine.Net.Api
+namespace Redmine.Net.Api.Net
 {
     /// <summary>
     /// 
@@ -162,5 +162,19 @@ namespace Redmine.Net.Api
     /// 
     /// </summary>
     SecurityProtocolType? SecurityProtocolType { get; set; }
+    
+    #if NET40_OR_GREATER || NETCOREAPP
+    /// <summary>
+    /// 
+    /// </summary>
+    public X509CertificateCollection ClientCertificates { get;  set; }
+    #endif
+    
+    #if(NET46_OR_GREATER || NETCOREAPP)
+    /// <summary>
+    /// 
+    /// </summary>
+    public bool? ReusePort { get; set; }
+    #endif
     }
 }
