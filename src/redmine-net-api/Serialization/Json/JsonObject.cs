@@ -37,12 +37,14 @@ namespace Redmine.Net.Api.Serialization
             Writer = writer;
             Writer.WriteStartObject();
 
-            if (!root.IsNullOrWhiteSpace())
+            if (root.IsNullOrWhiteSpace())
             {
-                hasRoot = true;
-                Writer.WritePropertyName(root);
-                Writer.WriteStartObject();
+                return;
             }
+            
+            hasRoot = true;
+            Writer.WritePropertyName(root);
+            Writer.WriteStartObject();
         }
 
         private JsonWriter Writer { get; }

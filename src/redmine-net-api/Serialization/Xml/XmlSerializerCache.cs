@@ -24,7 +24,7 @@ namespace Redmine.Net.Api.Serialization
 	/// <summary>
 	/// 
 	/// </summary>
-   internal class XmlSerializerCache : IXmlSerializerCache
+   internal sealed class XmlSerializerCache : IXmlSerializerCache
 	{
 		#if !(NET20 || NET40 || NET45 || NET451 || NET452)
         private static readonly Type[] EmptyTypes = Array.Empty<Type>();

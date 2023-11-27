@@ -42,7 +42,7 @@ namespace Redmine.Net.Api.Serialization
 
             using (var stringReader = new StringReader(jsonResponse))
             {
-                using (JsonReader jsonReader = new JsonTextReader(stringReader))
+                using (var jsonReader = new JsonTextReader(stringReader))
                 {
                     var obj = Activator.CreateInstance<T>();
 
@@ -68,7 +68,7 @@ namespace Redmine.Net.Api.Serialization
 
             using (var sr = new StringReader(jsonResponse))
             {
-                using (JsonReader reader = new JsonTextReader(sr))
+                using (var reader = new JsonTextReader(sr))
                 {
                     var total = 0;
                     var offset = 0;
@@ -111,7 +111,7 @@ namespace Redmine.Net.Api.Serialization
 
             using (var sr = new StringReader(jsonResponse))
             {
-                using (JsonReader reader = new JsonTextReader(sr))
+                using (var reader = new JsonTextReader(sr))
                 {
                     var total = 0;
 
@@ -144,9 +144,7 @@ namespace Redmine.Net.Api.Serialization
                 throw new ArgumentNullException(nameof(entity), $"Could not serialize null of type {typeof(T).Name}");
             }
 
-            var jsonSerializable = entity as IJsonSerializable;
-
-            if (jsonSerializable == null)
+            if (entity is not IJsonSerializable jsonSerializable)
             {
                 throw new RedmineException($"Entity of type '{typeof(T)}' should implement IJsonSerializable.");
             }
@@ -155,7 +153,7 @@ namespace Redmine.Net.Api.Serialization
 
             using (var sw = new StringWriter(stringBuilder))
             {
-                using (JsonWriter writer = new JsonTextWriter(sw))
+                using (var writer = new JsonTextWriter(sw))
                 {
                     writer.Formatting = Newtonsoft.Json.Formatting.Indented;
                     writer.DateFormatHandling = DateFormatHandling.IsoDateFormat;
@@ -163,12 +161,9 @@ namespace Redmine.Net.Api.Serialization
                     jsonSerializable.WriteJson(writer);
 
                     var json = stringBuilder.ToString();
+                    
+                    stringBuilder.Length = 0;
 
-#if NET20
-                    stringBuilder = null;
-#else
-                    stringBuilder.Clear();
-#endif
                     return json;
                 }
             }
