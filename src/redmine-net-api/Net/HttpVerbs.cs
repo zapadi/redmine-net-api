@@ -42,5 +42,10 @@ namespace Redmine.Net.Api
         /// Represents an HTTP DELETE protocol method that is used to delete an existing entity identified  by a URI.
         /// </summary>
         public const string DELETE = "DELETE";
+        
+              
+        internal const string DOWNLOAD = "DOWNLOAD";
+        
+        internal const string UPLOAD = "UPLOAD";
     }
 }
