@@ -8,7 +8,7 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
-        public const string OBSOLETE_TEXT = "In next major release, it will no longer be available.";
+        internal const string OBSOLETE_TEXT = "In next major release, it will no longer be available.";
         /// <summary>
         /// 
         /// </summary>
@@ -26,5 +26,10 @@ namespace Redmine.Net.Api
         /// 
         /// </summary>
         public const string CONTENT_TYPE_APPLICATION_STREAM = "application/octet-stream";
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string IMPERSONATE_HEADER_KEY = "X-Redmine-Switch-User";
     }
 }
