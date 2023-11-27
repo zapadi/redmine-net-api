@@ -117,5 +117,10 @@ namespace Redmine.Net.Api.Extensions
 
             return s;
         }
+        
+        internal static string ValueOrFallback(this string value, string fallback)
+        {
+            return !value.IsNullOrWhiteSpace() ? value : fallback;
+        }
     }
 }
