@@ -15,6 +15,7 @@
 */
 
 #if NET20
+// ReSharper disable once CheckNamespace
 namespace System
 {
     /// <summary>

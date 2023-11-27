@@ -16,6 +16,7 @@
 
 #if NET20
 
+// ReSharper disable once CheckNamespace
 namespace System.Runtime.CompilerServices
 {
     /// <summary>
@@ -29,3 +30,4 @@ namespace System.Runtime.CompilerServices
 }
 
 #endif
+
