@@ -5,5 +5,5 @@ namespace Redmine.Net.Api.Net;
 internal sealed class ApiResponseMessage
 {
     public NameValueCollection Headers { get; init; }
-    public byte[] Content { get; set; }
+    public byte[] Content { get; init; }
 }

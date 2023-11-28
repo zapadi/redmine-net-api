@@ -47,8 +47,8 @@ namespace Redmine.Net.Api
         /// <summary>
         /// Gets or sets the version of the Redmine server to which this client will connect.
         /// </summary>
-        public Version Version { get; init; }
+        public Version RedmineVersion { get; init; }
         
-        internal bool VerifyServerCert { get; set; }
+        internal bool VerifyServerCert { get; init; }
     }
 }
