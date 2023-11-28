@@ -16,7 +16,6 @@
 
 using System;
 using System.Collections.Specialized;
-using System.Globalization;
 using Redmine.Net.Api.Extensions;
 
 namespace Redmine.Net.Api
@@ -24,6 +23,7 @@ namespace Redmine.Net.Api
     /// <summary>
     /// 
     /// </summary>
+    // ReSharper disable once ClassNeverInstantiated.Global
     public sealed class SearchFilterBuilder
     {
         /// <summary>
@@ -38,20 +38,13 @@ namespace Redmine.Net.Api
                 _scope = value;
                 if (_scope != null)
                 {
-                    switch (_scope)
+                    _internalScope = _scope switch
                     {
-                        case SearchScope.All:
-                            _internalScope = "all";
-                            break;
-                        case SearchScope.MyProject:
-                            _internalScope = "my_project";
-                            break;
-                        case SearchScope.SubProjects:
-                            _internalScope = "subprojects";
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException(nameof(value));
-                    }
+                        SearchScope.All => "all",
+                        SearchScope.MyProject => "my_project",
+                        SearchScope.SubProjects => "subprojects",
+                        _ => throw new ArgumentOutOfRangeException(nameof(value))
+                    };
                 }
             }
         }
@@ -106,7 +99,6 @@ namespace Redmine.Net.Api
         /// </summary>
         public bool? OpenIssues{ get; set; }
 
-
         /// <summary>
         /// </summary>
         public SearchAttachment? Attachments
@@ -117,21 +109,13 @@ namespace Redmine.Net.Api
                 _attachments = value;
                 if (_attachments != null)
                 {
-                    switch (_attachments)
+                    _internalAttachments = _attachments switch
                     {
-                        case SearchAttachment.OnlyInAttachment:
-                            _internalAttachments = "only";
-                            break;
-
-                        case SearchAttachment.InDescription:
-                            _internalAttachments = "0";
-                            break;
-                        case SearchAttachment.InDescriptionAndAttachment:
-                            _internalAttachments = "1";
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
+                        SearchAttachment.OnlyInAttachment => "only",
+                        SearchAttachment.InDescription => "0",
+                        SearchAttachment.InDescriptionAndAttachment => "1",
+                        _ => throw new ArgumentOutOfRangeException(nameof(Attachments))
+                    };
                 }
             }
         }
@@ -146,38 +130,21 @@ namespace Redmine.Net.Api
         /// </summary>
         public NameValueCollection Build(NameValueCollection sb)
         {
-            AddIfNotNull(sb,"scope",_internalScope);
-            AddIfNotNull(sb,"projects",IncludeProjects);
-            AddIfNotNull(sb,"open_issues",OpenIssues);
-            AddIfNotNull(sb,"messages",IncludeMessages);
-            AddIfNotNull(sb,"wiki_pages",IncludeWikiPages);
-            AddIfNotNull(sb,"changesets",IncludeChangeSets);
-            AddIfNotNull(sb,"documents",IncludeDocuments);
-            AddIfNotNull(sb,"news",IncludeNews);
-            AddIfNotNull(sb,"issues",IncludeIssues);
-            AddIfNotNull(sb,"titles_only",TitlesOnly);
-            AddIfNotNull(sb,"all_words", AllWords);
-            AddIfNotNull(sb,"attachments", _internalAttachments);
+            sb.AddIfNotNull(RedmineKeys.SCOPE,_internalScope);
+            sb.AddIfNotNull(RedmineKeys.PROJECTS, IncludeProjects);
+            sb.AddIfNotNull(RedmineKeys.OPEN_ISSUES, OpenIssues);
+            sb.AddIfNotNull(RedmineKeys.MESSAGES, IncludeMessages);
+            sb.AddIfNotNull(RedmineKeys.WIKI_PAGES, IncludeWikiPages);
+            sb.AddIfNotNull(RedmineKeys.CHANGE_SETS, IncludeChangeSets);
+            sb.AddIfNotNull(RedmineKeys.DOCUMENTS, IncludeDocuments);
+            sb.AddIfNotNull(RedmineKeys.NEWS, IncludeNews);
+            sb.AddIfNotNull(RedmineKeys.ISSUES, IncludeIssues);
+            sb.AddIfNotNull(RedmineKeys.TITLES_ONLY, TitlesOnly);
+            sb.AddIfNotNull(RedmineKeys.ALL_WORDS, AllWords);
+            sb.AddIfNotNull(RedmineKeys.ATTACHMENTS, _internalAttachments);
                 
             return sb;
         }
-
-        private static void AddIfNotNull(NameValueCollection nameValueCollection, string key, bool? value)
-        {
-            if (value.HasValue)
-            {
-                nameValueCollection.Add(key, value.Value.ToString(CultureInfo.InvariantCulture));
-            }
-        }
-        
-        private static void AddIfNotNull(NameValueCollection nameValueCollection, string key, string value)
-        {
-            if (!value.IsNullOrWhiteSpace())
-            {
-                nameValueCollection.Add(key, value);
-            }
-        }
-        
     }
 
     /// <summary>
