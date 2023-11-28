@@ -33,30 +33,23 @@ namespace Redmine.Net.Api.Extensions
         /// <returns></returns>
         public static string GetParameterValue(this NameValueCollection parameters, string parameterName)
         {
-            if (parameters == null)
-            {
-                return null;
-            }
-
-            var value = parameters.Get(parameterName);
-            
-            return value.IsNullOrWhiteSpace() ? null : value;
+            return GetValue(parameters, parameterName);
         }
 
         /// <summary>
         /// Gets the parameter value.
         /// </summary>
         /// <param name="parameters">The parameters.</param>
-        /// <param name="parameterName">Name of the parameter.</param>
+        /// <param name="key">Name of the parameter.</param>
         /// <returns></returns>
-        public static string GetValue(this NameValueCollection parameters, string parameterName)
+        public static string GetValue(this NameValueCollection parameters, string key)
         {
             if (parameters == null)
             {
                 return null;
             }
 
-            var value = parameters.Get(parameterName);
+            var value = parameters.Get(key);
 
             return value.IsNullOrWhiteSpace() ? null : value;
         }
@@ -93,6 +86,55 @@ namespace Redmine.Net.Api.Extensions
             
             return queryString;
         }
+        
+        internal static NameValueCollection AddPagingParameters(this NameValueCollection parameters, int pageSize, int offset)
+        {
+            parameters ??= new NameValueCollection();
 
+            if(pageSize <= 0)
+            {
+                pageSize = RedmineConstants.DEFAULT_PAGE_SIZE_VALUE;
+            }
+            
+            if(offset < 0)
+            {
+                offset = 0;
+            }
+            
+            parameters.Set(RedmineKeys.LIMIT, pageSize.ToString(CultureInfo.InvariantCulture));
+            parameters.Set(RedmineKeys.OFFSET, offset.ToString(CultureInfo.InvariantCulture));
+
+            return parameters;
+        }
+
+        internal static NameValueCollection AddParamsIfExist(this NameValueCollection parameters, string[] include)
+        {
+            if (include is not {Length: > 0})
+            {
+                return parameters;
+            }
+            
+            parameters ??= new NameValueCollection();
+
+            parameters.Add(RedmineKeys.INCLUDE, string.Join(",", include));
+            
+            return parameters;
+        }
+        
+        internal static void AddIfNotNull(this NameValueCollection nameValueCollection, string key, string value)
+        {
+            if (!value.IsNullOrWhiteSpace())
+            {
+                nameValueCollection.Add(key, value);
+            }
+        }
+        
+        internal static void AddIfNotNull(this NameValueCollection nameValueCollection, string key, bool? value)
+        {
+            if (value.HasValue)
+            {
+                nameValueCollection.Add(key, value.Value.ToString(CultureInfo.InvariantCulture));
+            }
+        }   
     }
 }
