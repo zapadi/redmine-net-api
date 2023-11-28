@@ -1,4 +1,5 @@
 using System;
+using System.Net;
 using Redmine.Net.Api.Net;
 using Redmine.Net.Api.Serialization;
 
@@ -37,7 +38,7 @@ namespace Redmine.Net.Api
         /// <summary>
         /// Gets or sets a custom function that creates and returns a specialized instance of the WebClient class.
         /// </summary>
-        public Func<IRedmineApiClient> ClientFunc { get; init; }
+        public Func<WebClient> ClientFunc { get; init; }
         
         /// <summary>
         /// Gets or sets the settings for configuring the Redmine web client.
