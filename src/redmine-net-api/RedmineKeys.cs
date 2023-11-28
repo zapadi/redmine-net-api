@@ -43,6 +43,10 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
+        public const string ALL_WORDS = "all_words";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string ALLOWED_STATUSES = "allowed_statuses";
         /// <summary>
         /// 
@@ -213,6 +217,10 @@ namespace Redmine.Net.Api
         /// 
         /// </summary>
         public const string DONE_RATIO = "done_ratio";
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string DOCUMENTS = "documents";
         /// <summary>
         /// 
         /// </summary>
@@ -455,6 +463,10 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
+        public const string MESSAGES = "messages";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string MIN_LENGTH = "min_length";
         /// <summary>
         /// 
@@ -488,6 +500,10 @@ namespace Redmine.Net.Api
         /// 
         /// </summary>
         public const string OLD_VALUE = "old_value";
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string OPEN_ISSUES = "open_issues";
         /// <summary>
         /// 
         /// </summary>
@@ -611,6 +627,10 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
+        public const string SCOPE = "scope";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string SEARCHABLE = "searchable";
         /// <summary>
         /// 
@@ -684,6 +704,10 @@ namespace Redmine.Net.Api
         /// 
         /// </summary>
         public const string TITLE = "title";
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string TITLES_ONLY = "titles_only";
         /// <summary>
         /// 
         /// </summary>
