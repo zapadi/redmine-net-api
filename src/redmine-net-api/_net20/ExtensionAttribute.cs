@@ -1,4 +1,5 @@
-﻿/*
+﻿#if NET20
+/*
    Copyright 2011 - 2023 Adrian Popescu
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,9 +15,6 @@
    limitations under the License.
 */
 
-#if NET20
-
-// ReSharper disable once CheckNamespace
 namespace System.Runtime.CompilerServices
 {
     /// <summary>
