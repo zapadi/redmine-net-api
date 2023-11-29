@@ -36,7 +36,8 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <param name="writer"></param>
-        public void WriteJson(JsonWriter writer)
+        /// <param name="full"></param>
+        public void WriteJson(JsonWriter writer, bool full = false)
         {
             using (new JsonObject(writer, RedmineKeys.ATTACHMENTS))
             {

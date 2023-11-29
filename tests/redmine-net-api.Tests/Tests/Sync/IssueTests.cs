@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.IO;
+using Newtonsoft.Json;
 using Padi.RedmineApi.Tests.Infrastructure;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Exceptions;
@@ -315,6 +317,42 @@ namespace Padi.RedmineApi.Tests.Tests.Sync
 
             Assert.True(issueToClone.CustomFields.Count != clonedIssue.CustomFields.Count);
         }
+
+        [Fact, Order(15)]
+        public void Should_Issue_Be_Equal()
+        {
+            const string ISSUE_ID = "96";
+
+            var issue = fixture.RedmineManager.GetObject<Issue>(ISSUE_ID, new NameValueCollection
+            {
+                { RedmineKeys.INCLUDE, $"{RedmineKeys.CHILDREN},{RedmineKeys.ATTACHMENTS},{RedmineKeys.RELATIONS},{RedmineKeys.CHANGE_SETS},{RedmineKeys.JOURNALS},{RedmineKeys.WATCHERS}" }
+            });
+
+            Assert.NotNull(issue);
+
+            var json = string.Empty;
+            using (var swriter = new StringWriter())
+            {
+                using (var writer = new JsonTextWriter(swriter))
+                {
+                    issue.WriteJson(writer);
+                    json = swriter.ToString();
+                    Assert.False(string.IsNullOrWhiteSpace(json));
+                }
+            }
+
+            using (var sreader = new StringReader(json))
+            {
+                using (var reader = new JsonTextReader(sreader))
+                {
+                    var issue2 = new Issue();
+                    issue2.ReadJson(reader);
+                    Assert.Equal(issue, issue2);
+                }
+            }
+            
+        }
+
 
         [Fact]
         public void Should_Get_Issue_With_Hours()

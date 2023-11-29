@@ -124,11 +124,13 @@ namespace Redmine.Net.Api.Types
         #endregion
 
         #region Implementation of IJsonSerialization
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="writer"></param>
-        public void WriteJson(JsonWriter writer) { }
+        /// <param name="full"></param>
+        public void WriteJson(JsonWriter writer, bool full = false) { }
 
         /// <summary>
         /// 
