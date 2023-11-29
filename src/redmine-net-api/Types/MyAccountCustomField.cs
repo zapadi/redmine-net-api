@@ -104,7 +104,7 @@ namespace Redmine.Net.Api.Types
         }
 
         /// <inheritdoc />
-        public override void WriteJson(JsonWriter writer)
+        public override void WriteJson(JsonWriter writer, bool full = false)
         {
         }
 

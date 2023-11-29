@@ -147,7 +147,8 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <param name="writer"></param>
-        public override void WriteJson(JsonWriter writer)
+        /// <param name="full"></param>
+        public override void WriteJson(JsonWriter writer, bool full = false)
         {
             writer.WriteIdIfNotNull(RedmineKeys.ID, this);
             if (!Name.IsNullOrWhiteSpace())

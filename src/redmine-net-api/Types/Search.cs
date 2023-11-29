@@ -87,7 +87,7 @@ namespace Redmine.Net.Api.Types
         }
 
         /// <inheritdoc />
-        public void WriteJson(JsonWriter writer)
+        public void WriteJson(JsonWriter writer, bool full = false)
         {
         }
 

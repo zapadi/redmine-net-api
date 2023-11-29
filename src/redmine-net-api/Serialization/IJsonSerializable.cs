@@ -27,7 +27,8 @@ namespace Redmine.Net.Api.Serialization
         /// 
         /// </summary>
         /// <param name="writer"></param>
-        void WriteJson(JsonWriter writer);
+        /// <param name="full"></param>
+        void WriteJson(JsonWriter writer, bool full = false);
         /// <summary>
         /// 
         /// </summary>

@@ -420,7 +420,8 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <param name="writer"></param>
-        public override void WriteJson(JsonWriter writer)
+        /// <param name="full"></param>
+        public override void WriteJson(JsonWriter writer, bool full = false)
         {
             using (new JsonObject(writer, RedmineKeys.ISSUE))
             {
@@ -434,16 +435,52 @@ namespace Redmine.Net.Api.Types
                 }
 
                 writer.WriteBoolean(RedmineKeys.IS_PRIVATE, IsPrivate);
-                writer.WriteIdIfNotNull(RedmineKeys.PROJECT_ID, Project);
-                writer.WriteIdIfNotNull(RedmineKeys.PRIORITY_ID, Priority);
-                writer.WriteIdIfNotNull(RedmineKeys.STATUS_ID, Status);
-                writer.WriteIdIfNotNull(RedmineKeys.CATEGORY_ID, Category);
-                writer.WriteIdIfNotNull(RedmineKeys.TRACKER_ID, Tracker);
-                writer.WriteIdIfNotNull(RedmineKeys.ASSIGNED_TO_ID, AssignedTo);
-                writer.WriteIdIfNotNull(RedmineKeys.FIXED_VERSION_ID, FixedVersion);
+                if (full)
+                {
+                    if (Project != null)
+                        using (new JsonObject(writer, RedmineKeys.PROJECT))
+                            Project.WriteJson(writer);
+
+                    if (Tracker != null)
+                        using (new JsonObject(writer, RedmineKeys.TRACKER))
+                            Tracker.WriteJson(writer);
+                    if(Status != null)
+                        using (new JsonObject(writer, RedmineKeys.STATUS))
+                            Status.WriteJson(writer);
+                    if (Priority != null)
+                        using (new JsonObject(writer, RedmineKeys.PRIORITY))
+                            Priority.WriteJson(writer);
+                    if (Author != null)
+                        using (new JsonObject(writer, RedmineKeys.AUTHOR))
+                            Author.WriteJson(writer);
+                    if (Category != null)
+                        using (new JsonObject(writer, RedmineKeys.CATEGORY))
+                            Category.WriteJson(writer);
+                    if (AssignedTo != null)
+                        using (new JsonObject(writer, RedmineKeys.ASSIGNED_TO))
+                            AssignedTo.WriteJson(writer);
+                    if (ParentIssue != null)
+                        using (new JsonObject(writer, RedmineKeys.PARENT))
+                            ParentIssue.WriteJson(writer);
+                    if (FixedVersion != null)
+                        using (new JsonObject(writer, RedmineKeys.FIXED_VERSION))
+                            FixedVersion.WriteJson(writer);
+
+                }   
+                else
+                {
+                    writer.WriteIdIfNotNull(RedmineKeys.PROJECT_ID, Project);
+                    writer.WriteIdIfNotNull(RedmineKeys.PRIORITY_ID, Priority);
+                    writer.WriteIdIfNotNull(RedmineKeys.STATUS_ID, Status);
+                    writer.WriteIdIfNotNull(RedmineKeys.CATEGORY_ID, Category);
+                    writer.WriteIdIfNotNull(RedmineKeys.TRACKER_ID, Tracker);
+                    writer.WriteIdIfNotNull(RedmineKeys.ASSIGNED_TO_ID, AssignedTo);
+                    writer.WriteIdIfNotNull(RedmineKeys.FIXED_VERSION_ID, FixedVersion);
+                    writer.WriteIdOrEmpty(RedmineKeys.PARENT_ISSUE_ID, ParentIssue);
+                }
+
                 writer.WriteValueOrEmpty(RedmineKeys.ESTIMATED_HOURS, EstimatedHours);
 
-                writer.WriteIdOrEmpty(RedmineKeys.PARENT_ISSUE_ID, ParentIssue);
                 writer.WriteDateOrEmpty(RedmineKeys.START_DATE, StartDate);
                 writer.WriteDateOrEmpty(RedmineKeys.DUE_DATE, DueDate);
                 writer.WriteDateOrEmpty(RedmineKeys.UPDATED_ON, UpdatedOn);
