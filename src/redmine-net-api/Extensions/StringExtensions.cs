@@ -23,7 +23,7 @@ namespace Redmine.Net.Api.Extensions
     /// <summary>
     /// 
     /// </summary>
-    public static partial class StringExtensions
+    public static class StringExtensions
     {
         /// <summary>
         /// 
@@ -32,7 +32,6 @@ namespace Redmine.Net.Api.Extensions
         /// <returns></returns>
         public static bool IsNullOrWhiteSpace(this string value)
         {
-#if NET20
             if (value == null)
             {
                 return true;
@@ -45,10 +44,8 @@ namespace Redmine.Net.Api.Extensions
                     return false;
                 }
             }
+            
             return true;
-#else
-            return string.IsNullOrWhiteSpace(value);
-#endif
         }
 
         /// <summary>
@@ -59,12 +56,16 @@ namespace Redmine.Net.Api.Extensions
         /// <returns></returns>
         public static string Truncate(this string text, int maximumLength)
         {
-            if (text.IsNullOrWhiteSpace())
+            if (text.IsNullOrWhiteSpace() || maximumLength < 1 || text.Length <= maximumLength)
             {
                 return text;
             }
             
-            return text.Length > maximumLength ? text.Substring(0, maximumLength) : text;
+            #if (NET5_0_OR_GREATER)
+            return text.AsSpan()[..maximumLength].ToString();
+            #else
+            return text.Substring(0, maximumLength);
+            #endif
         }
 
         /// <summary>
@@ -95,11 +96,12 @@ namespace Redmine.Net.Api.Extensions
             }
 
             var rv = new SecureString();
-            foreach (var c in value)
+            
+            for (var index = 0; index < value.Length; ++index)
             {
-                rv.AppendChar(c);
+                rv.AppendChar(value[index]);
             }
-
+            
             return rv;
         }
 
@@ -110,11 +112,18 @@ namespace Redmine.Net.Api.Extensions
                 return s;
             }
 
+            #if (NET5_0_OR_GREATER)
+            if (s.EndsWith('/') || s.EndsWith('\\'))
+            {
+                return s.AsSpan()[..(s.Length - 1)].ToString();
+            }
+            #else
             if (s.EndsWith("/", StringComparison.OrdinalIgnoreCase) || s.EndsWith(@"\", StringComparison.OrdinalIgnoreCase))
             {
                 return s.Substring(0, s.Length - 1);
             }
-
+            #endif
+            
             return s;
         }
         
