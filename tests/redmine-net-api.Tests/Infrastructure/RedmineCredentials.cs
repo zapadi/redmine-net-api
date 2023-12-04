@@ -1,4 +1,4 @@
-﻿namespace Padi.RedmineApi.Tests
+﻿namespace Padi.DotNet.RedmineAPI.Tests.Infrastructure
 {
     public sealed class RedmineCredentials
     {

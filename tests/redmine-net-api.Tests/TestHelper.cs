@@ -1,12 +1,13 @@
 ﻿using System;
 using System.IO;
 using Microsoft.Extensions.Configuration;
+using Padi.DotNet.RedmineAPI.Tests.Infrastructure;
 
-namespace Padi.RedmineApi.Tests
+namespace Padi.DotNet.RedmineAPI.Tests
 {
     internal static class TestHelper
     {
-        public static IConfigurationRoot GetIConfigurationRoot(string outputPath)
+        private static IConfigurationRoot GetIConfigurationRoot(string outputPath)
         {
             var environment = Environment.GetEnvironmentVariable("Environment");
 
