@@ -2,16 +2,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
   
   <PropertyGroup Label="Build">
-    <TargetFrameworks>net20;net40;net45;net451;net452;net46;net461;net462;net47;net471;net472;net48;netstandard2.0;netstandard2.1</TargetFrameworks>
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <RootNamespace>Redmine.Net.Api</RootNamespace>
     <AssemblyName>redmine-net-api</AssemblyName>
-    <Deterministic>False</Deterministic>
+    <TargetFrameworks>net20;net40;net45;net451;net452;net46;net461;net462;net47;net471;net472;net48;net481;net60;net70;</TargetFrameworks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <Deterministic>True</Deterministic>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <DefineConstants>TRACE</DefineConstants>
     <Configurations>Debug;Release;DebugJson</Configurations>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
-    <LangVersion>7.3</LangVersion>
     <NoWarn>
       NU5105;
       CA1303;
@@ -22,137 +21,55 @@
       CA1724;
       CA1806;
       CA2227;
+      CS0612; <!--Obsolete-->
+      CS0618; <!--Obsolete-->
+      CA1002; <!--Change 'List<T>' to use 'Collection<T>', 'ReadOnlyCollection<T>' or 'KeyedCollection<K,V>' -->
     </NoWarn>
   </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net20'">
-    <DefineConstants>NET20;NETFULL</DefineConstants>
+  
+  <PropertyGroup Label="Analyzers">
+    <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+    <AnalysisLevel>latest</AnalysisLevel>
   </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net40'">
-    <DefineConstants>NET40;NETFULL</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net45'">
-    <DefineConstants>NET45;NETFULL</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net451'">
-    <DefineConstants>NET451;NETFULL</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net452'">
-    <DefineConstants>NET452;NETFULL</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net46'">
-    <DefineConstants>NET46;NETFULL</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net461'">
-    <DefineConstants>NET461;NETFULL</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net462'">
-    <DefineConstants>NET462;NETFULL</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net47'">
-    <DefineConstants>NET47;NETFULL</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net471'">
-    <DefineConstants>NET471;NETFULL</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net472'">
-    <DefineConstants>NET472;NETFULL</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net48'">
-    <DefineConstants>NET48;NETFULL</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.3'">
-    <DefineConstants>NETSTANDARD13;NETSTANDARD</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0'">
-    <DefineConstants>NETSTANDARD20;NETSTANDARD</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.1'">
-    <DefineConstants>NETSTANDARD21;NETSTANDARD</DefineConstants>
-  </PropertyGroup>
-
+  
   <ItemGroup Label="Package References">
-    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
   </ItemGroup>
 
+  <PropertyGroup Label="Package">
+    <Authors>Adrian Popescu</Authors>
+    <Description>Redmine Api is a .NET rest client for Redmine.</Description>
+    <Company>p.adi</Company>
+    <Copyright>Adrian Popescu, 2011 - $([System.DateTime]::Now.Year.ToString()) </Copyright>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <PackageId Condition="'$(Sign)' == '' OR '$(Sign)' == 'false'">redmine-api</PackageId>
+    <PackageId Condition="'$(Sign)' == 'true'">redmine-api-signed</PackageId>
+    <PackageIconUrl>https://raw.githubusercontent.com/zapadi/redmine-net-api/master/logo.png</PackageIconUrl>
+    <PackageIcon>logo.png</PackageIcon>
+    <PackageLicense>LICENSE</PackageLicense>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/zapadi/redmine-net-api</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageTags>Redmine; REST; API; Client; .NET; Adrian Popescu;</PackageTags>
+    <Product>Redmine .NET API Client</Product>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/zapadi/redmine-net-api</RepositoryUrl>
+    <Title>Redmine .NET API Client</Title>
+  </PropertyGroup>
+  
   <ItemGroup Condition=" '$(TargetFramework)' == 'net20' " Label=".NET 2.0 Package References">
     <Reference Include="System.Web" />
+    <Reference Include="System.Net.Http" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net40' " Label=".NET 4.0 Package References">
-    <Reference Include="System.Net" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Web.Extensions" />
+    <PackageReference Include="Microsoft.Bcl.Async" Version="1.0.168" />
+    <PackageReference Include="Microsoft.Net.Http" Version="2.2.29" />
   </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net45' " Label=".NET 4.5 Package References">
-    <Reference Include="System.Web" />
-    <Reference Include="System.Web.Extensions" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net451' " Label=".NET 4.5.1 Package References">
-    <Reference Include="System.Web" />
-    <Reference Include="System.Web.Extensions" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net452' " Label=".NET 4.5.2 Package References">
-    <Reference Include="System.Web" />
-    <Reference Include="System.Web.Extensions" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net46' " Label=".NET 4.6 Package References">
-    <Reference Include="System.Web" />
-    <Reference Include="System.Web.Extensions" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net461' " Label=".NET 4.6.1 Package References">
-    <Reference Include="System.Web" />
-    <Reference Include="System.Web.Extensions" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net462' " Label=".NET 4.6.2 Package References">
-    <Reference Include="System.Web" />
-    <Reference Include="System.Web.Extensions" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net47' " Label=".NET 4.7 Package References">
-    <Reference Include="System.Web" />
-    <Reference Include="System.Web.Extensions" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net471' " Label=".NET 4.7.1 Package References">
-    <Reference Include="System.Web" />
-    <Reference Include="System.Web.Extensions" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net472' " Label=".NET 4.7.2 Package References">
-    <Reference Include="System.Web" />
-    <Reference Include="System.Web.Extensions" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net48' " Label=".NET 4.8 Package References">
-    <Reference Include="System.Web" />
-    <Reference Include="System.Web.Extensions" />
-  </ItemGroup>
-
+  
   <ItemGroup>
     <EmbeddedResource Remove="Logging\**" />
     <Compile Remove="Properties\AssemblyInfo.cs" />
@@ -164,14 +81,17 @@
     </None>
     <None Include="..\..\logo.png" Pack="true" PackagePath="\" />
     <None Include="..\..\LICENSE" Pack="true" PackagePath="" />
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
-  <ItemGroup Label="Internals Visible To">
-    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
-      <_Parameter1 Condition="'$(Sign)' == '' OR '$(Sign)' == 'false'">$(MSBuildProjectName).Tests</_Parameter1>
-      <_Parameter1 Condition="'$(Sign)' == 'true'">$(MSBuildProjectName).Tests, PublicKey=0024000004800000940000000602000000240000525341310004000001000100678670c10a958cde6b74892d5207885bd2ab375255b85fd7794d60ff01ba1cf81aaff13f54d8a08a8f8c7816ef4fc0138de7941031e47b5b0c5d51f58cbfe6c5652e11cfa0865e2d0a860f47f73b701e6758e3e381665f7664f938462c9eb9bdc17312621e984981227fd9d38dbec5288e269d42836b9c8fc4c8ebd0282ca4d3
-      </_Parameter1>
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+      <_Parameter1>Padi.DotNet.RedmineAPI.Tests</_Parameter1> 
     </AssemblyAttribute>
   </ItemGroup>
+  
+<!--  <ItemGroup Label="Internals Visible To">-->
+<!--    <InternalsVisibleToProject Include="Padi.DotNet.RedmineAPI.Tests" />-->
+<!--  </ItemGroup>-->
 
 </Project>

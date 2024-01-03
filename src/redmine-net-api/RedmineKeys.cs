@@ -43,6 +43,10 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
+        public const string ALL_WORDS = "all_words";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string ALLOWED_STATUSES = "allowed_statuses";
         /// <summary>
         /// 
@@ -172,8 +176,11 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
+        public const string DEFAULT_ASSIGNED_TO_ID = "default_assigned_to_id";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string DEFAULT_STATUS = "default_status";
-
         /// <summary>
         /// 
         /// </summary>
@@ -182,6 +189,10 @@ namespace Redmine.Net.Api
         /// 
         /// </summary>
         public const string DEFAULT_VERSION = "default_version";
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string DEFAULT_VERSION_ID = "default_version_id";
         /// <summary>
         /// 
         /// </summary>
@@ -209,6 +220,10 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
+        public const string DOCUMENTS = "documents";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string DOWNLOADS = "downloads";
         /// <summary>
         /// 
@@ -226,6 +241,14 @@ namespace Redmine.Net.Api
         /// 
         /// </summary>
         public const string ENABLED_MODULE_NAMES = "enabled_module_names";
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string ENUMERATION_ISSUE_PRIORITIES = "enumerations/issue_priorities";
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string ENUMERATION_TIME_ENTRY_ACTIVITIES = "enumerations/time_entry_activities";
         /// <summary>
         /// 
         /// </summary>
@@ -351,6 +374,10 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
+        public const string ISSUE_STATUSES = "issue_statuses";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string ISSUE_TO_ID = "issue_to_id";
         /// <summary>
         /// 
@@ -436,6 +463,10 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
+        public const string MESSAGES = "messages";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string MIN_LENGTH = "min_length";
         /// <summary>
         /// 
@@ -469,6 +500,10 @@ namespace Redmine.Net.Api
         /// 
         /// </summary>
         public const string OLD_VALUE = "old_value";
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string OPEN_ISSUES = "open_issues";
         /// <summary>
         /// 
         /// </summary>
@@ -542,6 +577,10 @@ namespace Redmine.Net.Api
         /// </summary>
         public const string QUERY = "query";
         /// <summary>
+        /// 
+        /// </summary>
+        public const string QUERIES = "queries";
+        /// <summary>
         ///
         /// </summary>
         public const string REASSIGN_TO_ID = "reassign_to_id";
@@ -588,7 +627,15 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
+        public const string SCOPE = "scope";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string SEARCHABLE = "searchable";
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string SEARCH = "search";
         /// <summary>
         /// 
         /// </summary>
@@ -640,6 +687,10 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
+        public const string TIME_ENTRIES = "time_entries";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string TIME_ENTRY_ACTIVITIES = "time_entry_activities";
         /// <summary>
         /// 
@@ -653,6 +704,10 @@ namespace Redmine.Net.Api
         /// 
         /// </summary>
         public const string TITLE = "title";
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string TITLES_ONLY = "titles_only";
         /// <summary>
         /// 
         /// </summary>
@@ -783,5 +838,6 @@ namespace Redmine.Net.Api
         /// </summary>
         public const string WIKI_PAGES = "wiki_pages";
 
+       
     }
 }

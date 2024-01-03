@@ -1,12 +1,13 @@
 ﻿using System;
 using System.IO;
 using Microsoft.Extensions.Configuration;
+using Padi.DotNet.RedmineAPI.Tests.Infrastructure;
 
-namespace Padi.RedmineApi.Tests
+namespace Padi.DotNet.RedmineAPI.Tests
 {
     internal static class TestHelper
     {
-        public static IConfigurationRoot GetIConfigurationRoot(string outputPath)
+        private static IConfigurationRoot GetIConfigurationRoot(string outputPath)
         {
             var environment = Environment.GetEnvironmentVariable("Environment");
 
@@ -15,7 +16,6 @@ namespace Padi.RedmineApi.Tests
                 .AddJsonFile("appsettings.json", optional: true)
                 .AddJsonFile($"appsettings.{environment}.json", optional: true)
                 .AddUserSecrets("f8b9e946-b547-42f1-861c-f719dca00a84")
-                .AddEnvironmentVariables()
                 .Build();
         }
 

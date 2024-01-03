@@ -14,6 +14,7 @@
    limitations under the License.
 */
 
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Net;
@@ -31,31 +32,31 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// 
         /// </summary>
-        string Host { get; }
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]string Host { get; }
         /// <summary>
         /// 
         /// </summary>
-        string ApiKey { get; }
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]string ApiKey { get; }
         /// <summary>
         /// 
         /// </summary>
-        int PageSize { get; set; }
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]int PageSize { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        string ImpersonateUser { get; set; }
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]string ImpersonateUser { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        MimeFormat MimeFormat { get; }
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]MimeFormat MimeFormat { get; }
         /// <summary>
         /// 
         /// </summary>
-        IWebProxy Proxy { get; }
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]IWebProxy Proxy { get; }
         /// <summary>
         /// 
         /// </summary>
-        SecurityProtocolType SecurityProtocolType { get; }
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]SecurityProtocolType SecurityProtocolType { get; }
 
         /// <summary>
         /// 
@@ -184,7 +185,7 @@ namespace Redmine.Net.Api.Types
         /// <typeparam name="T"></typeparam>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        int Count<T>(NameValueCollection parameters) where T : class, new();
+        int Count<T>(NameValueCollection parameters = null) where T : class, new();
 
         /// <summary>
         /// 
@@ -240,16 +241,9 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <param name="id"></param>
         /// <param name="entity"></param>
-        /// <typeparam name="T"></typeparam>
-        void UpdateObject<T>(string id, T entity) where T : class, new();
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="entity"></param>
         /// <param name="projectId"></param>
         /// <typeparam name="T"></typeparam>
-        void UpdateObject<T>(string id, T entity, string projectId) where T : class, new();
+        void UpdateObject<T>(string id, T entity, string projectId = null) where T : class, new();
         
         /// <summary>
         /// 
@@ -257,7 +251,7 @@ namespace Redmine.Net.Api.Types
         /// <param name="id"></param>
         /// <param name="parameters"></param>
         /// <typeparam name="T"></typeparam>
-        void DeleteObject<T>(string id, NameValueCollection parameters) where T : class, new();
+        void DeleteObject<T>(string id, NameValueCollection parameters = null) where T : class, new();
 
         /// <summary>
         /// 
@@ -265,7 +259,7 @@ namespace Redmine.Net.Api.Types
         /// <param name="parameters"></param>
         /// <param name="uploadFile"></param>
         /// <returns></returns>
-        RedmineWebClient CreateWebClient(NameValueCollection parameters, bool uploadFile = false);
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]RedmineWebClient CreateWebClient(NameValueCollection parameters, bool uploadFile = false);
         /// <summary>
         /// 
         /// </summary>
@@ -274,6 +268,6 @@ namespace Redmine.Net.Api.Types
         /// <param name="chain"></param>
         /// <param name="sslPolicyErrors"></param>
         /// <returns></returns>
-        bool RemoteCertValidate(object sender, X509Certificate cert, X509Chain chain, SslPolicyErrors sslPolicyErrors);
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]bool RemoteCertValidate(object sender, X509Certificate cert, X509Chain chain, SslPolicyErrors sslPolicyErrors);
     }
 }

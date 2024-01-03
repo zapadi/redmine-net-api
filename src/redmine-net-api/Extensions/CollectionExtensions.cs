@@ -23,8 +23,6 @@ namespace Redmine.Net.Api.Extensions
     /// <summary>
     /// 
     /// </summary>
-
-
     public static class CollectionExtensions
     {
         /// <summary>
@@ -35,18 +33,24 @@ namespace Redmine.Net.Api.Extensions
         /// <returns></returns>
         public static IList<T> Clone<T>(this IList<T> listToClone) where T : ICloneable
         {
-            if (listToClone == null) return null;
-            IList<T> clonedList = new List<T>();
-            foreach (var item in listToClone)
+            if (listToClone == null)
             {
+                return null;
+            }
+            
+            var clonedList = new List<T>();
+            
+            for (var index = 0; index < listToClone.Count; index++)
+            {
+                var item = listToClone[index];
                 clonedList.Add((T) item.Clone());
             }
+
             return clonedList;
         }
-
-
+        
         /// <summary>
-        ///     Equalses the specified list to compare.
+        /// 
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="list">The list.</param>
@@ -54,26 +58,23 @@ namespace Redmine.Net.Api.Extensions
         /// <returns></returns>
         public static bool Equals<T>(this IList<T> list, IList<T> listToCompare) where T : class
         {
-            if (list ==null || listToCompare == null) return false;
-
-#if NET20
+            if (list == null || listToCompare == null)
+            {
+                return false;
+            }
+            
             if (list.Count != listToCompare.Count)
             {
                 return false;
             }
+            
             var index = 0;
-             while (index < list.Count && (list[index] as T).Equals(listToCompare[index] as T))
+            while (index < list.Count && list[index].Equals(listToCompare[index]))
             {
                 index++;
             }
 
             return index == list.Count;
-#else
-            var set = new HashSet<T>(list);
-            var setToCompare = new HashSet<T>(listToCompare);
-
-            return set.SetEquals(setToCompare);
-#endif
         }
         
         /// <summary>
@@ -87,21 +88,23 @@ namespace Redmine.Net.Api.Extensions
                 return null;
             }
 
-            var sb = new StringBuilder();
+            var sb = new StringBuilder("{");
+            
             foreach (var item in collection)
             {
-                sb.Append(",").Append(item);
+                sb.Append(item).Append(',');
             }
 
-            sb[0] = '{';
-            sb.Append("}");
+            if (sb.Length > 1)
+            {
+                sb.Length -= 1;
+            }
+            
+            sb.Append('}');
 
             var str = sb.ToString();
-#if NET20
-            sb = null;
-#else
-            sb.Clear();
-#endif
+            sb.Length = 0;
+
             return str;
         }
     }
