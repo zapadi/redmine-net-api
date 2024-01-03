@@ -6,7 +6,7 @@
     <AssemblyName>redmine-net-api</AssemblyName>
     <TargetFrameworks>net20;net40;net45;net451;net452;net46;net461;net462;net47;net471;net472;net48;net481;net60;net70;</TargetFrameworks>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-    <Deterministic>False</Deterministic>
+    <Deterministic>True</Deterministic>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <DefineConstants>TRACE</DefineConstants>
     <Configurations>Debug;Release;DebugJson</Configurations>
@@ -38,6 +38,28 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
   </ItemGroup>
 
+  <PropertyGroup Label="Package">
+    <Authors>Adrian Popescu</Authors>
+    <Description>Redmine Api is a .NET rest client for Redmine.</Description>
+    <Company>p.adi</Company>
+    <Copyright>Adrian Popescu, 2011 - $([System.DateTime]::Now.Year.ToString()) </Copyright>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <PackageId Condition="'$(Sign)' == '' OR '$(Sign)' == 'false'">redmine-api</PackageId>
+    <PackageId Condition="'$(Sign)' == 'true'">redmine-api-signed</PackageId>
+    <PackageIconUrl>https://raw.githubusercontent.com/zapadi/redmine-net-api/master/logo.png</PackageIconUrl>
+    <PackageIcon>logo.png</PackageIcon>
+    <PackageLicense>LICENSE</PackageLicense>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/zapadi/redmine-net-api</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageTags>Redmine; REST; API; Client; .NET; Adrian Popescu;</PackageTags>
+    <Product>Redmine .NET API Client</Product>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/zapadi/redmine-net-api</RepositoryUrl>
+    <Title>Redmine .NET API Client</Title>
+  </PropertyGroup>
+  
   <ItemGroup Condition=" '$(TargetFramework)' == 'net20' " Label=".NET 2.0 Package References">
     <Reference Include="System.Web" />
     <Reference Include="System.Net.Http" />
@@ -59,10 +81,17 @@
     </None>
     <None Include="..\..\logo.png" Pack="true" PackagePath="\" />
     <None Include="..\..\LICENSE" Pack="true" PackagePath="" />
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
-  <ItemGroup Label="Internals Visible To">
-    <InternalsVisibleToProject Include="Padi.DotNet.RedmineAPI.Tests" />
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+      <_Parameter1>Padi.DotNet.RedmineAPI.Tests</_Parameter1> 
+    </AssemblyAttribute>
   </ItemGroup>
+  
+<!--  <ItemGroup Label="Internals Visible To">-->
+<!--    <InternalsVisibleToProject Include="Padi.DotNet.RedmineAPI.Tests" />-->
+<!--  </ItemGroup>-->
 
 </Project>
