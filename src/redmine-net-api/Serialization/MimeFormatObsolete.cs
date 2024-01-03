@@ -14,11 +14,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System;
+
 namespace Redmine.Net.Api
 {
     /// <summary>
     /// 
     /// </summary>
+    [Obsolete(RedmineConstants.OBSOLETE_TEXT + "Use SerializationType instead")]
     public enum MimeFormat
     {
         /// <summary>
