@@ -14,17 +14,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#if !(NET20 || NET40)
+#if !(NET20)
 
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Globalization;
-using System.Net;
-using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Redmine.Net.Api.Extensions;
-using Redmine.Net.Api.Internals;
 using Redmine.Net.Api.Serialization;
 using Redmine.Net.Api.Types;
 
@@ -32,18 +29,22 @@ namespace Redmine.Net.Api.Async
 {
     /// <summary>
     /// </summary>
-    public static class RedmineManagerAsync
+    [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use RedmineManger async methods instead")]
+    public static class RedmineManagerAsyncExtensions
     {
         /// <summary>
         ///     Gets the current user asynchronous.
         /// </summary>
         /// <param name="redmineManager">The redmine manager.</param>
         /// <param name="parameters">The parameters.</param>
+        /// <param name="impersonateUserName"></param>
+        /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public static async Task<User> GetCurrentUserAsync(this RedmineManager redmineManager, NameValueCollection parameters = null)
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        public static async Task<User> GetCurrentUserAsync(this RedmineManager redmineManager, NameValueCollection parameters = null, string impersonateUserName = null, CancellationToken cancellationToken = default)
         {
-            var uri = UrlHelper.GetCurrentUserUrl(redmineManager);
-            return await WebApiAsyncHelper.ExecuteDownload<User>(redmineManager, uri, parameters).ConfigureAwait(false);
+            var requestOptions = RedmineManagerExtensions.CreateRequestOptions();
+            return await redmineManager.GetCurrentUserAsync(requestOptions, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -54,20 +55,15 @@ namespace Redmine.Net.Api.Async
         /// <param name="pageName">Name of the page.</param>
         /// <param name="wikiPage">The wiki page.</param>
         /// <returns></returns>
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
         public static async Task<WikiPage> CreateWikiPageAsync(this RedmineManager redmineManager, string projectId, string pageName, WikiPage wikiPage)
         {
-            var data = redmineManager.Serializer.Serialize(wikiPage);
-            if (string.IsNullOrEmpty(data)) return null;
+            var requestOptions = RedmineManagerExtensions.CreateRequestOptions();
 
-            var url = UrlHelper.GetWikiCreateOrUpdaterUrl(redmineManager, projectId, pageName);
-
-            url = Uri.EscapeUriString(url);
-
-            var response = await WebApiAsyncHelper.ExecuteUpload(redmineManager, url, HttpVerbs.PUT, data).ConfigureAwait(false);
-            return redmineManager.Serializer.Deserialize<WikiPage>(response);
+            return await redmineManager.CreateWikiPageAsync(projectId, pageName, wikiPage, requestOptions).ConfigureAwait(false);
         }
 
- /// <summary>
+        /// <summary>
         ///     Creates the or update wiki page asynchronous.
         /// </summary>
         /// <param name="redmineManager">The redmine manager.</param>
@@ -75,19 +71,11 @@ namespace Redmine.Net.Api.Async
         /// <param name="pageName">Name of the page.</param>
         /// <param name="wikiPage">The wiki page.</param>
         /// <returns></returns>
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
         public static async Task UpdateWikiPageAsync(this RedmineManager redmineManager, string projectId, string pageName, WikiPage wikiPage)
         {
-            var data = redmineManager.Serializer.Serialize(wikiPage);
-            if (string.IsNullOrEmpty(data))
-            {
-                return ;
-            }
-
-            var url = UrlHelper.GetWikiCreateOrUpdaterUrl(redmineManager, projectId, pageName);
-
-            url = Uri.EscapeUriString(url);
-
-            var response = await WebApiAsyncHelper.ExecuteUpload(redmineManager, url, HttpVerbs.PUT, data).ConfigureAwait(false);
+            var requestOptions = RedmineManagerExtensions.CreateRequestOptions();
+            await redmineManager.UpdateWikiPageAsync(projectId, pageName, wikiPage, requestOptions).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -97,12 +85,11 @@ namespace Redmine.Net.Api.Async
         /// <param name="projectId">The project identifier.</param>
         /// <param name="pageName">Name of the page.</param>
         /// <returns></returns>
-        public static async Task DeleteWikiPageAsync(this RedmineManager redmineManager, string projectId,
-            string pageName)
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        public static async Task DeleteWikiPageAsync(this RedmineManager redmineManager, string projectId, string pageName)
         {
-            var uri = UrlHelper.GetDeleteWikiUrl(redmineManager, projectId, pageName);
-            uri = Uri.EscapeUriString(uri);
-            await WebApiAsyncHelper.ExecuteUpload(redmineManager, uri, HttpVerbs.DELETE, string.Empty).ConfigureAwait(false);
+            var requestOptions = RedmineManagerExtensions.CreateRequestOptions();
+            await redmineManager.DeleteWikiPageAsync(projectId, pageName, requestOptions).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -114,10 +101,11 @@ namespace Redmine.Net.Api.Async
         /// <returns>
         ///     .
         /// </returns>
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
         public static async Task<Upload> UploadFileAsync(this RedmineManager redmineManager, byte[] data)
         {
-            var uri = UrlHelper.GetUploadFileUrl(redmineManager);
-            return await WebApiAsyncHelper.ExecuteUploadFile(redmineManager, uri, data).ConfigureAwait(false);
+            var requestOptions = RedmineManagerExtensions.CreateRequestOptions();
+            return await redmineManager.UploadFileAsync(data, requestOptions).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -126,9 +114,12 @@ namespace Redmine.Net.Api.Async
         /// <param name="redmineManager">The redmine manager.</param>
         /// <param name="address">The address.</param>
         /// <returns></returns>
+        [Obsolete("Use DownloadFileAsync instead")]
         public static async Task<byte[]> DownloadFileAsync(this RedmineManager redmineManager, string address)
         {
-            return await WebApiAsyncHelper.ExecuteDownloadFile(redmineManager, address).ConfigureAwait(false);
+            var requestOptions = RedmineManagerExtensions.CreateRequestOptions();
+
+            return await redmineManager.DownloadFileAsync(address, requestOptions).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -140,12 +131,11 @@ namespace Redmine.Net.Api.Async
         /// <param name="pageName">Name of the page.</param>
         /// <param name="version">The version.</param>
         /// <returns></returns>
-        public static async Task<WikiPage> GetWikiPageAsync(this RedmineManager redmineManager, string projectId,
-            NameValueCollection parameters, string pageName, uint version = 0)
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        public static async Task<WikiPage> GetWikiPageAsync(this RedmineManager redmineManager, string projectId, NameValueCollection parameters, string pageName, uint version = 0)
         {
-            var uri = UrlHelper.GetWikiPageUrl(redmineManager, projectId,  pageName, version);
-            uri = Uri.EscapeUriString(uri);
-            return await WebApiAsyncHelper.ExecuteDownload<WikiPage>(redmineManager, uri, parameters).ConfigureAwait(false);
+            var requestOptions = RedmineManagerExtensions.CreateRequestOptions(parameters);
+            return await redmineManager.GetWikiPageAsync(projectId, pageName, requestOptions, version).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -155,10 +145,11 @@ namespace Redmine.Net.Api.Async
         /// <param name="parameters">The parameters.</param>
         /// <param name="projectId">The project identifier.</param>
         /// <returns></returns>
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
         public static async Task<List<WikiPage>> GetAllWikiPagesAsync(this RedmineManager redmineManager, NameValueCollection parameters, string projectId)
         {
-            var uri = UrlHelper.GetWikisUrl(redmineManager, projectId);
-            return await WebApiAsyncHelper.ExecuteDownloadList<WikiPage>(redmineManager, uri, parameters).ConfigureAwait(false);
+            var requestOptions = RedmineManagerExtensions.CreateRequestOptions(parameters);
+            return await redmineManager.GetAllWikiPagesAsync(projectId, requestOptions).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -170,12 +161,11 @@ namespace Redmine.Net.Api.Async
         /// <returns>
         ///     Returns the Guid associated with the async request.
         /// </returns>
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
         public static async Task AddUserToGroupAsync(this RedmineManager redmineManager, int groupId, int userId)
         {
-            var data = SerializationHelper.SerializeUserId(userId, redmineManager.MimeFormat);
-            var uri = UrlHelper.GetAddUserToGroupUrl(redmineManager, groupId);
-
-            await WebApiAsyncHelper.ExecuteUpload(redmineManager, uri, HttpVerbs.POST, data).ConfigureAwait(false);
+            var requestOptions = RedmineManagerExtensions.CreateRequestOptions();
+            await redmineManager.AddUserToGroupAsync(groupId, userId, requestOptions).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -185,10 +175,11 @@ namespace Redmine.Net.Api.Async
         /// <param name="groupId">The group id.</param>
         /// <param name="userId">The user id.</param>
         /// <returns></returns>
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
         public static async Task RemoveUserFromGroupAsync(this RedmineManager redmineManager, int groupId, int userId)
         {
-            var uri = UrlHelper.GetRemoveUserFromGroupUrl(redmineManager, groupId, userId);
-            await WebApiAsyncHelper.ExecuteUpload(redmineManager, uri, HttpVerbs.DELETE, string.Empty).ConfigureAwait(false);
+            var requestOptions = RedmineManagerExtensions.CreateRequestOptions();
+            await redmineManager.RemoveUserFromGroupAsync(groupId, userId, requestOptions).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -198,12 +189,11 @@ namespace Redmine.Net.Api.Async
         /// <param name="issueId">The issue identifier.</param>
         /// <param name="userId">The user identifier.</param>
         /// <returns></returns>
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
         public static async Task AddWatcherToIssueAsync(this RedmineManager redmineManager, int issueId, int userId)
         {
-            var data = SerializationHelper.SerializeUserId(userId, redmineManager.MimeFormat);
-            var uri = UrlHelper.GetAddWatcherUrl(redmineManager, issueId);
-
-            await WebApiAsyncHelper.ExecuteUpload(redmineManager, uri, HttpVerbs.POST, data).ConfigureAwait(false);
+            var requestOptions = RedmineManagerExtensions.CreateRequestOptions();
+            await redmineManager.AddWatcherToIssueAsync(issueId, userId, requestOptions).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -213,10 +203,11 @@ namespace Redmine.Net.Api.Async
         /// <param name="issueId">The issue identifier.</param>
         /// <param name="userId">The user identifier.</param>
         /// <returns></returns>
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
         public static async Task RemoveWatcherFromIssueAsync(this RedmineManager redmineManager, int issueId, int userId)
         {
-            var uri = UrlHelper.GetRemoveWatcherUrl(redmineManager, issueId, userId);
-            await WebApiAsyncHelper.ExecuteUpload(redmineManager, uri, HttpVerbs.DELETE, string.Empty).ConfigureAwait(false);
+            var requestOptions = RedmineManagerExtensions.CreateRequestOptions();
+            await redmineManager.RemoveWatcherFromIssueAsync(issueId, userId, requestOptions).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -226,16 +217,10 @@ namespace Redmine.Net.Api.Async
         /// <param name="include"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
         public static async Task<int> CountAsync<T>(this RedmineManager redmineManager, params string[] include) where T : class, new()
         {
-            var parameters = new NameValueCollection();
-
-            if (include != null)
-            {
-                parameters.Add(RedmineKeys.INCLUDE, string.Join(",", include));
-            }
-
-            return await CountAsync<T>(redmineManager,parameters).ConfigureAwait(false);
+            return await RedmineManagerExtensions.CountAsync<T>(redmineManager, include).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -245,32 +230,11 @@ namespace Redmine.Net.Api.Async
         /// <param name="parameters"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
         public static async Task<int> CountAsync<T>(this RedmineManager redmineManager, NameValueCollection parameters) where T : class, new()
         {
-            int totalCount = 0, pageSize = 1, offset = 0;
-
-            if (parameters == null)
-            {
-                parameters = new NameValueCollection();
-            }
-
-            parameters.Set(RedmineKeys.LIMIT, pageSize.ToString(CultureInfo.InvariantCulture));
-            parameters.Set(RedmineKeys.OFFSET, offset.ToString(CultureInfo.InvariantCulture));
-
-            try
-            {
-                var tempResult = await GetPaginatedObjectsAsync<T>(redmineManager,parameters).ConfigureAwait(false);
-                if (tempResult != null)
-                {
-                    totalCount = tempResult.TotalItems;
-                }
-            }
-            catch (WebException wex)
-            {
-                wex.HandleWebException(redmineManager.Serializer);
-            }
-
-            return totalCount;
+            var requestOptions = RedmineManagerExtensions.CreateRequestOptions(parameters);
+            return await redmineManager.CountAsync<T>(requestOptions).ConfigureAwait(false);
         }
 
 
@@ -281,12 +245,12 @@ namespace Redmine.Net.Api.Async
         /// <param name="redmineManager">The redmine manager.</param>
         /// <param name="parameters">The parameters.</param>
         /// <returns></returns>
-        public static async Task<PagedResults<T>> GetPaginatedObjectsAsync<T>(this RedmineManager redmineManager,
-            NameValueCollection parameters)
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        public static async Task<PagedResults<T>> GetPaginatedObjectsAsync<T>(this RedmineManager redmineManager, NameValueCollection parameters)
             where T : class, new()
         {
-            var uri = UrlHelper.GetListUrl<T>(redmineManager, parameters);
-            return await WebApiAsyncHelper.ExecuteDownloadPaginatedList<T>(redmineManager, uri, parameters).ConfigureAwait(false);
+            var requestOptions = RedmineManagerExtensions.CreateRequestOptions(parameters);
+            return await redmineManager.GetPagedAsync<T>(requestOptions).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -296,70 +260,12 @@ namespace Redmine.Net.Api.Async
         /// <param name="redmineManager">The redmine manager.</param>
         /// <param name="parameters">The parameters.</param>
         /// <returns></returns>
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
         public static async Task<List<T>> GetObjectsAsync<T>(this RedmineManager redmineManager, NameValueCollection parameters)
             where T : class, new()
         {
-            int  pageSize = 0, offset = 0;
-            var isLimitSet = false;
-            List<T> resultList = null;
-
-            if (parameters == null)
-            {
-                parameters = new NameValueCollection();
-            }
-            else
-            {
-                isLimitSet = int.TryParse(parameters[RedmineKeys.LIMIT], out pageSize);
-                int.TryParse(parameters[RedmineKeys.OFFSET], out offset);
-            }
-            
-            if (pageSize == default(int))
-            {
-                pageSize = redmineManager.PageSize > 0
-                    ? redmineManager.PageSize
-                    : RedmineManager.DEFAULT_PAGE_SIZE_VALUE;
-                parameters.Set(RedmineKeys.LIMIT, pageSize.ToString(CultureInfo.InvariantCulture));
-            }
-            try
-            {
-                var hasOffset = RedmineManager.TypesWithOffset.ContainsKey(typeof(T));
-                if (hasOffset)
-                {
-                    var totalCount = 0;
-                do
-                {
-                    parameters.Set(RedmineKeys.OFFSET, offset.ToString(CultureInfo.InvariantCulture));
-                    var tempResult = await redmineManager.GetPaginatedObjectsAsync<T>(parameters).ConfigureAwait(false);
-                    totalCount = isLimitSet ? pageSize : tempResult.TotalItems;
-
-                    if (tempResult?.Items != null)
-                    {
-                        if (resultList == null)
-                        {
-                            resultList = new List<T>(tempResult.Items);
-                        }
-                        else
-                        {
-                            resultList.AddRange(tempResult.Items);
-                        }
-                    }
-                    offset += pageSize;
-                } while (offset < totalCount);
-                }
-                else
-                {
-                    var result = await redmineManager.GetPaginatedObjectsAsync<T>(parameters).ConfigureAwait(false);
-                    if (result?.Items != null)
-                    {
-                        return new List<T>(result.Items);
-                    }
-                }
-            }
-            catch (WebException wex)
-            {
-                wex.HandleWebException(redmineManager.Serializer);
-            }
-            return resultList;
+            var requestOptions = RedmineManagerExtensions.CreateRequestOptions(parameters);
+            return await redmineManager.GetObjectsAsync<T>(requestOptions).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -370,11 +276,12 @@ namespace Redmine.Net.Api.Async
         /// <param name="id">The id of the object.</param>
         /// <param name="parameters">Optional filters and/or optional fetched data.</param>
         /// <returns></returns>
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
         public static async Task<T> GetObjectAsync<T>(this RedmineManager redmineManager, string id, NameValueCollection parameters)
             where T : class, new()
         {
-            var uri = UrlHelper.GetGetUrl<T>(redmineManager, id);
-            return await WebApiAsyncHelper.ExecuteDownload<T>(redmineManager, uri, parameters).ConfigureAwait(false);
+            var requestOptions = RedmineManagerExtensions.CreateRequestOptions(parameters);
+            return await redmineManager.GetObjectAsync<T>(id, requestOptions).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -384,10 +291,12 @@ namespace Redmine.Net.Api.Async
         /// <param name="redmineManager">The redmine manager.</param>
         /// <param name="entity">The object to create.</param>
         /// <returns></returns>
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
         public static async Task<T> CreateObjectAsync<T>(this RedmineManager redmineManager, T entity)
             where T : class, new()
         {
-            return await CreateObjectAsync(redmineManager, entity, null).ConfigureAwait(false);
+            var requestOptions = RedmineManagerExtensions.CreateRequestOptions();
+            return await redmineManager.CreateObjectAsync(entity, null, requestOptions).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -398,14 +307,12 @@ namespace Redmine.Net.Api.Async
         /// <param name="entity">The object to create.</param>
         /// <param name="ownerId">The owner identifier.</param>
         /// <returns></returns>
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
         public static async Task<T> CreateObjectAsync<T>(this RedmineManager redmineManager, T entity, string ownerId)
             where T : class, new()
         {
-            var uri = UrlHelper.GetCreateUrl<T>(redmineManager, ownerId);
-            var data = redmineManager.Serializer.Serialize(entity);
-
-            var response = await WebApiAsyncHelper.ExecuteUpload(redmineManager, uri, HttpVerbs.POST, data).ConfigureAwait(false);
-            return redmineManager.Serializer.Deserialize<T>(response);
+            var requestOptions = RedmineManagerExtensions.CreateRequestOptions();
+            return await redmineManager.CreateObjectAsync(entity, ownerId, requestOptions, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -416,14 +323,12 @@ namespace Redmine.Net.Api.Async
         /// <param name="id">The identifier.</param>
         /// <param name="entity">The object.</param>
         /// <returns></returns>
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
         public static async Task UpdateObjectAsync<T>(this RedmineManager redmineManager, string id, T entity)
             where T : class, new()
         {
-            var uri = UrlHelper.GetUploadUrl<T>(redmineManager, id);
-            var data = redmineManager.Serializer.Serialize(entity);
-            data = Regex.Replace(data, @"\r\n|\r|\n", "\r\n");
-
-            await WebApiAsyncHelper.ExecuteUpload(redmineManager, uri, HttpVerbs.PUT, data).ConfigureAwait(false);
+            var requestOptions = RedmineManagerExtensions.CreateRequestOptions();
+            await redmineManager.UpdateObjectAsync(id, entity, requestOptions).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -433,11 +338,12 @@ namespace Redmine.Net.Api.Async
         /// <param name="redmineManager">The redmine manager.</param>
         /// <param name="id">The id of the object to delete</param>
         /// <returns></returns>
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
         public static async Task DeleteObjectAsync<T>(this RedmineManager redmineManager, string id)
             where T : class, new()
         {
-            var uri = UrlHelper.GetDeleteUrl<T>(redmineManager, id);
-            await WebApiAsyncHelper.ExecuteUpload(redmineManager, uri, HttpVerbs.DELETE, string.Empty).ConfigureAwait(false);
+            var requestOptions = RedmineManagerExtensions.CreateRequestOptions();
+            await redmineManager.DeleteObjectAsync<T>(id, requestOptions).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -450,28 +356,10 @@ namespace Redmine.Net.Api.Async
         /// <param name="searchFilter"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
         public static async Task<PagedResults<Search>> SearchAsync(this RedmineManager redmineManager, string q, int limit = RedmineManager.DEFAULT_PAGE_SIZE_VALUE, int offset = 0, SearchFilterBuilder searchFilter = null)
         {
-            if (q.IsNullOrWhiteSpace())
-            {
-                throw new ArgumentNullException(nameof(q));
-            }
-
-            var parameters = new NameValueCollection
-            {
-                {RedmineKeys.Q, q},
-                {RedmineKeys.LIMIT, limit.ToString(CultureInfo.InvariantCulture)},
-                {RedmineKeys.OFFSET, offset.ToString(CultureInfo.InvariantCulture)},
-            };
-
-            if (searchFilter != null)
-            {
-               parameters = searchFilter.Build(parameters);
-            }
-            
-            var result = await redmineManager.GetPaginatedObjectsAsync<Search>(parameters).ConfigureAwait(false);
-
-            return result;
+            return await RedmineManagerExtensions.SearchAsync(redmineManager, q, limit, offset, searchFilter).ConfigureAwait(false);
         }
     }
 }
