@@ -138,7 +138,7 @@ namespace Redmine.Net.Api.Extensions
         {
             var uri = redmineManager.RedmineApiUrls.IssueWatcherAdd(issueId.ToString(CultureInfo.InvariantCulture));
 
-            var payload = SerializationHelper.SerializeUserId(userId, redmineManager.MimeFormat);
+            var payload = SerializationHelper.SerializeUserId(userId, redmineManager.Serializer);
             
             redmineManager.ApiClient.Create(uri, payload, requestOptions);
         }
@@ -168,7 +168,7 @@ namespace Redmine.Net.Api.Extensions
         {
             var uri = redmineManager.RedmineApiUrls.GroupUserAdd(groupId.ToString(CultureInfo.InvariantCulture));
 
-            var payload = SerializationHelper.SerializeUserId(userId, redmineManager.MimeFormat);
+            var payload = SerializationHelper.SerializeUserId(userId, redmineManager.Serializer);
             
             redmineManager.ApiClient.Create(uri, payload, requestOptions);
         }
@@ -553,7 +553,7 @@ namespace Redmine.Net.Api.Extensions
         {
             var uri = redmineManager.RedmineApiUrls.GroupUserAdd(groupId.ToString(CultureInfo.InvariantCulture));
 
-            var payload = SerializationHelper.SerializeUserId(userId, redmineManager.MimeFormat);
+            var payload = SerializationHelper.SerializeUserId(userId, redmineManager.Serializer);
             
             await redmineManager.ApiClient.CreateAsync(uri, payload, requestOptions, cancellationToken).ConfigureAwait(false);
         }
@@ -587,7 +587,7 @@ namespace Redmine.Net.Api.Extensions
         {
             var uri = redmineManager.RedmineApiUrls.IssueWatcherAdd(issueId.ToString(CultureInfo.InvariantCulture));
 
-            var payload = SerializationHelper.SerializeUserId(userId, redmineManager.MimeFormat);
+            var payload = SerializationHelper.SerializeUserId(userId, redmineManager.Serializer);
             
             await redmineManager.ApiClient.CreateAsync(uri, payload, requestOptions, cancellationToken).ConfigureAwait(false);
         }

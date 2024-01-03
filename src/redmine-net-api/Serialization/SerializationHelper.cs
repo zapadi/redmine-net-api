@@ -1,6 +1,6 @@
 using System.Globalization;
 
-namespace Redmine.Net.Api
+namespace Redmine.Net.Api.Serialization
 {
     /// <summary>
     /// 
@@ -10,12 +10,12 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="mimeFormat"></param>
         /// <param name="userId"></param>
+        /// <param name="redmineSerializer"></param>
         /// <returns></returns>
-        public static string SerializeUserId(int userId, MimeFormat mimeFormat)
+        public static string SerializeUserId(int userId, IRedmineSerializer redmineSerializer)
         {
-            return mimeFormat == MimeFormat.Xml
+            return redmineSerializer is XmlRedmineSerializer
                 ? $"<user_id>{userId.ToString(CultureInfo.InvariantCulture)}</user_id>"
                 : $"{{\"user_id\":\"{userId.ToString(CultureInfo.InvariantCulture)}\"}}";
         }
