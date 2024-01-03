@@ -13,18 +13,14 @@ namespace Redmine.Net.Api.Exceptions
         /// 
         /// </summary>
         public RedmineApiException()
-            : this(errorCode: null, false)
-        {
-        }
+            : this(errorCode: null, false) { }
         
         /// <summary>
         /// 
         /// </summary>
         /// <param name="message"></param>
         public RedmineApiException(string message)
-            : this(message, errorCode: null, false)
-        {
-        }
+            : this(message, errorCode: null, false) { }
         
         /// <summary>
         /// 
@@ -32,9 +28,7 @@ namespace Redmine.Net.Api.Exceptions
         /// <param name="message"></param>
         /// <param name="innerException"></param>
         public RedmineApiException(string message, Exception innerException)
-            : this(message, innerException, errorCode: null, false)
-        {
-        }
+            : this(message, innerException, errorCode: null, false) { }
         
         /// <summary>
         /// 
@@ -42,9 +36,7 @@ namespace Redmine.Net.Api.Exceptions
         /// <param name="errorCode"></param>
         /// <param name="isTransient"></param>
         public RedmineApiException(string errorCode, bool isTransient)
-            : this(string.Empty, errorCode, isTransient)
-        {
-        }
+            : this(string.Empty, errorCode, isTransient) { }
         
         /// <summary>
         /// 
@@ -53,9 +45,7 @@ namespace Redmine.Net.Api.Exceptions
         /// <param name="errorCode"></param>
         /// <param name="isTransient"></param>
         public RedmineApiException(string message, string errorCode, bool isTransient)
-            : this(message, null, errorCode, isTransient)
-        {
-        }
+            : this(message, null, errorCode, isTransient) { }
         
         /// <summary>
         /// 
