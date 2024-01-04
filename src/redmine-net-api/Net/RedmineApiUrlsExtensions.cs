@@ -12,7 +12,7 @@ internal static class RedmineApiUrlsExtensions
 
     public static string CurrentUser(this RedmineApiUrls redmineApiUrls)
     {
-        return $"{RedmineKeys.CURRENT}.{redmineApiUrls.Format}";
+        return $"{RedmineKeys.USERS}/{RedmineKeys.CURRENT}.{redmineApiUrls.Format}";
     }
 
     public static string ProjectNews(this RedmineApiUrls redmineApiUrls, string projectIdentifier)
