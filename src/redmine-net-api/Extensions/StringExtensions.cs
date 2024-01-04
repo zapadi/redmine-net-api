@@ -16,6 +16,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Security;
 
 namespace Redmine.Net.Api.Extensions
@@ -130,6 +131,30 @@ namespace Redmine.Net.Api.Extensions
         internal static string ValueOrFallback(this string value, string fallback)
         {
             return !value.IsNullOrWhiteSpace() ? value : fallback;
+        }
+        
+        internal static string ToInvariantString<T>(this T value) where T : struct
+        {
+            return value switch
+            {
+                sbyte v => v.ToString(CultureInfo.InvariantCulture),
+                byte v => v.ToString(CultureInfo.InvariantCulture),
+                short v => v.ToString(CultureInfo.InvariantCulture),
+                ushort v => v.ToString(CultureInfo.InvariantCulture),
+                int v => v.ToString(CultureInfo.InvariantCulture),
+                uint v => v.ToString(CultureInfo.InvariantCulture),
+                long v => v.ToString(CultureInfo.InvariantCulture),
+                ulong v => v.ToString(CultureInfo.InvariantCulture),
+                float v => v.ToString("G7", CultureInfo.InvariantCulture), // Specify precision explicitly for backward compatibility
+                double v => v.ToString("G15", CultureInfo.InvariantCulture), // Specify precision explicitly for backward compatibility
+                decimal v => v.ToString(CultureInfo.InvariantCulture),
+                TimeSpan ts => ts.ToString(),
+                DateTime d => d.ToString(CultureInfo.InvariantCulture),
+                #pragma warning disable CA1308
+                bool b => b.ToString().ToLowerInvariant(),
+                #pragma warning restore CA1308
+                _ => value.ToString(),
+            };
         }
     }
 }
