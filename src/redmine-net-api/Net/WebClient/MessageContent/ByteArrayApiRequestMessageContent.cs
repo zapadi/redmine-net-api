@@ -14,16 +14,12 @@
    limitations under the License.
 */
 
-namespace Redmine.Net.Api.Serialization
+namespace Redmine.Net.Api.Net.WebClient.MessageContent;
+
+internal class ByteArrayApiRequestMessageContent : ApiRequestMessageContent
 {
-    internal interface IRedmineSerializer
+    public ByteArrayApiRequestMessageContent(byte[] content)
     {
-        string Type { get; }
-
-        string Serialize<T>(T obj) where T : class;
-
-        PagedResults<T> DeserializeToPagedResults<T>(string response) where T : class, new();
-
-        T Deserialize<T>(string response) where T : new();
+        Body = content;
     }
 }
