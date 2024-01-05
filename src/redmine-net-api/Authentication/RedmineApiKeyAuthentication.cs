@@ -24,7 +24,7 @@ namespace Redmine.Net.Api.Authentication;
 public sealed class RedmineApiKeyAuthentication: IRedmineAuthentication
 {
     /// <inheritdoc />
-    public string AuthenticationType { get; } = "X-Redmine-API-Key";
+    public string AuthenticationType => "X-Redmine-API-Key";
 
     /// <inheritdoc />
     public string Token { get; init; }

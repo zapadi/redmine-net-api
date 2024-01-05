@@ -27,7 +27,7 @@ namespace Redmine.Net.Api.Authentication
     public sealed class RedmineBasicAuthentication: IRedmineAuthentication
     {
         /// <inheritdoc />
-        public string AuthenticationType { get; } = "Basic";
+        public string AuthenticationType => "Basic";
 
         /// <inheritdoc />
         public string Token { get; init; }
