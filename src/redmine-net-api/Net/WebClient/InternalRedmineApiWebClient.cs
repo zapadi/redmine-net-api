@@ -1,12 +1,30 @@
+/*
+   Copyright 2011 - 2023 Adrian Popescu
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
+
 using System;
 using System.Collections.Specialized;
 using System.Net;
 using System.Text;
 using System.Threading;
+using Redmine.Net.Api.Authentication;
 #if!(NET20)
 using System.Threading.Tasks;
 #endif
 using Redmine.Net.Api.Extensions;
+using Redmine.Net.Api.Net.WebClient.MessageContent;
 using Redmine.Net.Api.Serialization;
 
 namespace Redmine.Net.Api.Net.WebClient
@@ -14,19 +32,19 @@ namespace Redmine.Net.Api.Net.WebClient
     /// <summary>
     /// 
     /// </summary>
-    internal sealed class RedmineApiClient : IRedmineApiClient
+    internal sealed class InternalRedmineApiWebClient : IRedmineApiClient
     {
         private readonly Func<System.Net.WebClient> _webClientFunc;
         private readonly IRedmineAuthentication _credentials;
         private readonly IRedmineSerializer _serializer;
 
-        public RedmineApiClient(RedmineManagerOptions redmineManagerOptions)
-            : this(() => new InternalRedmineWebClient(redmineManagerOptions), redmineManagerOptions.Authentication, redmineManagerOptions.Serializer)
+        public InternalRedmineApiWebClient(RedmineManagerOptions redmineManagerOptions)
+            : this(() => new InternalWebClient(redmineManagerOptions), redmineManagerOptions.Authentication, redmineManagerOptions.Serializer)
         {
             ConfigureServicePointManager(redmineManagerOptions.ClientOptions);
         }
 
-        public RedmineApiClient(Func<System.Net.WebClient> webClientFunc, IRedmineAuthentication authentication, IRedmineSerializer serializer)
+        public InternalRedmineApiWebClient(Func<System.Net.WebClient> webClientFunc, IRedmineAuthentication authentication, IRedmineSerializer serializer)
         {
             _webClientFunc = webClientFunc;
             _credentials = authentication;
@@ -306,7 +324,15 @@ namespace Redmine.Net.Api.Net.WebClient
                 webClient.QueryString = requestMessage.QueryString;
             }
 
-            webClient.Headers.Add(_credentials.AuthenticationType, _credentials.Token);
+            switch (_credentials)
+            {
+                case RedmineApiKeyAuthentication:
+                    webClient.Headers.Add(_credentials.AuthenticationType,_credentials.Token);
+                    break;
+                case RedmineBasicAuthentication:
+                    webClient.Headers.Add("Authorization", $"{_credentials.AuthenticationType} {_credentials.Token}");
+                    break;
+            }
 
             if (!requestMessage.ImpersonateUser.IsNullOrWhiteSpace())
             {
@@ -321,7 +347,7 @@ namespace Redmine.Net.Api.Net.WebClient
 
         private static string GetContentType(IRedmineSerializer serializer)
         {
-            return serializer.Format == "xml" ? RedmineConstants.CONTENT_TYPE_APPLICATION_XML : RedmineConstants.CONTENT_TYPE_APPLICATION_JSON;
+            return serializer.Format == RedmineConstants.XML ? RedmineConstants.CONTENT_TYPE_APPLICATION_XML : RedmineConstants.CONTENT_TYPE_APPLICATION_JSON;
         }
     }
 }
