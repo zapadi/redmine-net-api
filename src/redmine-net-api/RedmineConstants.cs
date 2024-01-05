@@ -47,5 +47,10 @@ namespace Redmine.Net.Api
         /// 
         /// </summary>
         public const string IMPERSONATE_HEADER_KEY = "X-Redmine-Switch-User";
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string XML = "xml";
     }
 }
