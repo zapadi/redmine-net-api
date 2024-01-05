@@ -100,11 +100,23 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="authentication"></param>
+        /// <param name="apiKey"></param>
         /// <returns></returns>
-        public RedmineManagerOptionsBuilder WithAuthentication(IRedmineAuthentication authentication)
+        public RedmineManagerOptionsBuilder WithApiKeyAuthentication(string apiKey)
         {
-            this.Authentication = authentication;
+            this.Authentication = new RedmineApiKeyAuthentication(apiKey);
+            return this;
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="login"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        public RedmineManagerOptionsBuilder WithBasicAuthentication(string login, string password)
+        {
+            this.Authentication = new RedmineBasicAuthentication(login, password);
             return this;
         }
 
@@ -198,13 +210,12 @@ namespace Redmine.Net.Api
                 VerifyServerCert = VerifyServerCert,
                 Serializer = RedmineSerializerFactory.CreateSerializer(SerializationType),
                 RedmineVersion = Version,
-                Authentication = Authentication,
+                Authentication = Authentication ?? new RedmineNoAuthentication(),
                 ClientOptions = ClientOptions 
             };
             
             return options;
         }
-        
         
         internal static void EnsureDomainNameIsValid(string domainName)
         {

@@ -20,7 +20,6 @@ using System.Collections.Specialized;
 using System.Net;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
-using Redmine.Net.Api.Authentication;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Net.WebClient;
 using Redmine.Net.Api.Serialization;
@@ -53,7 +52,6 @@ namespace Redmine.Net.Api
             IWebProxy proxy = null, SecurityProtocolType securityProtocolType = default, string scheme = "https", TimeSpan? timeout = null)
         :this(new RedmineManagerOptionsBuilder()
             .WithHost(host)
-            .WithAuthentication(new RedmineNoAuthentication())
             .WithSerializationType(mimeFormat)
             .WithVerifyServerCert(verifyServerCert)
             .WithClientOptions(new RedmineWebClientOptions()
@@ -87,7 +85,7 @@ namespace Redmine.Net.Api
                               SecurityProtocolType securityProtocolType = default, string scheme = "https", TimeSpan? timeout = null)
             : this(new RedmineManagerOptionsBuilder()
                    .WithHost(host)
-                   .WithAuthentication(new RedmineApiKeyAuthentication(apiKey))
+                   .WithApiKeyAuthentication(apiKey)
                    .WithSerializationType(mimeFormat)
                    .WithVerifyServerCert(verifyServerCert)
                    .WithClientOptions(new RedmineWebClientOptions()
@@ -116,7 +114,7 @@ namespace Redmine.Net.Api
                               SecurityProtocolType securityProtocolType = default, string scheme = "https", TimeSpan? timeout = null)
             : this(new RedmineManagerOptionsBuilder()
                    .WithHost(host)
-                   .WithAuthentication(new RedmineBasicAuthentication(login, password))
+                   .WithBasicAuthentication(login, password)
                    .WithSerializationType(mimeFormat)
                    .WithVerifyServerCert(verifyServerCert)
                    .WithClientOptions(new RedmineWebClientOptions()
