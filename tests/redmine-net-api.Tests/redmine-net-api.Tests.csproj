@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <Project Sdk="Microsoft.NET.Sdk">
+    
     <PropertyGroup Label="Build">
         <AssemblyName>Padi.DotNet.RedmineAPI.Tests</AssemblyName>
         <RootNamespace>$(AssemblyName)</RootNamespace>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
         <TargetFramework>net481</TargetFramework>
-        <TargetFrameworks>net40;net451;net452;net46;net461;net462;net47;net471;net472;net48;net481;</TargetFrameworks>
         <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
         <UserSecretsId>f8b9e946-b547-42f1-861c-f719dca00a84</UserSecretsId>
         <Configurations>Release;Debug;DebugJson</Configurations>
     </PropertyGroup>
 
     <PropertyGroup>
-        <Frameworks>|net45|net451|net452|net46|net461|</Frameworks>
-        <FrameworksExt>|net40|net45|net451|net452|net46|net461|</FrameworksExt>
+        <Net40_Net461>|net40|net45|net451|net452|net46|net461|</Net40_Net461>
+        <Net45_Net461>|net45|net451|net452|net46|net461|</Net45_Net461>
+        <Net40_Net480>|net40|net45|net451|net452|net46|net461|net462|net470|net471|net472|net48|</Net40_Net480>
+        <Net45_Net480>|net45|net451|net452|net46|net461|net462|net470|net471|net472|net48|</Net45_Net480>
     </PropertyGroup>
     
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -25,14 +27,6 @@
         <DefineConstants>DEBUG;TRACE;DEBUG_JSON</DefineConstants>
     </PropertyGroup>
     
-    <ItemGroup Condition="$(Frameworks.Contains('|$(TargetFrameworkExt)|'))" Label="Common Packages">
-        <PackageReference Include="Microsoft.Extensions.Configuration" Version="1.1.0" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="1.1.0" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="1.1.0" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="1.1.0" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="1.1.0" />
-    </ItemGroup>
-    
     <ItemGroup Condition=" '$(TargetFramework)' == 'net40' " Label=".NET 4.0 Package References">
         <Reference Include="System.Net" />
         <PackageReference Include="xunit" Version="1.9.2" />
@@ -42,22 +36,32 @@
         </PackageReference>
     </ItemGroup>
 
-    <ItemGroup Condition="$(Frameworks.Contains('|$(TargetFramework)|'))" Label=".NET 4.5.X to .NET 4.6.1">
+
+    <ItemGroup Condition="$(Net45_Net461.Contains('|$(TargetFramework)|'))" Label=".NET 4.5 to .NET 4.6.1">
+        <PackageReference Include="Microsoft.Extensions.Configuration" Version="1.1.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="1.1.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="1.1.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="1.1.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="1.1.0" />
+    </ItemGroup>
+    
+   
+    <ItemGroup Condition="$(Net45_Net461.Contains('|$(TargetFramework)|'))" Label=".NET 4.5.X to .NET 4.6.1">
         <PackageReference Include="xunit" Version="2.6.2" />
         <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3" PrivateAssets="all">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
     </ItemGroup>
 
-    <ItemGroup Condition="$(Frameworks.Contains('|$(TargetFramework)|')) == FALSE" Label=".NET 4.6.2 onwards">
+    <ItemGroup Condition="$(Net40_Net461.Contains('|$(TargetFramework)|')) == FALSE AND '$(TargetFramework)' != 'net461'" Label=".NET 4.6.1 onwards">
         <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
         <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.1" />
         <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="8.0.0" />
         <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="8.0.0" />
-        <PackageReference Include="xunit" Version="2.6.2" />
-        <PackageReference Include="xunit.analyzers" Version="1.6.0" />
-        <PackageReference Include="xunit.runner.visualstudio" Version="2.5.4" PrivateAssets="all">
+        <PackageReference Include="xunit" Version="2.6.5" />
+        <PackageReference Include="xunit.analyzers" Version="1.9.0" />
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.5.6" PrivateAssets="all">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
     </ItemGroup>
