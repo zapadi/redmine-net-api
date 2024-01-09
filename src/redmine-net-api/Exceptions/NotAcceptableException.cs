@@ -73,6 +73,7 @@ namespace Redmine.Net.Api.Exceptions
         {
         }
 
+#if !(NET8_0_OR_GREATER) 
         /// <summary>
         /// 
         /// </summary>
@@ -82,5 +83,6 @@ namespace Redmine.Net.Api.Exceptions
         {
          
         }
+#endif
     }
 }
