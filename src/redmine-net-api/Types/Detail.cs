@@ -173,10 +173,10 @@ namespace Redmine.Net.Api.Types
         public bool Equals(Detail other)
         {
             if (other == null) return false;
-            return string.Equals(Property, other.Property, StringComparison.InvariantCultureIgnoreCase)
-                && string.Equals(Name, other.Name, StringComparison.InvariantCultureIgnoreCase)
-                && string.Equals(OldValue, other.OldValue, StringComparison.InvariantCultureIgnoreCase)
-                && string.Equals(NewValue, other.NewValue, StringComparison.InvariantCultureIgnoreCase);
+            return string.Equals(Property, other.Property, StringComparison.OrdinalIgnoreCase)
+                && string.Equals(Name, other.Name, StringComparison.OrdinalIgnoreCase)
+                && string.Equals(OldValue, other.OldValue, StringComparison.OrdinalIgnoreCase)
+                && string.Equals(NewValue, other.NewValue, StringComparison.OrdinalIgnoreCase);
         }
 
         /// <summary>
