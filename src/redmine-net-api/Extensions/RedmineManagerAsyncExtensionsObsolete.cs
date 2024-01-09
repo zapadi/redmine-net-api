@@ -220,7 +220,7 @@ namespace Redmine.Net.Api.Async
         [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
         public static async Task<int> CountAsync<T>(this RedmineManager redmineManager, params string[] include) where T : class, new()
         {
-            return await RedmineManagerExtensions.CountAsync<T>(redmineManager, include).ConfigureAwait(false);
+            return await redmineManager.CountAsync<T>(null, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -265,7 +265,7 @@ namespace Redmine.Net.Api.Async
             where T : class, new()
         {
             var requestOptions = RedmineManagerExtensions.CreateRequestOptions(parameters);
-            return await redmineManager.GetObjectsAsync<T>(requestOptions).ConfigureAwait(false);
+            return await redmineManager.GetAsync<T>(requestOptions).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -281,7 +281,7 @@ namespace Redmine.Net.Api.Async
             where T : class, new()
         {
             var requestOptions = RedmineManagerExtensions.CreateRequestOptions(parameters);
-            return await redmineManager.GetObjectAsync<T>(id, requestOptions).ConfigureAwait(false);
+            return await redmineManager.GetAsync<T>(id, requestOptions).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -296,7 +296,7 @@ namespace Redmine.Net.Api.Async
             where T : class, new()
         {
             var requestOptions = RedmineManagerExtensions.CreateRequestOptions();
-            return await redmineManager.CreateObjectAsync(entity, null, requestOptions).ConfigureAwait(false);
+            return await redmineManager.CreateAsync(entity, null, requestOptions).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -312,7 +312,7 @@ namespace Redmine.Net.Api.Async
             where T : class, new()
         {
             var requestOptions = RedmineManagerExtensions.CreateRequestOptions();
-            return await redmineManager.CreateObjectAsync(entity, ownerId, requestOptions, CancellationToken.None).ConfigureAwait(false);
+            return await redmineManager.CreateAsync(entity, ownerId, requestOptions, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -328,7 +328,7 @@ namespace Redmine.Net.Api.Async
             where T : class, new()
         {
             var requestOptions = RedmineManagerExtensions.CreateRequestOptions();
-            await redmineManager.UpdateObjectAsync(id, entity, requestOptions).ConfigureAwait(false);
+            await redmineManager.UpdateAsync(id, entity, requestOptions).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -343,7 +343,7 @@ namespace Redmine.Net.Api.Async
             where T : class, new()
         {
             var requestOptions = RedmineManagerExtensions.CreateRequestOptions();
-            await redmineManager.DeleteObjectAsync<T>(id, requestOptions).ConfigureAwait(false);
+            await redmineManager.DeleteAsync<T>(id, requestOptions).ConfigureAwait(false);
         }
 
         /// <summary>

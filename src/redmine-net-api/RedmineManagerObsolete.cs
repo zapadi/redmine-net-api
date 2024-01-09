@@ -20,7 +20,9 @@ using System.Collections.Specialized;
 using System.Net;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
+using Redmine.Net.Api.Exceptions;
 using Redmine.Net.Api.Extensions;
+using Redmine.Net.Api.Net;
 using Redmine.Net.Api.Net.WebClient;
 using Redmine.Net.Api.Serialization;
 using Redmine.Net.Api.Types;
@@ -34,7 +36,8 @@ namespace Redmine.Net.Api
     {
         /// <summary>
         /// </summary>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use RedmineConstants.DEFAULT_PAGE_SIZE")]public const int DEFAULT_PAGE_SIZE_VALUE = 25;
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use RedmineConstants.DEFAULT_PAGE_SIZE")]
+        public const int DEFAULT_PAGE_SIZE_VALUE = 25;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="RedmineManager" /> class.
@@ -125,29 +128,33 @@ namespace Redmine.Net.Api
                        SecurityProtocolType = securityProtocolType
                    })) {}
         
-        #region Obsolete
+       
         /// <summary>
         ///     Gets the suffixes.
         /// </summary>
         /// <value>
         ///     The suffixes.
         /// </value>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]public static Dictionary<Type, string> Suffixes => null;
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        public static Dictionary<Type, string> Suffixes => null;
 
         /// <summary>
         /// 
         /// </summary>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]public string Format { get; }
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        public string Format { get; }
 
         /// <summary>
         /// 
         /// </summary>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]public string Scheme { get; }
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        public string Scheme { get; }
         
         /// <summary>
         /// 
         /// </summary>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]public TimeSpan? Timeout { get; }
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        public TimeSpan? Timeout { get; }
 
         /// <summary>
         ///     Gets the host.
@@ -155,7 +162,8 @@ namespace Redmine.Net.Api
         /// <value>
         ///     The host.
         /// </value>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]public string Host { get; }
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        public string Host { get; }
         
         /// <summary>
         ///     The ApiKey used to authenticate.
@@ -163,7 +171,8 @@ namespace Redmine.Net.Api
         /// <value>
         ///     The API key.
         /// </value>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]public string ApiKey { get; }
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        public string ApiKey { get; }
 
         /// <summary>
         ///     Gets the MIME format.
@@ -171,7 +180,8 @@ namespace Redmine.Net.Api
         /// <value>
         ///     The MIME format.
         /// </value>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]public MimeFormat MimeFormat { get; }
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        public MimeFormat MimeFormat { get; }
 
         /// <summary>
         ///     Gets the proxy.
@@ -179,7 +189,8 @@ namespace Redmine.Net.Api
         /// <value>
         ///     The proxy.
         /// </value>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]public IWebProxy Proxy { get; }
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        public IWebProxy Proxy { get; }
 
         /// <summary>
         ///     Gets the type of the security protocol.
@@ -187,14 +198,32 @@ namespace Redmine.Net.Api
         /// <value>
         ///     The type of the security protocol.
         /// </value>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]public SecurityProtocolType SecurityProtocolType { get; }
-        #endregion
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        public SecurityProtocolType SecurityProtocolType { get; }
+        
+        
+        /// <inheritdoc />
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        public int PageSize { get; set; }
+        
+        /// <inheritdoc />
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        public string ImpersonateUser { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Returns null")]
-        public static readonly Dictionary<Type, bool> TypesWithOffset = null;
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT )]
+        public static readonly Dictionary<Type, bool> TypesWithOffset = new Dictionary<Type, bool>{
+            {typeof(Issue), true},
+            {typeof(Project), true},
+            {typeof(User), true},
+            {typeof(News), true},
+            {typeof(Query), true},
+            {typeof(TimeEntry), true},
+            {typeof(ProjectMembership), true},
+            {typeof(Search), true}
+        };
         
         /// <summary>
         ///     Returns the user whose credentials are used to access the API.
@@ -354,6 +383,224 @@ namespace Redmine.Net.Api
         public PagedResults<Search> Search(string q, int limit = DEFAULT_PAGE_SIZE_VALUE, int offset = 0, SearchFilterBuilder searchFilter = null)
         {
             return RedmineManagerExtensions.Search(this, q, limit, offset, searchFilter);
+        }
+        
+           /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="include"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        public int Count<T>(params string[] include) where T : class, new()
+        {
+            var parameters = NameValueCollectionExtensions.AddParamsIfExist(null, include);
+
+            return Count<T>(parameters);
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parameters"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        public int Count<T>(NameValueCollection parameters) where T : class, new()
+        {
+            return Count<T>(parameters != null ? new RequestOptions { QueryString = parameters } : null);
+        }
+
+        /// <summary>
+        ///     Gets the redmine object based on id.
+        /// </summary>
+        /// <typeparam name="T">The type of objects to retrieve.</typeparam>
+        /// <param name="id">The id of the object.</param>
+        /// <param name="parameters">Optional filters and/or optional fetched data.</param>
+        /// <returns>
+        ///     Returns the object of type T.
+        /// </returns>
+        /// <code>
+        ///   <example>
+        ///         string issueId = "927";
+        ///         NameValueCollection parameters = null;
+        ///         Issue issue = redmineManager.GetObject&lt;Issue&gt;(issueId, parameters);
+        ///   </example>
+        /// </code>
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        public T GetObject<T>(string id, NameValueCollection parameters) where T : class, new()
+        {
+            var url = RedmineApiUrls.GetFragment<T>(id);
+
+            var response = ApiClient.Get(url, parameters != null ? new RequestOptions { QueryString = parameters } : null);
+            
+            return response.DeserializeTo<T>(Serializer);
+        }
+
+        /// <summary>
+        ///     Returns the complete list of objects.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="include">Optional fetched data.</param>
+        /// <remarks>
+        /// Optional fetched data:
+        ///     Project: trackers, issue_categories, enabled_modules (since Redmine 2.6.0)
+        ///     Issue: children, attachments, relations, changesets, journals, watchers (since Redmine 2.3.0)
+        ///     Users: memberships, groups (since Redmine 2.1)
+        ///     Groups: users, memberships
+        /// </remarks>
+        /// <returns>Returns the complete list of objects.</returns>
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        public List<T> GetObjects<T>(params string[] include) where T : class, new()
+        {
+            var parameters = NameValueCollectionExtensions.AddParamsIfExist(null, include);
+
+            return GetObjects<T>(parameters);
+        }
+        
+        /// <summary>
+        ///     Returns the complete list of objects.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="limit">The page size.</param>
+        /// <param name="offset">The offset.</param>
+        /// <param name="include">Optional fetched data.</param>
+        /// <remarks>
+        /// Optional fetched data:
+        ///     Project: trackers, issue_categories, enabled_modules (since 2.6.0)
+        ///     Issue: children, attachments, relations, changesets, journals, watchers - Since 2.3.0
+        ///     Users: memberships, groups (added in 2.1)
+        ///     Groups: users, memberships
+        /// </remarks>
+        /// <returns>Returns the complete list of objects.</returns>
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        public List<T> GetObjects<T>(int limit, int offset, params string[] include) where T : class, new()
+        {
+            var parameters = NameValueCollectionExtensions
+                .AddParamsIfExist(null, include)
+                .AddPagingParameters(limit, offset);
+
+            return GetObjects<T>(parameters);
+        }
+
+        /// <summary>
+        ///     Returns the complete list of objects.
+        /// </summary>
+        /// <typeparam name="T">The type of objects to retrieve.</typeparam>
+        /// <param name="parameters">Optional filters and/or optional fetched data.</param>
+        /// <returns>
+        ///     Returns a complete list of objects.
+        /// </returns>
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        public List<T> GetObjects<T>(NameValueCollection parameters = null) where T : class, new()
+        {
+            var uri = RedmineApiUrls.GetListFragment<T>();
+            
+            return GetObjects<T>(uri, parameters != null ? new RequestOptions { QueryString = parameters } : null);
+        }
+        
+        /// <summary>
+        ///     Gets the paginated objects.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="parameters">The parameters.</param>
+        /// <returns></returns>
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        public PagedResults<T> GetPaginatedObjects<T>(NameValueCollection parameters) where T : class, new()
+        {
+            var url = RedmineApiUrls.GetListFragment<T>();
+
+            return GetPaginatedObjects<T>(url, parameters != null ? new RequestOptions { QueryString = parameters } : null);
+        }
+
+        /// <summary>
+        ///     Creates a new Redmine object.
+        /// </summary>
+        /// <typeparam name="T">The type of object to create.</typeparam>
+        /// <param name="entity">The object to create.</param>
+        /// <returns></returns>
+        /// <exception cref="RedmineException"></exception>
+        /// <remarks>
+        ///     When trying to create an object with invalid or missing attribute parameters, you will get a 422 Unprocessable
+        ///     Entity response. That means that the object could not be created.
+        /// </remarks>
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        public T CreateObject<T>(T entity) where T : class, new()
+        {
+            return CreateObject(entity, null);
+        }
+
+        /// <summary>
+        ///     Creates a new Redmine object.
+        /// </summary>
+        /// <typeparam name="T">The type of object to create.</typeparam>
+        /// <param name="entity">The object to create.</param>
+        /// <param name="ownerId">The owner identifier.</param>
+        /// <returns></returns>
+        /// <exception cref="RedmineException"></exception>
+        /// <remarks>
+        ///     When trying to create an object with invalid or missing attribute parameters, you will get a 422 Unprocessable
+        ///     Entity response. That means that the object could not be created.
+        /// </remarks>
+        /// <code>
+        ///   <example>
+        ///         var project = new Project();
+        ///         project.Name = "test";
+        ///         project.Identifier = "the project identifier";
+        ///         project.Description = "the project description";
+        ///         redmineManager.CreateObject(project);
+        ///     </example>
+        /// </code>
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        public T CreateObject<T>(T entity, string ownerId) where T : class, new()
+        {
+            var url = RedmineApiUrls.CreateEntityFragment<T>(ownerId);
+
+            var payload = Serializer.Serialize(entity);
+            
+            var response = ApiClient.Create(url, payload);
+
+            return response.DeserializeTo<T>(Serializer);
+        }
+
+        /// <summary>
+        ///     Updates a Redmine object.
+        /// </summary>
+        /// <typeparam name="T">The type of object to be update.</typeparam>
+        /// <param name="id">The id of the object to be update.</param>
+        /// <param name="entity">The object to be update.</param>
+        /// <param name="projectId">The project identifier.</param>
+        /// <exception cref="RedmineException"></exception>
+        /// <remarks>
+        ///     When trying to update an object with invalid or missing attribute parameters, you will get a
+        ///     422(RedmineException) Unprocessable Entity response. That means that the object could not be updated.
+        /// </remarks>
+        /// <code>
+        /// </code>
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        public void UpdateObject<T>(string id, T entity, string projectId = null) where T : class, new()
+        {
+            var url = RedmineApiUrls.UpdateFragment<T>(id);
+
+            var payload = Serializer.Serialize(entity);
+            
+            ApiClient.Update(url, payload);
+        }
+
+        /// <summary>
+        /// Deletes the Redmine object.
+        /// </summary>
+        /// <typeparam name="T">The type of objects to delete.</typeparam>
+        /// <param name="id">The id of the object to delete</param>
+        /// <param name="parameters">The parameters</param>
+        /// <exception cref="RedmineException"></exception>
+        /// <code></code>
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        public void DeleteObject<T>(string id, NameValueCollection parameters = null) where T : class, new()
+        {
+            var url = RedmineApiUrls.DeleteFragment<T>(id);
+
+            ApiClient.Delete(url, parameters != null ? new RequestOptions { QueryString = parameters } : null);
         }
         
         /// <summary>

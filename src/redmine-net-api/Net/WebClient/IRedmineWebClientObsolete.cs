@@ -24,6 +24,7 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// 
     /// </summary>
+    [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
     public interface IRedmineWebClient
     {
         /// <summary>

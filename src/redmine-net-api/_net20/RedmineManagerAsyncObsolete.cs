@@ -29,6 +29,7 @@ namespace Redmine.Net.Api.Async
     /// <summary>
     /// 
     /// </summary>
+    [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
     public delegate void Task();
 
     /// <summary>
@@ -36,11 +37,12 @@ namespace Redmine.Net.Api.Async
     /// </summary>
     /// <typeparam name="TRes">The type of the resource.</typeparam>
     /// <returns></returns>
-    public delegate TRes Task<out TRes>();
+     [Obsolete(RedmineConstants.OBSOLETE_TEXT)] public delegate TRes Task<out TRes>();
 
     /// <summary>
     /// 
     /// </summary>
+     [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
     public static class RedmineManagerAsync
     {
         /// <summary>

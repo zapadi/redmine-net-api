@@ -24,6 +24,8 @@ namespace Redmine.Net.Api
     /// <summary>
     /// </summary>
     /// <seealso cref="System.Net.WebClient" />
+    [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+    #pragma warning disable SYSLIB0014
     public class RedmineWebClient : WebClient
     {
         private string redirectUrl = string.Empty;
@@ -203,7 +205,11 @@ namespace Redmine.Net.Api
                     }
 
                     // Have to make sure that the "/" symbol is between the "host" and "redirect" strings
+                    #if NET5_0_OR_GREATER
+                    if (!redirectUrl.StartsWith('/') && !host.EndsWith('/'))
+                    #else
                     if (!redirectUrl.StartsWith("/", StringComparison.OrdinalIgnoreCase) && !host.EndsWith("/", StringComparison.OrdinalIgnoreCase))
+                    #endif
                     {
                         redirectUrl = $"/{redirectUrl}";
                     }
@@ -250,4 +256,5 @@ namespace Redmine.Net.Api
             CookieContainer.Add(col);
         }
     }
+    #pragma warning restore SYSLIB0014
 }
