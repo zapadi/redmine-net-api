@@ -2,7 +2,7 @@
 ![Redmine .NET Api](https://github.com/zapadi/redmine-net-api/workflows/CI%2FCD/badge.svg?branch=master)
 ![Appveyor last build status](https://ci.appveyor.com/api/projects/status/github/zapadi/redmine-net-api?branch=master&svg=true&passingText=master%20-%20OK&failingText=ups...)
 [![NuGet package](https://img.shields.io/nuget/v/redmine-api.svg)](https://www.nuget.org/packages/redmine-api)
-![Nuget](https://img.shields.io/nuget/dt/redmine-net-api)
+![Nuget](https://img.shields.io/nuget/dt/redmine-api)
 <a href="https://www.buymeacoffee.com/vXCNnz9" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/lato-yellow.png" alt="Buy Me A Coffee" height="37" ></a>
 
 
