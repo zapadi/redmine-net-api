@@ -23,6 +23,10 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
+        public const string ACCOUNT = "account";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string ACTIVE = "active";
         /// <summary>
         /// The activity
@@ -329,6 +333,10 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
+        public const string INDEX = "index";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string INHERITED = "inherited";
         /// <summary>
         /// 
@@ -476,6 +484,10 @@ namespace Redmine.Net.Api
         /// 
         /// </summary>
         public const string MUST_CHANGE_PASSWORD = "must_change_passwd";
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string MY = "my";
         /// <summary>
         /// 
         /// </summary>

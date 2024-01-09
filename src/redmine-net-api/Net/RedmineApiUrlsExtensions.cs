@@ -23,7 +23,7 @@ internal static class RedmineApiUrlsExtensions
 {
     public static string MyAccount(this RedmineApiUrls redmineApiUrls)
     {
-        return $"my/account.{redmineApiUrls.Format}";
+        return $"{RedmineKeys.MY}/{RedmineKeys.ACCOUNT}.{redmineApiUrls.Format}";
     }
 
     public static string CurrentUser(this RedmineApiUrls redmineApiUrls)
@@ -53,7 +53,7 @@ internal static class RedmineApiUrlsExtensions
 
     public static string ProjectWikiIndex(this RedmineApiUrls redmineApiUrls, string projectId)
     {
-        return $"{RedmineKeys.PROJECTS}/{projectId}/{RedmineKeys.WIKI}/index.{redmineApiUrls.Format}";
+        return $"{RedmineKeys.PROJECTS}/{projectId}/{RedmineKeys.WIKI}/{RedmineKeys.INDEX}.{redmineApiUrls.Format}";
     }
 
     public static string ProjectWikiPage(this RedmineApiUrls redmineApiUrls, string projectId, string wikiPageName)
