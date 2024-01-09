@@ -24,6 +24,10 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// 
         /// </summary>
+        Unknown = 0,
+        /// <summary>
+        /// 
+        /// </summary>
         None = 1,
         /// <summary>
         /// 
