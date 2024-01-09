@@ -16,14 +16,29 @@
 
 namespace Redmine.Net.Api.Serialization
 {
+    /// <summary>
+    /// Serialization interface that supports serialize and deserialize methods.
+    /// </summary>
     internal interface IRedmineSerializer
     {
-        string Type { get; }
+        /// <summary>
+        /// Gets the application format this serializer supports (e.g. "json", "xml").
+        /// </summary>
+        string Format { get; }
 
+        /// <summary>
+        /// Serializes the specified object into a string.
+        /// </summary>
         string Serialize<T>(T obj) where T : class;
-
+     
+        /// <summary>
+        /// Deserializes the string into a PageResult of T object.
+        /// </summary>
         PagedResults<T> DeserializeToPagedResults<T>(string response) where T : class, new();
 
-        T Deserialize<T>(string response) where T : new();
+        /// <summary>
+        /// Deserializes the string into an object.
+        /// </summary>
+        T Deserialize<T>(string input) where T : new();
     }
 }

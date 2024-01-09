@@ -1,4 +1,4 @@
-﻿/*
+/*
    Copyright 2011 - 2023 Adrian Popescu
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,36 +14,12 @@
    limitations under the License.
 */
 
-namespace Redmine.Net.Api.Types
+namespace Redmine.Net.Api.Net.WebClient.MessageContent;
+
+internal class ByteArrayApiRequestMessageContent : ApiRequestMessageContent
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    public enum VersionSharing
+    public ByteArrayApiRequestMessageContent(byte[] content)
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        Unknown = 0,
-        /// <summary>
-        /// 
-        /// </summary>
-        None = 1,
-        /// <summary>
-        /// 
-        /// </summary>
-        Descendants,
-        /// <summary>
-        /// 
-        /// </summary>
-        Hierarchy,
-        /// <summary>
-        /// 
-        /// </summary>
-        Tree,
-        /// <summary>
-        /// 
-        /// </summary>
-        System
+        Body = content;
     }
 }

@@ -22,6 +22,10 @@ namespace Redmine.Net.Api.Types
     public enum VersionStatus
     {
         /// <summary>
+        /// value of zero - Not set/unknown
+        /// </summary>
+        None,
+        /// <summary>
         /// 
         /// </summary>
         Open = 1,

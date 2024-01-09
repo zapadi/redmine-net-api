@@ -1,4 +1,4 @@
-﻿/*
+/*
    Copyright 2011 - 2023 Adrian Popescu
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -141,8 +141,12 @@ namespace Redmine.Net.Api.Types
         public override void WriteXml(XmlWriter writer)
         {
             writer.WriteElementString(RedmineKeys.NAME, Name);
-            writer.WriteElementString(RedmineKeys.STATUS, Status.ToString().ToLowerInv());
-            writer.WriteElementString(RedmineKeys.SHARING, Sharing.ToString().ToLowerInv());
+            writer.WriteElementString(RedmineKeys.STATUS, Status.ToInvariantString());
+            if (Sharing != VersionSharing.Unknown)
+            {
+                writer.WriteElementString(RedmineKeys.SHARING, Sharing.ToInvariantString());
+            }
+
             writer.WriteDateOrEmpty(RedmineKeys.DUE_DATE, DueDate);
             writer.WriteElementString(RedmineKeys.DESCRIPTION, Description);
             if (CustomFields != null)

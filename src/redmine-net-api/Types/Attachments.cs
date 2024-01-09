@@ -24,7 +24,7 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// 
     /// </summary>
-    internal class Attachments : Dictionary<int, Attachment>, IJsonSerializable
+    internal sealed class Attachments : Dictionary<int, Attachment>, IJsonSerializable
     {
         /// <summary>
         /// 

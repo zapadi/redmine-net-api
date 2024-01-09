@@ -73,6 +73,7 @@ namespace Redmine.Net.Api.Exceptions
         /// <value>Value indicating whether the exception is transient or not.</value>
         public bool IsTransient { get; }
         
+        #if !(NET8_0_OR_GREATER)
         /// <inheritdoc />
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
@@ -81,5 +82,6 @@ namespace Redmine.Net.Api.Exceptions
             info.AddValue(nameof(this.ErrorCode), this.ErrorCode);
             info.AddValue(nameof(this.IsTransient), this.IsTransient);
         }
+        #endif
     }
 }

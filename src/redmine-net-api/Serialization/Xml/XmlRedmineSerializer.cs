@@ -27,20 +27,17 @@ namespace Redmine.Net.Api.Serialization
     internal sealed class XmlRedmineSerializer : IRedmineSerializer
     {
 
-        public XmlRedmineSerializer()
+        public XmlRedmineSerializer(): this(new XmlWriterSettings
         {
-            xmlWriterSettings = new XmlWriterSettings
-            {
-                OmitXmlDeclaration = true
-            };
-        }
+            OmitXmlDeclaration = true
+        }) { }
 
         public XmlRedmineSerializer(XmlWriterSettings xmlWriterSettings)
         {
-            this.xmlWriterSettings = xmlWriterSettings;
+            this._xmlWriterSettings = xmlWriterSettings;
         }
 
-        private readonly XmlWriterSettings xmlWriterSettings;
+        private readonly XmlWriterSettings _xmlWriterSettings;
 
         public T Deserialize<T>(string response) where T : new()
         {
@@ -53,7 +50,7 @@ namespace Redmine.Net.Api.Serialization
                 throw new RedmineException(ex.GetBaseException().Message, ex);
             }
         }
-
+        
         public PagedResults<T> DeserializeToPagedResults<T>(string response) where T : class, new()
         {
             try
@@ -81,7 +78,7 @@ namespace Redmine.Net.Api.Serialization
         }
 #pragma warning restore CA1822
 
-        public string Type { get; } = "xml";
+        public string Format => RedmineConstants.XML;
 
         public string Serialize<T>(T entity) where T : class
         {
@@ -153,7 +150,7 @@ namespace Redmine.Net.Api.Serialization
 
             using (var stringWriter = new StringWriter())
             {
-                using (var xmlWriter = XmlWriter.Create(stringWriter, xmlWriterSettings))
+                using (var xmlWriter = XmlWriter.Create(stringWriter, _xmlWriterSettings))
                 {
                     var serializer = new XmlSerializer(typeof(T));
 

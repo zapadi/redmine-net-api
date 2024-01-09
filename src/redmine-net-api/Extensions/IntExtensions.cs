@@ -1,4 +1,4 @@
-﻿/*
+/*
    Copyright 2011 - 2023 Adrian Popescu
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,36 +14,32 @@
    limitations under the License.
 */
 
-namespace Redmine.Net.Api.Types
+namespace Redmine.Net.Api.Extensions;
+
+internal static class IntExtensions
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    public enum VersionSharing
+    public static bool Between(this int val, int from, int to)
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        Unknown = 0,
-        /// <summary>
-        /// 
-        /// </summary>
-        None = 1,
-        /// <summary>
-        /// 
-        /// </summary>
-        Descendants,
-        /// <summary>
-        /// 
-        /// </summary>
-        Hierarchy,
-        /// <summary>
-        /// 
-        /// </summary>
-        Tree,
-        /// <summary>
-        /// 
-        /// </summary>
-        System
+        return val >= from && val <= to;
+    }
+    
+    public static bool Greater(this int val, int than)
+    {
+        return val > than;
+    }
+    
+    public static bool GreaterOrEqual(this int val, int than)
+    {
+        return val >= than;
+    }
+    
+    public static bool Lower(this int val, int than)
+    {
+        return val < than;
+    }
+    
+    public static bool LowerOrEqual(this int val, int than)
+    {
+        return val <= than;
     }
 }

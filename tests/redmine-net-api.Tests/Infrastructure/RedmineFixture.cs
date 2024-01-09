@@ -18,7 +18,7 @@ namespace Padi.DotNet.RedmineAPI.Tests.Infrastructure
 
             _redmineManagerOptionsBuilder = new RedmineManagerOptionsBuilder()
                                             .WithHost(Credentials.Uri)
-                                            .WithAuthentication(new RedmineApiKeyAuthentication(Credentials.ApiKey));
+                                            .WithApiKeyAuthentication(Credentials.ApiKey);
             
 			SetMimeTypeXml();
 			SetMimeTypeJson();

@@ -76,7 +76,7 @@ namespace Redmine.Net.Api.Exceptions
             : base(string.Format(CultureInfo.InvariantCulture,format, args), innerException)
         {
         }
-
+#if !(NET8_0_OR_GREATER) 
         /// <summary>
         /// 
         /// </summary>
@@ -87,5 +87,6 @@ namespace Redmine.Net.Api.Exceptions
         {
          
         }
+#endif
     }
 }

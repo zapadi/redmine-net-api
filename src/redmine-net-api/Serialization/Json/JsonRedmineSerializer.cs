@@ -135,7 +135,7 @@ namespace Redmine.Net.Api.Serialization
         }
         #pragma warning restore CA1822
         
-        public string Type { get; } = "json";
+        public string Format { get; } = "json";
 
         public string Serialize<T>(T entity) where T : class
         {
@@ -155,7 +155,7 @@ namespace Redmine.Net.Api.Serialization
             {
                 using (var writer = new JsonTextWriter(sw))
                 {
-                    writer.Formatting = Newtonsoft.Json.Formatting.Indented;
+                    writer.Formatting = Formatting.Indented;
                     writer.DateFormatHandling = DateFormatHandling.IsoDateFormat;
 
                     jsonSerializable.WriteJson(writer);
