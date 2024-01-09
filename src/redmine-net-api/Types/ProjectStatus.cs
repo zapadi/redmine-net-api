@@ -22,6 +22,10 @@ namespace Redmine.Net.Api.Types
     public enum ProjectStatus
     {
         /// <summary>
+        /// value of zero - Not set/unknown
+        /// </summary>
+        None,
+        /// <summary>
         /// 
         /// </summary>
         Active = 1,
