@@ -44,9 +44,11 @@ namespace Redmine.Net.Api.Extensions
         /// <returns></returns>
         public static PagedResults<News> GetProjectNews(this RedmineManager redmineManager, string projectIdentifier, RequestOptions requestOptions = null)
         {
-            var uri = Uri.EscapeDataString(redmineManager.RedmineApiUrls.ProjectNews(projectIdentifier));
+            var uri = redmineManager.RedmineApiUrls.ProjectNews(projectIdentifier);
 
-            var response = redmineManager.GetPaginatedObjects<News>(uri, requestOptions);
+            var escapedUri = Uri.EscapeDataString(uri);
+            
+            var response = redmineManager.GetPaginatedObjects<News>(escapedUri, requestOptions);
 
             return response;
         }
@@ -71,12 +73,14 @@ namespace Redmine.Net.Api.Extensions
             {
                 throw new RedmineException("News title cannot be blank");
             }
-
-            var uri = Uri.EscapeDataString(redmineManager.RedmineApiUrls.ProjectNews(projectIdentifier));
-
+            
             var payload = redmineManager.Serializer.Serialize(news);
+            
+            var uri = Uri.EscapeDataString(redmineManager.RedmineApiUrls.ProjectNews(projectIdentifier));
+            
+            var escapedUri = Uri.EscapeDataString(uri);
 
-            var response = redmineManager.ApiClient.Create(uri, payload, requestOptions);
+            var response = redmineManager.ApiClient.Create(escapedUri, payload, requestOptions);
 
             return response.DeserializeTo<News>(redmineManager.Serializer);
         }
@@ -223,9 +227,9 @@ namespace Redmine.Net.Api.Extensions
 
             var uri = redmineManager.RedmineApiUrls.ProjectWikiPageUpdate(projectId, pageName);
 
-            uri = Uri.EscapeDataString(uri);
+            var escapedUri = Uri.EscapeDataString(uri);
             
-            redmineManager.ApiClient.Patch(uri, payload, requestOptions);
+            redmineManager.ApiClient.Patch(escapedUri, payload, requestOptions);
         }
 
         /// <summary>
@@ -248,9 +252,9 @@ namespace Redmine.Net.Api.Extensions
 
             var uri = redmineManager.RedmineApiUrls.ProjectWikiPageUpdate(projectId, pageName);
 
-            uri = Uri.EscapeDataString(uri);
+            var escapedUri = Uri.EscapeDataString(uri);
             
-            var response = redmineManager.ApiClient.Create(uri, payload, requestOptions);
+            var response = redmineManager.ApiClient.Create(escapedUri, payload, requestOptions);
 
             return response.DeserializeTo<WikiPage>(redmineManager.Serializer);
         }
@@ -270,9 +274,9 @@ namespace Redmine.Net.Api.Extensions
                 ? redmineManager.RedmineApiUrls.ProjectWikiPage(projectId, pageName)
                 : redmineManager.RedmineApiUrls.ProjectWikiPageVersion(projectId, pageName, version.ToString(CultureInfo.InvariantCulture));
             
-            uri = Uri.EscapeDataString(uri);
+            var escapedUri = Uri.EscapeDataString(uri);
 
-            var response = redmineManager.ApiClient.Get(uri, requestOptions);
+            var response = redmineManager.ApiClient.Get(escapedUri, requestOptions);
 
             return response.DeserializeTo<WikiPage>(redmineManager.Serializer);
         }
@@ -305,9 +309,9 @@ namespace Redmine.Net.Api.Extensions
         {
             var uri = redmineManager.RedmineApiUrls.ProjectWikiPageDelete(projectId, pageName);
             
-            uri = Uri.EscapeDataString(uri);
+            var escapedUri = Uri.EscapeDataString(uri);
            
-            redmineManager.ApiClient.Delete(uri,  requestOptions);
+            redmineManager.ApiClient.Delete(escapedUri,  requestOptions);
         }
 
         /// <summary>
@@ -370,6 +374,96 @@ namespace Redmine.Net.Api.Extensions
         }
 
         #if !(NET20)
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="redmineManager"></param>
+        /// <param name="projectIdentifier"></param>
+        /// <param name="requestOptions"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public static async Task<PagedResults<News>> GetProjectNewsAsync(this RedmineManager redmineManager, string projectIdentifier, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
+        {
+            var uri = redmineManager.RedmineApiUrls.ProjectNews(projectIdentifier);
+
+            var escapedUri = Uri.EscapeDataString(uri);
+            
+            var response = await redmineManager.ApiClient.GetPagedAsync(escapedUri, requestOptions, cancellationToken).ConfigureAwait(false);
+
+            return response.DeserializeToPagedResults<News>(redmineManager.Serializer);;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="redmineManager"></param>
+        /// <param name="projectIdentifier"></param>
+        /// <param name="news"></param>
+        /// <param name="requestOptions"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        /// <exception cref="RedmineException"></exception>
+        public static async Task<News> AddProjectNewsAsync(this RedmineManager redmineManager, string projectIdentifier, News news, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
+        {
+            if (news == null)
+            {
+                throw new RedmineException("Argument news is null");
+            }
+
+            if (news.Title.IsNullOrWhiteSpace())
+            {
+                throw new RedmineException("News title cannot be blank");
+            }
+            
+            var payload = redmineManager.Serializer.Serialize(news);
+            
+            var uri = Uri.EscapeDataString(redmineManager.RedmineApiUrls.ProjectNews(projectIdentifier));
+            
+            var escapedUri = Uri.EscapeDataString(uri);
+
+            var response = await redmineManager.ApiClient.CreateAsync(escapedUri, payload, requestOptions, cancellationToken).ConfigureAwait(false);
+
+            return response.DeserializeTo<News>(redmineManager.Serializer);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="redmineManager"></param>
+        /// <param name="projectIdentifier"></param>
+        /// <param name="requestOptions"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        /// <exception cref="RedmineException"></exception>
+        public static async Task<PagedResults<ProjectMembership>> GetProjectMembershipsAsync(this RedmineManager redmineManager, string projectIdentifier, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
+        {
+            var uri = redmineManager.RedmineApiUrls.ProjectMemberships(projectIdentifier);
+
+            var response = await redmineManager.ApiClient.GetPagedAsync(uri, requestOptions, cancellationToken).ConfigureAwait(false);
+
+            return response.DeserializeToPagedResults<ProjectMembership>(redmineManager.Serializer);;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="redmineManager"></param>
+        /// <param name="projectIdentifier"></param>
+        /// <param name="requestOptions"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        /// <exception cref="RedmineException"></exception>
+        public static async Task<PagedResults<File>> GetProjectFilesAsync(this RedmineManager redmineManager, string projectIdentifier, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
+        {
+            var uri = redmineManager.RedmineApiUrls.ProjectFilesFragment(projectIdentifier);
+
+            var response = await redmineManager.ApiClient.GetPagedAsync(uri, requestOptions, cancellationToken).ConfigureAwait(false);
+            
+            return response.DeserializeToPagedResults<File>(redmineManager.Serializer);;
+        }
+
+        
         /// <summary>
         ///  
         /// </summary>
@@ -429,9 +523,9 @@ namespace Redmine.Net.Api.Extensions
 
             var url = redmineManager.RedmineApiUrls.ProjectWikiPageUpdate(projectId, pageName);
 
-            var uri = Uri.EscapeDataString(url);
+            var escapedUri = Uri.EscapeDataString(url);
 
-            var response = await redmineManager.ApiClient.CreateAsync(uri, payload,requestOptions, cancellationToken).ConfigureAwait(false);
+            var response = await redmineManager.ApiClient.CreateAsync(escapedUri, payload,requestOptions, cancellationToken).ConfigureAwait(false);
 
             return response.DeserializeTo<WikiPage>(redmineManager.Serializer);
         }
@@ -457,9 +551,9 @@ namespace Redmine.Net.Api.Extensions
 
             var url = redmineManager.RedmineApiUrls.ProjectWikiPageUpdate(projectId, pageName);
 
-            var uri = Uri.EscapeDataString(url);
+            var escapedUri = Uri.EscapeDataString(url);
             
-            await redmineManager.ApiClient.PatchAsync(uri, payload, requestOptions, cancellationToken).ConfigureAwait(false);
+            await redmineManager.ApiClient.PatchAsync(escapedUri, payload, requestOptions, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -475,45 +569,11 @@ namespace Redmine.Net.Api.Extensions
         {
             var uri = redmineManager.RedmineApiUrls.ProjectWikiPageDelete(projectId, pageName);
             
-            uri = Uri.EscapeDataString(uri);
+            var escapedUri = Uri.EscapeDataString(uri);
            
-            await redmineManager.ApiClient.DeleteAsync(uri,  requestOptions, cancellationToken).ConfigureAwait(false);
+            await redmineManager.ApiClient.DeleteAsync(escapedUri,  requestOptions, cancellationToken).ConfigureAwait(false);
         }
-
-        /// <summary>
-        ///     Support for adding attachments through the REST API is added in Redmine 1.4.0.
-        ///     Upload a file to server. This method does not block the calling thread.
-        /// </summary>
-        /// <param name="redmineManager">The redmine manager.</param>
-        /// <param name="data">The content of the file that will be uploaded on server.</param>
-        /// <param name="requestOptions"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns>
-        ///     .
-        /// </returns>
-        public static async Task<Upload> UploadFileAsync(this RedmineManager redmineManager, byte[] data, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
-        {
-            var url = redmineManager.RedmineApiUrls.UploadFragment();
-
-            var response = await redmineManager.ApiClient.UploadFileAsync(url, data,requestOptions  , cancellationToken: cancellationToken).ConfigureAwait(false);
-            
-            return response.DeserializeTo<Upload>(redmineManager.Serializer);
-        }
-
-        /// <summary>
-        ///     Downloads the file asynchronous.
-        /// </summary>
-        /// <param name="redmineManager">The redmine manager.</param>
-        /// <param name="address">The address.</param>
-        /// <param name="requestOptions"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        public static async Task<byte[]> DownloadFileAsync(this RedmineManager redmineManager, string address, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
-        {
-            var response = await redmineManager.ApiClient.DownloadAsync(address, requestOptions,cancellationToken: cancellationToken).ConfigureAwait(false);
-            return response.Content;
-        }
-
+        
         /// <summary>
         ///     Gets the wiki page asynchronous.
         /// </summary>
@@ -530,9 +590,9 @@ namespace Redmine.Net.Api.Extensions
                 ? redmineManager.RedmineApiUrls.ProjectWikiPage(projectId, pageName)
                 : redmineManager.RedmineApiUrls.ProjectWikiPageVersion(projectId, pageName, version.ToString(CultureInfo.InvariantCulture));
             
-            uri = Uri.EscapeDataString(uri);
+            var escapedUri = Uri.EscapeDataString(uri);
 
-            var response = await redmineManager.ApiClient.GetAsync(uri, requestOptions, cancellationToken).ConfigureAwait(false);
+            var response = await redmineManager.ApiClient.GetAsync(escapedUri, requestOptions, cancellationToken).ConfigureAwait(false);
 
             return response.DeserializeTo<WikiPage>(redmineManager.Serializer);
         }
@@ -623,270 +683,26 @@ namespace Redmine.Net.Api.Extensions
            
             await redmineManager.ApiClient.DeleteAsync(uri,  requestOptions, cancellationToken).ConfigureAwait(false);
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="redmineManager"></param>
-        /// <param name="include"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public static async Task<int> CountAsync<T>(this RedmineManager redmineManager, params string[] include) where T : class, new()
-        {
-            RequestOptions requestOptions = null;
-
-            if (include is {Length: > 0})
-            {
-                requestOptions = new RequestOptions()
-                {
-                    QueryString = new NameValueCollection
-                    {
-                        {RedmineKeys.INCLUDE, string.Join(",", include)}
-                    }
-                };
-            }
-
-            return await CountAsync<T>(redmineManager, requestOptions).ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="redmineManager"></param>
-        /// <param name="requestOptions"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public static async Task<int> CountAsync<T>(this RedmineManager redmineManager, RequestOptions requestOptions) where T : class, new()
-        {
-            var totalCount = 0;
-            const int PAGE_SIZE = 1;
-            const int OFFSET = 0;
-
-            if (requestOptions == null)
-            {
-                requestOptions = new RequestOptions();
-            }
-            
-            requestOptions.QueryString.AddPagingParameters(PAGE_SIZE, OFFSET);
-
-            var tempResult = await GetPagedAsync<T>(redmineManager, requestOptions).ConfigureAwait(false);
-            if (tempResult != null)
-            {
-                totalCount = tempResult.TotalItems;
-            }
-
-            return totalCount;
-        }
-
-
-        /// <summary>
-        ///     Gets the paginated objects asynchronous.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="redmineManager">The redmine manager.</param>
-        /// <param name="requestOptions"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        public static  async Task<PagedResults<T>> GetPagedAsync<T>(this RedmineManager redmineManager, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
-            where T : class, new()
-        {
-            var url = redmineManager.RedmineApiUrls.GetListFragment<T>();
-
-            var response= await redmineManager.ApiClient.GetAsync(url, requestOptions, cancellationToken).ConfigureAwait(false);
-            
-            return response.DeserializeToPagedResults<T>(redmineManager.Serializer);
-        }
-
-        /// <summary>
-        ///     Gets the objects asynchronous.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="redmineManager">The redmine manager.</param>
-        /// <param name="requestOptions"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        public static async Task<List<T>> GetObjectsAsync<T>(this RedmineManager redmineManager, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
-            where T : class, new()
-        {
-            int pageSize = 0, offset = 0;
-            var isLimitSet = false;
-            List<T> resultList = null;
-
-            if (requestOptions == null)
-            {
-                requestOptions = new RequestOptions();
-            }
-            
-            if (requestOptions.QueryString == null)
-            {
-                requestOptions.QueryString = new NameValueCollection();
-            }
-            else
-            {
-                isLimitSet = int.TryParse(requestOptions.QueryString[RedmineKeys.LIMIT], out pageSize);
-                int.TryParse(requestOptions.QueryString[RedmineKeys.OFFSET], out offset);
-            }
-
-            if (pageSize == default)
-            {
-                pageSize = redmineManager.PageSize > 0
-                    ? redmineManager.PageSize
-                    : RedmineManager.DEFAULT_PAGE_SIZE_VALUE;
-                requestOptions.QueryString.Set(RedmineKeys.LIMIT, pageSize.ToString(CultureInfo.InvariantCulture));
-            }
-
-            try
-            {
-                var hasOffset = RedmineManager.TypesWithOffset.ContainsKey(typeof(T));
-                if (hasOffset)
-                {
-                    int totalCount;
-                    do
-                    {
-                        requestOptions.QueryString.Set(RedmineKeys.OFFSET, offset.ToString(CultureInfo.InvariantCulture));
-                        
-                        var tempResult = await redmineManager.GetPagedAsync<T>(requestOptions, cancellationToken: cancellationToken).ConfigureAwait(false);
-                        
-                        totalCount = isLimitSet ? pageSize : tempResult.TotalItems;
-
-                        if (tempResult?.Items != null)
-                        {
-                            if (resultList == null)
-                            {
-                                resultList = new List<T>(tempResult.Items);
-                            }
-                            else
-                            {
-                                resultList.AddRange(tempResult.Items);
-                            }
-                        }
-
-                        offset += pageSize;
-                    } while (offset < totalCount);
-                }
-                else
-                {
-                    var result = await redmineManager.GetPagedAsync<T>(requestOptions, cancellationToken: cancellationToken).ConfigureAwait(false);
-                    if (result?.Items != null)
-                    {
-                        return new List<T>(result.Items);
-                    }
-                }
-            }
-            catch (WebException wex)
-            {
-                wex.HandleWebException(redmineManager.Serializer);
-            }
-
-            return resultList;
-        }
-
-        /// <summary>
-        ///     Gets a Redmine object. This method does not block the calling thread.
-        /// </summary>
-        /// <typeparam name="T">The type of objects to retrieve.</typeparam>
-        /// <param name="redmineManager">The redmine manager.</param>
-        /// <param name="id">The id of the object.</param>
-        /// <param name="requestOptions"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        public static async Task<T> GetObjectAsync<T>(this RedmineManager redmineManager, string id, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
-            where T : class, new()
-        {
-            var url = redmineManager.RedmineApiUrls.GetFragment<T>(id);
-
-            var response = await redmineManager.ApiClient.GetAsync(url,requestOptions, cancellationToken).ConfigureAwait(false);
-            
-            return response.DeserializeTo<T>(redmineManager.Serializer);
-        }
-
-        /// <summary>
-        ///     Creates a new Redmine object. This method does not block the calling thread.
-        /// </summary>
-        /// <typeparam name="T">The type of object to create.</typeparam>
-        /// <param name="redmineManager">The redmine manager.</param>
-        /// <param name="entity">The object to create.</param>
-        /// <param name="requestOptions"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        public static async Task<T> CreateObjectAsync<T>(this RedmineManager redmineManager, T entity, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
-            where T : class, new()
-        {
-            return await redmineManager.CreateObjectAsync( entity, null, requestOptions, cancellationToken: cancellationToken).ConfigureAwait(false);
-        }
-
-        /// <summary>
-        ///     Creates a new Redmine object. This method does not block the calling thread.
-        /// </summary>
-        /// <typeparam name="T">The type of object to create.</typeparam>
-        /// <param name="redmineManager">The redmine manager.</param>
-        /// <param name="entity">The object to create.</param>
-        /// <param name="ownerId">The owner identifier.</param>
-        /// <param name="requestOptions"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        public static async Task<T> CreateObjectAsync<T>(this RedmineManager redmineManager, T entity, string ownerId, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
-            where T : class, new()
-        {
-            var url = redmineManager.RedmineApiUrls.CreateEntityFragment<T>(ownerId);
-
-            var payload = redmineManager.Serializer.Serialize(entity);
-            
-            var response = await redmineManager.ApiClient.CreateAsync(url, payload, requestOptions, cancellationToken).ConfigureAwait(false);
-
-            return response.DeserializeTo<T>(redmineManager.Serializer);
-        }
-
-        /// <summary>
-        ///     Updates the object asynchronous.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="redmineManager">The redmine manager.</param>
-        /// <param name="id">The identifier.</param>
-        /// <param name="entity">The object.</param>
-        /// <param name="requestOptions"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        public static async Task UpdateObjectAsync<T>(this RedmineManager redmineManager, string id, T entity, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
-            where T : class, new()
-        {
-            var url = redmineManager.RedmineApiUrls.UpdateFragment<T>(id);
-
-            var payload = redmineManager.Serializer.Serialize(entity);
-            
-            await redmineManager.ApiClient.UpdateAsync(url, payload, requestOptions,cancellationToken: cancellationToken).ConfigureAwait(false);
-           // data = Regex.Replace(data, @"\r\n|\r|\n", "\r\n");
-        }
-
-        /// <summary>
-        ///     Deletes the Redmine object. This method does not block the calling thread.
-        /// </summary>
-        /// <typeparam name="T">The type of objects to delete.</typeparam>
-        /// <param name="redmineManager">The redmine manager.</param>
-        /// <param name="id">The id of the object to delete</param>
-        /// <param name="requestOptions"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        public static async Task DeleteObjectAsync<T>(this RedmineManager redmineManager, string id, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
-            where T : class, new()
-        {
-            var url = redmineManager.RedmineApiUrls.DeleteFragment<T>(id);
-
-            await redmineManager.ApiClient.DeleteAsync(url, requestOptions, cancellationToken).ConfigureAwait((false));
-        }
         #endif
         
         internal static RequestOptions CreateRequestOptions(NameValueCollection parameters = null, string impersonateUserName = null)
         {
             RequestOptions requestOptions = null;
-            if (parameters != null || !impersonateUserName.IsNullOrWhiteSpace())
+            if (parameters != null)
             {
                 requestOptions = new RequestOptions()
                 {
-                    QueryString = parameters,
-                    ImpersonateUser = impersonateUserName
+                    QueryString = parameters
                 };
             }
+
+            if (impersonateUserName.IsNullOrWhiteSpace())
+            {
+                return requestOptions;
+            }
+            
+            requestOptions ??= new RequestOptions();
+            requestOptions.ImpersonateUser = impersonateUserName;
 
             return requestOptions;
         }

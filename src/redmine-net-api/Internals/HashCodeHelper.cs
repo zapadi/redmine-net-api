@@ -38,12 +38,20 @@ namespace Redmine.Net.Api.Internals
             unchecked
             {
                 var hashCode = hash;
-                if (list == null) return hashCode;
+                if (list == null)
+                {
+                    return hashCode;
+                }
+                
                 hashCode = (hashCode * 13) + list.Count;
+                
                 foreach (var t in list)
                 {
                     hashCode *= 13;
-                    if (t != null) hashCode += t.GetHashCode();
+                    if (t != null)
+                    {
+                        hashCode += t.GetHashCode();
+                    }
                 }
 
                 return hashCode;
