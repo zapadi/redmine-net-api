@@ -18,7 +18,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Globalization;
-using System.Net;
 #if !(NET20)
 using System.Threading;
 using System.Threading.Tasks;
@@ -391,7 +390,7 @@ namespace Redmine.Net.Api.Extensions
             
             var response = await redmineManager.ApiClient.GetPagedAsync(escapedUri, requestOptions, cancellationToken).ConfigureAwait(false);
 
-            return response.DeserializeToPagedResults<News>(redmineManager.Serializer);;
+            return response.DeserializeToPagedResults<News>(redmineManager.Serializer);
         }
 
         /// <summary>
@@ -442,7 +441,7 @@ namespace Redmine.Net.Api.Extensions
 
             var response = await redmineManager.ApiClient.GetPagedAsync(uri, requestOptions, cancellationToken).ConfigureAwait(false);
 
-            return response.DeserializeToPagedResults<ProjectMembership>(redmineManager.Serializer);;
+            return response.DeserializeToPagedResults<ProjectMembership>(redmineManager.Serializer);
         }
 
         /// <summary>
@@ -460,7 +459,7 @@ namespace Redmine.Net.Api.Extensions
 
             var response = await redmineManager.ApiClient.GetPagedAsync(uri, requestOptions, cancellationToken).ConfigureAwait(false);
             
-            return response.DeserializeToPagedResults<File>(redmineManager.Serializer);;
+            return response.DeserializeToPagedResults<File>(redmineManager.Serializer);
         }
 
         
