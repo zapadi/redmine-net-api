@@ -4,7 +4,7 @@ services:
   redmine:
     ports:
       - '8089:3000'
-    image: 'redmine:4.1.1-alpine'
+    image: 'redmine:5.1.1-alpine'
     container_name: 'redmine-web'
     depends_on:
       - db-postgres
