@@ -32,7 +32,7 @@ env:
   
   PROJECT_NAME: redmine-net-api
 
-  CONFIGURATION: 'Release'
+  CONFIGURATION: Release
 
   # Set the build number in MinVer.
   MINVERBUILDMETADATA: build.${{github.run_number}}
