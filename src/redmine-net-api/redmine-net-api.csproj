@@ -68,7 +68,6 @@
   
   <ItemGroup Condition=" '$(TargetFramework)' == 'net20' " Label=".NET 2.0 Package References">
     <Reference Include="System.Web" />
-    <Reference Include="System.Net.Http" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net40' " Label=".NET 4.0 Package References">
