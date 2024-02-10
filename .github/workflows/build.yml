@@ -28,10 +28,8 @@ env:
   
   DOTNET_MULTILEVEL_LOOKUP: 0
   
-  PROJECT_PATH: "."
+  PROJECT_PATH: .
   
-  PROJECT_NAME: redmine-net-api
-
   CONFIGURATION: Release
 
   # Set the build number in MinVer.
@@ -77,8 +75,8 @@ jobs:
       run: dotnet restore "${{ env.PROJECT_PATH }}"
     
     - name: Build
-      run: |
-        dotnet build "${{ env.PROJECT_PATH }}" \
-        --configuration "${{ env.CONFIGURATION }}" \
-        --no-restore \
-        /p:ContinuousIntegrationBuild=true
+      run: >-
+          dotnet build "${{ env.PROJECT_PATH }}" 
+          --configuration "${{ env.CONFIGURATION }}" 
+          --no-restore 
+          -p:ContinuousIntegrationBuild=true
