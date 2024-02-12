@@ -8,7 +8,7 @@ on:
         required: false
         default: 'Manual build and run tests'
   workflow_run:
-    workflows: [ Build ]
+    workflows: [ 'Build' ]
     types:
       - completed
   
@@ -24,7 +24,7 @@ jobs:
         os: [ ubuntu-latest, windows-latest, macOS-latest ]
     steps:
      - name: Test
-       if: ${{ github.event.workflow_run.conclusion == 'success' }}
+      # if: ${{ github.event.workflow_run.conclusion == 'success' }}
        timeout-minutes: 60
        run: >-
         dotnet test "${{ env.PROJECT_PATH }}"

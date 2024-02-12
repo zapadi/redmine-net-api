@@ -9,9 +9,9 @@ on:
         default: 'Manual run'
   workflow_call:
   push:
-#    paths:
-#      - '**.cs'
-#      - '**.csproj'
+    paths:
+      - '**.cs'
+      - '**.csproj'
   pull_request:
     branches: [ master ]
     paths:
