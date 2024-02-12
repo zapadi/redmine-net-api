@@ -1,6 +1,7 @@
 name: build
 
 on:
+  workflow_call:
   workflow_dispatch:
     inputs:
       reason:
@@ -8,8 +9,11 @@ on:
         required: false
         default: 'Manual run'
   push:
+    paths:
+      - '**.cs'
+      - '**.csproj'
   pull_request:
-    branches: [ main ]
+    branches: [ master ]
     paths:
       - '**.cs'
       - '**.csproj'

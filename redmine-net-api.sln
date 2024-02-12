@@ -49,6 +49,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Others", "Others", "{4ADECA
 	ProjectSection(SolutionItems) = preProject
 		logo.png = logo.png
 		redmine-net-api.snk = redmine-net-api.snk
+		global.json = global.json
 	EndProjectSection
 EndProject
 Global
