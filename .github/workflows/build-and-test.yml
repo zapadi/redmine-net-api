@@ -1,0 +1,35 @@
+name: 'Build and Test'
+
+on:
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'The reason for running the workflow'
+        required: false
+        default: 'Manual build and run tests'
+  workflow_run:
+    workflows: [ Build ]
+    types:
+      - completed
+  
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+  test:  
+    name: Test - ${{matrix.os}}
+    needs: [build]
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, windows-latest, macOS-latest ]
+    steps:
+     - name: Test
+       if: ${{ github.event.workflow_run.conclusion == 'success' }}
+       timeout-minutes: 60
+       run: >-
+        dotnet test "${{ env.PROJECT_PATH }}"
+        --no-restore
+        --no-build
+        --verbosity normal
+        --logger "trx;LogFileName=test-results.trx" || true
+        

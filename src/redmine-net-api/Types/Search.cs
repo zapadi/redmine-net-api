@@ -123,10 +123,10 @@ namespace Redmine.Net.Api.Types
         public bool Equals(Search other)
         {
             if (other == null) return false;
-            return Id == other.Id && string.Equals(Title, other.Title, StringComparison.InvariantCultureIgnoreCase)
-                                  && string.Equals(Description, other.Description, StringComparison.InvariantCultureIgnoreCase)
-                                  && string.Equals(Url, other.Url, StringComparison.InvariantCultureIgnoreCase)
-                                  && string.Equals(Type, other.Type, StringComparison.InvariantCultureIgnoreCase)
+            return Id == other.Id && string.Equals(Title, other.Title, StringComparison.OrdinalIgnoreCase)
+                                  && string.Equals(Description, other.Description, StringComparison.OrdinalIgnoreCase)
+                                  && string.Equals(Url, other.Url, StringComparison.OrdinalIgnoreCase)
+                                  && string.Equals(Type, other.Type, StringComparison.OrdinalIgnoreCase)
                                   && DateTime == other.DateTime;
         }
 

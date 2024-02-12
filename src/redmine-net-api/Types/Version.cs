@@ -1,4 +1,4 @@
-/*
+﻿/*
    Copyright 2011 - 2023 Adrian Popescu
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -232,7 +232,7 @@ namespace Redmine.Net.Api.Types
                 && CreatedOn == other.CreatedOn
                 && UpdatedOn == other.UpdatedOn
                 && (CustomFields != null ? CustomFields.Equals<IssueCustomField>(other.CustomFields) : other.CustomFields == null)
-                && string.Equals(WikiPageTitle,other.WikiPageTitle, StringComparison.InvariantCultureIgnoreCase)
+                && string.Equals(WikiPageTitle,other.WikiPageTitle, StringComparison.OrdinalIgnoreCase)
                 && EstimatedHours == other.EstimatedHours
                 && SpentHours == other.SpentHours
                 ;
