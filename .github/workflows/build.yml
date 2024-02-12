@@ -7,7 +7,7 @@ on:
         description: 'The reason for running the workflow'
         required: false
         default: 'Manual run'
-#  workflow_call:
+  workflow_call:
   push:
 #    paths:
 #      - '**.cs'
