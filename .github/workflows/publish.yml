@@ -1,0 +1,47 @@
+name: 'Publish to NuGet'
+
+on: 
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'The reason for running the workflow'
+        required: false
+        default: 'Manual publish to nuget'
+  push:
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
+      
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+     
+jobs: 
+  publish:
+    name: Publish to Nuget
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print manual run reason
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        run: |
+          echo 'Reason: ${{ github.event.inputs.reason }}'
+      
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: artifacts
+          path: ./artifacts    
+      
+      - name: Publish packages
+        run: >-
+          dotnet nuget push ./artifacts/**.nupkg
+          --source 'https://api.nuget.org/v3/index.json'
+          --api-key ${{secrets.NUGET_TOKEN}}
+          --skip-duplicate
+          
+      - name: Upload artifacts to the GitHub release
+        uses: Roang-zero1/github-upload-release-artifacts-action@v3.0.0
+        with:
+          args: ./artifacts
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
