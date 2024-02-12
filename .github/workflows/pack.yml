@@ -2,9 +2,11 @@ name: 'Pack'
 
 on:
   workflow_run:
-    workflows: [ 'Build' ]
+    workflows: [ 'Build and Test' ]
     types: [ requested ]
     branches: [ master ]
+  
+  workflow_call:
   
   workflow_dispatch:
     inputs:
@@ -48,7 +50,7 @@ jobs:
           
       - name: Validate Version matches SemVer format
         run: |
-          if [[ ! "$VERSION" =~ ^([0-9]+\.){2}[0-9]+$ ]]; then
+          if [[ ! "$VERSION" =~ ^([0-9]+\.){2}[0-9]+(-[\w.]+)?$ ]]; then
             echo "The version does not match the SemVer format (X.Y.Z). Please provide a valid version."
             exit 1
           fi
@@ -93,7 +95,7 @@ jobs:
           --version 0.0.1-preview.304
 
       - name: Validate NuGet package
-        run: |
+        run: >-
           dotnet-validate package local ./artifacts/**.nupkg
 
       - name: Upload artifacts
