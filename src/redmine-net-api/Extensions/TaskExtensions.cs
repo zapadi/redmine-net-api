@@ -41,5 +41,20 @@ internal static class TaskExtensions
         Task.Factory.StartNew(function, CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default)
             .Unwrap().GetAwaiter().GetResult();
     }  
+    
+    #if !(NET45_OR_GREATER || NETCOREAPP)
+    public static Task<TResult[]> WhenAll<TResult>(IEnumerable<Task<TResult>> tasks)
+    {
+        var clone = tasks.ToArray();
+        
+        var x = Task.Factory.StartNew(() =>
+        {
+            Task.WaitAll(clone);
+            return clone.Select(t => t.Result).ToArray();
+        }, CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default);
+
+        return default; 
+    }
+    #endif
 }
 #endif
