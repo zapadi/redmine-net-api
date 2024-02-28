@@ -15,10 +15,12 @@
 */
 
 #if !(NET20)
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Globalization;
 using System.Net;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Redmine.Net.Api.Extensions;
@@ -30,16 +32,17 @@ namespace Redmine.Net.Api;
 
 public partial class RedmineManager: IRedmineManagerAsync
 {
+    private const string CRLR = "\r\n";
+    
     /// <inheritdoc />
-    public async Task<int> CountAsync<T>(RequestOptions requestOptions, CancellationToken cancellationToken = default) where T : class, new()
+    public async Task<int> CountAsync<T>(RequestOptions requestOptions, CancellationToken cancellationToken = default) 
+        where T : class, new()
     {
-        const int PAGE_SIZE = 1;
-        const int OFFSET = 0;
         var totalCount = 0;
 
         requestOptions ??= new RequestOptions();
 
-        requestOptions.QueryString.AddPagingParameters(PAGE_SIZE, OFFSET);
+        requestOptions.QueryString.AddPagingParameters(pageSize: 1, offset: 0);
 
         var tempResult = await GetPagedAsync<T>(requestOptions, cancellationToken).ConfigureAwait(false);
         if (tempResult != null)
@@ -145,8 +148,7 @@ public partial class RedmineManager: IRedmineManagerAsync
 
         return response.DeserializeTo<T>(Serializer);
     }
-
-
+    
     /// <inheritdoc />
     public async Task<T> CreateAsync<T>(T entity, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
         where T : class, new()
@@ -174,8 +176,12 @@ public partial class RedmineManager: IRedmineManagerAsync
         var url = RedmineApiUrls.UpdateFragment<T>(id);
 
         var payload = Serializer.Serialize(entity);
-
-        // payload = Regex.Replace(payload, @"\r\n|\r|\n", "\r\n");
+        
+        #if NET7_0_OR_GREATER
+        payload = ReplaceEndingsRegex().Replace(payload, CRLR);
+        #else
+        payload = Regex.Replace(payload, "\r\n|\r|\n",CRLR);
+        #endif
         
         await ApiClient.UpdateAsync(url, payload, requestOptions, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
@@ -205,5 +211,10 @@ public partial class RedmineManager: IRedmineManagerAsync
         var response = await ApiClient.DownloadAsync(address, requestOptions,cancellationToken: cancellationToken).ConfigureAwait(false);
         return response.Content;
     }
+
+    #if NET7_0_OR_GREATER
+    [GeneratedRegex(@"\r\n|\r|\n")]
+    private static partial Regex ReplaceEndingsRegex();
+    #endif
 }
 #endif
