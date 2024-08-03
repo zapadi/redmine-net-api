@@ -27,10 +27,6 @@ env:
   # Configuration
   CONFIGURATION: Release
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
-
 jobs:
   check-tag-branch:
     name: Check Tag and Master Branch hashes
