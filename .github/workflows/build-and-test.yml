@@ -45,6 +45,22 @@ env:
   CONFIGURATION: Release
 
 jobs:
+  before:
+    name: Before
+    runs-on: ubuntu-latest
+    steps:
+      - name: Info Before
+        run: |
+          echo "[${{ github.event_name }}] event automatically triggered this job."
+          echo "branch name is ${{ github.ref }}"
+          echo "This job has a '${{ job.status }}' status."
+      - name: Run a one-line script
+        run: |
+          echo "Is true: $( [ \"$EVENT_NAME\" = 'push' ] && [ \"$GITHUB_REF\" != 'refs/tags/' ] ) || [ \"$EVENT_NAME\" = 'workflow_dispatch' ]"
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          GITHUB_REF: ${{ github.ref }}
+          
   build:
     needs: before
     name: Build ${{ matrix.os }} - dotnet ${{ matrix.dotnet }}
