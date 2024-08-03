@@ -35,9 +35,7 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// 
         /// </summary>
-        public CustomFieldValue()
-        {
-        }
+        public CustomFieldValue() { }
 
         /// <summary>
         /// 
@@ -47,7 +45,7 @@ namespace Redmine.Net.Api.Types
         {
             Info = value;
         }
-            
+
         #region Properties
 
         /// <summary>
@@ -144,7 +142,7 @@ namespace Redmine.Net.Api.Types
         public bool Equals(CustomFieldValue other)
         {
             if (other == null) return false;
-            return string.Equals(Info,other.Info,StringComparison.OrdinalIgnoreCase);
+            return string.Equals(Info, other.Info, StringComparison.OrdinalIgnoreCase);
         }
 
         /// <summary>
@@ -195,6 +193,5 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <returns></returns>
         private string DebuggerDisplay => $"[{nameof(CustomFieldValue)}: {Info}]";
-
     }
 }

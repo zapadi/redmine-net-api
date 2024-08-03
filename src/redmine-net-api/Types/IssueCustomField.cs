@@ -112,7 +112,9 @@ namespace Redmine.Net.Api.Types
 
             writer.WriteAttributeString(RedmineKeys.ID, Id.ToString(CultureInfo.InvariantCulture));
 
-            if (itemsCount > 1)
+            Multiple = itemsCount > 1;
+            
+            if (Multiple)
             {
                 writer.WriteArrayStringElement(RedmineKeys.VALUE, Values, GetValue);
             }
@@ -120,6 +122,8 @@ namespace Redmine.Net.Api.Types
             {
                 writer.WriteElementString(RedmineKeys.VALUE, itemsCount > 0 ? Values[0].Info : null);
             }
+            
+            writer.WriteBoolean(RedmineKeys.MULTIPLE, Multiple);
         }
         #endregion
 
@@ -136,12 +140,14 @@ namespace Redmine.Net.Api.Types
             }
 
             var itemsCount = Values.Count;
+            Multiple = itemsCount > 1;
 
             writer.WriteStartObject();
             writer.WriteProperty(RedmineKeys.ID, Id);
             writer.WriteProperty(RedmineKeys.NAME, Name);
-
-            if (itemsCount > 1)
+            writer.WriteBoolean(RedmineKeys.MULTIPLE, Multiple);
+            
+            if (Multiple)
             {
                 writer.WritePropertyName(RedmineKeys.VALUE);
                 writer.WriteStartArray();
@@ -150,8 +156,6 @@ namespace Redmine.Net.Api.Types
                     writer.WriteValue(cfv.Info);
                 }
                 writer.WriteEndArray();
-
-                writer.WriteBoolean(RedmineKeys.MULTIPLE, Multiple);
             }
             else
             {

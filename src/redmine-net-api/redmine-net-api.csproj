@@ -64,6 +64,12 @@
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/zapadi/redmine-net-api</RepositoryUrl>
     <Title>Redmine .NET API Client</Title>
+
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <!-- Build symbol package (.snupkg) to distribute the PDB containing Source Link -->
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <IsPackable>true</IsPackable>
   </PropertyGroup>
   
   <ItemGroup Condition=" '$(TargetFramework)' == 'net20' " Label=".NET 2.0 Package References">

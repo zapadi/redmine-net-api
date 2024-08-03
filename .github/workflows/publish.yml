@@ -1,52 +1,178 @@
 name: 'Publish to NuGet'
 
-on: 
+on:
   workflow_dispatch:
     inputs:
       reason:
         description: 'The reason for running the workflow'
         required: false
-        default: 'Manual publish to nuget'
-        
-  workflow_run:
-    workflows: [ 'Pack' ]
-    types:
-      - completed
+        default: 'Manual publish'
+      version:
+        description: 'Version'
+        required: true
   push:
     tags:
-      - '[0-9]+.[0-9]+.[0-9]+(-[\w.]+)?'
-      
+      - '[0-9]+.[0-9]+.[0-9]+*'
+
+env:
+  # Disable the .NET logo in the console output.
+  DOTNET_NOLOGO: true
+  
+  # Disable sending usage data to Microsoft
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  
+  # Set working directory
+  PROJECT_PATH: ./src/redmine-net-api/redmine-net-api.csproj
+  
+  # Configuration
+  CONFIGURATION: Release
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
-     
-jobs: 
-  publish:
-    name: Publish to Nuget
-    if: github.ref == 'refs/heads/master'
+
+jobs:
+  check-tag-branch:
+    name: Check Tag and Master Branch hashes
+    # This job is based on replies in https://github.community/t/how-to-create-filter-on-both-tag-and-branch/16936/6
+    runs-on: ubuntu-latest
+    outputs:
+      ver: ${{ steps.set-version.outputs.VERSION }}
+    steps:
+      - name: Get tag commit hash
+        id: tag-commit-hash
+        run: |
+          hash=${{ github.sha }}
+          echo "{name}=tag-hash::${hash}" >> $GITHUB_OUTPUT
+          echo $hash
+
+      - name: Checkout master
+        uses: actions/checkout@v4
+        with:
+          ref: master
+
+      - name: Get latest master commit hash
+        id: master-commit-hash
+        run: |
+          hash=$(git log -n1 --format=format:"%H")
+          echo "{name}=master-hash::${hash}" >> $GITHUB_OUTPUT
+          echo $hash
+
+      - name: Verify tag commit matches master commit - exit if they don't match
+        if: steps.tag-commit-hash.outputs.tag-hash != steps.master-commit-hash.outputs.master-hash
+        run: |
+          echo "Tag was not on the master branch. Exiting."
+          exit 1
+
+      - name: Get Dispatched Version
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          echo "VERSION=${{ github.event.inputs.version }}" >> $GITHUB_ENV
+
+      - name: Get Tag Version
+        if: github.event_name == 'push'
+        run: |
+          echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV   
+
+      - name: Set Version
+        id: set-version
+        run: |
+          echo "VERSION=${{ env.VERSION }}" >> "$GITHUB_OUTPUT"
+  
+  validate-version:
+    name: Validate Version
+    needs: check-tag-branch
     runs-on: ubuntu-latest
     steps:
-      - name: Print manual run reason
-        if: ${{ github.event_name == 'workflow_dispatch' }}
+      - name: Get Version
+        run: echo "VERSION=${{ needs.check-tag-branch.outputs.ver }}" >> $GITHUB_ENV
+
+      - name: Display Version
+        run: echo "$VERSION"
+
+      - name: Check Version Is Declared
         run: |
-          echo 'Reason: ${{ github.event.inputs.reason }}'
-      
+          if [[ -z "$VERSION" ]]; then
+            echo "Version is not declared."
+            exit 1
+          fi
+
+      - name: Validate Version matches SemVer format
+        run: |
+          if [[ ! "$VERSION" =~ ^([0-9]+\.){2,3}[0-9]+(-[a-zA-Z0-9.-]+)*$ ]]; then
+            echo "The version does not match the SemVer format (X.Y.Z). Please provide a valid version."
+            exit 1
+          fi
+  
+  call-build-and-test:
+    name: Call Build and Test
+    needs: validate-version
+    uses: ./.github/workflows/build-and-test.yml
+  
+  pack:
+    name: Pack
+    needs: [check-tag-branch, validate-version, call-build-and-test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Version
+        run: echo "VERSION=${{ needs.check-tag-branch.outputs.ver }}" >> $GITHUB_ENV
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+          fetch-depth: 0
+
+      - name: Setup .NET Core (global.json)
+        uses: actions/setup-dotnet@v4
+
+      - name: Display dotnet version
+        run: dotnet --version
+
+      - name: Install dependencies
+        run: dotnet restore "${{ env.PROJECT_PATH }}"
+
+      - name: Create the package
+        run: >-
+          dotnet pack "${{ env.PROJECT_PATH }}"
+          --output ./artifacts
+          --configuration "${{ env.CONFIGURATION }}"
+          -p:Version=$VERSION
+          -p:PackageVersion=$VERSION
+          -p:SymbolPackageFormat=snupkg
+
+      - name: Create the package - Signed
+        run: >-
+          dotnet pack "${{ env.PROJECT_PATH }}"
+          --output ./artifacts
+          --configuration "${{ env.CONFIGURATION }}"
+          --include-symbols
+          --include-source
+          -p:Version=$VERSION
+          -p:PackageVersion=$VERSION
+          -p:SymbolPackageFormat=snupkg
+          -p:Sign=true
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifacts
+          path: ./artifacts
+  
+  publish:
+    name: Publish to Nuget
+    needs: pack
+    runs-on: ubuntu-latest
+    steps:
       - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
           name: artifacts
-          path: ./artifacts    
-      
+          path: ./artifacts
+
       - name: Publish packages
         run: >-
           dotnet nuget push ./artifacts/**.nupkg
           --source 'https://api.nuget.org/v3/index.json'
           --api-key ${{secrets.NUGET_TOKEN}}
           --skip-duplicate
-          
-      - name: Upload artifacts to the GitHub release
-        uses: Roang-zero1/github-upload-release-artifacts-action@v3.0.0
-        with:
-          args: ./artifacts
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

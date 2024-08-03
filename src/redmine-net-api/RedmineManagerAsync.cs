@@ -15,31 +15,33 @@
 */
 
 #if !(NET20)
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Globalization;
-using System.Net;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Net;
 using Redmine.Net.Api.Serialization;
 using Redmine.Net.Api.Types;
+using TaskExtensions = Redmine.Net.Api.Extensions.TaskExtensions;
 
 namespace Redmine.Net.Api;
 
 public partial class RedmineManager: IRedmineManagerAsync
 {
+    private const string CRLR = "\r\n";
+    
     /// <inheritdoc />
-    public async Task<int> CountAsync<T>(RequestOptions requestOptions, CancellationToken cancellationToken = default) where T : class, new()
+    public async Task<int> CountAsync<T>(RequestOptions requestOptions, CancellationToken cancellationToken = default) 
+        where T : class, new()
     {
-        const int PAGE_SIZE = 1;
-        const int OFFSET = 0;
         var totalCount = 0;
 
         requestOptions ??= new RequestOptions();
 
-        requestOptions.QueryString.AddPagingParameters(PAGE_SIZE, OFFSET);
+        requestOptions.QueryString.AddPagingParameters(pageSize: 1, offset: 0);
 
         var tempResult = await GetPagedAsync<T>(requestOptions, cancellationToken).ConfigureAwait(false);
         if (tempResult != null)
@@ -60,7 +62,8 @@ public partial class RedmineManager: IRedmineManagerAsync
 
         return response.DeserializeToPagedResults<T>(Serializer);
     }
-
+    
+    
     /// <inheritdoc />
     public async Task<List<T>> GetAsync<T>(RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
         where T : class, new()
@@ -86,52 +89,83 @@ public partial class RedmineManager: IRedmineManagerAsync
             pageSize = PageSize > 0
                 ? PageSize
                 : RedmineConstants.DEFAULT_PAGE_SIZE_VALUE;
-            requestOptions.QueryString.Set(RedmineKeys.LIMIT, pageSize.ToString(CultureInfo.InvariantCulture));
+            requestOptions.QueryString.Set(RedmineKeys.LIMIT, pageSize.ToInvariantString());
         }
-
-        try
+        
+        var hasOffset = RedmineManager.TypesWithOffset.ContainsKey(typeof(T));
+        if (hasOffset)
         {
-            var hasOffset = RedmineManager.TypesWithOffset.ContainsKey(typeof(T));
-            if (hasOffset)
+            requestOptions.QueryString.Set(RedmineKeys.OFFSET, offset.ToInvariantString());
+
+            var tempResult = await GetPagedAsync<T>(requestOptions, cancellationToken).ConfigureAwait(false);
+
+            var totalCount = isLimitSet ? pageSize : tempResult.TotalItems;
+            
+            if (tempResult?.Items != null)
             {
-                int totalCount;
-                do
-                {
-                    requestOptions.QueryString.Set(RedmineKeys.OFFSET, offset.ToString(CultureInfo.InvariantCulture));
-
-                    var tempResult = await GetPagedAsync<T>(requestOptions, cancellationToken: cancellationToken).ConfigureAwait(false);
-
-                    totalCount = isLimitSet ? pageSize : tempResult.TotalItems;
-
-                    if (tempResult?.Items != null)
-                    {
-                        if (resultList == null)
-                        {
-                            resultList = new List<T>(tempResult.Items);
-                        }
-                        else
-                        {
-                            resultList.AddRange(tempResult.Items);
-                        }
-                    }
-
-                    offset += pageSize;
-                } while (offset < totalCount);
+                resultList = new List<T>(tempResult.Items);
             }
-            else
+           
+            var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+
+            var remainingPages = totalPages - offset / pageSize;
+
+            if (remainingPages <= 0)
             {
-                var result = await GetPagedAsync<T>(requestOptions, cancellationToken: cancellationToken).ConfigureAwait(false);
-                if (result?.Items != null)
+                return resultList;
+            }
+            
+            using (var semaphore = new SemaphoreSlim(MAX_CONCURRENT_TASKS))
+            {
+                var pageFetchTasks = new List<Task<PagedResults<T>>>();
+
+                for (int page = 0; page < remainingPages; page++)
                 {
-                    return new List<T>(result.Items);
+                    await semaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
+
+                    var innerOffset = (page * pageSize) + offset;
+                    
+                    pageFetchTasks.Add(GetPagedInternalAsync<T>(semaphore, new RequestOptions()
+                    {
+                        QueryString = new NameValueCollection()
+                        {
+                            {RedmineKeys.OFFSET, innerOffset.ToInvariantString()},
+                            {RedmineKeys.LIMIT, pageSize.ToInvariantString()}
+                        }
+                    }, cancellationToken));
+                }
+
+                var pageResults = await
+                    #if(NET45_OR_GREATER || NETCOREAPP)
+                    Task.WhenAll(pageFetchTasks)
+                    #else
+                    TaskExtensions.WhenAll(pageFetchTasks)
+                    #endif
+                    .ConfigureAwait(false);
+                
+                foreach (var pageResult in pageResults)
+                {
+                    if (pageResult?.Items == null)
+                    {
+                        continue;
+                    }
+                    
+                    resultList ??= new List<T>();
+
+                    resultList.AddRange(pageResult.Items);
                 }
             }
         }
-        catch (WebException wex)
+        else
         {
-            wex.HandleWebException(Serializer);
+            var result = await GetPagedAsync<T>(requestOptions, cancellationToken: cancellationToken)
+                .ConfigureAwait(false);
+            if (result?.Items != null)
+            {
+                return new List<T>(result.Items);
+            }
         }
-
+        
         return resultList;
     }
 
@@ -145,8 +179,7 @@ public partial class RedmineManager: IRedmineManagerAsync
 
         return response.DeserializeTo<T>(Serializer);
     }
-
-
+    
     /// <inheritdoc />
     public async Task<T> CreateAsync<T>(T entity, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
         where T : class, new()
@@ -174,8 +207,12 @@ public partial class RedmineManager: IRedmineManagerAsync
         var url = RedmineApiUrls.UpdateFragment<T>(id);
 
         var payload = Serializer.Serialize(entity);
-
-        // payload = Regex.Replace(payload, @"\r\n|\r|\n", "\r\n");
+        
+        #if NET7_0_OR_GREATER
+        payload = ReplaceEndingsRegex().Replace(payload, CRLR);
+        #else
+        payload = Regex.Replace(payload, "\r\n|\r|\n",CRLR);
+        #endif
         
         await ApiClient.UpdateAsync(url, payload, requestOptions, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
@@ -204,6 +241,30 @@ public partial class RedmineManager: IRedmineManagerAsync
     {
         var response = await ApiClient.DownloadAsync(address, requestOptions,cancellationToken: cancellationToken).ConfigureAwait(false);
         return response.Content;
+    }
+
+    #if NET7_0_OR_GREATER
+    [GeneratedRegex(@"\r\n|\r|\n")]
+    private static partial Regex ReplaceEndingsRegex();
+    #endif
+    
+    private const int MAX_CONCURRENT_TASKS = 3;
+    
+    private async Task<PagedResults<T>> GetPagedInternalAsync<T>(SemaphoreSlim semaphore, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
+        where T : class, new()
+    {
+        try
+        {
+            var url = RedmineApiUrls.GetListFragment<T>();
+
+            var response = await ApiClient.GetAsync(url, requestOptions, cancellationToken).ConfigureAwait(false);
+
+            return response.DeserializeToPagedResults<T>(Serializer);
+        }
+        finally
+        {
+            semaphore.Release();
+        }
     }
 }
 #endif
