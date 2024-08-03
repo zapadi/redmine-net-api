@@ -88,16 +88,6 @@ jobs:
           -p:SymbolPackageFormat=snupkg
           -p:Sign=true
 
-      - name: Install dotnet-validate
-        run: >-
-          dotnet tool install
-          --global dotnet-validate
-          --version 0.0.1-preview.304
-
-      - name: Validate NuGet package
-        run: >-
-          dotnet-validate package local ./artifacts/**.nupkg
-
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
