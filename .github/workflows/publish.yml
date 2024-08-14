@@ -133,6 +133,8 @@ jobs:
           dotnet pack "${{ env.PROJECT_PATH }}"
           --output ./artifacts
           --configuration "${{ env.CONFIGURATION }}"
+          --include-symbols
+          --include-source
           -p:Version=$VERSION
           -p:PackageVersion=$VERSION
           -p:SymbolPackageFormat=snupkg
