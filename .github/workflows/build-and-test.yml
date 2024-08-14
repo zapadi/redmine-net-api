@@ -22,9 +22,9 @@ on:
       - '**.csproj'
       - '**.sln'
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
+# concurrency:
+#   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+#   cancel-in-progress: true
 
 env:
   # Disable the .NET logo in the console output.
