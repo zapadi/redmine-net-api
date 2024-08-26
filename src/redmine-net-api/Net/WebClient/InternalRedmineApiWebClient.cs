@@ -131,7 +131,7 @@ namespace Redmine.Net.Api.Net.WebClient
         public ApiResponseMessage Upload(string address, byte[] data, RequestOptions requestOptions = null)
         {
             var content = new ByteArrayApiRequestMessageContent(data);
-            return HandleRequest(address, HttpVerbs.UPLOAD, requestOptions, content);
+            return HandleRequest(address, HttpVerbs.POST, requestOptions, content);
         }
 
         #if !(NET20)
@@ -160,7 +160,7 @@ namespace Redmine.Net.Api.Net.WebClient
         public async Task<ApiResponseMessage> UploadFileAsync(string address, byte[] data, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
         {
             var content = new ByteArrayApiRequestMessageContent(data);
-            return await HandleRequestAsync(address, HttpVerbs.UPLOAD, requestOptions, content, cancellationToken:cancellationToken).ConfigureAwait(false);
+            return await HandleRequestAsync(address, HttpVerbs.POST, requestOptions, content, cancellationToken:cancellationToken).ConfigureAwait(false);
         }
 
         public async Task<ApiResponseMessage> PatchAsync(string address, string payload, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
