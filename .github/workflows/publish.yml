@@ -137,6 +137,7 @@ jobs:
           --include-source
           -p:Version=$VERSION
           -p:PackageVersion=$VERSION
+          -p:IncludeSymbols=true
           -p:SymbolPackageFormat=snupkg
 
       - name: Create the package - Signed
@@ -148,6 +149,7 @@ jobs:
           --include-source
           -p:Version=$VERSION
           -p:PackageVersion=$VERSION
+          -p:IncludeSymbols=true
           -p:SymbolPackageFormat=snupkg
           -p:Sign=true
 
