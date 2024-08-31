@@ -35,7 +35,8 @@
   </PropertyGroup>
   
   <PropertyGroup>
-    <DebugType>embedded</DebugType>
+    <DebugType Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">full</DebugType>
+    <DebugType Condition="'$(DebugType)' == ''">portable</DebugType> <!-- Default to portable if not set -->    
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageOutputPath>$(SolutionDir)/artifacts</PackageOutputPath>
   </PropertyGroup>
@@ -68,6 +69,7 @@
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <!-- Build symbol package (.snupkg) to distribute the PDB containing Source Link -->
     <IncludeSymbols>true</IncludeSymbols>
+    <DebugSymbols>true</DebugSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <IsPackable>true</IsPackable>
   </PropertyGroup>
