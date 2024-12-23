@@ -24,6 +24,7 @@ namespace Redmine.Net.Api.Exceptions
     /// </summary>
     /// <seealso cref="Redmine.Net.Api.Exceptions.RedmineException" />
     [Serializable]
+    [Obsolete($"Use {nameof(RedmineApiException)} instead. In next major version, this will be removed.")]
     public sealed class ForbiddenException : RedmineException
     {
         /// <summary>
