@@ -38,6 +38,11 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         public string CustomizedType { get; internal set; }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Description { get; internal set; }
 
         /// <summary>
         /// 
@@ -126,6 +131,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
                     case RedmineKeys.CUSTOMIZED_TYPE: CustomizedType = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.DEFAULT_VALUE: DefaultValue = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.DESCRIPTION: Description = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.FIELD_FORMAT: FieldFormat = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.IS_FILTER: IsFilter = reader.ReadElementContentAsBoolean(); break;
                     case RedmineKeys.IS_REQUIRED: IsRequired = reader.ReadElementContentAsBoolean(); break;
@@ -170,6 +176,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
                     case RedmineKeys.CUSTOMIZED_TYPE: CustomizedType = reader.ReadAsString(); break;
                     case RedmineKeys.DEFAULT_VALUE: DefaultValue = reader.ReadAsString(); break;
+                    case RedmineKeys.DESCRIPTION: Description = reader.ReadAsString(); break;
                     case RedmineKeys.FIELD_FORMAT: FieldFormat = reader.ReadAsString(); break;
                     case RedmineKeys.IS_FILTER: IsFilter = reader.ReadAsBool(); break;
                     case RedmineKeys.IS_REQUIRED: IsRequired = reader.ReadAsBool(); break;
