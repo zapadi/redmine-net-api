@@ -38,6 +38,11 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         public string CustomizedType { get; internal set; }
+        
+        /// <summary>
+        /// Added in Redmine 5.1.0 version
+        /// </summary>
+        public string Description { get; internal set; }
 
         /// <summary>
         /// 
@@ -125,6 +130,7 @@ namespace Redmine.Net.Api.Types
                 {
                     case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
                     case RedmineKeys.CUSTOMIZED_TYPE: CustomizedType = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.DESCRIPTION: Description = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.DEFAULT_VALUE: DefaultValue = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.FIELD_FORMAT: FieldFormat = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.IS_FILTER: IsFilter = reader.ReadElementContentAsBoolean(); break;
@@ -170,6 +176,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
                     case RedmineKeys.CUSTOMIZED_TYPE: CustomizedType = reader.ReadAsString(); break;
                     case RedmineKeys.DEFAULT_VALUE: DefaultValue = reader.ReadAsString(); break;
+                    case RedmineKeys.DESCRIPTION: Description = reader.ReadAsString(); break;
                     case RedmineKeys.FIELD_FORMAT: FieldFormat = reader.ReadAsString(); break;
                     case RedmineKeys.IS_FILTER: IsFilter = reader.ReadAsBool(); break;
                     case RedmineKeys.IS_REQUIRED: IsRequired = reader.ReadAsBool(); break;
@@ -207,6 +214,7 @@ namespace Redmine.Net.Api.Types
                 && Searchable == other.Searchable
                 && Visible == other.Visible
                 && string.Equals(CustomizedType,other.CustomizedType, StringComparison.OrdinalIgnoreCase)
+                && string.Equals(Description,other.Description, StringComparison.OrdinalIgnoreCase)
                 && string.Equals(DefaultValue,other.DefaultValue, StringComparison.OrdinalIgnoreCase)
                 && string.Equals(FieldFormat,other.FieldFormat, StringComparison.OrdinalIgnoreCase)
                 && MaxLength == other.MaxLength
@@ -243,6 +251,7 @@ namespace Redmine.Net.Api.Types
                 hashCode = HashCodeHelper.GetHashCode(Id, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(IsFilter, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(IsRequired, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Description, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Multiple, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Searchable, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Visible, hashCode);
@@ -264,6 +273,7 @@ namespace Redmine.Net.Api.Types
         private string DebuggerDisplay =>
             $@"[{nameof(CustomField)}: {ToString()}
 , CustomizedType={CustomizedType}
+, Description={Description}
 , FieldFormat={FieldFormat}
 , Regexp={Regexp}
 , MinLength={MinLength?.ToString(CultureInfo.InvariantCulture)}
