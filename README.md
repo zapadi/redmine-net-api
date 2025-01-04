@@ -58,6 +58,13 @@ A good way to get started (flow):
 
 The API is released under Apache 2 open-source license. You can use it for both personal and commercial purposes, build upon it and modify it.
 
+## Contributors
+Thanks to all the people who already contributed!
+
+<a href="https://github.com/zapadi/redmine-net-api/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=zapadi/redmine-net-api" />
+</a>
+
 ## Thanks
 
 I would like to thank:
