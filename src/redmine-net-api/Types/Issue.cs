@@ -35,6 +35,15 @@ namespace Redmine.Net.Api.Types
     /// include: fetch associated data (optional). 
     /// Possible values: children, attachments, relations, changesets and journals. To fetch multiple associations use comma (e.g ?include=relations,journals). 
     /// See Issue journals for more information.
+    /// Optional filters:
+    ///    issue_id: get issue with the given id or multiple issues by id using ',' to separate id.
+    ///    project_id: get issues from the project with the given id (a numeric value, not a project identifier).
+    ///    subproject_id: get issues from the subproject with the given id. You can use project_id=XXX&amp;subproject_id=!* to get only the issues of a given project and none of its subprojects.
+    ///    tracker_id: get issues from the tracker with the given id
+    ///    status_id: get issues with the given status id only. Possible values: open, closed, * to get open and closed issues, status id
+    ///    assigned_to_id: get issues which are assigned to the given user id. me can be used instead an ID to fetch all issues from the logged-in user (via API key or HTTP auth)
+    ///    parent_id: get issues whose parent issue is given id.
+    ///    cf_x: get issues with the given value for custom field with an ID of x. (Custom field must have 'used as a filter' checked.)
     /// </remarks>
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.ISSUE)]
@@ -54,7 +63,7 @@ namespace Redmine.Net.Api.Types
         public IdentifiableName Tracker { get; set; }
 
         /// <summary>
-        /// Gets or sets the status.Possible values: open, closed, * to get open and closed issues, status id
+        /// Gets or sets the status.
         /// </summary>
         /// <value>The status.</value>
         public IdentifiableName Status { get; set; }

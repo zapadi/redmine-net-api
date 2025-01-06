@@ -1,4 +1,4 @@
-﻿/*
+/*
    Copyright 2011 - 2023 Adrian Popescu
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -37,26 +37,22 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// Gets or sets the uploaded token.
         /// </summary>
-        /// <value>The name of the file.</value>
         public string Token { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the file.
         /// Maximum allowed file size (1024000).
         /// </summary>
-        /// <value>The name of the file.</value>
         public string FileName { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the file.
         /// </summary>
-        /// <value>The name of the file.</value>
         public string ContentType { get; set; }
 
         /// <summary>
         /// Gets or sets the file description. (Undocumented feature)
         /// </summary>
-        /// <value>The file descroütopm.</value>
         public string Description { get; set; }
         #endregion
 
