@@ -134,12 +134,13 @@ namespace Redmine.Net.Api
         ///     Upload a file to server. This method does not block the calling thread.
         /// </summary>
         /// <param name="data">The content of the file that will be uploaded on server.</param>
+        /// <param name="fileName"></param>
         /// <param name="requestOptions"></param>
         /// <param name="cancellationToken"></param>
         /// <returns>
         ///     .
         /// </returns>
-        Task<Upload> UploadFileAsync(byte[] data, RequestOptions requestOptions = null, CancellationToken cancellationToken = default);
+        Task<Upload> UploadFileAsync(byte[] data, string fileName = null, RequestOptions requestOptions = null, CancellationToken cancellationToken = default);
 
         /// <summary>
         ///     Downloads the file asynchronous.

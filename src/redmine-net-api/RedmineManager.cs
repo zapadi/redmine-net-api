@@ -1,4 +1,4 @@
-﻿/*
+/*
    Copyright 2011 - 2023 Adrian Popescu
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -171,9 +171,9 @@ namespace Redmine.Net.Api
         }
 
         /// <inheritdoc />
-        public Upload UploadFile(byte[] data)
+        public Upload UploadFile(byte[] data, string fileName = null)
         {
-            var url = RedmineApiUrls.UploadFragment();
+            var url = RedmineApiUrls.UploadFragment(fileName);
 
             var response = ApiClient.Upload(url, data);
             

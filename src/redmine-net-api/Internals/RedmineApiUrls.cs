@@ -156,7 +156,7 @@ namespace Redmine.Net.Api.Net
                 return IssueAttachmentFragment(ownerId);
             }
 
-            throw new RedmineException($"No endpoint defined for type {type} for PATCH operation.");
+            throw new RedmineException($"No endpoint defined of type {type} for PATCH operation.");
         }
 
         public string DeleteFragment<T>(string id)
@@ -200,9 +200,11 @@ namespace Redmine.Net.Api.Net
             return $"{TypeFragment(TypeUrlFragments, type)}.{Format}";
         }
 
-        public string UploadFragment()
+        public string UploadFragment(string fileName = null)
         {
-            return $"{RedmineKeys.UPLOADS}.{Format}";
+            return !fileName.IsNullOrWhiteSpace() 
+                ? $"{RedmineKeys.UPLOADS}.{Format}?filename={Uri.EscapeDataString(fileName)}" 
+                : $"{RedmineKeys.UPLOADS}.{Format}";
         }
     }
 }
