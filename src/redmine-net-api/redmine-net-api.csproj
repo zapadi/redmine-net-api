@@ -127,6 +127,24 @@
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net481' " Label=".NET 4.8.1 Package References">
     <PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0" />
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net60'" Label=".NET Core 6 Package References">
+    <PackageReference Include="System.Buffers" Version="4.6.0" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net70'" Label=".NET Core 7 Package References">
+    <PackageReference Include="System.Buffers" Version="4.6.0" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0" />
+    <PackageReference Include="System.Text.Json" Version="7.0.3" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net80'" Label=".NET Core 8 Package References">
+    <PackageReference Include="System.Buffers" Version="4.6.0" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0" />
+    <PackageReference Include="System.Text.Json" Version="7.0.3" />
+  </ItemGroup>
+
   </ItemGroup>
 
   <ItemGroup>

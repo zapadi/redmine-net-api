@@ -1,3 +1,4 @@
+#if NET45_OR_GREATER || NETCOREAPP
 /*
    Copyright 2011 - 2024 Adrian Popescu
 
@@ -15,32 +16,14 @@
 */
 
 using System;
-using System.Net.Http;
 using Redmine.Net.Api.Authentication;
-using Redmine.Net.Api.Net.WebClient;
+using Redmine.Net.Api.Http;
 using Redmine.Net.Api.Serialization;
 
 namespace Redmine.Net.Api.Net.HttpClient;
 
 internal sealed partial class InternalRedmineApiHttpClient: IRedmineApiClient
 {
-    private readonly Func<HttpClient> _httpClientFunc;
-    private readonly IRedmineAuthentication _credentials;
-    private readonly IRedmineSerializer _serializer;
-
-    public InternalRedmineApiHttpClient(RedmineManagerOptions redmineManagerOptions)
-        : this(() => new InternalWebClient(redmineManagerOptions), redmineManagerOptions.Authentication, redmineManagerOptions.Serializer)
-    {
-        //ConfigureServicePointManager(redmineManagerOptions.ClientOptions);
-    }
-
-    public InternalRedmineApiHttpClient(Func<HttpClient> webClientFunc, IRedmineAuthentication authentication, IRedmineSerializer serializer)
-    {
-        _httpClientFunc = webClientFunc;
-        _credentials = authentication;
-        _serializer = serializer;
-    }
-    
     public ApiResponseMessage Get(string address, RequestOptions requestOptions = null)
     {
         throw new System.NotImplementedException();
@@ -81,3 +64,4 @@ internal sealed partial class InternalRedmineApiHttpClient: IRedmineApiClient
         throw new System.NotImplementedException();
     }
 }
+#endif

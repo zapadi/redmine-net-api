@@ -22,6 +22,9 @@ using System.Net;
 using Redmine.Net.Api.Authentication;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Net;
+#if NET45_OR_GREATER || NETCOREAPP
+using Redmine.Net.Api.Net.HttpClient;
+#endif
 using Redmine.Net.Api.Net.WebClient;
 using Redmine.Net.Api.Serialization;
 using Redmine.Net.Api.Types;
@@ -81,6 +84,13 @@ namespace Redmine.Net.Api
             
             RedmineApiUrls = new RedmineApiUrls(Serializer.Format);
             ApiClient = new InternalRedmineApiWebClient(_redmineManagerOptions); 
+            else
+            {
+                ApiClient = _redmineManagerOptions.HttpClientFunc != null
+                    ? new InternalRedmineApiHttpClient(_redmineManagerOptions.HttpClientFunc,
+                        _redmineManagerOptions.Authentication, _redmineManagerOptions.Serializer)
+                    : new InternalRedmineApiHttpClient(_redmineManagerOptions);
+            }
         }
 
         /// <inheritdoc />

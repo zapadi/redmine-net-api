@@ -16,6 +16,9 @@
 
 using System;
 using System.Net;
+#if NET45_OR_GREATER || NETCOREAPP
+using System.Net.Http;
+#endif
 using Redmine.Net.Api.Authentication;
 using Redmine.Net.Api.Net;
 using Redmine.Net.Api.Serialization;
@@ -57,6 +60,12 @@ namespace Redmine.Net.Api
         /// </summary>
         public Func<WebClient> ClientFunc { get; init; }
         
+    #if NET45_OR_GREATER || NETCOREAPP
+        /// <summary>
+        /// Gets or sets a custom function that creates and returns a specialized instance of the WebClient class.
+        /// </summary>
+        public Func<HttpClient> HttpClientFunc { get; init; }
+    #endif
         /// <summary>
         /// Gets or sets the settings for configuring the Redmine web client.
         /// </summary>

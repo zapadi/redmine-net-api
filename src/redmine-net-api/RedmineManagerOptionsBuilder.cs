@@ -16,6 +16,10 @@
 
 using System;
 using System.Net;
+#if NET45_OR_GREATER || NETCOREAPP
+using System.Net.Http;
+using Redmine.Net.Api.Net.HttpClient;
+#endif
 using Redmine.Net.Api.Authentication;
 using Redmine.Net.Api.Exceptions;
 using Redmine.Net.Api.Extensions;
@@ -144,12 +148,30 @@ namespace Redmine.Net.Api
             this.ClientFunc = clientFunc;
             return this;
         }
-
+        
+#if NET45_OR_GREATER || NETCOREAPP
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="clientFunc"></param>
+        /// <returns></returns>
+        public RedmineManagerOptionsBuilder WithHttpClient(Func<HttpClient> clientFunc)
+        {
+            this.HttpClientFunc = clientFunc;
+            return this;
+        }
+#endif
         /// <summary>
         /// 
         /// </summary>
         public Func<WebClient> ClientFunc { get; private set; }
-
+        
+        #if NET45_OR_GREATER || NETCOREAPP
+        /// <summary>
+        /// 
+        /// </summary>
+        public Func<HttpClient> HttpClientFunc { get; private set; }
+#endif
         /// <summary>
         /// 
         /// </summary>
@@ -160,7 +182,20 @@ namespace Redmine.Net.Api
             this.ClientOptions = clientOptions;
             return this;
         }
-
+        
+#if NET45_OR_GREATER || NETCOREAPP
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="clientOptions"></param>
+        /// <returns></returns>
+        public RedmineManagerOptionsBuilder WithHttpClientClientOptions(IRedmineHttpClientOptions clientOptions)
+        {
+            _clientType = ClientType.HttpClient;
+            this.ClientOptions = clientOptions;
+            return this;
+        }
+#endif
         /// <summary>
         /// 
         /// </summary>
@@ -199,8 +234,16 @@ namespace Redmine.Net.Api
         /// <returns></returns>
         internal RedmineManagerOptions Build()
         {
-            ClientOptions ??= new RedmineWebClientOptions();
+#if NET45_OR_GREATER || NETCOREAPP
             
+                ClientType.HttpClient => new RedmineHttpClientOptions()
+                {
+                    UserAgent = "Redmine.Net.Api.Net",
+                    DecompressionFormat = DecompressionMethods.GZip | DecompressionMethods.Deflate,
+                },
+                _ => throw new ArgumentOutOfRangeException()
+            #else
+            #endif
             var baseAddress = CreateRedmineUri(Host, ClientOptions.Scheme);
             
             var options = new RedmineManagerOptions()
