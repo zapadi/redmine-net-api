@@ -51,6 +51,11 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
+        public const string AUTHORIZATION_HEADER_KEY = "Authorization";
+        
+        /// <summary>
+        /// 
+        /// </summary>
         public const string XML = "xml";
     }
 }
