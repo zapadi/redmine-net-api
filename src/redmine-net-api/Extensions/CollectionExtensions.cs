@@ -1,4 +1,4 @@
-﻿/*
+/*
    Copyright 2011 - 2023 Adrian Popescu
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -40,9 +40,8 @@ namespace Redmine.Net.Api.Extensions
             
             var clonedList = new List<T>();
             
-            for (var index = 0; index < listToClone.Count; index++)
+            foreach (var item in listToClone)
             {
-                var item = listToClone[index];
                 clonedList.Add((T) item.Clone());
             }
 

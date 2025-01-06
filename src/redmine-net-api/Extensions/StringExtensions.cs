@@ -38,9 +38,9 @@ namespace Redmine.Net.Api.Extensions
                 return true;
             }
 
-            for (var index = 0; index < value.Length; ++index)
+            foreach (var ch in value)
             {
-                if (!char.IsWhiteSpace(value[index]))
+                if (!char.IsWhiteSpace(ch))
                 {
                     return false;
                 }
@@ -77,7 +77,9 @@ namespace Redmine.Net.Api.Extensions
         [SuppressMessage("ReSharper", "CA1308")]
         public static string ToLowerInv(this string text)
         {
-            return text.IsNullOrWhiteSpace() ? text : text.ToLowerInvariant();
+            return text.IsNullOrWhiteSpace() 
+                ? text 
+                : text.ToLowerInvariant();
         }
 
         /// <summary>
@@ -98,9 +100,9 @@ namespace Redmine.Net.Api.Extensions
 
             var rv = new SecureString();
             
-            for (var index = 0; index < value.Length; ++index)
+            foreach (var ch in value)
             {
-                rv.AppendChar(value[index]);
+                rv.AppendChar(ch);
             }
             
             return rv;
@@ -150,9 +152,7 @@ namespace Redmine.Net.Api.Extensions
                 decimal v => v.ToString(CultureInfo.InvariantCulture),
                 TimeSpan ts => ts.ToString(),
                 DateTime d => d.ToString(CultureInfo.InvariantCulture),
-                #pragma warning disable CA1308
-                bool b => b.ToString().ToLowerInvariant(),
-                #pragma warning restore CA1308
+                bool b => b ? "true" : "false",
                 _ => value.ToString(),
             };
         }
