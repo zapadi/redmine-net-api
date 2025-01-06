@@ -15,6 +15,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Xml;
 using System.Xml.Serialization;
@@ -40,6 +41,11 @@ namespace Redmine.Net.Api.Types
         /// Gets the description of this tracker.
         /// </summary>
         public string Description { get; internal set; }
+        
+        /// <summary>
+        /// Gets the list of enabled tracker's core fields
+        /// </summary>
+        public List<TrackerCoreField> EnabledStandardFields { get; internal set; }
 
         #region Implementation of IXmlSerialization
         /// <summary>
@@ -63,6 +69,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.NAME: Name = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.DEFAULT_STATUS: DefaultStatus = new IdentifiableName(reader); break;
                     case RedmineKeys.DESCRIPTION: Description = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.ENABLED_STANDARD_FIELDS: EnabledStandardFields = reader.ReadElementContentAsCollection<TrackerCoreField>(); break;
                     default: reader.Read(); break;
                 }
             }
@@ -95,6 +102,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.NAME: Name = reader.ReadAsString(); break;
                     case RedmineKeys.DEFAULT_STATUS: DefaultStatus = new IdentifiableName(reader); break;
                     case RedmineKeys.DESCRIPTION: Description = reader.ReadAsString(); break;
+                    case RedmineKeys.ENABLED_STANDARD_FIELDS: EnabledStandardFields = reader.ReadAsCollection<TrackerCoreField>(); break;
                     default: reader.Read(); break;
                 }
             }
