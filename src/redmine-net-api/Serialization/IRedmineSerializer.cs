@@ -25,7 +25,7 @@ namespace Redmine.Net.Api.Serialization
         /// Gets the application format this serializer supports (e.g. "json", "xml").
         /// </summary>
         string Format { get; }
-
+        
         /// <summary>
         /// Serializes the specified object into a string.
         /// </summary>

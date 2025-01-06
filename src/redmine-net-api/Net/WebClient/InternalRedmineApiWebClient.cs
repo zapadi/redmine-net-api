@@ -64,37 +64,53 @@ namespace Redmine.Net.Api.Net.WebClient
             
             if (webClientOptions.MaxServicePoints.HasValue)
             {
+#pragma warning disable SYSLIB0014
                 ServicePointManager.MaxServicePoints = webClientOptions.MaxServicePoints.Value;
+#pragma warning restore SYSLIB0014
             }
 
             if (webClientOptions.MaxServicePointIdleTime.HasValue)
             {
+#pragma warning disable SYSLIB0014
                 ServicePointManager.MaxServicePointIdleTime = webClientOptions.MaxServicePointIdleTime.Value;
+#pragma warning restore SYSLIB0014
             }
 
+#pragma warning disable SYSLIB0014
             ServicePointManager.SecurityProtocol = webClientOptions.SecurityProtocolType ?? ServicePointManager.SecurityProtocol;
+#pragma warning restore SYSLIB0014
 
             if (webClientOptions.DefaultConnectionLimit.HasValue)
             {
+#pragma warning disable SYSLIB0014
                 ServicePointManager.DefaultConnectionLimit = webClientOptions.DefaultConnectionLimit.Value;
+#pragma warning restore SYSLIB0014
             }
 
             if (webClientOptions.DnsRefreshTimeout.HasValue)
             {
+#pragma warning disable SYSLIB0014
                 ServicePointManager.DnsRefreshTimeout = webClientOptions.DnsRefreshTimeout.Value;
+#pragma warning restore SYSLIB0014
             }
 
+#pragma warning disable SYSLIB0014
             ServicePointManager.CheckCertificateRevocationList = webClientOptions.CheckCertificateRevocationList;
+#pragma warning restore SYSLIB0014
 
             if (webClientOptions.EnableDnsRoundRobin.HasValue)
             {
+#pragma warning disable SYSLIB0014
                 ServicePointManager.EnableDnsRoundRobin = webClientOptions.EnableDnsRoundRobin.Value;
+#pragma warning restore SYSLIB0014
             }
 
             #if(NET46_OR_GREATER || NETCOREAPP)
             if (webClientOptions.ReusePort.HasValue)
             {
+#pragma warning disable SYSLIB0014
                 ServicePointManager.ReusePort = webClientOptions.ReusePort.Value;
+#pragma warning restore SYSLIB0014
             }
             #endif
         }

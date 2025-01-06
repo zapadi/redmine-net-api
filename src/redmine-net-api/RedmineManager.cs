@@ -49,14 +49,8 @@ namespace Redmine.Net.Api
         /// <exception cref="ArgumentNullException"></exception>
         public RedmineManager(RedmineManagerOptionsBuilder optionsBuilder)
         {
-            #if NET5_0_OR_GREATER
-            ArgumentNullException.ThrowIfNull(optionsBuilder);
-            #else
-            if (optionsBuilder == null)
-            {
-                throw new ArgumentNullException(nameof(optionsBuilder));
-            }
-            #endif
+            ArgumentNullThrowHelper.ThrowIfNull(optionsBuilder, nameof(optionsBuilder));
+           
             _redmineManagerOptions = optionsBuilder.Build();
             if (_redmineManagerOptions.VerifyServerCert)
             {

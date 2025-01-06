@@ -14,34 +14,30 @@
    limitations under the License.
 */
 
-using System;
 using System.Text;
+using Redmine.Net.Api.Internals;
 
 namespace Redmine.Net.Api.Net.WebClient.MessageContent;
 
-internal sealed class StringApiRequestMessageContent : ByteArrayApiRequestMessageContent
+internal sealed class StringApiRequestMessageContent 
+    : ByteArrayApiRequestMessageContent
 {
     private static readonly Encoding DefaultStringEncoding = Encoding.UTF8;
 
-    public StringApiRequestMessageContent(string content, string mediaType) : this(content, mediaType, DefaultStringEncoding)
+    public StringApiRequestMessageContent(string content, string mediaType) 
+        : this(content, mediaType, DefaultStringEncoding)
     {
     }
 
-    public StringApiRequestMessageContent(string content, string mediaType, Encoding encoding) : base(GetContentByteArray(content, encoding))
+    public StringApiRequestMessageContent(string content, string mediaType, Encoding encoding) 
+        : base(GetContentByteArray(content, encoding))
     {
         ContentType = mediaType;
     }
 
     private static byte[] GetContentByteArray(string content, Encoding encoding)
     {
-        #if NET5_0_OR_GREATER
-        ArgumentNullException.ThrowIfNull(content);
-        #else
-        if (content == null)
-        {
-            throw new ArgumentNullException(nameof(content));
-        }
-        #endif
+        ArgumentNullThrowHelper.ThrowIfNull(content);
         return (encoding ?? DefaultStringEncoding).GetBytes(content);
     }
 }
