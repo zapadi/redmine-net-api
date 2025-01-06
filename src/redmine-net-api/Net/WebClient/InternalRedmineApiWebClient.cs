@@ -34,6 +34,7 @@ namespace Redmine.Net.Api.Net.WebClient
     /// </summary>
     internal sealed class InternalRedmineApiWebClient : IRedmineApiClient
     {
+        private static readonly byte[] EmptyBytes = Encoding.UTF8.GetBytes(string.Empty);
         private readonly Func<System.Net.WebClient> _webClientFunc;
         private readonly IRedmineAuthentication _credentials;
         private readonly IRedmineSerializer _serializer;
@@ -44,48 +45,56 @@ namespace Redmine.Net.Api.Net.WebClient
             ConfigureServicePointManager(redmineManagerOptions.ClientOptions);
         }
 
-        public InternalRedmineApiWebClient(Func<System.Net.WebClient> webClientFunc, IRedmineAuthentication authentication, IRedmineSerializer serializer)
+        public InternalRedmineApiWebClient(
+            Func<System.Net.WebClient> webClientFunc, 
+            IRedmineAuthentication authentication, 
+            IRedmineSerializer serializer)
         {
             _webClientFunc = webClientFunc;
             _credentials = authentication;
             _serializer = serializer;
         }
 
-        private static void ConfigureServicePointManager(IRedmineApiClientOptions webClientSettings)
+        private static void ConfigureServicePointManager(IRedmineApiClientOptions options)
         {
-            if (webClientSettings.MaxServicePoints.HasValue)
+            if (options is not IRedmineWebClientOptions webClientOptions)
             {
-                ServicePointManager.MaxServicePoints = webClientSettings.MaxServicePoints.Value;
+                return;
+            }
+            
+            if (webClientOptions.MaxServicePoints.HasValue)
+            {
+                ServicePointManager.MaxServicePoints = webClientOptions.MaxServicePoints.Value;
             }
 
-            if (webClientSettings.MaxServicePointIdleTime.HasValue)
+            if (webClientOptions.MaxServicePointIdleTime.HasValue)
             {
-                ServicePointManager.MaxServicePointIdleTime = webClientSettings.MaxServicePointIdleTime.Value;
+                ServicePointManager.MaxServicePointIdleTime = webClientOptions.MaxServicePointIdleTime.Value;
             }
 
-            ServicePointManager.SecurityProtocol = webClientSettings.SecurityProtocolType ?? ServicePointManager.SecurityProtocol;
+            ServicePointManager.SecurityProtocol = webClientOptions.SecurityProtocolType ?? ServicePointManager.SecurityProtocol;
 
-            if (webClientSettings.DefaultConnectionLimit.HasValue)
+            if (webClientOptions.DefaultConnectionLimit.HasValue)
             {
-                ServicePointManager.DefaultConnectionLimit = webClientSettings.DefaultConnectionLimit.Value;
+                ServicePointManager.DefaultConnectionLimit = webClientOptions.DefaultConnectionLimit.Value;
             }
 
-            if (webClientSettings.DnsRefreshTimeout.HasValue)
+            if (webClientOptions.DnsRefreshTimeout.HasValue)
             {
-                ServicePointManager.DnsRefreshTimeout = webClientSettings.DnsRefreshTimeout.Value;
+                ServicePointManager.DnsRefreshTimeout = webClientOptions.DnsRefreshTimeout.Value;
             }
 
-            ServicePointManager.CheckCertificateRevocationList = webClientSettings.CheckCertificateRevocationList;
+            ServicePointManager.CheckCertificateRevocationList = webClientOptions.CheckCertificateRevocationList;
 
-            if (webClientSettings.EnableDnsRoundRobin.HasValue)
+            if (webClientOptions.EnableDnsRoundRobin.HasValue)
             {
-                ServicePointManager.EnableDnsRoundRobin = webClientSettings.EnableDnsRoundRobin.Value;
+                ServicePointManager.EnableDnsRoundRobin = webClientOptions.EnableDnsRoundRobin.Value;
             }
 
             #if(NET46_OR_GREATER || NETCOREAPP)
-            if (webClientSettings.ReusePort.HasValue)
+            if (webClientOptions.ReusePort.HasValue)
             {
-                ServicePointManager.ReusePort = webClientSettings.ReusePort.Value;
+                ServicePointManager.ReusePort = webClientOptions.ReusePort.Value;
             }
             #endif
         }
@@ -197,7 +206,7 @@ namespace Redmine.Net.Api.Net.WebClient
                 
                 SetWebClientHeaders(webClient, requestMessage);
 
-                if (requestMessage.Method is HttpVerbs.GET or HttpVerbs.DOWNLOAD)
+                if(IsGetOrDownload(requestMessage.Method))
                 {
                     response = await webClient.DownloadDataTaskAsync(requestMessage.RequestUri).ConfigureAwait(false);
                 }
@@ -211,7 +220,7 @@ namespace Redmine.Net.Api.Net.WebClient
                     }
                     else
                     {
-                        payload = Encoding.UTF8.GetBytes(string.Empty);
+                        payload = EmptyBytes;
                     }
 
                     response = await webClient.UploadDataTaskAsync(requestMessage.RequestUri, requestMessage.Method, payload).ConfigureAwait(false);
@@ -293,7 +302,7 @@ namespace Redmine.Net.Api.Net.WebClient
                     }
                     else
                     {
-                        payload = Encoding.UTF8.GetBytes(string.Empty);
+                        payload = EmptyBytes;
                     }
 
                     response = webClient.UploadData(requestMessage.RequestUri, requestMessage.Method, payload);
