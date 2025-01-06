@@ -51,6 +51,25 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
+        public const string AUTHORIZATION_HEADER_KEY = "Authorization";
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string API_KEY_AUTHORIZATION_HEADER_KEY = "X-Redmine-API-Key";
+        
+        /// <summary>
+        /// 
+        /// </summary>
         public const string XML = "xml";
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string JSON = "json";
+        
+        internal const string USER_AGENT_HEADER_KEY = "User-Agent";
+        
+        internal const string CONTENT_TYPE_HEADER_KEY = "Content-Type";
     }
 }
