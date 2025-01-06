@@ -57,7 +57,7 @@ namespace Redmine.Net.Api
             .WithHost(host)
             .WithSerializationType(mimeFormat)
             .WithVerifyServerCert(verifyServerCert)
-            .WithClientOptions(new RedmineWebClientOptions()
+            .WithWebClientOptions(new RedmineWebClientOptions()
             {
                 Proxy = proxy,
                 Scheme = scheme,
@@ -91,7 +91,7 @@ namespace Redmine.Net.Api
                    .WithApiKeyAuthentication(apiKey)
                    .WithSerializationType(mimeFormat)
                    .WithVerifyServerCert(verifyServerCert)
-                   .WithClientOptions(new RedmineWebClientOptions()
+                   .WithWebClientOptions(new RedmineWebClientOptions()
                    {
                        Proxy = proxy,
                        Scheme = scheme,
@@ -120,7 +120,7 @@ namespace Redmine.Net.Api
                    .WithBasicAuthentication(login, password)
                    .WithSerializationType(mimeFormat)
                    .WithVerifyServerCert(verifyServerCert)
-                   .WithClientOptions(new RedmineWebClientOptions()
+                   .WithWebClientOptions(new RedmineWebClientOptions()
                    {
                        Proxy = proxy,
                        Scheme = scheme,
@@ -135,7 +135,7 @@ namespace Redmine.Net.Api
         /// <value>
         ///     The suffixes.
         /// </value>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " It returns null.")]
         public static Dictionary<Type, string> Suffixes => null;
 
         /// <summary>
@@ -385,7 +385,7 @@ namespace Redmine.Net.Api
             return RedmineManagerExtensions.Search(this, q, limit, offset, searchFilter);
         }
         
-           /// <summary>
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="include"></param>
@@ -427,14 +427,10 @@ namespace Redmine.Net.Api
         ///         Issue issue = redmineManager.GetObject&lt;Issue&gt;(issueId, parameters);
         ///   </example>
         /// </code>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        [Obsolete($"{RedmineConstants.OBSOLETE_TEXT} Use Get<T> instead")]
         public T GetObject<T>(string id, NameValueCollection parameters) where T : class, new()
         {
-            var url = RedmineApiUrls.GetFragment<T>(id);
-
-            var response = ApiClient.Get(url, parameters != null ? new RequestOptions { QueryString = parameters } : null);
-            
-            return response.DeserializeTo<T>(Serializer);
+            return Get<T>(id, parameters != null ? new RequestOptions { QueryString = parameters } : null);
         }
 
         /// <summary>
@@ -494,9 +490,7 @@ namespace Redmine.Net.Api
         [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
         public List<T> GetObjects<T>(NameValueCollection parameters = null) where T : class, new()
         {
-            var uri = RedmineApiUrls.GetListFragment<T>();
-            
-            return GetObjects<T>(uri, parameters != null ? new RequestOptions { QueryString = parameters } : null);
+            return Get<T>(parameters != null ? new RequestOptions { QueryString = parameters } : null);
         }
         
         /// <summary>
@@ -508,9 +502,7 @@ namespace Redmine.Net.Api
         [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
         public PagedResults<T> GetPaginatedObjects<T>(NameValueCollection parameters) where T : class, new()
         {
-            var url = RedmineApiUrls.GetListFragment<T>();
-
-            return GetPaginatedObjects<T>(url, parameters != null ? new RequestOptions { QueryString = parameters } : null);
+            return GetPaginated<T>(parameters != null ? new RequestOptions { QueryString = parameters } : null);
         }
 
         /// <summary>
@@ -527,7 +519,7 @@ namespace Redmine.Net.Api
         [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
         public T CreateObject<T>(T entity) where T : class, new()
         {
-            return CreateObject(entity, null);
+            return Create<T>(entity);
         }
 
         /// <summary>
@@ -554,21 +546,15 @@ namespace Redmine.Net.Api
         [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
         public T CreateObject<T>(T entity, string ownerId) where T : class, new()
         {
-            var url = RedmineApiUrls.CreateEntityFragment<T>(ownerId);
-
-            var payload = Serializer.Serialize(entity);
-            
-            var response = ApiClient.Create(url, payload);
-
-            return response.DeserializeTo<T>(Serializer);
+            return Create<T>(entity, ownerId);
         }
 
         /// <summary>
         ///     Updates a Redmine object.
         /// </summary>
-        /// <typeparam name="T">The type of object to be update.</typeparam>
-        /// <param name="id">The id of the object to be update.</param>
-        /// <param name="entity">The object to be update.</param>
+        /// <typeparam name="T">The type of object to be updated.</typeparam>
+        /// <param name="id">The id of the object to be updated.</param>
+        /// <param name="entity">The object to be updated.</param>
         /// <param name="projectId">The project identifier.</param>
         /// <exception cref="RedmineException"></exception>
         /// <remarks>
@@ -580,11 +566,7 @@ namespace Redmine.Net.Api
         [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
         public void UpdateObject<T>(string id, T entity, string projectId = null) where T : class, new()
         {
-            var url = RedmineApiUrls.UpdateFragment<T>(id);
-
-            var payload = Serializer.Serialize(entity);
-            
-            ApiClient.Update(url, payload);
+            Update(id, entity, projectId);
         }
 
         /// <summary>
@@ -598,9 +580,7 @@ namespace Redmine.Net.Api
         [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
         public void DeleteObject<T>(string id, NameValueCollection parameters = null) where T : class, new()
         {
-            var url = RedmineApiUrls.DeleteFragment<T>(id);
-
-            ApiClient.Delete(url, parameters != null ? new RequestOptions { QueryString = parameters } : null);
+            Delete<T>(id, parameters != null ? new RequestOptions { QueryString = parameters } : null);
         }
         
         /// <summary>
@@ -625,12 +605,13 @@ namespace Redmine.Net.Api
         /// <param name="sslPolicyErrors">The error.</param>
         /// <returns></returns>
         /// <code></code>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT + "Use WebClientSettings.ServerCertificateValidationCallback instead")]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + "Use RedmineManagerOptions.ClientOptions.ServerCertificateValidationCallback instead")]
         public virtual bool RemoteCertValidate(object sender, X509Certificate cert, X509Chain chain, SslPolicyErrors sslPolicyErrors)
         {
             const SslPolicyErrors IGNORED_ERRORS = SslPolicyErrors.RemoteCertificateChainErrors | SslPolicyErrors.RemoteCertificateNameMismatch;
  
             return (sslPolicyErrors & ~IGNORED_ERRORS) == SslPolicyErrors.None;
+
         }
     }
 }

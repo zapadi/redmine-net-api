@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -35,17 +36,7 @@ namespace Redmine.Net.Api.Extensions
         /// </summary>
         /// <param name="exception">The exception.</param>
         /// <param name="serializer"></param>
-        /// <exception cref="RedmineTimeoutException">Timeout!</exception>
-        /// <exception cref="NameResolutionFailureException">Bad domain name!</exception>
-        /// <exception cref="NotFoundException"></exception>
-        /// <exception cref="InternalServerErrorException"></exception>
-        /// <exception cref="UnauthorizedException"></exception>
-        /// <exception cref="ForbiddenException"></exception>
-        /// <exception cref="ConflictException">The page that you are trying to update is staled!</exception>
-        /// <exception cref="RedmineException">
-        /// </exception>
-        /// <exception cref="NotAcceptableException"></exception>
-        public static void HandleWebException(this WebException exception, IRedmineSerializer serializer)
+        public static void HandleApiRequestException(this WebException exception, IRedmineSerializer serializer)
         {
             if (exception == null)
             {
@@ -56,27 +47,14 @@ namespace Redmine.Net.Api.Extensions
 
             switch (exception.Status)
             {
-                case WebExceptionStatus.Timeout:
-                    throw new RedmineTimeoutException(nameof(WebExceptionStatus.Timeout), innerException);
-                case WebExceptionStatus.NameResolutionFailure:
-                    throw new NameResolutionFailureException("Bad domain name.", innerException);
-                
                 case WebExceptionStatus.ProtocolError:
                     {
                         var response = (HttpWebResponse)exception.Response;
+                        Debug.Assert(response != null, $"{nameof(response)} != null");
                         switch ((int)response.StatusCode)
                         {
-                            case (int)HttpStatusCode.NotFound:
-                                throw new NotFoundException(response.StatusDescription, innerException);
-
-                            case (int)HttpStatusCode.Unauthorized:
-                                throw new UnauthorizedException(response.StatusDescription, innerException);
-
-                            case (int)HttpStatusCode.Forbidden:
-                                throw new ForbiddenException(response.StatusDescription, innerException);
-
                             case (int)HttpStatusCode.Conflict:
-                                throw new ConflictException("The page that you are trying to update is staled!", innerException);
+                                throw new RedmineException("The page that you are trying to update is staled!", innerException);
 
                             case 422:
                                 RedmineException redmineException;
@@ -100,16 +78,13 @@ namespace Redmine.Net.Api.Extensions
                                
                                 throw redmineException;
 
-                            case (int)HttpStatusCode.NotAcceptable:
-                                throw new NotAcceptableException(response.StatusDescription, innerException);
-
                             default:
                                 throw new RedmineException(response.StatusDescription, innerException);
                         }
                     }
                     
                 default:
-                    throw new RedmineException(exception.Message, innerException);
+                    throw new RedmineException(innerException.Message, innerException);
             }
         }
 
@@ -119,7 +94,7 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="webResponse">The web response.</param>
         /// <param name="serializer"></param>
         /// <returns></returns>
-        private static IEnumerable<Error> GetRedmineExceptions(this WebResponse webResponse, IRedmineSerializer serializer)
+        private static IEnumerable<Error> GetRedmineExceptions(WebResponse webResponse, IRedmineSerializer serializer)
         {
             using (var responseStream = webResponse.GetResponseStream())
             {

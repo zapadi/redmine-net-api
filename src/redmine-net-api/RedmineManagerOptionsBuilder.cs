@@ -36,10 +36,10 @@ namespace Redmine.Net.Api
     {
         private enum ClientType
         {
-            None,
             WebClient,
+            HttpClient,
         }
-        private ClientType _clientType = ClientType.None;
+        private ClientType _clientType = ClientType.WebClient;
         
         /// <summary>
         /// 
@@ -97,7 +97,7 @@ namespace Redmine.Net.Api
         }
 
         /// <summary>
-        /// 
+        /// Gets the current serialization type 
         /// </summary>
         public SerializationType SerializationType { get; private set; }
 
@@ -136,15 +136,7 @@ namespace Redmine.Net.Api
         /// <returns></returns>
         public RedmineManagerOptionsBuilder WithWebClient(Func<WebClient> clientFunc)
         {
-            if (clientFunc != null)
-            {
-                _clientType = ClientType.WebClient;
-            }
-
-            if (clientFunc == null && _clientType == ClientType.WebClient)
-            {
-                _clientType = ClientType.None;
-            }
+            _clientType = ClientType.WebClient;
             this.ClientFunc = clientFunc;
             return this;
         }
@@ -157,6 +149,7 @@ namespace Redmine.Net.Api
         /// <returns></returns>
         public RedmineManagerOptionsBuilder WithHttpClient(Func<HttpClient> clientFunc)
         {
+            _clientType = ClientType.HttpClient;
             this.HttpClientFunc = clientFunc;
             return this;
         }
@@ -177,8 +170,9 @@ namespace Redmine.Net.Api
         /// </summary>
         /// <param name="clientOptions"></param>
         /// <returns></returns>
-        public RedmineManagerOptionsBuilder WithClientOptions(IRedmineApiClientOptions clientOptions)
+        public RedmineManagerOptionsBuilder WithWebClientOptions(IRedmineApiClientOptions clientOptions)
         {
+            _clientType = ClientType.WebClient;
             this.ClientOptions = clientOptions;
             return this;
         }
@@ -235,14 +229,26 @@ namespace Redmine.Net.Api
         internal RedmineManagerOptions Build()
         {
 #if NET45_OR_GREATER || NETCOREAPP
-            
+            ClientOptions ??= _clientType switch
+            {
+                ClientType.WebClient => new RedmineWebClientOptions()
+                {
+                    UserAgent = "Redmine.Net.Api",
+                    DecompressionFormat = DecompressionMethods.GZip | DecompressionMethods.Deflate,
+                },
                 ClientType.HttpClient => new RedmineHttpClientOptions()
                 {
                     UserAgent = "Redmine.Net.Api.Net",
                     DecompressionFormat = DecompressionMethods.GZip | DecompressionMethods.Deflate,
                 },
                 _ => throw new ArgumentOutOfRangeException()
+            };
             #else
+            ClientOptions ??= new RedmineWebClientOptions()
+                {
+                    UserAgent = "Redmine.Net.Api.Net",
+                    DecompressionFormat = DecompressionMethods.GZip | DecompressionMethods.Deflate,
+                };
             #endif
             var baseAddress = CreateRedmineUri(Host, ClientOptions.Scheme);
             
@@ -260,6 +266,8 @@ namespace Redmine.Net.Api
             return options;
         }
         
+        private static readonly char[] DotCharArray = ['.'];
+        
         internal static void EnsureDomainNameIsValid(string domainName)
         {
             if (domainName.IsNullOrWhiteSpace())
@@ -272,7 +280,7 @@ namespace Redmine.Net.Api
                 throw new RedmineException("Domain name cannot be longer than 255 characters.");
             }
 
-            var labels = domainName.Split('.');
+            var labels = domainName.Split(DotCharArray);
             if (labels.Length == 1)
             {
                 throw new RedmineException("Domain name is not valid.");
@@ -340,7 +348,6 @@ namespace Redmine.Net.Api
             }
 
             scheme ??= Uri.UriSchemeHttps;
-            var hasScheme = false;
             if (!uri.Scheme.IsNullOrWhiteSpace())
             {
                 if (uri.Host.IsNullOrWhiteSpace() && uri.IsAbsoluteUri && !uri.IsFile)
@@ -364,57 +371,17 @@ namespace Redmine.Net.Api
                     {
                         throw new RedmineException("Invalid host scheme. Only HTTP and HTTPS are supported.");
                     }
-
-                    hasScheme = true;
                 }
             }
             else
             {
-                
                 if (!IsSchemaHttpOrHttps(scheme))
                 {
                     throw new RedmineException("Invalid host scheme. Only HTTP and HTTPS are supported.");
                 }
             }
 
-            var uriBuilder = new UriBuilder();
-            
-            if (uri.HostNameType == UriHostNameType.IPv6)
-            {
-                uriBuilder.Scheme = (hasScheme ? uri.Scheme : scheme ?? Uri.UriSchemeHttps);
-                uriBuilder.Host = uri.Host;
-            }
-            else
-            {
-                if (uri.Authority.IsNullOrWhiteSpace())
-                {
-                    if (uri.Port == -1)
-                    {
-                        if (int.TryParse(uri.LocalPath, out var port))
-                        {
-                            uriBuilder.Port = port;
-                        }
-                    }
-
-                    uriBuilder.Scheme = scheme ?? Uri.UriSchemeHttps;
-                    uriBuilder.Host = uri.Scheme;
-                }
-                else
-                {
-                    uriBuilder.Scheme = uri.Scheme;
-                    uriBuilder.Port = int.TryParse(uri.LocalPath, out var port) ? port : uri.Port;
-                    uriBuilder.Host = uri.Host;
-                }
-            }
-
-            try
-            {
-                return uriBuilder.Uri;
-            }
-            catch (Exception ex)
-            {
-                throw new RedmineException(ex.Message);
-            }
+            return uri;
         }
 
         private static bool IsSchemaHttpOrHttps(string scheme)

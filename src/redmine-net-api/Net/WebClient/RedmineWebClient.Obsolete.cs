@@ -149,7 +149,7 @@ namespace Redmine.Net.Api
             }
             catch (WebException webException)
             {
-                webException.HandleWebException(RedmineSerializer);
+                webException.HandleApiRequestException(RedmineSerializer);
             }
 
             switch (response)

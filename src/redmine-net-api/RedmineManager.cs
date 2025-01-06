@@ -1,4 +1,4 @@
-/*
+﻿/*
    Copyright 2011 - 2023 Adrian Popescu
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,6 +21,7 @@ using System.Globalization;
 using System.Net;
 using Redmine.Net.Api.Authentication;
 using Redmine.Net.Api.Extensions;
+using Redmine.Net.Api.Internals;
 using Redmine.Net.Api.Net;
 #if NET45_OR_GREATER || NETCOREAPP
 using Redmine.Net.Api.Net.HttpClient;
@@ -52,24 +53,31 @@ namespace Redmine.Net.Api
             ArgumentNullThrowHelper.ThrowIfNull(optionsBuilder, nameof(optionsBuilder));
            
             _redmineManagerOptions = optionsBuilder.Build();
+#if NET45_OR_GREATER
             if (_redmineManagerOptions.VerifyServerCert)
             {
                 _redmineManagerOptions.ClientOptions.ServerCertificateValidationCallback = RemoteCertValidate;
             }
+#endif
 
-            Serializer = _redmineManagerOptions.Serializer;
+            if (_redmineManagerOptions.ClientOptions is RedmineWebClientOptions)
+            {
+#pragma warning disable SYSLIB0014
+                _redmineManagerOptions.ClientOptions.SecurityProtocolType ??= ServicePointManager.SecurityProtocol;
+#pragma warning restore SYSLIB0014
+            }
             
+            Serializer = _redmineManagerOptions.Serializer;
             Host = _redmineManagerOptions.BaseAddress.ToString();
             PageSize = _redmineManagerOptions.PageSize;
             Format = Serializer.Format;
             Scheme = _redmineManagerOptions.BaseAddress.Scheme;
             Proxy = _redmineManagerOptions.ClientOptions.Proxy;
             Timeout = _redmineManagerOptions.ClientOptions.Timeout;
-            MimeFormat = RedmineConstants.XML.Equals(Serializer.Format, StringComparison.OrdinalIgnoreCase) ? MimeFormat.Xml : MimeFormat.Json;
-            
-            _redmineManagerOptions.ClientOptions.SecurityProtocolType ??= ServicePointManager.SecurityProtocol;
-                
-            SecurityProtocolType = _redmineManagerOptions.ClientOptions.SecurityProtocolType.Value;
+            MimeFormat = RedmineConstants.XML.Equals(Serializer.Format, StringComparison.Ordinal) 
+                ? MimeFormat.Xml 
+                : MimeFormat.Json;
+            SecurityProtocolType = _redmineManagerOptions.ClientOptions.SecurityProtocolType.GetValueOrDefault();
             
             if (_redmineManagerOptions.Authentication is RedmineApiKeyAuthentication)
             {
@@ -77,7 +85,13 @@ namespace Redmine.Net.Api
             }
             
             RedmineApiUrls = new RedmineApiUrls(Serializer.Format);
-            ApiClient = new InternalRedmineApiWebClient(_redmineManagerOptions); 
+            #if NET45_OR_GREATER || NETCOREAPP
+            if (_redmineManagerOptions.ClientOptions is RedmineWebClientOptions)
+            {
+                ApiClient = _redmineManagerOptions.ClientFunc != null 
+                    ? new InternalRedmineApiWebClient(_redmineManagerOptions.ClientFunc, _redmineManagerOptions.Authentication, _redmineManagerOptions.Serializer)
+                    : new InternalRedmineApiWebClient(_redmineManagerOptions);
+            }
             else
             {
                 ApiClient = _redmineManagerOptions.HttpClientFunc != null
@@ -85,6 +99,11 @@ namespace Redmine.Net.Api
                         _redmineManagerOptions.Authentication, _redmineManagerOptions.Serializer)
                     : new InternalRedmineApiHttpClient(_redmineManagerOptions);
             }
+#else
+            ApiClient = _redmineManagerOptions.ClientFunc != null 
+            ? new InternalRedmineApiWebClient(_redmineManagerOptions.ClientFunc, _redmineManagerOptions.Authentication, _redmineManagerOptions.Serializer)
+            : new InternalRedmineApiWebClient(_redmineManagerOptions);
+            #endif
         }
 
         /// <inheritdoc />
@@ -102,7 +121,7 @@ namespace Redmine.Net.Api
             
             requestOptions.QueryString = requestOptions.QueryString.AddPagingParameters(PAGE_SIZE, OFFSET);
             
-            var tempResult = GetPaginatedObjects<T>(requestOptions.QueryString);
+            var tempResult = GetPaginated<T>(requestOptions);
 
             if (tempResult != null)
             {
@@ -129,7 +148,7 @@ namespace Redmine.Net.Api
         {
             var uri = RedmineApiUrls.GetListFragment<T>();
             
-            return GetObjects<T>(uri, requestOptions);
+            return GetInternal<T>(uri, requestOptions);
         }
 
         /// <inheritdoc />
@@ -138,7 +157,7 @@ namespace Redmine.Net.Api
         {
             var url = RedmineApiUrls.GetListFragment<T>();
 
-            return GetPaginatedObjects<T>(url, requestOptions);
+            return GetPaginatedInternal<T>(url, requestOptions);
         }
 
         /// <inheritdoc />
@@ -199,7 +218,7 @@ namespace Redmine.Net.Api
         /// <param name="requestOptions"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        internal List<T> GetObjects<T>(string uri, RequestOptions requestOptions = null) 
+        internal List<T> GetInternal<T>(string uri, RequestOptions requestOptions = null) 
              where T : class, new()
         {
             int pageSize = 0, offset = 0;
@@ -232,7 +251,7 @@ namespace Redmine.Net.Api
                 {
                     requestOptions.QueryString.Set(RedmineKeys.OFFSET, offset.ToString(CultureInfo.InvariantCulture));
 
-                    var tempResult = GetPaginatedObjects<T>(uri, requestOptions);
+                    var tempResult = GetPaginatedInternal<T>(uri, requestOptions);
 
                     totalCount = isLimitSet ? pageSize : tempResult.TotalItems;
 
@@ -254,7 +273,7 @@ namespace Redmine.Net.Api
             }
             else
             {
-                var result = GetPaginatedObjects<T>(uri, requestOptions);
+                var result = GetPaginatedInternal<T>(uri, requestOptions);
                 if (result?.Items != null)
                 {
                     return new List<T>(result.Items);
@@ -271,7 +290,7 @@ namespace Redmine.Net.Api
         /// <param name="requestOptions"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        internal PagedResults<T> GetPaginatedObjects<T>(string uri = null, RequestOptions requestOptions = null) 
+        internal PagedResults<T> GetPaginatedInternal<T>(string uri = null, RequestOptions requestOptions = null) 
             where T : class, new()
         {
             uri = uri.IsNullOrWhiteSpace() ? RedmineApiUrls.GetListFragment<T>() : uri;

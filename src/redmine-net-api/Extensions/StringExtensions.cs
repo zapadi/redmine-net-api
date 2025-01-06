@@ -116,12 +116,12 @@ namespace Redmine.Net.Api.Extensions
             }
 
             #if (NET5_0_OR_GREATER)
-            if (s.EndsWith('/') || s.EndsWith('\\'))
+            if (s.AsSpan().EndsWith("/", StringComparison.Ordinal) || s.AsSpan().EndsWith("\\", StringComparison.Ordinal))
             {
                 return s.AsSpan()[..(s.Length - 1)].ToString();
             }
             #else
-            if (s.EndsWith("/", StringComparison.OrdinalIgnoreCase) || s.EndsWith(@"\", StringComparison.OrdinalIgnoreCase))
+            if (s.EndsWith("/", StringComparison.Ordinal) || s.EndsWith(@"\", StringComparison.Ordinal))
             {
                 return s.Substring(0, s.Length - 1);
             }
