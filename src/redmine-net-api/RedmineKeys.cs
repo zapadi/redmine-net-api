@@ -248,6 +248,10 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
+        public const string ENABLED_STANDARD_FIELDS = "enabled_standard_fields";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string ENUMERATION_ISSUE_PRIORITIES = "enumerations/issue_priorities";
         /// <summary>
         /// 
@@ -769,6 +773,10 @@ namespace Redmine.Net.Api
         /// 
         /// </summary>
         public const string UPDATED_ON = "updated_on";
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string UPDATED_BY = "updated_by";
         /// <summary>
         /// 
         /// </summary>
