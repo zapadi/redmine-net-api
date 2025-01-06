@@ -15,11 +15,10 @@
 */
 
 using System;
-using System.Collections.Generic;
 using System.Net;
-using System.Net.Cache;
+#if NET45_OR_GREATER
 using System.Net.Security;
-using System.Security.Cryptography.X509Certificates;
+#endif
 
 namespace Redmine.Net.Api.Net
 {
@@ -29,168 +28,108 @@ namespace Redmine.Net.Api.Net
     public interface IRedmineApiClientOptions
     {
         /// <summary>
-    /// 
-    /// </summary>
-    bool? AutoRedirect { get; set; }
+        /// 
+        /// </summary>
+        bool? AutoRedirect { get; set; }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    CookieContainer CookieContainer { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        CookieContainer CookieContainer { get; set; }
+        
+        /// <summary>
+        /// Gets or sets a value that indicates whether the certificate is checked against the certificate authority revocation list.
+        /// </summary>
+        bool CheckCertificateRevocationList { get; set; }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        ICredentials Credentials { get; set; }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    DecompressionMethods? DecompressionFormat { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        DecompressionMethods? DecompressionFormat { get; set; }
+       
+        /// <summary>
+        /// 
+        /// </summary>
+        int? MaxAutomaticRedirections { get; set; }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    ICredentials Credentials { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        long? MaxRequestContentBufferSize { get; set; }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    Dictionary<string, string> DefaultHeaders { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        long? MaxResponseContentBufferSize { get; set; }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    IWebProxy Proxy { get; set; }
+    #if NET471_OR_GREATER || NETCOREAPP
+        /// <summary>
+        /// 
+        /// </summary>
+        int? MaxConnectionsPerServer { get; set; }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    bool? KeepAlive { get; set; }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    int? MaxAutomaticRedirections { get; set; }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    long? MaxRequestContentBufferSize { get; set; }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    long? MaxResponseContentBufferSize { get; set; }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    int? MaxConnectionsPerServer { get; set; }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    int? MaxResponseHeadersLength { get; set; }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    bool? PreAuthenticate { get; set; }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    RequestCachePolicy RequestCachePolicy { get; set; }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    string Scheme { get; set; }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    RemoteCertificateValidationCallback ServerCertificateValidationCallback { get; set; }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    TimeSpan? Timeout { get; set; }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    bool? UnsafeAuthenticatedConnectionSharing { get; set; }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    string UserAgent { get; set; }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    bool? UseCookies { get; set; }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    bool? UseDefaultCredentials { get; set; }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    bool? UseProxy { get; set; }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <remarks>Only HTTP/1.0 and HTTP/1.1 version requests are currently supported.</remarks>
-    Version ProtocolVersion { get; set; }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    bool CheckCertificateRevocationList { get; set; }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    int? DefaultConnectionLimit { get; set; }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    int? DnsRefreshTimeout { get; set; }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    bool? EnableDnsRoundRobin { get; set; }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    int? MaxServicePoints { get; set; }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    int? MaxServicePointIdleTime { get; set; }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    SecurityProtocolType? SecurityProtocolType { get; set; }
-    
-    #if NET40_OR_GREATER || NETCOREAPP
-    /// <summary>
-    /// 
-    /// </summary>
-    public X509CertificateCollection ClientCertificates { get;  set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        int? MaxResponseHeadersLength { get; set; }
     #endif
+
+        /// <summary>
+        /// 
+        /// </summary>
+        bool? PreAuthenticate { get; set; }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        IWebProxy Proxy { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        string Scheme { get; set; }
+
+#if NET45_OR_GREATER
+        /// <summary>
+        /// 
+        /// </summary>
+        public RemoteCertificateValidationCallback ServerCertificateValidationCallback { get; set; }
     
-    #if(NET46_OR_GREATER || NETCOREAPP)
-    /// <summary>
-    /// 
-    /// </summary>
-    public bool? ReusePort { get; set; }
-    #endif
+#endif
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        SecurityProtocolType? SecurityProtocolType { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        TimeSpan? Timeout { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        string UserAgent { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        bool? UseCookies { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        bool? UseDefaultCredentials { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        bool? UseProxy { get; set; }
     }
 }
