@@ -1,4 +1,4 @@
-/*
+﻿/*
    Copyright 2011 - 2023 Adrian Popescu
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -34,6 +34,11 @@ namespace Redmine.Net.Api.Types
     public sealed class Upload : IXmlSerializable, IJsonSerializable, IEquatable<Upload>
     {
         #region Properties
+        /// <summary>
+        ///  Gets the uploaded id.
+        /// </summary>
+        public string Id { get; private set; }
+        
         /// <summary>
         /// Gets or sets the uploaded token.
         /// </summary>
@@ -80,6 +85,7 @@ namespace Redmine.Net.Api.Types
 
                 switch (reader.Name)
                 {
+                    case RedmineKeys.ID: Id = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.CONTENT_TYPE: ContentType = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.DESCRIPTION: Description = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.FILE_NAME: FileName = reader.ReadElementContentAsString(); break;
@@ -123,6 +129,7 @@ namespace Redmine.Net.Api.Types
 
                 switch (reader.Value)
                 {
+                    case RedmineKeys.ID: Id = reader.ReadAsString(); break;
                     case RedmineKeys.CONTENT_TYPE: ContentType = reader.ReadAsString(); break;
                     case RedmineKeys.DESCRIPTION: Description = reader.ReadAsString(); break;
                     case RedmineKeys.FILE_NAME: FileName = reader.ReadAsString(); break;
