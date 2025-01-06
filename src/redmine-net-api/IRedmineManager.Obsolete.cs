@@ -44,7 +44,7 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         ///     Maximum page-size when retrieving complete object lists
         ///     <remarks>
-        ///         By default only 25 results can be retrieved per request. Maximum is 100. To change the maximum value set
+        ///         By default, only 25 results can be retrieved per request. Maximum is 100. To change the maximum value set
         ///         in your Settings -&gt; General, "Objects per page options".By adding (for instance) 9999 there would make you
         ///         able to get that many results per request.
         ///     </remarks>
