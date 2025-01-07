@@ -48,7 +48,7 @@ internal static class RedmineApiUrlsExtensions
             throw new RedmineException($"Argument '{nameof(projectIdentifier)}' is null or whitespace");
         }
 
-        return $"{RedmineKeys.PROJECT}/{projectIdentifier}/{RedmineKeys.MEMBERSHIPS}.{redmineApiUrls.Format}";
+        return $"{RedmineKeys.PROJECTS}/{projectIdentifier}/{RedmineKeys.MEMBERSHIPS}.{redmineApiUrls.Format}";
     }
 
     public static string ProjectWikiIndex(this RedmineApiUrls redmineApiUrls, string projectId)
