@@ -93,7 +93,7 @@ namespace Redmine.Net.Api
             
             requestOptions.QueryString = requestOptions.QueryString.AddPagingParameters(PAGE_SIZE, OFFSET);
             
-            var tempResult = GetPaginatedObjects<T>(requestOptions.QueryString);
+            var tempResult = GetPaginated<T>(requestOptions);
 
             if (tempResult != null)
             {
@@ -120,7 +120,7 @@ namespace Redmine.Net.Api
         {
             var uri = RedmineApiUrls.GetListFragment<T>();
             
-            return GetObjects<T>(uri, requestOptions);
+            return GetInternal<T>(uri, requestOptions);
         }
 
         /// <inheritdoc />
@@ -129,7 +129,7 @@ namespace Redmine.Net.Api
         {
             var url = RedmineApiUrls.GetListFragment<T>();
 
-            return GetPaginatedObjects<T>(url, requestOptions);
+            return GetPaginatedInternal<T>(url, requestOptions);
         }
 
         /// <inheritdoc />
@@ -190,7 +190,7 @@ namespace Redmine.Net.Api
         /// <param name="requestOptions"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        internal List<T> GetObjects<T>(string uri, RequestOptions requestOptions = null) 
+        internal List<T> GetInternal<T>(string uri, RequestOptions requestOptions = null) 
              where T : class, new()
         {
             int pageSize = 0, offset = 0;
@@ -223,7 +223,7 @@ namespace Redmine.Net.Api
                 {
                     requestOptions.QueryString.Set(RedmineKeys.OFFSET, offset.ToString(CultureInfo.InvariantCulture));
 
-                    var tempResult = GetPaginatedObjects<T>(uri, requestOptions);
+                    var tempResult = GetPaginatedInternal<T>(uri, requestOptions);
 
                     totalCount = isLimitSet ? pageSize : tempResult.TotalItems;
 
@@ -245,7 +245,7 @@ namespace Redmine.Net.Api
             }
             else
             {
-                var result = GetPaginatedObjects<T>(uri, requestOptions);
+                var result = GetPaginatedInternal<T>(uri, requestOptions);
                 if (result?.Items != null)
                 {
                     return new List<T>(result.Items);
@@ -262,7 +262,7 @@ namespace Redmine.Net.Api
         /// <param name="requestOptions"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        internal PagedResults<T> GetPaginatedObjects<T>(string uri = null, RequestOptions requestOptions = null) 
+        internal PagedResults<T> GetPaginatedInternal<T>(string uri = null, RequestOptions requestOptions = null) 
             where T : class, new()
         {
             uri = uri.IsNullOrWhiteSpace() ? RedmineApiUrls.GetListFragment<T>() : uri;
