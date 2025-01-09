@@ -208,11 +208,7 @@ public partial class RedmineManager: IRedmineManagerAsync
 
         var payload = Serializer.Serialize(entity);
         
-        #if NET7_0_OR_GREATER
-        payload = ReplaceEndingsRegex().Replace(payload, CRLR);
-        #else
         payload = Regex.Replace(payload, "\r\n|\r|\n",CRLR);
-        #endif
         
         await ApiClient.UpdateAsync(url, payload, requestOptions, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
@@ -242,11 +238,6 @@ public partial class RedmineManager: IRedmineManagerAsync
         var response = await ApiClient.DownloadAsync(address, requestOptions,cancellationToken: cancellationToken).ConfigureAwait(false);
         return response.Content;
     }
-
-    #if NET7_0_OR_GREATER
-    [GeneratedRegex(@"\r\n|\r|\n")]
-    private static partial Regex ReplaceEndingsRegex();
-    #endif
     
     private const int MAX_CONCURRENT_TASKS = 3;
     
