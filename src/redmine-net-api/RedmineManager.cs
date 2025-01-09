@@ -50,24 +50,31 @@ namespace Redmine.Net.Api
             ArgumentNullThrowHelper.ThrowIfNull(optionsBuilder, nameof(optionsBuilder));
             
             _redmineManagerOptions = optionsBuilder.Build();
+    #if NET45_OR_GREATER
             if (_redmineManagerOptions.VerifyServerCert)
             {
                 _redmineManagerOptions.ClientOptions.ServerCertificateValidationCallback = RemoteCertValidate;
             }
+    #endif
 
-            Serializer = _redmineManagerOptions.Serializer;
+            if (_redmineManagerOptions.ClientOptions is RedmineWebClientOptions)
+            {
+    #pragma warning disable SYSLIB0014
+                _redmineManagerOptions.ClientOptions.SecurityProtocolType ??= ServicePointManager.SecurityProtocol;
+    #pragma warning restore SYSLIB0014
+            }
             
+            Serializer = _redmineManagerOptions.Serializer;
             Host = _redmineManagerOptions.BaseAddress.ToString();
             PageSize = _redmineManagerOptions.PageSize;
             Format = Serializer.Format;
             Scheme = _redmineManagerOptions.BaseAddress.Scheme;
             Proxy = _redmineManagerOptions.ClientOptions.Proxy;
             Timeout = _redmineManagerOptions.ClientOptions.Timeout;
-            MimeFormat = RedmineConstants.XML.Equals(Serializer.Format, StringComparison.OrdinalIgnoreCase) ? MimeFormat.Xml : MimeFormat.Json;
-            
-            _redmineManagerOptions.ClientOptions.SecurityProtocolType ??= ServicePointManager.SecurityProtocol;
-                
-            SecurityProtocolType = _redmineManagerOptions.ClientOptions.SecurityProtocolType.Value;
+            MimeFormat = RedmineConstants.XML.Equals(Serializer.Format, StringComparison.Ordinal) 
+                ? MimeFormat.Xml 
+                : MimeFormat.Json;
+            SecurityProtocolType = _redmineManagerOptions.ClientOptions.SecurityProtocolType.GetValueOrDefault();
             
             if (_redmineManagerOptions.Authentication is RedmineApiKeyAuthentication)
             {
@@ -75,7 +82,22 @@ namespace Redmine.Net.Api
             }
             
             RedmineApiUrls = new RedmineApiUrls(Serializer.Format);
-            ApiClient = new InternalRedmineApiWebClient(_redmineManagerOptions); 
+    #if NET45_OR_GREATER || NETCOREAPP
+            if (_redmineManagerOptions.ClientOptions is RedmineWebClientOptions)
+            {
+                ApiClient = _redmineManagerOptions.ClientFunc != null 
+                    ? new InternalRedmineApiWebClient(_redmineManagerOptions.ClientFunc, _redmineManagerOptions.Authentication, _redmineManagerOptions.Serializer)
+                    : new InternalRedmineApiWebClient(_redmineManagerOptions);
+            }
+            else
+            {
+              
+            }
+    #else
+            ApiClient = _redmineManagerOptions.ClientFunc != null 
+            ? new InternalRedmineApiWebClient(_redmineManagerOptions.ClientFunc, _redmineManagerOptions.Authentication, _redmineManagerOptions.Serializer)
+            : new InternalRedmineApiWebClient(_redmineManagerOptions);
+    #endif
         }
 
         /// <inheritdoc />
