@@ -361,6 +361,10 @@ namespace Redmine.Net.Api
                     uriBuilder.Scheme = uri.Scheme;
                     uriBuilder.Port = int.TryParse(uri.LocalPath, out var port) ? port : uri.Port;
                     uriBuilder.Host = uri.Host;
+                    if (!uri.LocalPath.IsNullOrWhiteSpace() && !uri.LocalPath.Contains("."))
+                    {
+                        uriBuilder.Path = uri.LocalPath;
+                    }
                 }
             }
 
