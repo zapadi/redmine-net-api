@@ -29,7 +29,7 @@ namespace Redmine.Net.Api.Async
 {
     /// <summary>
     /// </summary>
-    [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use RedmineManger async methods instead")]
+    [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use RedmineManger async methods instead.")]
     public static class RedmineManagerAsyncExtensions
     {
         /// <summary>
@@ -40,7 +40,7 @@ namespace Redmine.Net.Api.Async
         /// <param name="impersonateUserName"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use the extension with RequestOptions parameter instead.")]
         public static async Task<User> GetCurrentUserAsync(this RedmineManager redmineManager, NameValueCollection parameters = null, string impersonateUserName = null, CancellationToken cancellationToken = default)
         {
             var requestOptions = RedmineManagerExtensions.CreateRequestOptions();
@@ -55,7 +55,7 @@ namespace Redmine.Net.Api.Async
         /// <param name="pageName">Name of the page.</param>
         /// <param name="wikiPage">The wiki page.</param>
         /// <returns></returns>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use the extension with RequestOptions parameter instead.")]
         public static async Task<WikiPage> CreateWikiPageAsync(this RedmineManager redmineManager, string projectId, string pageName, WikiPage wikiPage)
         {
             var requestOptions = RedmineManagerExtensions.CreateRequestOptions();
@@ -71,7 +71,7 @@ namespace Redmine.Net.Api.Async
         /// <param name="pageName">Name of the page.</param>
         /// <param name="wikiPage">The wiki page.</param>
         /// <returns></returns>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use the extension with RequestOptions parameter instead.")]
         public static async Task UpdateWikiPageAsync(this RedmineManager redmineManager, string projectId, string pageName, WikiPage wikiPage)
         {
             var requestOptions = RedmineManagerExtensions.CreateRequestOptions();
@@ -85,7 +85,7 @@ namespace Redmine.Net.Api.Async
         /// <param name="projectId">The project identifier.</param>
         /// <param name="pageName">Name of the page.</param>
         /// <returns></returns>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use the extension with RequestOptions parameter instead.")]
         public static async Task DeleteWikiPageAsync(this RedmineManager redmineManager, string projectId, string pageName)
         {
             var requestOptions = RedmineManagerExtensions.CreateRequestOptions();
@@ -101,7 +101,7 @@ namespace Redmine.Net.Api.Async
         /// <returns>
         ///     .
         /// </returns>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use the extension with RequestOptions parameter instead.")]
         public static async Task<Upload> UploadFileAsync(this RedmineManager redmineManager, byte[] data)
         {
             var requestOptions = RedmineManagerExtensions.CreateRequestOptions();
@@ -114,7 +114,7 @@ namespace Redmine.Net.Api.Async
         /// <param name="redmineManager">The redmine manager.</param>
         /// <param name="address">The address.</param>
         /// <returns></returns>
-        [Obsolete("Use DownloadFileAsync instead")]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use the extension with RequestOptions parameter instead.")]
         public static async Task<byte[]> DownloadFileAsync(this RedmineManager redmineManager, string address)
         {
             var requestOptions = RedmineManagerExtensions.CreateRequestOptions();
@@ -131,7 +131,7 @@ namespace Redmine.Net.Api.Async
         /// <param name="pageName">Name of the page.</param>
         /// <param name="version">The version.</param>
         /// <returns></returns>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use the extension with RequestOptions parameter instead.")]
         public static async Task<WikiPage> GetWikiPageAsync(this RedmineManager redmineManager, string projectId, NameValueCollection parameters, string pageName, uint version = 0)
         {
             var requestOptions = RedmineManagerExtensions.CreateRequestOptions(parameters);
@@ -145,7 +145,7 @@ namespace Redmine.Net.Api.Async
         /// <param name="parameters">The parameters.</param>
         /// <param name="projectId">The project identifier.</param>
         /// <returns></returns>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use the extension with RequestOptions parameter instead.")]
         public static async Task<List<WikiPage>> GetAllWikiPagesAsync(this RedmineManager redmineManager, NameValueCollection parameters, string projectId)
         {
             var requestOptions = RedmineManagerExtensions.CreateRequestOptions(parameters);
@@ -161,7 +161,7 @@ namespace Redmine.Net.Api.Async
         /// <returns>
         ///     Returns the Guid associated with the async request.
         /// </returns>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use the extension with RequestOptions parameter instead.")]
         public static async Task AddUserToGroupAsync(this RedmineManager redmineManager, int groupId, int userId)
         {
             var requestOptions = RedmineManagerExtensions.CreateRequestOptions();
@@ -175,7 +175,7 @@ namespace Redmine.Net.Api.Async
         /// <param name="groupId">The group id.</param>
         /// <param name="userId">The user id.</param>
         /// <returns></returns>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use the extension with RequestOptions parameter instead.")]
         public static async Task RemoveUserFromGroupAsync(this RedmineManager redmineManager, int groupId, int userId)
         {
             var requestOptions = RedmineManagerExtensions.CreateRequestOptions();
@@ -189,7 +189,7 @@ namespace Redmine.Net.Api.Async
         /// <param name="issueId">The issue identifier.</param>
         /// <param name="userId">The user identifier.</param>
         /// <returns></returns>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use the extension with RequestOptions parameter instead.")]
         public static async Task AddWatcherToIssueAsync(this RedmineManager redmineManager, int issueId, int userId)
         {
             var requestOptions = RedmineManagerExtensions.CreateRequestOptions();
@@ -203,7 +203,7 @@ namespace Redmine.Net.Api.Async
         /// <param name="issueId">The issue identifier.</param>
         /// <param name="userId">The user identifier.</param>
         /// <returns></returns>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use the extension with RequestOptions parameter instead.")]
         public static async Task RemoveWatcherFromIssueAsync(this RedmineManager redmineManager, int issueId, int userId)
         {
             var requestOptions = RedmineManagerExtensions.CreateRequestOptions();
@@ -217,7 +217,7 @@ namespace Redmine.Net.Api.Async
         /// <param name="include"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use the extension with RequestOptions parameter instead.")]
         public static async Task<int> CountAsync<T>(this RedmineManager redmineManager, params string[] include) where T : class, new()
         {
             return await redmineManager.CountAsync<T>(null, CancellationToken.None).ConfigureAwait(false);
@@ -230,7 +230,7 @@ namespace Redmine.Net.Api.Async
         /// <param name="parameters"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use CountAsync method instead.")]
         public static async Task<int> CountAsync<T>(this RedmineManager redmineManager, NameValueCollection parameters) where T : class, new()
         {
             var requestOptions = RedmineManagerExtensions.CreateRequestOptions(parameters);
@@ -245,7 +245,7 @@ namespace Redmine.Net.Api.Async
         /// <param name="redmineManager">The redmine manager.</param>
         /// <param name="parameters">The parameters.</param>
         /// <returns></returns>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT  + " Use GetPagedAsync method instead.")]
         public static async Task<PagedResults<T>> GetPaginatedObjectsAsync<T>(this RedmineManager redmineManager, NameValueCollection parameters)
             where T : class, new()
         {
@@ -260,7 +260,7 @@ namespace Redmine.Net.Api.Async
         /// <param name="redmineManager">The redmine manager.</param>
         /// <param name="parameters">The parameters.</param>
         /// <returns></returns>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT  + " Use GetAsync method instead.")]
         public static async Task<List<T>> GetObjectsAsync<T>(this RedmineManager redmineManager, NameValueCollection parameters)
             where T : class, new()
         {
@@ -276,7 +276,7 @@ namespace Redmine.Net.Api.Async
         /// <param name="id">The id of the object.</param>
         /// <param name="parameters">Optional filters and/or optional fetched data.</param>
         /// <returns></returns>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT  + " Use GetAsync method instead.")]
         public static async Task<T> GetObjectAsync<T>(this RedmineManager redmineManager, string id, NameValueCollection parameters)
             where T : class, new()
         {
@@ -291,7 +291,7 @@ namespace Redmine.Net.Api.Async
         /// <param name="redmineManager">The redmine manager.</param>
         /// <param name="entity">The object to create.</param>
         /// <returns></returns>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT  + " Use CreateAsync method instead.")]
         public static async Task<T> CreateObjectAsync<T>(this RedmineManager redmineManager, T entity)
             where T : class, new()
         {
@@ -307,7 +307,7 @@ namespace Redmine.Net.Api.Async
         /// <param name="entity">The object to create.</param>
         /// <param name="ownerId">The owner identifier.</param>
         /// <returns></returns>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT  + " Use CreateAsync method instead.")]
         public static async Task<T> CreateObjectAsync<T>(this RedmineManager redmineManager, T entity, string ownerId)
             where T : class, new()
         {
@@ -323,7 +323,7 @@ namespace Redmine.Net.Api.Async
         /// <param name="id">The identifier.</param>
         /// <param name="entity">The object.</param>
         /// <returns></returns>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT  + " Use UpdateAsync method instead.")]
         public static async Task UpdateObjectAsync<T>(this RedmineManager redmineManager, string id, T entity)
             where T : class, new()
         {
@@ -338,28 +338,12 @@ namespace Redmine.Net.Api.Async
         /// <param name="redmineManager">The redmine manager.</param>
         /// <param name="id">The id of the object to delete</param>
         /// <returns></returns>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT  + " Use DeleteAsync method instead.")]
         public static async Task DeleteObjectAsync<T>(this RedmineManager redmineManager, string id)
             where T : class, new()
         {
             var requestOptions = RedmineManagerExtensions.CreateRequestOptions();
             await redmineManager.DeleteAsync<T>(id, requestOptions).ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="redmineManager"></param>
-        /// <param name="q"></param>
-        /// <param name="limit"></param>
-        /// <param name="offset"></param>
-        /// <param name="searchFilter"></param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentNullException"></exception>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
-        public static async Task<PagedResults<Search>> SearchAsync(this RedmineManager redmineManager, string q, int limit = RedmineManager.DEFAULT_PAGE_SIZE_VALUE, int offset = 0, SearchFilterBuilder searchFilter = null)
-        {
-            return await RedmineManagerExtensions.SearchAsync(redmineManager, q, limit, offset, searchFilter).ConfigureAwait(false);
         }
     }
 }
