@@ -105,7 +105,7 @@ namespace Redmine.Net.Api.Async
         public static async Task<Upload> UploadFileAsync(this RedmineManager redmineManager, byte[] data)
         {
             var requestOptions = RedmineManagerExtensions.CreateRequestOptions();
-            return await redmineManager.UploadFileAsync(data, requestOptions).ConfigureAwait(false);
+            return await redmineManager.UploadFileAsync(data, null, requestOptions).ConfigureAwait(false);
         }
 
         /// <summary>

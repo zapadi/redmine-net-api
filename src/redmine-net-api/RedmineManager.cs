@@ -188,9 +188,9 @@ namespace Redmine.Net.Api
         }
 
         /// <inheritdoc />
-        public Upload UploadFile(byte[] data)
+        public Upload UploadFile(byte[] data, string fileName = null)
         {
-            var url = RedmineApiUrls.UploadFragment();
+            var url = RedmineApiUrls.UploadFragment(fileName);
 
             var response = ApiClient.Upload(url, data);
             

@@ -93,17 +93,18 @@ public partial interface IRedmineManager
     /// <typeparam name="T"></typeparam>
     void Delete<T>(string id, RequestOptions requestOptions = null) 
         where T : class, new();
-    
+
     /// <summary>
     ///     Support for adding attachments through the REST API is added in Redmine 1.4.0.
     ///     Upload a file to server.
     /// </summary>
     /// <param name="data">The content of the file that will be uploaded on server.</param>
+    /// <param name="fileName"></param>
     /// <returns>
     ///     Returns the token for uploaded file.
     /// </returns>
     /// <exception cref="RedmineException"></exception>
-    Upload UploadFile(byte[] data);
+    Upload UploadFile(byte[] data, string fileName = null);
         
     /// <summary>
     ///     Downloads a file from the specified address.

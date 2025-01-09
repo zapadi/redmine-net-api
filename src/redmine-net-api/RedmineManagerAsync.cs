@@ -223,9 +223,9 @@ public partial class RedmineManager: IRedmineManagerAsync
     }
     
     /// <inheritdoc />
-    public async Task<Upload> UploadFileAsync(byte[] data, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
+    public async Task<Upload> UploadFileAsync(byte[] data, string fileName = null, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
     {
-        var url = RedmineApiUrls.UploadFragment();
+        var url = RedmineApiUrls.UploadFragment(fileName);
 
         var response = await ApiClient.UploadFileAsync(url, data,requestOptions  , cancellationToken: cancellationToken).ConfigureAwait(false);
             
