@@ -16,6 +16,7 @@
 
 using System;
 using System.Text;
+using Redmine.Net.Api.Internals;
 
 namespace Redmine.Net.Api.Net.WebClient.MessageContent;
 
@@ -34,14 +35,7 @@ internal sealed class StringApiRequestMessageContent : ByteArrayApiRequestMessag
 
     private static byte[] GetContentByteArray(string content, Encoding encoding)
     {
-        #if NET5_0_OR_GREATER
-        ArgumentNullException.ThrowIfNull(content);
-        #else
-        if (content == null)
-        {
-            throw new ArgumentNullException(nameof(content));
-        }
-        #endif
+        ArgumentNullThrowHelper.ThrowIfNull(content, nameof(content));
         return (encoding ?? DefaultStringEncoding).GetBytes(content);
     }
 }

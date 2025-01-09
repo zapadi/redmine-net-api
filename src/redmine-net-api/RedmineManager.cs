@@ -1,4 +1,4 @@
-﻿/*
+/*
    Copyright 2011 - 2023 Adrian Popescu
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,6 +21,7 @@ using System.Globalization;
 using System.Net;
 using Redmine.Net.Api.Authentication;
 using Redmine.Net.Api.Extensions;
+using Redmine.Net.Api.Internals;
 using Redmine.Net.Api.Net;
 using Redmine.Net.Api.Net.WebClient;
 using Redmine.Net.Api.Serialization;
@@ -46,14 +47,8 @@ namespace Redmine.Net.Api
         /// <exception cref="ArgumentNullException"></exception>
         public RedmineManager(RedmineManagerOptionsBuilder optionsBuilder)
         {
-            #if NET5_0_OR_GREATER
-            ArgumentNullException.ThrowIfNull(optionsBuilder);
-            #else
-            if (optionsBuilder == null)
-            {
-                throw new ArgumentNullException(nameof(optionsBuilder));
-            }
-            #endif
+            ArgumentNullThrowHelper.ThrowIfNull(optionsBuilder, nameof(optionsBuilder));
+            
             _redmineManagerOptions = optionsBuilder.Build();
             if (_redmineManagerOptions.VerifyServerCert)
             {
