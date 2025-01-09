@@ -1,4 +1,4 @@
-﻿/*
+/*
    Copyright 2011 - 2023 Adrian Popescu
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -59,7 +59,7 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// 
         /// </summary>
-        public bool IsAssignable { get; set; }
+        public bool? IsAssignable { get; set; }
         #endregion
 
         #region Implementation of IXmlSerialization
@@ -82,6 +82,7 @@ namespace Redmine.Net.Api.Types
                 {
                     case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
                     case RedmineKeys.NAME: Name = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.ASSIGNABLE: IsAssignable = reader.ReadElementContentAsNullableBoolean(); break;
                     case RedmineKeys.PERMISSIONS: Permissions = reader.ReadElementContentAsCollection<Permission>(); break;
                     default: reader.Read(); break;
                 }
@@ -113,6 +114,7 @@ namespace Redmine.Net.Api.Types
                 {
                     case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
                     case RedmineKeys.NAME: Name = reader.ReadAsString(); break;
+                    case RedmineKeys.ASSIGNABLE: IsAssignable = reader.ReadAsBoolean(); break;
                     case RedmineKeys.PERMISSIONS: Permissions = reader.ReadAsCollection<Permission>(); break;
                     default: reader.Read(); break;
                 }
@@ -129,7 +131,11 @@ namespace Redmine.Net.Api.Types
         public bool Equals(Role other)
         {
             if (other == null) return false;
-            return Id == other.Id && Name == other.Name;
+            return EqualityComparer<int>.Default.Equals(Id, other.Id) &&
+                   EqualityComparer<string>.Default.Equals(Name, other.Name) &&
+                   IsAssignable == other.IsAssignable &&
+                   EqualityComparer<IList<Permission>>.Default.Equals(Permissions, other.Permissions);
+
         }
 
         /// <summary>
@@ -156,6 +162,7 @@ namespace Redmine.Net.Api.Types
                 var hashCode = 13;
                 hashCode = HashCodeHelper.GetHashCode(Id, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Name, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(IsAssignable, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Permissions, hashCode);
                 return hashCode;
             }

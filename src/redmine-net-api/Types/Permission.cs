@@ -77,23 +77,9 @@ namespace Redmine.Net.Api.Types
         /// <param name="reader"></param>
         public void ReadJson(JsonReader reader)
         {
-            while (reader.Read())
+            if (reader.TokenType == JsonToken.String)
             {
-                if (reader.TokenType == JsonToken.EndObject)
-                {
-                    return;
-                }
-
-                if (reader.TokenType != JsonToken.PropertyName)
-                {
-                    continue;
-                }
-
-                switch (reader.Value)
-                {
-                    case RedmineKeys.PERMISSION: Info = reader.ReadAsString(); break;
-                    default: reader.Read(); break;
-                }
+                Info = reader.Value as string;
             }
         }
 
