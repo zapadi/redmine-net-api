@@ -22,12 +22,12 @@ namespace Redmine.Net.Api.Net.WebClient;
 
 internal sealed class InternalWebClient : System.Net.WebClient
 {
-    private readonly IRedmineApiClientOptions _webClientSettings;
+    private readonly IRedmineWebClientOptions _webClientOptions;
 
     #pragma warning disable SYSLIB0014
     public InternalWebClient(RedmineManagerOptions redmineManagerOptions)
     {
-        _webClientSettings = redmineManagerOptions.ClientOptions;
+        _webClientOptions = redmineManagerOptions.ClientOptions as IRedmineWebClientOptions;
         BaseAddress = redmineManagerOptions.BaseAddress.ToString();
     }
     #pragma warning restore SYSLIB0014
@@ -43,55 +43,55 @@ internal sealed class InternalWebClient : System.Net.WebClient
                 return base.GetWebRequest(address);
             }
 
-            httpWebRequest.UserAgent = _webClientSettings.UserAgent.ValueOrFallback("RedmineDotNetAPIClient");
+            httpWebRequest.UserAgent = _webClientOptions.UserAgent.ValueOrFallback("RedmineDotNetAPIClient");
 
-            httpWebRequest.AutomaticDecompression = _webClientSettings.DecompressionFormat ?? DecompressionMethods.GZip | DecompressionMethods.Deflate | DecompressionMethods.None;
+            httpWebRequest.AutomaticDecompression = _webClientOptions.DecompressionFormat ?? DecompressionMethods.GZip | DecompressionMethods.Deflate | DecompressionMethods.None;
 
-            AssignIfHasValue(_webClientSettings.AutoRedirect, value => httpWebRequest.AllowAutoRedirect = value);
+            AssignIfHasValue(_webClientOptions.AutoRedirect, value => httpWebRequest.AllowAutoRedirect = value);
 
-            AssignIfHasValue(_webClientSettings.MaxAutomaticRedirections, value => httpWebRequest.MaximumAutomaticRedirections = value);
+            AssignIfHasValue(_webClientOptions.MaxAutomaticRedirections, value => httpWebRequest.MaximumAutomaticRedirections = value);
 
-            AssignIfHasValue(_webClientSettings.KeepAlive, value => httpWebRequest.KeepAlive = value);
+            AssignIfHasValue(_webClientOptions.KeepAlive, value => httpWebRequest.KeepAlive = value);
 
-            AssignIfHasValue(_webClientSettings.Timeout, value => httpWebRequest.Timeout = (int) value.TotalMilliseconds);
+            AssignIfHasValue(_webClientOptions.Timeout, value => httpWebRequest.Timeout = (int) value.TotalMilliseconds);
 
-            AssignIfHasValue(_webClientSettings.PreAuthenticate, value => httpWebRequest.PreAuthenticate = value);
+            AssignIfHasValue(_webClientOptions.PreAuthenticate, value => httpWebRequest.PreAuthenticate = value);
 
-            AssignIfHasValue(_webClientSettings.UseCookies, value => httpWebRequest.CookieContainer = _webClientSettings.CookieContainer);
+            AssignIfHasValue(_webClientOptions.UseCookies, value => httpWebRequest.CookieContainer = _webClientOptions.CookieContainer);
 
-            AssignIfHasValue(_webClientSettings.UnsafeAuthenticatedConnectionSharing, value => httpWebRequest.UnsafeAuthenticatedConnectionSharing = value);
+            AssignIfHasValue(_webClientOptions.UnsafeAuthenticatedConnectionSharing, value => httpWebRequest.UnsafeAuthenticatedConnectionSharing = value);
 
-            AssignIfHasValue(_webClientSettings.MaxResponseContentBufferSize, value => { });
+            AssignIfHasValue(_webClientOptions.MaxResponseContentBufferSize, value => { });
 
-            if (_webClientSettings.DefaultHeaders != null)
+            if (_webClientOptions.DefaultHeaders != null)
             {
                 httpWebRequest.Headers = new WebHeaderCollection();
-                foreach (var defaultHeader in _webClientSettings.DefaultHeaders)
+                foreach (var defaultHeader in _webClientOptions.DefaultHeaders)
                 {
                     httpWebRequest.Headers.Add(defaultHeader.Key, defaultHeader.Value);
                 }
             }
 
-            httpWebRequest.CachePolicy = _webClientSettings.RequestCachePolicy;
+            httpWebRequest.CachePolicy = _webClientOptions.RequestCachePolicy;
 
-            httpWebRequest.Proxy = _webClientSettings.Proxy;
+            httpWebRequest.Proxy = _webClientOptions.Proxy;
 
-            httpWebRequest.Credentials = _webClientSettings.Credentials;
+            httpWebRequest.Credentials = _webClientOptions.Credentials;
 
-            #if !(NET20)
-                if (_webClientSettings.ClientCertificates != null)
+            #if NET40_OR_GREATER || NETCOREAPP
+                if (_webClientOptions.ClientCertificates != null)
                 {
-                    httpWebRequest.ClientCertificates = _webClientSettings.ClientCertificates;
+                    httpWebRequest.ClientCertificates = _webClientOptions.ClientCertificates;
                 }
             #endif
 
             #if (NET45_OR_GREATER || NETCOREAPP)
-                httpWebRequest.ServerCertificateValidationCallback = _webClientSettings.ServerCertificateValidationCallback;
+                httpWebRequest.ServerCertificateValidationCallback = _webClientOptions.ServerCertificateValidationCallback;
             #endif
 
-            if (_webClientSettings.ProtocolVersion != default)
+            if (_webClientOptions.ProtocolVersion != null)
             {
-                httpWebRequest.ProtocolVersion = _webClientSettings.ProtocolVersion;
+                httpWebRequest.ProtocolVersion = _webClientOptions.ProtocolVersion;
             }
 
             return httpWebRequest;

@@ -32,10 +32,10 @@ namespace Redmine.Net.Api
     {
         private enum ClientType
         {
-            None,
             WebClient,
+            HttpClient,
         }
-        private ClientType _clientType = ClientType.None;
+        private ClientType _clientType = ClientType.WebClient;
         
         /// <summary>
         /// 
@@ -93,7 +93,7 @@ namespace Redmine.Net.Api
         }
 
         /// <summary>
-        /// 
+        /// Gets the current serialization type 
         /// </summary>
         public SerializationType SerializationType { get; private set; }
 
@@ -132,15 +132,7 @@ namespace Redmine.Net.Api
         /// <returns></returns>
         public RedmineManagerOptionsBuilder WithWebClient(Func<WebClient> clientFunc)
         {
-            if (clientFunc != null)
-            {
-                _clientType = ClientType.WebClient;
-            }
-
-            if (clientFunc == null && _clientType == ClientType.WebClient)
-            {
-                _clientType = ClientType.None;
-            }
+            _clientType = ClientType.WebClient;
             this.ClientFunc = clientFunc;
             return this;
         }
@@ -155,8 +147,9 @@ namespace Redmine.Net.Api
         /// </summary>
         /// <param name="clientOptions"></param>
         /// <returns></returns>
-        public RedmineManagerOptionsBuilder WithClientOptions(IRedmineApiClientOptions clientOptions)
+        public RedmineManagerOptionsBuilder WithWebClientOptions(IRedmineApiClientOptions clientOptions)
         {
+            _clientType = ClientType.WebClient;
             this.ClientOptions = clientOptions;
             return this;
         }
@@ -199,8 +192,30 @@ namespace Redmine.Net.Api
         /// <returns></returns>
         internal RedmineManagerOptions Build()
         {
-            ClientOptions ??= new RedmineWebClientOptions();
-            
+            const string defaultUserAgent = "Redmine.Net.Api.Net";
+            var defaultDecompressionFormat = 
+            #if NETFRAMEWORK
+                DecompressionMethods.GZip | DecompressionMethods.Deflate | DecompressionMethods.None;
+            #else
+                DecompressionMethods.All;
+            #endif
+    #if NET45_OR_GREATER || NETCOREAPP
+            ClientOptions ??= _clientType switch
+            {
+                ClientType.WebClient => new RedmineWebClientOptions()
+                {
+                    UserAgent = defaultUserAgent,
+                    DecompressionFormat = defaultDecompressionFormat,
+                },
+                _ => throw new ArgumentOutOfRangeException()
+            };
+    #else
+            ClientOptions ??= new RedmineWebClientOptions()
+                {
+                    UserAgent = defaultUserAgent,
+                    DecompressionFormat = defaultDecompressionFormat,
+                };
+    #endif
             var baseAddress = CreateRedmineUri(Host, ClientOptions.Scheme);
             
             var options = new RedmineManagerOptions()
@@ -217,6 +232,8 @@ namespace Redmine.Net.Api
             return options;
         }
         
+        private static readonly char[] DotCharArray = ['.'];
+        
         internal static void EnsureDomainNameIsValid(string domainName)
         {
             if (domainName.IsNullOrWhiteSpace())
@@ -229,7 +246,7 @@ namespace Redmine.Net.Api
                 throw new RedmineException("Domain name cannot be longer than 255 characters.");
             }
 
-            var labels = domainName.Split('.');
+            var labels = domainName.Split(DotCharArray);
             if (labels.Length == 1)
             {
                 throw new RedmineException("Domain name is not valid.");
@@ -327,7 +344,6 @@ namespace Redmine.Net.Api
             }
             else
             {
-                
                 if (!IsSchemaHttpOrHttps(scheme))
                 {
                     throw new RedmineException("Invalid host scheme. Only HTTP and HTTPS are supported.");

@@ -47,7 +47,7 @@ namespace Redmine.Net.Api.Extensions
 
             var escapedUri = Uri.EscapeDataString(uri);
             
-            var response = redmineManager.GetPaginatedObjects<News>(escapedUri, requestOptions);
+            var response = redmineManager.GetPaginatedInternal<News>(escapedUri, requestOptions);
 
             return response;
         }
@@ -96,7 +96,7 @@ namespace Redmine.Net.Api.Extensions
         {
             var uri = redmineManager.RedmineApiUrls.ProjectMemberships(projectIdentifier);
 
-            var response = redmineManager.GetPaginatedObjects<ProjectMembership>(uri, requestOptions);
+            var response = redmineManager.GetPaginatedInternal<ProjectMembership>(uri, requestOptions);
 
             return response;
         }
@@ -113,7 +113,7 @@ namespace Redmine.Net.Api.Extensions
         {
             var uri = redmineManager.RedmineApiUrls.ProjectFilesFragment(projectIdentifier);
 
-            var response = redmineManager.GetPaginatedObjects<File>(uri, requestOptions);
+            var response = redmineManager.GetPaginatedInternal<File>(uri, requestOptions);
             
             return response;
         }
@@ -291,7 +291,7 @@ namespace Redmine.Net.Api.Extensions
         {
             var uri = redmineManager.RedmineApiUrls.ProjectWikiIndex(projectId);
 
-            var response = redmineManager.GetObjects<WikiPage>(uri, requestOptions);
+            var response = redmineManager.GetInternal<WikiPage>(uri, requestOptions);
 
             return response;
         }
@@ -530,7 +530,7 @@ namespace Redmine.Net.Api.Extensions
         }
 
         /// <summary>
-        ///     Creates the or update wiki page asynchronous.
+        ///     Creates or update wiki page asynchronous.
         /// </summary>
         /// <param name="redmineManager">The redmine manager.</param>
         /// <param name="projectId">The project identifier.</param>

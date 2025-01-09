@@ -200,9 +200,11 @@ namespace Redmine.Net.Api.Net
             return $"{TypeFragment(TypeUrlFragments, type)}.{Format}";
         }
 
-        public string UploadFragment()
+        public string UploadFragment(string fileName = null)
         {
-            return $"{RedmineKeys.UPLOADS}.{Format}";
+            return !fileName.IsNullOrWhiteSpace() 
+                ? $"{RedmineKeys.UPLOADS}.{Format}?filename={Uri.EscapeDataString(fileName)}" 
+                : $"{RedmineKeys.UPLOADS}.{Format}";
         }
     }
 }
