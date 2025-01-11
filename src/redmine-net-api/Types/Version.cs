@@ -1,4 +1,4 @@
-﻿/*
+/*
    Copyright 2011 - 2023 Adrian Popescu
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -149,9 +149,10 @@ namespace Redmine.Net.Api.Types
 
             writer.WriteDateOrEmpty(RedmineKeys.DUE_DATE, DueDate);
             writer.WriteElementString(RedmineKeys.DESCRIPTION, Description);
+            writer.WriteElementString(RedmineKeys.WIKI_PAGE_TITLE, WikiPageTitle);
             if (CustomFields != null)
             {
-               writer.WriteArray(RedmineKeys.CUSTOM_FIELDS, CustomFields);
+                writer.WriteArray(RedmineKeys.CUSTOM_FIELDS, CustomFields);
             }
         }
         #endregion
@@ -210,6 +211,12 @@ namespace Redmine.Net.Api.Types
                 writer.WriteProperty(RedmineKeys.SHARING, Sharing.ToString().ToLowerInv());
                 writer.WriteProperty(RedmineKeys.DESCRIPTION, Description);
                 writer.WriteDateOrEmpty(RedmineKeys.DUE_DATE, DueDate);
+                if (CustomFields != null)
+                {
+                    writer.WriteArray(RedmineKeys.CUSTOM_FIELDS, CustomFields);
+                }
+                
+                writer.WriteProperty(RedmineKeys.WIKI_PAGE_TITLE, WikiPageTitle);
             }
         }
         #endregion
