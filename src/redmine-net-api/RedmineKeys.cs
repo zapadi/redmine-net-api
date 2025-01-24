@@ -789,6 +789,10 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
+        public const string UNARCHIVE = "unarchive";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string UPDATED_ON = "updated_on";
         /// <summary>
         /// 
