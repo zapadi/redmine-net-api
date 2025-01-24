@@ -49,6 +49,22 @@ namespace Redmine.Net.Api.Extensions
             
             redmineManager.ApiClient.Update(escapedUri, string.Empty ,requestOptions);
         }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="redmineManager"></param>
+        /// <param name="projectIdentifier"></param>
+        /// <param name="requestOptions"></param>
+        /// <returns></returns>
+        public static void UnarchiveProject(this RedmineManager redmineManager, string projectIdentifier, RequestOptions requestOptions = null)
+        {
+            var uri = redmineManager.RedmineApiUrls.ProjectUnarchive(projectIdentifier);
+
+            var escapedUri = Uri.EscapeDataString(uri);
+            
+            redmineManager.ApiClient.Update(escapedUri, string.Empty ,requestOptions);
+        }
         /// 
         /// </summary>
         /// <param name="redmineManager"></param>
@@ -398,6 +414,22 @@ namespace Redmine.Net.Api.Extensions
         public static async Task ArchiveProjectAsync(this RedmineManager redmineManager, string projectIdentifier, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
         {
             var uri = redmineManager.RedmineApiUrls.ProjectArchive(projectIdentifier);
+            
+            var escapedUri = Uri.EscapeDataString(uri);
+           
+            await redmineManager.ApiClient.DeleteAsync(escapedUri,  requestOptions, cancellationToken).ConfigureAwait(false);
+        }
+        
+        /// <summary>
+        /// Unarchives the project asynchronously
+        /// </summary>
+        /// <param name="redmineManager"></param>
+        /// <param name="projectIdentifier"></param>
+        /// <param name="requestOptions"></param>
+        /// <param name="cancellationToken"></param>
+        public static async Task UnarchiveProjectAsync(this RedmineManager redmineManager, string projectIdentifier, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
+        {
+            var uri = redmineManager.RedmineApiUrls.ProjectUnarchive(projectIdentifier);
             
             var escapedUri = Uri.EscapeDataString(uri);
            
