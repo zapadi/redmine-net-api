@@ -45,10 +45,17 @@ internal static class RedmineApiUrlsExtensions
     {
         return $"{RedmineKeys.PROJECTS}/{projectIdentifier}/{RedmineKeys.ARCHIVE}.{redmineApiUrls.Format}";
     }
+    
     public static string ProjectUnarchive(this RedmineApiUrls redmineApiUrls, string projectIdentifier)
     {
         return $"{RedmineKeys.PROJECTS}/{projectIdentifier}/{RedmineKeys.UNARCHIVE}.{redmineApiUrls.Format}";
     }
+    
+    public static string ProjectRepositoryAddRelatedIssue(this RedmineApiUrls redmineApiUrls, string projectIdentifier, string repositoryIdentifier, string revision)
+    {
+        return $"{RedmineKeys.PROJECTS}/{projectIdentifier}/{RedmineKeys.REPOSITORY}/{repositoryIdentifier}/{RedmineKeys.REVISIONS}/{revision}/{RedmineKeys.ISSUES}.{redmineApiUrls.Format}";
+    }
+    
     public static string ProjectNews(this RedmineApiUrls redmineApiUrls, string projectIdentifier)
     {
         if (projectIdentifier.IsNullOrWhiteSpace())

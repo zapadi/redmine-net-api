@@ -644,11 +644,19 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
+        public const string REPOSITORY = "repository";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string RESULT = "result";
         /// <summary>
         /// 
         /// </summary>
         public const string REVISION = "revision";
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string REVISIONS = "revisions";
         /// <summary>
         /// 
         /// </summary>

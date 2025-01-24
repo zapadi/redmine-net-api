@@ -97,6 +97,23 @@ namespace Redmine.Net.Api.Extensions
             
             redmineManager.ApiClient.Update(escapedUri,string.Empty, requestOptions);
         }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="redmineManager"></param>
+        /// <param name="projectIdentifier"></param>
+        /// <param name="repositoryIdentifier"></param>
+        /// <param name="revision"></param>
+        /// <param name="requestOptions"></param>
+        public static void ProjectRepositoryAddRelatedIssue(this RedmineManager redmineManager, string projectIdentifier, string repositoryIdentifier, string revision, RequestOptions requestOptions = null)
+        {
+            var uri = redmineManager.RedmineApiUrls.ProjectRepositoryAddRelatedIssue(projectIdentifier, repositoryIdentifier, revision);
+            
+            var escapedUri = Uri.EscapeDataString(uri);
+            
+            _ = redmineManager.ApiClient.Create(escapedUri,string.Empty, requestOptions);
+        }
         /// 
         /// </summary>
         /// <param name="redmineManager"></param>
@@ -498,6 +515,24 @@ namespace Redmine.Net.Api.Extensions
             var escapedUri = Uri.EscapeDataString(uri);
            
             await redmineManager.ApiClient.UpdateAsync(escapedUri, string.Empty, requestOptions, cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="redmineManager"></param>
+        /// <param name="projectIdentifier"></param>
+        /// <param name="repositoryIdentifier"></param>
+        /// <param name="revision"></param>
+        /// <param name="requestOptions"></param>
+        /// <param name="cancellationToken"></param>
+        public static async Task ProjectRepositoryAddRelatedIssueAsync(this RedmineManager redmineManager, string projectIdentifier, string repositoryIdentifier, string revision, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
+        {
+            var uri = redmineManager.RedmineApiUrls.ProjectRepositoryAddRelatedIssue(projectIdentifier, repositoryIdentifier, revision);
+            
+            var escapedUri = Uri.EscapeDataString(uri);
+           
+            await redmineManager.ApiClient.CreateAsync(escapedUri, string.Empty ,requestOptions, cancellationToken).ConfigureAwait(false);
         }
         /// <summary>
         /// 
