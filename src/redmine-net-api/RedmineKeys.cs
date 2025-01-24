@@ -59,6 +59,10 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
+        public const string ARCHIVE = "archive";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string ASSIGNED_TO = "assigned_to";
         /// <summary>
         /// 
