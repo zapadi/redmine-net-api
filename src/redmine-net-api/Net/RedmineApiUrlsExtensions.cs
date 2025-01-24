@@ -56,6 +56,11 @@ internal static class RedmineApiUrlsExtensions
         return $"{RedmineKeys.PROJECTS}/{projectIdentifier}/{RedmineKeys.REPOSITORY}/{repositoryIdentifier}/{RedmineKeys.REVISIONS}/{revision}/{RedmineKeys.ISSUES}.{redmineApiUrls.Format}";
     }
     
+    public static string ProjectRepositoryRemoveRelatedIssue(this RedmineApiUrls redmineApiUrls, string projectIdentifier, string repositoryIdentifier, string revision, string issueIdentifier)
+    {
+        return $"{RedmineKeys.PROJECTS}/{projectIdentifier}/{RedmineKeys.REPOSITORY}/{repositoryIdentifier}/{RedmineKeys.REVISIONS}/{revision}/{RedmineKeys.ISSUES}/{issueIdentifier}.{redmineApiUrls.Format}";
+    }
+    
     public static string ProjectNews(this RedmineApiUrls redmineApiUrls, string projectIdentifier)
     {
         if (projectIdentifier.IsNullOrWhiteSpace())

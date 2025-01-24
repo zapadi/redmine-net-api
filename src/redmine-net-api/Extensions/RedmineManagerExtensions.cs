@@ -114,6 +114,26 @@ namespace Redmine.Net.Api.Extensions
             
             _ = redmineManager.ApiClient.Create(escapedUri,string.Empty, requestOptions);
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="redmineManager"></param>
+        /// <param name="projectIdentifier"></param>
+        /// <param name="repositoryIdentifier"></param>
+        /// <param name="revision"></param>
+        /// <param name="issueIdentifier"></param>
+        /// <param name="requestOptions"></param>
+        public static void ProjectRepositoryRemoveRelatedIssue(this RedmineManager redmineManager, string projectIdentifier, string repositoryIdentifier, string revision, string issueIdentifier, RequestOptions requestOptions = null)
+        {
+            var uri = redmineManager.RedmineApiUrls.ProjectRepositoryRemoveRelatedIssue(projectIdentifier, repositoryIdentifier, revision, issueIdentifier);
+            
+            var escapedUri = Uri.EscapeDataString(uri);
+           
+            _ = redmineManager.ApiClient.Delete(escapedUri, requestOptions);
+        }
+        
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="redmineManager"></param>
@@ -534,6 +554,26 @@ namespace Redmine.Net.Api.Extensions
            
             await redmineManager.ApiClient.CreateAsync(escapedUri, string.Empty ,requestOptions, cancellationToken).ConfigureAwait(false);
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="redmineManager"></param>
+        /// <param name="projectIdentifier"></param>
+        /// <param name="repositoryIdentifier"></param>
+        /// <param name="revision"></param>
+        /// <param name="issueIdentifier"></param>
+        /// <param name="requestOptions"></param>
+        /// <param name="cancellationToken"></param>
+        public static async Task ProjectRepositoryRemoveRelatedIssueAsync(this RedmineManager redmineManager, string projectIdentifier, string repositoryIdentifier, string revision, string issueIdentifier, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
+        {
+            var uri = redmineManager.RedmineApiUrls.ProjectRepositoryRemoveRelatedIssue(projectIdentifier, repositoryIdentifier, revision, issueIdentifier);
+            
+            var escapedUri = Uri.EscapeDataString(uri);
+           
+            await redmineManager.ApiClient.DeleteAsync(escapedUri,  requestOptions, cancellationToken).ConfigureAwait(false);
+        }
+        
         /// <summary>
         /// 
         /// </summary>
