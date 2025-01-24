@@ -31,6 +31,11 @@ internal static class RedmineApiUrlsExtensions
         return $"{RedmineKeys.USERS}/{RedmineKeys.CURRENT}.{redmineApiUrls.Format}";
     }
 
+    public static string ProjectReopen(this RedmineApiUrls redmineApiUrls, string projectIdentifier)
+    {
+        return $"{RedmineKeys.PROJECTS}/{projectIdentifier}/{RedmineKeys.REOPEN}.{redmineApiUrls.Format}";
+    }
+    
     public static string ProjectArchive(this RedmineApiUrls redmineApiUrls, string projectIdentifier)
     {
         return $"{RedmineKeys.PROJECTS}/{projectIdentifier}/{RedmineKeys.ARCHIVE}.{redmineApiUrls.Format}";
