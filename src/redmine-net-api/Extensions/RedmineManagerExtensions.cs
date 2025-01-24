@@ -81,6 +81,22 @@ namespace Redmine.Net.Api.Extensions
             
             redmineManager.ApiClient.Update(escapedUri, string.Empty ,requestOptions);
         }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="redmineManager"></param>
+        /// <param name="projectIdentifier"></param>
+        /// <param name="requestOptions"></param>
+        /// <returns></returns>
+        public static void CloseProject(this RedmineManager redmineManager, string projectIdentifier, RequestOptions requestOptions = null)
+        {
+            var uri = redmineManager.RedmineApiUrls.ProjectClose(projectIdentifier);
+
+            var escapedUri = Uri.EscapeDataString(uri);
+            
+            redmineManager.ApiClient.Update(escapedUri,string.Empty, requestOptions);
+        }
         /// 
         /// </summary>
         /// <param name="redmineManager"></param>
@@ -451,6 +467,23 @@ namespace Redmine.Net.Api.Extensions
            
             await redmineManager.ApiClient.DeleteAsync(escapedUri,  requestOptions, cancellationToken).ConfigureAwait(false);
         }
+
+        /// <summary>
+        /// Closes the project asynchronously
+        /// </summary>
+        /// <param name="redmineManager"></param>
+        /// <param name="projectIdentifier"></param>
+        /// <param name="requestOptions"></param>
+        /// <param name="cancellationToken"></param>
+        public static async Task CloseProjectAsync(this RedmineManager redmineManager, string projectIdentifier, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
+        {
+            var uri = redmineManager.RedmineApiUrls.ProjectClose(projectIdentifier);
+            
+            var escapedUri = Uri.EscapeDataString(uri);
+           
+            await redmineManager.ApiClient.UpdateAsync(escapedUri, string.Empty,  requestOptions, cancellationToken).ConfigureAwait(false);
+        }
+
         /// <summary>
         /// Reopens the project asynchronously
         /// </summary>

@@ -116,6 +116,10 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
+        public const string CLOSE = "close";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string CLOSED_ON = "closed_on";
         /// <summary>
         /// 
