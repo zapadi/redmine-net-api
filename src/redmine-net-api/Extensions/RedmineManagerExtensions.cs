@@ -235,7 +235,7 @@ namespace Redmine.Net.Api.Extensions
         /// <summary>
         /// 
         /// </summary>
-        /// <returns>Returns the my account details.</returns>
+        /// <returns>Returns my account details.</returns>
         public static MyAccount GetMyAccount(this RedmineManager redmineManager, RequestOptions requestOptions = null)
         {
             var uri = redmineManager.RedmineApiUrls.MyAccount();
@@ -661,7 +661,6 @@ namespace Redmine.Net.Api.Extensions
             
             return response.DeserializeToPagedResults<File>(redmineManager.Serializer);
         }
-
         
         /// <summary>
         ///  
@@ -702,7 +701,7 @@ namespace Redmine.Net.Api.Extensions
         }
 
         /// <summary>
-        ///     Creates the or update wiki page asynchronous.
+        ///     Creates or updates wiki page asynchronous.
         /// </summary>
         /// <param name="redmineManager">The redmine manager.</param>
         /// <param name="projectId">The project identifier.</param>
@@ -730,7 +729,7 @@ namespace Redmine.Net.Api.Extensions
         }
 
         /// <summary>
-        ///     Creates or update wiki page asynchronous.
+        ///     Creates or updates wiki page asynchronous.
         /// </summary>
         /// <param name="redmineManager">The redmine manager.</param>
         /// <param name="projectId">The project identifier.</param>

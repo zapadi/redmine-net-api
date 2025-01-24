@@ -23,7 +23,7 @@ using Redmine.Net.Api.Extensions;
 namespace Redmine.Net.Api.Types
 {
     /// <summary>
-    /// 
+    /// [1, 'New'], [2, 'Assigned'], [4, 'Feedback'], [5, 'Closed'], [6, 'Rejected']
     /// </summary>
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.STATUS)]
