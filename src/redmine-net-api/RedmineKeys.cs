@@ -233,6 +233,10 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
+        public const string DOCUMENT_CATEGORY = "document_category";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string DOCUMENTS = "documents";
         /// <summary>
         /// 
@@ -278,6 +282,10 @@ namespace Redmine.Net.Api
         /// 
         /// </summary>
         public const string ESTIMATED_HOURS = "estimated_hours";
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string FIELD = "field";
         /// <summary>
         /// 
         /// </summary>
@@ -866,7 +874,5 @@ namespace Redmine.Net.Api
         /// 
         /// </summary>
         public const string WIKI_PAGES = "wiki_pages";
-
-       
     }
 }
