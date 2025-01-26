@@ -27,7 +27,7 @@ namespace Redmine.Net.Api.Serialization
     internal sealed class XmlRedmineSerializer : IRedmineSerializer
     {
 
-        public XmlRedmineSerializer(): this(new XmlWriterSettings
+        public XmlRedmineSerializer() : this(new XmlWriterSettings
         {
             OmitXmlDeclaration = true
         }) { }
@@ -125,6 +125,11 @@ namespace Redmine.Net.Api.Serialization
                     var offset = xmlReader.ReadAttributeAsInt(RedmineKeys.OFFSET);
                     var limit = xmlReader.ReadAttributeAsInt(RedmineKeys.LIMIT);
                     var result = xmlReader.ReadElementContentAsCollection<T>();
+
+                    if (totalItems == 0 && result.Count > 0)
+                    {
+                        totalItems = result.Count;
+                    }
 
                     return new PagedResults<T>(result, totalItems, offset, limit);
                 }
