@@ -1,9 +1,8 @@
 ﻿using System.Diagnostics;
 using Redmine.Net.Api;
-using Redmine.Net.Api.Authentication;
 using Redmine.Net.Api.Serialization;
 
-namespace Padi.DotNet.RedmineAPI.Tests.Infrastructure
+namespace Padi.DotNet.RedmineAPI.Tests.Infrastructure.Fixtures
 {
 	public sealed class RedmineFixture
     {
