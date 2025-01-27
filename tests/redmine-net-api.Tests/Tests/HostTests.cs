@@ -1,4 +1,4 @@
-﻿using Padi.DotNet.RedmineAPI.Tests.Infrastructure;
+﻿using Padi.DotNet.RedmineAPI.Tests.Infrastructure.Order;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Exceptions;
 using Xunit;
@@ -7,7 +7,7 @@ namespace Padi.DotNet.RedmineAPI.Tests.Tests
 {
     [Trait("Redmine-api", "Host")]
     [Order(1)]
-    public sealed class HostValidationTests
+    public sealed class HostTests
     {
         [Theory]
         [InlineData(null)]
@@ -54,15 +54,15 @@ namespace Padi.DotNet.RedmineAPI.Tests.Tests
         [InlineData("www.domain.com:3000", "https://www.domain.com:3000/")]
         [InlineData("https://www.google.com", "https://www.google.com/")]
         [InlineData("http://example.com:8080", "http://example.com:8080/")]
-        [InlineData("http://example.com/path", "http://example.com/")]
+        [InlineData("http://example.com/path", "http://example.com/path")]
         [InlineData("http://example.com?param=value", "http://example.com/")]
         [InlineData("http://example.com#fragment", "http://example.com/")]
         [InlineData("http://example.com/", "http://example.com/")]
         [InlineData("http://example.com/?param=value", "http://example.com/")]
         [InlineData("http://example.com/#fragment", "http://example.com/")]
-        [InlineData("http://example.com/path/page", "http://example.com/")]
-        [InlineData("http://example.com/path/page?param=value", "http://example.com/")]
-        [InlineData("http://example.com/path/page#fragment","http://example.com/")]
+        [InlineData("http://example.com/path/page", "http://example.com/path/page")]
+        [InlineData("http://example.com/path/page?param=value", "http://example.com/path/page")]
+        [InlineData("http://example.com/path/page#fragment","http://example.com/path/page")]
         [InlineData("http://[::1]:8080", "http://[::1]/")]
         [InlineData("http://www.domain.com/title/index.htm", "http://www.domain.com/")]
         [InlineData("http://www.localhost.com/", "http://www.localhost.com/")]
