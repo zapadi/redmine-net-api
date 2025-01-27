@@ -1,9 +1,8 @@
 ﻿using System.Diagnostics;
 using Redmine.Net.Api;
-using Redmine.Net.Api.Authentication;
 using Redmine.Net.Api.Serialization;
 
-namespace Padi.DotNet.RedmineAPI.Tests.Infrastructure
+namespace Padi.DotNet.RedmineAPI.Tests.Infrastructure.Fixtures
 {
 	public sealed class RedmineFixture
     {
@@ -17,23 +16,25 @@ namespace Padi.DotNet.RedmineAPI.Tests.Infrastructure
             Credentials = TestHelper.GetApplicationConfiguration();
 
             _redmineManagerOptionsBuilder = new RedmineManagerOptionsBuilder()
-                                            .WithHost(Credentials.Uri)
+                                            .WithHost(Credentials.Uri ?? "localhost")
                                             .WithApiKeyAuthentication(Credentials.ApiKey);
             
 			SetMimeTypeXml();
 			SetMimeTypeJson();
+            
+            RedmineManager = new RedmineManager(_redmineManagerOptionsBuilder);
 		}
 
 		[Conditional("DEBUG_JSON")]
 		private void SetMimeTypeJson()
 		{
-			RedmineManager = new RedmineManager(_redmineManagerOptionsBuilder.WithSerializationType(SerializationType.Json));
+            _redmineManagerOptionsBuilder.WithSerializationType(SerializationType.Json);
 		}
 
 		[Conditional("DEBUG_XML")]
 		private void SetMimeTypeXml()
 		{
-			RedmineManager = new RedmineManager(_redmineManagerOptionsBuilder.WithSerializationType(SerializationType.Xml));
+            _redmineManagerOptionsBuilder.WithSerializationType(SerializationType.Xml);
 		}
 	}
 }
