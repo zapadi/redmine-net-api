@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Redmine.Net.Api.Types;
 
 namespace Redmine.Net.Api.Extensions
 {
@@ -30,8 +31,9 @@ namespace Redmine.Net.Api.Extensions
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="listToClone">The list to clone.</param>
+        /// <param name="resetId"></param>
         /// <returns></returns>
-        public static IList<T> Clone<T>(this IList<T> listToClone) where T : ICloneable
+        public static IList<T> Clone<T>(this IList<T> listToClone, bool resetId) where T : ICloneable<T>
         {
             if (listToClone == null)
             {
@@ -43,7 +45,7 @@ namespace Redmine.Net.Api.Extensions
             for (var index = 0; index < listToClone.Count; index++)
             {
                 var item = listToClone[index];
-                clonedList.Add((T) item.Clone());
+                clonedList.Add(item.Clone(resetId));
             }
 
             return clonedList;

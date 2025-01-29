@@ -29,6 +29,7 @@ namespace Redmine.Net.Api.Types
     /// </summary>
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     public class IdentifiableName : Identifiable<IdentifiableName>
+        , ICloneable<IdentifiableName>
     {
         /// <summary>
         /// 
@@ -224,5 +225,18 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <returns></returns>
         private string DebuggerDisplay => $"[{nameof(IdentifiableName)}: {base.ToString()}, Name={Name}]";
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public new IdentifiableName Clone(bool resetId)
+        {
+            return new IdentifiableName
+            {
+                Id = Id,
+                Name = Name
+            };
+        }
     }
 }

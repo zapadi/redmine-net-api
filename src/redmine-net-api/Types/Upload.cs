@@ -32,6 +32,7 @@ namespace Redmine.Net.Api.Types
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.UPLOAD)]
     public sealed class Upload : IXmlSerializable, IJsonSerializable, IEquatable<Upload>
+        , ICloneable<Upload>
     {
         #region Properties
         /// <summary>
@@ -234,5 +235,19 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
         private string DebuggerDisplay => $"[Upload: Token={Token}, FileName={FileName}, ContentType={ContentType}, Description={Description}]";
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public Upload Clone(bool resetId)
+        {
+            return new Upload
+            {
+                Token = Token,
+                FileName = FileName,
+                ContentType = ContentType,
+                Description = Description
+            };
+        }
     }
 }

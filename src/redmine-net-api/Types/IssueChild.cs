@@ -31,6 +31,7 @@ namespace Redmine.Net.Api.Types
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.ISSUE)]
     public sealed class IssueChild : Identifiable<IssueChild>
+        ,ICloneable<IssueChild>
     {
         #region Properties
         /// <summary>
@@ -173,12 +174,12 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        public new IssueChild Clone()
+        public new IssueChild Clone(bool resetId)
         {
             return new IssueChild
             {
                 Id = Id,
-                Tracker = Tracker,
+                Tracker = Tracker?.Clone(false),
                 Subject = Subject
             };
         }

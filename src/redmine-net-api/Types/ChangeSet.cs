@@ -33,6 +33,7 @@ namespace Redmine.Net.Api.Types
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.CHANGE_SET)]
     public sealed class ChangeSet : IXmlSerializable, IJsonSerializable, IEquatable<ChangeSet>
+    ,ICloneable<ChangeSet>
     {
         #region Properties
         /// <summary>
@@ -155,6 +156,23 @@ namespace Redmine.Net.Api.Types
                 && User == other.User
                 && Comments == other.Comments
                 && CommittedOn == other.CommittedOn;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="resetId"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public ChangeSet Clone(bool resetId)
+        {
+            return new ChangeSet()
+            {
+                User = User,
+                Comments = Comments,
+                Revision = Revision,
+                CommittedOn = CommittedOn,
+            };
         }
 
         /// <summary>

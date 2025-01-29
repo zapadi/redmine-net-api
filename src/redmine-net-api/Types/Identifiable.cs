@@ -33,6 +33,7 @@ namespace Redmine.Net.Api.Types
     /// <typeparam name="T"></typeparam>
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     public abstract class Identifiable<T> : IXmlSerializable, IJsonSerializable, IEquatable<T>
+        , ICloneable<Identifiable<T>> 
         where T : Identifiable<T>
     {
         #region Properties
@@ -158,5 +159,13 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
         private string DebuggerDisplay => $"Id={Id.ToString(CultureInfo.InvariantCulture)}";
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public virtual Identifiable<T> Clone(bool resetId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
