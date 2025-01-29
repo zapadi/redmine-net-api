@@ -27,7 +27,7 @@ internal sealed class InternalWebClient : System.Net.WebClient
     #pragma warning disable SYSLIB0014
     public InternalWebClient(RedmineManagerOptions redmineManagerOptions)
     {
-        _webClientOptions = redmineManagerOptions.ClientOptions as IRedmineWebClientOptions;
+        _webClientOptions = redmineManagerOptions.WebClientOptions;
         BaseAddress = redmineManagerOptions.BaseAddress.ToString();
     }
     #pragma warning restore SYSLIB0014
