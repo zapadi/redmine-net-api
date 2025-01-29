@@ -25,7 +25,7 @@ namespace Redmine.Net.Api.Net.WebClient;
 /// <summary>
 /// 
 /// </summary>
-public sealed class RedmineWebClientOptions: IRedmineApiClientOptions
+public sealed class RedmineWebClientOptions: IRedmineWebClientOptions
 {
     /// <summary>
     /// 

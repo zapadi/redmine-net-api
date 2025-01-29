@@ -44,7 +44,7 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         ///     Maximum page-size when retrieving complete object lists
         ///     <remarks>
-        ///         By default only 25 results can be retrieved per request. Maximum is 100. To change the maximum value set
+        ///         By default, only 25 results can be retrieved per request. Maximum is 100. To change the maximum value set
         ///         in your Settings -&gt; General, "Objects per page options".By adding (for instance) 9999 there would make you
         ///         able to get that many results per request.
         ///     </remarks>
@@ -56,7 +56,7 @@ namespace Redmine.Net.Api.Types
         int PageSize { get; set; }
         
         /// <summary>
-        ///     As of Redmine 2.2.0 you can impersonate user setting user login (eg. jsmith). This only works when using the API
+        ///     As of Redmine 2.2.0 you can impersonate user setting user login (e.g. jsmith). This only works when using the API
         ///     with an administrator account, this header will be ignored when using the API with a regular user account.
         /// </summary>
         /// <value>

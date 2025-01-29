@@ -42,7 +42,7 @@ namespace Redmine.Net.Api.Net.WebClient
         public InternalRedmineApiWebClient(RedmineManagerOptions redmineManagerOptions)
             : this(() => new InternalWebClient(redmineManagerOptions), redmineManagerOptions.Authentication, redmineManagerOptions.Serializer)
         {
-            ConfigureServicePointManager(redmineManagerOptions.ClientOptions);
+            ConfigureServicePointManager(redmineManagerOptions.WebClientOptions);
         }
 
         public InternalRedmineApiWebClient(
@@ -55,9 +55,9 @@ namespace Redmine.Net.Api.Net.WebClient
             _serializer = serializer;
         }
 
-        private static void ConfigureServicePointManager(IRedmineApiClientOptions options)
+        private static void ConfigureServicePointManager(IRedmineWebClientOptions webClientOptions)
         {
-            if (options is not IRedmineWebClientOptions webClientOptions)
+            if (webClientOptions == null)
             {
                 return;
             }

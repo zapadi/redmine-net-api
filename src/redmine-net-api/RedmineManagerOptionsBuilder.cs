@@ -69,7 +69,6 @@ namespace Redmine.Net.Api
         /// </summary>
         public string Host { get; private set; }
         
-
         /// <summary>
         /// 
         /// </summary>
@@ -147,17 +146,38 @@ namespace Redmine.Net.Api
         /// </summary>
         /// <param name="clientOptions"></param>
         /// <returns></returns>
+        [Obsolete("Use WithWebClientOptions(IRedmineWebClientOptions clientOptions) instead.")]
         public RedmineManagerOptionsBuilder WithWebClientOptions(IRedmineApiClientOptions clientOptions)
         {
+            return WithWebClientOptions((IRedmineWebClientOptions)clientOptions);
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="clientOptions"></param>
+        /// <returns></returns>
+        public RedmineManagerOptionsBuilder WithWebClientOptions(IRedmineWebClientOptions clientOptions)
+        {
             _clientType = ClientType.WebClient;
-            this.ClientOptions = clientOptions;
+            this.WebClientOptions = clientOptions;
             return this;
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public IRedmineApiClientOptions ClientOptions { get; private set; }
+        [Obsolete("Use WebClientOptions instead.")]
+        public IRedmineApiClientOptions ClientOptions
+        {
+            get => WebClientOptions;
+            private set { }
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public IRedmineWebClientOptions WebClientOptions { get; private set; }
 
         /// <summary>
         /// 
@@ -200,7 +220,7 @@ namespace Redmine.Net.Api
                 DecompressionMethods.All;
             #endif
     #if NET45_OR_GREATER || NETCOREAPP
-            ClientOptions ??= _clientType switch
+            WebClientOptions ??= _clientType switch
             {
                 ClientType.WebClient => new RedmineWebClientOptions()
                 {
@@ -210,13 +230,13 @@ namespace Redmine.Net.Api
                 _ => throw new ArgumentOutOfRangeException()
             };
     #else
-            ClientOptions ??= new RedmineWebClientOptions()
+            WebClientOptions ??= new RedmineWebClientOptions()
                 {
                     UserAgent = defaultUserAgent,
                     DecompressionFormat = defaultDecompressionFormat,
                 };
     #endif
-            var baseAddress = CreateRedmineUri(Host, ClientOptions.Scheme);
+            var baseAddress = CreateRedmineUri(Host, WebClientOptions.Scheme);
             
             var options = new RedmineManagerOptions()
             {
@@ -226,7 +246,7 @@ namespace Redmine.Net.Api
                 Serializer = RedmineSerializerFactory.CreateSerializer(SerializationType),
                 RedmineVersion = Version,
                 Authentication = Authentication ?? new RedmineNoAuthentication(),
-                ClientOptions = ClientOptions 
+                WebClientOptions = WebClientOptions 
             };
             
             return options;
