@@ -33,6 +33,7 @@ namespace Redmine.Net.Api.Types
     [XmlRoot(RedmineKeys.ATTACHMENT)]
     public sealed class Attachment : 
         Identifiable<Attachment>
+        , ICloneable<Attachment>
     {
         #region Properties
         /// <summary>
@@ -266,5 +267,24 @@ ContentUrl={ContentUrl},
 Author={Author}, 
 CreatedOn={CreatedOn?.ToString("u", CultureInfo.InvariantCulture)}]";
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public new Attachment Clone()
+        {
+            return new Attachment
+            {
+                Id = Id,
+                FileName = FileName,
+                FileSize = FileSize,
+                ContentType = ContentType,
+                Description = Description,
+                ContentUrl = ContentUrl,
+                ThumbnailUrl = ThumbnailUrl,
+                Author = Author?.Clone(),
+                CreatedOn = CreatedOn
+            };
+        }
     }
 }

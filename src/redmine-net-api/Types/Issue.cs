@@ -40,6 +40,7 @@ namespace Redmine.Net.Api.Types
     [XmlRoot(RedmineKeys.ISSUE)]
     public sealed class Issue : 
         Identifiable<Issue>
+        ,ICloneable<Issue>
     {
         #region Properties
         /// <summary>
@@ -588,36 +589,51 @@ namespace Redmine.Net.Api.Types
         }
         #endregion
 
-        #region Implementation of IClonable
+        #region Implementation of IClonable<T>
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public object Clone()
+        public new Issue Clone()
         {
             var issue = new Issue
             {
-                AssignedTo = AssignedTo,
-                Author = Author,
-                Category = Category,
-                CustomFields = CustomFields.Clone(),
-                Description = Description,
-                DoneRatio = DoneRatio,
-                DueDate = DueDate,
-                SpentHours = SpentHours,
-                EstimatedHours = EstimatedHours,
-                Priority = Priority,
-                StartDate = StartDate,
-                Status = Status,
+                Project = Project?.Clone(),
+                Tracker = Tracker?.Clone(),
+                Status = Status?.Clone(),
+                Priority = Priority?.Clone(),
+                Author = Author?.Clone(),
+                Category = Category?.Clone(),
                 Subject = Subject,
-                Tracker = Tracker,
-                Project = Project,
-                FixedVersion = FixedVersion,
+                Description = Description,
+                StartDate = StartDate,
+                DueDate = DueDate,
+                DoneRatio = DoneRatio,
+                IsPrivate = IsPrivate,
+                EstimatedHours = EstimatedHours,
+                TotalEstimatedHours = TotalEstimatedHours,
+                SpentHours = SpentHours,
+                TotalSpentHours = TotalSpentHours,
+                AssignedTo = AssignedTo?.Clone(),
+                FixedVersion = FixedVersion?.Clone(),
                 Notes = Notes,
-                Watchers = Watchers.Clone()
+                PrivateNotes = PrivateNotes,
+                CreatedOn = CreatedOn,
+                UpdatedOn = UpdatedOn,
+                ClosedOn = ClosedOn,
+                ParentIssue = ParentIssue?.Clone(),
+                CustomFields = CustomFields?.Clone(),
+                Journals = Journals?.Clone(),
+                Attachments = Attachments?.Clone(),
+                Relations = Relations?.Clone(),
+                Children = Children?.Clone(),
+                Watchers = Watchers?.Clone(),
+                Uploads = Uploads?.Clone(),
             };
+
             return issue;
         }
+
         #endregion
 
         /// <summary>
