@@ -156,5 +156,22 @@ namespace Redmine.Net.Api.Extensions
                 _ => value.ToString(),
             };
         }
+
+        private const string CRLR = "\r\n";
+        
+        internal static string ReplaceEndings(this string input, string replacement = CRLR)
+        {
+            if (input.IsNullOrWhiteSpace())
+            {
+                return input;
+            }
+
+            #if NET6_0_OR_GREATER
+            input =  input.ReplaceLineEndings(CRLR);
+            #else
+            input = Regex.Replace(input, "\r\n|\r|\n", CRLR);
+            #endif
+            return input;
+        }
     }
 }

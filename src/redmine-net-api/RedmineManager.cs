@@ -175,6 +175,8 @@ namespace Redmine.Net.Api
 
             var payload = Serializer.Serialize(entity);
             
+            payload = payload.ReplaceEndings();
+            
             ApiClient.Update(url, payload, requestOptions);
         }
 
