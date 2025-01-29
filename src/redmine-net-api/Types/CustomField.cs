@@ -207,23 +207,22 @@ namespace Redmine.Net.Api.Types
         {
             if (other == null) return false;
 
-            return Id == other.Id
-                && IsFilter == other.IsFilter
-                && IsRequired == other.IsRequired
-                && Multiple == other.Multiple
-                && Searchable == other.Searchable
-                && Visible == other.Visible
-                && string.Equals(CustomizedType,other.CustomizedType, StringComparison.OrdinalIgnoreCase)
-                && string.Equals(Description,other.Description, StringComparison.OrdinalIgnoreCase)
-                && string.Equals(DefaultValue,other.DefaultValue, StringComparison.OrdinalIgnoreCase)
-                && string.Equals(FieldFormat,other.FieldFormat, StringComparison.OrdinalIgnoreCase)
-                && MaxLength == other.MaxLength
-                && MinLength == other.MinLength
-                && string.Equals(Name,other.Name, StringComparison.OrdinalIgnoreCase)
-                && string.Equals(Regexp,other.Regexp, StringComparison.OrdinalIgnoreCase)
-                && PossibleValues.Equals(other.PossibleValues)
-                && Roles.Equals(other.Roles)
-                && Trackers.Equals(other.Trackers);
+            return base.Equals(other)
+                   && string.Equals(CustomizedType, other.CustomizedType, StringComparison.OrdinalIgnoreCase)
+                   && string.Equals(Description, other.Description, StringComparison.OrdinalIgnoreCase)
+                   && string.Equals(FieldFormat, other.FieldFormat, StringComparison.OrdinalIgnoreCase)
+                   && string.Equals(Regexp, other.Regexp, StringComparison.OrdinalIgnoreCase)
+                   && string.Equals(DefaultValue, other.DefaultValue, StringComparison.Ordinal)
+                   && MinLength == other.MinLength
+                   && MaxLength == other.MaxLength
+                   && IsRequired == other.IsRequired
+                   && IsFilter == other.IsFilter
+                   && Searchable == other.Searchable
+                   && Multiple == other.Multiple
+                   && Visible == other.Visible
+                   && Equals(PossibleValues, other.PossibleValues)
+                   && Equals(Trackers, other.Trackers)
+                   && Equals(Roles, other.Roles);
         }
 
         /// <summary>
@@ -247,26 +246,46 @@ namespace Redmine.Net.Api.Types
         {
             unchecked
             {
-                var hashCode = 13;
-                hashCode = HashCodeHelper.GetHashCode(Id, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(IsFilter, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(IsRequired, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(Description, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(Multiple, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(Searchable, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(Visible, hashCode);
+                var hashCode = base.GetHashCode();
                 hashCode = HashCodeHelper.GetHashCode(CustomizedType, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(DefaultValue, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Description, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(FieldFormat, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(MaxLength, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(MinLength, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(Name, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Regexp, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(MinLength, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(MaxLength, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(IsRequired, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(IsFilter, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Searchable, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Multiple, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(DefaultValue, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Visible, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(PossibleValues, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(Roles, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Trackers, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Roles, hashCode);
                 return hashCode;
             }
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool operator ==(CustomField left, CustomField right)
+        {
+            return Equals(left, right);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool operator !=(CustomField left, CustomField right)
+        {
+            return !Equals(left, right);
         }
         #endregion
 

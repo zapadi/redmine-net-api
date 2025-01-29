@@ -104,6 +104,19 @@ namespace Redmine.Net.Api.Types
             if (other == null) return false;
             return Id == other.Id && Author == other.Author && Content == other.Content;
         }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as NewsComment);
+        }
 
         /// <inheritdoc />
         public override int GetHashCode()
@@ -114,6 +127,28 @@ namespace Redmine.Net.Api.Types
             hashCode = HashCodeHelper.GetHashCode(Content, hashCode);
 
             return hashCode;
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool operator ==(NewsComment left, NewsComment right)
+        {
+            return Equals(left, right);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool operator !=(NewsComment left, NewsComment right)
+        {
+            return !Equals(left, right);
         }
 
         private string DebuggerDisplay => $@"[{nameof(IssueAllowedStatus)}: {ToString()},

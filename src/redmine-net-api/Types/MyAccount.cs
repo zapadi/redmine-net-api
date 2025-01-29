@@ -190,10 +190,24 @@ namespace Redmine.Net.Api.Types
                    && string.Equals(FirstName, other.FirstName, StringComparison.OrdinalIgnoreCase)
                    && string.Equals(LastName, other.LastName, StringComparison.OrdinalIgnoreCase)
                    && string.Equals(ApiKey, other.ApiKey, StringComparison.OrdinalIgnoreCase)
+                   && Email.Equals(other.Email, StringComparison.OrdinalIgnoreCase)
                    && IsAdmin == other.IsAdmin
                    && CreatedOn == other.CreatedOn
                    && LastLoginOn == other.LastLoginOn
-                   && (CustomFields?.Equals<MyAccountCustomField>(other.CustomFields) ?? other.CustomFields == null);
+                   && CustomFields.Equals(other.CustomFields);
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as MyAccount);
         }
 
         /// <inheritdoc />
@@ -213,6 +227,28 @@ namespace Redmine.Net.Api.Types
                 hashCode = HashCodeHelper.GetHashCode(CustomFields, hashCode);
                 return hashCode;
             }
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool operator ==(MyAccount left, MyAccount right)
+        {
+            return Equals(left, right);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool operator !=(MyAccount left, MyAccount right)
+        {
+            return !Equals(left, right);
         }
 
         private string DebuggerDisplay => $@"[ {nameof(MyAccount)}:

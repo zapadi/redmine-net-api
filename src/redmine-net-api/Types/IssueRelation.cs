@@ -1,4 +1,4 @@
-﻿/*
+/*
    Copyright 2011 - 2023 Adrian Popescu
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,7 +32,8 @@ namespace Redmine.Net.Api.Types
     /// </summary>
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.RELATION)]
-    public sealed class IssueRelation : Identifiable<IssueRelation>
+    public sealed class IssueRelation : 
+        Identifiable<IssueRelation>
     {
         #region Properties
         /// <summary>
@@ -219,6 +220,19 @@ namespace Redmine.Net.Api.Types
             if (other == null) return false;
             return Id == other.Id && IssueId == other.IssueId && IssueToId == other.IssueToId && Type == other.Type && Delay == other.Delay;
         }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as IssueRelation);
+        }
 
         /// <summary>
         /// 
@@ -228,14 +242,35 @@ namespace Redmine.Net.Api.Types
         {
             unchecked
             {
-                var hashCode = 13;
-                hashCode = HashCodeHelper.GetHashCode(Id, hashCode);
+                var hashCode = base.GetHashCode();
                 hashCode = HashCodeHelper.GetHashCode(IssueId, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(IssueToId, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Type, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Delay, hashCode);
                 return hashCode;
             }
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool operator ==(IssueRelation left, IssueRelation right)
+        {
+            return Equals(left, right);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool operator !=(IssueRelation left, IssueRelation right)
+        {
+            return !Equals(left, right);
         }
         #endregion
 

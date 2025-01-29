@@ -1,4 +1,4 @@
-﻿/*
+/*
    Copyright 2011 - 2023 Adrian Popescu
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -128,6 +128,19 @@ namespace Redmine.Net.Api.Types
                 && Project != null ? Project.Equals(other.Project) : other.Project == null 
                 && Roles != null ? Roles.Equals<MembershipRole>(other.Roles) : other.Roles == null;
         }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as Membership);
+        }
 
         /// <summary>
         /// 
@@ -137,14 +150,35 @@ namespace Redmine.Net.Api.Types
         {
             unchecked
             {
-                var hashCode = 13;
-                hashCode = HashCodeHelper.GetHashCode(Id, hashCode);
+                var hashCode = base.GetHashCode();
                 hashCode = HashCodeHelper.GetHashCode(Group, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Project, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(User, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Roles, hashCode);
                 return hashCode;
             }
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool operator ==(Membership left, Membership right)
+        {
+            return Equals(left, right);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool operator !=(Membership left, Membership right)
+        {
+            return !Equals(left, right);
         }
         #endregion
 

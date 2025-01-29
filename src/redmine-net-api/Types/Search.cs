@@ -123,16 +123,24 @@ namespace Redmine.Net.Api.Types
         public bool Equals(Search other)
         {
             if (other == null) return false;
-            return Id == other.Id && string.Equals(Title, other.Title, StringComparison.OrdinalIgnoreCase)
-                                  && string.Equals(Description, other.Description, StringComparison.OrdinalIgnoreCase)
-                                  && string.Equals(Url, other.Url, StringComparison.OrdinalIgnoreCase)
-                                  && string.Equals(Type, other.Type, StringComparison.OrdinalIgnoreCase)
-                                  && DateTime == other.DateTime;
+            return Id == other.Id 
+                    && string.Equals(Title, other.Title, StringComparison.OrdinalIgnoreCase)
+                    && string.Equals(Description, other.Description, StringComparison.OrdinalIgnoreCase)
+                    && string.Equals(Url, other.Url, StringComparison.OrdinalIgnoreCase)
+                    && string.Equals(Type, other.Type, StringComparison.OrdinalIgnoreCase)
+                    && DateTime == other.DateTime;
         }
-
-        /// <inheritdoc />
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public override bool Equals(object obj)
         {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
             return Equals(obj as Search);
         }
 
@@ -150,6 +158,28 @@ namespace Redmine.Net.Api.Types
                 hashCode = HashCodeHelper.GetHashCode(DateTime, hashCode);
                 return hashCode;
             }
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool operator ==(Search left, Search right)
+        {
+            return Equals(left, right);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool operator !=(Search left, Search right)
+        {
+            return !Equals(left, right);
         }
 
         private string DebuggerDisplay => $@"[{nameof(Search)}:Id={Id.ToString(CultureInfo.InvariantCulture)},Title={Title},Type={Type},Url={Url},Description={Description}, DateTime={DateTime?.ToString("u", CultureInfo.InvariantCulture)}]";

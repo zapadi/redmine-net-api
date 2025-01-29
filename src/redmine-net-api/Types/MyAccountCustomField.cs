@@ -108,12 +108,28 @@ namespace Redmine.Net.Api.Types
         {
         }
 
-        /// <inheritdoc />
-        public override bool Equals(IdentifiableName other)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
         {
-            var result = base.Equals(other);
-           
-            return result && string.Equals(Value,((MyAccountCustomField)other)?.Value, StringComparison.OrdinalIgnoreCase);
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as MyAccountCustomField);
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public bool Equals(MyAccountCustomField other)
+        {
+            return base.Equals(other)
+                && string.Equals(Value, other.Value, StringComparison.OrdinalIgnoreCase);
         }
 
         /// <inheritdoc />
@@ -125,6 +141,28 @@ namespace Redmine.Net.Api.Types
                 hashCode = HashCodeHelper.GetHashCode(Value, hashCode);
                 return hashCode;
             }
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool operator ==(MyAccountCustomField left, MyAccountCustomField right)
+        {
+            return Equals(left, right);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool operator !=(MyAccountCustomField left, MyAccountCustomField right)
+        {
+            return !Equals(left, right);
         }
 
         /// <summary>

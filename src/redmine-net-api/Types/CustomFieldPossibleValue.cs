@@ -139,7 +139,8 @@ namespace Redmine.Net.Api.Types
         public bool Equals(CustomFieldPossibleValue other)
         {
             if (other == null) return false;
-            return Value == other.Value;
+            return string.Equals(Value, other.Value, StringComparison.Ordinal)
+                && string.Equals(Label, other.Label, StringComparison.Ordinal);
         }
 
         /// <summary>
@@ -163,10 +164,33 @@ namespace Redmine.Net.Api.Types
         {
             unchecked
             {
-                var hashCode = 13;
+                var hashCode = 17;
                 hashCode = HashCodeHelper.GetHashCode(Value, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Label, hashCode);
                 return hashCode;
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool operator ==(CustomFieldPossibleValue left, CustomFieldPossibleValue right)
+        {
+            return Equals(left, right);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool operator !=(CustomFieldPossibleValue left, CustomFieldPossibleValue right)
+        {
+            return !Equals(left, right);
         }
         #endregion
 

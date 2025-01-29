@@ -121,7 +121,7 @@ namespace Redmine.Net.Api.Types
         }
         #endregion 
 
-        #region Implementation of IEquatable<TimeEntryActivity>
+        #region Implementation of IEquatable<DocumentCategory>
 
         /// <summary>
         /// 
@@ -132,7 +132,10 @@ namespace Redmine.Net.Api.Types
         {
             if (other == null) return false;
 
-            return Id == other.Id && Name == other.Name && IsDefault == other.IsDefault && IsActive == other.IsActive;
+            return Id == other.Id 
+                    && Name == other.Name 
+                    && IsDefault == other.IsDefault 
+                    && IsActive == other.IsActive;
         }
 
         /// <summary>
@@ -156,22 +159,42 @@ namespace Redmine.Net.Api.Types
         {
             unchecked
             {
-                var hashCode = 13;
-                hashCode = HashCodeHelper.GetHashCode(Id, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(Name, hashCode);
+                var hashCode = base.GetHashCode();
                 hashCode = HashCodeHelper.GetHashCode(IsDefault, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(IsActive, hashCode);
                 return hashCode;
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool operator ==(DocumentCategory left, DocumentCategory right)
+        {
+            return Equals(left, right);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool operator !=(DocumentCategory left, DocumentCategory right)
+        {
+            return !Equals(left, right);
+        }
+        
         #endregion
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        private string DebuggerDisplay => $"[{nameof(TimeEntryActivity)}:{ToString()}, IsDefault={IsDefault.ToString(CultureInfo.InvariantCulture)}, IsActive={IsActive.ToString(CultureInfo.InvariantCulture)}]";
+        private string DebuggerDisplay => $"[{nameof(DocumentCategory)}, IsDefault={IsDefault.ToString(CultureInfo.InvariantCulture)}, IsActive={IsActive.ToString(CultureInfo.InvariantCulture)}]";
 
     }
 }

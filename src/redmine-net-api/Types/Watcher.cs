@@ -1,4 +1,4 @@
-﻿/*
+/*
    Copyright 2011 - 2023 Adrian Popescu
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,7 +26,8 @@ namespace Redmine.Net.Api.Types
     /// </summary>
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.USER)]
-    public sealed class Watcher : IdentifiableName, IValue, ICloneable
+    public sealed class Watcher : Identifiable<Watcher>
+        ,IValue
     {
         #region Implementation of IValue 
         /// <summary>

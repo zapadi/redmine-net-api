@@ -1,4 +1,4 @@
-﻿/*
+/*
    Copyright 2011 - 2023 Adrian Popescu
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,6 +23,7 @@ using System.Xml.Serialization;
 using Newtonsoft.Json;
 using Redmine.Net.Api.Internals;
 using Redmine.Net.Api.Serialization;
+using NotImplementedException = System.NotImplementedException;
 
 namespace Redmine.Net.Api.Types
 {
@@ -31,7 +32,8 @@ namespace Redmine.Net.Api.Types
     /// </summary>
     /// <typeparam name="T"></typeparam>
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
-    public abstract class Identifiable<T> : IXmlSerializable, IJsonSerializable, IEquatable<T>, IEquatable<Identifiable<T>> where T : Identifiable<T>
+    public abstract class Identifiable<T> : IXmlSerializable, IJsonSerializable, IEquatable<T>
+        where T : Identifiable<T>
     {
         #region Properties
         /// <summary>
@@ -121,7 +123,7 @@ namespace Redmine.Net.Api.Types
         {
             unchecked
             {
-                var hashCode = 13;
+                var hashCode = 17;
                 hashCode = HashCodeHelper.GetHashCode(Id, hashCode);
                 return hashCode;
             }

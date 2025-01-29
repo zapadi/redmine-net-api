@@ -19,6 +19,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 using Redmine.Net.Api.Extensions;
+using Redmine.Net.Api.Internals;
 
 namespace Redmine.Net.Api.Types
 {
@@ -64,6 +65,68 @@ namespace Redmine.Net.Api.Types
                     }
                 }
             }
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public bool Equals(IssueAllowedStatus other)
+        {
+            if (other == null) return false;
+            return Id == other.Id 
+                  && Name == other.Name
+                  && IsClosed == other.IsClosed;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as IssueAllowedStatus);
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = base.GetHashCode();
+                hashCode = HashCodeHelper.GetHashCode(IsClosed, hashCode);
+                return hashCode;
+            }
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool operator ==(IssueAllowedStatus left, IssueAllowedStatus right)
+        {
+            return Equals(left, right);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool operator !=(IssueAllowedStatus left, IssueAllowedStatus right)
+        {
+            return !Equals(left, right);
         }
         
         private string DebuggerDisplay => $"[{nameof(IssueAllowedStatus)}: {ToString()}]";

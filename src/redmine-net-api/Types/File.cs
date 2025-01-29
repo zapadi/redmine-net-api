@@ -1,4 +1,4 @@
-﻿/*
+/*
    Copyright 2011 - 2023 Adrian Popescu
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -209,19 +209,32 @@ namespace Redmine.Net.Api.Types
         public override bool Equals(File other)
         {
             if (other == null) return false;
-            return Id == other.Id
-                && Filename == other.Filename
-                && FileSize == other.FileSize
-                && Description == other.Description
-                && ContentType == other.ContentType
-                && ContentUrl == other.ContentUrl
-                && Author == other.Author
-                && CreatedOn == other.CreatedOn
-                && Version == other.Version
-                && Digest == other.Digest
-                && Downloads == other.Downloads
-                && Token == other.Token;
+            return base.Equals(other)
+                   && string.Equals(Filename, other.Filename, StringComparison.OrdinalIgnoreCase)
+                   && string.Equals(ContentType, other.ContentType, StringComparison.OrdinalIgnoreCase)
+                   && string.Equals(Description, other.Description, StringComparison.OrdinalIgnoreCase)
+                   && string.Equals(ContentUrl, other.ContentUrl, StringComparison.OrdinalIgnoreCase)
+                   && string.Equals(Digest, other.Digest, StringComparison.OrdinalIgnoreCase)
+                   && Equals(Author, other.Author)
+                   && FileSize == other.FileSize
+                   && CreatedOn == other.CreatedOn
+                   && Version == other.Version
+                   && Downloads == other.Downloads;
         }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as File);
+        }
+
 
         /// <summary>
         /// 
@@ -230,21 +243,39 @@ namespace Redmine.Net.Api.Types
         public override int GetHashCode()
         {
             var hashCode = base.GetHashCode();
-
             hashCode = HashCodeHelper.GetHashCode(Filename, hashCode);
             hashCode = HashCodeHelper.GetHashCode(FileSize, hashCode);
             hashCode = HashCodeHelper.GetHashCode(ContentType, hashCode);
             hashCode = HashCodeHelper.GetHashCode(Description, hashCode);
-            hashCode = HashCodeHelper.GetHashCode(Author, hashCode);
             hashCode = HashCodeHelper.GetHashCode(ContentUrl, hashCode);
-
             hashCode = HashCodeHelper.GetHashCode(Author, hashCode);
             hashCode = HashCodeHelper.GetHashCode(CreatedOn, hashCode);
             hashCode = HashCodeHelper.GetHashCode(Version, hashCode);
             hashCode = HashCodeHelper.GetHashCode(Digest, hashCode);
             hashCode = HashCodeHelper.GetHashCode(Downloads, hashCode);
-
             return hashCode;
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool operator ==(File left, File right)
+        {
+            return Equals(left, right);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool operator !=(File left, File right)
+        {
+            return !Equals(left, right);
         }
         #endregion
 
