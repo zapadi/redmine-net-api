@@ -1,4 +1,4 @@
-﻿/*
+/*
    Copyright 2011 - 2023 Adrian Popescu
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -343,14 +343,26 @@ namespace Redmine.Net.Api.Types
                 && LastLoginOn == other.LastLoginOn
                 && Status == other.Status
                 && MustChangePassword == other.MustChangePassword
-                && (CustomFields != null ? CustomFields.Equals<IssueCustomField>(other.CustomFields) : other.CustomFields == null)
-                && (Memberships != null ? Memberships.Equals<Membership>(other.Memberships) : other.Memberships == null)
-                && (Groups != null ? Groups.Equals<UserGroup>(other.Groups) : other.Groups == null)
+                && Equals(CustomFields, other.CustomFields)
+                && Equals(Memberships, other.Memberships)
+                && Equals(Groups, other.Groups)
                 && string.Equals(TwoFactorAuthenticationScheme,other.TwoFactorAuthenticationScheme, StringComparison.OrdinalIgnoreCase)
                 && IsAdmin == other.IsAdmin
                 && PasswordChangedOn == other.PasswordChangedOn
-                && UpdatedOn == other.UpdatedOn
-                ;
+                && UpdatedOn == other.UpdatedOn;
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as User);
         }
 
         /// <summary>
@@ -384,6 +396,28 @@ namespace Redmine.Net.Api.Types
                 hashCode = HashCodeHelper.GetHashCode(UpdatedOn, hashCode);
                 return hashCode;
             }
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool operator ==(User left, User right)
+        {
+            return Equals(left, right);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool operator !=(User left, User right)
+        {
+            return !Equals(left, right);
         }
         #endregion
 

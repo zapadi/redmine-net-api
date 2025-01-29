@@ -238,12 +238,25 @@ namespace Redmine.Net.Api.Types
                 && Sharing == other.Sharing
                 && CreatedOn == other.CreatedOn
                 && UpdatedOn == other.UpdatedOn
-                && (CustomFields != null ? CustomFields.Equals<IssueCustomField>(other.CustomFields) : other.CustomFields == null)
+                && Equals(CustomFields, other.CustomFields)
                 && string.Equals(WikiPageTitle,other.WikiPageTitle, StringComparison.OrdinalIgnoreCase)
                 && EstimatedHours == other.EstimatedHours
-                && SpentHours == other.SpentHours
-                ;
+                && SpentHours == other.SpentHours;
         }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as Version);
+        }
+        
         /// <summary>
         /// 
         /// </summary>
@@ -266,6 +279,28 @@ namespace Redmine.Net.Api.Types
                 hashCode = HashCodeHelper.GetHashCode(SpentHours, hashCode);
                 return hashCode;
             }
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool operator ==(Version left, Version right)
+        {
+            return Equals(left, right);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool operator !=(Version left, Version right)
+        {
+            return !Equals(left, right);
         }
         #endregion
 

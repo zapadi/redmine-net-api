@@ -1,4 +1,4 @@
-﻿/*
+/*
    Copyright 2011 - 2023 Adrian Popescu
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,7 +30,7 @@ namespace Redmine.Net.Api.Types
     /// </summary>
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.ISSUE)]
-    public sealed class IssueChild : Identifiable<IssueChild>, ICloneable
+    public sealed class IssueChild : Identifiable<IssueChild>
     {
         #region Properties
         /// <summary>
@@ -113,9 +113,23 @@ namespace Redmine.Net.Api.Types
         public override bool Equals(IssueChild other)
         {
             if (other == null) return false;
-            return Id == other.Id && Tracker == other.Tracker && Subject == other.Subject;
+            return base.Equals(other) 
+                   && Tracker == other.Tracker && Subject == other.Subject;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as IssueChild);
+        }
+        
         /// <summary>
         /// 
         /// </summary>
@@ -124,26 +138,51 @@ namespace Redmine.Net.Api.Types
         {
             unchecked
             {
-                var hashCode = 13;
-                hashCode = HashCodeHelper.GetHashCode(Id, hashCode);
+                var hashCode = base.GetHashCode();
                 hashCode = HashCodeHelper.GetHashCode(Tracker, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Subject, hashCode);
                 return hashCode;
             }
         }
-        #endregion 
-
-        #region Implementation of IClonable
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool operator ==(IssueChild left, IssueChild right)
+        {
+            return Equals(left, right);
+        }
 
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
         /// <returns></returns>
-        public object Clone()
+        public static bool operator !=(IssueChild left, IssueChild right)
         {
-            var issueChild = new IssueChild { Subject = Subject, Tracker = Tracker };
-            return issueChild;
+            return !Equals(left, right);
         }
+        #endregion 
+
+        #region Implementation of IClonable<IssueChild>
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public new IssueChild Clone()
+        {
+            return new IssueChild
+            {
+                Id = Id,
+                Tracker = Tracker,
+                Subject = Subject
+            };
+        }
+
         #endregion
 
         /// <summary>
@@ -151,6 +190,5 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <returns></returns>
         private string DebuggerDisplay => $"[{nameof(IssueChild)}: {ToString()}, Tracker={Tracker}, Subject={Subject}]";
-
     }
 }

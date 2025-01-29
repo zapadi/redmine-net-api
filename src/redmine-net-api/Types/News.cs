@@ -1,4 +1,4 @@
-﻿/*
+/*
    Copyright 2011 - 2023 Adrian Popescu
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -202,16 +202,32 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public override bool Equals(News other)
+        public new bool Equals(News other)
         {
-            if (other == null) return false;
-            return Id == other.Id
-                && Project == other.Project
-                && Author == other.Author
-                && string.Equals(Title,other.Title,StringComparison.OrdinalIgnoreCase)
-                && string.Equals(Summary, other.Summary, StringComparison.OrdinalIgnoreCase)
-                && string.Equals(Description, other.Description, StringComparison.OrdinalIgnoreCase)
-                && CreatedOn == other.CreatedOn;
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+
+            return base.Equals(other)
+                   && Equals(Project, other.Project)
+                   && Equals(Author, other.Author)
+                   && string.Equals(Title, other.Title, StringComparison.Ordinal)
+                   && string.Equals(Summary, other.Summary, StringComparison.Ordinal)
+                   && string.Equals(Description, other.Description, StringComparison.Ordinal)
+                   && CreatedOn.Equals(other.CreatedOn)
+                   && Equals(Comments, other.Comments);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as News);
         }
 
         /// <summary>
@@ -229,8 +245,31 @@ namespace Redmine.Net.Api.Types
                 hashCode = HashCodeHelper.GetHashCode(Summary, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Description, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(CreatedOn, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Comments, hashCode);
                 return hashCode;
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool operator ==(News left, News right)
+        {
+            return Equals(left, right);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool operator !=(News left, News right)
+        {
+            return !Equals(left, right);
         }
         #endregion
 

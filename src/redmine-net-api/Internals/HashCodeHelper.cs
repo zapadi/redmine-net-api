@@ -43,11 +43,11 @@ namespace Redmine.Net.Api.Internals
                     return hashCode;
                 }
                 
-                hashCode = (hashCode * 13) + list.Count;
+                hashCode = (hashCode * 17) + list.Count;
                 
                 foreach (var t in list)
                 {
-                    hashCode *= 13;
+                    hashCode *= 17;
                     if (t != null)
                     {
                         hashCode += t.GetHashCode();

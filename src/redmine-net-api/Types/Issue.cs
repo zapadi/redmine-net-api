@@ -38,7 +38,8 @@ namespace Redmine.Net.Api.Types
     /// </remarks>
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.ISSUE)]
-    public sealed class Issue : Identifiable<Issue>, ICloneable
+    public sealed class Issue : 
+        Identifiable<Issue>
     {
         #region Properties
         /// <summary>
@@ -488,21 +489,34 @@ namespace Redmine.Net.Api.Types
                 && DueDate == other.DueDate
                 && DoneRatio == other.DoneRatio
                 && EstimatedHours == other.EstimatedHours
-                && (CustomFields != null ? CustomFields.Equals<IssueCustomField>(other.CustomFields) : other.CustomFields == null)
+                && SpentHours == other.SpentHours
                 && CreatedOn == other.CreatedOn
                 && UpdatedOn == other.UpdatedOn
                 && AssignedTo == other.AssignedTo
                 && FixedVersion == other.FixedVersion
                 && Notes == other.Notes
-                && (Watchers != null ? Watchers.Equals<Watcher>(other.Watchers) : other.Watchers == null)
                 && ClosedOn == other.ClosedOn
-                && SpentHours == other.SpentHours
                 && PrivateNotes == other.PrivateNotes
-                && (Attachments != null ? Attachments.Equals<Attachment>(other.Attachments) : other.Attachments == null)
-                && (ChangeSets != null ? ChangeSets.Equals<ChangeSet>(other.ChangeSets) : other.ChangeSets == null)
-                && (Children != null ? Children.Equals<IssueChild>(other.Children) : other.Children == null)
-                && (Journals != null ? Journals.Equals<Journal>(other.Journals) : other.Journals == null)
-                && (Relations != null ? Relations.Equals<IssueRelation>(other.Relations) : other.Relations == null);
+                && Attachments.Equals(other.Attachments)
+                && CustomFields.Equals(other.CustomFields)
+                && ChangeSets.Equals(other.ChangeSets)
+                && Children.Equals(other.Children)
+                && Journals.Equals(other.Journals)
+                && Relations.Equals(other.Relations)
+                && Watchers.Equals(other.Watchers);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as Issue);
         }
 
         /// <summary>
@@ -550,6 +564,28 @@ namespace Redmine.Net.Api.Types
 
             return hashCode;
         }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool operator ==(Issue left, Issue right)
+        {
+            return Equals(left, right);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool operator !=(Issue left, Issue right)
+        {
+            return !Equals(left, right);
+        }
         #endregion
 
         #region Implementation of IClonable
@@ -564,7 +600,7 @@ namespace Redmine.Net.Api.Types
                 AssignedTo = AssignedTo,
                 Author = Author,
                 Category = Category,
-                CustomFields = CustomFields.Clone(),
+                CustomFields = CustomFields,
                 Description = Description,
                 DoneRatio = DoneRatio,
                 DueDate = DueDate,
@@ -578,7 +614,7 @@ namespace Redmine.Net.Api.Types
                 Project = Project,
                 FixedVersion = FixedVersion,
                 Notes = Notes,
-                Watchers = Watchers.Clone()
+                Watchers = Watchers
             };
             return issue;
         }

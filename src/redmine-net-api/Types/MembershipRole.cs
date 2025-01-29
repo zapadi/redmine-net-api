@@ -1,4 +1,4 @@
-﻿/*
+/*
    Copyright 2011 - 2023 Adrian Popescu
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -114,7 +114,8 @@ namespace Redmine.Net.Api.Types
         public bool Equals(MembershipRole other)
         {
             if (other == null) return false;
-            return Id == other.Id && Name == other.Name && Inherited == other.Inherited;
+            return base.Equals(other) 
+                   && Inherited == other.Inherited;
         }
 
         /// <summary>
@@ -138,12 +139,32 @@ namespace Redmine.Net.Api.Types
         {
             unchecked
             {
-                var hashCode = 13;
-                hashCode = HashCodeHelper.GetHashCode(Id, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(Name, hashCode);
+                var hashCode = base.GetHashCode();
                 hashCode = HashCodeHelper.GetHashCode(Inherited, hashCode);
                 return hashCode;
             }
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool operator ==(MembershipRole left, MembershipRole right)
+        {
+            return Equals(left, right);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool operator !=(MembershipRole left, MembershipRole right)
+        {
+            return !Equals(left, right);
         }
         #endregion
 

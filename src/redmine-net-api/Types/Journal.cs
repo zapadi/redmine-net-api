@@ -1,4 +1,4 @@
-﻿/*
+/*
    Copyright 2011 - 2023 Adrian Popescu
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,7 +31,8 @@ namespace Redmine.Net.Api.Types
     /// </summary>
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.JOURNAL)]
-    public sealed class Journal : Identifiable<Journal>
+    public sealed class Journal : 
+        Identifiable<Journal>
     {
         #region Properties
         /// <summary>
@@ -180,13 +181,29 @@ namespace Redmine.Net.Api.Types
         public override bool Equals(Journal other)
         {
             if (other == null) return false;
-            return Id == other.Id
-                && User == other.User
-                && Notes == other.Notes
-                && CreatedOn == other.CreatedOn
-                && (Details != null ? Details.Equals<Detail>(other.Details) : other.Details == null);
+            return base.Equals(other)
+                   && Equals(User, other.User)
+                   && Equals(Details, other.Details)
+                   && string.Equals(Notes, other.Notes, StringComparison.OrdinalIgnoreCase)
+                   && CreatedOn == other.CreatedOn
+                   && UpdatedOn == other.UpdatedOn
+                   && Equals(UpdatedBy, other.UpdatedBy)
+                   && PrivateNotes == other.PrivateNotes;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as Journal);
+        }
+        
         /// <summary>
         /// 
         /// </summary>
@@ -195,14 +212,38 @@ namespace Redmine.Net.Api.Types
         {
             unchecked
             {
-                var hashCode = 13;
-                hashCode = HashCodeHelper.GetHashCode(Id, hashCode);
+                var hashCode = base.GetHashCode();
                 hashCode = HashCodeHelper.GetHashCode(User, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Notes, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(CreatedOn, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Details, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(PrivateNotes, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(UpdatedOn, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(UpdatedBy, hashCode);
                 return hashCode;
             }
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool operator ==(Journal left, Journal right)
+        {
+            return Equals(left, right);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool operator !=(Journal left, Journal right)
+        {
+            return !Equals(left, right);
         }
         #endregion
 

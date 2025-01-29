@@ -307,23 +307,37 @@ namespace Redmine.Net.Api.Types
                 return false;
             }
 
-            return Id == other.Id
-                && string.Equals(Identifier, other.Identifier, StringComparison.OrdinalIgnoreCase)
-                && string.Equals(Description, other.Description, StringComparison.OrdinalIgnoreCase)
-                && (Parent != null ? Parent.Equals(other.Parent) : other.Parent == null)
-                && string.Equals(HomePage, other.HomePage, StringComparison.OrdinalIgnoreCase)
-                && CreatedOn == other.CreatedOn
-                && UpdatedOn == other.UpdatedOn
-                && Status == other.Status
-                && IsPublic == other.IsPublic
-                && InheritMembers == other.InheritMembers
-                && (Trackers != null ? Trackers.Equals<ProjectTracker>(other.Trackers) : other.Trackers == null)
-                && (CustomFields != null ? CustomFields.Equals<IssueCustomField>(other.CustomFields) : other.CustomFields == null)
-                && (IssueCategories != null ? IssueCategories.Equals<ProjectIssueCategory>(other.IssueCategories) : other.IssueCategories == null)
-                && (EnabledModules != null ? EnabledModules.Equals<ProjectEnabledModule>(other.EnabledModules) : other.EnabledModules == null)
-                && (TimeEntryActivities != null ? TimeEntryActivities.Equals<ProjectTimeEntryActivity>(other.TimeEntryActivities) : other.TimeEntryActivities == null)
-                && (DefaultAssignee != null ? DefaultAssignee.Equals(other.DefaultAssignee) : other.DefaultAssignee == null)
-                && (DefaultVersion != null ? DefaultVersion.Equals(other.DefaultVersion) : other.DefaultVersion == null);
+            return base.Equals(other)
+                   && string.Equals(Identifier, other.Identifier, StringComparison.OrdinalIgnoreCase)
+                   && string.Equals(Description, other.Description, StringComparison.OrdinalIgnoreCase)
+                   && string.Equals(HomePage, other.HomePage, StringComparison.OrdinalIgnoreCase)
+                   && string.Equals(Identifier, other.Identifier, StringComparison.OrdinalIgnoreCase)
+                   && CreatedOn == other.CreatedOn
+                   && UpdatedOn == other.UpdatedOn
+                   && Status == other.Status
+                   && IsPublic == other.IsPublic
+                   && InheritMembers == other.InheritMembers
+                   && Equals(DefaultAssignee, other.DefaultAssignee)
+                   && Equals(DefaultVersion, other.DefaultVersion)
+                   && Equals(Parent, other.Parent)
+                   && Equals(Trackers, other.Trackers)
+                   && Equals(CustomFields, other.CustomFields)
+                   && Equals(IssueCategories, other.IssueCategories)
+                   && Equals(EnabledModules, other.EnabledModules)
+                   && Equals(TimeEntryActivities, other.TimeEntryActivities);
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as Project);
         }
 
         /// <summary>
@@ -355,6 +369,28 @@ namespace Redmine.Net.Api.Types
                 return hashCode;
             }
         }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool operator ==(Project left, Project right)
+        {
+            return Equals(left, right);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool operator !=(Project left, Project right)
+        {
+            return !Equals(left, right);
+        }
         #endregion
 
         /// <summary>
@@ -379,15 +415,5 @@ CustomFields={CustomFields.Dump()},
 IssueCategories={IssueCategories.Dump()}, 
 EnabledModules={EnabledModules.Dump()}, 
 TimeEntryActivities = {TimeEntryActivities.Dump()}]";
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as Project);
-        }
     }
 }

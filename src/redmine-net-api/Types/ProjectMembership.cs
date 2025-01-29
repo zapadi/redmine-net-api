@@ -162,12 +162,25 @@ namespace Redmine.Net.Api.Types
         {
             if (other == null) return false;
             return Id == other.Id
-                && Project.Equals(other.Project)
-                && Roles.Equals<MembershipRole>(other.Roles)
-                && (User != null ? User.Equals(other.User) : other.User == null)
-                && (Group != null ? Group.Equals(other.Group) : other.Group == null);
+                && Equals(Project, other.Project)
+                && Equals(Roles, other.Roles)
+                && Equals(User, other.User)
+                && Equals(Group, other.Group);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as ProjectMembership);
+        }
+        
         /// <summary>
         /// 
         /// </summary>
@@ -183,6 +196,28 @@ namespace Redmine.Net.Api.Types
                 hashCode = HashCodeHelper.GetHashCode(Roles, hashCode);
                 return hashCode;
             }
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool operator ==(ProjectMembership left, ProjectMembership right)
+        {
+            return Equals(left, right);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool operator !=(ProjectMembership left, ProjectMembership right)
+        {
+            return !Equals(left, right);
         }
         #endregion
 
