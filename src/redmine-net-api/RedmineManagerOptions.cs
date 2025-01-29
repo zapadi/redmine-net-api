@@ -18,6 +18,7 @@ using System;
 using System.Net;
 using Redmine.Net.Api.Authentication;
 using Redmine.Net.Api.Net;
+using Redmine.Net.Api.Net.WebClient;
 using Redmine.Net.Api.Serialization;
 
 namespace Redmine.Net.Api
@@ -60,7 +61,7 @@ namespace Redmine.Net.Api
         /// <summary>
         /// Gets or sets the settings for configuring the Redmine web client.
         /// </summary>
-        public IRedmineApiClientOptions ClientOptions { get; init; }
+        public IRedmineWebClientOptions WebClientOptions { get; init; }
         
         /// <summary>
         /// Gets or sets the version of the Redmine server to which this client will connect.
