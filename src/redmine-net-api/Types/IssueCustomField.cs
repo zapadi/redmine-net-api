@@ -322,11 +322,7 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="obj"></param>
         /// <returns></returns>
         public override bool Equals(object obj)
-        {
-            return Equals(obj as IssueCustomField);
-        }
     }
 }
