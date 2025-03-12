@@ -137,13 +137,13 @@ namespace Redmine.Net.Api.Types
         public bool Equals(Role other)
         {
             if (other == null) return false;
-            return EqualityComparer<int>.Default.Equals(Id, other.Id) &&
-                   EqualityComparer<string>.Default.Equals(Name, other.Name) &&
-                   IsAssignable == other.IsAssignable &&
-                   EqualityComparer<string>.Default.Equals(IssuesVisibility, other.IssuesVisibility) &&
-                   EqualityComparer<string>.Default.Equals(TimeEntriesVisibility, other.TimeEntriesVisibility) &&
-                   EqualityComparer<string>.Default.Equals(UsersVisibility, other.UsersVisibility) &&
-                   EqualityComparer<IList<Permission>>.Default.Equals(Permissions, other.Permissions);
+            return Id == other.Id 
+                   && string.Equals(Name, other.Name, StringComparison.Ordinal) 
+                   && IsAssignable == other.IsAssignable 
+                   && IssuesVisibility == other.IssuesVisibility 
+                   && TimeEntriesVisibility == other.TimeEntriesVisibility
+                   && UsersVisibility == other.UsersVisibility 
+                   && Permissions != null ? Permissions.Equals<Permission>(other.Permissions) : other.Permissions == null;
 
         }
 

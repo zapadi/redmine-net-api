@@ -119,7 +119,7 @@ namespace Redmine.Net.Api.Types
         {
             if (other == null) return false;
 
-            return string.Equals(Info,other.Info, StringComparison.OrdinalIgnoreCase);
+            return string.Equals(Info, other.Info, StringComparison.Ordinal);
         }
 
         /// <summary>

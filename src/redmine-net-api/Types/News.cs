@@ -202,19 +202,21 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public new bool Equals(News other)
+        public override bool Equals(News other)
         {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
+            if(other == null) return false;
 
-            return base.Equals(other)
-                   && Equals(Project, other.Project)
-                   && Equals(Author, other.Author)
-                   && string.Equals(Title, other.Title, StringComparison.Ordinal)
-                   && string.Equals(Summary, other.Summary, StringComparison.Ordinal)
-                   && string.Equals(Description, other.Description, StringComparison.Ordinal)
-                   && CreatedOn.Equals(other.CreatedOn)
-                   && Equals(Comments, other.Comments);
+            var result = base.Equals(other);
+            result = result && Project == other.Project;
+            result = result && Author == other.Author;
+            result = result && string.Equals(Title, other.Title, StringComparison.Ordinal);
+            result = result && string.Equals(Summary, other.Summary, StringComparison.Ordinal);
+            result = result && string.Equals(Description, other.Description, StringComparison.Ordinal);
+            result = result && CreatedOn == other.CreatedOn;
+            result = result && (Attachments?.Equals<Attachment>(other.Attachments) ?? other.Attachments == null);
+            result = result && (Comments?.Equals<NewsComment>(other.Comments) ?? other.Comments == null);
+            result = result && (Uploads?.Equals<Upload>(other.Uploads) ?? other.Uploads == null);
+            return result;
         }
 
         /// <summary>
@@ -238,7 +240,8 @@ namespace Redmine.Net.Api.Types
         {
             unchecked
             {
-                var hashCode = base.GetHashCode();
+                var hashCode = 17;
+                hashCode = HashCodeHelper.GetHashCode(Id, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Project, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Author, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Title, hashCode);
@@ -246,6 +249,8 @@ namespace Redmine.Net.Api.Types
                 hashCode = HashCodeHelper.GetHashCode(Description, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(CreatedOn, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Comments, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Attachments, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Uploads, hashCode);
                 return hashCode;
             }
         }

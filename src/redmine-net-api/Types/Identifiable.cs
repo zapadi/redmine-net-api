@@ -41,7 +41,7 @@ namespace Redmine.Net.Api.Types
         /// Gets the id.
         /// </summary>
         /// <value>The id.</value>
-        public int Id { get; protected set; }
+        public int Id { get; protected internal set; }
         #endregion
 
         #region Implementation of IXmlSerialization

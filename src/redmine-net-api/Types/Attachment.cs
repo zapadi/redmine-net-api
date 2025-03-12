@@ -189,12 +189,12 @@ namespace Redmine.Net.Api.Types
         {
             if (other == null) return false;
             return base.Equals(other)
-                   && string.Equals(FileName, other.FileName, StringComparison.OrdinalIgnoreCase)
-                   && string.Equals(ContentType, other.ContentType, StringComparison.OrdinalIgnoreCase)
-                   && string.Equals(Description, other.Description, StringComparison.OrdinalIgnoreCase)
-                   && string.Equals(ContentUrl, other.ContentUrl, StringComparison.OrdinalIgnoreCase)
-                   && string.Equals(ThumbnailUrl, other.ThumbnailUrl, StringComparison.OrdinalIgnoreCase)
-                   && Equals(Author, other.Author)
+                   && string.Equals(FileName, other.FileName, StringComparison.Ordinal)
+                   && string.Equals(ContentType, other.ContentType, StringComparison.Ordinal)
+                   && string.Equals(Description, other.Description, StringComparison.Ordinal)
+                   && string.Equals(ContentUrl, other.ContentUrl, StringComparison.Ordinal)
+                   && string.Equals(ThumbnailUrl, other.ThumbnailUrl, StringComparison.Ordinal)
+                   && Author == other.Author
                    && FileSize == other.FileSize
                    && CreatedOn == other.CreatedOn;
         }

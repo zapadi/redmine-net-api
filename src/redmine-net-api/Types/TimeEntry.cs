@@ -233,11 +233,11 @@ namespace Redmine.Net.Api.Types
                 && SpentOn == other.SpentOn
                 && Hours == other.Hours
                 && Activity == other.Activity
-                && Comments == other.Comments
+                && string.Equals(Comments, other.Comments, StringComparison.Ordinal)
                 && User == other.User
                 && CreatedOn == other.CreatedOn
                 && UpdatedOn == other.UpdatedOn
-                && Equals(CustomFields, other.CustomFields);
+                && (CustomFields?.Equals<IssueCustomField>(other.CustomFields) ?? other.CustomFields == null);
         }
 
         /// <summary>

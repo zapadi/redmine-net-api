@@ -14,6 +14,7 @@
    limitations under the License.
 */
 
+using System;
 using System.Diagnostics;
 using System.Xml;
 using System.Xml.Serialization;
@@ -102,7 +103,9 @@ namespace Redmine.Net.Api.Types
         public override bool Equals(NewsComment other)
         {
             if (other == null) return false;
-            return Id == other.Id && Author == other.Author && Content == other.Content;
+            return Id == other.Id 
+                   && Author == other.Author 
+                   && string.Equals(Content, other.Content, StringComparison.Ordinal);
         }
         
         /// <summary>
@@ -121,12 +124,15 @@ namespace Redmine.Net.Api.Types
         /// <inheritdoc />
         public override int GetHashCode()
         {
-            var hashCode = base.GetHashCode();
+            unchecked
+            {
+                var hashCode = 17;
+                hashCode = HashCodeHelper.GetHashCode(Id, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Author, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Content, hashCode);
 
-            hashCode = HashCodeHelper.GetHashCode(Author, hashCode);
-            hashCode = HashCodeHelper.GetHashCode(Content, hashCode);
-
-            return hashCode;
+                return hashCode;
+            }
         }
         
         /// <summary>

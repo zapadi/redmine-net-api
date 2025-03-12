@@ -57,6 +57,31 @@ namespace Redmine.Net.Api.Internals
                 return hashCode;
             }
         }
+        
+        public static int GetHashCode<T>(List<T> list, int hash) where T : class
+        {
+            unchecked
+            {
+                var hashCode = hash;
+                if (list == null)
+                {
+                    return hashCode;
+                }
+                
+                hashCode = (hashCode * 17) + list.Count;
+                
+                foreach (var t in list)
+                {
+                    hashCode *= 17;
+                    if (t != null)
+                    {
+                        hashCode += t.GetHashCode();
+                    }
+                }
+
+                return hashCode;
+            }
+        }
 
         /// <summary>
         /// Returns a hash code for this instance.
