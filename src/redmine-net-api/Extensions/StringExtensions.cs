@@ -18,6 +18,9 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Security;
+#if !NET6_0_OR_GREATER
+using System.Text.RegularExpressions;
+#endif
 
 namespace Redmine.Net.Api.Extensions
 {

@@ -14,6 +14,7 @@
    limitations under the License.
 */
 
+using System;
 using System.Diagnostics;
 using System.Xml.Serialization;
 
@@ -42,6 +43,5 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <returns></returns>
         private string DebuggerDisplay => $"[{nameof(CustomFieldRole)}: {ToString()}]";
-
     }
 }

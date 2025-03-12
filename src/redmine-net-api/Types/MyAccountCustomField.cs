@@ -74,10 +74,7 @@ namespace Redmine.Net.Api.Types
         }
 
         /// <inheritdoc />
-        public override void WriteXml(XmlWriter writer)
-        {
-        }
-
+        public override void WriteXml(XmlWriter writer) {}
 
         /// <inheritdoc />
         public override void ReadJson(JsonReader reader)
@@ -103,9 +100,7 @@ namespace Redmine.Net.Api.Types
         }
 
         /// <inheritdoc />
-        public override void WriteJson(JsonWriter writer)
-        {
-        }
+        public override void WriteJson(JsonWriter writer) {}
 
         /// <summary>
         /// 
