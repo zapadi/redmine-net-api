@@ -186,15 +186,15 @@ namespace Redmine.Net.Api.Types
         {
             if (other == null) return false;
             return Id == other.Id
-                   && string.Equals(Login, other.Login, StringComparison.OrdinalIgnoreCase)
-                   && string.Equals(FirstName, other.FirstName, StringComparison.OrdinalIgnoreCase)
-                   && string.Equals(LastName, other.LastName, StringComparison.OrdinalIgnoreCase)
-                   && string.Equals(ApiKey, other.ApiKey, StringComparison.OrdinalIgnoreCase)
-                   && Email.Equals(other.Email, StringComparison.OrdinalIgnoreCase)
+                   && string.Equals(Login, other.Login, StringComparison.Ordinal)
+                   && string.Equals(FirstName, other.FirstName, StringComparison.Ordinal)
+                   && string.Equals(LastName, other.LastName, StringComparison.Ordinal)
+                   && string.Equals(ApiKey, other.ApiKey, StringComparison.Ordinal)
+                   && string.Equals(Email, other.Email, StringComparison.Ordinal)
                    && IsAdmin == other.IsAdmin
                    && CreatedOn == other.CreatedOn
                    && LastLoginOn == other.LastLoginOn
-                   && CustomFields.Equals(other.CustomFields);
+                   && (CustomFields?.Equals<MyAccountCustomField>(other.CustomFields) ?? other.CustomFields == null);
         }
         
         /// <summary>
@@ -215,15 +215,16 @@ namespace Redmine.Net.Api.Types
         {
             unchecked
             {
-                var hashCode = base.GetHashCode();
+                var hashCode = 17;
+                hashCode = HashCodeHelper.GetHashCode(Id, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Login, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(FirstName, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(LastName, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(ApiKey, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Email, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(IsAdmin, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(CreatedOn, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(LastLoginOn, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(ApiKey, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(CustomFields, hashCode);
                 return hashCode;
             }

@@ -73,9 +73,7 @@ namespace Redmine.Net.Api.Types
                 switch (reader.Name)
                 {
                     case RedmineKeys.LABEL: Label = reader.ReadElementContentAsString(); break;
-
                     case RedmineKeys.VALUE: Value = reader.ReadElementContentAsString(); break;
-
                     default: reader.Read(); break;
                 }
             }
@@ -111,14 +109,9 @@ namespace Redmine.Net.Api.Types
 
                 switch (reader.Value)
                 {
-                    case RedmineKeys.LABEL:
-                        Label = reader.ReadAsString(); break;
-
-                    case RedmineKeys.VALUE:
-
-                        Value = reader.ReadAsString(); break;
-                    default:
-                        reader.Read(); break;
+                    case RedmineKeys.LABEL: Label = reader.ReadAsString(); break;
+                    case RedmineKeys.VALUE: Value = reader.ReadAsString(); break;
+                    default: reader.Read(); break;
                 }
             }
         }
@@ -139,8 +132,9 @@ namespace Redmine.Net.Api.Types
         public bool Equals(CustomFieldPossibleValue other)
         {
             if (other == null) return false;
-            return string.Equals(Value, other.Value, StringComparison.Ordinal)
+            var result = string.Equals(Value, other.Value, StringComparison.Ordinal)
                 && string.Equals(Label, other.Label, StringComparison.Ordinal);
+            return result;
         }
 
         /// <summary>

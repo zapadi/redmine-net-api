@@ -132,7 +132,9 @@ namespace Redmine.Net.Api.Types
         {
             if (other == null) return false;
 
-            return Id == other.Id && Name == other.Name && IsDefault == other.IsDefault && IsActive == other.IsActive;
+            return base.Equals(other) 
+                   && IsDefault == other.IsDefault 
+                   && IsActive == other.IsActive;
         }
 
         /// <summary>

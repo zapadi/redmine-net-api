@@ -124,10 +124,10 @@ namespace Redmine.Net.Api.Types
         {
             if (other == null) return false;
             return Id == other.Id 
-                    && string.Equals(Title, other.Title, StringComparison.OrdinalIgnoreCase)
-                    && string.Equals(Description, other.Description, StringComparison.OrdinalIgnoreCase)
-                    && string.Equals(Url, other.Url, StringComparison.OrdinalIgnoreCase)
-                    && string.Equals(Type, other.Type, StringComparison.OrdinalIgnoreCase)
+                    && string.Equals(Title, other.Title, StringComparison.Ordinal)
+                    && string.Equals(Description, other.Description, StringComparison.Ordinal)
+                    && string.Equals(Url, other.Url, StringComparison.Ordinal)
+                    && string.Equals(Type, other.Type, StringComparison.Ordinal)
                     && DateTime == other.DateTime;
         }
         

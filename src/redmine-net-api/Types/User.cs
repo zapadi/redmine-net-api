@@ -331,25 +331,25 @@ namespace Redmine.Net.Api.Types
         {
             if (other == null) return false;
             return Id == other.Id
-                && string.Equals(AvatarUrl,other.AvatarUrl, StringComparison.OrdinalIgnoreCase)
-                && string.Equals(Login,other.Login, StringComparison.OrdinalIgnoreCase)
-                && string.Equals(FirstName,other.FirstName, StringComparison.OrdinalIgnoreCase)
-                && string.Equals(LastName,other.LastName, StringComparison.OrdinalIgnoreCase)
-                && string.Equals(Email,other.Email, StringComparison.OrdinalIgnoreCase)
-                && string.Equals(MailNotification,other.MailNotification, StringComparison.OrdinalIgnoreCase)
-                && string.Equals(ApiKey,other.ApiKey, StringComparison.OrdinalIgnoreCase)
+                && string.Equals(AvatarUrl,other.AvatarUrl, StringComparison.Ordinal)
+                && string.Equals(Login,other.Login, StringComparison.Ordinal)
+                && string.Equals(FirstName,other.FirstName, StringComparison.Ordinal)
+                && string.Equals(LastName,other.LastName, StringComparison.Ordinal)
+                && string.Equals(Email,other.Email, StringComparison.Ordinal)
+                && string.Equals(MailNotification,other.MailNotification, StringComparison.Ordinal)
+                && string.Equals(ApiKey,other.ApiKey, StringComparison.Ordinal)
+                && string.Equals(TwoFactorAuthenticationScheme,other.TwoFactorAuthenticationScheme, StringComparison.Ordinal)
                 && AuthenticationModeId == other.AuthenticationModeId
                 && CreatedOn == other.CreatedOn
                 && LastLoginOn == other.LastLoginOn
                 && Status == other.Status
                 && MustChangePassword == other.MustChangePassword
-                && Equals(CustomFields, other.CustomFields)
-                && Equals(Memberships, other.Memberships)
-                && Equals(Groups, other.Groups)
-                && string.Equals(TwoFactorAuthenticationScheme,other.TwoFactorAuthenticationScheme, StringComparison.OrdinalIgnoreCase)
                 && IsAdmin == other.IsAdmin
                 && PasswordChangedOn == other.PasswordChangedOn
-                && UpdatedOn == other.UpdatedOn;
+                && UpdatedOn == other.UpdatedOn
+                && CustomFields != null ? CustomFields.Equals<IssueCustomField>(other.CustomFields) : other.CustomFields == null
+                && Memberships != null ? Memberships.Equals<Membership>(other.Memberships) : other.Memberships == null
+                && Groups != null ? Groups.Equals<UserGroup>(other.Groups) : other.Groups == null;
         }
         
         /// <summary>
@@ -373,27 +373,27 @@ namespace Redmine.Net.Api.Types
         {
             unchecked
             {
-                var hashCode = base.GetHashCode();
+                var hashCode = 17;
+                hashCode = HashCodeHelper.GetHashCode(Id, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(AvatarUrl, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Login, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(Password, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(FirstName, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(LastName, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Email, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(MailNotification, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(ApiKey, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(TwoFactorAuthenticationScheme, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(AuthenticationModeId, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(CreatedOn, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(LastLoginOn, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(ApiKey, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Status, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(MustChangePassword, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(CustomFields, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(Memberships, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(Groups, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(TwoFactorAuthenticationScheme, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(IsAdmin, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(PasswordChangedOn, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(UpdatedOn, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(CustomFields, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Memberships, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Groups, hashCode);
                 return hashCode;
             }
         }

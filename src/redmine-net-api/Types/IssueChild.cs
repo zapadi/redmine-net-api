@@ -115,7 +115,8 @@ namespace Redmine.Net.Api.Types
         {
             if (other == null) return false;
             return base.Equals(other) 
-                   && Tracker == other.Tracker && Subject == other.Subject;
+                   && Tracker == other.Tracker 
+                   && string.Equals(Subject, other.Subject, StringComparison.Ordinal);
         }
 
         /// <summary>

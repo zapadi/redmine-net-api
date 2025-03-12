@@ -484,8 +484,8 @@ namespace Redmine.Net.Api.Types
                 && Priority == other.Priority
                 && Author == other.Author
                 && Category == other.Category
-                && Subject == other.Subject
-                && Description == other.Description
+                && string.Equals(Subject, other.Subject, StringComparison.Ordinal)
+                && string.Equals(Description, other.Description, StringComparison.Ordinal)
                 && StartDate == other.StartDate
                 && DueDate == other.DueDate
                 && DoneRatio == other.DoneRatio
@@ -495,16 +495,16 @@ namespace Redmine.Net.Api.Types
                 && UpdatedOn == other.UpdatedOn
                 && AssignedTo == other.AssignedTo
                 && FixedVersion == other.FixedVersion
-                && Notes == other.Notes
+                && string.Equals(Notes, other.Notes, StringComparison.Ordinal)
                 && ClosedOn == other.ClosedOn
                 && PrivateNotes == other.PrivateNotes
-                && Attachments.Equals(other.Attachments)
-                && CustomFields.Equals(other.CustomFields)
-                && ChangeSets.Equals(other.ChangeSets)
-                && Children.Equals(other.Children)
-                && Journals.Equals(other.Journals)
-                && Relations.Equals(other.Relations)
-                && Watchers.Equals(other.Watchers);
+                && (Attachments?.Equals<Attachment>(other.Attachments) ?? other.Attachments == null)
+                && (CustomFields?.Equals<IssueCustomField>(other.CustomFields) ?? other.CustomFields == null)
+                && (ChangeSets?.Equals<ChangeSet>(other.ChangeSets) ?? other.ChangeSets == null)
+                && (Children?.Equals<IssueChild>(other.Children) ?? other.Children == null)
+                && (Journals?.Equals<Journal>(other.Journals) ?? other.Journals == null)
+                && (Relations?.Equals<IssueRelation>(other.Relations) ?? other.Relations == null)
+                && (Watchers?.Equals<Watcher>(other.Watchers) ?? other.Watchers == null);
         }
 
         /// <summary>
@@ -529,19 +529,19 @@ namespace Redmine.Net.Api.Types
             var hashCode = base.GetHashCode();
 
             hashCode = HashCodeHelper.GetHashCode(Project, hashCode);
+          
             hashCode = HashCodeHelper.GetHashCode(Tracker, hashCode);
             hashCode = HashCodeHelper.GetHashCode(Status, hashCode);
             hashCode = HashCodeHelper.GetHashCode(Priority, hashCode);
             hashCode = HashCodeHelper.GetHashCode(Author, hashCode);
             hashCode = HashCodeHelper.GetHashCode(Category, hashCode);
-
+            
             hashCode = HashCodeHelper.GetHashCode(Subject, hashCode);
             hashCode = HashCodeHelper.GetHashCode(Description, hashCode);
             hashCode = HashCodeHelper.GetHashCode(StartDate, hashCode);
             hashCode = HashCodeHelper.GetHashCode(Project, hashCode);
             hashCode = HashCodeHelper.GetHashCode(DueDate, hashCode);
             hashCode = HashCodeHelper.GetHashCode(DoneRatio, hashCode);
-
             hashCode = HashCodeHelper.GetHashCode(PrivateNotes, hashCode);
             hashCode = HashCodeHelper.GetHashCode(EstimatedHours, hashCode);
             hashCode = HashCodeHelper.GetHashCode(SpentHours, hashCode);

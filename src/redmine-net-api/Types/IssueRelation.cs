@@ -219,7 +219,11 @@ namespace Redmine.Net.Api.Types
         public override bool Equals(IssueRelation other)
         {
             if (other == null) return false;
-            return Id == other.Id && IssueId == other.IssueId && IssueToId == other.IssueToId && Type == other.Type && Delay == other.Delay;
+            return Id == other.Id 
+                   && IssueId == other.IssueId 
+                   && IssueToId == other.IssueToId 
+                   && Type == other.Type 
+                   && Delay == other.Delay;
         }
         
         /// <summary>

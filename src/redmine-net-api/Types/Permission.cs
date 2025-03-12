@@ -98,7 +98,7 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
         public bool Equals(Permission other)
         {
-            return other != null && Info == other.Info;
+            return other != null && string.Equals(Info, other.Info, StringComparison.Ordinal);
         }
 
         /// <summary>

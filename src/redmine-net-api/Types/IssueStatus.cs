@@ -116,7 +116,9 @@ namespace Redmine.Net.Api.Types
         public bool Equals(IssueStatus other)
         {
             if (other == null) return false;
-            return Id == other.Id && Name == other.Name && IsClosed == other.IsClosed && IsDefault == other.IsDefault;
+            return base.Equals(other)
+                   && IsClosed == other.IsClosed 
+                   && IsDefault == other.IsDefault;
         }
 
         /// <summary>

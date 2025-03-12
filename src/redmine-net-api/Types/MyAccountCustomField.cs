@@ -29,14 +29,13 @@ namespace Redmine.Net.Api.Types
     /// </summary>
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.CUSTOM_FIELD)]
-    public sealed class MyAccountCustomField : IdentifiableName
+    public sealed class MyAccountCustomField : IdentifiableName, IEquatable<MyAccountCustomField>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="MyAccountCustomField"/> class.
         /// </summary>
         /// <remarks>Serialization</remarks>
         public MyAccountCustomField() { }
-
         
         /// <summary>
         /// 
@@ -117,8 +116,7 @@ namespace Redmine.Net.Api.Types
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != GetType()) return false;
-            return Equals(obj as MyAccountCustomField);
+            return obj is MyAccountCustomField other && Equals(other);
         }
         
         /// <summary>
@@ -128,8 +126,9 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
         public bool Equals(MyAccountCustomField other)
         {
+            if (other == null) return false;
             return base.Equals(other)
-                && string.Equals(Value, other.Value, StringComparison.OrdinalIgnoreCase);
+                   && string.Equals(Value, other.Value, StringComparison.Ordinal);
         }
 
         /// <inheritdoc />

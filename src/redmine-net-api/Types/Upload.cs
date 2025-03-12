@@ -170,10 +170,10 @@ namespace Redmine.Net.Api.Types
         public bool Equals(Upload other)
         {
             return other != null
-                && string.Equals(Token, other.Token, StringComparison.OrdinalIgnoreCase)
-                && string.Equals(FileName, other.FileName, StringComparison.OrdinalIgnoreCase)
-                && string.Equals(Description, other.Description, StringComparison.OrdinalIgnoreCase)
-                && string.Equals(ContentType, other.ContentType, StringComparison.OrdinalIgnoreCase);
+                && string.Equals(Token, other.Token, StringComparison.Ordinal)
+                && string.Equals(FileName, other.FileName, StringComparison.Ordinal)
+                && string.Equals(Description, other.Description, StringComparison.Ordinal)
+                && string.Equals(ContentType, other.ContentType, StringComparison.Ordinal);
         }
 
         /// <summary>

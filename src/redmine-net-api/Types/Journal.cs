@@ -130,8 +130,6 @@ namespace Redmine.Net.Api.Types
         #endregion
 
         #region Implementation of IJsonSerialization
-
-
         /// <summary>
         /// 
         /// </summary>
@@ -182,14 +180,15 @@ namespace Redmine.Net.Api.Types
         public override bool Equals(Journal other)
         {
             if (other == null) return false;
-            return base.Equals(other)
-                   && Equals(User, other.User)
-                   && Equals(Details, other.Details)
-                   && string.Equals(Notes, other.Notes, StringComparison.OrdinalIgnoreCase)
-                   && CreatedOn == other.CreatedOn
-                   && UpdatedOn == other.UpdatedOn
-                   && Equals(UpdatedBy, other.UpdatedBy)
-                   && PrivateNotes == other.PrivateNotes;
+            var result = base.Equals(other);
+            result = result && User == other.User;
+            result = result && UpdatedBy == other.UpdatedBy;
+            result = result && (Details?.Equals<Detail>(other.Details) ?? other.Details == null);
+            result = result && string.Equals(Notes, other.Notes, StringComparison.Ordinal);
+            result = result && CreatedOn == other.CreatedOn;
+            result = result && UpdatedOn == other.UpdatedOn;
+            result = result && PrivateNotes == other.PrivateNotes;
+            return result;
         }
 
         /// <summary>

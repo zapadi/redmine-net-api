@@ -154,7 +154,7 @@ namespace Redmine.Net.Api.Types
 
             return Revision == other.Revision
                 && User == other.User
-                && Comments == other.Comments
+                && string.Equals(Comments, other.Comments, StringComparison.Ordinal)
                 && CommittedOn == other.CommittedOn;
         }
 

@@ -146,7 +146,7 @@ namespace Redmine.Net.Api.Types
         public bool Equals(CustomFieldValue other)
         {
             if (other == null) return false;
-            return string.Equals(Info, other.Info, StringComparison.OrdinalIgnoreCase);
+            return string.Equals(Info, other.Info, StringComparison.Ordinal);
         }
 
         /// <summary>

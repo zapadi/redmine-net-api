@@ -219,11 +219,12 @@ namespace Redmine.Net.Api.Types
                 && string.Equals(Title, other.Title, StringComparison.Ordinal)
                 && string.Equals(Text, other.Text, StringComparison.Ordinal)
                 && string.Equals(Comments, other.Comments, StringComparison.Ordinal)
+                && string.Equals(ParentTitle, other.ParentTitle, StringComparison.Ordinal)
                 && Version == other.Version
-                && Equals(Author, other.Author)
-                && CreatedOn.Equals(other.CreatedOn)
-                && UpdatedOn.Equals(other.UpdatedOn)
-                && Equals(Attachments, other.Attachments);
+                && Author == other.Author
+                && CreatedOn == other.CreatedOn
+                && UpdatedOn == other.UpdatedOn
+                && (Attachments?.Equals<Attachment>(other.Attachments) ?? other.Attachments == null);
         }
 
         /// <summary>
