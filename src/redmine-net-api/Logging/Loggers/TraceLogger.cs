@@ -14,10 +14,9 @@
    limitations under the License.
 */
 
-using System;
 using System.Diagnostics;
 
-namespace Redmine.Net.Api.Logging;
+namespace Redmine.Net.Api.Logging.Loggers;
 
 /// <summary>
 /// 
