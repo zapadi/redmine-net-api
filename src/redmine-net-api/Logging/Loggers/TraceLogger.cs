@@ -14,16 +14,39 @@
    limitations under the License.
 */
 
+using System;
+using System.Diagnostics;
+
 namespace Redmine.Net.Api.Logging;
 
 /// <summary>
 /// 
 /// </summary>
-public interface ILogger
+public sealed class TraceLogger : ILogger
 {
     /// <summary>
     /// Logs the specified entry.
     /// </summary>
     /// <param name="entry">The entry.</param>
-    void Log(LogEntry entry);
+    public void Log(LogEntry entry)
+    {
+        switch (entry.Severity)
+        {
+            case LoggingEventType.Debug:
+                Trace.WriteLine(entry.Message, "Debug");
+                break;
+            case LoggingEventType.Information:
+                Trace.TraceInformation(entry.Message);
+                break;
+            case LoggingEventType.Warning:
+                Trace.TraceWarning(entry.Message);
+                break;
+            case LoggingEventType.Error:
+                Trace.TraceError(entry.Message);
+                break;
+            case LoggingEventType.Fatal:
+                Trace.WriteLine(entry.Message, "Fatal");
+                break;
+        }
+    }
 }

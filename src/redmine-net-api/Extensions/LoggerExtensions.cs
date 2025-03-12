@@ -15,6 +15,7 @@
 */
 
 using Redmine.Net.Api.Logging;
+using Redmine.Net.Api.Logging.Loggers;
 
 namespace Redmine.Net.Api.Extensions
 {
@@ -37,7 +38,7 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="redmineManager">The redmine manager.</param>
         public static void UseColorConsoleLog(this RedmineManager redmineManager)
         {
-            Logger.UseLogger(new ColorConsoleLogger());
+            Logger.UseLogger(new ConsoleColorLogger());
         }
 
         /// <summary>

@@ -15,38 +15,32 @@
 */
 
 using System;
-using System.Diagnostics;
 
-namespace Redmine.Net.Api.Logging
+namespace Redmine.Net.Api.Logging.Loggers;
+
+/// <summary>
+/// 
+/// </summary>
+/// <seealso cref="Redmine.Net.Api.Logging.ILogger" />
+public sealed class ConsoleLogger : ILogger
 {
+    private static readonly object locker = new object();
+
     /// <summary>
-    /// 
     /// </summary>
-    public sealed class TraceLogger : ILogger
+    /// <param name="entry"></param>
+    public void Log(LogEntry entry)
     {
-        /// <summary>
-        /// Logs the specified entry.
-        /// </summary>
-        /// <param name="entry">The entry.</param>
-        /// <exception cref="System.ArgumentOutOfRangeException"></exception>
-        public void Log(LogEntry entry)
+        lock (locker)
         {
             switch (entry.Severity)
             {
                 case LoggingEventType.Debug:
-                    Trace.WriteLine(entry.Message, "Debug");
-                    break;
                 case LoggingEventType.Information:
-                    Trace.TraceInformation(entry.Message);
-                    break;
                 case LoggingEventType.Warning:
-                    Trace.TraceWarning(entry.Message);
-                    break;
                 case LoggingEventType.Error:
-                    Trace.TraceError(entry.Message);
-                    break;
                 case LoggingEventType.Fatal:
-                    Trace.WriteLine(entry.Message, "Fatal");
+                    Console.WriteLine(entry.Message);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

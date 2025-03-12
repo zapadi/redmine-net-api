@@ -14,32 +14,31 @@
    limitations under the License.
 */
 
-namespace Redmine.Net.Api.Logging
+namespace Redmine.Net.Api.Logging;
+
+/// <summary>
+/// 
+/// </summary>
+public enum LoggingEventType
 {
     /// <summary>
-    /// 
+    /// The debug
     /// </summary>
-    public enum LoggingEventType
-    {
-        /// <summary>
-        /// The debug
-        /// </summary>
-        Debug,
-        /// <summary>
-        /// The information
-        /// </summary>
-        Information,
-        /// <summary>
-        /// The warning
-        /// </summary>
-        Warning,
-        /// <summary>
-        /// The error
-        /// </summary>
-        Error,
-        /// <summary>
-        /// The fatal
-        /// </summary>
-        Fatal
-    };
-}
+    Debug,
+    /// <summary>
+    /// The information
+    /// </summary>
+    Information,
+    /// <summary>
+    /// The warning
+    /// </summary>
+    Warning,
+    /// <summary>
+    /// The error
+    /// </summary>
+    Error,
+    /// <summary>
+    /// The fatal
+    /// </summary>
+    Fatal
+};
