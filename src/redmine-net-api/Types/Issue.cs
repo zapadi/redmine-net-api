@@ -594,16 +594,16 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        public new Issue Clone()
+        public new Issue Clone(bool resetId)
         {
             var issue = new Issue
             {
-                Project = Project?.Clone(),
-                Tracker = Tracker?.Clone(),
-                Status = Status?.Clone(),
-                Priority = Priority?.Clone(),
-                Author = Author?.Clone(),
-                Category = Category?.Clone(),
+                Project = Project?.Clone(false),
+                Tracker = Tracker?.Clone(false),
+                Status = Status?.Clone(false),
+                Priority = Priority?.Clone(false),
+                Author = Author?.Clone(false),
+                Category = Category?.Clone(false),
                 Subject = Subject,
                 Description = Description,
                 StartDate = StartDate,
@@ -614,21 +614,21 @@ namespace Redmine.Net.Api.Types
                 TotalEstimatedHours = TotalEstimatedHours,
                 SpentHours = SpentHours,
                 TotalSpentHours = TotalSpentHours,
-                AssignedTo = AssignedTo?.Clone(),
-                FixedVersion = FixedVersion?.Clone(),
+                AssignedTo = AssignedTo?.Clone(false),
+                FixedVersion = FixedVersion?.Clone(false),
                 Notes = Notes,
                 PrivateNotes = PrivateNotes,
                 CreatedOn = CreatedOn,
                 UpdatedOn = UpdatedOn,
                 ClosedOn = ClosedOn,
-                ParentIssue = ParentIssue?.Clone(),
-                CustomFields = CustomFields?.Clone(),
-                Journals = Journals?.Clone(),
-                Attachments = Attachments?.Clone(),
-                Relations = Relations?.Clone(),
-                Children = Children?.Clone(),
-                Watchers = Watchers?.Clone(),
-                Uploads = Uploads?.Clone(),
+                ParentIssue = ParentIssue?.Clone(false),
+                CustomFields = CustomFields?.Clone(false),
+                Journals = Journals?.Clone(false),
+                Attachments = Attachments?.Clone(false),
+                Relations = Relations?.Clone(false),
+                Children = Children?.Clone(false),
+                Watchers = Watchers?.Clone(false),
+                Uploads = Uploads?.Clone(false),
             };
 
             return issue;
@@ -675,6 +675,5 @@ Relations={Relations.Dump()},
 Children={Children.Dump()}, 
 Uploads={Uploads.Dump()}, 
 Watchers={Watchers.Dump()}]";
-
     }
 }

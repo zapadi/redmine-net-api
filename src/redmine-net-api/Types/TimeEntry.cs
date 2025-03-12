@@ -304,7 +304,7 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        public new TimeEntry Clone()
+        public new TimeEntry Clone(bool resetId)
         {
             var timeEntry = new TimeEntry
             {

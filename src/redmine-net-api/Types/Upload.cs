@@ -239,7 +239,7 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        public Upload Clone()
+        public Upload Clone(bool resetId)
         {
             return new Upload
             {

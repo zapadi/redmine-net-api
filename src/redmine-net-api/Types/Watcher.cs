@@ -43,8 +43,12 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        public new Watcher Clone()
+        public new Watcher Clone(bool resetId)
         {
+            if (resetId)
+            {
+                return new Watcher();
+            }
             return new Watcher
             {
                 Id = Id
@@ -58,6 +62,5 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <returns></returns>
         private string DebuggerDisplay => $"[{nameof(Watcher)}: {ToString()}]";
-
     }
 }

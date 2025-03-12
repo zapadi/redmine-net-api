@@ -293,8 +293,18 @@ Delay={Delay?.ToString(CultureInfo.InvariantCulture)}]";
         /// 
         /// </summary>
         /// <returns></returns>
-        public new IssueRelation Clone()
+        public new IssueRelation Clone(bool resetId)
         {
+            if (resetId)
+            {
+                return new IssueRelation
+                {
+                    IssueId = IssueId,
+                    IssueToId = IssueToId,
+                    Type = Type,
+                    Delay = Delay
+                };
+            }
             return new IssueRelation
             {
                 Id = Id,

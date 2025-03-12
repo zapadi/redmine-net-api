@@ -163,7 +163,7 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        public virtual Identifiable<T> Clone()
+        public virtual Identifiable<T> Clone(bool resetId)
         {
             throw new NotImplementedException();
         }

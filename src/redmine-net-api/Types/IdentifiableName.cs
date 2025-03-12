@@ -231,7 +231,7 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        public new IdentifiableName Clone()
+        public new IdentifiableName Clone(bool resetId)
         {
             return new IdentifiableName
             {

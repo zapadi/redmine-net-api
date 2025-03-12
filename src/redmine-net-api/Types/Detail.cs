@@ -188,7 +188,7 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public Detail Clone()
+        public Detail Clone(bool resetId)
         {
             return new Detail(Name, Property, OldValue, NewValue);
         }

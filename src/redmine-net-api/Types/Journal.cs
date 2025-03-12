@@ -257,16 +257,27 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        public new Journal Clone()
+        public new Journal Clone(bool resetId)
         {
+            if (resetId)
+            {
+                return new Journal
+                {
+                    User = User?.Clone(false),
+                    Notes = Notes,
+                    CreatedOn = CreatedOn,
+                    PrivateNotes = PrivateNotes,
+                    Details = Details?.Clone(false)
+                };
+            }
             return new Journal
             {
                 Id = Id,
-                User = User?.Clone(),
+                User = User?.Clone(false),
                 Notes = Notes,
                 CreatedOn = CreatedOn,
                 PrivateNotes = PrivateNotes,
-                Details = Details?.Clone()
+                Details = Details?.Clone(false)
             };
         }
     }

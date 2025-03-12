@@ -10,5 +10,5 @@ public interface ICloneable<out T>
     /// 
     /// </summary>
     /// <returns></returns>
-    T Clone();
+    internal T Clone(bool resetId);
 }

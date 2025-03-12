@@ -271,8 +271,23 @@ CreatedOn={CreatedOn?.ToString("u", CultureInfo.InvariantCulture)}]";
         /// 
         /// </summary>
         /// <returns></returns>
-        public new Attachment Clone()
+        public new Attachment Clone(bool resetId)
         {
+            if (resetId)
+            {
+                return new Attachment
+                {
+                    FileName = FileName,
+                    FileSize = FileSize,
+                    ContentType = ContentType,
+                    Description = Description,
+                    ContentUrl = ContentUrl,
+                    ThumbnailUrl = ThumbnailUrl,
+                    Author = Author?.Clone(false),
+                    CreatedOn = CreatedOn
+                };
+            }
+            
             return new Attachment
             {
                 Id = Id,
@@ -282,7 +297,7 @@ CreatedOn={CreatedOn?.ToString("u", CultureInfo.InvariantCulture)}]";
                 Description = Description,
                 ContentUrl = ContentUrl,
                 ThumbnailUrl = ThumbnailUrl,
-                Author = Author?.Clone(),
+                Author = Author?.Clone(true),
                 CreatedOn = CreatedOn
             };
         }

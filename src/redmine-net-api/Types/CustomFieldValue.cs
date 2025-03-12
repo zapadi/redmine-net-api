@@ -206,7 +206,7 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        public CustomFieldValue Clone()
+        public CustomFieldValue Clone(bool resetId)
         {
             return new CustomFieldValue { Info = Info };
         }

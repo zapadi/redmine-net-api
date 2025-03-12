@@ -275,14 +275,23 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        public new IssueCustomField Clone()
+        public new IssueCustomField Clone(bool resetId)
         {
-            var clone = new IssueCustomField
+            IssueCustomField clone;
+            if (resetId)
             {
-                Id = Id,
-                Name = Name,
-                Multiple = Multiple,
-            };
+                clone = new IssueCustomField();
+            }
+            else
+            {
+                clone = new IssueCustomField
+                {
+                    Id = Id,
+                };
+            }
+
+            clone.Name = Name;
+            clone.Multiple = Multiple;
 
             if (Values != null)
             {
@@ -317,11 +326,5 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <returns></returns>
         private string DebuggerDisplay => $"[{nameof(IssueCustomField)}: {ToString()} Values={Values.Dump()}, Multiple={Multiple.ToString(CultureInfo.InvariantCulture)}]";
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public override bool Equals(object obj)
     }
 }

@@ -175,12 +175,20 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        public new IssueChild Clone()
+        public new IssueChild Clone(bool resetId)
         {
+            if (resetId)
+            {
+                return new IssueChild
+                {
+                    Tracker = Tracker?.Clone(false),
+                    Subject = Subject
+                };
+            }
             return new IssueChild
             {
                 Id = Id,
-                Tracker = Tracker?.Clone(),
+                Tracker = Tracker?.Clone(false),
                 Subject = Subject
             };
         }
