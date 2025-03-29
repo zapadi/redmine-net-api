@@ -112,6 +112,27 @@ namespace Redmine.Net.Api.Net
         {
             var type = typeof(T);
 
+            return CreateEntityFragment(type, ownerId);
+        }
+        public string CreateEntityFragment<T>(RequestOptions requestOptions)
+        {
+            var type = typeof(T);
+
+            return CreateEntityFragment(type, requestOptions);
+        }
+        internal string CreateEntityFragment(Type type, RequestOptions requestOptions)
+        {
+            string ownerId = null;
+            if (requestOptions is { QueryString: not null })
+            {
+                ownerId = requestOptions.QueryString.Get(RedmineKeys.PROJECT_ID) ??
+                          requestOptions.QueryString.Get(RedmineKeys.ISSUE_ID);
+            }
+
+            return CreateEntityFragment(type, ownerId);
+        }
+        internal string CreateEntityFragment(Type type, string ownerId = null)
+        {
             if (type == typeof(Version) || type == typeof(IssueCategory) || type == typeof(ProjectMembership))
             {
                 return ProjectParentFragment(ownerId, TypeUrlFragments[type]);
@@ -129,7 +150,7 @@ namespace Redmine.Net.Api.Net
 
             if (type == typeof(Upload))
             {
-                return RedmineKeys.UPLOADS;
+                return $"{RedmineKeys.UPLOADS}.{Format}";
             }
 
             if (type == typeof(Attachment) || type == typeof(Attachments))
@@ -144,6 +165,10 @@ namespace Redmine.Net.Api.Net
         {
             var type = typeof(T);
 
+            return GetFragment(type, id);
+        }
+        internal string GetFragment(Type type, string id)
+        {
             return $"{TypeFragment(TypeUrlFragments, type)}/{id}.{Format}";
         }
 
@@ -151,6 +176,10 @@ namespace Redmine.Net.Api.Net
         {
             var type = typeof(T);
 
+            return PatchFragment(type, ownerId);
+        }
+        internal string PatchFragment(Type type, string ownerId)
+        {
             if (type == typeof(Attachment) || type == typeof(Attachments))
             {
                 return IssueAttachmentFragment(ownerId);
@@ -163,6 +192,10 @@ namespace Redmine.Net.Api.Net
         {
             var type = typeof(T);
 
+            return DeleteFragment(type, id);
+        }
+        internal string DeleteFragment(Type type,string id)
+        {
             return $"{TypeFragment(TypeUrlFragments, type)}/{id}.{Format}";
         }
 
@@ -170,6 +203,10 @@ namespace Redmine.Net.Api.Net
         {
             var type = typeof(T);
 
+            return UpdateFragment(type, id);
+        }
+        internal string UpdateFragment(Type type, string id)
+        {
             return $"{TypeFragment(TypeUrlFragments, type)}/{id}.{Format}";
         }
 
@@ -179,8 +216,27 @@ namespace Redmine.Net.Api.Net
 
             return GetListFragment(type, ownerId);
         }
+        
+        public string GetListFragment<T>(RequestOptions requestOptions) where T : class, new()
+        {
+            var type = typeof(T);
+            
+            return GetListFragment(type, requestOptions);
+        }
+        
+        internal string GetListFragment(Type type, RequestOptions requestOptions)
+        {
+            string ownerId = null;
+            if (requestOptions is { QueryString: not null })
+            {
+                ownerId = requestOptions.QueryString.Get(RedmineKeys.PROJECT_ID) ??
+                          requestOptions.QueryString.Get(RedmineKeys.ISSUE_ID);
+            }
+            
+            return GetListFragment(type, ownerId);
+        }
 
-        public string GetListFragment(Type type, string ownerId = null)
+        internal string GetListFragment(Type type, string ownerId = null)
         {
             if (type == typeof(Version) || type == typeof(IssueCategory) || type == typeof(ProjectMembership))
             {
