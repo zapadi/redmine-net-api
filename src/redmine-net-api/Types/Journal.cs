@@ -35,7 +35,7 @@ namespace Redmine.Net.Api.Types
     {
         #region Properties
         /// <summary>
-        /// Gets or sets the user.
+        /// Gets the user.
         /// </summary>
         /// <value>
         /// The user.
@@ -53,12 +53,20 @@ namespace Redmine.Net.Api.Types
         public string Notes { get; set; }
 
         /// <summary>
-        /// Gets or sets the created on.
+        /// Gets the created on.
         /// </summary>
         /// <value>
         /// The created on.
         /// </value>
         public DateTime? CreatedOn { get; internal set; }
+        
+        /// <summary>
+        /// Gets the updated on.
+        /// </summary>
+        /// <value>
+        /// The updated on.
+        /// </value>
+        public DateTime? UpdatedOn { get; internal set; }
 
         /// <summary>
         /// 
@@ -66,12 +74,17 @@ namespace Redmine.Net.Api.Types
         public bool PrivateNotes { get; internal set; }
 
         /// <summary>
-        /// Gets or sets the details.
+        /// Gets the details.
         /// </summary>
         /// <value>
         /// The details.
         /// </value>
         public IList<Detail> Details { get; internal set; }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public IdentifiableName UpdatedBy { get; internal set; }
         #endregion
 
         #region Implementation of IXmlSerialization
@@ -95,10 +108,12 @@ namespace Redmine.Net.Api.Types
                 switch (reader.Name)
                 {
                     case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
+                    case RedmineKeys.UPDATED_ON: UpdatedOn = reader.ReadElementContentAsNullableDateTime(); break;
                     case RedmineKeys.DETAILS: Details = reader.ReadElementContentAsCollection<Detail>(); break;
                     case RedmineKeys.NOTES: Notes = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.PRIVATE_NOTES: PrivateNotes = reader.ReadElementContentAsBoolean(); break;
                     case RedmineKeys.USER: User = new IdentifiableName(reader); break;
+                    case RedmineKeys.UPDATED_BY: UpdatedBy = new IdentifiableName(reader); break;
                     default: reader.Read(); break;
                 }
             }
@@ -137,10 +152,12 @@ namespace Redmine.Net.Api.Types
                 {
                     case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
                     case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadAsDateTime(); break;
+                    case RedmineKeys.UPDATED_ON: UpdatedOn = reader.ReadAsDateTime(); break;
                     case RedmineKeys.DETAILS: Details = reader.ReadAsCollection<Detail>(); break;
                     case RedmineKeys.NOTES: Notes = reader.ReadAsString(); break;
                     case RedmineKeys.PRIVATE_NOTES: PrivateNotes = reader.ReadAsBool(); break;
                     case RedmineKeys.USER: User = new IdentifiableName(reader); break;
+                    case RedmineKeys.UPDATED_BY: UpdatedBy = new IdentifiableName(reader); break;
                     default: reader.Read(); break;
                 }
             }

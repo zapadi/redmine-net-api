@@ -1,4 +1,4 @@
-/*
+﻿/*
    Copyright 2011 - 2023 Adrian Popescu
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -83,6 +83,9 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
                     case RedmineKeys.NAME: Name = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.ASSIGNABLE: IsAssignable = reader.ReadElementContentAsNullableBoolean(); break;
+                    case RedmineKeys.ISSUES_VISIBILITY: IssuesVisibility = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.TIME_ENTRIES_VISIBILITY: TimeEntriesVisibility = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.USERS_VISIBILITY: UsersVisibility = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.PERMISSIONS: Permissions = reader.ReadElementContentAsCollection<Permission>(); break;
                     default: reader.Read(); break;
                 }
@@ -115,6 +118,9 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
                     case RedmineKeys.NAME: Name = reader.ReadAsString(); break;
                     case RedmineKeys.ASSIGNABLE: IsAssignable = reader.ReadAsBoolean(); break;
+                    case RedmineKeys.ISSUES_VISIBILITY: IssuesVisibility = reader.ReadAsString(); break;
+                    case RedmineKeys.TIME_ENTRIES_VISIBILITY: TimeEntriesVisibility = reader.ReadAsString(); break;
+                    case RedmineKeys.USERS_VISIBILITY: UsersVisibility = reader.ReadAsString(); break;
                     case RedmineKeys.PERMISSIONS: Permissions = reader.ReadAsCollection<Permission>(); break;
                     default: reader.Read(); break;
                 }
@@ -134,6 +140,9 @@ namespace Redmine.Net.Api.Types
             return EqualityComparer<int>.Default.Equals(Id, other.Id) &&
                    EqualityComparer<string>.Default.Equals(Name, other.Name) &&
                    IsAssignable == other.IsAssignable &&
+                   EqualityComparer<string>.Default.Equals(IssuesVisibility, other.IssuesVisibility) &&
+                   EqualityComparer<string>.Default.Equals(TimeEntriesVisibility, other.TimeEntriesVisibility) &&
+                   EqualityComparer<string>.Default.Equals(UsersVisibility, other.UsersVisibility) &&
                    EqualityComparer<IList<Permission>>.Default.Equals(Permissions, other.Permissions);
 
         }
@@ -163,6 +172,9 @@ namespace Redmine.Net.Api.Types
                 hashCode = HashCodeHelper.GetHashCode(Id, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Name, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(IsAssignable, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(IssuesVisibility, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(TimeEntriesVisibility, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(UsersVisibility, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Permissions, hashCode);
                 return hashCode;
             }

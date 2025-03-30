@@ -29,14 +29,25 @@ namespace Redmine.Net.Api.Types
     /// Availability 2.2
     /// </summary>
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
-    [XmlRoot(RedmineKeys.ISSUE_PRIORITY)]
-    public sealed class IssuePriority : IdentifiableName, IEquatable<IssuePriority>
+    [XmlRoot(RedmineKeys.DOCUMENT_CATEGORY)]
+    public sealed class DocumentCategory : IdentifiableName, IEquatable<DocumentCategory>
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        public DocumentCategory() { }
+
+        internal DocumentCategory(int id, string name)
+            : base(id, name)
+        {
+        }
+
         #region Properties
         /// <summary>
         /// 
         /// </summary>
         public bool IsDefault { get; internal set; }
+        
         /// <summary>
         /// 
         /// </summary>
@@ -63,17 +74,23 @@ namespace Redmine.Net.Api.Types
                 switch (reader.Name)
                 {
                     case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
-                    case RedmineKeys.ACTIVE: IsActive = reader.ReadElementContentAsBoolean(); break;
                     case RedmineKeys.IS_DEFAULT: IsDefault = reader.ReadElementContentAsBoolean(); break;
                     case RedmineKeys.NAME: Name = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.ACTIVE: IsActive = reader.ReadElementContentAsBoolean(); break;
                     default: reader.Read(); break;
                 }
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+        public override void WriteXml(XmlWriter writer) { }
+
         #endregion
 
         #region Implementation of IJsonSerialization
-
         /// <summary>
         /// 
         /// </summary>
@@ -95,22 +112,23 @@ namespace Redmine.Net.Api.Types
                 switch (reader.Value)
                 {
                     case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
-                    case RedmineKeys.ACTIVE: IsActive = reader.ReadAsBool(); break;
                     case RedmineKeys.IS_DEFAULT: IsDefault = reader.ReadAsBool(); break;
                     case RedmineKeys.NAME: Name = reader.ReadAsString(); break;
+                    case RedmineKeys.ACTIVE: IsActive = reader.ReadAsBool(); break;
                     default: reader.Read(); break;
                 }
             }
         }
         #endregion 
 
-        #region Implementation of IEquatable<IssuePriority>
+        #region Implementation of IEquatable<TimeEntryActivity>
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public bool Equals(IssuePriority other)
+        public bool Equals(DocumentCategory other)
         {
             if (other == null) return false;
 
@@ -127,7 +145,7 @@ namespace Redmine.Net.Api.Types
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != GetType()) return false;
-            return Equals(obj as IssuePriority);
+            return Equals(obj as DocumentCategory);
         }
 
         /// <summary>
@@ -146,13 +164,14 @@ namespace Redmine.Net.Api.Types
                 return hashCode;
             }
         }
+
         #endregion
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        private string DebuggerDisplay => $"[IssuePriority: {ToString()}, IsDefault={IsDefault.ToString(CultureInfo.InvariantCulture)}, IsActive={IsActive.ToString(CultureInfo.InvariantCulture)}]";
+        private string DebuggerDisplay => $"[{nameof(TimeEntryActivity)}:{ToString()}, IsDefault={IsDefault.ToString(CultureInfo.InvariantCulture)}, IsActive={IsActive.ToString(CultureInfo.InvariantCulture)}]";
 
     }
 }

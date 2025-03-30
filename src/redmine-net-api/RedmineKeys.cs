@@ -59,6 +59,10 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
+        public const string ARCHIVE = "archive";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string ASSIGNED_TO = "assigned_to";
         /// <summary>
         /// 
@@ -84,6 +88,11 @@ namespace Redmine.Net.Api
         /// 
         /// </summary>
         public const string AUTH_SOURCE_ID = "auth_source_id";
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string AVATAR_URL = "avatar_url";
         /// <summary>
         /// 
         /// </summary>
@@ -224,6 +233,10 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
+        public const string DOCUMENT_CATEGORY = "document_category";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string DOCUMENTS = "documents";
         /// <summary>
         /// 
@@ -248,6 +261,10 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
+        public const string ENABLED_STANDARD_FIELDS = "enabled_standard_fields";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string ENUMERATION_ISSUE_PRIORITIES = "enumerations/issue_priorities";
         /// <summary>
         /// 
@@ -265,6 +282,10 @@ namespace Redmine.Net.Api
         /// 
         /// </summary>
         public const string ESTIMATED_HOURS = "estimated_hours";
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string FIELD = "field";
         /// <summary>
         /// 
         /// </summary>
@@ -772,6 +793,10 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
+        public const string UPDATED_BY = "updated_by";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string UPLOAD = "upload";
         /// <summary>
         /// 
@@ -849,7 +874,5 @@ namespace Redmine.Net.Api
         /// 
         /// </summary>
         public const string WIKI_PAGES = "wiki_pages";
-
-       
     }
 }
