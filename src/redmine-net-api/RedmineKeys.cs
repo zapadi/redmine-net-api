@@ -116,6 +116,10 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
+        public const string CLOSE = "close";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string CLOSED_ON = "closed_on";
         /// <summary>
         /// 
@@ -636,11 +640,23 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
+        public const string REOPEN = "reopen";
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string REPOSITORY = "repository";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string RESULT = "result";
         /// <summary>
         /// 
         /// </summary>
         public const string REVISION = "revision";
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string REVISIONS = "revisions";
         /// <summary>
         /// 
         /// </summary>
@@ -786,6 +802,10 @@ namespace Redmine.Net.Api
         /// 
         /// </summary>
         public const string TWO_FA_SCHEME = "twofa_scheme";
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string UNARCHIVE = "unarchive";
         /// <summary>
         /// 
         /// </summary>

@@ -31,6 +31,36 @@ internal static class RedmineApiUrlsExtensions
         return $"{RedmineKeys.USERS}/{RedmineKeys.CURRENT}.{redmineApiUrls.Format}";
     }
 
+    public static string ProjectClose(this RedmineApiUrls redmineApiUrls, string projectIdentifier)
+    {
+        return $"{RedmineKeys.PROJECTS}/{projectIdentifier}/{RedmineKeys.CLOSE}.{redmineApiUrls.Format}";
+    }
+    
+    public static string ProjectReopen(this RedmineApiUrls redmineApiUrls, string projectIdentifier)
+    {
+        return $"{RedmineKeys.PROJECTS}/{projectIdentifier}/{RedmineKeys.REOPEN}.{redmineApiUrls.Format}";
+    }
+    
+    public static string ProjectArchive(this RedmineApiUrls redmineApiUrls, string projectIdentifier)
+    {
+        return $"{RedmineKeys.PROJECTS}/{projectIdentifier}/{RedmineKeys.ARCHIVE}.{redmineApiUrls.Format}";
+    }
+    
+    public static string ProjectUnarchive(this RedmineApiUrls redmineApiUrls, string projectIdentifier)
+    {
+        return $"{RedmineKeys.PROJECTS}/{projectIdentifier}/{RedmineKeys.UNARCHIVE}.{redmineApiUrls.Format}";
+    }
+    
+    public static string ProjectRepositoryAddRelatedIssue(this RedmineApiUrls redmineApiUrls, string projectIdentifier, string repositoryIdentifier, string revision)
+    {
+        return $"{RedmineKeys.PROJECTS}/{projectIdentifier}/{RedmineKeys.REPOSITORY}/{repositoryIdentifier}/{RedmineKeys.REVISIONS}/{revision}/{RedmineKeys.ISSUES}.{redmineApiUrls.Format}";
+    }
+    
+    public static string ProjectRepositoryRemoveRelatedIssue(this RedmineApiUrls redmineApiUrls, string projectIdentifier, string repositoryIdentifier, string revision, string issueIdentifier)
+    {
+        return $"{RedmineKeys.PROJECTS}/{projectIdentifier}/{RedmineKeys.REPOSITORY}/{repositoryIdentifier}/{RedmineKeys.REVISIONS}/{revision}/{RedmineKeys.ISSUES}/{issueIdentifier}.{redmineApiUrls.Format}";
+    }
+    
     public static string ProjectNews(this RedmineApiUrls redmineApiUrls, string projectIdentifier)
     {
         if (projectIdentifier.IsNullOrWhiteSpace())

@@ -34,7 +34,106 @@ namespace Redmine.Net.Api.Extensions
     /// </summary>
     public static class RedmineManagerExtensions
     {
-       /// <summary>
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="redmineManager"></param>
+        /// <param name="projectIdentifier"></param>
+        /// <param name="requestOptions"></param>
+        /// <returns></returns>
+        public static void ArchiveProject(this RedmineManager redmineManager, string projectIdentifier, RequestOptions requestOptions = null)
+        {
+            var uri = redmineManager.RedmineApiUrls.ProjectArchive(projectIdentifier);
+
+            var escapedUri = Uri.EscapeDataString(uri);
+            
+            redmineManager.ApiClient.Update(escapedUri, string.Empty ,requestOptions);
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="redmineManager"></param>
+        /// <param name="projectIdentifier"></param>
+        /// <param name="requestOptions"></param>
+        /// <returns></returns>
+        public static void UnarchiveProject(this RedmineManager redmineManager, string projectIdentifier, RequestOptions requestOptions = null)
+        {
+            var uri = redmineManager.RedmineApiUrls.ProjectUnarchive(projectIdentifier);
+
+            var escapedUri = Uri.EscapeDataString(uri);
+            
+            redmineManager.ApiClient.Update(escapedUri, string.Empty ,requestOptions);
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="redmineManager"></param>
+        /// <param name="projectIdentifier"></param>
+        /// <param name="requestOptions"></param>
+        /// <returns></returns>
+        public static void ReopenProject(this RedmineManager redmineManager, string projectIdentifier, RequestOptions requestOptions = null)
+        {
+            var uri = redmineManager.RedmineApiUrls.ProjectReopen(projectIdentifier);
+
+            var escapedUri = Uri.EscapeDataString(uri);
+            
+            redmineManager.ApiClient.Update(escapedUri, string.Empty ,requestOptions);
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="redmineManager"></param>
+        /// <param name="projectIdentifier"></param>
+        /// <param name="requestOptions"></param>
+        /// <returns></returns>
+        public static void CloseProject(this RedmineManager redmineManager, string projectIdentifier, RequestOptions requestOptions = null)
+        {
+            var uri = redmineManager.RedmineApiUrls.ProjectClose(projectIdentifier);
+
+            var escapedUri = Uri.EscapeDataString(uri);
+            
+            redmineManager.ApiClient.Update(escapedUri,string.Empty, requestOptions);
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="redmineManager"></param>
+        /// <param name="projectIdentifier"></param>
+        /// <param name="repositoryIdentifier"></param>
+        /// <param name="revision"></param>
+        /// <param name="requestOptions"></param>
+        public static void ProjectRepositoryAddRelatedIssue(this RedmineManager redmineManager, string projectIdentifier, string repositoryIdentifier, string revision, RequestOptions requestOptions = null)
+        {
+            var uri = redmineManager.RedmineApiUrls.ProjectRepositoryAddRelatedIssue(projectIdentifier, repositoryIdentifier, revision);
+            
+            var escapedUri = Uri.EscapeDataString(uri);
+            
+            _ = redmineManager.ApiClient.Create(escapedUri,string.Empty, requestOptions);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="redmineManager"></param>
+        /// <param name="projectIdentifier"></param>
+        /// <param name="repositoryIdentifier"></param>
+        /// <param name="revision"></param>
+        /// <param name="issueIdentifier"></param>
+        /// <param name="requestOptions"></param>
+        public static void ProjectRepositoryRemoveRelatedIssue(this RedmineManager redmineManager, string projectIdentifier, string repositoryIdentifier, string revision, string issueIdentifier, RequestOptions requestOptions = null)
+        {
+            var uri = redmineManager.RedmineApiUrls.ProjectRepositoryRemoveRelatedIssue(projectIdentifier, repositoryIdentifier, revision, issueIdentifier);
+            
+            var escapedUri = Uri.EscapeDataString(uri);
+           
+            _ = redmineManager.ApiClient.Delete(escapedUri, requestOptions);
+        }
+        
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="redmineManager"></param>
@@ -374,6 +473,107 @@ namespace Redmine.Net.Api.Extensions
 
         #if !(NET20)
 
+        /// <summary>
+        /// Archives the project asynchronously
+        /// </summary>
+        /// <param name="redmineManager"></param>
+        /// <param name="projectIdentifier"></param>
+        /// <param name="requestOptions"></param>
+        /// <param name="cancellationToken"></param>
+        public static async Task ArchiveProjectAsync(this RedmineManager redmineManager, string projectIdentifier, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
+        {
+            var uri = redmineManager.RedmineApiUrls.ProjectArchive(projectIdentifier);
+            
+            var escapedUri = Uri.EscapeDataString(uri);
+           
+            await redmineManager.ApiClient.DeleteAsync(escapedUri,  requestOptions, cancellationToken).ConfigureAwait(false);
+        }
+        
+        /// <summary>
+        /// Unarchives the project asynchronously
+        /// </summary>
+        /// <param name="redmineManager"></param>
+        /// <param name="projectIdentifier"></param>
+        /// <param name="requestOptions"></param>
+        /// <param name="cancellationToken"></param>
+        public static async Task UnarchiveProjectAsync(this RedmineManager redmineManager, string projectIdentifier, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
+        {
+            var uri = redmineManager.RedmineApiUrls.ProjectUnarchive(projectIdentifier);
+            
+            var escapedUri = Uri.EscapeDataString(uri);
+           
+            await redmineManager.ApiClient.DeleteAsync(escapedUri,  requestOptions, cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Closes the project asynchronously
+        /// </summary>
+        /// <param name="redmineManager"></param>
+        /// <param name="projectIdentifier"></param>
+        /// <param name="requestOptions"></param>
+        /// <param name="cancellationToken"></param>
+        public static async Task CloseProjectAsync(this RedmineManager redmineManager, string projectIdentifier, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
+        {
+            var uri = redmineManager.RedmineApiUrls.ProjectClose(projectIdentifier);
+            
+            var escapedUri = Uri.EscapeDataString(uri);
+           
+            await redmineManager.ApiClient.UpdateAsync(escapedUri, string.Empty,  requestOptions, cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Reopens the project asynchronously
+        /// </summary>
+        /// <param name="redmineManager"></param>
+        /// <param name="projectIdentifier"></param>
+        /// <param name="requestOptions"></param>
+        /// <param name="cancellationToken"></param>
+        public static async Task ReopenProjectAsync(this RedmineManager redmineManager, string projectIdentifier, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
+        {
+            var uri = redmineManager.RedmineApiUrls.ProjectReopen(projectIdentifier);
+            
+            var escapedUri = Uri.EscapeDataString(uri);
+           
+            await redmineManager.ApiClient.UpdateAsync(escapedUri, string.Empty, requestOptions, cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="redmineManager"></param>
+        /// <param name="projectIdentifier"></param>
+        /// <param name="repositoryIdentifier"></param>
+        /// <param name="revision"></param>
+        /// <param name="requestOptions"></param>
+        /// <param name="cancellationToken"></param>
+        public static async Task ProjectRepositoryAddRelatedIssueAsync(this RedmineManager redmineManager, string projectIdentifier, string repositoryIdentifier, string revision, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
+        {
+            var uri = redmineManager.RedmineApiUrls.ProjectRepositoryAddRelatedIssue(projectIdentifier, repositoryIdentifier, revision);
+            
+            var escapedUri = Uri.EscapeDataString(uri);
+           
+            await redmineManager.ApiClient.CreateAsync(escapedUri, string.Empty ,requestOptions, cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="redmineManager"></param>
+        /// <param name="projectIdentifier"></param>
+        /// <param name="repositoryIdentifier"></param>
+        /// <param name="revision"></param>
+        /// <param name="issueIdentifier"></param>
+        /// <param name="requestOptions"></param>
+        /// <param name="cancellationToken"></param>
+        public static async Task ProjectRepositoryRemoveRelatedIssueAsync(this RedmineManager redmineManager, string projectIdentifier, string repositoryIdentifier, string revision, string issueIdentifier, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
+        {
+            var uri = redmineManager.RedmineApiUrls.ProjectRepositoryRemoveRelatedIssue(projectIdentifier, repositoryIdentifier, revision, issueIdentifier);
+            
+            var escapedUri = Uri.EscapeDataString(uri);
+           
+            await redmineManager.ApiClient.DeleteAsync(escapedUri,  requestOptions, cancellationToken).ConfigureAwait(false);
+        }
+        
         /// <summary>
         /// 
         /// </summary>
