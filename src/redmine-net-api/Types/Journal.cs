@@ -33,6 +33,7 @@ namespace Redmine.Net.Api.Types
     [XmlRoot(RedmineKeys.JOURNAL)]
     public sealed class Journal : 
         Identifiable<Journal>
+        ,ICloneable<Journal>
     {
         #region Properties
         /// <summary>
@@ -253,5 +254,32 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
         private string DebuggerDisplay => $"[{nameof(Journal)}: {ToString()}, User={User}, Notes={Notes}, CreatedOn={CreatedOn?.ToString("u", CultureInfo.InvariantCulture)}, Details={Details.Dump()}]";
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public new Journal Clone(bool resetId)
+        {
+            if (resetId)
+            {
+                return new Journal
+                {
+                    User = User?.Clone(false),
+                    Notes = Notes,
+                    CreatedOn = CreatedOn,
+                    PrivateNotes = PrivateNotes,
+                    Details = Details?.Clone(false)
+                };
+            }
+            return new Journal
+            {
+                Id = Id,
+                User = User?.Clone(false),
+                Notes = Notes,
+                CreatedOn = CreatedOn,
+                PrivateNotes = PrivateNotes,
+                Details = Details?.Clone(false)
+            };
+        }
     }
 }

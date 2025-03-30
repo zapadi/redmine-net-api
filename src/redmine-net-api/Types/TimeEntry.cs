@@ -34,6 +34,7 @@ namespace Redmine.Net.Api.Types
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.TIME_ENTRY)]
     public sealed class TimeEntry : Identifiable<TimeEntry>
+        , ICloneable<TimeEntry>
     {
         #region Properties
         private string comments;
@@ -303,7 +304,7 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        public object Clone()
+        public new TimeEntry Clone(bool resetId)
         {
             var timeEntry = new TimeEntry
             {

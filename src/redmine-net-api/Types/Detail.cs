@@ -34,6 +34,7 @@ namespace Redmine.Net.Api.Types
         IXmlSerializable
         ,IJsonSerializable
         ,IEquatable<Detail>
+        ,ICloneable<Detail>
     {
         /// <summary>
         /// 
@@ -180,6 +181,16 @@ namespace Redmine.Net.Api.Types
                 && string.Equals(Name, other.Name, StringComparison.OrdinalIgnoreCase)
                 && string.Equals(OldValue, other.OldValue, StringComparison.OrdinalIgnoreCase)
                 && string.Equals(NewValue, other.NewValue, StringComparison.OrdinalIgnoreCase);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public Detail Clone(bool resetId)
+        {
+            return new Detail(Name, Property, OldValue, NewValue);
         }
 
         /// <summary>

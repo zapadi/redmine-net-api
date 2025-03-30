@@ -34,6 +34,7 @@ namespace Redmine.Net.Api.Types
         IXmlSerializable
         ,IJsonSerializable
         ,IEquatable<CustomFieldValue>
+        ,ICloneable<CustomFieldValue>
     {
         /// <summary>
         /// 
@@ -205,10 +206,9 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        public object Clone()
+        public CustomFieldValue Clone(bool resetId)
         {
-            var customFieldValue = new CustomFieldValue {Info = Info};
-            return customFieldValue;
+            return new CustomFieldValue { Info = Info };
         }
 
         #endregion

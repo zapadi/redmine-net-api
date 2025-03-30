@@ -34,6 +34,7 @@ namespace Redmine.Net.Api.Types
     public sealed class IssueCustomField : 
         IdentifiableName
         ,IEquatable<IssueCustomField>
+        ,ICloneable<IssueCustomField>, IValue
     {
         #region Properties
         /// <summary>
@@ -270,16 +271,37 @@ namespace Redmine.Net.Api.Types
         }
         #endregion
 
-        #region Implementation of IClonable
+        #region Implementation of IClonable<IssueCustomField>
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public object Clone()
+        public new IssueCustomField Clone(bool resetId)
         {
-            var issueCustomField = new IssueCustomField { Multiple = Multiple, Values = Values };
-            return issueCustomField;
+            IssueCustomField clone;
+            if (resetId)
+            {
+                clone = new IssueCustomField();
+            }
+            else
+            {
+                clone = new IssueCustomField
+                {
+                    Id = Id,
+                };
+            }
+
+            clone.Name = Name;
+            clone.Multiple = Multiple;
+
+            if (Values != null)
+            {
+                clone.Values = new List<CustomFieldValue>(Values);
+            }
+
+            return clone;
         }
+        
         #endregion
 
         #region Implementation of IValue

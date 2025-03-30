@@ -34,6 +34,7 @@ namespace Redmine.Net.Api.Types
     [XmlRoot(RedmineKeys.RELATION)]
     public sealed class IssueRelation : 
         Identifiable<IssueRelation>
+        ,ICloneable<IssueRelation>
     {
         #region Properties
         /// <summary>
@@ -284,5 +285,30 @@ IssueToId={IssueToId.ToString(CultureInfo.InvariantCulture)},
 Type={Type:G},
 Delay={Delay?.ToString(CultureInfo.InvariantCulture)}]";
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public new IssueRelation Clone(bool resetId)
+        {
+            if (resetId)
+            {
+                return new IssueRelation
+                {
+                    IssueId = IssueId,
+                    IssueToId = IssueToId,
+                    Type = Type,
+                    Delay = Delay
+                };
+            }
+            return new IssueRelation
+            {
+                Id = Id,
+                IssueId = IssueId,
+                IssueToId = IssueToId,
+                Type = Type,
+                Delay = Delay
+            };
+        }
     }
 }
