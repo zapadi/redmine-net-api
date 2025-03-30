@@ -19,6 +19,17 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// 
         /// </summary>
+        public TrackerCoreField()
+        {
+        }
+
+        internal TrackerCoreField(string name)
+        {
+            Name = name;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
         public string Name { get; private set; }
         
         /// <summary>
@@ -94,7 +105,7 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
         public bool Equals(TrackerCoreField other)
         {
-            return other != null && Name == other.Name;
+            return other != null && string.Equals(Name, other.Name, StringComparison.Ordinal);
         }
 
         /// <summary>

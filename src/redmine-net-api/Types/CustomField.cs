@@ -207,22 +207,23 @@ namespace Redmine.Net.Api.Types
         {
             if (other == null) return false;
 
-            return base.Equals(other)
-                   && string.Equals(CustomizedType, other.CustomizedType, StringComparison.OrdinalIgnoreCase)
-                   && string.Equals(Description, other.Description, StringComparison.OrdinalIgnoreCase)
-                   && string.Equals(FieldFormat, other.FieldFormat, StringComparison.OrdinalIgnoreCase)
-                   && string.Equals(Regexp, other.Regexp, StringComparison.OrdinalIgnoreCase)
-                   && string.Equals(DefaultValue, other.DefaultValue, StringComparison.Ordinal)
-                   && MinLength == other.MinLength
-                   && MaxLength == other.MaxLength
-                   && IsRequired == other.IsRequired
-                   && IsFilter == other.IsFilter
-                   && Searchable == other.Searchable
-                   && Multiple == other.Multiple
-                   && Visible == other.Visible
-                   && Equals(PossibleValues, other.PossibleValues)
-                   && Equals(Trackers, other.Trackers)
-                   && Equals(Roles, other.Roles);
+            var result = base.Equals(other)
+                    && string.Equals(CustomizedType, other.CustomizedType, StringComparison.Ordinal)
+                    && string.Equals(Description, other.Description, StringComparison.Ordinal)
+                    && string.Equals(FieldFormat, other.FieldFormat, StringComparison.Ordinal)
+                    && string.Equals(Regexp, other.Regexp, StringComparison.Ordinal)
+                    && string.Equals(DefaultValue, other.DefaultValue, StringComparison.Ordinal)
+                    && MinLength == other.MinLength
+                    && MaxLength == other.MaxLength
+                    && IsRequired == other.IsRequired
+                    && IsFilter == other.IsFilter
+                    && Searchable == other.Searchable
+                    && Multiple == other.Multiple
+                    && Visible == other.Visible
+                    && (PossibleValues?.Equals<CustomFieldPossibleValue>(other.PossibleValues) ?? other.PossibleValues == null)
+                    && (Trackers?.Equals<TrackerCustomField>(other.Trackers) ?? other.Trackers == null)
+                    && (Roles?.Equals<CustomFieldRole>(other.Roles) ?? other.Roles == null);
+            return result;
         }
 
         /// <summary>

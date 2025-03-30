@@ -1,6 +1,6 @@
 using System;
 
-namespace Padi.DotNet.RedmineAPI.Tests.Infrastructure
+namespace Padi.DotNet.RedmineAPI.Tests.Infrastructure.Order
 {
     public sealed class OrderAttribute : Attribute
     {

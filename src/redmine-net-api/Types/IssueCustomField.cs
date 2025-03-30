@@ -214,10 +214,9 @@ namespace Redmine.Net.Api.Types
         public bool Equals(IssueCustomField other)
         {
             if (other == null) return false;
-            return Id == other.Id
-                && Name == other.Name
+            return base.Equals(other)
                 && Multiple == other.Multiple
-                && Values.Equals(other.Values);
+                && (Values?.Equals<CustomFieldValue>(other.Values) ?? other.Values == null);
         }
 
         /// <summary>

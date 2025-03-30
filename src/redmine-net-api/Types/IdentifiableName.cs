@@ -167,7 +167,7 @@ namespace Redmine.Net.Api.Types
         public override bool Equals(IdentifiableName other)
         {
             if (other == null) return false;
-            return Id == other.Id && string.Equals(Name, other.Name, StringComparison.OrdinalIgnoreCase);
+            return Id == other.Id && string.Equals(Name, other.Name, StringComparison.Ordinal);
         }
 
         /// <summary>

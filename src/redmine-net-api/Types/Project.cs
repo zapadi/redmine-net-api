@@ -308,23 +308,23 @@ namespace Redmine.Net.Api.Types
             }
 
             return base.Equals(other)
-                   && string.Equals(Identifier, other.Identifier, StringComparison.OrdinalIgnoreCase)
-                   && string.Equals(Description, other.Description, StringComparison.OrdinalIgnoreCase)
-                   && string.Equals(HomePage, other.HomePage, StringComparison.OrdinalIgnoreCase)
-                   && string.Equals(Identifier, other.Identifier, StringComparison.OrdinalIgnoreCase)
+                   && string.Equals(Identifier, other.Identifier, StringComparison.Ordinal)
+                   && string.Equals(Description, other.Description, StringComparison.Ordinal)
+                   && string.Equals(HomePage, other.HomePage, StringComparison.Ordinal)
+                   && string.Equals(Identifier, other.Identifier, StringComparison.Ordinal)
                    && CreatedOn == other.CreatedOn
                    && UpdatedOn == other.UpdatedOn
                    && Status == other.Status
                    && IsPublic == other.IsPublic
                    && InheritMembers == other.InheritMembers
-                   && Equals(DefaultAssignee, other.DefaultAssignee)
-                   && Equals(DefaultVersion, other.DefaultVersion)
-                   && Equals(Parent, other.Parent)
-                   && Equals(Trackers, other.Trackers)
-                   && Equals(CustomFields, other.CustomFields)
-                   && Equals(IssueCategories, other.IssueCategories)
-                   && Equals(EnabledModules, other.EnabledModules)
-                   && Equals(TimeEntryActivities, other.TimeEntryActivities);
+                   && DefaultAssignee == other.DefaultAssignee
+                   && DefaultVersion == other.DefaultVersion
+                   && Parent == other.Parent
+                   && (Trackers?.Equals<ProjectTracker>(other.Trackers) ?? other.Trackers == null)
+                   && (CustomFields?.Equals<IssueCustomField>(other.CustomFields) ?? other.CustomFields == null)
+                   && (IssueCategories?.Equals<ProjectIssueCategory>(other.IssueCategories) ?? other.IssueCategories == null)
+                   && (EnabledModules?.Equals<ProjectEnabledModule>(other.EnabledModules) ?? other.EnabledModules == null)
+                   && (TimeEntryActivities?.Equals<ProjectTimeEntryActivity>(other.TimeEntryActivities) ?? other.TimeEntryActivities == null);
         }
         
         /// <summary>

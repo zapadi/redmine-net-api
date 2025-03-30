@@ -230,16 +230,16 @@ namespace Redmine.Net.Api.Types
         public override bool Equals(Version other)
         {
             if (other == null) return false;
-            return Id == other.Id && Name == other.Name
+            return base.Equals(other)
                 && Project == other.Project
-                && Description == other.Description
-                && Status == other.Status
-                && DueDate == other.DueDate
-                && Sharing == other.Sharing
-                && CreatedOn == other.CreatedOn
-                && UpdatedOn == other.UpdatedOn
-                && Equals(CustomFields, other.CustomFields)
-                && string.Equals(WikiPageTitle,other.WikiPageTitle, StringComparison.OrdinalIgnoreCase)
+                && string.Equals(Description, other.Description, StringComparison.Ordinal)
+                 && Status == other.Status
+                 && DueDate == other.DueDate
+                 && Sharing == other.Sharing
+                 && CreatedOn == other.CreatedOn
+                 && UpdatedOn == other.UpdatedOn
+                 && (CustomFields?.Equals<IssueCustomField>(other.CustomFields) ?? other.CustomFields == null) 
+                && string.Equals(WikiPageTitle,other.WikiPageTitle, StringComparison.Ordinal)
                 && EstimatedHours == other.EstimatedHours
                 && SpentHours == other.SpentHours;
         }
