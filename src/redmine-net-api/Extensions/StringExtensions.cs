@@ -18,6 +18,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Security;
+using System.Text.RegularExpressions;
 
 namespace Redmine.Net.Api.Extensions
 {
@@ -155,6 +156,25 @@ namespace Redmine.Net.Api.Extensions
                 #pragma warning restore CA1308
                 _ => value.ToString(),
             };
+        }
+
+        private const string CRLR = "\r\n";
+        private const string CR = "\r";
+        private const string LR = "\n";
+        
+        internal static string ReplaceEndings(this string input, string replacement = CRLR)
+        {
+            if (input.IsNullOrWhiteSpace())
+            {
+                return input;
+            }
+
+            #if NET6_0_OR_GREATER
+            input =  input.ReplaceLineEndings(CRLR);
+            #else
+            input = Regex.Replace(input, $"{CRLR}|{CR}|{LR}", CRLR);
+            #endif
+            return input;
         }
     }
 }

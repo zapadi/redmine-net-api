@@ -18,7 +18,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Redmine.Net.Api.Extensions;
@@ -31,7 +30,7 @@ namespace Redmine.Net.Api;
 
 public partial class RedmineManager: IRedmineManagerAsync
 {
-    private const string CRLR = "\r\n";
+    
     
     /// <inheritdoc />
     public async Task<int> CountAsync<T>(RequestOptions requestOptions, CancellationToken cancellationToken = default) 
@@ -208,7 +207,7 @@ public partial class RedmineManager: IRedmineManagerAsync
 
         var payload = Serializer.Serialize(entity);
         
-        payload = Regex.Replace(payload, "\r\n|\r|\n",CRLR);
+        payload = payload.ReplaceEndings();
         
         await ApiClient.UpdateAsync(url, payload, requestOptions, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
