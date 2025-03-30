@@ -15,7 +15,10 @@
 */
 
 using System.Diagnostics;
+using System.Xml;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
+using Redmine.Net.Api.Extensions;
 
 namespace Redmine.Net.Api.Types
 {
@@ -26,6 +29,43 @@ namespace Redmine.Net.Api.Types
     [XmlRoot(RedmineKeys.STATUS)]
     public sealed class IssueAllowedStatus : IdentifiableName
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool? IsClosed { get; internal set; }
+
+        /// <inheritdoc />
+        public override void ReadXml(XmlReader reader)
+        {
+            Id = reader.ReadAttributeAsInt(RedmineKeys.ID);
+            Name = reader.GetAttribute(RedmineKeys.NAME);
+            IsClosed = reader.ReadAttributeAsBoolean(RedmineKeys.IS_CLOSED);
+            reader.Read();
+        }
+
+        /// <inheritdoc />
+        public override void ReadJson(JsonReader reader)
+        {
+            while (reader.Read())
+            {
+                if (reader.TokenType == JsonToken.EndObject)
+                {
+                    return;
+                }
+
+                if (reader.TokenType == JsonToken.PropertyName)
+                {
+                    switch (reader.Value)
+                    {
+                        case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
+                        case RedmineKeys.NAME: Name = reader.ReadAsString(); break;
+                        case RedmineKeys.IS_CLOSED: IsClosed = reader.ReadAsBoolean(); break;
+                        default: reader.Read(); break;
+                    }
+                }
+            }
+        }
+        
         private string DebuggerDisplay => $"[{nameof(IssueAllowedStatus)}: {ToString()}]";
     }
 }

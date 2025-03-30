@@ -13,7 +13,7 @@ namespace Redmine.Net.Api.Types
     /// 
     /// </summary>
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
-    [XmlRoot(RedmineKeys.TRACKER)]
+    [XmlRoot(RedmineKeys.FIELD)]
     public sealed class TrackerCoreField: IXmlSerializable, IJsonSerializable, IEquatable<TrackerCoreField>
     {
         /// <summary>
@@ -40,7 +40,6 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <param name="reader"></param>
-        /// <exception cref="NotImplementedException"></exception>
         public void ReadXml(XmlReader reader)
         {
             reader.Read();
@@ -66,7 +65,6 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <param name="reader"></param>
-        /// <exception cref="NotImplementedException"></exception>
         public void ReadJson(JsonReader reader)
         {
             while (reader.Read())

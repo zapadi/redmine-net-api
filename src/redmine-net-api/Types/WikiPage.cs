@@ -123,7 +123,16 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.TITLE: Title = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.UPDATED_ON: UpdatedOn = reader.ReadElementContentAsNullableDateTime(); break;
                     case RedmineKeys.VERSION: Version = reader.ReadElementContentAsInt(); break;
-                    case RedmineKeys.PARENT: ParentTitle = reader.GetAttribute(RedmineKeys.PARENT); break;
+                    case RedmineKeys.PARENT:
+                    {
+                        if (reader.HasAttributes)
+                        {
+                            ParentTitle = reader.GetAttribute(RedmineKeys.TITLE);
+                            reader.Read();
+                        }
+                        
+                        break;
+                    }
                     default: reader.Read(); break;
                 }
             }
@@ -206,14 +215,28 @@ namespace Redmine.Net.Api.Types
         {
             if (other == null) return false;
 
-            return Id == other.Id
-                && Title == other.Title
-                && Text == other.Text
-                && Comments == other.Comments
+            return base.Equals(other)
+                && string.Equals(Title, other.Title, StringComparison.Ordinal)
+                && string.Equals(Text, other.Text, StringComparison.Ordinal)
+                && string.Equals(Comments, other.Comments, StringComparison.Ordinal)
                 && Version == other.Version
-                && Author == other.Author
-                && CreatedOn == other.CreatedOn
-                && UpdatedOn == other.UpdatedOn;
+                && Equals(Author, other.Author)
+                && CreatedOn.Equals(other.CreatedOn)
+                && UpdatedOn.Equals(other.UpdatedOn)
+                && Equals(Attachments, other.Attachments);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as WikiPage);
         }
 
         /// <summary>
@@ -235,6 +258,28 @@ namespace Redmine.Net.Api.Types
                 hashCode = HashCodeHelper.GetHashCode(Attachments, hashCode);
                 return hashCode;
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool operator ==(WikiPage left, WikiPage right)
+        {
+            return Equals(left, right);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool operator !=(WikiPage left, WikiPage right)
+        {
+            return !Equals(left, right);
         }
         #endregion
 
