@@ -1,4 +1,4 @@
-﻿/*
+/*
    Copyright 2011 - 2023 Adrian Popescu
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,7 +31,8 @@ namespace Redmine.Net.Api.Types
     /// </summary>
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.ATTACHMENT)]
-    public sealed class Attachment : Identifiable<Attachment>
+    public sealed class Attachment : 
+        Identifiable<Attachment>
     {
         #region Properties
         /// <summary>
@@ -186,15 +187,28 @@ namespace Redmine.Net.Api.Types
         public override bool Equals(Attachment other)
         {
             if (other == null) return false;
-            return Id == other.Id
-                && FileName == other.FileName
-                && FileSize == other.FileSize
-                && ContentType == other.ContentType
-                && Author == other.Author
-                && ThumbnailUrl == other.ThumbnailUrl
-                && CreatedOn == other.CreatedOn
-                && Description == other.Description
-                && ContentUrl == other.ContentUrl;
+            return base.Equals(other)
+                   && string.Equals(FileName, other.FileName, StringComparison.OrdinalIgnoreCase)
+                   && string.Equals(ContentType, other.ContentType, StringComparison.OrdinalIgnoreCase)
+                   && string.Equals(Description, other.Description, StringComparison.OrdinalIgnoreCase)
+                   && string.Equals(ContentUrl, other.ContentUrl, StringComparison.OrdinalIgnoreCase)
+                   && string.Equals(ThumbnailUrl, other.ThumbnailUrl, StringComparison.OrdinalIgnoreCase)
+                   && Equals(Author, other.Author)
+                   && FileSize == other.FileSize
+                   && CreatedOn == other.CreatedOn;
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as Attachment);
         }
 
         /// <summary>
@@ -209,14 +223,35 @@ namespace Redmine.Net.Api.Types
                 hashCode = HashCodeHelper.GetHashCode(FileName, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(FileSize, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(ContentType, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(Author, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(CreatedOn, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Description, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(ContentUrl, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(ThumbnailUrl, hashCode);
-
+                hashCode = HashCodeHelper.GetHashCode(Author, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(CreatedOn, hashCode);
                 return hashCode;
             }
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool operator ==(Attachment left, Attachment right)
+        {
+            return Equals(left, right);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool operator !=(Attachment left, Attachment right)
+        {
+            return !Equals(left, right);
         }
         #endregion
 

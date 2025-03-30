@@ -1,4 +1,4 @@
-﻿/*
+/*
    Copyright 2011 - 2023 Adrian Popescu
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,7 +31,9 @@ namespace Redmine.Net.Api.Types
     /// </summary>
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.CUSTOM_FIELD)]
-    public sealed class IssueCustomField : IdentifiableName, IEquatable<IssueCustomField>, ICloneable, IValue
+    public sealed class IssueCustomField : 
+        IdentifiableName
+        ,IEquatable<IssueCustomField>
     {
         #region Properties
         /// <summary>
@@ -214,9 +216,22 @@ namespace Redmine.Net.Api.Types
             return Id == other.Id
                 && Name == other.Name
                 && Multiple == other.Multiple
-                && (Values != null ? Values.Equals<CustomFieldValue>(other.Values) : other.Values == null);
+                && Values.Equals(other.Values);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as IssueCustomField);
+        }
+        
         /// <summary>
         /// 
         /// </summary>
@@ -225,13 +240,33 @@ namespace Redmine.Net.Api.Types
         {
             unchecked
             {
-                var hashCode = 13;
-                hashCode = HashCodeHelper.GetHashCode(Id, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(Name, hashCode);
+                var hashCode = base.GetHashCode();
                 hashCode = HashCodeHelper.GetHashCode(Values, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Multiple, hashCode);
                 return hashCode;
             }
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool operator ==(IssueCustomField left, IssueCustomField right)
+        {
+            return Equals(left, right);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool operator !=(IssueCustomField left, IssueCustomField right)
+        {
+            return !Equals(left, right);
         }
         #endregion
 
@@ -242,7 +277,7 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
         public object Clone()
         {
-            var issueCustomField = new IssueCustomField { Multiple = Multiple, Values = Values.Clone<CustomFieldValue>() };
+            var issueCustomField = new IssueCustomField { Multiple = Multiple, Values = Values };
             return issueCustomField;
         }
         #endregion
@@ -270,15 +305,5 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <returns></returns>
         private string DebuggerDisplay => $"[{nameof(IssueCustomField)}: {ToString()} Values={Values.Dump()}, Multiple={Multiple.ToString(CultureInfo.InvariantCulture)}]";
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as IssueCustomField);
-        }
     }
 }

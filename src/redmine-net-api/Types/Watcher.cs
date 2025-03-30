@@ -26,7 +26,8 @@ namespace Redmine.Net.Api.Types
     /// </summary>
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.USER)]
-    public sealed class Watcher : IdentifiableName, IValue, ICloneable
+    public sealed class Watcher : Identifiable<Watcher>
+        ,IValue
     {
         #region Implementation of IValue 
         /// <summary>
@@ -43,7 +44,7 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
         public object Clone()
         {
-            var watcher = new Watcher { Id = Id, Name = Name };
+            var watcher = new Watcher { Id = Id };
             return watcher;
         }
         #endregion

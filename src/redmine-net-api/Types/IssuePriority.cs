@@ -30,7 +30,9 @@ namespace Redmine.Net.Api.Types
     /// </summary>
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.ISSUE_PRIORITY)]
-    public sealed class IssuePriority : IdentifiableName, IEquatable<IssuePriority>
+    public sealed class IssuePriority : 
+        IdentifiableName
+        ,IEquatable<IssuePriority>
     {
         #region Properties
         /// <summary>
@@ -114,7 +116,9 @@ namespace Redmine.Net.Api.Types
         {
             if (other == null) return false;
 
-            return Id == other.Id && Name == other.Name && IsDefault == other.IsDefault && IsActive == other.IsActive;
+            return Id == other.Id && Name == other.Name 
+                && IsDefault == other.IsDefault 
+                && IsActive == other.IsActive;
         }
 
         /// <summary>
@@ -138,13 +142,33 @@ namespace Redmine.Net.Api.Types
         {
             unchecked
             {
-                var hashCode = 13;
-                hashCode = HashCodeHelper.GetHashCode(Id, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(Name, hashCode);
+                var hashCode = base.GetHashCode();
                 hashCode = HashCodeHelper.GetHashCode(IsDefault, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(IsActive, hashCode);
                 return hashCode;
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool operator ==(IssuePriority left, IssuePriority right)
+        {
+            return Equals(left, right);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool operator !=(IssuePriority left, IssuePriority right)
+        {
+            return !Equals(left, right);
         }
         #endregion
 

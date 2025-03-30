@@ -1,4 +1,4 @@
-﻿/*
+/*
    Copyright 2011 - 2023 Adrian Popescu
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,7 +30,10 @@ namespace Redmine.Net.Api.Types
     /// </summary>
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.DETAIL)]
-    public sealed class Detail : IXmlSerializable, IJsonSerializable, IEquatable<Detail>
+    public sealed class Detail : 
+        IXmlSerializable
+        ,IJsonSerializable
+        ,IEquatable<Detail>
     {
         /// <summary>
         /// 
@@ -200,7 +203,7 @@ namespace Redmine.Net.Api.Types
         {
             unchecked
             {
-                var hashCode = 13;
+                var hashCode = 17;
                 hashCode = HashCodeHelper.GetHashCode(Property, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Name, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(OldValue, hashCode);
@@ -208,6 +211,28 @@ namespace Redmine.Net.Api.Types
 
                 return hashCode;
             }
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool operator ==(Detail left, Detail right)
+        {
+            return Equals(left, right);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool operator !=(Detail left, Detail right)
+        {
+            return !Equals(left, right);
         }
         #endregion
 

@@ -164,11 +164,10 @@ namespace Redmine.Net.Api.Types
         public bool Equals(Group other)
         {
             if (other == null) return false;
-            return Id == other.Id
-                && Name == other.Name
-                && (Users != null ? Users.Equals<GroupUser>(other.Users) : other.Users == null)
-                && (CustomFields != null ? CustomFields.Equals<IssueCustomField>(other.CustomFields) : other.CustomFields == null)
-                && (Memberships != null ? Memberships.Equals<Membership>(other.Memberships) : other.Memberships == null);
+            return base.Equals(other)
+                   && Equals(Users, other.Users)
+                   && Equals(CustomFields, other.CustomFields)
+                   && Equals(Memberships, other.Memberships);
         }
 
         /// <summary>
@@ -192,14 +191,34 @@ namespace Redmine.Net.Api.Types
         {
             unchecked
             {
-                var hashCode = 13;
-                hashCode = HashCodeHelper.GetHashCode(Id, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(Name, hashCode);
+                var hashCode = base.GetHashCode();
                 hashCode = HashCodeHelper.GetHashCode(Users, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(CustomFields, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Memberships, hashCode);
                 return hashCode;
             }
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool operator ==(Group left, Group right)
+        {
+            return Equals(left, right);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool operator !=(Group left, Group right)
+        {
+            return !Equals(left, right);
         }
 
         #endregion
