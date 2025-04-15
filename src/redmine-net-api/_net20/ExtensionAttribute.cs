@@ -1,6 +1,6 @@
 ﻿#if NET20
 /*
-   Copyright 2011 - 2023 Adrian Popescu
+   Copyright 2011 - 2025 Adrian Popescu
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
