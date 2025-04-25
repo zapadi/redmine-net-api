@@ -76,7 +76,7 @@ class Program
         var manager = new RedmineManager(options);
 
         // Retrieve an issue asynchronously
-        var issue = await manager.GetObjectAsync<Issue>(12345);
+        var issue = await manager.GetAsync<Issue>(12345);
         Console.WriteLine($"Issue subject: {issue.Subject}");
     }
 }
