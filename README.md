@@ -6,7 +6,7 @@
 [![Contributors](https://img.shields.io/github/contributors/zapadi/redmine-net-api)](https://github.com/zapadi/redmine-net-api/graphs/contributors)
 
 
-A modern and flexible .NET client library to interact with [Redmine](https://www.redmine.org)'s REST API. Supports XML and JSON formats with GZipped responses for improved performance.
+A modern and flexible .NET client library to interact with [Redmine](https://www.redmine.org)'s REST API.
 
 
 ## 🚀 Features
@@ -69,11 +69,9 @@ class Program
 {
     static async Task Main()
     {
-        var options = new RedmineManagerOptions
-        {
-            BaseAddress = "https://your-redmine-url",
-            ApiKey = "your-api-key"
-        };
+        var options = new RedmineManagerOptionsBuilder()
+            .WithHost("https://your-redmine-url")
+            .WithApiKeyAuthentication("your-api-key");
 
         var manager = new RedmineManager(options);
 
