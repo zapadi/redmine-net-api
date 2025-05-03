@@ -141,17 +141,22 @@ public partial class RedmineManager: IRedmineManagerAsync
                     TaskExtensions.WhenAll(pageFetchTasks)
                     #endif
                     .ConfigureAwait(false);
-                
-                foreach (var pageResult in pageResults)
-                {
-                    if (pageResult?.Items == null)
-                    {
-                        continue;
-                    }
-                    
-                    resultList ??= new List<T>();
 
-                    resultList.AddRange(pageResult.Items);
+                if (pageResults.Length == 0)
+                {
+                    return resultList;
+                }
+                else
+                {
+                    resultList = new List<T>();
+                    foreach (var pageResult in pageResults)
+                    {
+                        if (pageResult?.Items == null)
+                        {
+                            continue;
+                        }
+                        resultList.AddRange(pageResult.Items);
+                    }
                 }
             }
         }
