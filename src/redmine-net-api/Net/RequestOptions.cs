@@ -43,4 +43,20 @@ public sealed class RequestOptions
     /// 
     /// </summary>
     public string UserAgent { get; set; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    public RequestOptions Clone()
+    {
+        return new RequestOptions
+        {
+            QueryString = QueryString != null ? new NameValueCollection(QueryString) : null,
+            ImpersonateUser = ImpersonateUser,
+            ContentType = ContentType,
+            Accept = Accept,
+            UserAgent = UserAgent
+        };
+    }
 }

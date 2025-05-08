@@ -126,7 +126,7 @@ namespace Redmine.Net.Api.Serialization
                     var limit = xmlReader.ReadAttributeAsInt(RedmineKeys.LIMIT);
                     var result = xmlReader.ReadElementContentAsCollection<T>();
 
-                    if (totalItems == 0 && result.Count > 0)
+                    if (totalItems == 0 && result?.Count > 0)
                     {
                         totalItems = result.Count;
                     }

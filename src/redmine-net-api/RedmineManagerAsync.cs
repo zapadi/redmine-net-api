@@ -30,8 +30,6 @@ namespace Redmine.Net.Api;
 
 public partial class RedmineManager: IRedmineManagerAsync
 {
-    
-    
     /// <inheritdoc />
     public async Task<int> CountAsync<T>(RequestOptions requestOptions, CancellationToken cancellationToken = default) 
         where T : class, new()
@@ -55,7 +53,7 @@ public partial class RedmineManager: IRedmineManagerAsync
     public async Task<PagedResults<T>> GetPagedAsync<T>(RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
         where T : class, new()
     {
-        var url = RedmineApiUrls.GetListFragment<T>();
+        var url = RedmineApiUrls.GetListFragment<T>(requestOptions);
 
         var response = await ApiClient.GetAsync(url, requestOptions, cancellationToken).ConfigureAwait(false);
 
@@ -71,67 +69,57 @@ public partial class RedmineManager: IRedmineManagerAsync
         var isLimitSet = false;
         List<T> resultList = null;
 
-        requestOptions ??= new RequestOptions();
-
-        if (requestOptions.QueryString == null)
+        var baseRequestOptions = requestOptions != null ? requestOptions.Clone() : new RequestOptions();
+        if (baseRequestOptions.QueryString == null)
         {
-            requestOptions.QueryString = new NameValueCollection();
+            baseRequestOptions.QueryString = new NameValueCollection();
         }
         else
         {
-            isLimitSet = int.TryParse(requestOptions.QueryString[RedmineKeys.LIMIT], out pageSize);
-            int.TryParse(requestOptions.QueryString[RedmineKeys.OFFSET], out offset);
+            isLimitSet = int.TryParse(baseRequestOptions.QueryString[RedmineKeys.LIMIT], out pageSize);
+            int.TryParse(baseRequestOptions.QueryString[RedmineKeys.OFFSET], out offset);
         }
 
         if (pageSize == default)
         {
-            pageSize = PageSize > 0
-                ? PageSize
+            pageSize = _redmineManagerOptions.PageSize > 0
+                ? _redmineManagerOptions.PageSize
                 : RedmineConstants.DEFAULT_PAGE_SIZE_VALUE;
-            requestOptions.QueryString.Set(RedmineKeys.LIMIT, pageSize.ToInvariantString());
+            baseRequestOptions.QueryString.Set(RedmineKeys.LIMIT, pageSize.ToInvariantString());
         }
-        
-        var hasOffset = RedmineManager.TypesWithOffset.ContainsKey(typeof(T));
+
+        var hasOffset = TypesWithOffset.ContainsKey(typeof(T));
         if (hasOffset)
         {
-            requestOptions.QueryString.Set(RedmineKeys.OFFSET, offset.ToInvariantString());
+            var firstPageOptions = baseRequestOptions.Clone();
+            firstPageOptions.QueryString.Set(RedmineKeys.OFFSET, offset.ToInvariantString());
+            var firstPage = await GetPagedAsync<T>(firstPageOptions, cancellationToken).ConfigureAwait(false);
 
-            var tempResult = await GetPagedAsync<T>(requestOptions, cancellationToken).ConfigureAwait(false);
-
-            var totalCount = isLimitSet ? pageSize : tempResult.TotalItems;
-            
-            if (tempResult?.Items != null)
+            if (firstPage == null || firstPage.Items == null)
             {
-                resultList = new List<T>(tempResult.Items);
+                return null;
             }
-           
+            
+            var totalCount = isLimitSet ? pageSize : firstPage.TotalItems;
+            resultList =  new List<T>(firstPage.Items);
+
             var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
-
-            var remainingPages = totalPages - offset / pageSize;
-
+            var remainingPages = totalPages - 1 - (offset / pageSize);
             if (remainingPages <= 0)
             {
                 return resultList;
             }
-            
+
             using (var semaphore = new SemaphoreSlim(MAX_CONCURRENT_TASKS))
             {
                 var pageFetchTasks = new List<Task<PagedResults<T>>>();
-
-                for (int page = 0; page < remainingPages; page++)
+                for (int page = 1; page <= remainingPages; page++)
                 {
                     await semaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
-
-                    var innerOffset = (page * pageSize) + offset;
-                    
-                    pageFetchTasks.Add(GetPagedInternalAsync<T>(semaphore, new RequestOptions()
-                    {
-                        QueryString = new NameValueCollection()
-                        {
-                            {RedmineKeys.OFFSET, innerOffset.ToInvariantString()},
-                            {RedmineKeys.LIMIT, pageSize.ToInvariantString()}
-                        }
-                    }, cancellationToken));
+                    var pageOffset = (page * pageSize) + offset;
+                    var pageRequestOptions = baseRequestOptions.Clone();
+                    pageRequestOptions.QueryString.Set(RedmineKeys.OFFSET, pageOffset.ToInvariantString());
+                    pageFetchTasks.Add(GetPagedInternalAsync<T>(semaphore, pageRequestOptions, cancellationToken));
                 }
 
                 var pageResults = await
@@ -141,30 +129,27 @@ public partial class RedmineManager: IRedmineManagerAsync
                     TaskExtensions.WhenAll(pageFetchTasks)
                     #endif
                     .ConfigureAwait(false);
-                
+
                 foreach (var pageResult in pageResults)
                 {
                     if (pageResult?.Items == null)
                     {
                         continue;
                     }
-                    
-                    resultList ??= new List<T>();
-
                     resultList.AddRange(pageResult.Items);
                 }
             }
         }
         else
         {
-            var result = await GetPagedAsync<T>(requestOptions, cancellationToken: cancellationToken)
+            var result = await GetPagedAsync<T>(baseRequestOptions, cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
             if (result?.Items != null)
             {
                 return new List<T>(result.Items);
             }
         }
-        
+
         return resultList;
     }
 
@@ -245,7 +230,7 @@ public partial class RedmineManager: IRedmineManagerAsync
     {
         try
         {
-            var url = RedmineApiUrls.GetListFragment<T>();
+            var url = RedmineApiUrls.GetListFragment<T>(requestOptions);
 
             var response = await ApiClient.GetAsync(url, requestOptions, cancellationToken).ConfigureAwait(false);
 

@@ -140,7 +140,7 @@ namespace Redmine.Net.Api
         public List<T> Get<T>(RequestOptions requestOptions = null) 
             where T : class, new()
         {
-            var uri = RedmineApiUrls.GetListFragment<T>();
+            var uri = RedmineApiUrls.GetListFragment<T>(requestOptions);
             
             return GetInternal<T>(uri, requestOptions);
         }
@@ -149,7 +149,7 @@ namespace Redmine.Net.Api
         public PagedResults<T> GetPaginated<T>(RequestOptions requestOptions = null) 
             where T : class, new()
         {
-            var url = RedmineApiUrls.GetListFragment<T>();
+            var url = RedmineApiUrls.GetListFragment<T>(requestOptions);
 
             return GetPaginatedInternal<T>(url, requestOptions);
         }
@@ -289,7 +289,7 @@ namespace Redmine.Net.Api
         internal PagedResults<T> GetPaginatedInternal<T>(string uri = null, RequestOptions requestOptions = null) 
             where T : class, new()
         {
-            uri = uri.IsNullOrWhiteSpace() ? RedmineApiUrls.GetListFragment<T>() : uri;
+            uri = uri.IsNullOrWhiteSpace() ? RedmineApiUrls.GetListFragment<T>(requestOptions) : uri;
             
             var response= ApiClient.Get(uri, requestOptions);
             
