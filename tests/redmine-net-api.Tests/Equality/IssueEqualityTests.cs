@@ -88,7 +88,7 @@ public sealed class IssueEqualityTests
             Id = 1,
             Project = new IdentifiableName { Id = 100, Name = "Test Project" },
             Tracker = new IdentifiableName { Id = 1, Name = "Bug" },
-            Status = new IdentifiableName { Id = 1, Name = "New" },
+            Status = new IssueStatus { Id = 1, Name = "New" },
             Priority = new IdentifiableName { Id = 1, Name = "Normal" },
             Author = new IdentifiableName { Id = 1, Name = "John Doe" },
             Subject = "Test Issue",

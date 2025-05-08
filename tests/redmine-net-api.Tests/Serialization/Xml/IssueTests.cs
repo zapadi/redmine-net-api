@@ -117,10 +117,8 @@ public class IssueTests(XmlSerializerFixture fixture)
             </issue>
             <issue>
                 <id>4325</id>
-                <journals type="array">
-                </journals>
-                <changesets type="array">
-                </changesets>
+                <journals type="array"/>
+                <changesets type="array"/>
                 <custom_fields type="array">
                     <custom_field name="Affected version" id="1">
                         <value>1.0.1</value>
@@ -134,6 +132,48 @@ public class IssueTests(XmlSerializerFixture fixture)
         """;
         
         var output = fixture.Serializer.DeserializeToPagedResults<Redmine.Net.Api.Types.Issue>(input);
+        
+        Assert.NotNull(output);
+        Assert.Equal(2, output.TotalItems);
+
+        var issues = output.Items.ToList();
+        Assert.Equal(4326, issues[0].Id);
+        Assert.Equal("Redmine", issues[0].Project.Name);
+        Assert.Equal(1, issues[0].Project.Id);
+        Assert.Equal("Feature", issues[0].Tracker.Name);
+        Assert.Equal(2, issues[0].Tracker.Id);
+        Assert.Equal("New", issues[0].Status.Name);
+        Assert.Equal(1, issues[0].Status.Id);
+        Assert.Equal("Normal", issues[0].Priority.Name);
+        Assert.Equal(4, issues[0].Priority.Id);
+        Assert.Equal("John Smith", issues[0].Author.Name);
+        Assert.Equal(10106, issues[0].Author.Id);
+        Assert.Equal("Email notifications", issues[0].Category.Name);
+        Assert.Equal(9, issues[0].Category.Id);
+        Assert.Contains("Aggregate Multiple Issue Changes for Email Notifications", issues[0].Subject);
+        Assert.Contains("This is not to be confused with another useful proposed feature", issues[0].Description);
+        Assert.Equal(new DateTime(2009, 12, 3), issues[0].StartDate);
+        Assert.Null(issues[0].DueDate);
+        Assert.Equal(0, issues[0].DoneRatio);
+        Assert.Null(issues[0].EstimatedHours);
+        
+        Assert.NotNull(issues[0].CustomFields);
+        var issueCustomFields = issues[0].CustomFields.ToList();
+        Assert.Equal(4, issueCustomFields.Count);
+        
+        Assert.Equal(2,issueCustomFields[0].Id);
+        Assert.Equal("Duplicate",issueCustomFields[0].Values[0].Info);
+        Assert.False(issueCustomFields[0].Multiple);
+        Assert.Equal("Resolution",issueCustomFields[0].Name);
+        
+        Assert.NotNull(issues[1].CustomFields);
+        issueCustomFields = issues[1].CustomFields.ToList();
+        Assert.Equal(2, issueCustomFields.Count);
+        
+        Assert.Equal(1,issueCustomFields[0].Id);
+        Assert.Equal("1.0.1",issueCustomFields[0].Values[0].Info);
+        Assert.False(issueCustomFields[0].Multiple);
+        Assert.Equal("Affected version",issueCustomFields[0].Name);
     }
     
     [Fact]
@@ -199,6 +239,68 @@ public class IssueTests(XmlSerializerFixture fixture)
         Assert.Equal("5", details[0].OldValue);
         Assert.Equal("8", details[0].NewValue);
         
+    }
+
+    [Fact]
+    public void Should_Deserialize_Issue_With_Watchers()
+    {
+        const string input = """
+        <?xml version="1.0" encoding="UTF-8"?>
+        <issue>
+            <id>5</id>
+            <project id="1" name="Project-Test"/>
+            <tracker id="1" name="Bug"/>
+            <status id="1" name="New" is_closed="true"/>
+            <priority id="2" name="Normal"/>
+            <author id="90" name="Admin User"/>
+            <fixed_version id="2" name="version2"/>
+            <subject>#380</subject>
+            <description></description>
+            <start_date>2025-04-28</start_date>
+            <due_date/>
+            <done_ratio>0</done_ratio>
+            <is_private>false</is_private>
+            <estimated_hours/>
+            <total_estimated_hours/>
+            <spent_hours>0.0</spent_hours>
+            <total_spent_hours>0.0</total_spent_hours>
+            <created_on>2025-04-28T17:58:42Z</created_on>
+            <updated_on>2025-04-28T17:58:42Z</updated_on>
+            <closed_on/>
+            <watchers type="array">
+                <user id="91" name="Normal User"/>
+                <user id="90" name="Admin User"/>
+            </watchers>
+        </issue>
+        """;
+        
+        var output = fixture.Serializer.Deserialize<Redmine.Net.Api.Types.Issue>(input);
+        
+        Assert.NotNull(output);
+        Assert.Equal(5, output.Id);
+        Assert.Equal("Project-Test", output.Project.Name);
+        Assert.Equal(1, output.Project.Id);
+        Assert.Equal("Bug", output.Tracker.Name);
+        Assert.Equal(1, output.Tracker.Id);
+        Assert.Equal("New", output.Status.Name);
+        Assert.Equal(1, output.Status.Id);
+        Assert.True(output.Status.IsClosed);
+        Assert.False(output.Status.IsDefault);
+        Assert.Equal(2, output.FixedVersion.Id);
+        Assert.Equal("version2", output.FixedVersion.Name);
+        Assert.Equal(new DateTime(2025, 4, 28), output.StartDate);
+        Assert.Null(output.DueDate);
+        Assert.Equal(0, output.DoneRatio);
+        Assert.Null(output.EstimatedHours);
+        Assert.Null(output.TotalEstimatedHours);
+
+        var watchers = output.Watchers.ToList();
+        Assert.Equal(2, watchers.Count);
+        
+        Assert.Equal(91, watchers[0].Id);
+        Assert.Equal("Normal User", watchers[0].Name);
+        Assert.Equal(90, watchers[1].Id);
+        Assert.Equal("Admin User", watchers[1].Name);
     }
 }
 
