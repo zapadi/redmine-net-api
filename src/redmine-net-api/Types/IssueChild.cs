@@ -191,6 +191,6 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        private string DebuggerDisplay => $"[{nameof(IssueChild)}: {ToString()}, Tracker={Tracker}, Subject={Subject}]";
+        private string DebuggerDisplay => $"[IssueChild: Id={Id.ToInvariantString()}]";
     }
 }

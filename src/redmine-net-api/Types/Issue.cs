@@ -650,30 +650,6 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        private string DebuggerDisplay =>
-               $@"[{nameof(Issue)}: {ToString()}, Project={Project}, Tracker={Tracker}, Status={Status}, 
-Priority={Priority}, Author={Author}, Category={Category}, Subject={Subject}, Description={Description}, 
-StartDate={StartDate?.ToString("u", CultureInfo.InvariantCulture)}, 
-DueDate={DueDate?.ToString("u", CultureInfo.InvariantCulture)}, 
-DoneRatio={DoneRatio?.ToString("F", CultureInfo.InvariantCulture)}, 
-PrivateNotes={PrivateNotes.ToString(CultureInfo.InvariantCulture)}, 
-EstimatedHours={EstimatedHours?.ToString("F", CultureInfo.InvariantCulture)}, 
-SpentHours={SpentHours?.ToString("F", CultureInfo.InvariantCulture)}, 
-CustomFields={CustomFields.Dump()}, 
-CreatedOn={CreatedOn?.ToString("u", CultureInfo.InvariantCulture)}, 
-UpdatedOn={UpdatedOn?.ToString("u", CultureInfo.InvariantCulture)}, 
-ClosedOn={ClosedOn?.ToString("u", CultureInfo.InvariantCulture)}, 
-Notes={Notes}, 
-AssignedTo={AssignedTo}, 
-ParentIssue={ParentIssue}, 
-FixedVersion={FixedVersion}, 
-IsPrivate={IsPrivate.ToString(CultureInfo.InvariantCulture)}, 
-Journals={Journals.Dump()}, 
-ChangeSets={ChangeSets.Dump()}, 
-Attachments={Attachments.Dump()}, 
-Relations={Relations.Dump()}, 
-Children={Children.Dump()}, 
-Uploads={Uploads.Dump()}, 
-Watchers={Watchers.Dump()}]";
+        private string DebuggerDisplay => $"[Issue:Id={Id.ToInvariantString()}, Status={Status?.Name}, Priority={Priority?.Name}, DoneRatio={DoneRatio?.ToString("F", CultureInfo.InvariantCulture)},IsPrivate={IsPrivate.ToInvariantString()}]";
     }
 }

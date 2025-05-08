@@ -19,6 +19,7 @@ using System.Diagnostics;
 using System.Xml;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
+using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Internals;
 
 namespace Redmine.Net.Api.Types
@@ -157,9 +158,6 @@ namespace Redmine.Net.Api.Types
             return !Equals(left, right);
         }
 
-        private string DebuggerDisplay => $@"[{nameof(IssueAllowedStatus)}: {ToString()},
-{nameof(NewsComment)}: {ToString()}, 
-Author={Author}, 
-CONTENT={Content}]";
+        private string DebuggerDisplay => $"[NewsComment: Id={Id.ToInvariantString()}]";
     }
 }

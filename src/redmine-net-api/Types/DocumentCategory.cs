@@ -193,7 +193,7 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        private string DebuggerDisplay => $"[{nameof(DocumentCategory)}, IsDefault={IsDefault.ToString(CultureInfo.InvariantCulture)}, IsActive={IsActive.ToString(CultureInfo.InvariantCulture)}]";
+        private string DebuggerDisplay => $"[DocumentCategory: Id={Id.ToInvariantString()}, Name={Name}, IsDefault={IsDefault.ToInvariantString()}, IsActive={IsActive.ToInvariantString()}]";
 
     }
 }

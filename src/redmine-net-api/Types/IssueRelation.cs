@@ -283,11 +283,7 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        private string DebuggerDisplay => $@"[{nameof(IssueRelation)}: {ToString()}, 
-IssueId={IssueId.ToString(CultureInfo.InvariantCulture)}, 
-IssueToId={IssueToId.ToString(CultureInfo.InvariantCulture)}, 
-Type={Type:G},
-Delay={Delay?.ToString(CultureInfo.InvariantCulture)}]";
+        private string DebuggerDisplay => $"[IssueRelation: Id={Id.ToInvariantString()}, IssueId={IssueId.ToInvariantString()}, Type={Type:G}, Delay={Delay?.ToInvariantString()}]";
 
         /// <summary>
         /// 

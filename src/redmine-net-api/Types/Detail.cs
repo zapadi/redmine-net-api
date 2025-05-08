@@ -251,7 +251,7 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        private string DebuggerDisplay => $"[{nameof(Detail)}: Property={Property}, Name={Name}, OldValue={OldValue}, NewValue={NewValue}]";
+        private string DebuggerDisplay => $"[Detail: Property={Property}, Name={Name}, OldValue={OldValue}, NewValue={NewValue}]";
 
     }
 }

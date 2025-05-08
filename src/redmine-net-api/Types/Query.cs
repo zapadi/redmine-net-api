@@ -176,6 +176,6 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        private string DebuggerDisplay => $"[{nameof(Query)}: {ToString()}, IsPublic={IsPublic.ToString(CultureInfo.InvariantCulture)}, ProjectId={ProjectId?.ToString(CultureInfo.InvariantCulture)}]";
+        private string DebuggerDisplay => $"[Query: Id={Id.ToInvariantString()}, Name={Name}, IsPublic={IsPublic.ToInvariantString()}, ProjectId={ProjectId?.ToInvariantString()}]";
     }
 }

@@ -205,7 +205,7 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        private string DebuggerDisplay => $"[{nameof(Role)}: {ToString()}, Permissions={Permissions}]";
+        private string DebuggerDisplay => $"[Role: Id={Id.ToInvariantString()}, Name={Name}]";
 
     }
 }

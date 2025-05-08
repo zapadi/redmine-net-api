@@ -168,7 +168,7 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        private string DebuggerDisplay => $"[{nameof(MyAccountCustomField)}: {ToString()}, Value: {Value}]";
+        private string DebuggerDisplay => $"[MyAccountCustomField: Id={Id.ToInvariantString()}, Name={Name}, Value: {Value}]";
 
     }
 }

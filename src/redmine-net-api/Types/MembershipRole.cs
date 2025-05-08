@@ -179,7 +179,6 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        private string DebuggerDisplay => $"[MembershipRole: {ToString()}, Inherited={Inherited.ToString(CultureInfo.InvariantCulture)}]";
-
+        private string DebuggerDisplay => $"[MembershipRole: Id={Id.ToInvariantString()}, Name={Name}, Inherited={Inherited.ToInvariantString()}]";
     }
 }

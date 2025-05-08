@@ -233,7 +233,7 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        private string DebuggerDisplay => $"[Upload: Token={Token}, FileName={FileName}, ContentType={ContentType}, Description={Description}]";
+        private string DebuggerDisplay => $"[Upload: Token={Token}, FileName={FileName}]";
 
         /// <summary>
         /// 

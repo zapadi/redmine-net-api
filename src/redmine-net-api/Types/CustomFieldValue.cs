@@ -217,6 +217,6 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        private string DebuggerDisplay => $"[{nameof(CustomFieldValue)}: {Info}]";
+        private string DebuggerDisplay => $"[CustomFieldValue: {Info}]";
     }
 }

@@ -176,7 +176,7 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        private string DebuggerDisplay => $"[{nameof(Error)}: {Info}]";
+        private string DebuggerDisplay => $"[Error: {Info}]";
 
     }
 }

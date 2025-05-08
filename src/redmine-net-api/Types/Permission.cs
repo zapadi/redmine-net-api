@@ -155,7 +155,7 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        private string DebuggerDisplay => $"[{nameof(Permission)}: {Info}]";
+        private string DebuggerDisplay => $"[Permission: {Info}]";
 
     }
 }

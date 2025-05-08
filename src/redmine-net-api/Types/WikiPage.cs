@@ -17,7 +17,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
 using System.Xml;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
@@ -288,12 +287,7 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        private string DebuggerDisplay => $@"[{nameof(WikiPage)}: {ToString()}, Title={Title}, Text={Text}, Comments={Comments}, 
-Version={Version.ToString(CultureInfo.InvariantCulture)}, 
-Author={Author}, 
-CreatedOn={CreatedOn?.ToString("u", CultureInfo.InvariantCulture)}, 
-UpdatedOn={UpdatedOn?.ToString("u", CultureInfo.InvariantCulture)}, 
-Attachments={Attachments.Dump()}]";
+        private string DebuggerDisplay => $"[WikiPage: Id={Id.ToInvariantString()}, Title={Title}]";
 
     }
 }

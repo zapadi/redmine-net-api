@@ -283,7 +283,7 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        private string DebuggerDisplay => $"[{nameof(File)}: {ToString()}, Name={Filename}]";
+        private string DebuggerDisplay => $"[File: {Id.ToInvariantString()}, Name={Filename}]";
 
     }
 }

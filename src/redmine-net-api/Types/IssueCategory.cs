@@ -209,7 +209,7 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        private string DebuggerDisplay => $"[{nameof(IssueCategory)}: {ToString()}, Project={Project}, AssignTo={AssignTo}, Name={Name}]";
+        private string DebuggerDisplay => $"[IssueCategory: Id={Id.ToInvariantString()}, Name={Name}]";
 
     }
 }

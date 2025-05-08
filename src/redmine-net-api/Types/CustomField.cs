@@ -290,22 +290,6 @@ namespace Redmine.Net.Api.Types
         }
         #endregion
 
-        private string DebuggerDisplay =>
-            $@"[{nameof(CustomField)}: {ToString()}
-, CustomizedType={CustomizedType}
-, Description={Description}
-, FieldFormat={FieldFormat}
-, Regexp={Regexp}
-, MinLength={MinLength?.ToString(CultureInfo.InvariantCulture)}
-, MaxLength={MaxLength?.ToString(CultureInfo.InvariantCulture)}
-, IsRequired={IsRequired.ToString(CultureInfo.InvariantCulture)}
-, IsFilter={IsFilter.ToString(CultureInfo.InvariantCulture)}
-, Searchable={Searchable.ToString(CultureInfo.InvariantCulture)}
-, Multiple={Multiple.ToString(CultureInfo.InvariantCulture)}
-, DefaultValue={DefaultValue}
-, Visible={Visible.ToString(CultureInfo.InvariantCulture)}
-, PossibleValues={PossibleValues.Dump()}
-, Trackers={Trackers.Dump()}
-, Roles={Roles.Dump()}]";
+        private string DebuggerDisplay => $"[CustomField: Id={Id.ToInvariantString()}, Name={Name}]";
     }
 }

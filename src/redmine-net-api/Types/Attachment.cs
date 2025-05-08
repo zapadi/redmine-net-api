@@ -256,16 +256,7 @@ namespace Redmine.Net.Api.Types
         }
         #endregion
 
-        private string DebuggerDisplay =>
-        $@"[{nameof(Attachment)}: 
-{ToString()}, 
-FileName={FileName}, 
-FileSize={FileSize.ToString(CultureInfo.InvariantCulture)}, 
-ContentType={ContentType}, 
-Description={Description}, 
-ContentUrl={ContentUrl}, 
-Author={Author}, 
-CreatedOn={CreatedOn?.ToString("u", CultureInfo.InvariantCulture)}]";
+        private string DebuggerDisplay =>$"[Attachment: Id={Id.ToInvariantString()}, FileName={FileName}, FileSize={FileSize.ToInvariantString()}]";
 
         /// <summary>
         /// 

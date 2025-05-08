@@ -308,18 +308,7 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        private string DebuggerDisplay => $@"[{nameof(Version)}: {ToString()}, 
-Project={Project}, 
-Description={Description}, 
-Status={Status:G},
-DueDate={DueDate?.ToString("u", CultureInfo.InvariantCulture)}, 
-Sharing={Sharing:G}, 
-CreatedOn={CreatedOn?.ToString("u", CultureInfo.InvariantCulture)}, 
-UpdatedOn={UpdatedOn?.ToString("u", CultureInfo.InvariantCulture)}, 
-EstimatedHours={EstimatedHours?.ToString("F", CultureInfo.InvariantCulture)},
-SpentHours={SpentHours?.ToString("F", CultureInfo.InvariantCulture)},
-WikiPageTitle={WikiPageTitle}
-CustomFields={CustomFields.Dump()}]";
+        private string DebuggerDisplay => $"[Version: Id={Id.ToInvariantString()}, Name={Name}, Status={Status:G}]";
 
     }
 }
