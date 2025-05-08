@@ -167,10 +167,8 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.PROJECT: Project = new IdentifiableName(reader); break;
                     case RedmineKeys.SUMMARY: Summary = reader.ReadAsString(); break;
                     case RedmineKeys.TITLE: Title = reader.ReadAsString(); break;
-                    case RedmineKeys.ATTACHMENTS: Attachments = reader.ReadAsCollection<Attachment>();
-                        break;
-                    case RedmineKeys.COMMENTS: Comments = reader.ReadAsCollection<NewsComment>();
-                        break;
+                    case RedmineKeys.ATTACHMENTS: Attachments = reader.ReadAsCollection<Attachment>(); break;
+                    case RedmineKeys.COMMENTS: Comments = reader.ReadAsCollection<NewsComment>(); break;
                     default: reader.Read(); break;
                 }
             }

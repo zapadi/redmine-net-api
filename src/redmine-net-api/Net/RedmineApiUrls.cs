@@ -194,7 +194,7 @@ namespace Redmine.Net.Api.Net
 
             return DeleteFragment(type, id);
         }
-        internal string DeleteFragment(Type type,string id)
+        internal string DeleteFragment(Type type, string id)
         {
             return $"{TypeFragment(TypeUrlFragments, type)}/{id}.{Format}";
         }

@@ -702,7 +702,7 @@ namespace Redmine.Net.Api.Extensions
         }
 
         /// <summary>
-        ///     Creates the or update wiki page asynchronous.
+        ///     Creates or updates wiki page asynchronous.
         /// </summary>
         /// <param name="redmineManager">The redmine manager.</param>
         /// <param name="projectId">The project identifier.</param>
@@ -730,7 +730,7 @@ namespace Redmine.Net.Api.Extensions
         }
 
         /// <summary>
-        ///     Creates or update wiki page asynchronous.
+        ///     Creates or updates wiki page asynchronous.
         /// </summary>
         /// <param name="redmineManager">The redmine manager.</param>
         /// <param name="projectId">The project identifier.</param>

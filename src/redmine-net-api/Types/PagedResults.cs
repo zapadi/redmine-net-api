@@ -37,7 +37,7 @@ namespace Redmine.Net.Api.Serialization
             Offset = offset;
             PageSize = pageSize;
 
-            if (pageSize <= 0)
+            if (pageSize <= 0 || total == 0)
             {
                 return;
             }
