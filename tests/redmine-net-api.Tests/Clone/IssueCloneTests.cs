@@ -94,7 +94,7 @@ public sealed class IssueCloneTests
             Id = 1,
             Project = new IdentifiableName(100, "Test Project"),
             Tracker = new IdentifiableName(200, "Bug"),
-            Status = new IdentifiableName(300, "New"),
+            Status = new IssueStatus(300, "New"),
             Priority = new IdentifiableName(400, "Normal"),
             Author = new IdentifiableName(500, "John Doe"),
             Subject = "Test Issue",

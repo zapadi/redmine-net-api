@@ -30,8 +30,44 @@ namespace Redmine.Net.Api.Types
     /// </summary>
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.ISSUE_STATUS)]
-    public sealed class IssueStatus : IdentifiableName, IEquatable<IssueStatus>
+    public sealed class IssueStatus : IdentifiableName, IEquatable<IssueStatus>, ICloneable<IssueStatus>
     {
+        public IssueStatus()
+        {
+            
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        internal IssueStatus(int id, string name, bool isDefault = false, bool isClosed = false)
+        {
+            Id = id;
+            Name = name;
+            IsClosed = isClosed;
+            IsDefault = isDefault;
+        }
+        
+        internal IssueStatus(XmlReader reader)
+        {
+            Initialize(reader);
+        }
+        
+        internal IssueStatus(JsonReader reader)
+        {
+            Initialize(reader);
+        }
+
+        private void Initialize(XmlReader reader)
+        {
+            ReadXml(reader);
+        }
+
+        private void Initialize(JsonReader reader)
+        {
+            ReadJson(reader);
+        }
+        
         #region Properties
         /// <summary>
         /// Gets or sets a value indicating whether IssueStatus is default.
@@ -55,6 +91,16 @@ namespace Redmine.Net.Api.Types
         /// <param name="reader"></param>
         public override void ReadXml(XmlReader reader)
         {
+            if (reader.HasAttributes && reader.Name == "status")
+            {
+                Id = reader.ReadAttributeAsInt(RedmineKeys.ID);
+                IsClosed = reader.ReadAttributeAsBoolean(RedmineKeys.IS_CLOSED);
+                IsDefault = reader.ReadAttributeAsBoolean(RedmineKeys.IS_DEFAULT);
+                Name = reader.GetAttribute(RedmineKeys.NAME);
+                reader.Read();
+                return;
+            }
+            
             reader.Read();
             while (!reader.EOF)
             {
@@ -119,6 +165,22 @@ namespace Redmine.Net.Api.Types
             return base.Equals(other)
                    && IsClosed == other.IsClosed 
                    && IsDefault == other.IsDefault;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="resetId"></param>
+        /// <returns></returns>
+        public new IssueStatus Clone(bool resetId)
+        {
+            return new IssueStatus
+            {
+                Id = Id,
+                Name = Name,
+                IsClosed = IsClosed,
+                IsDefault = IsDefault
+            };
         }
 
         /// <summary>

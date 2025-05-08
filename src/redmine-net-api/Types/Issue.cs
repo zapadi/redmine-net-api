@@ -59,7 +59,7 @@ namespace Redmine.Net.Api.Types
         /// Gets or sets the status.Possible values: open, closed, * to get open and closed issues, status id
         /// </summary>
         /// <value>The status.</value>
-        public IdentifiableName Status { get; set; }
+        public IssueStatus Status { get; set; }
 
         /// <summary>
         /// Gets or sets the priority.
@@ -307,7 +307,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.RELATIONS: Relations = reader.ReadElementContentAsCollection<IssueRelation>(); break;
                     case RedmineKeys.SPENT_HOURS: SpentHours = reader.ReadElementContentAsNullableFloat(); break;
                     case RedmineKeys.START_DATE: StartDate = reader.ReadElementContentAsNullableDateTime(); break;
-                    case RedmineKeys.STATUS: Status = new IdentifiableName(reader); break;
+                    case RedmineKeys.STATUS: Status = new IssueStatus(reader); break;
                     case RedmineKeys.SUBJECT: Subject = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.TOTAL_ESTIMATED_HOURS: TotalEstimatedHours = reader.ReadElementContentAsNullableFloat(); break;
                     case RedmineKeys.TOTAL_SPENT_HOURS: TotalSpentHours = reader.ReadElementContentAsNullableFloat(); break;
@@ -406,7 +406,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.RELATIONS: Relations = reader.ReadAsCollection<IssueRelation>(); break;
                     case RedmineKeys.SPENT_HOURS: SpentHours = (float?)reader.ReadAsDouble(); break;
                     case RedmineKeys.START_DATE: StartDate = reader.ReadAsDateTime(); break;
-                    case RedmineKeys.STATUS: Status = new IdentifiableName(reader); break;
+                    case RedmineKeys.STATUS: Status = new IssueStatus(reader); break;
                     case RedmineKeys.SUBJECT: Subject = reader.ReadAsString(); break;
                     case RedmineKeys.TOTAL_ESTIMATED_HOURS: TotalEstimatedHours = (float?)reader.ReadAsDouble(); break;
                     case RedmineKeys.TOTAL_SPENT_HOURS: TotalSpentHours = (float?)reader.ReadAsDouble(); break;
