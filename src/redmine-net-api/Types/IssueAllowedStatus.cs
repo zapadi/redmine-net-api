@@ -129,6 +129,6 @@ namespace Redmine.Net.Api.Types
             return !Equals(left, right);
         }
         
-        private string DebuggerDisplay => $"[{nameof(IssueAllowedStatus)}: {ToString()}]";
+        private string DebuggerDisplay => $"[IssueAllowedStatus: Id={Id.ToInvariantString()}, Name={Name}]";
     }
 }

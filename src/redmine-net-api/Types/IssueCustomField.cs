@@ -325,6 +325,6 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        private string DebuggerDisplay => $"[{nameof(IssueCustomField)}: {ToString()} Values={Values.Dump()}, Multiple={Multiple.ToString(CultureInfo.InvariantCulture)}]";
+        private string DebuggerDisplay => $"[IssueCustomField: Id={Id.ToInvariantString()}, Name={Name}, Multiple={Multiple.ToInvariantString()}]";
     }
 }

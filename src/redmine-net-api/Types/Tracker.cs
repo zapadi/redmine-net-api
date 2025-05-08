@@ -183,6 +183,6 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        private string DebuggerDisplay => $"[{nameof(Tracker)}: {base.ToString()}]";
+        private string DebuggerDisplay => $"[Tracker: Id={Id.ToInvariantString()}, Name={Name}]";
     }
 }

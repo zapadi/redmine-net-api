@@ -397,23 +397,6 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        private string DebuggerDisplay =>
-                $@"[Project: {ToString()}, 
-Identifier={Identifier}, 
-Description={Description}, 
-Parent={Parent}, 
-HomePage={HomePage}, 
-CreatedOn={CreatedOn?.ToString("u", CultureInfo.InvariantCulture)}, 
-UpdatedOn={UpdatedOn?.ToString("u", CultureInfo.InvariantCulture)}, 
-Status={Status:G}, 
-IsPublic={IsPublic.ToString(CultureInfo.InvariantCulture)}, 
-InheritMembers={InheritMembers.ToString(CultureInfo.InvariantCulture)}, 
-DefaultAssignee={DefaultAssignee},
-DefaultVersion={DefaultVersion},
-Trackers={Trackers.Dump()}, 
-CustomFields={CustomFields.Dump()}, 
-IssueCategories={IssueCategories.Dump()}, 
-EnabledModules={EnabledModules.Dump()}, 
-TimeEntryActivities = {TimeEntryActivities.Dump()}]";
+        private string DebuggerDisplay => $"[Project: Id={Id.ToInvariantString()}, Name={Name}, Identifier={Identifier}, Status={Status:G}, IsPublic={IsPublic.ToInvariantString()}]";
     }
 }

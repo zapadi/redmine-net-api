@@ -76,7 +76,7 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        private string DebuggerDisplay => $"[{nameof(TrackerCustomField)}: {ToString()}]";
+        private string DebuggerDisplay => $"[TrackerCustomField: Id={Id.ToInvariantString()}, Name={Name}]";
 
     }
 }

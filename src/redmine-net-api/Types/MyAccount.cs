@@ -252,16 +252,6 @@ namespace Redmine.Net.Api.Types
             return !Equals(left, right);
         }
 
-        private string DebuggerDisplay => $@"[ {nameof(MyAccount)}:
-Id={Id.ToString(CultureInfo.InvariantCulture)},
-Login={Login}, 
-ApiKey={ApiKey}, 
-FirstName={FirstName}, 
-LastName={LastName}, 
-Email={Email}, 
-IsAdmin={IsAdmin.ToString(CultureInfo.InvariantCulture).ToLowerInv()}, 
-CreatedOn={CreatedOn?.ToString("u", CultureInfo.InvariantCulture)}, 
-LastLoginOn={LastLoginOn?.ToString("u", CultureInfo.InvariantCulture)}, 
-CustomFields={CustomFields.Dump()}]";
+        private string DebuggerDisplay => $"[MyAccount: Id={Id.ToInvariantString()}, Login={Login}, IsAdmin={IsAdmin.ToInvariantString()}]";
     }
 }

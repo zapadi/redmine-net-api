@@ -176,7 +176,7 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        private string DebuggerDisplay => $"[IssuePriority: {ToString()}, IsDefault={IsDefault.ToString(CultureInfo.InvariantCulture)}, IsActive={IsActive.ToString(CultureInfo.InvariantCulture)}]";
+        private string DebuggerDisplay => $"[IssuePriority: Id={Id.ToInvariantString()},Name={Name}, IsDefault={IsDefault.ToInvariantString()},IsActive={IsActive.ToInvariantString()}]";
 
     }
 }

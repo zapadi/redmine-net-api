@@ -186,6 +186,6 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        private string DebuggerDisplay => $"[{nameof(Membership)}: {ToString()}, Group={Group},  Project={Project}, User={User}, Roles={Roles.Dump()}]";
+        private string DebuggerDisplay => $"[Membership: Id={Id.ToInvariantString()}]";
     }
 }

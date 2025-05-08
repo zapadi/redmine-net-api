@@ -425,27 +425,7 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        private string DebuggerDisplay =>
-               $@"[{nameof(User)}: {Groups}, 
-Login={Login}, Password={Password}, 
-FirstName={FirstName}, 
-LastName={LastName}, 
-AvatarUrl={AvatarUrl},
-IsAdmin={IsAdmin.ToString(CultureInfo.InvariantCulture)},
-TwoFactorAuthenticationScheme={TwoFactorAuthenticationScheme}
-Email={Email}, 
-EmailNotification={MailNotification}, 
-AuthenticationModeId={AuthenticationModeId?.ToString(CultureInfo.InvariantCulture)}, 
-CreatedOn={CreatedOn?.ToString("u", CultureInfo.InvariantCulture)}, 
-UpdatedOn={UpdatedOn?.ToString("u", CultureInfo.InvariantCulture)}
-PasswordChangedOn={PasswordChangedOn?.ToString("u", CultureInfo.InvariantCulture)}
-LastLoginOn={LastLoginOn?.ToString("u", CultureInfo.InvariantCulture)}, 
-ApiKey={ApiKey}, 
-Status={Status:G}, 
-MustChangePassword={MustChangePassword.ToString(CultureInfo.InvariantCulture)}, 
-CustomFields={CustomFields.Dump()}, 
-Memberships={Memberships.Dump()}, 
-Groups={Groups.Dump()}]";
+        private string DebuggerDisplay => $"[User: Id={Id.ToInvariantString()}, Login={Login}, IsAdmin={IsAdmin.ToString(CultureInfo.InvariantCulture)}, Status={Status:G}]";
 
     }
 }

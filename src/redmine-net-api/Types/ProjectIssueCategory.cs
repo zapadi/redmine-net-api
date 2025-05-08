@@ -16,6 +16,7 @@
 
 using System.Diagnostics;
 using System.Xml.Serialization;
+using Redmine.Net.Api.Extensions;
 
 namespace Redmine.Net.Api.Types
 {
@@ -40,7 +41,7 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        private string DebuggerDisplay => $"[{nameof(ProjectIssueCategory)}: {ToString()}]";
+        private string DebuggerDisplay => $"[ProjectIssueCategory: Id={Id.ToInvariantString()}, Name={Name}]";
 
     }
 }

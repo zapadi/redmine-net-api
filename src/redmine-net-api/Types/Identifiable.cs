@@ -21,6 +21,7 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
+using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Internals;
 using Redmine.Net.Api.Serialization;
 using NotImplementedException = System.NotImplementedException;
@@ -157,7 +158,7 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        private string DebuggerDisplay => $"Id={Id.ToString(CultureInfo.InvariantCulture)}";
+        private string DebuggerDisplay => $"Id={Id.ToInvariantString()}";
 
         /// <summary>
         /// 

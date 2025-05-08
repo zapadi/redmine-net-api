@@ -238,7 +238,7 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        private string DebuggerDisplay => $"[{nameof(IssueStatus)}: {ToString()}, IsDefault={IsDefault.ToString(CultureInfo.InvariantCulture)}, IsClosed={IsClosed.ToString(CultureInfo.InvariantCulture)}]";
+        private string DebuggerDisplay => $"[IssueStatus: Id={Id.ToInvariantString()}, Name={Name}, IsDefault={IsDefault.ToInvariantString()}, IsClosed={IsClosed.ToInvariantString()}]";
 
     }
 }

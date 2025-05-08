@@ -224,7 +224,7 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        private string DebuggerDisplay => $"[{nameof(IdentifiableName)}: {base.ToString()}, Name={Name}]";
+        private string DebuggerDisplay => $"[IdentifiableName: Id={Id.ToInvariantString()}, Name={Name}]";
 
         /// <summary>
         /// 

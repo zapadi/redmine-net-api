@@ -62,7 +62,7 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        private string DebuggerDisplay => $"[{nameof(ProjectEnabledModule)}: {ToString()}]";
+        private string DebuggerDisplay => $"[ProjectEnabledModule: Id={Id.ToInvariantString()}, Name={Name}]";
 
     }
 }

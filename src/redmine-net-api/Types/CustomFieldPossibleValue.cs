@@ -192,7 +192,7 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        private string DebuggerDisplay => $"[{nameof(CustomFieldPossibleValue)}: Label:{Label}, Value:{Value}]";
+        private string DebuggerDisplay => $"[CustomFieldPossibleValue: Label:{Label}, Value:{Value}]";
 
     }
 }

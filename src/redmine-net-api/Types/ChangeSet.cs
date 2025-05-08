@@ -232,12 +232,7 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        private string DebuggerDisplay =>
-             $@"[{nameof(ChangeSet)}: 
-Revision={Revision.ToString(CultureInfo.InvariantCulture)}, 
-User='{User}', 
-CommittedOn={CommittedOn?.ToString("u", CultureInfo.InvariantCulture)}, 
-Comments='{Comments}']";
+        private string DebuggerDisplay => $" ChangeSet: Revision={Revision}, CommittedOn={CommittedOn?.ToString("u", CultureInfo.InvariantCulture)}]";
 
     }
 }

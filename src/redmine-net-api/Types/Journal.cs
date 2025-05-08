@@ -251,7 +251,7 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        private string DebuggerDisplay => $"[{nameof(Journal)}: {ToString()}, User={User}, Notes={Notes}, CreatedOn={CreatedOn?.ToString("u", CultureInfo.InvariantCulture)}, Details={Details.Dump()}]";
+        private string DebuggerDisplay => $"[Journal: Id={Id.ToInvariantString()}, CreatedOn={CreatedOn?.ToString("u", CultureInfo.InvariantCulture)}]";
 
         /// <summary>
         /// 

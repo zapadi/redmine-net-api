@@ -182,6 +182,6 @@ namespace Redmine.Net.Api.Types
             return !Equals(left, right);
         }
 
-        private string DebuggerDisplay => $@"[{nameof(Search)}:Id={Id.ToString(CultureInfo.InvariantCulture)},Title={Title},Type={Type},Url={Url},Description={Description}, DateTime={DateTime?.ToString("u", CultureInfo.InvariantCulture)}]";
+        private string DebuggerDisplay => $"[Search: Id={Id.ToInvariantString()}, Title={Title}, Type={Type}]";
     }
 }

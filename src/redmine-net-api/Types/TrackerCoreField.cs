@@ -36,7 +36,7 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        private string DebuggerDisplay => $"[{nameof(TrackerCoreField)}: {ToString()}]";
+        private string DebuggerDisplay => $"[TrackerCoreField: Name={Name}]";
 
         /// <summary>
         /// 
