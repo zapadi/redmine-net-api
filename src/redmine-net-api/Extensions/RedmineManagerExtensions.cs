@@ -449,7 +449,7 @@ namespace Redmine.Net.Api.Extensions
         {
             var parameters = CreateSearchParameters(q, limit, offset, searchFilter);
 
-            var response = redmineManager.GetPaginatedObjects<Search>(parameters);
+            var response = redmineManager.GetPaginated<Search>(new RequestOptions() {QueryString = parameters});
 
             return response;
         }

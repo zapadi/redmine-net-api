@@ -1,5 +1,6 @@
 using System.Collections.Specialized;
 using Padi.DotNet.RedmineAPI.Tests.Tests;
+using Redmine.Net.Api;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Net;
 using Redmine.Net.Api.Types;
@@ -19,12 +20,13 @@ public sealed class RedmineApi371 : IClassFixture<RedmineApiUrlsFixture>
     [Fact]
     public void Should_Return_IssueCategories_For_Project_Url()
     {
+        var projectIdAsString = 1.ToInvariantString();
         var result = _fixture.Sut.GetListFragment<IssueCategory>(
             new RequestOptions
             {
-                QueryString = new NameValueCollection{ { "project_id", 1.ToInvariantString() } }
+                QueryString = new NameValueCollection{ { RedmineKeys.PROJECT_ID, projectIdAsString } }
             });
         
-        Assert.Equal($"projects/1/issue_categories.{_fixture.Format}", result);
+        Assert.Equal($"projects/{projectIdAsString}/issue_categories.{_fixture.Format}", result);
     }
 }
