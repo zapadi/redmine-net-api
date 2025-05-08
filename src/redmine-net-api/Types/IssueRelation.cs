@@ -205,7 +205,11 @@ namespace Redmine.Net.Api.Types
                 return IssueRelationType.CopiedFrom;
             }
 
+#if NETFRAMEWORK
             return (IssueRelationType)Enum.Parse(typeof(IssueRelationType), value, true);
+#else
+            return Enum.Parse<IssueRelationType>(value, true);
+#endif
         }
         
         #endregion
