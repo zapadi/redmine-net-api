@@ -1,4 +1,4 @@
-﻿/*
+/*
    Copyright 2011 - 2025 Adrian Popescu
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,6 +18,7 @@ using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.Xml.Serialization;
+using Redmine.Net.Api.Internals;
 
 namespace Redmine.Net.Api.Types
 {
@@ -26,7 +27,8 @@ namespace Redmine.Net.Api.Types
     /// </summary>
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.USER)]
-    public sealed class Watcher : Identifiable<Watcher>
+    public sealed class Watcher : IdentifiableName
+        ,IEquatable<Watcher>
         ,ICloneable<Watcher>
         ,IValue
     {
@@ -47,16 +49,82 @@ namespace Redmine.Net.Api.Types
         {
             if (resetId)
             {
-                return new Watcher();
+                return new Watcher()
+                {
+                    Name = Name
+                };
             }
             return new Watcher
             {
-                Id = Id
+                Id = Id,
+                Name = Name
             };
         }
 
         #endregion
 
+        #region Implementation of IEquatable<IdentifiableName>
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public bool Equals(Watcher other)
+        {
+            if (other == null) return false;
+            return Id == other.Id && string.Equals(Name, other.Name, StringComparison.Ordinal);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as Watcher);
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = base.GetHashCode();
+                hashCode = HashCodeHelper.GetHashCode(Name, hashCode);
+                return hashCode;
+            }
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool operator ==(Watcher left, Watcher right)
+        {
+            return Equals(left, right);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool operator !=(Watcher left, Watcher right)
+        {
+            return !Equals(left, right);
+        }
+        #endregion
+        
         /// <summary>
         /// 
         /// </summary>
