@@ -112,8 +112,8 @@ namespace Redmine.Net.Api.Types
         {
             AssertValidIssueRelationType();
 
-            writer.WriteElementString(RedmineKeys.ISSUE_TO_ID, IssueToId.ToString(CultureInfo.InvariantCulture));
-            writer.WriteElementString(RedmineKeys.RELATION_TYPE, Type.ToString().ToLowerInv());
+            writer.WriteElementString(RedmineKeys.ISSUE_TO_ID, IssueToId.ToInvariantString());
+            writer.WriteElementString(RedmineKeys.RELATION_TYPE, Type.ToLowerInvariant());
 
             if (Type == IssueRelationType.Precedes || Type == IssueRelationType.Follows)
             {
@@ -134,7 +134,7 @@ namespace Redmine.Net.Api.Types
             using (new JsonObject(writer, RedmineKeys.RELATION))
             {
                 writer.WriteProperty(RedmineKeys.ISSUE_TO_ID, IssueToId);
-                writer.WriteProperty(RedmineKeys.RELATION_TYPE, Type.ToString().ToLowerInv());
+                writer.WriteProperty(RedmineKeys.RELATION_TYPE, Type.ToLowerInvariant());
 
                 if (Type == IssueRelationType.Precedes || Type == IssueRelationType.Follows)
                 {
