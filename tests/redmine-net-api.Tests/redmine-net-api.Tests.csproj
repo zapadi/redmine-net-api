@@ -4,6 +4,8 @@
     
     <PropertyGroup Label="Build">
         <AssemblyName>Padi.DotNet.RedmineAPI.Tests</AssemblyName>
+        <Nullable>disable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
         <RootNamespace>$(AssemblyName)</RootNamespace>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
         <TargetFramework>net481</TargetFramework>
