@@ -68,13 +68,13 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
       
-        [XmlEnum("copied_to")]
+        [XmlEnum(RedmineKeys.COPIED_TO)]
         CopiedTo,
 
         /// <summary>
         /// 
         /// </summary>
-        [XmlEnum("copied_from")]
+        [XmlEnum(RedmineKeys.COPIED_FROM)]
         CopiedFrom
     }
 }
