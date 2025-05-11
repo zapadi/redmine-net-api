@@ -31,14 +31,9 @@ namespace Redmine.Net.Api.Types
     /// </summary>
     [DebuggerDisplay($"{{{nameof(DebuggerDisplay)},nq}}")]
     [XmlRoot(RedmineKeys.VERSION)]
-    public sealed class Version : Identifiable<Version>
+    public sealed class Version : IdentifiableName, IEquatable<Version>
     {
         #region Properties
-        /// <summary>
-        /// Gets or sets the name.
-        /// </summary>
-        public string Name { get; set; }
-
         /// <summary>
         /// Gets the project.
         /// </summary>
@@ -226,18 +221,18 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public override bool Equals(Version other)
+        public bool Equals(Version other)
         {
             if (other == null) return false;
             return base.Equals(other)
                 && Project == other.Project
                 && string.Equals(Description, other.Description, StringComparison.Ordinal)
-                 && Status == other.Status
-                 && DueDate == other.DueDate
-                 && Sharing == other.Sharing
-                 && CreatedOn == other.CreatedOn
-                 && UpdatedOn == other.UpdatedOn
-                 && (CustomFields?.Equals<IssueCustomField>(other.CustomFields) ?? other.CustomFields == null) 
+                && Status == other.Status
+                && DueDate == other.DueDate
+                && Sharing == other.Sharing
+                && CreatedOn == other.CreatedOn
+                && UpdatedOn == other.UpdatedOn
+                && (CustomFields?.Equals<IssueCustomField>(other.CustomFields) ?? other.CustomFields == null) 
                 && string.Equals(WikiPageTitle,other.WikiPageTitle, StringComparison.Ordinal)
                 && EstimatedHours == other.EstimatedHours
                 && SpentHours == other.SpentHours;
