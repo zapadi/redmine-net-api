@@ -16,7 +16,6 @@
 
 using System;
 using System.Diagnostics;
-using System.Globalization;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
@@ -30,7 +29,7 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// 
     /// </summary>
-    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
+    [DebuggerDisplay($"{{{nameof(DebuggerDisplay)},nq}}")]
     [XmlRoot(RedmineKeys.RESULT)]
     public sealed class Search: IXmlSerializable, IJsonSerializable, IEquatable<Search>
     {

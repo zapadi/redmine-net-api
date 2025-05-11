@@ -17,7 +17,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
 using System.Xml;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
@@ -30,7 +29,7 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// Availability 1.0
     /// </summary>
-    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
+    [DebuggerDisplay($"{{{nameof(DebuggerDisplay)},nq}}")]
     [XmlRoot(RedmineKeys.PROJECT)]
     public sealed class Project : IdentifiableName, IEquatable<Project>
     {

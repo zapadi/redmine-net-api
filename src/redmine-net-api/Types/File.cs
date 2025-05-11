@@ -30,7 +30,7 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// 
     /// </summary>
-    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
+    [DebuggerDisplay($"{{{nameof(DebuggerDisplay)},nq}}")]
     [XmlRoot(RedmineKeys.FILE)]
     public sealed class File : Identifiable<File>
     {

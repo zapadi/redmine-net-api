@@ -23,7 +23,7 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// 
     /// </summary>
-    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
+    [DebuggerDisplay($"{{{nameof(DebuggerDisplay)},nq}}")]
     [XmlRoot(RedmineKeys.TIME_ENTRY_ACTIVITY)]
     public sealed class ProjectTimeEntryActivity : IdentifiableName
     {

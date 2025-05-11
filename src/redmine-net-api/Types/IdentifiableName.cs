@@ -27,7 +27,7 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// 
     /// </summary>
-    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
+    [DebuggerDisplay($"{{{nameof(DebuggerDisplay)},nq}}")]
     public class IdentifiableName : Identifiable<IdentifiableName>
         , ICloneable<IdentifiableName>
     {

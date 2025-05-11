@@ -16,7 +16,6 @@
 
 using System;
 using System.Diagnostics;
-using System.Globalization;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
@@ -24,7 +23,6 @@ using Newtonsoft.Json;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Internals;
 using Redmine.Net.Api.Serialization;
-using NotImplementedException = System.NotImplementedException;
 
 namespace Redmine.Net.Api.Types
 {
@@ -32,7 +30,7 @@ namespace Redmine.Net.Api.Types
     /// 
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
+    [DebuggerDisplay($"{{{nameof(DebuggerDisplay)},nq}}")]
     public abstract class Identifiable<T> : IXmlSerializable, IJsonSerializable, IEquatable<T>
         , ICloneable<Identifiable<T>> 
         where T : Identifiable<T>

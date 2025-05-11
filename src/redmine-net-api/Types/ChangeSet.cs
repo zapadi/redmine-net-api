@@ -30,7 +30,7 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// 
     /// </summary>
-    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
+    [DebuggerDisplay($"{{{nameof(DebuggerDisplay)},nq}}")]
     [XmlRoot(RedmineKeys.CHANGE_SET)]
     public sealed class ChangeSet : IXmlSerializable, IJsonSerializable, IEquatable<ChangeSet>
     ,ICloneable<ChangeSet>

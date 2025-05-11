@@ -17,7 +17,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
 using System.Xml;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
@@ -31,7 +30,7 @@ namespace Redmine.Net.Api.Types
     /// 
     /// </summary>
     /// <remarks>Availability 4.1</remarks>
-    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
+    [DebuggerDisplay($"{{{nameof(DebuggerDisplay)},nq}}")]
     [XmlRoot(RedmineKeys.USER)]
     public sealed class MyAccount : Identifiable<MyAccount>
     {
