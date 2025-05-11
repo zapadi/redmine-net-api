@@ -38,6 +38,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Props", "Props", "{707B6A3F
 		releasenotes.props = releasenotes.props
 		signing.props = signing.props
 		version.props = version.props
+		Directory.Packages.props = Directory.Packages.props
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docker", "Docker", "{1D340EEB-C535-45D4-80D7-ADD4434D7B77}"

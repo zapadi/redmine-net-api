@@ -1,0 +1,12 @@
+<Project>
+    <ItemGroup Label="Build">
+        <PackageVersion Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+        <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
+    </ItemGroup>    
+    <ItemGroup Condition=" '$(TargetFramework)' == 'net40' " Label=".NET 4.0 Package References">
+        <PackageVersion Include="System.ValueTuple" Version="4.5.0"  />
+        <PackageVersion Include="Microsoft.Bcl.Async" Version="1.0.168" />
+        <PackageVersion Include="Microsoft.Net.Http" Version="2.2.29" />
+    </ItemGroup>
+    
+</Project>
