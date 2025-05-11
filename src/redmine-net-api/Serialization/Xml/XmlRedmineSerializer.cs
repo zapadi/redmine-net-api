@@ -79,6 +79,8 @@ namespace Redmine.Net.Api.Serialization
 #pragma warning restore CA1822
 
         public string Format => RedmineConstants.XML;
+        
+        public string ContentType { get; } = "application/xml";
 
         public string Serialize<T>(T entity) where T : class
         {
