@@ -80,7 +80,7 @@ namespace Redmine.Net.Api.Serialization
 
         public string Format => RedmineConstants.XML;
         
-        public string ContentType { get; } = "application/xml";
+        public string ContentType { get; } = RedmineConstants.CONTENT_TYPE_APPLICATION_XML;
 
         public string Serialize<T>(T entity) where T : class
         {

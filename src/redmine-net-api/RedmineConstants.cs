@@ -57,5 +57,10 @@ namespace Redmine.Net.Api
         /// 
         /// </summary>
         public const string XML = "xml";
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string JSON = "json";
     }
 }
