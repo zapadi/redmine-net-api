@@ -135,7 +135,7 @@ namespace Redmine.Net.Api.Serialization
         }
         #pragma warning restore CA1822
         
-        public string Format { get; } = "json";
+        public string Format { get; } = RedmineConstants.JSON;
 
         public string Serialize<T>(T entity) where T : class
         {
