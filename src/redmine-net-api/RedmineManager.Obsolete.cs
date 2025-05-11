@@ -154,7 +154,7 @@ namespace Redmine.Net.Api
         /// 
         /// </summary>
         [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
-        public TimeSpan? Timeout { get; }
+        public TimeSpan? Timeout { get; private set; }
 
         /// <summary>
         ///     Gets the host.
@@ -190,7 +190,7 @@ namespace Redmine.Net.Api
         ///     The proxy.
         /// </value>
         [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
-        public IWebProxy Proxy { get; }
+        public IWebProxy Proxy { get; private set; }
 
         /// <summary>
         ///     Gets the type of the security protocol.
@@ -199,7 +199,7 @@ namespace Redmine.Net.Api
         ///     The type of the security protocol.
         /// </value>
         [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
-        public SecurityProtocolType SecurityProtocolType { get; }
+        public SecurityProtocolType SecurityProtocolType { get; private set; }
         
         
         /// <inheritdoc />
