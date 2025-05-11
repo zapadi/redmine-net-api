@@ -56,7 +56,7 @@ namespace Redmine.Net.Api.Types
         public IdentifiableName Tracker { get; set; }
 
         /// <summary>
-        /// Gets or sets the status.Possible values: open, closed, * to get open and closed issues, status id
+        /// Gets or sets the status. Possible values: open, closed, * to get open and closed issues, status id
         /// </summary>
         /// <value>The status.</value>
         public IssueStatus Status { get; set; }

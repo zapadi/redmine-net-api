@@ -17,15 +17,17 @@
 namespace Redmine.Net.Api.Serialization
 {
     /// <summary>
-    /// 
+    /// Specifies the serialization types supported by the Redmine API.
     /// </summary>
     public enum SerializationType
     {
         /// <summary>
+        /// The XML format.
         /// </summary>
         Xml,
+
         /// <summary>
-        /// The json
+        /// The JSON format.
         /// </summary>
         Json
     }

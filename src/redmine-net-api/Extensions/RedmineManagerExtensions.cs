@@ -35,13 +35,13 @@ namespace Redmine.Net.Api.Extensions
     public static class RedmineManagerExtensions
     {
         /// <summary>
-        /// 
+        /// Archives a project in Redmine based on the specified project identifier.
         /// </summary>
-        /// <param name="redmineManager"></param>
-        /// <param name="projectIdentifier"></param>
-        /// <param name="requestOptions"></param>
-        /// <returns></returns>
-        public static void ArchiveProject(this RedmineManager redmineManager, string projectIdentifier, RequestOptions requestOptions = null)
+        /// <param name="redmineManager">The instance of the RedmineManager used to manage the API requests.</param>
+        /// <param name="projectIdentifier">The unique identifier of the project to be archived.</param>
+        /// <param name="requestOptions">Additional request options to include in the API call.</param>
+        public static void ArchiveProject(this RedmineManager redmineManager, string projectIdentifier,
+            RequestOptions requestOptions = null)
         {
             var uri = redmineManager.RedmineApiUrls.ProjectArchive(projectIdentifier);
 
@@ -49,15 +49,15 @@ namespace Redmine.Net.Api.Extensions
             
             redmineManager.ApiClient.Update(escapedUri, string.Empty ,requestOptions);
         }
-        
+
         /// <summary>
-        /// 
+        /// Unarchives a project in Redmine based on the specified project identifier.
         /// </summary>
-        /// <param name="redmineManager"></param>
-        /// <param name="projectIdentifier"></param>
-        /// <param name="requestOptions"></param>
-        /// <returns></returns>
-        public static void UnarchiveProject(this RedmineManager redmineManager, string projectIdentifier, RequestOptions requestOptions = null)
+        /// <param name="redmineManager">The instance of the RedmineManager used to manage the API requests.</param>
+        /// <param name="projectIdentifier">The unique identifier of the project to be unarchived.</param>
+        /// <param name="requestOptions">Additional request options to include in the API call.</param>
+        public static void UnarchiveProject(this RedmineManager redmineManager, string projectIdentifier,
+            RequestOptions requestOptions = null)
         {
             var uri = redmineManager.RedmineApiUrls.ProjectUnarchive(projectIdentifier);
 
@@ -65,15 +65,15 @@ namespace Redmine.Net.Api.Extensions
             
             redmineManager.ApiClient.Update(escapedUri, string.Empty ,requestOptions);
         }
-        
+
         /// <summary>
-        /// 
+        /// Reopens a previously closed project in Redmine based on the specified project identifier.
         /// </summary>
-        /// <param name="redmineManager"></param>
-        /// <param name="projectIdentifier"></param>
-        /// <param name="requestOptions"></param>
-        /// <returns></returns>
-        public static void ReopenProject(this RedmineManager redmineManager, string projectIdentifier, RequestOptions requestOptions = null)
+        /// <param name="redmineManager">The instance of the RedmineManager used to execute the API request.</param>
+        /// <param name="projectIdentifier">The unique identifier of the project to be reopened.</param>
+        /// <param name="requestOptions">Additional request options to include in the API call.</param>
+        public static void ReopenProject(this RedmineManager redmineManager, string projectIdentifier,
+            RequestOptions requestOptions = null)
         {
             var uri = redmineManager.RedmineApiUrls.ProjectReopen(projectIdentifier);
 
@@ -81,15 +81,15 @@ namespace Redmine.Net.Api.Extensions
             
             redmineManager.ApiClient.Update(escapedUri, string.Empty ,requestOptions);
         }
-        
+
         /// <summary>
-        /// 
+        /// Closes a project in Redmine based on the specified project identifier.
         /// </summary>
-        /// <param name="redmineManager"></param>
-        /// <param name="projectIdentifier"></param>
-        /// <param name="requestOptions"></param>
-        /// <returns></returns>
-        public static void CloseProject(this RedmineManager redmineManager, string projectIdentifier, RequestOptions requestOptions = null)
+        /// <param name="redmineManager">The instance of the RedmineManager used to manage the API requests.</param>
+        /// <param name="projectIdentifier">The unique identifier of the project to be closed.</param>
+        /// <param name="requestOptions">Additional request options to include in the API call.</param>
+        public static void CloseProject(this RedmineManager redmineManager, string projectIdentifier,
+            RequestOptions requestOptions = null)
         {
             var uri = redmineManager.RedmineApiUrls.ProjectClose(projectIdentifier);
 
@@ -97,16 +97,18 @@ namespace Redmine.Net.Api.Extensions
             
             redmineManager.ApiClient.Update(escapedUri,string.Empty, requestOptions);
         }
-        
+
         /// <summary>
-        /// 
+        /// Adds a related issue to a project repository in Redmine based on the specified parameters.
         /// </summary>
-        /// <param name="redmineManager"></param>
-        /// <param name="projectIdentifier"></param>
-        /// <param name="repositoryIdentifier"></param>
-        /// <param name="revision"></param>
-        /// <param name="requestOptions"></param>
-        public static void ProjectRepositoryAddRelatedIssue(this RedmineManager redmineManager, string projectIdentifier, string repositoryIdentifier, string revision, RequestOptions requestOptions = null)
+        /// <param name="redmineManager">The instance of the RedmineManager used to manage the API requests.</param>
+        /// <param name="projectIdentifier">The unique identifier of the project to which the repository belongs.</param>
+        /// <param name="repositoryIdentifier">The unique identifier of the repository within the project.</param>
+        /// <param name="revision">The revision or commit ID to relate the issue to.</param>
+        /// <param name="requestOptions">Additional request options to include in the API call.</param>
+        public static void ProjectRepositoryAddRelatedIssue(this RedmineManager redmineManager,
+            string projectIdentifier, string repositoryIdentifier, string revision,
+            RequestOptions requestOptions = null)
         {
             var uri = redmineManager.RedmineApiUrls.ProjectRepositoryAddRelatedIssue(projectIdentifier, repositoryIdentifier, revision);
             
@@ -116,15 +118,17 @@ namespace Redmine.Net.Api.Extensions
         }
 
         /// <summary>
-        /// 
+        /// Removes a related issue from the specified repository revision of a project in Redmine.
         /// </summary>
-        /// <param name="redmineManager"></param>
-        /// <param name="projectIdentifier"></param>
-        /// <param name="repositoryIdentifier"></param>
-        /// <param name="revision"></param>
-        /// <param name="issueIdentifier"></param>
-        /// <param name="requestOptions"></param>
-        public static void ProjectRepositoryRemoveRelatedIssue(this RedmineManager redmineManager, string projectIdentifier, string repositoryIdentifier, string revision, string issueIdentifier, RequestOptions requestOptions = null)
+        /// <param name="redmineManager">The instance of the RedmineManager used to manage the API requests.</param>
+        /// <param name="projectIdentifier">The unique identifier of the project containing the repository.</param>
+        /// <param name="repositoryIdentifier">The unique identifier of the repository from which the related issue will be removed.</param>
+        /// <param name="revision">The specific revision of the repository to disassociate the issue from.</param>
+        /// <param name="issueIdentifier">The unique identifier of the issue to be removed as related.</param>
+        /// <param name="requestOptions">Additional request options to include in the API call.</param>
+        public static void ProjectRepositoryRemoveRelatedIssue(this RedmineManager redmineManager,
+            string projectIdentifier, string repositoryIdentifier, string revision, string issueIdentifier,
+            RequestOptions requestOptions = null)
         {
             var uri = redmineManager.RedmineApiUrls.ProjectRepositoryRemoveRelatedIssue(projectIdentifier, repositoryIdentifier, revision, issueIdentifier);
             
@@ -132,15 +136,16 @@ namespace Redmine.Net.Api.Extensions
            
             _ = redmineManager.ApiClient.Delete(escapedUri, requestOptions);
         }
-        
+
         /// <summary>
-        /// 
+        /// Retrieves a paginated list of news for a specific project in Redmine.
         /// </summary>
-        /// <param name="redmineManager"></param>
-        /// <param name="projectIdentifier"></param>
-        /// <param name="requestOptions"></param>
-        /// <returns></returns>
-        public static PagedResults<News> GetProjectNews(this RedmineManager redmineManager, string projectIdentifier, RequestOptions requestOptions = null)
+        /// <param name="redmineManager">The instance of the RedmineManager used to manage the API requests.</param>
+        /// <param name="projectIdentifier">The unique identifier of the project for which news is being retrieved.</param>
+        /// <param name="requestOptions">Additional request options to include in the API call, if any.</param>
+        /// <returns>A paginated list of news items associated with the specified project.</returns>
+        public static PagedResults<News> GetProjectNews(this RedmineManager redmineManager, string projectIdentifier,
+            RequestOptions requestOptions = null)
         {
             var uri = redmineManager.RedmineApiUrls.ProjectNews(projectIdentifier);
 
@@ -152,15 +157,16 @@ namespace Redmine.Net.Api.Extensions
         }
 
         /// <summary>
-        /// 
+        /// Adds a news item to a project in Redmine based on the specified project identifier.
         /// </summary>
-        /// <param name="redmineManager"></param>
-        /// <param name="projectIdentifier"></param>
-        /// <param name="news"></param>
-        /// <param name="requestOptions"></param>
-        /// <returns></returns>
-        /// <exception cref="RedmineException"></exception>
-        public static News AddProjectNews(this RedmineManager redmineManager, string projectIdentifier, News news, RequestOptions requestOptions = null)
+        /// <param name="redmineManager">The instance of the RedmineManager used to manage the API requests.</param>
+        /// <param name="projectIdentifier">The unique identifier of the project to which the news will be added.</param>
+        /// <param name="news">The news item to be added to the project, which must contain a valid title.</param>
+        /// <param name="requestOptions">Additional request options to include in the API call.</param>
+        /// <returns>The created news item as a response from the Redmine server.</returns>
+        /// <exception cref="RedmineException">Thrown when the provided news object is null or the news title is blank.</exception>
+        public static News AddProjectNews(this RedmineManager redmineManager, string projectIdentifier, News news,
+            RequestOptions requestOptions = null)
         {
             if (news == null)
             {
@@ -184,14 +190,15 @@ namespace Redmine.Net.Api.Extensions
         }
 
         /// <summary>
-        /// 
+        /// Retrieves the memberships associated with the specified project in Redmine.
         /// </summary>
-        /// <param name="redmineManager"></param>
-        /// <param name="projectIdentifier"></param>
-        /// <param name="requestOptions"></param>
-        /// <returns></returns>
-        /// <exception cref="RedmineException"></exception>
-        public static PagedResults<ProjectMembership> GetProjectMemberships(this RedmineManager redmineManager, string projectIdentifier, RequestOptions requestOptions = null)
+        /// <param name="redmineManager">The instance of the RedmineManager used to manage the API requests.</param>
+        /// <param name="projectIdentifier">The unique identifier of the project for which memberships are being retrieved.</param>
+        /// <param name="requestOptions">Additional request options to include in the API call, such as pagination or filters.</param>
+        /// <returns>Returns a paginated collection of project memberships for the specified project.</returns>
+        /// <exception cref="RedmineException">Thrown when the API request fails or an error occurs during execution.</exception>
+        public static PagedResults<ProjectMembership> GetProjectMemberships(this RedmineManager redmineManager,
+            string projectIdentifier, RequestOptions requestOptions = null)
         {
             var uri = redmineManager.RedmineApiUrls.ProjectMemberships(projectIdentifier);
 
@@ -201,14 +208,15 @@ namespace Redmine.Net.Api.Extensions
         }
 
         /// <summary>
-        /// 
+        /// Retrieves the list of files associated with a specific project in Redmine.
         /// </summary>
-        /// <param name="redmineManager"></param>
-        /// <param name="projectIdentifier"></param>
-        /// <param name="requestOptions"></param>
-        /// <returns></returns>
-        /// <exception cref="RedmineException"></exception>
-        public static PagedResults<File> GetProjectFiles(this RedmineManager redmineManager, string projectIdentifier, RequestOptions requestOptions = null)
+        /// <param name="redmineManager">The instance of the RedmineManager used to manage the API requests.</param>
+        /// <param name="projectIdentifier">The unique identifier of the project whose files are being retrieved.</param>
+        /// <param name="requestOptions">Additional request options to include in the API call.</param>
+        /// <returns>A paginated result containing the list of files associated with the project.</returns>
+        /// <exception cref="RedmineException">Thrown when the API request fails or returns an error response.</exception>
+        public static PagedResults<File> GetProjectFiles(this RedmineManager redmineManager, string projectIdentifier,
+            RequestOptions requestOptions = null)
         {
             var uri = redmineManager.RedmineApiUrls.ProjectFilesFragment(projectIdentifier);
 
@@ -220,9 +228,9 @@ namespace Redmine.Net.Api.Extensions
         /// <summary>
         ///     Returns the user whose credentials are used to access the API.
         /// </summary>
-        /// <param name="redmineManager"></param>
-        /// <param name="requestOptions"></param>
-        /// <returns></returns>
+        /// <param name="redmineManager">The instance of the RedmineManager used to manage the API requests.</param>
+        /// <param name="requestOptions">Additional request options to include in the API call.</param>
+        /// <returns>The authenticated user as a <see cref="User"/> object.</returns>
         public static User GetCurrentUser(this RedmineManager redmineManager, RequestOptions requestOptions = null)
         {
             var uri = redmineManager.RedmineApiUrls.CurrentUser();
@@ -231,11 +239,13 @@ namespace Redmine.Net.Api.Extensions
 
             return response.DeserializeTo<User>(redmineManager.Serializer);
         }
-        
+
         /// <summary>
-        /// 
+        /// Retrieves the account details of the currently authenticated user.
         /// </summary>
-        /// <returns>Returns the my account details.</returns>
+        /// <param name="redmineManager">The instance of the RedmineManager used to perform the API call.</param>
+        /// <param name="requestOptions">Optional configuration for the API request.</param>
+        /// <returns>Returns the account details of the authenticated user as a MyAccount object.</returns>
         public static MyAccount GetMyAccount(this RedmineManager redmineManager, RequestOptions requestOptions = null)
         {
             var uri = redmineManager.RedmineApiUrls.MyAccount();
@@ -246,13 +256,14 @@ namespace Redmine.Net.Api.Extensions
         }
 
         /// <summary>
-        ///     Adds the watcher to issue.
+        /// Adds a watcher to a specific issue in Redmine using the specified issue ID and user ID.
         /// </summary>
-        /// <param name="redmineManager"></param>
-        /// <param name="issueId">The issue identifier.</param>
-        /// <param name="userId">The user identifier.</param>
-        /// <param name="requestOptions"></param>
-        public static void AddWatcherToIssue(this RedmineManager redmineManager, int issueId, int userId, RequestOptions requestOptions = null)
+        /// <param name="redmineManager">The instance of the RedmineManager used to manage the API requests.</param>
+        /// <param name="issueId">The unique identifier of the issue to which the watcher will be added.</param>
+        /// <param name="userId">The unique identifier of the user to be added as a watcher.</param>
+        /// <param name="requestOptions">Additional request options to include in the API call.</param>
+        public static void AddWatcherToIssue(this RedmineManager redmineManager, int issueId, int userId,
+            RequestOptions requestOptions = null)
         {
             var uri = redmineManager.RedmineApiUrls.IssueWatcherAdd(issueId.ToString(CultureInfo.InvariantCulture));
 
@@ -262,13 +273,14 @@ namespace Redmine.Net.Api.Extensions
         }
 
         /// <summary>
-        ///     Removes the watcher from issue.
+        /// Removes a watcher from a specific issue in Redmine based on the specified issue identifier and user identifier.
         /// </summary>
-        /// <param name="redmineManager"></param>
-        /// <param name="issueId">The issue identifier.</param>
-        /// <param name="userId">The user identifier.</param>
-        /// <param name="requestOptions"></param>
-        public static void RemoveWatcherFromIssue(this RedmineManager redmineManager, int issueId, int userId, RequestOptions requestOptions = null)
+        /// <param name="redmineManager">The instance of the RedmineManager used to manage the API requests.</param>
+        /// <param name="issueId">The unique identifier of the issue from which the watcher will be removed.</param>
+        /// <param name="userId">The unique identifier of the user to be removed as a watcher.</param>
+        /// <param name="requestOptions">Additional request options to include in the API call.</param>
+        public static void RemoveWatcherFromIssue(this RedmineManager redmineManager, int issueId, int userId,
+            RequestOptions requestOptions = null)
         {
             var uri = redmineManager.RedmineApiUrls.IssueWatcherRemove(issueId.ToString(CultureInfo.InvariantCulture), userId.ToString(CultureInfo.InvariantCulture));
            
@@ -276,13 +288,14 @@ namespace Redmine.Net.Api.Extensions
         }
 
         /// <summary>
-        ///     Adds an existing user to a group.
+        /// Adds a user to a specified group in Redmine.
         /// </summary>
-        /// <param name="redmineManager"></param>
-        /// <param name="groupId">The group id.</param>
-        /// <param name="userId">The user id.</param>
-        /// <param name="requestOptions"></param>
-        public static void AddUserToGroup(this RedmineManager redmineManager, int groupId, int userId, RequestOptions requestOptions = null)
+        /// <param name="redmineManager">The instance of the RedmineManager used to manage API requests.</param>
+        /// <param name="groupId">The unique identifier of the group to which the user will be added.</param>
+        /// <param name="userId">The unique identifier of the user to be added to the group.</param>
+        /// <param name="requestOptions">Additional request options to include in the API call.</param>
+        public static void AddUserToGroup(this RedmineManager redmineManager, int groupId, int userId,
+            RequestOptions requestOptions = null)
         {
             var uri = redmineManager.RedmineApiUrls.GroupUserAdd(groupId.ToString(CultureInfo.InvariantCulture));
 
@@ -292,13 +305,14 @@ namespace Redmine.Net.Api.Extensions
         }
 
         /// <summary>
-        ///     Removes an user from a group.
+        /// Removes a user from a specified group in Redmine.
         /// </summary>
-        /// <param name="redmineManager"></param>
-        /// <param name="groupId">The group id.</param>
-        /// <param name="userId">The user id.</param>
-        /// <param name="requestOptions"></param>
-        public static void RemoveUserFromGroup(this RedmineManager redmineManager, int groupId, int userId, RequestOptions requestOptions = null)
+        /// <param name="redmineManager">The instance of the RedmineManager used to manage API requests.</param>
+        /// <param name="groupId">The unique identifier of the group from which the user will be removed.</param>
+        /// <param name="userId">The unique identifier of the user to be removed from the group.</param>
+        /// <param name="requestOptions">Additional request options to customize the API call.</param>
+        public static void RemoveUserFromGroup(this RedmineManager redmineManager, int groupId, int userId,
+            RequestOptions requestOptions = null)
         {
             var uri = redmineManager.RedmineApiUrls.GroupUserRemove(groupId.ToString(CultureInfo.InvariantCulture), userId.ToString(CultureInfo.InvariantCulture));
            
@@ -306,15 +320,15 @@ namespace Redmine.Net.Api.Extensions
         }
 
         /// <summary>
-        ///     Creates or updates a wiki page.
+        /// Updates a specified wiki page for a project in Redmine.
         /// </summary>
-        /// <param name="redmineManager"></param>
-        /// <param name="projectId">The project id or identifier.</param>
-        /// <param name="pageName">The wiki page name.</param>
-        /// <param name="wikiPage">The wiki page to create or update.</param>
-        /// <param name="requestOptions"></param>
-        /// <returns></returns>
-        public static void UpdateWikiPage(this RedmineManager redmineManager, string projectId, string pageName, WikiPage wikiPage, RequestOptions requestOptions = null)
+        /// <param name="redmineManager">The instance of the RedmineManager used to process the request.</param>
+        /// <param name="projectId">The unique identifier of the project containing the wiki page.</param>
+        /// <param name="pageName">The name of the wiki page to be updated.</param>
+        /// <param name="wikiPage">The WikiPage object containing the updated data for the page.</param>
+        /// <param name="requestOptions">Optional parameters for customizing the API request.</param>
+        public static void UpdateWikiPage(this RedmineManager redmineManager, string projectId, string pageName,
+            WikiPage wikiPage, RequestOptions requestOptions = null)
         {
             var payload = redmineManager.Serializer.Serialize(wikiPage);
 
@@ -331,15 +345,17 @@ namespace Redmine.Net.Api.Extensions
         }
 
         /// <summary>
-        /// 
+        /// Creates a new wiki page within a specified project in Redmine.
         /// </summary>
-        /// <param name="redmineManager"></param>
-        /// <param name="projectId"></param>
-        /// <param name="pageName"></param>
-        /// <param name="wikiPage"></param>
-        /// <param name="requestOptions"></param>
-        /// <returns></returns>
-        public static WikiPage CreateWikiPage(this RedmineManager redmineManager, string projectId, string pageName, WikiPage wikiPage, RequestOptions requestOptions = null)
+        /// <param name="redmineManager">The instance of the RedmineManager used to manage API requests.</param>
+        /// <param name="projectId">The unique identifier of the project where the wiki page will be created.</param>
+        /// <param name="pageName">The name of the new wiki page.</param>
+        /// <param name="wikiPage">The WikiPage object containing the content and metadata for the new page.</param>
+        /// <param name="requestOptions">Additional request options to include in the API call.</param>
+        /// <returns>The created WikiPage object containing the details of the new wiki page.</returns>
+        /// <exception cref="RedmineException">Thrown when the request payload is empty or if the API request fails.</exception>
+        public static WikiPage CreateWikiPage(this RedmineManager redmineManager, string projectId, string pageName,
+            WikiPage wikiPage, RequestOptions requestOptions = null)
         {
             var payload = redmineManager.Serializer.Serialize(wikiPage);
 
@@ -358,15 +374,16 @@ namespace Redmine.Net.Api.Extensions
         }
 
         /// <summary>
-        /// Gets the wiki page.
+        /// Retrieves a wiki page from a Redmine project using the specified project identifier and page name.
         /// </summary>
-        /// <param name="redmineManager"></param>
-        /// <param name="projectId">The project identifier.</param>
-        /// <param name="pageName">Name of the page.</param>
-        /// <param name="requestOptions"></param>
-        /// <param name="version">The version.</param>
-        /// <returns></returns>
-        public static WikiPage GetWikiPage(this RedmineManager redmineManager, string projectId,  string pageName, RequestOptions requestOptions = null, uint version = 0)
+        /// <param name="redmineManager">The instance of the RedmineManager responsible for managing API requests.</param>
+        /// <param name="projectId">The unique identifier of the project containing the wiki page.</param>
+        /// <param name="pageName">The name of the wiki page to retrieve.</param>
+        /// <param name="requestOptions">Additional options to include in the API request, such as headers or query parameters.</param>
+        /// <param name="version">The specific version of the wiki page to retrieve. If 0, the latest version is retrieved.</param>
+        /// <returns>A WikiPage object containing the details of the requested wiki page.</returns>
+        public static WikiPage GetWikiPage(this RedmineManager redmineManager, string projectId, string pageName,
+            RequestOptions requestOptions = null, uint version = 0)
         {
             var uri = version == 0
                 ? redmineManager.RedmineApiUrls.ProjectWikiPage(projectId, pageName)
@@ -380,13 +397,14 @@ namespace Redmine.Net.Api.Extensions
         }
 
         /// <summary>
-        ///     Returns the list of all pages in a project wiki.
+        /// Retrieves all wiki pages associated with the specified project.
         /// </summary>
-        /// <param name="redmineManager"></param>
-        /// <param name="projectId">The project id or identifier.</param>
-        /// <param name="requestOptions"></param>
-        /// <returns></returns>
-        public static List<WikiPage> GetAllWikiPages(this RedmineManager redmineManager, string projectId, RequestOptions requestOptions = null)
+        /// <param name="redmineManager">The instance of the RedmineManager used to manage API requests.</param>
+        /// <param name="projectId">The unique identifier of the project whose wiki pages are to be fetched.</param>
+        /// <param name="requestOptions">Additional request options to include in the API call.</param>
+        /// <returns>A list of wiki pages associated with the specified project.</returns>
+        public static List<WikiPage> GetAllWikiPages(this RedmineManager redmineManager, string projectId,
+            RequestOptions requestOptions = null)
         {
             var uri = redmineManager.RedmineApiUrls.ProjectWikiIndex(projectId);
 
@@ -399,10 +417,10 @@ namespace Redmine.Net.Api.Extensions
         ///     Deletes a wiki page, its attachments and its history. If the deleted page is a parent page, its child pages are not
         ///     deleted but changed as root pages.
         /// </summary>
-        /// <param name="redmineManager"></param>
+        /// <param name="redmineManager">The instance of the RedmineManager used to manage API requests.</param>
         /// <param name="projectId">The project id or identifier.</param>
         /// <param name="pageName">The wiki page name.</param>
-        /// <param name="requestOptions"></param>
+        /// <param name="requestOptions">Additional request options to include in the API call.</param>
         public static void DeleteWikiPage(this RedmineManager redmineManager, string projectId, string pageName, RequestOptions requestOptions = null)
         {
             var uri = redmineManager.RedmineApiUrls.ProjectWikiPageDelete(projectId, pageName);
@@ -418,7 +436,7 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="redmineManager"></param>
         /// <param name="issueId">The issue identifier.</param>
         /// <param name="attachment">The attachment.</param>
-        /// <param name="requestOptions"></param>
+        /// <param name="requestOptions">Additional request options to include in the API call.</param>
         public static void UpdateIssueAttachment(this RedmineManager redmineManager, int issueId, Attachment attachment, RequestOptions requestOptions = null)
         {
             var attachments = new Attachments
@@ -478,7 +496,7 @@ namespace Redmine.Net.Api.Extensions
         /// </summary>
         /// <param name="redmineManager"></param>
         /// <param name="projectIdentifier"></param>
-        /// <param name="requestOptions"></param>
+        /// <param name="requestOptions">Additional request options to include in the API call.</param>
         /// <param name="cancellationToken"></param>
         public static async Task ArchiveProjectAsync(this RedmineManager redmineManager, string projectIdentifier, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
         {
@@ -494,7 +512,7 @@ namespace Redmine.Net.Api.Extensions
         /// </summary>
         /// <param name="redmineManager"></param>
         /// <param name="projectIdentifier"></param>
-        /// <param name="requestOptions"></param>
+        /// <param name="requestOptions">Additional request options to include in the API call.</param>
         /// <param name="cancellationToken"></param>
         public static async Task UnarchiveProjectAsync(this RedmineManager redmineManager, string projectIdentifier, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
         {
@@ -510,7 +528,7 @@ namespace Redmine.Net.Api.Extensions
         /// </summary>
         /// <param name="redmineManager"></param>
         /// <param name="projectIdentifier"></param>
-        /// <param name="requestOptions"></param>
+        /// <param name="requestOptions">Additional request options to include in the API call.</param>
         /// <param name="cancellationToken"></param>
         public static async Task CloseProjectAsync(this RedmineManager redmineManager, string projectIdentifier, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
         {
@@ -526,7 +544,7 @@ namespace Redmine.Net.Api.Extensions
         /// </summary>
         /// <param name="redmineManager"></param>
         /// <param name="projectIdentifier"></param>
-        /// <param name="requestOptions"></param>
+        /// <param name="requestOptions">Additional request options to include in the API call.</param>
         /// <param name="cancellationToken"></param>
         public static async Task ReopenProjectAsync(this RedmineManager redmineManager, string projectIdentifier, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
         {
@@ -544,7 +562,7 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="projectIdentifier"></param>
         /// <param name="repositoryIdentifier"></param>
         /// <param name="revision"></param>
-        /// <param name="requestOptions"></param>
+        /// <param name="requestOptions">Additional request options to include in the API call.</param>
         /// <param name="cancellationToken"></param>
         public static async Task ProjectRepositoryAddRelatedIssueAsync(this RedmineManager redmineManager, string projectIdentifier, string repositoryIdentifier, string revision, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
         {
@@ -563,7 +581,7 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="repositoryIdentifier"></param>
         /// <param name="revision"></param>
         /// <param name="issueIdentifier"></param>
-        /// <param name="requestOptions"></param>
+        /// <param name="requestOptions">Additional request options to include in the API call.</param>
         /// <param name="cancellationToken"></param>
         public static async Task ProjectRepositoryRemoveRelatedIssueAsync(this RedmineManager redmineManager, string projectIdentifier, string repositoryIdentifier, string revision, string issueIdentifier, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
         {
@@ -579,7 +597,7 @@ namespace Redmine.Net.Api.Extensions
         /// </summary>
         /// <param name="redmineManager"></param>
         /// <param name="projectIdentifier"></param>
-        /// <param name="requestOptions"></param>
+        /// <param name="requestOptions">Additional request options to include in the API call.</param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         public static async Task<PagedResults<News>> GetProjectNewsAsync(this RedmineManager redmineManager, string projectIdentifier, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
@@ -599,7 +617,7 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="redmineManager"></param>
         /// <param name="projectIdentifier"></param>
         /// <param name="news"></param>
-        /// <param name="requestOptions"></param>
+        /// <param name="requestOptions">Additional request options to include in the API call.</param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         /// <exception cref="RedmineException"></exception>
@@ -631,7 +649,7 @@ namespace Redmine.Net.Api.Extensions
         /// </summary>
         /// <param name="redmineManager"></param>
         /// <param name="projectIdentifier"></param>
-        /// <param name="requestOptions"></param>
+        /// <param name="requestOptions">Additional request options to include in the API call.</param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         /// <exception cref="RedmineException"></exception>
@@ -649,7 +667,7 @@ namespace Redmine.Net.Api.Extensions
         /// </summary>
         /// <param name="redmineManager"></param>
         /// <param name="projectIdentifier"></param>
-        /// <param name="requestOptions"></param>
+        /// <param name="requestOptions">Additional request options to include in the API call.</param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         /// <exception cref="RedmineException"></exception>
@@ -677,7 +695,7 @@ namespace Redmine.Net.Api.Extensions
         {
             var parameters = CreateSearchParameters(q, limit, offset, searchFilter);
 
-            var response = await redmineManager.ApiClient.GetPagedAsync("", new RequestOptions()
+            var response = await redmineManager.ApiClient.GetPagedAsync(string.Empty, new RequestOptions()
             {
                 QueryString = parameters
             }, cancellationToken).ConfigureAwait(false);
@@ -689,7 +707,7 @@ namespace Redmine.Net.Api.Extensions
         /// 
         /// </summary>
         /// <param name="redmineManager"></param>
-        /// <param name="requestOptions"></param>
+        /// <param name="requestOptions">Additional request options to include in the API call.</param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         public static async Task<User> GetCurrentUserAsync(this RedmineManager redmineManager, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
@@ -708,7 +726,7 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="projectId">The project identifier.</param>
         /// <param name="pageName">Name of the page.</param>
         /// <param name="wikiPage">The wiki page.</param>
-        /// <param name="requestOptions"></param>
+        /// <param name="requestOptions">Additional request options to include in the API call.</param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         public static async Task<WikiPage> CreateWikiPageAsync(this RedmineManager redmineManager, string projectId, string pageName, WikiPage wikiPage, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
@@ -736,7 +754,7 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="projectId">The project identifier.</param>
         /// <param name="pageName">Name of the page.</param>
         /// <param name="wikiPage">The wiki page.</param>
-        /// <param name="requestOptions"></param>
+        /// <param name="requestOptions">Additional request options to include in the API call.</param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         public static async Task UpdateWikiPageAsync(this RedmineManager redmineManager, string projectId, string pageName, WikiPage wikiPage, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
@@ -761,7 +779,7 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="redmineManager">The redmine manager.</param>
         /// <param name="projectId">The project identifier.</param>
         /// <param name="pageName">Name of the page.</param>
-        /// <param name="requestOptions"></param>
+        /// <param name="requestOptions">Additional request options to include in the API call.</param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         public static async Task DeleteWikiPageAsync(this RedmineManager redmineManager, string projectId, string pageName, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
@@ -779,7 +797,7 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="redmineManager">The redmine manager.</param>
         /// <param name="projectId">The project identifier.</param>
         /// <param name="pageName">Name of the page.</param>
-        /// <param name="requestOptions"></param>
+        /// <param name="requestOptions">Additional request options to include in the API call.</param>
         /// <param name="version">The version.</param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
@@ -801,7 +819,7 @@ namespace Redmine.Net.Api.Extensions
         /// </summary>
         /// <param name="redmineManager">The redmine manager.</param>
         /// <param name="projectId">The project identifier.</param>
-        /// <param name="requestOptions"></param>
+        /// <param name="requestOptions">Additional request options to include in the API call.</param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         public static async Task<List<WikiPage>> GetAllWikiPagesAsync(this RedmineManager redmineManager, string projectId, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
@@ -819,7 +837,7 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="redmineManager">The redmine manager.</param>
         /// <param name="groupId">The group id.</param>
         /// <param name="userId">The user id.</param>
-        /// <param name="requestOptions"></param>
+        /// <param name="requestOptions">Additional request options to include in the API call.</param>
         /// <param name="cancellationToken"></param>
         /// <returns>
         ///     Returns the Guid associated with the async request.
@@ -839,7 +857,7 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="redmineManager">The redmine manager.</param>
         /// <param name="groupId">The group id.</param>
         /// <param name="userId">The user id.</param>
-        /// <param name="requestOptions"></param>
+        /// <param name="requestOptions">Additional request options to include in the API call.</param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         public static async Task RemoveUserFromGroupAsync(this RedmineManager redmineManager, int groupId, int userId, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
@@ -855,7 +873,7 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="redmineManager">The redmine manager.</param>
         /// <param name="issueId">The issue identifier.</param>
         /// <param name="userId">The user identifier.</param>
-        /// <param name="requestOptions"></param>
+        /// <param name="requestOptions">Additional request options to include in the API call.</param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         public static async Task AddWatcherToIssueAsync(this RedmineManager redmineManager, int issueId, int userId, RequestOptions requestOptions = null , CancellationToken cancellationToken = default)
@@ -873,7 +891,7 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="redmineManager">The redmine manager.</param>
         /// <param name="issueId">The issue identifier.</param>
         /// <param name="userId">The user identifier.</param>
-        /// <param name="requestOptions"></param>
+        /// <param name="requestOptions">Additional request options to include in the API call.</param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         public static async Task RemoveWatcherFromIssueAsync(this RedmineManager redmineManager, int issueId, int userId, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
