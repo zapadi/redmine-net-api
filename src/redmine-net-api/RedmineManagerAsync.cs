@@ -211,7 +211,7 @@ public partial class RedmineManager: IRedmineManagerAsync
     {
         var url = RedmineApiUrls.UploadFragment(fileName);
 
-        var response = await ApiClient.UploadFileAsync(url, data,requestOptions  , cancellationToken: cancellationToken).ConfigureAwait(false);
+        var response = await ApiClient.UploadFileAsync(url, data, requestOptions, cancellationToken: cancellationToken).ConfigureAwait(false);
             
         return response.DeserializeTo<Upload>(Serializer);
     }
@@ -219,7 +219,7 @@ public partial class RedmineManager: IRedmineManagerAsync
     /// <inheritdoc />
     public async Task<byte[]> DownloadFileAsync(string address, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
     {
-        var response = await ApiClient.DownloadAsync(address, requestOptions,cancellationToken: cancellationToken).ConfigureAwait(false);
+        var response = await ApiClient.DownloadAsync(address, requestOptions, cancellationToken: cancellationToken).ConfigureAwait(false);
         return response.Content;
     }
     

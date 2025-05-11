@@ -214,12 +214,13 @@ namespace Redmine.Net.Api
         {
             const string defaultUserAgent = "Redmine.Net.Api.Net";
             var defaultDecompressionFormat = 
-            #if NETFRAMEWORK
+#if NETFRAMEWORK
                 DecompressionMethods.GZip | DecompressionMethods.Deflate | DecompressionMethods.None;
-            #else
+#else
                 DecompressionMethods.All;
-            #endif
-    #if NET45_OR_GREATER || NETCOREAPP
+#endif
+    
+#if NET45_OR_GREATER || NETCOREAPP
             WebClientOptions ??= _clientType switch
             {
                 ClientType.WebClient => new RedmineWebClientOptions()
@@ -229,13 +230,14 @@ namespace Redmine.Net.Api
                 },
                 _ => throw new ArgumentOutOfRangeException()
             };
-    #else
+#else
             WebClientOptions ??= new RedmineWebClientOptions()
                 {
                     UserAgent = defaultUserAgent,
                     DecompressionFormat = defaultDecompressionFormat,
                 };
-    #endif
+#endif
+
             var baseAddress = CreateRedmineUri(Host, WebClientOptions.Scheme);
             
             var options = new RedmineManagerOptions()
