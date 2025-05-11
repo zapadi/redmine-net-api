@@ -1,4 +1,3 @@
-using System.Linq;
 using Padi.DotNet.RedmineAPI.Tests.Infrastructure;
 using Padi.DotNet.RedmineAPI.Tests.Infrastructure.Fixtures;
 using Redmine.Net.Api.Types;

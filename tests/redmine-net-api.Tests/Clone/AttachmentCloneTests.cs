@@ -1,4 +1,3 @@
-using System;
 using Redmine.Net.Api.Types;
 using Xunit;
 

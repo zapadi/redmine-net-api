@@ -1,7 +1,5 @@
 #if !(NET20 || NET40)
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using Xunit.Abstractions;
 using Xunit.Sdk;

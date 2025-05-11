@@ -1,4 +1,3 @@
-using System;
 using Padi.DotNet.RedmineAPI.Tests.Infrastructure;
 using Padi.DotNet.RedmineAPI.Tests.Infrastructure.Fixtures;
 using Xunit;
