@@ -15,6 +15,7 @@
 */
 
 using System.Collections.Specialized;
+using Redmine.Net.Api.Extensions;
 
 namespace Redmine.Net.Api.Net;
 
@@ -58,5 +59,27 @@ public sealed class RequestOptions
             Accept = Accept,
             UserAgent = UserAgent
         };
+    }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="include"></param>
+    /// <returns></returns>
+    public static RequestOptions Include(string include)
+    {
+        if (include.IsNullOrWhiteSpace())
+        {
+            return null;
+        }
+        
+        var requestOptions = new RequestOptions
+        {
+            QueryString = new NameValueCollection
+            {
+                {RedmineKeys.INCLUDE, include}
+            }
+        };
+
+        return requestOptions;
     }
 }
