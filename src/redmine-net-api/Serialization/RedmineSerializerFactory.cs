@@ -15,6 +15,8 @@
 */
 
 using System;
+using Redmine.Net.Api.Serialization.Json;
+using Redmine.Net.Api.Serialization.Xml;
 
 namespace Redmine.Net.Api.Serialization;
 
@@ -23,6 +25,16 @@ namespace Redmine.Net.Api.Serialization;
 /// </summary>
 internal static class RedmineSerializerFactory
 {
+    /// <summary>
+    /// Creates an instance of an IRedmineSerializer based on the specified serialization type.
+    /// </summary>
+    /// <param name="type">The type of serialization, either Xml or Json.</param>
+    /// <returns>
+    /// An instance of a serializer that implements the IRedmineSerializer interface.
+    /// </returns>
+    /// <exception cref="NotImplementedException">
+    /// Thrown when the specified serialization type is not supported.
+    /// </exception>
     public static IRedmineSerializer CreateSerializer(SerializationType type)
     {
         return type switch

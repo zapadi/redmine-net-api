@@ -19,16 +19,20 @@ using System.Globalization;
 namespace Redmine.Net.Api.Serialization
 {
     /// <summary>
-    /// 
+    /// Provides helper methods for serializing user-related data for communication with the Redmine API.
     /// </summary>
     internal static class SerializationHelper
     {
         /// <summary>
-        /// 
+        /// Serializes the user ID into a format suitable for communication with the Redmine API,
+        /// based on the specified serializer type.
         /// </summary>
-        /// <param name="userId"></param>
-        /// <param name="redmineSerializer"></param>
-        /// <returns></returns>
+        /// <param name="userId">The ID of the user to be serialized.</param>
+        /// <param name="redmineSerializer">The serializer used to format the user ID (e.g., XML or JSON).</param>
+        /// <returns>A serialized representation of the user ID.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// Thrown when the provided serializer is not recognized or supported.
+        /// </exception>
         public static string SerializeUserId(int userId, IRedmineSerializer redmineSerializer)
         {
             return redmineSerializer is XmlRedmineSerializer

@@ -28,10 +28,10 @@ namespace Redmine.Net.Api.Extensions
     public static class StringExtensions
     {
         /// <summary>
-        /// 
+        /// Determines whether a string is null, empty, or consists only of white-space characters.
         /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
+        /// <param name="value">The string to evaluate.</param>
+        /// <returns>True if the string is null, empty, or whitespace; otherwise, false.</returns>
         public static bool IsNullOrWhiteSpace(this string value)
         {
             if (value == null)
@@ -51,11 +51,11 @@ namespace Redmine.Net.Api.Extensions
         }
 
         /// <summary>
-        /// 
+        /// Truncates a string to the specified maximum length if it exceeds that length.
         /// </summary>
-        /// <param name="text"></param>
-        /// <param name="maximumLength"></param>
-        /// <returns></returns>
+        /// <param name="text">The string to truncate.</param>
+        /// <param name="maximumLength">The maximum allowed length for the string.</param>
+        /// <returns>The truncated string if its length exceeds the maximum length; otherwise, the original string.</returns>
         public static string Truncate(this string text, int maximumLength)
         {
             if (text.IsNullOrWhiteSpace() || maximumLength < 1 || text.Length <= maximumLength)
@@ -107,6 +107,11 @@ namespace Redmine.Net.Api.Extensions
             return rv;
         }
 
+        /// <summary>
+        /// Removes the trailing slash ('/' or '\') from the end of the string if it exists.
+        /// </summary>
+        /// <param name="s">The string to process.</param>
+        /// <returns>The input string without a trailing slash, or the original string if no trailing slash exists.</returns>
         internal static string RemoveTrailingSlash(this string s)
         {
             if (string.IsNullOrEmpty(s))
@@ -128,12 +133,24 @@ namespace Redmine.Net.Api.Extensions
             
             return s;
         }
-        
+
+        /// <summary>
+        /// Returns the specified string value if it is neither null, empty, nor consists only of white-space characters; otherwise, returns the fallback string.
+        /// </summary>
+        /// <param name="value">The primary string value to evaluate.</param>
+        /// <param name="fallback">The fallback string to return if the primary string is null, empty, or consists of only white-space characters.</param>
+        /// <returns>The original string if it is valid; otherwise, the fallback string.</returns>
         internal static string ValueOrFallback(this string value, string fallback)
         {
             return !value.IsNullOrWhiteSpace() ? value : fallback;
         }
-        
+
+        /// <summary>
+        /// Converts a value of a struct type to its invariant culture string representation.
+        /// </summary>
+        /// <typeparam name="T">The struct type of the value.</typeparam>
+        /// <param name="value">The value to convert to a string.</param>
+        /// <returns>The invariant culture string representation of the value.</returns>
         internal static string ToInvariantString<T>(this T value) where T : struct
         {
             return value switch
@@ -161,7 +178,13 @@ namespace Redmine.Net.Api.Extensions
         private const string CR = "\r";
         private const string LR = "\n";
         private const string CRLR = $"{CR}{LR}";
-        
+
+        /// <summary>
+        /// Replaces all line endings in the input string with the specified replacement string.
+        /// </summary>
+        /// <param name="input">The string in which line endings will be replaced.</param>
+        /// <param name="replacement">The string to replace line endings with. Defaults to a combination of carriage return and line feed.</param>
+        /// <returns>The input string with all line endings replaced by the specified replacement string.</returns>
         internal static string ReplaceEndings(this string input, string replacement = CRLR)
         {
             if (input.IsNullOrWhiteSpace())

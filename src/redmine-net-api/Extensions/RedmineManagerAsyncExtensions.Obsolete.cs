@@ -64,7 +64,7 @@ namespace Redmine.Net.Api.Async
         }
 
         /// <summary>
-        ///     Creates the or update wiki page asynchronous.
+        ///     Creates or updates wiki page asynchronous.
         /// </summary>
         /// <param name="redmineManager">The redmine manager.</param>
         /// <param name="projectId">The project identifier.</param>
@@ -94,7 +94,7 @@ namespace Redmine.Net.Api.Async
 
         /// <summary>
         ///     Support for adding attachments through the REST API is added in Redmine 1.4.0.
-        ///     Upload a file to server. This method does not block the calling thread.
+        ///     Upload a file to the server. This method does not block the calling thread.
         /// </summary>
         /// <param name="redmineManager">The redmine manager.</param>
         /// <param name="data">The content of the file that will be uploaded on server.</param>
