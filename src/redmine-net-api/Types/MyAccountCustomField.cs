@@ -27,7 +27,7 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// 
     /// </summary>
-    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
+    [DebuggerDisplay($"{{{nameof(DebuggerDisplay)},nq}}")]
     [XmlRoot(RedmineKeys.CUSTOM_FIELD)]
     public sealed class MyAccountCustomField : IdentifiableName, IEquatable<MyAccountCustomField>
     {
