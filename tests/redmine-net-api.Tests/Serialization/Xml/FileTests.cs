@@ -1,9 +1,7 @@
-using System;
-using System.Collections.Generic;
 using Padi.DotNet.RedmineAPI.Tests.Infrastructure;
 using Padi.DotNet.RedmineAPI.Tests.Infrastructure.Fixtures;
-using Redmine.Net.Api.Types;
 using Xunit;
+using File = Redmine.Net.Api.Types.File;
 
 namespace Padi.DotNet.RedmineAPI.Tests.Serialization.Xml;
 

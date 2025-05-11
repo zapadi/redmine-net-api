@@ -1,10 +1,10 @@
-using System;
 using System.Collections.Specialized;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Exceptions;
 using Redmine.Net.Api.Net;
 using Redmine.Net.Api.Types;
 using Xunit;
+using File = Redmine.Net.Api.Types.File;
 using Version = Redmine.Net.Api.Types.Version;
 
 

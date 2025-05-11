@@ -1,4 +1,3 @@
-using System;
 using Redmine.Net.Api.Types;
 
 namespace Padi.DotNet.RedmineAPI.Tests.Equality;
