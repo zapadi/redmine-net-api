@@ -16,7 +16,6 @@
 
 using System;
 using System.Diagnostics;
-using System.Globalization;
 using System.Xml;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
@@ -28,7 +27,7 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// Availability 2.2
     /// </summary>
-    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
+    [DebuggerDisplay($"{{{nameof(DebuggerDisplay)},nq}}")]
     [XmlRoot(RedmineKeys.DOCUMENT_CATEGORY)]
     public sealed class DocumentCategory : IdentifiableName, IEquatable<DocumentCategory>
     {

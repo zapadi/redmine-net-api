@@ -12,7 +12,7 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// 
     /// </summary>
-    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
+    [DebuggerDisplay($"{{{nameof(DebuggerDisplay)},nq}}")]
     [XmlRoot(RedmineKeys.FIELD)]
     public sealed class TrackerCoreField: IXmlSerializable, IJsonSerializable, IEquatable<TrackerCoreField>
     {
