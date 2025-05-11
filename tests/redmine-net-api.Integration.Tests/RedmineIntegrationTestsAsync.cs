@@ -76,7 +76,7 @@ public class RedmineIntegrationTestsAsync(RedmineTestContainerFixture fixture)
     }
     
     [Fact]
-    public async Task GetIssue_WithVersions_ShouldReturnAsync()
+    public async Task Should_ReturnIssueWithVersionsAsync()
     {
         var issue = await _redmineManager.GetAsync<Issue>(5.ToInvariantString(), 
             new RequestOptions { 
