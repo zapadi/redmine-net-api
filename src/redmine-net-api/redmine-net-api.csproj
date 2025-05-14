@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Net20_Net40>|net20|net40|</Net20_Net40>
+  </PropertyGroup>
   
   <PropertyGroup Label="Build">
     <RootNamespace>Redmine.Net.Api</RootNamespace>
@@ -87,6 +91,7 @@
 
   <ItemGroup Label="Package References">
     <PackageReference Include="Newtonsoft.Json" />
+    <PackageReference Include="System.Memory" Condition=" $(Net20_Net40.Contains('|$(TargetFramework)|')) == FALSE " />
   </ItemGroup>
   
   <ItemGroup Condition=" '$(TargetFramework)' == 'net20' " Label=".NET 2.0 Package References">
