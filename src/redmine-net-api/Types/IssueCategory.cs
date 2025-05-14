@@ -90,7 +90,7 @@ namespace Redmine.Net.Api.Types
         /// <param name="writer"></param>
         public override void WriteXml(XmlWriter writer)
         {
-            writer.WriteIdIfNotNull(RedmineKeys.PROJECT_ID, Project);
+         //   writer.WriteIdIfNotNull(RedmineKeys.PROJECT_ID, Project);
             writer.WriteElementString(RedmineKeys.NAME, Name);
             writer.WriteIdIfNotNull(RedmineKeys.ASSIGNED_TO_ID, AssignTo);
         }
