@@ -22,11 +22,17 @@ using Redmine.Net.Api.Exceptions;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Internals;
 
-namespace Redmine.Net.Api.Serialization
+namespace Redmine.Net.Api.Serialization.Xml
 {
     internal sealed class XmlRedmineSerializer : IRedmineSerializer
     {
-
+        private static void EnsureXmlSerializable<T>()
+        {
+            if (!typeof(IXmlSerializable).IsAssignableFrom(typeof(T)))
+            {
+                throw new RedmineException($"Entity of type '{typeof(T)}' should implement ${nameof(IXmlSerializable)}.");
+            }
+        }
         public XmlRedmineSerializer() : this(new XmlWriterSettings
         {
             OmitXmlDeclaration = true
@@ -103,39 +109,32 @@ namespace Redmine.Net.Api.Serialization
         /// <returns></returns>
         private static PagedResults<T> XmlDeserializeList<T>(string xmlResponse, bool onlyCount) where T : class, new()
         {
-            if (xmlResponse.IsNullOrWhiteSpace())
+            SerializationHelper.EnsureDeserializationInputIsNotNullOrWhiteSpace(xmlResponse, nameof(xmlResponse), typeof(T));
+
+            using var stringReader = new StringReader(xmlResponse);
+            using var xmlReader = XmlTextReaderBuilder.Create(stringReader);
+            while (xmlReader.NodeType == XmlNodeType.None || xmlReader.NodeType == XmlNodeType.XmlDeclaration)
             {
-                throw new ArgumentNullException(nameof(xmlResponse), $"Could not deserialize null or empty input for type '{typeof(T).Name}'.");
+                xmlReader.Read();
             }
 
-            using (var stringReader = new StringReader(xmlResponse))
+            var totalItems = xmlReader.ReadAttributeAsInt(RedmineKeys.TOTAL_COUNT);
+                    
+            if (onlyCount)
             {
-                using (var xmlReader = XmlTextReaderBuilder.Create(stringReader))
-                {
-                    while (xmlReader.NodeType == XmlNodeType.None || xmlReader.NodeType == XmlNodeType.XmlDeclaration)
-                    {
-                        xmlReader.Read();
-                    }
-
-                    var totalItems = xmlReader.ReadAttributeAsInt(RedmineKeys.TOTAL_COUNT);
-                    
-                    if (onlyCount)
-                    {
-                        return new PagedResults<T>(null, totalItems, 0, 0);
-                    }
-                    
-                    var offset = xmlReader.ReadAttributeAsInt(RedmineKeys.OFFSET);
-                    var limit = xmlReader.ReadAttributeAsInt(RedmineKeys.LIMIT);
-                    var result = xmlReader.ReadElementContentAsCollection<T>();
-
-                    if (totalItems == 0 && result?.Count > 0)
-                    {
-                        totalItems = result.Count;
-                    }
-
-                    return new PagedResults<T>(result, totalItems, offset, limit);
-                }
+                return new PagedResults<T>(null, totalItems, 0, 0);
             }
+                    
+            var offset = xmlReader.ReadAttributeAsInt(RedmineKeys.OFFSET);
+            var limit = xmlReader.ReadAttributeAsInt(RedmineKeys.LIMIT);
+            var result = xmlReader.ReadElementContentAsCollection<T>();
+
+            if (totalItems == 0 && result?.Count > 0)
+            {
+                totalItems = result.Count;
+            }
+
+            return new PagedResults<T>(result, totalItems, offset, limit);
         }
 
         /// <summary>
@@ -150,22 +149,18 @@ namespace Redmine.Net.Api.Serialization
         // ReSharper disable once InconsistentNaming
         private string ToXML<T>(T entity) where T : class
         {
-            if (entity == default(T))
+            if (entity == null)
             {
                 throw new ArgumentNullException(nameof(entity), $"Could not serialize null of type {typeof(T).Name}");
             }
 
-            using (var stringWriter = new StringWriter())
-            {
-                using (var xmlWriter = XmlWriter.Create(stringWriter, _xmlWriterSettings))
-                {
-                    var serializer = new XmlSerializer(typeof(T));
+            using var stringWriter = new StringWriter();
+            using var xmlWriter = XmlWriter.Create(stringWriter, _xmlWriterSettings);
+            var serializer = new XmlSerializer(typeof(T));
 
-                    serializer.Serialize(xmlWriter, entity);
+            serializer.Serialize(xmlWriter, entity);
 
-                    return stringWriter.ToString();
-                }
-            }
+            return stringWriter.ToString();
         }
 
         /// <summary>
@@ -183,27 +178,20 @@ namespace Redmine.Net.Api.Serialization
         // ReSharper disable once InconsistentNaming
         private static TOut XmlDeserializeEntity<TOut>(string xml) where TOut : new()
         {
-            if (xml.IsNullOrWhiteSpace())
+            SerializationHelper.EnsureDeserializationInputIsNotNullOrWhiteSpace(xml, nameof(xml), typeof(TOut));
+
+            using var textReader = new StringReader(xml);
+            using var xmlReader = XmlTextReaderBuilder.Create(textReader);
+            var serializer = new XmlSerializer(typeof(TOut));
+
+            var entity = serializer.Deserialize(xmlReader);
+
+            if (entity is TOut t)
             {
-                throw new ArgumentNullException(nameof(xml), $"Could not deserialize null or empty input for type '{typeof(TOut).Name}'.");
+                return t;
             }
 
-            using (var textReader = new StringReader(xml))
-            {
-                using (var xmlReader = XmlTextReaderBuilder.Create(textReader))
-                {
-                    var serializer = new XmlSerializer(typeof(TOut));
-
-                    var entity = serializer.Deserialize(xmlReader);
-
-                    if (entity is TOut t)
-                    {
-                        return t;
-                    }
-
-                    return default;
-                }
-            }
+            return default;
         }
     }
 }
