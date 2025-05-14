@@ -14,6 +14,7 @@
    limitations under the License.
 */
 
+using System;
 using System.Collections.Generic;
 using Redmine.Net.Api.Exceptions;
 using Redmine.Net.Api.Net;
@@ -110,7 +111,8 @@ public partial interface IRedmineManager
     ///     Downloads a file from the specified address.
     /// </summary>
     /// <param name="address">The address.</param>
+    /// <param name="progress"></param>
     /// <returns>The content of the downloaded file as a byte array.</returns>
     /// <exception cref="RedmineException"></exception>
-    byte[] DownloadFile(string address);
+    byte[] DownloadFile(string address, IProgress<int> progress = null);
 }
