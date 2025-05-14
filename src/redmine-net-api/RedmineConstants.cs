@@ -52,7 +52,6 @@ namespace Redmine.Net.Api
         /// 
         /// </summary>
         public const string AUTHORIZATION_HEADER_KEY = "Authorization";
-        
         /// <summary>
         /// 
         /// </summary>
