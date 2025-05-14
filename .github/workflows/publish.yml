@@ -128,7 +128,7 @@ jobs:
       - name: Install dependencies
         run: dotnet restore "${{ env.PROJECT_PATH }}"
 
-      - name: Create the package
+      - name: 📦 Create the package
         run: >-
           dotnet pack "${{ env.PROJECT_PATH }}"
           --output ./artifacts
@@ -140,7 +140,7 @@ jobs:
           -p:IncludeSymbols=true
           -p:SymbolPackageFormat=snupkg
 
-      - name: Create the package - Signed
+      - name: 📦 Create the package - Signed 
         run: >-
           dotnet pack "${{ env.PROJECT_PATH }}"
           --output ./artifacts

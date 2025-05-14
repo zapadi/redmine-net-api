@@ -99,7 +99,7 @@ jobs:
       - name: Restore
         run: dotnet restore "${{ env.PROJECT_PATH }}"
 
-      - name: Build
+      - name: 🔨 Build
         run: >-
           dotnet build "${{ env.PROJECT_PATH }}"  
           --configuration "${{ env.CONFIGURATION }}" 
