@@ -13,6 +13,7 @@ namespace Padi.DotNet.RedmineAPI.Tests
                 .SetBasePath(outputPath)
                 .AddJsonFile("appsettings.json", optional: true)
                 .AddJsonFile($"appsettings.{environment}.json", optional: true)
+                .AddJsonFile($"appsettings-local.json", optional: true)
                 .AddUserSecrets("f8b9e946-b547-42f1-861c-f719dca00a84")
                 .Build();
         }
@@ -29,7 +30,7 @@ namespace Padi.DotNet.RedmineAPI.Tests
             var iConfig = GetIConfigurationRoot(outputPath);
 
             iConfig
-                .GetSection("Credentials-Local")
+                .GetSection("Credentials")
                 .Bind(credentials);
                 
             return credentials;
