@@ -19,7 +19,7 @@ using System.Text;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Serialization;
 
-namespace Redmine.Net.Api.Net;
+namespace Redmine.Net.Api.Net.Internal;
 
 internal static class ApiResponseMessageExtensions
 {

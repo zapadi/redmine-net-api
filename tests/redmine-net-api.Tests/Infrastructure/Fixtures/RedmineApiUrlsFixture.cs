@@ -1,5 +1,5 @@
 using System.Diagnostics;
-using Redmine.Net.Api.Net;
+using Redmine.Net.Api.Net.Internal;
 
 namespace Padi.DotNet.RedmineAPI.Tests.Tests;
 

@@ -24,6 +24,7 @@ using System.Threading.Tasks;
 #endif
 using Redmine.Net.Api.Exceptions;
 using Redmine.Net.Api.Net;
+using Redmine.Net.Api.Net.Internal;
 using Redmine.Net.Api.Serialization;
 using Redmine.Net.Api.Types;
 

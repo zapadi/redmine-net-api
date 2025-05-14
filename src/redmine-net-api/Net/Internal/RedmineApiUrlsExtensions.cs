@@ -17,7 +17,7 @@
 using Redmine.Net.Api.Exceptions;
 using Redmine.Net.Api.Extensions;
 
-namespace Redmine.Net.Api.Net;
+namespace Redmine.Net.Api.Net.Internal;
 
 internal static class RedmineApiUrlsExtensions
 {

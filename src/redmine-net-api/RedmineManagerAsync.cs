@@ -22,6 +22,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Net;
+using Redmine.Net.Api.Net.Internal;
 using Redmine.Net.Api.Serialization;
 using Redmine.Net.Api.Types;
 #if!(NET45_OR_GREATER || NETCOREAPP)

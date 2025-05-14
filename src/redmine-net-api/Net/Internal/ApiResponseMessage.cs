@@ -15,16 +15,15 @@
 */
 
 using System.Collections.Specialized;
+using System.Net;
 
-namespace Redmine.Net.Api.Net;
+namespace Redmine.Net.Api.Net.Internal;
 
-internal sealed class ApiRequestMessage
+internal sealed class ApiResponseMessage
 {
-    public ApiRequestMessageContent Content { get; set; }
-    public string Method { get; set; } = HttpVerbs.GET;
-    public string RequestUri { get; set; }
-    public NameValueCollection QueryString { get; set; }
-    public string ImpersonateUser { get; set; }
-        
-    public string ContentType { get; set; }
+    public NameValueCollection Headers { get; init; }
+    public byte[] Content { get; init; }
+    
+    public HttpStatusCode StatusCode { get; init; }
+
 }
