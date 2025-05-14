@@ -269,6 +269,10 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
+        public const string ENUMERATION_DOCUMENT_CATEGORIES = "enumerations/document_categories";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string ENUMERATION_ISSUE_PRIORITIES = "enumerations/issue_priorities";
         /// <summary>
         /// 
@@ -323,6 +327,10 @@ namespace Redmine.Net.Api
         /// 
         /// </summary>
         public const string FIXED_VERSION_ID = "fixed_version_id";
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string GENERATE_PASSWORD = "generate_password";
         /// <summary>
         /// 
         /// </summary>
@@ -383,7 +391,10 @@ namespace Redmine.Net.Api
         /// 
         /// </summary>
         public const string ISSUE_CATEGORY = "issue_category";
-
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string ISSUE_CUSTOM_FIELDS = "issue_custom_fields";
         /// <summary>
         /// 
         /// </summary>
@@ -681,6 +692,10 @@ namespace Redmine.Net.Api
         /// 
         /// </summary>
         public const string SEARCHABLE = "searchable";
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string SEND_INFORMATION = "send_information";
         /// <summary>
         /// 
         /// </summary>
