@@ -15,6 +15,7 @@
 */
 
 #if !(NET20)
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -147,9 +148,10 @@ namespace Redmine.Net.Api
         /// </summary>
         /// <param name="address">The address.</param>
         /// <param name="requestOptions"></param>
+        /// <param name="progress"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<byte[]> DownloadFileAsync(string address, RequestOptions requestOptions = null, CancellationToken cancellationToken = default);
+        Task<byte[]> DownloadFileAsync(string address, RequestOptions requestOptions = null, IProgress<int> progress = null, CancellationToken cancellationToken = default);
     }
 }
 #endif
