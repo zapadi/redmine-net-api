@@ -15,6 +15,7 @@
 */
 
 #if !(NET20 || NET35)
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -36,6 +37,6 @@ internal interface IAsyncRedmineApiClient
     
     Task<ApiResponseMessage> UploadFileAsync(string address, byte[] data, RequestOptions requestOptions = null, CancellationToken cancellationToken = default);
     
-    Task<ApiResponseMessage> DownloadAsync(string address, RequestOptions requestOptions = null, CancellationToken cancellationToken = default);
+    Task<ApiResponseMessage> DownloadAsync(string address, RequestOptions requestOptions = null, IProgress<int> progress = null, CancellationToken cancellationToken = default);
 }
 #endif

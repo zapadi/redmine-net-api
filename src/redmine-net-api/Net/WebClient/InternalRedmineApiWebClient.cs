@@ -128,7 +128,7 @@ namespace Redmine.Net.Api.Net.WebClient
             return HandleRequest(address, HttpVerbs.DELETE, requestOptions);
         }
 
-        public ApiResponseMessage Download(string address, RequestOptions requestOptions = null)
+        public ApiResponseMessage Download(string address, RequestOptions requestOptions = null, IProgress<int> progress = null)
         {
             return HandleRequest(address, HttpVerbs.DOWNLOAD, requestOptions);
         }
@@ -161,12 +161,12 @@ namespace Redmine.Net.Api.Net.WebClient
             return req;
         }
 
-        private ApiResponseMessage HandleRequest(string address, string verb, RequestOptions requestOptions = null, ApiRequestMessageContent content = null)
+        private ApiResponseMessage HandleRequest(string address, string verb, RequestOptions requestOptions = null, ApiRequestMessageContent content = null, IProgress<int> progress = null)
         {
-            return Send(CreateRequestMessage(address, verb, requestOptions, content));
+            return Send(CreateRequestMessage(address, verb, requestOptions, content), progress);
         }
 
-        private ApiResponseMessage Send(ApiRequestMessage requestMessage)
+        private ApiResponseMessage Send(ApiRequestMessage requestMessage, IProgress<int> progress = null)
         {
             System.Net.WebClient webClient = null;
             byte[] response = null;
@@ -176,6 +176,15 @@ namespace Redmine.Net.Api.Net.WebClient
             try
             {
                 webClient = _webClientFunc();
+                
+                if (progress != null)
+                {
+                    webClient.DownloadProgressChanged += (_, e) =>
+                    {
+                        progress.Report(e.ProgressPercentage);
+                    };
+                }
+                
                 SetWebClientHeaders(webClient, requestMessage);
 
                 if (IsGetOrDownload(requestMessage.Method))

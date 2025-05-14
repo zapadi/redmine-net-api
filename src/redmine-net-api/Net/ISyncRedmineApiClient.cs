@@ -14,6 +14,8 @@
    limitations under the License.
 */
 
+using System;
+
 namespace Redmine.Net.Api.Net;
 
 internal interface ISyncRedmineApiClient
@@ -32,5 +34,5 @@ internal interface ISyncRedmineApiClient
 
     ApiResponseMessage Upload(string address, byte[] data, RequestOptions requestOptions = null);
 
-    ApiResponseMessage Download(string address, RequestOptions requestOptions = null);
+    ApiResponseMessage Download(string address, RequestOptions requestOptions = null, IProgress<int> progress = null);
 }
