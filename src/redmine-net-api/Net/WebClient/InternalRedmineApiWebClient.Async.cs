@@ -114,6 +114,7 @@ namespace Redmine.Net.Api.Net.WebClient
                 }
                 
                 responseHeaders = webClient.ResponseHeaders;
+                
             }
             catch (WebException ex) when (ex.Status == WebExceptionStatus.RequestCanceled)
             {

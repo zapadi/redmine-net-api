@@ -645,11 +645,12 @@ namespace Redmine.Net.Api.Types
             return IdentifiableName.Create<IdentifiableName>(Id);
         }
 
-
         /// <summary>
-        /// 
+        /// Provides a string representation of the object for use in debugging.
         /// </summary>
-        /// <returns></returns>
+        /// <value>
+        /// A string that represents the object, formatted for debugging purposes.
+        /// </value>
         private string DebuggerDisplay => $"[Issue:Id={Id.ToInvariantString()}, Status={Status?.Name}, Priority={Priority?.Name}, DoneRatio={DoneRatio?.ToString("F", CultureInfo.InvariantCulture)},IsPrivate={IsPrivate.ToInvariantString()}]";
     }
 }
