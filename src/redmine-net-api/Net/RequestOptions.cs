@@ -64,7 +64,7 @@ public sealed class RequestOptions
             ContentType = ContentType,
             Accept = Accept,
             UserAgent = UserAgent,
-            Headers = new Dictionary<string, string>(Headers),
+            Headers = Headers != null ? new Dictionary<string, string>(Headers) : null,
         };
     }
 
