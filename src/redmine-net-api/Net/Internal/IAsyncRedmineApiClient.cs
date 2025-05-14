@@ -19,7 +19,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Redmine.Net.Api.Net;
+namespace Redmine.Net.Api.Net.Internal;
 
 internal interface IAsyncRedmineApiClient
 {

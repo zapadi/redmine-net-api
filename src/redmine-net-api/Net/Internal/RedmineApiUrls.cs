@@ -21,7 +21,7 @@ using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Types;
 using Version = Redmine.Net.Api.Types.Version;
 
-namespace Redmine.Net.Api.Net
+namespace Redmine.Net.Api.Net.Internal
 {
     internal sealed class RedmineApiUrls
     {

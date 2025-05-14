@@ -14,16 +14,14 @@
    limitations under the License.
 */
 
-using System.Collections.Specialized;
-using System.Net;
+namespace Redmine.Net.Api.Net.Internal;
 
-namespace Redmine.Net.Api.Net;
-
-internal sealed class ApiResponseMessage
+/// <summary>
+/// 
+/// </summary>
+internal interface IRedmineApiClient : ISyncRedmineApiClient
+#if !(NET20 || NET35)
+    , IAsyncRedmineApiClient
+#endif
 {
-    public NameValueCollection Headers { get; init; }
-    public byte[] Content { get; init; }
-    
-    public HttpStatusCode StatusCode { get; init; }
-
 }

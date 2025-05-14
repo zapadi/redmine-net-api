@@ -14,6 +14,8 @@
    limitations under the License.
 */
 
+using Redmine.Net.Api.Net.Internal;
+
 namespace Redmine.Net.Api.Net.WebClient.MessageContent;
 
 internal class ByteArrayApiRequestMessageContent : ApiRequestMessageContent

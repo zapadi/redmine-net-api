@@ -14,14 +14,11 @@
    limitations under the License.
 */
 
-namespace Redmine.Net.Api.Net;
+namespace Redmine.Net.Api.Net.Internal;
 
-/// <summary>
-/// 
-/// </summary>
-internal interface IRedmineApiClient : ISyncRedmineApiClient
-#if !(NET20 || NET35)
-    , IAsyncRedmineApiClient
-#endif
+internal abstract class ApiRequestMessageContent
 {
+    public string ContentType { get; internal set; }
+
+    public byte[] Body { get; internal set; }
 }

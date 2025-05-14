@@ -16,7 +16,7 @@
 
 using System;
 
-namespace Redmine.Net.Api.Net;
+namespace Redmine.Net.Api.Net.Internal;
 
 internal interface ISyncRedmineApiClient
 {
