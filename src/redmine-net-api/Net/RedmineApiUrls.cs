@@ -151,7 +151,7 @@ namespace Redmine.Net.Api.Net
 
             if (type == typeof(Upload))
             {
-                return $"{RedmineKeys.UPLOADS}.{Format}";
+                return UploadFragment(ownerId); //$"{RedmineKeys.UPLOADS}.{Format}";
             }
 
             if (type == typeof(Attachment) || type == typeof(Attachments))
