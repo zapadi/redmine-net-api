@@ -20,6 +20,7 @@ using System.Net;
 using System.Text;
 using Redmine.Net.Api.Authentication;
 using Redmine.Net.Api.Extensions;
+using Redmine.Net.Api.Net.WebClient.Extensions;
 using Redmine.Net.Api.Net.WebClient.MessageContent;
 using Redmine.Net.Api.Serialization;
 

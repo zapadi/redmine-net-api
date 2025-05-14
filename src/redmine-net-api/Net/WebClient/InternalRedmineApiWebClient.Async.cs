@@ -22,6 +22,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Redmine.Net.Api.Exceptions;
 using Redmine.Net.Api.Extensions;
+using Redmine.Net.Api.Net.WebClient.Extensions;
 using Redmine.Net.Api.Net.WebClient.MessageContent;
 
 namespace Redmine.Net.Api.Net.WebClient
