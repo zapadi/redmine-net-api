@@ -16,6 +16,7 @@
 
 using System.Collections.Generic;
 using System.Text;
+using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Serialization;
 
 namespace Redmine.Net.Api.Net;
@@ -24,37 +25,29 @@ internal static class ApiResponseMessageExtensions
 {
     internal static T DeserializeTo<T>(this ApiResponseMessage responseMessage, IRedmineSerializer redmineSerializer) where T : new()
     {
-        if (responseMessage?.Content == null)
-        {
-            return default;
-        }
-            
-        var responseAsString = Encoding.UTF8.GetString(responseMessage.Content);
-            
-        return redmineSerializer.Deserialize<T>(responseAsString);
+        var responseAsString = GetResponseContentAsString(responseMessage);
+        return responseAsString.IsNullOrWhiteSpace() ? default : redmineSerializer.Deserialize<T>(responseAsString);
     }
         
     internal static PagedResults<T> DeserializeToPagedResults<T>(this ApiResponseMessage responseMessage, IRedmineSerializer redmineSerializer) where T : class, new()
     {
-        if (responseMessage?.Content == null)
-        {
-            return default;
-        }
-            
-        var responseAsString = Encoding.UTF8.GetString(responseMessage.Content);
-            
-        return redmineSerializer.DeserializeToPagedResults<T>(responseAsString);
+        var responseAsString = GetResponseContentAsString(responseMessage);
+        return responseAsString.IsNullOrWhiteSpace() ? default : redmineSerializer.DeserializeToPagedResults<T>(responseAsString);
     }
         
     internal static List<T> DeserializeToList<T>(this ApiResponseMessage responseMessage, IRedmineSerializer redmineSerializer) where T : class, new()
     {
-        if (responseMessage?.Content == null)
-        {
-            return default;
-        }
-            
-        var responseAsString = Encoding.UTF8.GetString(responseMessage.Content);
-            
-        return redmineSerializer.Deserialize<List<T>>(responseAsString);
+        var responseAsString = GetResponseContentAsString(responseMessage);
+        return responseAsString.IsNullOrWhiteSpace() ? null : redmineSerializer.Deserialize<List<T>>(responseAsString);
+    }
+
+    /// <summary>
+    /// Gets the response content as a UTF-8 encoded string.
+    /// </summary>
+    /// <param name="responseMessage">The API response message.</param>
+    /// <returns>The content as a string, or null if the response or content is null.</returns>
+    private static string GetResponseContentAsString(ApiResponseMessage responseMessage)
+    {
+        return responseMessage?.Content == null ? null : Encoding.UTF8.GetString(responseMessage.Content);
     }
 }
