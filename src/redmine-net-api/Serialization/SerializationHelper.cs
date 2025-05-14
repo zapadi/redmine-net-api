@@ -14,7 +14,11 @@
    limitations under the License.
 */
 
-using System.Globalization;
+using System;
+using Redmine.Net.Api.Exceptions;
+using Redmine.Net.Api.Extensions;
+using Redmine.Net.Api.Serialization.Json;
+using Redmine.Net.Api.Serialization.Xml;
 
 namespace Redmine.Net.Api.Serialization
 {
@@ -35,9 +39,20 @@ namespace Redmine.Net.Api.Serialization
         /// </exception>
         public static string SerializeUserId(int userId, IRedmineSerializer redmineSerializer)
         {
-            return redmineSerializer is XmlRedmineSerializer
-                ? $"<user_id>{userId.ToString(CultureInfo.InvariantCulture)}</user_id>"
-                : $"{{\"user_id\":\"{userId.ToString(CultureInfo.InvariantCulture)}\"}}";
+            return redmineSerializer switch
+            {
+                XmlRedmineSerializer => $"<user_id>{userId.ToInvariantString()}</user_id>",
+                JsonRedmineSerializer => $"{{\"user_id\":\"{userId.ToInvariantString()}\"}}",
+                _ => throw new ArgumentOutOfRangeException(nameof(redmineSerializer), redmineSerializer, null)
+            };
+        }
+        
+        public static void EnsureDeserializationInputIsNotNullOrWhiteSpace(string input, string paramName, Type type)
+        {
+            if (input.IsNullOrWhiteSpace())
+            {
+                throw new RedmineSerializationException($"Could not deserialize null or empty input for type '{type.Name}'.", paramName);
+            }
         }
     }
 }
