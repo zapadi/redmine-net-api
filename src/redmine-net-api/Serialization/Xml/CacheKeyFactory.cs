@@ -18,6 +18,7 @@ using System;
 using System.Globalization;
 using System.Text;
 using System.Xml.Serialization;
+using Redmine.Net.Api.Extensions;
 
 namespace Redmine.Net.Api.Serialization
 {
@@ -46,11 +47,11 @@ namespace Redmine.Net.Api.Serialization
             var keyBuilder = new StringBuilder();
             keyBuilder.Append(type.FullName);
             keyBuilder.Append( "??" );
-            keyBuilder.Append(overrides?.GetHashCode().ToString(CultureInfo.InvariantCulture));
+            keyBuilder.Append(overrides?.GetHashCode().ToInvariantString());
             keyBuilder.Append( "??" );
             keyBuilder.Append(GetTypeArraySignature(types));
             keyBuilder.Append("??");
-            keyBuilder.Append(root?.GetHashCode().ToString(CultureInfo.InvariantCulture));
+            keyBuilder.Append(root?.GetHashCode().ToInvariantString());
             keyBuilder.Append("??");
             keyBuilder.Append(defaultNamespace);
 

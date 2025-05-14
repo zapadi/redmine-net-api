@@ -241,7 +241,7 @@ namespace Redmine.Net.Api
             if (pageSize == default)
             {
                 pageSize = _redmineManagerOptions.PageSize > 0 ? _redmineManagerOptions.PageSize : RedmineConstants.DEFAULT_PAGE_SIZE_VALUE;
-                requestOptions.QueryString.Set(RedmineKeys.LIMIT, pageSize.ToString(CultureInfo.InvariantCulture));
+                requestOptions.QueryString.Set(RedmineKeys.LIMIT, pageSize.ToInvariantString());
             }
             
             var hasOffset = TypesWithOffset.ContainsKey(typeof(T));
@@ -250,7 +250,7 @@ namespace Redmine.Net.Api
                 int totalCount;
                 do
                 {
-                    requestOptions.QueryString.Set(RedmineKeys.OFFSET, offset.ToString(CultureInfo.InvariantCulture));
+                    requestOptions.QueryString.Set(RedmineKeys.OFFSET, offset.ToInvariantString());
 
                     var tempResult = GetPaginatedInternal<T>(uri, requestOptions);
 

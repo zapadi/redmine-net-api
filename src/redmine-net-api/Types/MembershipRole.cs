@@ -100,7 +100,7 @@ namespace Redmine.Net.Api.Types
         /// <param name="writer"></param>
         public override void WriteJson(JsonWriter writer)
         {
-            writer.WriteProperty(RedmineKeys.ID, Id.ToString(CultureInfo.InvariantCulture));
+            writer.WriteProperty(RedmineKeys.ID, Id.ToInvariantString());
         }
 
         #endregion
@@ -172,7 +172,7 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// 
         /// </summary>
-        public string Value => Id.ToString(CultureInfo.InvariantCulture);
+        public string Value => Id.ToInvariantString();
         #endregion
 
         /// <summary>
