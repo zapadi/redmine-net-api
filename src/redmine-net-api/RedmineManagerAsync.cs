@@ -217,9 +217,9 @@ public partial class RedmineManager: IRedmineManagerAsync
     }
 
     /// <inheritdoc />
-    public async Task<byte[]> DownloadFileAsync(string address, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
+    public async Task<byte[]> DownloadFileAsync(string address, RequestOptions requestOptions = null, IProgress<int> progress = null, CancellationToken cancellationToken = default)
     {
-        var response = await ApiClient.DownloadAsync(address, requestOptions,cancellationToken: cancellationToken).ConfigureAwait(false);
+        var response = await ApiClient.DownloadAsync(address, requestOptions, progress, cancellationToken: cancellationToken).ConfigureAwait(false);
         return response.Content;
     }
     
