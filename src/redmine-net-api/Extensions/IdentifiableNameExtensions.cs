@@ -61,5 +61,21 @@ namespace Redmine.Net.Api.Extensions
 
             return new IdentifiableName(val, null);
         }
+
+        /// <summary>
+        /// Converts an integer value into an <see cref="IssueStatus"/> object.
+        /// </summary>
+        /// <param name="val">The integer value representing the ID of an issue status.</param>
+        /// <returns>An <see cref="IssueStatus"/> object initialized with the specified identifier.</returns>
+        /// <exception cref="RedmineException">Thrown when the specified value is less than or equal to zero.</exception>
+        public static IssueStatus ToIssueStatusIdentifier(this int val)
+        {
+            if (val <= 0)
+            {
+                throw new RedmineException(nameof(val), "Value must be greater than zero");
+            }
+
+            return new IssueStatus(val, null);
+        }
     }
 }
