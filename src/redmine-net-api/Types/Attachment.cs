@@ -122,8 +122,8 @@ namespace Redmine.Net.Api.Types
         /// <param name="writer"></param>
         public override void WriteXml(XmlWriter writer)
         {
-            writer.WriteElementString(RedmineKeys.DESCRIPTION, Description);
             writer.WriteElementString(RedmineKeys.FILE_NAME, FileName);
+            writer.WriteElementString(RedmineKeys.DESCRIPTION, Description);
         }
 
         #endregion

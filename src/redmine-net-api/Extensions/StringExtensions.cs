@@ -39,9 +39,9 @@ namespace Redmine.Net.Api.Extensions
                 return true;
             }
 
-            for (var index = 0; index < value.Length; ++index)
+            foreach (var ch in value)
             {
-                if (!char.IsWhiteSpace(value[index]))
+                if (!char.IsWhiteSpace(ch))
                 {
                     return false;
                 }
@@ -99,9 +99,9 @@ namespace Redmine.Net.Api.Extensions
 
             var rv = new SecureString();
             
-            for (var index = 0; index < value.Length; ++index)
+            foreach (var ch in value)
             {
-                rv.AppendChar(value[index]);
+                rv.AppendChar(ch);
             }
             
             return rv;
@@ -169,7 +169,7 @@ namespace Redmine.Net.Api.Extensions
                 TimeSpan ts => ts.ToString(),
                 DateTime d => d.ToString(CultureInfo.InvariantCulture),
                 #pragma warning disable CA1308
-                bool b => b.ToString().ToLowerInvariant(),
+                bool b => b ? "true" : "false",
                 #pragma warning restore CA1308
                 _ => value.ToString(),
             };

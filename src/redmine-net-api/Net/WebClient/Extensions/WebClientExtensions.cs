@@ -1,7 +1,7 @@
-using Redmine.Net.Api;
 using Redmine.Net.Api.Extensions;
-using Redmine.Net.Api.Net;
 using Redmine.Net.Api.Serialization;
+
+namespace Redmine.Net.Api.Net.WebClient.Extensions;
 
 internal static class WebClientExtensions
 {

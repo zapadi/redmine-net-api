@@ -288,6 +288,5 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <returns></returns>
         private string DebuggerDisplay => $"[WikiPage: Id={Id.ToInvariantString()}, Title={Title}]";
-
     }
 }
