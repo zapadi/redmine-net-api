@@ -113,7 +113,7 @@ namespace Redmine.Net.Api.Types
 
             var itemsCount = Values.Count;
 
-            writer.WriteAttributeString(RedmineKeys.ID, Id.ToString(CultureInfo.InvariantCulture));
+            writer.WriteAttributeString(RedmineKeys.ID, Id.ToInvariantString());
 
             Multiple = itemsCount > 1;
             
@@ -307,7 +307,7 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// 
         /// </summary>
-        public string Value => Id.ToString(CultureInfo.InvariantCulture);
+        public string Value => Id.ToInvariantString();
 
         #endregion
 

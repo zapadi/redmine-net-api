@@ -47,7 +47,7 @@ namespace Redmine.Net.Api.Extensions
         {
             if (identifiableName != null)
             {
-                writer.WriteElementString(elementName, identifiableName.Id.ToString(CultureInfo.InvariantCulture));
+                writer.WriteElementString(elementName, identifiableName.Id.ToInvariantString());
             }
         }
 
@@ -232,7 +232,7 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="ident"></param>
         public static void WriteIdOrEmpty(this XmlWriter writer, string elementName, IdentifiableName ident)
         {
-            writer.WriteElementString(elementName, ident != null ? ident.Id.ToString(CultureInfo.InvariantCulture) : string.Empty);
+            writer.WriteElementString(elementName, ident != null ? ident.Id.ToInvariantString() : string.Empty);
         }
 
         /// <summary>
@@ -267,7 +267,7 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="elementName">The tag.</param>
         public static void WriteBoolean(this XmlWriter writer, string elementName, bool value)
         {
-            writer.WriteElementString(elementName, value.ToString().ToLowerInv());
+            writer.WriteElementString(elementName, value.ToInvariantString());
         }
 
         /// <summary>
@@ -285,7 +285,7 @@ namespace Redmine.Net.Api.Extensions
             }
             else
             {
-                writer.WriteElementString(elementName, val.Value.ToString().ToLowerInv());
+                writer.WriteElementString(elementName, val.Value.ToInvariantString());
             }
         }
 

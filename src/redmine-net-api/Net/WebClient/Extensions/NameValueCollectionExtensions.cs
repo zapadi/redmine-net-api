@@ -101,8 +101,8 @@ namespace Redmine.Net.Api.Extensions
                 offset = 0;
             }
             
-            parameters.Set(RedmineKeys.LIMIT, pageSize.ToString(CultureInfo.InvariantCulture));
-            parameters.Set(RedmineKeys.OFFSET, offset.ToString(CultureInfo.InvariantCulture));
+            parameters.Set(RedmineKeys.LIMIT, pageSize.ToInvariantString());
+            parameters.Set(RedmineKeys.OFFSET, offset.ToInvariantString());
 
             return parameters;
         }
@@ -133,7 +133,7 @@ namespace Redmine.Net.Api.Extensions
         {
             if (value.HasValue)
             {
-                nameValueCollection.Add(key, value.Value.ToString(CultureInfo.InvariantCulture));
+                nameValueCollection.Add(key, value.Value.ToInvariantString());
             }
         }   
     }

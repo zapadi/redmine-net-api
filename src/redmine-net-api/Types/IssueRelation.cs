@@ -115,7 +115,7 @@ namespace Redmine.Net.Api.Types
         {
             AssertValidIssueRelationType();
 
-            writer.WriteElementString(RedmineKeys.ISSUE_TO_ID, IssueToId.ToString(CultureInfo.InvariantCulture));
+            writer.WriteElementString(RedmineKeys.ISSUE_TO_ID, IssueToId.ToInvariantString());
             writer.WriteElementString(RedmineKeys.RELATION_TYPE, Type.ToString().ToLowerInv());
 
             if (Type == IssueRelationType.Precedes || Type == IssueRelationType.Follows)

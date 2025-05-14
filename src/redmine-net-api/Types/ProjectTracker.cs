@@ -57,7 +57,7 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// 
         /// </summary>
-        public string Value => Id.ToString(CultureInfo.InvariantCulture);
+        public string Value => Id.ToInvariantString();
 
         #endregion
 
