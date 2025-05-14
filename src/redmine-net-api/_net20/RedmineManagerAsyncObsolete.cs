@@ -306,8 +306,8 @@ namespace Redmine.Net.Api.Async
             var parameters = new NameValueCollection
             {
                 {RedmineKeys.Q, q},
-                {RedmineKeys.LIMIT, limit.ToString(CultureInfo.InvariantCulture)},
-                {RedmineKeys.OFFSET, offset.ToString(CultureInfo.InvariantCulture)},
+                {RedmineKeys.LIMIT, limit.ToInvariantString()},
+                {RedmineKeys.OFFSET, offset.ToInvariantString()},
             };
 
             if (searchFilter != null)

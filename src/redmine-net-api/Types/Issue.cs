@@ -334,7 +334,7 @@ namespace Redmine.Net.Api.Types
             }
 
             writer.WriteElementString(RedmineKeys.DESCRIPTION, Description);
-            writer.WriteElementString(RedmineKeys.IS_PRIVATE, IsPrivate.ToString(CultureInfo.InvariantCulture).ToLowerInv());
+            writer.WriteElementString(RedmineKeys.IS_PRIVATE, IsPrivate.ToInvariantString());
 
             writer.WriteIdIfNotNull(RedmineKeys.PROJECT_ID, Project);
             writer.WriteIdIfNotNull(RedmineKeys.PRIORITY_ID, Priority);
@@ -452,12 +452,12 @@ namespace Redmine.Net.Api.Types
 
                 if (DoneRatio != null)
                 {
-                    writer.WriteProperty(RedmineKeys.DONE_RATIO, DoneRatio.Value.ToString(CultureInfo.InvariantCulture));
+                    writer.WriteProperty(RedmineKeys.DONE_RATIO, DoneRatio.Value.ToInvariantString());
                 }
 
                 if (SpentHours != null)
                 {
-                    writer.WriteProperty(RedmineKeys.SPENT_HOURS, SpentHours.Value.ToString(CultureInfo.InvariantCulture));
+                    writer.WriteProperty(RedmineKeys.SPENT_HOURS, SpentHours.Value.ToInvariantString());
                 }
 
                 writer.WriteArray(RedmineKeys.UPLOADS, Uploads);

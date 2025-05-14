@@ -72,7 +72,7 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="elementName">The property name.</param>
         public static void WriteBoolean(this JsonWriter writer, string elementName, bool value)
         {
-            writer.WriteProperty(elementName, value.ToString().ToLowerInv());
+            writer.WriteProperty(elementName, value.ToInvariantString());
         }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="emptyValue"></param>
         public static void WriteIdOrEmpty(this JsonWriter jsonWriter, string tag, IdentifiableName ident, string emptyValue = null)
         {
-            jsonWriter.WriteProperty(tag, ident != null ? ident.Id.ToString(CultureInfo.InvariantCulture) : emptyValue);
+            jsonWriter.WriteProperty(tag, ident != null ? ident.Id.ToInvariantString() : emptyValue);
         }
 
         /// <summary>
@@ -212,7 +212,7 @@ namespace Redmine.Net.Api.Extensions
 
             foreach (var identifiableName in collection)
             {
-                sb.Append(identifiableName.Id.ToString(CultureInfo.InvariantCulture)).Append(',');
+                sb.Append(identifiableName.Id.ToInvariantString()).Append(',');
             }
 
             if (sb.Length > 1)
