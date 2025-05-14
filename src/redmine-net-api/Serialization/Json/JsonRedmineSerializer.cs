@@ -22,116 +22,98 @@ using Newtonsoft.Json;
 using Redmine.Net.Api.Exceptions;
 using Redmine.Net.Api.Extensions;
 
-namespace Redmine.Net.Api.Serialization
+namespace Redmine.Net.Api.Serialization.Json
 {
     internal sealed class JsonRedmineSerializer : IRedmineSerializer
     {
-        public T Deserialize<T>(string jsonResponse) where T : new()
+        private static void EnsureJsonSerializable<T>()
         {
-            if (jsonResponse.IsNullOrWhiteSpace())
-            {
-                throw new ArgumentNullException(nameof(jsonResponse), $"Could not deserialize null or empty input for type '{typeof(T).Name}'.");
-            }
-
-            var isJsonSerializable = typeof(IJsonSerializable).IsAssignableFrom(typeof(T));
-
-            if (!isJsonSerializable)
+            if (!typeof(IJsonSerializable).IsAssignableFrom(typeof(T)))
             {
                 throw new RedmineException($"Entity of type '{typeof(T)}' should implement IJsonSerializable.");
             }
+        }
 
-            using (var stringReader = new StringReader(jsonResponse))
+        public T Deserialize<T>(string jsonResponse) where T : new()
+        {
+            SerializationHelper.EnsureDeserializationInputIsNotNullOrWhiteSpace(jsonResponse, nameof(jsonResponse), typeof(T));
+
+            EnsureJsonSerializable<T>();
+
+            using var stringReader = new StringReader(jsonResponse);
+            using var jsonReader = new JsonTextReader(stringReader);
+            var obj = Activator.CreateInstance<T>();
+
+            if (jsonReader.Read() && jsonReader.Read())
             {
-                using (var jsonReader = new JsonTextReader(stringReader))
-                {
-                    var obj = Activator.CreateInstance<T>();
-
-                    if (jsonReader.Read())
-                    {
-                        if (jsonReader.Read())
-                        {
-                            ((IJsonSerializable)obj).ReadJson(jsonReader);
-                        }
-                    }
-
-                    return obj;
-                }
+                ((IJsonSerializable)obj).ReadJson(jsonReader);
             }
+
+            return obj;
         }
 
         public PagedResults<T> DeserializeToPagedResults<T>(string jsonResponse) where T : class, new()
         {
-            if (jsonResponse.IsNullOrWhiteSpace())
-            {
-                throw new ArgumentNullException(nameof(jsonResponse), $"Could not deserialize null or empty input for type '{typeof(T).Name}'.");
-            }
+            SerializationHelper.EnsureDeserializationInputIsNotNullOrWhiteSpace(jsonResponse, nameof(jsonResponse), typeof(T));
 
-            using (var sr = new StringReader(jsonResponse))
+            using var sr = new StringReader(jsonResponse);
+            using var reader = new JsonTextReader(sr);
+            var total = 0;
+            var offset = 0;
+            var limit = 0;
+            List<T> list = null;
+
+            while (reader.Read())
             {
-                using (var reader = new JsonTextReader(sr))
+                if (reader.TokenType != JsonToken.PropertyName)
                 {
-                    var total = 0;
-                    var offset = 0;
-                    var limit = 0;
-                    List<T> list = null;
+                    continue;
+                }
 
-                    while (reader.Read())
-                    {
-                        if (reader.TokenType != JsonToken.PropertyName) continue;
-
-                        switch (reader.Value)
-                        {
-                            case RedmineKeys.TOTAL_COUNT:
-                                total = reader.ReadAsInt32().GetValueOrDefault();
-                                break;
-                            case RedmineKeys.OFFSET:
-                                offset = reader.ReadAsInt32().GetValueOrDefault();
-                                break;
-                            case RedmineKeys.LIMIT:
-                                limit = reader.ReadAsInt32().GetValueOrDefault();
-                                break;
-                            default:
-                                list = reader.ReadAsCollection<T>();
-                                break;
-                        }
-                    }
-
-                    return new PagedResults<T>(list, total, offset, limit);
+                switch (reader.Value)
+                {
+                    case RedmineKeys.TOTAL_COUNT:
+                        total = reader.ReadAsInt32().GetValueOrDefault();
+                        break;
+                    case RedmineKeys.OFFSET:
+                        offset = reader.ReadAsInt32().GetValueOrDefault();
+                        break;
+                    case RedmineKeys.LIMIT:
+                        limit = reader.ReadAsInt32().GetValueOrDefault();
+                        break;
+                    default:
+                        list = reader.ReadAsCollection<T>();
+                        break;
                 }
             }
+
+            return new PagedResults<T>(list, total, offset, limit);
         }
 
         #pragma warning disable CA1822
         public int Count<T>(string jsonResponse) where T : class, new()
         {
-            if (jsonResponse.IsNullOrWhiteSpace())
-            {
-                throw new ArgumentNullException(nameof(jsonResponse), $"Could not deserialize null or empty input for type '{typeof(T).Name}'.");
-            }
+            SerializationHelper.EnsureDeserializationInputIsNotNullOrWhiteSpace(jsonResponse, nameof(jsonResponse), typeof(T));
 
-            using (var sr = new StringReader(jsonResponse))
+            using var sr = new StringReader(jsonResponse);
+            using var reader = new JsonTextReader(sr);
+            var total = 0;
+
+            while (reader.Read())
             {
-                using (var reader = new JsonTextReader(sr))
+                if (reader.TokenType != JsonToken.PropertyName)
                 {
-                    var total = 0;
+                    continue;
+                }
 
-                    while (reader.Read())
-                    {
-                        if (reader.TokenType != JsonToken.PropertyName)
-                        {
-                            continue;
-                        }
-
-                        if (reader.Value is RedmineKeys.TOTAL_COUNT)
-                        {
-                            total = reader.ReadAsInt32().GetValueOrDefault();
-                            return total;
-                        }
-                    }
-
+                if (reader.Value is RedmineKeys.TOTAL_COUNT)
+                {
+                    total = reader.ReadAsInt32().GetValueOrDefault();
                     return total;
                 }
             }
+
+            return total;
         }
         #pragma warning restore CA1822
         
@@ -141,10 +123,12 @@ namespace Redmine.Net.Api.Serialization
 
         public string Serialize<T>(T entity) where T : class
         {
-            if (entity == default(T))
+            if (entity == null)
             {
-                throw new ArgumentNullException(nameof(entity), $"Could not serialize null of type {typeof(T).Name}");
+                throw new RedmineSerializationException($"Could not serialize null of type {typeof(T).Name}", nameof(entity));
             }
+            
+            EnsureJsonSerializable<T>();
 
             if (entity is not IJsonSerializable jsonSerializable)
             {
@@ -153,22 +137,18 @@ namespace Redmine.Net.Api.Serialization
 
             var stringBuilder = new StringBuilder();
 
-            using (var sw = new StringWriter(stringBuilder))
-            {
-                using (var writer = new JsonTextWriter(sw))
-                {
-                    writer.Formatting = Formatting.Indented;
-                    writer.DateFormatHandling = DateFormatHandling.IsoDateFormat;
+            using var sw = new StringWriter(stringBuilder);
+            using var writer = new JsonTextWriter(sw);
+            //writer.Formatting = Formatting.Indented;
+            writer.DateFormatHandling = DateFormatHandling.IsoDateFormat;
 
-                    jsonSerializable.WriteJson(writer);
+            jsonSerializable.WriteJson(writer);
 
-                    var json = stringBuilder.ToString();
+            var json = stringBuilder.ToString();
                     
-                    stringBuilder.Length = 0;
+            stringBuilder.Length = 0;
 
-                    return json;
-                }
-            }
+            return json;
         }
     }
 }
