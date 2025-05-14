@@ -15,6 +15,7 @@
 */
 
 using System.Net;
+using Redmine.Net.Api.Extensions;
 
 namespace Redmine.Net.Api.Authentication;
 
@@ -24,7 +25,7 @@ namespace Redmine.Net.Api.Authentication;
 public sealed class RedmineApiKeyAuthentication: IRedmineAuthentication
 {
     /// <inheritdoc />
-    public string AuthenticationType => "X-Redmine-API-Key";
+    public string AuthenticationType { get; } = RedmineAuthenticationType.ApiKey.ToText();
 
     /// <inheritdoc />
     public string Token { get; init; }
