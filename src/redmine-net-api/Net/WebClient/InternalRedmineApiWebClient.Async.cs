@@ -83,12 +83,19 @@ namespace Redmine.Net.Api.Net.WebClient
             System.Net.WebClient webClient = null;
             byte[] response = null;
             NameValueCollection responseHeaders = null;
+            CancellationTokenRegistration cancellationTokenRegistration = default;
+                
             try
             {
                 webClient = _webClientFunc();
-
-                cancellationToken.Register(webClient.CancelAsync);
+                cancellationTokenRegistration =
+                    cancellationToken.Register(
+                        static state => ((System.Net.WebClient)state!).CancelAsync(),
+                        webClient
+                    );
                 
+                cancellationToken.ThrowIfCancellationRequested();
+
                 SetWebClientHeaders(webClient, requestMessage);
 
                 if(IsGetOrDownload(requestMessage.Method))
@@ -117,7 +124,10 @@ namespace Redmine.Net.Api.Net.WebClient
             }
             catch (WebException ex) when (ex.Status == WebExceptionStatus.RequestCanceled)
             {
-                //TODO: Handle cancellation...
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    throw new RedmineApiException("The operation was canceled by the user.", ex);
+                }
             }
             catch (WebException webException)
             {
@@ -125,6 +135,12 @@ namespace Redmine.Net.Api.Net.WebClient
             }
             finally
             {
+                #if NETFRAMEWORK
+                cancellationTokenRegistration.Dispose();
+                #else
+                await cancellationTokenRegistration.DisposeAsync().ConfigureAwait(false);
+                #endif
+                
                 webClient?.Dispose();
             }
 
