@@ -101,6 +101,30 @@ internal sealed class InternalWebClient : System.Net.WebClient
             throw new RedmineException(webException.GetBaseException().Message, webException);
         }
     }
+    
+    public HttpStatusCode StatusCode { get; private set; }
+
+    protected override WebResponse GetWebResponse(WebRequest request)
+    {
+        var response = base.GetWebResponse(request);
+        if (response is HttpWebResponse httpResponse)
+        {
+            StatusCode = httpResponse.StatusCode;
+        }
+        return response;
+    }
+    
+    protected override WebResponse GetWebResponse(WebRequest request, IAsyncResult result)
+    {
+        var response = base.GetWebResponse(request, result);
+
+        if (response is HttpWebResponse httpResponse)
+        {
+            StatusCode = httpResponse.StatusCode;
+        }
+
+        return response;
+    }
 
     private static void AssignIfHasValue<T>(T? nullableValue, Action<T> assignAction) where T : struct
     {

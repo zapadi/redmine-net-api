@@ -170,6 +170,7 @@ namespace Redmine.Net.Api.Net.WebClient
         {
             System.Net.WebClient webClient = null;
             byte[] response = null;
+            HttpStatusCode? statusCode = null;
             NameValueCollection responseHeaders = null;
 
             try
@@ -198,6 +199,10 @@ namespace Redmine.Net.Api.Net.WebClient
                 }
 
                 responseHeaders = webClient.ResponseHeaders;
+                if (webClient is InternalWebClient iwc)
+                {
+                    statusCode = iwc.StatusCode;
+                }
             }
             catch (WebException webException)
             {
@@ -211,7 +216,8 @@ namespace Redmine.Net.Api.Net.WebClient
             return new ApiResponseMessage()
             {
                 Headers = responseHeaders,
-                Content = response
+                Content = response,
+                StatusCode = statusCode ?? HttpStatusCode.OK,
             };
         }
 
