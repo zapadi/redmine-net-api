@@ -3,6 +3,11 @@ namespace Redmine.Net.Api.Types;
 /// <summary>
 /// 
 /// </summary>
+ [System.Diagnostics.CodeAnalysis.SuppressMessage(
+"Design",
+"CA1034:Nested types should not be visible",
+Justification = "Deliberately exposed")]
+
 public static class Include
 {
     /// <summary>
