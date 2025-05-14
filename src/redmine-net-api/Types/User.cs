@@ -17,7 +17,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
 using System.Xml;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
@@ -115,6 +114,10 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         public bool MustChangePassword { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool GeneratePassword { get; set; }
 
         /// <summary>
         /// 
@@ -152,9 +155,15 @@ namespace Redmine.Net.Api.Types
         /// Gets or sets the user's mail_notification.
         /// </summary>
         /// <value>
-        /// only_my_events, only_assigned, [...]
+        /// only_my_events, only_assigned, ...
         /// </value>
         public string MailNotification { get; set; }
+        
+        /// <summary>
+        /// Send account information to the user
+        /// </summary>
+        public bool SendInformation { get; set; }
+        
         #endregion
 
         #region Implementation of IXmlSerialization
@@ -207,32 +216,33 @@ namespace Redmine.Net.Api.Types
         public override void WriteXml(XmlWriter writer)
         {
             writer.WriteElementString(RedmineKeys.LOGIN, Login);
+            
+            if (!Password.IsNullOrWhiteSpace())
+            {
+                writer.WriteElementString(RedmineKeys.PASSWORD, Password);
+            }
+            
             writer.WriteElementString(RedmineKeys.FIRST_NAME, FirstName);
             writer.WriteElementString(RedmineKeys.LAST_NAME, LastName);
             writer.WriteElementString(RedmineKeys.MAIL, Email);
             
-            if(!string.IsNullOrEmpty(MailNotification))
-            {
-                writer.WriteElementString(RedmineKeys.MAIL_NOTIFICATION, MailNotification);
-            }
-
-            if (!string.IsNullOrEmpty(Password))
-            {
-                writer.WriteElementString(RedmineKeys.PASSWORD, Password);
-            }
-
             if(AuthenticationModeId.HasValue)
             { 
                 writer.WriteValueOrEmpty(RedmineKeys.AUTH_SOURCE_ID, AuthenticationModeId);
             }
             
-            writer.WriteBoolean(RedmineKeys.MUST_CHANGE_PASSWORD, MustChangePassword);
-            writer.WriteElementString(RedmineKeys.STATUS, ((int)Status).ToString(CultureInfo.InvariantCulture));
-            
-            if(CustomFields != null)
-            { 
-                writer.WriteArray(RedmineKeys.CUSTOM_FIELDS, CustomFields);
+            if(!MailNotification.IsNullOrWhiteSpace())
+            {
+                writer.WriteElementString(RedmineKeys.MAIL_NOTIFICATION, MailNotification);
             }
+
+            writer.WriteBoolean(RedmineKeys.MUST_CHANGE_PASSWORD, MustChangePassword);
+            writer.WriteBoolean(RedmineKeys.GENERATE_PASSWORD, GeneratePassword);
+            writer.WriteBoolean(RedmineKeys.SEND_INFORMATION, SendInformation);
+            
+            writer.WriteElementString(RedmineKeys.STATUS, ((int)Status).ToInvariantString());
+            
+            writer.WriteArray(RedmineKeys.CUSTOM_FIELDS, CustomFields);
         }
         #endregion
 
@@ -291,32 +301,33 @@ namespace Redmine.Net.Api.Types
             using (new JsonObject(writer, RedmineKeys.USER))
             {
                 writer.WriteProperty(RedmineKeys.LOGIN, Login);
-                writer.WriteProperty(RedmineKeys.FIRST_NAME, FirstName);
-                writer.WriteProperty(RedmineKeys.LAST_NAME, LastName);
-                writer.WriteProperty(RedmineKeys.MAIL, Email);
                 
-                if(!string.IsNullOrEmpty(MailNotification))
-                {
-                    writer.WriteProperty(RedmineKeys.MAIL_NOTIFICATION, MailNotification);
-                }
-
                 if (!string.IsNullOrEmpty(Password))
                 {
                     writer.WriteProperty(RedmineKeys.PASSWORD, Password);
                 }
-
+                
+                writer.WriteProperty(RedmineKeys.FIRST_NAME, FirstName);
+                writer.WriteProperty(RedmineKeys.LAST_NAME, LastName);
+                writer.WriteProperty(RedmineKeys.MAIL, Email);
+                
                 if(AuthenticationModeId.HasValue)
                 { 
                     writer.WriteValueOrEmpty(RedmineKeys.AUTH_SOURCE_ID, AuthenticationModeId);
                 }
+                
+                if(!MailNotification.IsNullOrWhiteSpace())
+                {
+                    writer.WriteProperty(RedmineKeys.MAIL_NOTIFICATION, MailNotification);
+                }
             
                 writer.WriteBoolean(RedmineKeys.MUST_CHANGE_PASSWORD, MustChangePassword);
-                writer.WriteProperty(RedmineKeys.STATUS, ((int)Status).ToString(CultureInfo.InvariantCulture));
+                writer.WriteBoolean(RedmineKeys.GENERATE_PASSWORD, GeneratePassword);
+                writer.WriteBoolean(RedmineKeys.SEND_INFORMATION, SendInformation);
+                
+                writer.WriteProperty(RedmineKeys.STATUS, ((int)Status).ToInvariantString());
             
-                if(CustomFields != null)
-                { 
-                    writer.WriteArray(RedmineKeys.CUSTOM_FIELDS, CustomFields);
-                }
+                writer.WriteArray(RedmineKeys.CUSTOM_FIELDS, CustomFields);
             }
         }
         #endregion
@@ -344,6 +355,8 @@ namespace Redmine.Net.Api.Types
                 && LastLoginOn == other.LastLoginOn
                 && Status == other.Status
                 && MustChangePassword == other.MustChangePassword
+                && GeneratePassword == other.GeneratePassword
+                && SendInformation == other.SendInformation
                 && IsAdmin == other.IsAdmin
                 && PasswordChangedOn == other.PasswordChangedOn
                 && UpdatedOn == other.UpdatedOn
@@ -394,6 +407,8 @@ namespace Redmine.Net.Api.Types
                 hashCode = HashCodeHelper.GetHashCode(CustomFields, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Memberships, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Groups, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(GeneratePassword, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(SendInformation, hashCode);
                 return hashCode;
             }
         }
@@ -425,7 +440,6 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        private string DebuggerDisplay => $"[User: Id={Id.ToInvariantString()}, Login={Login}, IsAdmin={IsAdmin.ToString(CultureInfo.InvariantCulture)}, Status={Status:G}]";
-
+        private string DebuggerDisplay => $"[User: Id={Id.ToInvariantString()}, Login={Login}, IsAdmin={IsAdmin.ToInvariantString()}, Status={Status:G}]";
     }
 }
