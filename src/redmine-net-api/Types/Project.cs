@@ -197,30 +197,25 @@ namespace Redmine.Net.Api.Types
         {
             writer.WriteElementString(RedmineKeys.NAME, Name);
             writer.WriteElementString(RedmineKeys.IDENTIFIER, Identifier);
-
             writer.WriteIfNotDefaultOrNull(RedmineKeys.DESCRIPTION, Description);
-            writer.WriteBoolean(RedmineKeys.INHERIT_MEMBERS, InheritMembers);
-            writer.WriteBoolean(RedmineKeys.IS_PUBLIC, IsPublic);
             writer.WriteIfNotDefaultOrNull(RedmineKeys.HOMEPAGE, HomePage);
-
+            writer.WriteBoolean(RedmineKeys.IS_PUBLIC, IsPublic);
             writer.WriteIdIfNotNull(RedmineKeys.PARENT_ID, Parent);
+            writer.WriteBoolean(RedmineKeys.INHERIT_MEMBERS, InheritMembers);
+
+            //It works only when the new project is a subproject and it inherits the members. 
+            writer.WriteIdIfNotNull(RedmineKeys.DEFAULT_ASSIGNED_TO_ID, DefaultAssignee);
+            //It works only with existing shared versions.
+            writer.WriteIdIfNotNull(RedmineKeys.DEFAULT_VERSION_ID, DefaultVersion);
 
             writer.WriteRepeatableElement(RedmineKeys.TRACKER_IDS, (IEnumerable<IValue>)Trackers);
             writer.WriteRepeatableElement(RedmineKeys.ENABLED_MODULE_NAMES, (IEnumerable<IValue>)EnabledModules);
-
-            if (Id == 0)
-            {
-                writer.WriteRepeatableElement(RedmineKeys.ISSUE_CUSTOM_FIELD_IDS, (IEnumerable<IValue>)CustomFields);
-                return;
-            }
-
+            writer.WriteRepeatableElement(RedmineKeys.ISSUE_CUSTOM_FIELD_IDS, (IEnumerable<IValue>)CustomFields);
             writer.WriteArray(RedmineKeys.CUSTOM_FIELDS, CustomFields);
         }
         #endregion
 
         #region Implementation of IJsonSerialization
-
-
         /// <summary>
         /// 
         /// </summary>
@@ -279,15 +274,15 @@ namespace Redmine.Net.Api.Types
                 writer.WriteBoolean(RedmineKeys.INHERIT_MEMBERS, InheritMembers);
                 writer.WriteBoolean(RedmineKeys.IS_PUBLIC, IsPublic);
                 writer.WriteIdIfNotNull(RedmineKeys.PARENT_ID, Parent);
+                
+                //It works only when the new project is a subproject and it inherits the members. 
+                writer.WriteIdIfNotNull(RedmineKeys.DEFAULT_ASSIGNED_TO_ID, DefaultAssignee);
+                //It works only with existing shared versions.
+                writer.WriteIdIfNotNull(RedmineKeys.DEFAULT_VERSION_ID, DefaultVersion);
+                
                 writer.WriteRepeatableElement(RedmineKeys.TRACKER_IDS, (IEnumerable<IValue>)Trackers);
                 writer.WriteRepeatableElement(RedmineKeys.ENABLED_MODULE_NAMES, (IEnumerable<IValue>)EnabledModules);
-
-                if (Id == 0)
-                {
-                    writer.WriteRepeatableElement(RedmineKeys.ISSUE_CUSTOM_FIELD_IDS, (IEnumerable<IValue>)CustomFields);
-                    return;
-                }
-
+                writer.WriteRepeatableElement(RedmineKeys.ISSUE_CUSTOM_FIELD_IDS, (IEnumerable<IValue>)CustomFields);
                 writer.WriteArray(RedmineKeys.CUSTOM_FIELDS, CustomFields);
             }
         }
