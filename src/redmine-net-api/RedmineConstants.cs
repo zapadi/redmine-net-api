@@ -52,6 +52,10 @@ namespace Redmine.Net.Api
         /// 
         /// </summary>
         public const string AUTHORIZATION_HEADER_KEY = "Authorization";
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string API_KEY_AUTHORIZATION_HEADER_KEY = "X-Redmine-API-Key";
         
         /// <summary>
         /// 

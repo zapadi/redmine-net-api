@@ -18,6 +18,7 @@ using System;
 using System.Net;
 using System.Text;
 using Redmine.Net.Api.Exceptions;
+using Redmine.Net.Api.Extensions;
 
 namespace Redmine.Net.Api.Authentication
 {
@@ -27,7 +28,7 @@ namespace Redmine.Net.Api.Authentication
     public sealed class RedmineBasicAuthentication: IRedmineAuthentication
     {
         /// <inheritdoc />
-        public string AuthenticationType => "Basic";
+        public string AuthenticationType { get; } = RedmineAuthenticationType.Basic.ToText();
 
         /// <inheritdoc />
         public string Token { get; init; }
@@ -45,7 +46,7 @@ namespace Redmine.Net.Api.Authentication
             if (username == null) throw new RedmineException(nameof(username));
             if (password == null) throw new RedmineException(nameof(password));
             
-            Token = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{username}:{password}"));
+            Token = $"Basic {Convert.ToBase64String(Encoding.UTF8.GetBytes($"{username}:{password}"))}";
         }
     }
 }

@@ -1,3 +1,5 @@
+using System;
+using Redmine.Net.Api.Authentication;
 using Redmine.Net.Api.Types;
 
 namespace Redmine.Net.Api.Extensions;
@@ -95,6 +97,17 @@ public static class EnumExtensions
             UserStatus.StatusAnonymous => "status_anonymous",
             UserStatus.StatusLocked => "status_locked",
             UserStatus.StatusRegistered => "status_registered",
+            _ => "undefined"
+        };
+    }
+
+    internal static string ToText(this RedmineAuthenticationType @enum)
+    {
+        return @enum switch
+        {
+            RedmineAuthenticationType.NoAuthentication => "NoAuth",
+            RedmineAuthenticationType.Basic => "Basic",
+            RedmineAuthenticationType.ApiKey => "ApiKey",
             _ => "undefined"
         };
     }

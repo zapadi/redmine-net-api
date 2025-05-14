@@ -231,10 +231,10 @@ namespace Redmine.Net.Api.Net.WebClient
             switch (_credentials)
             {
                 case RedmineApiKeyAuthentication:
-                    webClient.Headers.Add(_credentials.AuthenticationType,_credentials.Token);
+                    webClient.Headers.Add(RedmineConstants.API_KEY_AUTHORIZATION_HEADER_KEY,_credentials.Token);
                     break;
                 case RedmineBasicAuthentication:
-                    webClient.Headers.Add("Authorization", $"{_credentials.AuthenticationType} {_credentials.Token}");
+                    webClient.Headers.Add(RedmineConstants.AUTHORIZATION_HEADER_KEY, _credentials.Token);
                     break;
             }
 

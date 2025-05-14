@@ -15,6 +15,7 @@
 */
 
 using System.Net;
+using Redmine.Net.Api.Extensions;
 
 namespace Redmine.Net.Api.Authentication;
 
@@ -24,7 +25,7 @@ namespace Redmine.Net.Api.Authentication;
 public sealed class RedmineNoAuthentication: IRedmineAuthentication
 {
     /// <inheritdoc />
-    public string AuthenticationType => "NoAuth";
+    public string AuthenticationType { get; } = RedmineAuthenticationType.NoAuthentication.ToText();
 
     /// <inheritdoc />
     public string Token { get; init; }
