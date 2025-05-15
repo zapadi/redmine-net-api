@@ -12,10 +12,10 @@ public class UserTestsAsync(RedmineTestContainerFixture fixture)
     {
         var user = new User
         {
-            Login = ThreadSafeRandom.GenerateText(12),
-            FirstName = ThreadSafeRandom.GenerateText(8),
-            LastName = ThreadSafeRandom.GenerateText(10),
-            Email = $"{ThreadSafeRandom.GenerateText(5)}.{ThreadSafeRandom.GenerateText(4)}@gmail.com",
+            Login = RandomHelper.GenerateText(12),
+            FirstName = RandomHelper.GenerateText(8),
+            LastName = RandomHelper.GenerateText(10),
+            Email = $"{RandomHelper.GenerateText(5)}.{RandomHelper.GenerateText(4)}@gmail.com",
             Password = "password123",
             AuthenticationModeId = null,
             MustChangePassword = false,
@@ -30,9 +30,9 @@ public class UserTestsAsync(RedmineTestContainerFixture fixture)
         //Arrange
         var userData = new User
         {
-            Login = ThreadSafeRandom.GenerateText(5),
-            FirstName = ThreadSafeRandom.GenerateText(5),
-            LastName = ThreadSafeRandom.GenerateText(5),
+            Login = RandomHelper.GenerateText(5),
+            FirstName = RandomHelper.GenerateText(5),
+            LastName = RandomHelper.GenerateText(5),
             Password = "password123",
             MailNotification = "only_my_events",
             AuthenticationModeId = null,
@@ -81,7 +81,7 @@ public class UserTestsAsync(RedmineTestContainerFixture fixture)
         var createdUser = await CreateTestUserAsync();
         Assert.NotNull(createdUser);
 
-        var updatedFirstName = ThreadSafeRandom.GenerateText(10);
+        var updatedFirstName = RandomHelper.GenerateText(10);
         createdUser.FirstName = updatedFirstName;
 
         //Act

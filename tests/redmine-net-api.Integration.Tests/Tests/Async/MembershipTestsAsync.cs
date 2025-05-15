@@ -16,10 +16,10 @@ public class MembershipTestsAsync(RedmineTestContainerFixture fixture)
         
         var user = new User
         {
-            Login = ThreadSafeRandom.GenerateText(10),
-            FirstName = ThreadSafeRandom.GenerateText(8),
-            LastName = ThreadSafeRandom.GenerateText(9),
-            Email = $"{ThreadSafeRandom.GenerateText(5)}@example.com",
+            Login = RandomHelper.GenerateText(10),
+            FirstName = RandomHelper.GenerateText(8),
+            LastName = RandomHelper.GenerateText(9),
+            Email = $"{RandomHelper.GenerateText(5)}@example.com",
             Password = "password123",
             MustChangePassword = false,
             Status = UserStatus.StatusActive
@@ -56,10 +56,10 @@ public class MembershipTestsAsync(RedmineTestContainerFixture fixture)
         
         var user = new User
         {
-            Login = ThreadSafeRandom.GenerateText(10),
-            FirstName = ThreadSafeRandom.GenerateText(8),
-            LastName = ThreadSafeRandom.GenerateText(9),
-            Email = $"{ThreadSafeRandom.GenerateText(5)}@example.com",
+            Login = RandomHelper.GenerateText(10),
+            FirstName = RandomHelper.GenerateText(8),
+            LastName = RandomHelper.GenerateText(9),
+            Email = $"{RandomHelper.GenerateText(5)}@example.com",
             Password = "password123",
             MustChangePassword = false,
             Status = UserStatus.StatusActive

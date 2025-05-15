@@ -77,11 +77,11 @@ public class WikiTestsAsync(RedmineTestContainerFixture fixture)
     public async Task DeleteWikiPage_Should_Succeed()
     {
         // Arrange
-        var wikiPageName = ThreadSafeRandom.GenerateText(7);
+        var wikiPageName = RandomHelper.GenerateText(7);
         
         var wikiPage = new WikiPage
         {
-            Title = ThreadSafeRandom.GenerateText(5),
+            Title = RandomHelper.GenerateText(5),
             Text = "Test wiki page content for deletion",
             Comments = "Initial wiki page creation for deletion test"
         };
@@ -123,7 +123,7 @@ public class WikiTestsAsync(RedmineTestContainerFixture fixture)
     public async Task CreateWikiPage_Should_Succeed()
     {
         //Arrange
-        var pageTitle = ThreadSafeRandom.GenerateText("NewWikiPage");
+        var pageTitle = RandomHelper.GenerateText("NewWikiPage");
         var text = "This is the content of a new wiki page.";
         var comments = "Creation comment for new wiki page.";
         var wikiPageData = new WikiPage { Text = text, Comments = comments };

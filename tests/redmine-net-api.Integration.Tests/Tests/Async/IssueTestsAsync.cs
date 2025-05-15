@@ -16,8 +16,8 @@ public class IssueTestsAsync(RedmineTestContainerFixture fixture)
         var issue = new Issue
         {
             Project = ProjectIdName,
-            Subject = ThreadSafeRandom.GenerateText(9),
-            Description = ThreadSafeRandom.GenerateText(18),
+            Subject = RandomHelper.GenerateText(9),
+            Description = RandomHelper.GenerateText(18),
             Tracker = 1.ToIdentifier(),
             Status = 1.ToIssueStatusIdentifier(),
             Priority = 2.ToIdentifier(),
@@ -34,8 +34,8 @@ public class IssueTestsAsync(RedmineTestContainerFixture fixture)
         var issueData = new Issue
         {
             Project = ProjectIdName,
-            Subject = ThreadSafeRandom.GenerateText(9),
-            Description = ThreadSafeRandom.GenerateText(18),
+            Subject = RandomHelper.GenerateText(9),
+            Description = RandomHelper.GenerateText(18),
             Tracker = 2.ToIdentifier(),
             Status = 1.ToIssueStatusIdentifier(),
             Priority = 3.ToIdentifier(),
@@ -44,7 +44,7 @@ public class IssueTestsAsync(RedmineTestContainerFixture fixture)
             EstimatedHours = 8,
             CustomFields =
             [
-                IssueCustomField.CreateSingle(1, ThreadSafeRandom.GenerateText(8), ThreadSafeRandom.GenerateText(4)) 
+                IssueCustomField.CreateSingle(1, RandomHelper.GenerateText(8), RandomHelper.GenerateText(4)) 
             ]
         };
 
@@ -93,14 +93,14 @@ public class IssueTestsAsync(RedmineTestContainerFixture fixture)
         var createdIssue = await CreateTestIssueAsync();
         Assert.NotNull(createdIssue);
 
-        var updatedSubject = ThreadSafeRandom.GenerateText(9);
-        var updatedDescription = ThreadSafeRandom.GenerateText(18);
+        var updatedSubject = RandomHelper.GenerateText(9);
+        var updatedDescription = RandomHelper.GenerateText(18);
         var updatedStatusId = 2; 
         
         createdIssue.Subject = updatedSubject;
         createdIssue.Description = updatedDescription;
         createdIssue.Status = updatedStatusId.ToIssueStatusIdentifier(); 
-        createdIssue.Notes = ThreadSafeRandom.GenerateText("Note");
+        createdIssue.Notes = RandomHelper.GenerateText("Note");
 
         var issueId = createdIssue.Id.ToInvariantString();
 
@@ -137,8 +137,8 @@ public class IssueTestsAsync(RedmineTestContainerFixture fixture)
     {
         var createdIssue = await CreateTestIssueAsync(
         [
-            IssueCustomField.CreateMultiple(1, ThreadSafeRandom.GenerateText(8), 
-                [ThreadSafeRandom.GenerateText(4), ThreadSafeRandom.GenerateText(4)]) 
+            IssueCustomField.CreateMultiple(1, RandomHelper.GenerateText(8), 
+                [RandomHelper.GenerateText(4), RandomHelper.GenerateText(4)]) 
         ],
     [new Watcher() { Id = 1 }, new Watcher(){Id = 2}]);
         
