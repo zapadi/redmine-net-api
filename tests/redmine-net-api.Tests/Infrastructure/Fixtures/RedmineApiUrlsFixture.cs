@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using Redmine.Net.Api.Net.Internal;
 
-namespace Padi.DotNet.RedmineAPI.Tests.Tests;
+namespace Padi.DotNet.RedmineAPI.Tests.Infrastructure.Fixtures;
 
 public sealed class RedmineApiUrlsFixture
 {
