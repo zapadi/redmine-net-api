@@ -26,6 +26,6 @@ public sealed class RedmineApiUrlsFixture
     [Conditional("DEBUG_XML")]
     private void SetMimeTypeXml()
     {
-        Format = "json";
+        Format = "xml";
     }
 }
