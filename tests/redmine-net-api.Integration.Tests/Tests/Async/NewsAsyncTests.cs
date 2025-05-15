@@ -15,16 +15,16 @@ public class NewsTestsAsync(RedmineTestContainerFixture fixture)
         // Arrange
         _ = await fixture.RedmineManager.AddProjectNewsAsync(PROJECT_ID, new News()
         {
-            Title = ThreadSafeRandom.GenerateText(5),
-            Summary = ThreadSafeRandom.GenerateText(10),
-            Description = ThreadSafeRandom.GenerateText(20),
+            Title = RandomHelper.GenerateText(5),
+            Summary = RandomHelper.GenerateText(10),
+            Description = RandomHelper.GenerateText(20),
         });
         
         _ = await fixture.RedmineManager.AddProjectNewsAsync("2", new News()
         {
-            Title = ThreadSafeRandom.GenerateText(5),
-            Summary = ThreadSafeRandom.GenerateText(10),
-            Description = ThreadSafeRandom.GenerateText(20),
+            Title = RandomHelper.GenerateText(5),
+            Summary = RandomHelper.GenerateText(10),
+            Description = RandomHelper.GenerateText(20),
         });
         
         
@@ -41,9 +41,9 @@ public class NewsTestsAsync(RedmineTestContainerFixture fixture)
         // Arrange
         var newsCreated = await fixture.RedmineManager.AddProjectNewsAsync(PROJECT_ID, new News()
         {
-            Title = ThreadSafeRandom.GenerateText(5),
-            Summary = ThreadSafeRandom.GenerateText(10),
-            Description = ThreadSafeRandom.GenerateText(20),
+            Title = RandomHelper.GenerateText(5),
+            Summary = RandomHelper.GenerateText(10),
+            Description = RandomHelper.GenerateText(20),
         });
         
         // Act

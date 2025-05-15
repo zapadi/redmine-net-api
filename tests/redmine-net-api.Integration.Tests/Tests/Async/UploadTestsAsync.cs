@@ -47,27 +47,27 @@ public class UploadTestsAsync(RedmineTestContainerFixture fixture)
     [Fact]
     public async Task Upload_Attachment_To_Wiki_Should_Succeed()
     {
-        var bytes = Encoding.UTF8.GetBytes(ThreadSafeRandom.GenerateText("Hello Wiki!",10));
-        var fileName = $"{ThreadSafeRandom.GenerateText("wiki-",5)}.txt";
+        var bytes = Encoding.UTF8.GetBytes(RandomHelper.GenerateText("Hello Wiki!",10));
+        var fileName = $"{RandomHelper.GenerateText("wiki-",5)}.txt";
         var uploadFile = await fixture.RedmineManager.UploadFileAsync(bytes, fileName);
 
         Assert.NotNull(uploadFile);
         Assert.NotNull(uploadFile.Token);
 
-        var wikiPageName = ThreadSafeRandom.GenerateText(7);
+        var wikiPageName = RandomHelper.GenerateText(7);
 
         var wikiPageInfo = new WikiPage()
         {
             Version = 0,
-            Comments = ThreadSafeRandom.GenerateText(15),
-            Text = ThreadSafeRandom.GenerateText(10),
+            Comments = RandomHelper.GenerateText(15),
+            Text = RandomHelper.GenerateText(10),
             Uploads =
             [
                 new Upload()
                 {
                     Token = uploadFile.Token,
                     ContentType = "text/plain",
-                    Description = ThreadSafeRandom.GenerateText(15),
+                    Description = RandomHelper.GenerateText(15),
                     FileName = fileName,
                 }
             ]

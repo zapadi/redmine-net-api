@@ -14,8 +14,8 @@ public class JournalTestsAsync(RedmineTestContainerFixture fixture)
         var issue = new Issue
         {
             Project = IdentifiableName.Create<Project>(1),
-            Subject = ThreadSafeRandom.GenerateText(13),
-            Description = ThreadSafeRandom.GenerateText(19),
+            Subject = RandomHelper.GenerateText(13),
+            Description = RandomHelper.GenerateText(19),
             Tracker = 1.ToIdentifier(),
             Status = 1.ToIssueStatusIdentifier(),
             Priority = 2.ToIdentifier(),

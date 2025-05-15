@@ -35,7 +35,7 @@ public class IssueAttachmentTestsAsync(RedmineTestContainerFixture fixture)
         // Prepare issue with attachment
         var updateIssue = new Issue
         {
-            Subject = $"Test issue for attachment {ThreadSafeRandom.GenerateText(5)}",
+            Subject = $"Test issue for attachment {RandomHelper.GenerateText(5)}",
             Uploads = [upload]
         };
 

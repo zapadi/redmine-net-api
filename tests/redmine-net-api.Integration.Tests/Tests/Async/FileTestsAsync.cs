@@ -45,7 +45,7 @@ public class FileTestsAsync(RedmineTestContainerFixture fixture)
         {
             Token = token,
             Filename = fileName,
-            Description = ThreadSafeRandom.GenerateText(9),
+            Description = RandomHelper.GenerateText(9),
             ContentType = "text/plain",
         };
 
@@ -62,7 +62,7 @@ public class FileTestsAsync(RedmineTestContainerFixture fixture)
         {
             Token = token,
             Filename = fileName,
-            Description = ThreadSafeRandom.GenerateText(9),
+            Description = RandomHelper.GenerateText(9),
             ContentType = "text/plain",
             Version = 1.ToIdentifier(),
         };
@@ -74,7 +74,7 @@ public class FileTestsAsync(RedmineTestContainerFixture fixture)
     private async Task<(string,string)> UploadFileAsync()
     {
         var bytes = "Hello World!"u8.ToArray();
-        var fileName = $"{ThreadSafeRandom.GenerateText(5)}.txt";
+        var fileName = $"{RandomHelper.GenerateText(5)}.txt";
         var upload = await fixture.RedmineManager.UploadFileAsync(bytes, fileName);
         
         Assert.NotNull(upload);

@@ -15,8 +15,8 @@ public class VersionTestsAsync(RedmineTestContainerFixture fixture)
     {
         var version = new Version
         {
-            Name = ThreadSafeRandom.GenerateText(10),
-            Description = ThreadSafeRandom.GenerateText(15),
+            Name = RandomHelper.GenerateText(10),
+            Description = RandomHelper.GenerateText(15),
             Status = VersionStatus.Open,
             Sharing = VersionSharing.None,
             DueDate = DateTime.Now.Date.AddDays(30)
@@ -75,7 +75,7 @@ public class VersionTestsAsync(RedmineTestContainerFixture fixture)
         var createdVersion = await CreateTestVersionAsync();
         Assert.NotNull(createdVersion);
 
-        var updatedDescription = ThreadSafeRandom.GenerateText(20);
+        var updatedDescription = RandomHelper.GenerateText(20);
         var updatedStatus = VersionStatus.Locked;
         createdVersion.Description = updatedDescription;
         createdVersion.Status = updatedStatus;

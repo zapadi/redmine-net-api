@@ -2,20 +2,20 @@ using System.Text;
 
 namespace Padi.DotNet.RedmineAPI.Integration.Tests;
 
-public static class ThreadSafeRandom
+internal static class RandomHelper
 {
     /// <summary>
     /// Generates a cryptographically strong, random string suffix.
     /// This method is thread-safe as Guid.NewGuid() is thread-safe.
     /// </summary>
     /// <returns>A random string, 32 characters long, consisting of hexadecimal characters, without hyphens.</returns>
-    public static string GenerateSuffix()
+    private static string GenerateSuffix()
     {
         return Guid.NewGuid().ToString("N");
     }
 
-    private static readonly char[] EnglishAlphabetChars =
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".ToCharArray();
+    private static readonly char[] EnglishAlphabetChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+        .ToCharArray();
 
     // ThreadLocal ensures that each thread has its own instance of Random,
     // which is important because System.Random is not thread-safe for concurrent use.
@@ -60,7 +60,7 @@ public static class ThreadSafeRandom
     /// <summary>
     /// Generates a random name by combining a specified prefix and a random alphabetic suffix.
     /// This method is thread-safe.
-    /// Example: if prefix is "MyItem", the result could be "MyItem_aBcDeFgHiJ".
+    /// Example: if the prefix is "MyItem", the result could be "MyItem_aBcDeFgHiJ".
     /// </summary>
     /// <param name="prefix">The prefix for the name. A '_' separator will be added.</param>
     /// <param name="suffixLength">The desired length of the random suffix. Defaults to 10.</param>
