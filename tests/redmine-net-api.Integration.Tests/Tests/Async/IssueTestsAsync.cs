@@ -1,6 +1,7 @@
 using Padi.DotNet.RedmineAPI.Integration.Tests.Fixtures;
 using Redmine.Net.Api.Exceptions;
 using Redmine.Net.Api.Extensions;
+using Redmine.Net.Api.Net;
 using Redmine.Net.Api.Types;
 
 namespace Padi.DotNet.RedmineAPI.Integration.Tests.Tests.Async;
@@ -10,7 +11,7 @@ public class IssueTestsAsync(RedmineTestContainerFixture fixture)
 {
     private static readonly IdentifiableName ProjectIdName = IdentifiableName.Create<Project>(1);
 
-    private async Task<Issue> CreateTestIssueAsync()
+    private async Task<Issue> CreateTestIssueAsync(List<IssueCustomField> customFields = null, List<Watcher> watchers = null)
     {
         var issue = new Issue
         {
@@ -20,10 +21,8 @@ public class IssueTestsAsync(RedmineTestContainerFixture fixture)
             Tracker = 1.ToIdentifier(),
             Status = 1.ToIssueStatusIdentifier(),
             Priority = 2.ToIdentifier(),
-            CustomFields =
-            [
-                IssueCustomField.CreateMultiple(1, ThreadSafeRandom.GenerateText(8), [ThreadSafeRandom.GenerateText(4), ThreadSafeRandom.GenerateText(4)]) 
-            ]
+            CustomFields = customFields,
+            Watchers = watchers
         };
         return await fixture.RedmineManager.CreateAsync(issue);
     }
@@ -131,5 +130,25 @@ public class IssueTestsAsync(RedmineTestContainerFixture fixture)
 
         //Assert
         await Assert.ThrowsAsync<NotFoundException>(async () => await fixture.RedmineManager.GetAsync<Issue>(issueId));
+    }
+
+    [Fact]
+    public async Task GetIssue_With_Watchers_And_Relations_Should_Succeed()
+    {
+        var createdIssue = await CreateTestIssueAsync(
+        [
+            IssueCustomField.CreateMultiple(1, ThreadSafeRandom.GenerateText(8), 
+                [ThreadSafeRandom.GenerateText(4), ThreadSafeRandom.GenerateText(4)]) 
+        ],
+    [new Watcher() { Id = 1 }, new Watcher(){Id = 2}]);
+        
+        Assert.NotNull(createdIssue);
+        
+        //Act
+        var retrievedIssue = await fixture.RedmineManager.GetAsync<Issue>(createdIssue.Id.ToInvariantString(), 
+            RequestOptions.Include($"{Include.Issue.Watchers},{Include.Issue.Relations}"));
+
+        //Assert
+        Assert.NotNull(retrievedIssue);
     }
 }
