@@ -66,5 +66,8 @@ namespace Redmine.Net.Api
         /// 
         /// </summary>
         public const string JSON = "json";
+        
+        internal const string USER_AGENT_HEADER_KEY = "User-Agent";
+        internal const string CONTENT_TYPE_HEADER_KEY = "Content-Type";
     }
 }
