@@ -58,8 +58,13 @@ namespace Redmine.Net.Api.Net.WebClient.Extensions
                 case WebExceptionStatus.ProtocolError:
                     if (exception.Response != null)
                     {
+                        var statusCode = exception.Response is HttpWebResponse httpResponse 
+                            ? (int)httpResponse.StatusCode 
+                            : (int)HttpStatusCode.InternalServerError;
+                
                         using var responseStream = exception.Response.GetResponseStream();
-                        HttpStatusHelper.MapStatusCodeToException((int)exception.Status, responseStream, innerException, serializer);
+                        HttpStatusHelper.MapStatusCodeToException(statusCode, responseStream, innerException, serializer);
+
                     }
 
                     break;

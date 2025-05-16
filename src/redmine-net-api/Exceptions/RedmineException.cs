@@ -15,6 +15,7 @@
 */
 
 using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.Serialization;
 
@@ -24,6 +25,7 @@ namespace Redmine.Net.Api.Exceptions
     /// Thrown in case something went wrong in Redmine
     /// </summary>
     /// <seealso cref="System.Exception" />
+    [DebuggerDisplay($"{{{nameof(DebuggerDisplay)},nq}}")]
     [Serializable]
     public class RedmineException : Exception
     {
@@ -85,5 +87,7 @@ namespace Redmine.Net.Api.Exceptions
             
         }
         #endif
+        
+        private string DebuggerDisplay => $"[{Message}]";
     }
 }

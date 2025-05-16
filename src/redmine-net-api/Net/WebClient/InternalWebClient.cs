@@ -117,12 +117,10 @@ internal sealed class InternalWebClient : System.Net.WebClient
     protected override WebResponse GetWebResponse(WebRequest request, IAsyncResult result)
     {
         var response = base.GetWebResponse(request, result);
-
         if (response is HttpWebResponse httpResponse)
         {
             StatusCode = httpResponse.StatusCode;
         }
-
         return response;
     }
 
