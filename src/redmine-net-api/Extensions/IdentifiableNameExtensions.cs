@@ -23,6 +23,7 @@ namespace Redmine.Net.Api.Extensions
                 DocumentCategory documentCategory => IdentifiableName.Create<DocumentCategory>(documentCategory.Id, documentCategory.Name),
                 Group group => IdentifiableName.Create<Group>(group.Id, group.Name),
                 GroupUser groupUser => IdentifiableName.Create<GroupUser>(groupUser.Id, groupUser.Name),
+                Issue issue => new IdentifiableName(issue.Id, issue.Subject),
                 IssueAllowedStatus issueAllowedStatus => IdentifiableName.Create<IssueAllowedStatus>(issueAllowedStatus.Id, issueAllowedStatus.Name),
                 IssueCustomField issueCustomField => IdentifiableName.Create<IssueCustomField>(issueCustomField.Id, issueCustomField.Name),
                 IssuePriority issuePriority => IdentifiableName.Create<IssuePriority>(issuePriority.Id, issuePriority.Name),
