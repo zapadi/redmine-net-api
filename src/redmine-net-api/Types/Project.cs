@@ -121,7 +121,21 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The custom fields.
         /// </value>
-        public IList<IssueCustomField> CustomFields { get; set; }
+        [Obsolete($"{RedmineConstants.OBSOLETE_TEXT} Use {nameof(IssueCustomFields)} instead.")]
+        public IList<IssueCustomField> CustomFields
+        {
+            get => IssueCustomFields;
+            set => IssueCustomFields = (List<IssueCustomField>)value;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public List<IssueCustomField> IssueCustomFields { get; set; }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public List<IdentifiableName> CustomFieldValues { get; set; }
 
         /// <summary>
         /// Gets the issue categories.
@@ -129,13 +143,13 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The issue categories.
         /// </value>
-        /// <remarks>Available in Redmine starting with 2.6.0 version.</remarks>
+        /// <remarks>Available in Redmine starting with the 2.6.0 version.</remarks>
         public IList<ProjectIssueCategory> IssueCategories { get; internal set; }
 
         /// <summary>
         /// Gets the time entry activities.
         /// </summary>
-        /// <remarks>Available in Redmine starting with 3.4.0 version.</remarks>
+        /// <remarks>Available in Redmine starting with the 3.4.0 version.</remarks>
         public IList<ProjectTimeEntryActivity> TimeEntryActivities { get; internal set; }
 
         /// <summary>
@@ -169,7 +183,7 @@ namespace Redmine.Net.Api.Types
                 {
                     case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
                     case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
-                    case RedmineKeys.CUSTOM_FIELDS: CustomFields = reader.ReadElementContentAsCollection<IssueCustomField>(); break;
+                    case RedmineKeys.CUSTOM_FIELDS: IssueCustomFields = reader.ReadElementContentAsCollection<IssueCustomField>(); break;
                     case RedmineKeys.DESCRIPTION: Description = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.ENABLED_MODULES: EnabledModules = reader.ReadElementContentAsCollection<ProjectEnabledModule>(); break;
                     case RedmineKeys.HOMEPAGE: HomePage = reader.ReadElementContentAsString(); break;
@@ -203,15 +217,18 @@ namespace Redmine.Net.Api.Types
             writer.WriteIdIfNotNull(RedmineKeys.PARENT_ID, Parent);
             writer.WriteBoolean(RedmineKeys.INHERIT_MEMBERS, InheritMembers);
 
-            //It works only when the new project is a subproject and it inherits the members. 
+            //It works only when the new project is a subproject, and it inherits the members. 
             writer.WriteIdIfNotNull(RedmineKeys.DEFAULT_ASSIGNED_TO_ID, DefaultAssignee);
             //It works only with existing shared versions.
             writer.WriteIdIfNotNull(RedmineKeys.DEFAULT_VERSION_ID, DefaultVersion);
 
             writer.WriteRepeatableElement(RedmineKeys.TRACKER_IDS, (IEnumerable<IValue>)Trackers);
             writer.WriteRepeatableElement(RedmineKeys.ENABLED_MODULE_NAMES, (IEnumerable<IValue>)EnabledModules);
-            writer.WriteRepeatableElement(RedmineKeys.ISSUE_CUSTOM_FIELD_IDS, (IEnumerable<IValue>)CustomFields);
-            writer.WriteArray(RedmineKeys.CUSTOM_FIELDS, CustomFields);
+            writer.WriteRepeatableElement(RedmineKeys.ISSUE_CUSTOM_FIELD_IDS, (IEnumerable<IValue>)IssueCustomFields);
+            if (Id == 0)
+            {
+                writer.WriteArray(RedmineKeys.CUSTOM_FIELD_VALUES, CustomFieldValues);
+            }
         }
         #endregion
 
@@ -238,7 +255,7 @@ namespace Redmine.Net.Api.Types
                 {
                     case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
                     case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadAsDateTime(); break;
-                    case RedmineKeys.CUSTOM_FIELDS: CustomFields = reader.ReadAsCollection<IssueCustomField>(); break;
+                    case RedmineKeys.CUSTOM_FIELDS: IssueCustomFields = reader.ReadAsCollection<IssueCustomField>(); break;
                     case RedmineKeys.DESCRIPTION: Description = reader.ReadAsString(); break;
                     case RedmineKeys.ENABLED_MODULES: EnabledModules = reader.ReadAsCollection<ProjectEnabledModule>(); break;
                     case RedmineKeys.HOMEPAGE: HomePage = reader.ReadAsString(); break;
@@ -275,15 +292,18 @@ namespace Redmine.Net.Api.Types
                 writer.WriteBoolean(RedmineKeys.IS_PUBLIC, IsPublic);
                 writer.WriteIdIfNotNull(RedmineKeys.PARENT_ID, Parent);
                 
-                //It works only when the new project is a subproject and it inherits the members. 
+                //It works only when the new project is a subproject, and it inherits the members. 
                 writer.WriteIdIfNotNull(RedmineKeys.DEFAULT_ASSIGNED_TO_ID, DefaultAssignee);
                 //It works only with existing shared versions.
                 writer.WriteIdIfNotNull(RedmineKeys.DEFAULT_VERSION_ID, DefaultVersion);
                 
                 writer.WriteRepeatableElement(RedmineKeys.TRACKER_IDS, (IEnumerable<IValue>)Trackers);
                 writer.WriteRepeatableElement(RedmineKeys.ENABLED_MODULE_NAMES, (IEnumerable<IValue>)EnabledModules);
-                writer.WriteRepeatableElement(RedmineKeys.ISSUE_CUSTOM_FIELD_IDS, (IEnumerable<IValue>)CustomFields);
-                writer.WriteArray(RedmineKeys.CUSTOM_FIELDS, CustomFields);
+                writer.WriteRepeatableElement(RedmineKeys.ISSUE_CUSTOM_FIELD_IDS, (IEnumerable<IValue>)IssueCustomFields);
+                if (Id == 0)
+                {
+                    writer.WriteArray(RedmineKeys.CUSTOM_FIELD_VALUES, CustomFieldValues);
+                }
             }
         }
         #endregion
