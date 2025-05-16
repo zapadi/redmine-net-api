@@ -160,6 +160,39 @@ namespace Redmine.Net.Api.Extensions
 
             writer.WriteEndElement();
         }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+        /// <param name="elementName"></param>
+        /// <param name="collection"></param>
+        /// <param name="root"></param>
+        /// <param name="defaultNamespace"></param>
+        /// <typeparam name="T"></typeparam>
+        public static void WriteArray<T>(this XmlWriter writer, string elementName, IEnumerable<T> collection, string root, string defaultNamespace = null)
+        {
+            if (collection == null)
+            {
+                return;
+            }
+
+            var type = typeof(T);
+            writer.WriteStartElement(elementName);
+            writer.WriteAttributeString("type", "array");
+
+            var rootAttribute = new XmlRootAttribute(root);
+
+            var serializer = new XmlSerializer(type, XmlAttributeOverrides, EmptyTypeArray, rootAttribute,
+                defaultNamespace);
+
+            foreach (var item in collection)
+            {
+                serializer.Serialize(writer, item);
+            }
+
+            writer.WriteEndElement();
+        }
 
         /// <summary>
         /// Writes the list elements.
