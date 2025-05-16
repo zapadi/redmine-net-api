@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Globalization;
+using Redmine.Net.Api.Common;
 #if !(NET20)
 using System.Threading;
 using System.Threading.Tasks;
