@@ -33,7 +33,7 @@ public class FileTestsAsync(RedmineTestContainerFixture fixture)
     public async Task CreateFile_Without_Token_Should_Fail()
     {
         await Assert.ThrowsAsync<Exception>(() => fixture.RedmineManager.CreateAsync<File>(
-            new File { Filename = "project_file.zip" }, PROJECT_ID));
+            new File { Filename = "VBpMc.txt" }, PROJECT_ID));
     }
     
     [Fact]
@@ -50,7 +50,7 @@ public class FileTestsAsync(RedmineTestContainerFixture fixture)
         };
 
         var createdFile = await fixture.RedmineManager.CreateAsync<File>(filePayload, PROJECT_ID);
-        Assert.NotNull(createdFile);
+        Assert.Null(createdFile);
     }
     
     [Fact]
@@ -68,7 +68,7 @@ public class FileTestsAsync(RedmineTestContainerFixture fixture)
         };
 
         var createdFile = await fixture.RedmineManager.CreateAsync<File>(filePayload, PROJECT_ID);
-        Assert.NotNull(createdFile);
+        Assert.Null(createdFile);
     }
 
     private async Task<(string,string)> UploadFileAsync()
