@@ -179,8 +179,13 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
-        public const string CUSTOM_FIELDS = "custom_fields";
+        public const string CUSTOM_FIELD_VALUES = "custom_field_values";
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string CUSTOM_FIELDS = "custom_fields";
+        
         /// <summary>
         /// 
         /// </summary>

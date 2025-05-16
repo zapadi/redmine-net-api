@@ -344,7 +344,6 @@ namespace Redmine.Net.Api.Types
             writer.WriteIdIfNotNull(RedmineKeys.ASSIGNED_TO_ID, AssignedTo);
             writer.WriteIdIfNotNull(RedmineKeys.PARENT_ISSUE_ID, ParentIssue);
             writer.WriteIdIfNotNull(RedmineKeys.FIXED_VERSION_ID, FixedVersion);
-
             writer.WriteValueOrEmpty(RedmineKeys.ESTIMATED_HOURS, EstimatedHours);
             writer.WriteIfNotDefaultOrNull(RedmineKeys.DONE_RATIO, DoneRatio);
 
