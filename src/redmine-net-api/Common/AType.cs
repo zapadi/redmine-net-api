@@ -1,7 +1,6 @@
 using System;
-using System.Runtime.CompilerServices;
 
-namespace Padi.DotNet.RedmineAPI.Tests.Infrastructure;
+namespace Redmine.Net.Api.Common;
 
 internal readonly struct A<T>{
     public static A<T> Is => default;
