@@ -12,7 +12,7 @@ public class ProjectTestsAsync(RedmineTestContainerFixture fixture)
     {
         var entity = new Project
         {
-            Identifier = Guid.NewGuid().ToString("N"),
+            Identifier = RandomHelper.GenerateText(5),
             Name = "test-random",
         };
         
@@ -22,37 +22,33 @@ public class ProjectTestsAsync(RedmineTestContainerFixture fixture)
     [Fact]
     public async Task CreateProject_Should_Succeed()
     {
+        var projectName = RandomHelper.GenerateText(7);
         var data = new Project
         {
+            Name = projectName,
+            Identifier = projectName.ToLowerInvariant(),
+            Description = RandomHelper.GenerateText(7),
+            HomePage = RandomHelper.GenerateText(7),
             IsPublic = true,
+            InheritMembers = true,
+            
             EnabledModules = [
                 new ProjectEnabledModule("files"), 
                 new ProjectEnabledModule("wiki")
             ],
-            Identifier = Guid.NewGuid().ToString("N"),
-            InheritMembers = true,
-            Name = "test-random",
-            HomePage = "test-homepage",
+
             Trackers =
             [
                 new ProjectTracker(1), 
                 new ProjectTracker(2), 
                 new ProjectTracker(3),
             ],
-            Description = $"Description for create test",
-            CustomFields =
-            [
-                new IssueCustomField 
-                { 
-                    Id = 1, 
-                    Values = [ 
-                        new CustomFieldValue
-                        {
-                            Info = "Custom field test value"
-                        } 
-                    ] 
-                }
-            ]
+
+            CustomFieldValues = [IdentifiableName.Create<CustomField>(1, "cf1"), IdentifiableName.Create<CustomField>(2, "cf2")]
+            // IssueCustomFields =
+            // [
+            //      IssueCustomField.CreateSingle(1, RandomHelper.GenerateText(5), RandomHelper.GenerateText(7)) 
+            // ]
         };
 
         //Act

@@ -19,7 +19,7 @@ public class TimeEntryTestsAsync(RedmineTestContainerFixture fixture)
             Issue = issue.ToIdentifiableName(),
             SpentOn = DateTime.Now.Date,
             Hours = 1.5m,
-            Activity = 8.ToIdentifier(),
+          //  Activity = 8.ToIdentifier(),
             Comments = $"Test time entry comments {Guid.NewGuid()}",
         };
         return await fixture.RedmineManager.CreateAsync(timeEntry);
@@ -35,7 +35,7 @@ public class TimeEntryTestsAsync(RedmineTestContainerFixture fixture)
             Issue = 1.ToIdentifier(),
             SpentOn = DateTime.Now.Date,
             Hours = 1.5m,
-            Activity = 8.ToIdentifier(),
+            //Activity = 8.ToIdentifier(),
             Comments = $"Initial create test comments {Guid.NewGuid()}",
         };
 

@@ -28,7 +28,7 @@ public class VersionTestsAsync(RedmineTestContainerFixture fixture)
     public async Task CreateVersion_Should_Succeed()
     {
         //Arrange
-        var versionSuffix = Guid.NewGuid().ToString("N");
+        var versionSuffix = RandomHelper.GenerateText(6);
         var versionData = new Version
         {
             Name = $"Test Version Create {versionSuffix}",
