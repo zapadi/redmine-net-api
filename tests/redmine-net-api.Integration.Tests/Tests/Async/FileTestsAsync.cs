@@ -1,4 +1,5 @@
 using Padi.DotNet.RedmineAPI.Integration.Tests.Fixtures;
+using Redmine.Net.Api.Exceptions;
 using Redmine.Net.Api.Extensions;
 using File = Redmine.Net.Api.Types.File;
 
@@ -32,7 +33,7 @@ public class FileTestsAsync(RedmineTestContainerFixture fixture)
     [Fact]
     public async Task CreateFile_Without_Token_Should_Fail()
     {
-        await Assert.ThrowsAsync<Exception>(() => fixture.RedmineManager.CreateAsync<File>(
+        await Assert.ThrowsAsync<NotFoundException>(() => fixture.RedmineManager.CreateAsync<File>(
             new File { Filename = "VBpMc.txt" }, PROJECT_ID));
     }
     

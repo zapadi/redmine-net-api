@@ -18,10 +18,11 @@ public class ProjectTestsAsync(RedmineTestContainerFixture fixture)
         
         return await fixture.RedmineManager.CreateAsync(entity);
     }
-    
+
     [Fact]
     public async Task CreateProject_Should_Succeed()
     {
+        //Arrange
         var projectName = RandomHelper.GenerateText(7);
         var data = new Project
         {
@@ -44,7 +45,7 @@ public class ProjectTestsAsync(RedmineTestContainerFixture fixture)
                 new ProjectTracker(3),
             ],
 
-            CustomFieldValues = [IdentifiableName.Create<CustomField>(1, "cf1"), IdentifiableName.Create<CustomField>(2, "cf2")]
+            //CustomFieldValues = [IdentifiableName.Create<CustomField>(1, "cf1"), IdentifiableName.Create<CustomField>(2, "cf2")]
             // IssueCustomFields =
             // [
             //      IssueCustomField.CreateSingle(1, RandomHelper.GenerateText(5), RandomHelper.GenerateText(7)) 

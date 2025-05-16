@@ -11,7 +11,8 @@ public class IssueTestsAsync(RedmineTestContainerFixture fixture)
 {
     private static readonly IdentifiableName ProjectIdName = IdentifiableName.Create<Project>(1);
 
-    private async Task<Issue> CreateTestIssueAsync(List<IssueCustomField> customFields = null, List<Watcher> watchers = null)
+    private async Task<Issue> CreateTestIssueAsync(List<IssueCustomField> customFields = null,
+        List<Watcher> watchers = null)
     {
         var issue = new Issue
         {
@@ -44,7 +45,7 @@ public class IssueTestsAsync(RedmineTestContainerFixture fixture)
             EstimatedHours = 8,
             CustomFields =
             [
-                IssueCustomField.CreateSingle(1, RandomHelper.GenerateText(8), RandomHelper.GenerateText(4)) 
+                IssueCustomField.CreateSingle(1, RandomHelper.GenerateText(8), RandomHelper.GenerateText(4))
             ]
         };
 
@@ -72,7 +73,7 @@ public class IssueTestsAsync(RedmineTestContainerFixture fixture)
         //Arrange
         var createdIssue = await CreateTestIssueAsync();
         Assert.NotNull(createdIssue);
-        
+
         var issueId = createdIssue.Id.ToInvariantString();
 
         //Act
@@ -95,11 +96,11 @@ public class IssueTestsAsync(RedmineTestContainerFixture fixture)
 
         var updatedSubject = RandomHelper.GenerateText(9);
         var updatedDescription = RandomHelper.GenerateText(18);
-        var updatedStatusId = 2; 
-        
+        var updatedStatusId = 2;
+
         createdIssue.Subject = updatedSubject;
         createdIssue.Description = updatedDescription;
-        createdIssue.Status = updatedStatusId.ToIssueStatusIdentifier(); 
+        createdIssue.Status = updatedStatusId.ToIssueStatusIdentifier();
         createdIssue.Notes = RandomHelper.GenerateText("Note");
 
         var issueId = createdIssue.Id.ToInvariantString();
@@ -122,7 +123,7 @@ public class IssueTestsAsync(RedmineTestContainerFixture fixture)
         //Arrange
         var createdIssue = await CreateTestIssueAsync();
         Assert.NotNull(createdIssue);
-        
+
         var issueId = createdIssue.Id.ToInvariantString();
 
         //Act
@@ -136,16 +137,16 @@ public class IssueTestsAsync(RedmineTestContainerFixture fixture)
     public async Task GetIssue_With_Watchers_And_Relations_Should_Succeed()
     {
         var createdIssue = await CreateTestIssueAsync(
-        [
-            IssueCustomField.CreateMultiple(1, RandomHelper.GenerateText(8), 
-                [RandomHelper.GenerateText(4), RandomHelper.GenerateText(4)]) 
-        ],
-    [new Watcher() { Id = 1 }, new Watcher(){Id = 2}]);
-        
+            [
+                IssueCustomField.CreateMultiple(1, RandomHelper.GenerateText(8),
+                    [RandomHelper.GenerateText(4), RandomHelper.GenerateText(4)])
+            ],
+            [new Watcher() { Id = 1 }]);
+
         Assert.NotNull(createdIssue);
-        
+
         //Act
-        var retrievedIssue = await fixture.RedmineManager.GetAsync<Issue>(createdIssue.Id.ToInvariantString(), 
+        var retrievedIssue = await fixture.RedmineManager.GetAsync<Issue>(createdIssue.Id.ToInvariantString(),
             RequestOptions.Include($"{Include.Issue.Watchers},{Include.Issue.Relations}"));
 
         //Assert
