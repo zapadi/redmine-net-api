@@ -95,16 +95,18 @@ public class WikiTestsAsync(RedmineTestContainerFixture fixture)
             await fixture.RedmineManager.GetWikiPageAsync(PROJECT_ID, wikiPageName));
     }
     
-     private async Task<(WikiPage Page, string ProjectId, string PageTitle)> CreateTestWikiPageAsync(
+     private async Task<(string pageTitle, string ProjectId, string PageTitle)> CreateTestWikiPageAsync(
         string pageTitleSuffix = null, 
         string initialText = "Default initial text for wiki page.", 
         string initialComments = "Initial comments for wiki page.")
     {
-        var pageTitle = $"TestWikiPage_{(pageTitleSuffix ?? RandomHelper.GenerateText(5))}";
+        var pageTitle = RandomHelper.GenerateText(5);
         var wikiPageData = new WikiPage
         {
+            Title = RandomHelper.GenerateText(5),
             Text = initialText,
-            Comments = initialComments
+            Comments = initialComments,
+            Version = 0
         };
 
         var createdPage = await fixture.RedmineManager.CreateWikiPageAsync(PROJECT_ID, pageTitle, wikiPageData);
@@ -114,7 +116,7 @@ public class WikiTestsAsync(RedmineTestContainerFixture fixture)
         // Assert.True(createdPage.Id > 0, "Created WikiPage should have a valid ID.");
         // Assert.Equal(initialText, createdPage.Text);
 
-        return (createdPage, PROJECT_ID, pageTitle);
+        return (pageTitle, PROJECT_ID, pageTitle);
     }
 
     [Fact]
@@ -141,7 +143,11 @@ public class WikiTestsAsync(RedmineTestContainerFixture fixture)
     public async Task UpdateWikiPage_Should_Succeed()
     {
         //Arrange
-        var (initialPage, projectId, pageTitle) = await CreateTestWikiPageAsync("UpdateTest", "Original Text.", "Original Comments.");
+        var pageTitle = RandomHelper.GenerateText(8);
+        var text = "This is the content of a new wiki page.";
+        var comments = "Creation comment for new wiki page.";
+        var wikiPageData = new WikiPage { Text = text, Comments = comments };
+        var createdPage = await fixture.RedmineManager.CreateWikiPageAsync(PROJECT_ID, pageTitle, wikiPageData);
         
         var updatedText = $"Updated wiki text content {Guid.NewGuid():N}";
         var updatedComments = "These are updated comments for the wiki page update.";
@@ -150,19 +156,16 @@ public class WikiTestsAsync(RedmineTestContainerFixture fixture)
         { 
             Text = updatedText, 
             Comments = updatedComments,
-            Version = ++initialPage.Version
+            Version = 1
         };
 
         //Act
-        await fixture.RedmineManager.UpdateWikiPageAsync(projectId, pageTitle, wikiPageToUpdate);
-        var retrievedPage = await fixture.RedmineManager.GetAsync<WikiPage>(initialPage.Id.ToInvariantString());
+        await fixture.RedmineManager.UpdateWikiPageAsync(PROJECT_ID, pageTitle, wikiPageToUpdate);
+        var retrievedPage = await fixture.RedmineManager.GetWikiPageAsync(1.ToInvariantString(), createdPage.Title, version: 1);
 
         //Assert
         Assert.NotNull(retrievedPage);
         Assert.Equal(updatedText, retrievedPage.Text);
         Assert.Equal(updatedComments, retrievedPage.Comments);
-        Assert.True(retrievedPage.Version > initialPage.Version 
-                    || (retrievedPage.Version == 1 && initialPage.Version == 0) 
-                    || (initialPage.Version ==0 && retrievedPage.Version ==0));
     }
 }

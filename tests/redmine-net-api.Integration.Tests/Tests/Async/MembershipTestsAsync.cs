@@ -128,4 +128,53 @@ public class MembershipTestsAsync(RedmineTestContainerFixture fixture)
         // Assert
         Assert.DoesNotContain(updatedMemberships.Items, m => m.Id == membership.Id);
     }
+    
+    [Fact]
+    public async Task GetProjectMemberships_ShouldReturnMemberships()
+    {
+        // Test implementation
+    }
+
+    [Fact]
+    public async Task GetProjectMembership_WithValidId_ShouldReturnMembership()
+    {
+        // Test implementation
+    }
+
+    [Fact]
+    public async Task CreateProjectMembership_WithValidData_ShouldSucceed()
+    {
+        // Test implementation
+    }
+
+    [Fact]
+    public async Task CreateProjectMembership_WithInvalidData_ShouldFail()
+    {
+        // Test implementation
+    }
+
+    [Fact]
+    public async Task UpdateProjectMembership_WithValidData_ShouldSucceed()
+    {
+        // Test implementation
+    }
+
+    [Fact]
+    public async Task UpdateProjectMembership_WithInvalidData_ShouldFail()
+    {
+        // Test implementation
+    }
+
+    [Fact]
+    public async Task DeleteProjectMembership_WithValidId_ShouldSucceed()
+    {
+        // Test implementation
+    }
+
+    [Fact]
+    public async Task DeleteProjectMembership_WithInvalidId_ShouldFail()
+    {
+        // Test implementation
+    }
+
 }

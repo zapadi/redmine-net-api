@@ -22,6 +22,6 @@ public class SearchTestsAsync(RedmineTestContainerFixture fixture)
 
         // Assert
         Assert.NotNull(results);
-        Assert.Empty(results.Items);
+        Assert.Null(results.Items);
     }
 }

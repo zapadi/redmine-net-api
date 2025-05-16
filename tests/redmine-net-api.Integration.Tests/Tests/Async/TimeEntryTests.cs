@@ -1,4 +1,5 @@
 using Padi.DotNet.RedmineAPI.Integration.Tests.Fixtures;
+using Padi.DotNet.RedmineAPI.Integration.Tests.Helpers;
 using Redmine.Net.Api.Exceptions;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Types;
@@ -11,7 +12,8 @@ public class TimeEntryTestsAsync(RedmineTestContainerFixture fixture)
     private async Task<TimeEntry> CreateTestTimeEntryAsync()
     {
         var project = await fixture.RedmineManager.GetAsync<Project>(1.ToInvariantString());
-        var issue = await fixture.RedmineManager.GetAsync<Issue>(1.ToInvariantString());
+        var issueData = IssueTestHelper.CreateIssue();
+        var issue = await fixture.RedmineManager.CreateAsync<Issue>(issueData);
         
         var timeEntry = new TimeEntry
         {
@@ -19,7 +21,7 @@ public class TimeEntryTestsAsync(RedmineTestContainerFixture fixture)
             Issue = issue.ToIdentifiableName(),
             SpentOn = DateTime.Now.Date,
             Hours = 1.5m,
-          //  Activity = 8.ToIdentifier(),
+            Activity = 8.ToIdentifier(),
             Comments = $"Test time entry comments {Guid.NewGuid()}",
         };
         return await fixture.RedmineManager.CreateAsync(timeEntry);
@@ -29,13 +31,15 @@ public class TimeEntryTestsAsync(RedmineTestContainerFixture fixture)
     public async Task CreateTimeEntry_Should_Succeed()
     {
         //Arrange
+        var issueData = IssueTestHelper.CreateIssue();
+        var issue = await fixture.RedmineManager.CreateAsync<Issue>(issueData);
         var timeEntryData = new TimeEntry
         {
             Project = 1.ToIdentifier(),
-            Issue = 1.ToIdentifier(),
+            Issue = issue.ToIdentifiableName(),
             SpentOn = DateTime.Now.Date,
             Hours = 1.5m,
-            //Activity = 8.ToIdentifier(),
+            Activity = 8.ToIdentifier(),
             Comments = $"Initial create test comments {Guid.NewGuid()}",
         };
 
