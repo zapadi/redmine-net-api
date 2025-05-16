@@ -107,7 +107,7 @@ namespace Redmine.Net.Api.Types
                 writer.WriteIdIfNotNull(RedmineKeys.USER_ID, User);
             }
 
-            writer.WriteArray(RedmineKeys.ROLE_IDS, Roles, typeof(MembershipRole), RedmineKeys.ROLE_ID);
+            writer.WriteArray(RedmineKeys.ROLE_IDS, Roles,  root: RedmineKeys.ROLE_ID);
         }
         #endregion
 
@@ -155,7 +155,7 @@ namespace Redmine.Net.Api.Types
                     writer.WriteIdIfNotNull(RedmineKeys.USER_ID, User);
                 }
 
-                writer.WriteRepeatableElement(RedmineKeys.ROLE_IDS, (IEnumerable<IValue>)Roles);
+                writer.WriteArray(RedmineKeys.ROLE_IDS, Roles);
             }
         }
         #endregion
