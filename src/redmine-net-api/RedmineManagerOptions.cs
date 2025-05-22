@@ -17,7 +17,7 @@
 using System;
 using System.Net;
 using Redmine.Net.Api.Authentication;
-using Redmine.Net.Api.Net;
+using Redmine.Net.Api.Logging;
 using Redmine.Net.Api.Net.WebClient;
 using Redmine.Net.Api.Serialization;
 
@@ -69,5 +69,12 @@ namespace Redmine.Net.Api
         public Version RedmineVersion { get; init; }
         
         internal bool VerifyServerCert { get; init; }
+        
+        public IRedmineLogger Logger { get; init; }
+        
+        /// <summary>
+        /// Gets or sets additional logging configuration options
+        /// </summary>
+        public RedmineLoggingOptions LoggingOptions { get; init; } = new RedmineLoggingOptions();
     }
 }

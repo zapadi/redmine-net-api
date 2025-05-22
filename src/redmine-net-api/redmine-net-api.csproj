@@ -3,6 +3,7 @@
 
   <PropertyGroup>
     <Net20_Net40>|net20|net40|</Net20_Net40>
+    <Net20_Net461>|net20|net40|net45|net451|net452|net46|net461|</Net20_Net461>
   </PropertyGroup>
   
   <PropertyGroup Label="Build">
@@ -91,7 +92,7 @@
 
   <ItemGroup Label="Package References">
     <PackageReference Include="Newtonsoft.Json" />
-    <PackageReference Include="System.Memory" Condition=" $(Net20_Net40.Contains('|$(TargetFramework)|')) == FALSE " />
+    <PackageReference Include="Microsoft.Extensions.Http" Condition=" $(Net20_Net461.Contains('|$(TargetFramework)|')) == FALSE "/>
   </ItemGroup>
   
   <ItemGroup Condition=" '$(TargetFramework)' == 'net20' " Label=".NET 2.0 Package References">
@@ -105,11 +106,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <EmbeddedResource Remove="Logging\**" />
     <Compile Remove="Properties\AssemblyInfo.cs" />
-    <Compile Remove="Extensions\LoggerExtensions.cs" />
-    <Compile Remove="Logging\**" />
-    <None Remove="Logging\**" />
     <None Include="..\..\redmine-net-api.snk">
       <Link>redmine-net-api.snk</Link>
     </None>
