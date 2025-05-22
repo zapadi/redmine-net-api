@@ -16,9 +16,12 @@
 
 using System;
 using System.Net;
+#if  NET462_OR_GREATER || NETCOREAPP
+using Microsoft.Extensions.Logging;
+#endif
 using Redmine.Net.Api.Authentication;
 using Redmine.Net.Api.Exceptions;
-using Redmine.Net.Api.Extensions;
+using Redmine.Net.Api.Logging;
 using Redmine.Net.Api.Net;
 using Redmine.Net.Api.Net.WebClient;
 using Redmine.Net.Api.Serialization;
@@ -30,6 +33,9 @@ namespace Redmine.Net.Api
     /// </summary>
     public sealed class RedmineManagerOptionsBuilder
     {
+        private IRedmineLogger _redmineLogger = RedmineNullLogger.Instance;
+        private Action<RedmineLoggingOptions> _configureLoggingOptions;
+        
         private enum ClientType
         {
             WebClient,
@@ -191,6 +197,32 @@ namespace Redmine.Net.Api
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="logger"></param>
+        /// <param name="configure"></param>
+        /// <returns></returns>
+        public RedmineManagerOptionsBuilder WithLogger(IRedmineLogger logger, Action<RedmineLoggingOptions> configure = null)
+        {
+            _redmineLogger = logger ?? RedmineNullLogger.Instance;
+            _configureLoggingOptions = configure;
+            return this;
+        }
+#if  NET462_OR_GREATER || NETCOREAPP
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="logger"></param>
+        /// <param name="configure"></param>
+        /// <returns></returns>
+        public RedmineManagerOptionsBuilder WithLogger(ILogger logger, Action<RedmineLoggingOptions> configure = null)
+        {
+            _redmineLogger = new MicrosoftLoggerRedmineAdapter(logger);
+            _configureLoggingOptions = configure;
+            return this;
+        }
+#endif
+        /// <summary>
         /// Gets or sets the version of the Redmine server to which this client will connect.
         /// </summary>
         public Version Version { get; set; }
@@ -239,6 +271,12 @@ namespace Redmine.Net.Api
 #endif
 
             var baseAddress = CreateRedmineUri(Host, WebClientOptions.Scheme);
+            RedmineLoggingOptions redmineLoggingOptions = null;
+            if (_configureLoggingOptions != null)
+            {
+                redmineLoggingOptions = new RedmineLoggingOptions();
+                _configureLoggingOptions(redmineLoggingOptions);
+            }
             
             var options = new RedmineManagerOptions()
             {
@@ -249,6 +287,8 @@ namespace Redmine.Net.Api
                 RedmineVersion = Version,
                 Authentication = Authentication ?? new RedmineNoAuthentication(),
                 WebClientOptions = WebClientOptions 
+                Logger = _redmineLogger,
+                LoggingOptions = redmineLoggingOptions,
             };
             
             return options;
