@@ -24,10 +24,6 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// 
         /// </summary>
-        StatusAnonymous = 0,
-        /// <summary>
-        /// 
-        /// </summary>
         StatusActive = 1,
         /// <summary>
         /// 

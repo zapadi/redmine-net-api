@@ -6,7 +6,7 @@ namespace Redmine.Net.Api.Logging;
 public sealed class RedmineLoggingOptions
 {
     /// <summary>
-    /// Gets or sets the minimum log level
+    /// Gets or sets the minimum log level. The default value is LogLevel.Information
     /// </summary>
     public LogLevel MinimumLevel { get; set; } = LogLevel.Information;
 
