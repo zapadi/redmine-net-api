@@ -17,11 +17,16 @@
 using System;
 using System.Net;
 using Redmine.Net.Api.Authentication;
+using Redmine.Net.Api.Http;
+using Redmine.Net.Api.Http.Clients.WebClient;
 using Redmine.Net.Api.Logging;
-using Redmine.Net.Api.Net.WebClient;
 using Redmine.Net.Api.Serialization;
+#if !NET20
+using System.Net.Http;
+using Redmine.Net.Api.Http.Clients.HttpClient;
+#endif
 
-namespace Redmine.Net.Api
+namespace Redmine.Net.Api.Options
 {
     /// <summary>
     /// 
@@ -54,21 +59,9 @@ namespace Redmine.Net.Api
         public IRedmineAuthentication Authentication { get; init; }
 
         /// <summary>
-        /// Gets or sets a custom function that creates and returns a specialized instance of the WebClient class.
-        /// </summary>
-        public Func<WebClient> ClientFunc { get; init; }
-        
-        /// <summary>
-        /// Gets or sets the settings for configuring the Redmine web client.
-        /// </summary>
-        public IRedmineWebClientOptions WebClientOptions { get; init; }
-        
-        /// <summary>
         /// Gets or sets the version of the Redmine server to which this client will connect.
         /// </summary>
         public Version RedmineVersion { get; init; }
-        
-        internal bool VerifyServerCert { get; init; }
         
         public IRedmineLogger Logger { get; init; }
         
@@ -76,5 +69,38 @@ namespace Redmine.Net.Api
         /// Gets or sets additional logging configuration options
         /// </summary>
         public RedmineLoggingOptions LoggingOptions { get; init; } = new RedmineLoggingOptions();
+        
+        /// <summary>
+        /// Gets or sets the settings for configuring the Redmine http client.
+        /// </summary>
+        public IRedmineApiClientOptions ApiClientOptions { get; set; }
+        
+        /// <summary>
+        /// Gets or sets a custom function that creates and returns a specialized instance of the WebClient class.
+        /// </summary>
+        public Func<WebClient> ClientFunc { get; init; }
+        
+        /// <summary>
+        /// Gets or sets the settings for configuring the Redmine web client.
+        /// </summary>
+        public RedmineWebClientOptions WebClientOptions {
+            get => (RedmineWebClientOptions)ApiClientOptions;
+            set => ApiClientOptions = value;
+        }
+        
+        #if !NET20
+        /// <summary>
+        /// 
+        /// </summary>
+        public HttpClient HttpClient { get; init; }
+        
+        /// <summary>
+        /// Gets or sets the settings for configuring the Redmine http client.
+        /// </summary>
+        public RedmineHttpClientOptions HttpClientOptions {
+            get => (RedmineHttpClientOptions)ApiClientOptions;
+            set => ApiClientOptions = value;
+        }
+        #endif
     }
 }

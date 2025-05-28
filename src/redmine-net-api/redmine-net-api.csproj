@@ -4,6 +4,7 @@
   <PropertyGroup>
     <Net20_Net40>|net20|net40|</Net20_Net40>
     <Net20_Net461>|net20|net40|net45|net451|net452|net46|net461|</Net20_Net461>
+    <Net45_Net461>|net45|net451|net452|net46|net461|</Net45_Net461>
   </PropertyGroup>
   
   <PropertyGroup Label="Build">
@@ -91,8 +92,15 @@
   </PropertyGroup>
 
   <ItemGroup Label="Package References">
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies.net48" />
     <PackageReference Include="Newtonsoft.Json" />
     <PackageReference Include="Microsoft.Extensions.Http" Condition=" $(Net20_Net461.Contains('|$(TargetFramework)|')) == FALSE "/>
+  </ItemGroup>
+  
+  <ItemGroup Condition=" $(Net20_Net40.Contains('|$(TargetFramework)|')) == FALSE ">
+    <PackageReference Include="System.Memory" />
+    <PackageReference Include="System.Buffers" />
+    <PackageReference Include="System.ValueTuple" />
   </ItemGroup>
   
   <ItemGroup Condition=" '$(TargetFramework)' == 'net20' " Label=".NET 2.0 Package References">
@@ -103,6 +111,10 @@
     <PackageReference Include="System.ValueTuple" />
     <PackageReference Include="Microsoft.Bcl.Async" />
     <PackageReference Include="Microsoft.Net.Http" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" $(Net45_Net461.Contains('|$(TargetFramework)|')) ">
+    <PackageReference Include="System.Net.Http" />
   </ItemGroup>
   
   <ItemGroup>
