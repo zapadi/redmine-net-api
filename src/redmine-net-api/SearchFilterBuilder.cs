@@ -16,7 +16,6 @@
 
 using System;
 using System.Collections.Specialized;
-using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Http.Extensions;
 
 namespace Redmine.Net.Api

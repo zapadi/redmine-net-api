@@ -21,7 +21,6 @@ using System.Xml.Schema;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 using Redmine.Net.Api.Internals;
-using Redmine.Net.Api.Serialization;
 using Redmine.Net.Api.Serialization.Json;
 
 namespace Redmine.Net.Api.Types

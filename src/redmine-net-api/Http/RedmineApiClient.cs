@@ -2,8 +2,6 @@ using System;
 using Redmine.Net.Api.Authentication;
 using Redmine.Net.Api.Http.Constants;
 using Redmine.Net.Api.Http.Messages;
-using Redmine.Net.Api.Net;
-using Redmine.Net.Api.Net.Internal;
 using Redmine.Net.Api.Options;
 using Redmine.Net.Api.Serialization;
 

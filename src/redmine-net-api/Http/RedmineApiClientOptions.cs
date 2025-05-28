@@ -5,7 +5,6 @@ using System.Net.Cache;
 #if NET || NET471_OR_GREATER
 using System.Net.Http;
 #endif
-using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 
 namespace Redmine.Net.Api.Http;

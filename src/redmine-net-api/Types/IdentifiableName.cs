@@ -16,7 +16,6 @@
 
 using System;
 using System.Diagnostics;
-using System.Globalization;
 using System.Xml;
 using Newtonsoft.Json;
 using Redmine.Net.Api.Extensions;

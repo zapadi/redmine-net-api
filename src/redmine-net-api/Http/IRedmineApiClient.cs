@@ -20,8 +20,6 @@ using Redmine.Net.Api.Http.Messages;
 using System.Threading;
 using System.Threading.Tasks;
 #endif
-using Redmine.Net.Api.Net;
-using Redmine.Net.Api.Net.Internal;
 
 namespace Redmine.Net.Api.Http;
 /// <summary>

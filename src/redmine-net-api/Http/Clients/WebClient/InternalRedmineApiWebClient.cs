@@ -17,7 +17,6 @@
 using System;
 using System.Collections.Specialized;
 using System.Globalization;
-using System.IO;
 using System.Net;
 using System.Text;
 using Redmine.Net.Api.Authentication;

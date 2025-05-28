@@ -18,7 +18,6 @@ using System.Net;
 #if (NET45_OR_GREATER || NET)
 using System.Net.Security;
 #endif
-using System.Security.Cryptography.X509Certificates;
 
 namespace Redmine.Net.Api.Http.Clients.WebClient;
 /// <summary>

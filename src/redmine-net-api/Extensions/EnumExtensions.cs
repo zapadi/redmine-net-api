@@ -1,4 +1,3 @@
-using System;
 using Redmine.Net.Api.Authentication;
 using Redmine.Net.Api.Types;
 

@@ -15,7 +15,6 @@
 */
 
 using System.Diagnostics;
-using System.Globalization;
 using System.Xml.Serialization;
 using Redmine.Net.Api.Common;
 using Redmine.Net.Api.Extensions;

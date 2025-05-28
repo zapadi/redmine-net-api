@@ -1,5 +1,3 @@
-using System;
-using System.Net;
 using System.Text;
 using Redmine.Net.Api.Options;
 
