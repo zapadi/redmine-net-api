@@ -11,11 +11,6 @@ public sealed class RedmineLoggingOptions
     public LogLevel MinimumLevel { get; set; } = LogLevel.Information;
 
     /// <summary>
-    /// Gets or sets whether detailed API request/response logging is enabled
-    /// </summary>
-    public bool EnableVerboseLogging { get; set; }
-
-    /// <summary>
     /// Gets or sets whether to include HTTP request/response details in logs
     /// </summary>
     public bool IncludeHttpDetails { get; set; }
