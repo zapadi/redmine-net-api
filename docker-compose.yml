@@ -5,7 +5,7 @@ services:
     ports:
       - '8089:3000'
     image: 'redmine:6.0.5-alpine'
-    container_name: 'redmine-web'
+    container_name: 'redmine-web605'
     depends_on:
       - db-postgres
     # healthcheck:
@@ -32,8 +32,8 @@ services:
       POSTGRES_DB: redmine
       POSTGRES_USER: redmine-usr
       POSTGRES_PASSWORD: redmine-pswd
-    container_name: 'redmine-db'
-    image: 'postgres:17.4-alpine'
+    container_name: 'redmine-db175'
+    image: 'postgres:17.5-alpine'
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 20s
