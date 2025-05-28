@@ -14,7 +14,7 @@ public static class EnumExtensions
     /// </summary>
     /// <param name="enum">The enumeration value to be converted.</param>
     /// <returns>A string representation of the IssueRelationType enumeration value in a lowercase, or "undefined" if the value does not match a defined case.</returns>
-    public static string ToLowerInvariant(this IssueRelationType @enum)
+    public static string ToLowerName(this IssueRelationType @enum)
     {
         return @enum switch
         {
@@ -36,7 +36,7 @@ public static class EnumExtensions
     /// </summary>
     /// <param name="enum">The VersionSharing enumeration value to be converted.</param>
     /// <returns>A string representation of the VersionSharing enumeration value in a lowercase, or "undefined" if the value does not match a valid case.</returns>
-    public static string ToLowerInvariant(this VersionSharing @enum)
+    public static string ToLowerName(this VersionSharing @enum)
     {
         return @enum switch
         {
@@ -55,7 +55,7 @@ public static class EnumExtensions
     /// </summary>
     /// <param name="enum">The <see cref="VersionStatus"/> enumeration value to be converted.</param>
     /// <returns>A lowercase string representation of the enumeration value, or "undefined" if the value does not match a defined case.</returns>
-    public static string ToLowerInvariant(this VersionStatus @enum)
+    public static string ToLowerName(this VersionStatus @enum)
     {
         return @enum switch
         {
@@ -72,7 +72,7 @@ public static class EnumExtensions
     /// </summary>
     /// <param name="enum">The ProjectStatus enumeration value to be converted.</param>
     /// <returns>A string representation of the ProjectStatus enumeration value in a lowercase, or "undefined" if the value does not match a defined case.</returns>
-    public static string ToLowerInvariant(this ProjectStatus @enum)
+    public static string ToLowerName(this ProjectStatus @enum)
     {
         return @enum switch
         {
@@ -89,12 +89,11 @@ public static class EnumExtensions
     /// </summary>
     /// <param name="enum">The enumeration value to be converted.</param>
     /// <returns>A string representation of the UserStatus enumeration value in a lowercase, or "undefined" if the value does not match a defined case.</returns>
-    public static string ToLowerInvariant(this UserStatus @enum)
+    public static string ToLowerName(this UserStatus @enum)
     {
         return @enum switch
         {
             UserStatus.StatusActive => "status_active",
-            UserStatus.StatusAnonymous => "status_anonymous",
             UserStatus.StatusLocked => "status_locked",
             UserStatus.StatusRegistered => "status_registered",
             _ => "undefined"

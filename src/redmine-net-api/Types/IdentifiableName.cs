@@ -21,6 +21,8 @@ using System.Xml;
 using Newtonsoft.Json;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Internals;
+using Redmine.Net.Api.Serialization.Json.Extensions;
+using Redmine.Net.Api.Serialization.Xml.Extensions;
 
 namespace Redmine.Net.Api.Types
 {

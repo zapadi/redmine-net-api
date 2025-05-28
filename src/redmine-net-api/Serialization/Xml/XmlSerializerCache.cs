@@ -19,7 +19,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Xml.Serialization;
 
-namespace Redmine.Net.Api.Serialization
+namespace Redmine.Net.Api.Serialization.Xml
 {
 	/// <summary>
 	/// 

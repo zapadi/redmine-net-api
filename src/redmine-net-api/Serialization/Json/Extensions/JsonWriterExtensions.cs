@@ -20,10 +20,11 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using Newtonsoft.Json;
-using Redmine.Net.Api.Serialization;
+using Redmine.Net.Api.Common;
+using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Types;
 
-namespace Redmine.Net.Api.Extensions
+namespace Redmine.Net.Api.Serialization.Json.Extensions
 {
     /// <summary>
     /// 

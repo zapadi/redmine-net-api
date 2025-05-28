@@ -14,7 +14,7 @@
    limitations under the License.
 */
 
-namespace Redmine.Net.Api.Types
+namespace Redmine.Net.Api.Common
 {
     /// <summary>
     /// 

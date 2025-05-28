@@ -16,7 +16,7 @@
 
 using Newtonsoft.Json;
 
-namespace Redmine.Net.Api.Serialization
+namespace Redmine.Net.Api.Serialization.Json
 {
     /// <summary>
     /// 

@@ -16,11 +16,12 @@
 
 using System;
 using System.Collections.Generic;
+using Redmine.Net.Api.Common;
 using Redmine.Net.Api.Exceptions;
-using Redmine.Net.Api.Net;
-using Redmine.Net.Api.Serialization;
+using Redmine.Net.Api.Http;
+using Redmine.Net.Api.Types;
 
-namespace Redmine.Net.Api.Types;
+namespace Redmine.Net.Api;
 
 /// <summary>
 /// 

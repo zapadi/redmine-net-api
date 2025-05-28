@@ -14,14 +14,24 @@
    limitations under the License.
 */
 
-using Redmine.Net.Api.Net.Internal;
-
-namespace Redmine.Net.Api.Net.WebClient.MessageContent;
-
-internal class ByteArrayApiRequestMessageContent : ApiRequestMessageContent
+namespace Redmine.Net.Api.Http
 {
-    public ByteArrayApiRequestMessageContent(byte[] content)
+    /// <summary>
+    /// 
+    /// </summary>
+    internal enum RedirectType
     {
-        Body = content;
+        /// <summary>
+        /// 
+        /// </summary>
+        None,
+        /// <summary>
+        /// 
+        /// </summary>
+        OnlyHost,
+        /// <summary>
+        /// 
+        /// </summary>
+        All
     }
 }

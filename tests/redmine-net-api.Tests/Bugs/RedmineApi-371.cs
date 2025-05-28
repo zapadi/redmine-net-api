@@ -2,7 +2,7 @@ using System.Collections.Specialized;
 using Padi.DotNet.RedmineAPI.Tests.Infrastructure.Fixtures;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Extensions;
-using Redmine.Net.Api.Net;
+using Redmine.Net.Api.Http;
 using Redmine.Net.Api.Types;
 using Xunit;
 

@@ -17,14 +17,16 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Globalization;
 using System.Net;
-using Redmine.Net.Api.Authentication;
+using Redmine.Net.Api.Common;
 using Redmine.Net.Api.Extensions;
+using Redmine.Net.Api.Http;
+using Redmine.Net.Api.Http.Clients.WebClient;
+using Redmine.Net.Api.Http.Extensions;
 using Redmine.Net.Api.Internals;
-using Redmine.Net.Api.Net;
+using Redmine.Net.Api.Logging;
 using Redmine.Net.Api.Net.Internal;
-using Redmine.Net.Api.Net.WebClient;
+using Redmine.Net.Api.Options;
 using Redmine.Net.Api.Serialization;
 using Redmine.Net.Api.Types;
 
@@ -57,8 +59,8 @@ namespace Redmine.Net.Api
             RedmineApiUrls = new RedmineApiUrls(_redmineManagerOptions.Serializer.Format);
            
             ApiClient =
-#if NET45_OR_GREATER || NETCOREAPP
-             _redmineManagerOptions.WebClientOptions switch
+#if NET40_OR_GREATER || NET
+             _redmineManagerOptions.ApiClientOptions switch
             {
                 RedmineWebClientOptions => CreateWebClient(_redmineManagerOptions),
                 RedmineHttpClientOptions => CreateHttpClient(_redmineManagerOptions),
@@ -68,13 +70,14 @@ namespace Redmine.Net.Api
 #endif
         }
 
-        private InternalRedmineApiWebClient CreateWebClient(RedmineManagerOptions options)
+        private static InternalRedmineApiWebClient CreateWebClient(RedmineManagerOptions options)
         {
             if (options.ClientFunc != null)
             {
-                return new InternalRedmineApiWebClient(options.ClientFunc, options.Authentication, options.Serializer);
+                return new InternalRedmineApiWebClient(options.ClientFunc, options);
             }
 
+            ApplyServiceManagerSettings(options.WebClientOptions);
 #pragma warning disable SYSLIB0014
             options.WebClientOptions.SecurityProtocolType ??= ServicePointManager.SecurityProtocol;
 #pragma warning restore SYSLIB0014
@@ -85,18 +88,57 @@ namespace Redmine.Net.Api
 
 #if NET45_OR_GREATER
             if (options.VerifyServerCert)
+        private static void ApplyServiceManagerSettings(RedmineWebClientOptions options)
+        {
+            if (options == null)
             {
-                options.WebClientOptions.ServerCertificateValidationCallback = RemoteCertValidate;
+                return;
+            }
+        
+            if (options.SecurityProtocolType.HasValue)
+            {
+                ServicePointManager.SecurityProtocol = options.SecurityProtocolType.Value;
+            }
+        
+            if (options.DefaultConnectionLimit.HasValue)
+            {
+                ServicePointManager.DefaultConnectionLimit = options.DefaultConnectionLimit.Value;
+            }
+        
+            if (options.DnsRefreshTimeout.HasValue)
+            {
+                ServicePointManager.DnsRefreshTimeout = options.DnsRefreshTimeout.Value;
+            }
+        
+            if (options.EnableDnsRoundRobin.HasValue)
+            {
+                ServicePointManager.EnableDnsRoundRobin = options.EnableDnsRoundRobin.Value;
+            }
+        
+            if (options.MaxServicePoints.HasValue)
+            {
+                ServicePointManager.MaxServicePoints = options.MaxServicePoints.Value;
+            }
+        
+            if (options.MaxServicePointIdleTime.HasValue)
+            {
+                ServicePointManager.MaxServicePointIdleTime = options.MaxServicePointIdleTime.Value;
+            }
+        
+#if(NET46_OR_GREATER || NET)
+            if (options.ReusePort.HasValue)
+            {
+                ServicePointManager.ReusePort = options.ReusePort.Value;
             }
 #endif
-            return new InternalRedmineApiWebClient(options);
+        #if NEFRAMEWORK
+            if (options.CheckCertificateRevocationList)
+            {
+                ServicePointManager.CheckCertificateRevocationList = true;
+            }
+#endif
         }
         
-        private IRedmineApiClient CreateHttpClient(RedmineManagerOptions options)
-        {
-            throw new NotImplementedException();
-        }
-
         /// <inheritdoc />
         public int Count<T>(RequestOptions requestOptions = null) 
             where T : class, new()

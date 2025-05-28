@@ -14,11 +14,19 @@
    limitations under the License.
 */
 
-namespace Redmine.Net.Api.Net.Internal;
+using System.Collections.Specialized;
+using Redmine.Net.Api.Http.Clients.WebClient;
+using Redmine.Net.Api.Http.Constants;
 
-internal abstract class ApiRequestMessageContent
+namespace Redmine.Net.Api.Http.Messages;
+
+internal sealed class RedmineApiRequest
 {
-    public string ContentType { get; internal set; }
-
-    public byte[] Body { get; internal set; }
+    public RedmineApiRequestContent Content { get; set; }
+    public string Method { get; set; } = HttpConstants.HttpVerbs.GET;
+    public string RequestUri { get; set; }
+    public NameValueCollection QueryString { get; set; }
+    public string ImpersonateUser { get; set; }
+        
+    public string ContentType { get; set; }
 }

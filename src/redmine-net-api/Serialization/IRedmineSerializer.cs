@@ -14,6 +14,8 @@
    limitations under the License.
 */
 
+using Redmine.Net.Api.Common;
+
 namespace Redmine.Net.Api.Serialization
 {
     /// <summary>
