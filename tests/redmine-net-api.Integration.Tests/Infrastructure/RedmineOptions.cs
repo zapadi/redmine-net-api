@@ -1,6 +1,6 @@
 ﻿using Padi.DotNet.RedmineAPI.Integration.Tests.Fixtures;
 
-namespace Padi.DotNet.RedmineAPI.Tests.Infrastructure
+namespace Padi.DotNet.RedmineAPI.Integration.Tests.Infrastructure
 {
     public sealed class TestContainerOptions
     {

@@ -1,6 +1,6 @@
 using System.Text;
 using Redmine.Net.Api;
-using Redmine.Net.Api.Net;
+using Redmine.Net.Api.Http;
 using Redmine.Net.Api.Types;
 using File = System.IO.File;
 

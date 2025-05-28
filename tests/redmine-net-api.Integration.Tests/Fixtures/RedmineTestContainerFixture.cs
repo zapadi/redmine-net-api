@@ -3,9 +3,9 @@ using DotNet.Testcontainers.Configurations;
 using DotNet.Testcontainers.Containers;
 using DotNet.Testcontainers.Networks;
 using Npgsql;
-using Padi.DotNet.RedmineAPI.Tests;
-using Padi.DotNet.RedmineAPI.Tests.Infrastructure;
+using Padi.DotNet.RedmineAPI.Integration.Tests.Infrastructure;
 using Redmine.Net.Api;
+using Redmine.Net.Api.Options;
 using Testcontainers.PostgreSql;
 using Xunit.Abstractions;
 
@@ -35,55 +35,13 @@ public class RedmineTestContainerFixture : IAsyncLifetime
 
     public RedmineTestContainerFixture()
     {
-        _redmineOptions = TestHelper.GetConfiguration();
+        _redmineOptions = ConfigurationHelper.GetConfiguration();
         
         if (_redmineOptions.Mode != TestContainerMode.UseExisting)
         {
             BuildContainers();
         }
     }
-
-    // private static string GetExistingRedmineUrl()
-    // {
-    //     return GetConfigValue("TestContainer:ExistingRedmineUrl") ?? "http://localhost:3000";
-    // }
-    //
-    // private static string GetRedmineUsername()
-    // {
-    //     return GetConfigValue("Redmine:Username") ?? DefaultRedmineUser;
-    // }
-    //
-    // private static string GetRedminePassword()
-    // {
-    //     return GetConfigValue("Redmine:Password") ?? DefaultRedminePassword;
-    // }
-    
-    /// <summary>
-    /// Gets configuration value from environment variables or appsettings.json
-    /// </summary>
-    // private static string GetConfigValue(string key)
-    // {
-    //     var envKey = key.Replace(":", "__");
-    //     var envValue = Environment.GetEnvironmentVariable(envKey);
-    //     if (!string.IsNullOrEmpty(envValue))
-    //     {
-    //         return envValue;
-    //     }
-    //     
-    //     try
-    //     {
-    //         var config = new ConfigurationBuilder()
-    //             .AddJsonFile("appsettings.json", optional: true)
-    //             .AddJsonFile("appsettings.local.json", optional: true)
-    //             .Build();
-    //             
-    //         return config[key];
-    //     }
-    //     catch
-    //     {
-    //         return null;
-    //     }
-    // }
 
     /// <summary>
     /// Detects if running in a CI/CD environment
@@ -94,30 +52,6 @@ public class RedmineTestContainerFixture : IAsyncLifetime
                !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("GITHUB_ACTIONS"));
 
     }
-
-    /// <summary>
-    /// Gets container mode from configuration
-    /// </summary>
-    // private static TestContainerMode GetContainerMode()
-    // {
-    //     var mode = GetConfigValue("TestContainer:Mode");
-    //     
-    //     if (string.IsNullOrEmpty(mode))
-    //     {
-    //         if (IsRunningInCiEnvironment())
-    //         {
-    //             return TestContainerMode.CreateNewWithRandomPorts;
-    //         }
-    //         
-    //         return TestContainerMode.CreateNewWithRandomPorts;
-    //     }
-    //     
-    //     return mode.ToLowerInvariant() switch
-    //     {
-    //         "existing" => TestContainerMode.UseExisting,
-    //         _ => TestContainerMode.CreateNewWithRandomPorts
-    //     };
-    // }
     
     private void BuildContainers()
     {
@@ -125,8 +59,7 @@ public class RedmineTestContainerFixture : IAsyncLifetime
             .WithDriver(NetworkDriver.Bridge)
             .Build();
 
-        var postgresBuilder
-            = new PostgreSqlBuilder()
+        var postgresBuilder = new PostgreSqlBuilder()
             .WithImage(PostgresImage)
             .WithNetwork(Network)
             .WithNetworkAliases(RedmineNetworkAlias)
@@ -150,8 +83,7 @@ public class RedmineTestContainerFixture : IAsyncLifetime
         
         PostgresContainer = postgresBuilder.Build();
         
-        var redmineBuilder
-            = new ContainerBuilder()
+        var redmineBuilder = new ContainerBuilder()
             .WithImage(RedmineImage)
             .WithNetwork(Network)
             .WithPortBinding(RedminePort, assignRandomHostPort: true)
@@ -213,7 +145,11 @@ public class RedmineTestContainerFixture : IAsyncLifetime
             RedmineHost = $"http://{RedmineContainer.Hostname}:{RedmineContainer.GetMappedPublicPort(RedminePort)}";
         }
 
-        rmgBuilder.WithHost(RedmineHost);
+        rmgBuilder
+            .WithHost(RedmineHost)
+            .UseHttpClient()
+            //.UseWebClient()
+            .WithXmlSerialization();
         
         RedmineManager = new RedmineManager(rmgBuilder);
     }

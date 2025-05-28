@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <Net40_Net461>|net40|net45|net451|net452|net46|net461|</Net40_Net461>
