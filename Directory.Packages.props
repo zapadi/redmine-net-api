@@ -1,10 +1,12 @@
 <Project>
     <PropertyGroup>
-        <Net45_Net461>|net45|net451|net452|net46|net461|</Net45_Net461>
+        <Net20_Net46>|net20|net40|net45|net451|net452|net46|</Net20_Net46>
         <Net20_Net461>|net20|net40|net45|net451|net452|net46|net461|</Net20_Net461>
+        <Net45_Net46>|net45|net451|net452|net46|</Net45_Net46>
+        <Net45_Net461>|net45|net451|net452|net46|net461|</Net45_Net461>
     </PropertyGroup>
     <ItemGroup Label="Build">
-        <PackageVersion Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+        <PackageVersion Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
         <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
     </ItemGroup>    
     <ItemGroup Condition=" '$(TargetFramework)' == 'net40' " Label=".NET 4.0 Package References">
@@ -13,9 +15,15 @@
         <PackageVersion Include="Microsoft.Net.Http" Version="2.2.29" />
     </ItemGroup>
     <ItemGroup Condition=" $(Net45_Net461.Contains('|$(TargetFramework)|'))" >
+        <PackageVersion Include="System.Net.Http" Version="4.3.4" />
+        <PackageVersion Include="System.Buffers" Version="4.5.1" />
         <PackageVersion Include="System.Memory" Version="4.5.5" />
     </ItemGroup>
     <ItemGroup Condition=" $(Net20_Net461.Contains('|$(TargetFramework)|')) == FALSE "  >
+        <PackageVersion Include="System.ValueTuple" Version="4.6.1"  />
+        <PackageVersion Include="System.Buffers" Version="4.6.1" />
         <PackageVersion Include="System.Memory" Version="4.6.3" />
+        <PackageVersion Include="Microsoft.Extensions.Http" Version="9.0.5" />
+        <PackageVersion Include="Microsoft.Extensions.Logging" Version="9.0.5" />
     </ItemGroup>
 </Project>

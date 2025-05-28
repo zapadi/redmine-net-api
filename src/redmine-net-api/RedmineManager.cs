@@ -25,6 +25,9 @@ using Redmine.Net.Api.Http.Clients.WebClient;
 using Redmine.Net.Api.Http.Extensions;
 using Redmine.Net.Api.Internals;
 using Redmine.Net.Api.Logging;
+#if NET40_OR_GREATER || NET
+using Redmine.Net.Api.Http.Clients.HttpClient;
+#endif
 using Redmine.Net.Api.Net.Internal;
 using Redmine.Net.Api.Options;
 using Redmine.Net.Api.Serialization;
@@ -42,6 +45,7 @@ namespace Redmine.Net.Api
         internal IRedmineSerializer Serializer { get; }
         internal RedmineApiUrls RedmineApiUrls { get; }
         internal IRedmineApiClient ApiClient { get; }
+        internal IRedmineLogger Logger { get; }
         
         /// <summary>
         /// 
@@ -85,9 +89,14 @@ namespace Redmine.Net.Api
             return new InternalRedmineApiWebClient(options);
         }
 #if NET40_OR_GREATER || NET
+        private InternalRedmineApiHttpClient CreateHttpClient(RedmineManagerOptions options)
+        {
+            return options.HttpClient != null 
+                ? new InternalRedmineApiHttpClient(options.HttpClient, options) 
+                : new InternalRedmineApiHttpClient(_redmineManagerOptions);
+        }
+#endif
 
-#if NET45_OR_GREATER
-            if (options.VerifyServerCert)
         private static void ApplyServiceManagerSettings(RedmineWebClientOptions options)
         {
             if (options == null)
