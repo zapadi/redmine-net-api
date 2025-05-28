@@ -85,7 +85,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The attachments.
         /// </value>
-        public IList<Attachment> Attachments { get; set; }
+        public List<Attachment> Attachments { get; set; }
 
         /// <summary>
         /// Sets the uploads.
@@ -94,7 +94,7 @@ namespace Redmine.Net.Api.Types
         /// The uploads.
         /// </value>
         /// <remarks>Availability starting with redmine version 3.3</remarks>
-        public IList<Upload> Uploads { get; set; }
+        public List<Upload> Uploads { get; set; }
         #endregion
 
         #region Implementation of IXmlSerializable

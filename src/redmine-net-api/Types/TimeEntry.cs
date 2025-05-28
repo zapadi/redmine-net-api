@@ -106,7 +106,7 @@ namespace Redmine.Net.Api.Types
         /// Gets or sets the custom fields.
         /// </summary>
         /// <value>The custom fields.</value>
-        public IList<IssueCustomField> CustomFields { get; set; }
+        public List<IssueCustomField> CustomFields { get; set; }
         #endregion
 
         #region Implementation of IXmlSerialization

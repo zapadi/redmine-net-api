@@ -54,7 +54,7 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="listToClone">The list to be cloned.</param>
         /// <param name="resetId">Specifies whether to reset the ID for each cloned item.</param>
         /// <returns>A new list containing cloned copies of the elements from the original list. Returns null if the original list is null.</returns>
-        public static IList<T> Clone<T>(this List<T> listToClone, bool resetId) where T : ICloneable<T>
+        public static List<T> Clone<T>(this List<T> listToClone, bool resetId) where T : ICloneable<T>
         {
             if (listToClone == null)
             {

@@ -98,17 +98,17 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// 
         /// </summary>
-        public IList<CustomFieldPossibleValue> PossibleValues { get; internal set; }
+        public List<CustomFieldPossibleValue> PossibleValues { get; internal set; }
 
         /// <summary>
         /// 
         /// </summary>
-        public IList<TrackerCustomField> Trackers { get; internal set; }
+        public List<TrackerCustomField> Trackers { get; internal set; }
 
         /// <summary>
         /// 
         /// </summary>
-        public IList<CustomFieldRole> Roles { get; internal set; }
+        public List<CustomFieldRole> Roles { get; internal set; }
         #endregion
 
         #region Implementation of IXmlSerializable 

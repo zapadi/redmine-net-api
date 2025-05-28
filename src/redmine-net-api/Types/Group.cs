@@ -55,19 +55,19 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// Represents the group's users.
         /// </summary>
-        public IList<GroupUser> Users { get;  set; }
+        public List<GroupUser> Users { get;  set; }
 
         /// <summary>
         /// Gets or sets the custom fields.
         /// </summary>
         /// <value>The custom fields.</value>
-        public IList<IssueCustomField> CustomFields { get; internal set; }
+        public List<IssueCustomField> CustomFields { get; internal set; }
 
         /// <summary>
         /// Gets or sets the custom fields.
         /// </summary>
         /// <value>The custom fields.</value>
-        public IList<Membership> Memberships { get; internal set; }
+        public List<Membership> Memberships { get; internal set; }
         #endregion
 
         #region Implementation of IXmlSerializable

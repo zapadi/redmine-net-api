@@ -44,7 +44,7 @@ namespace Redmine.Net.Api.Types
         /// Gets or sets the value.
         /// </summary>
         /// <value>The value.</value>
-        public IList<CustomFieldValue> Values { get; set; }
+        public List<CustomFieldValue> Values { get; set; }
 
         /// <summary>
         /// 

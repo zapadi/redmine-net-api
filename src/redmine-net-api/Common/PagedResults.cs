@@ -30,7 +30,7 @@ namespace Redmine.Net.Api.Common
         /// <param name="total"></param>
         /// <param name="offset"></param>
         /// <param name="pageSize"></param>
-        public PagedResults(IEnumerable<TOut> items, int total, int offset, int pageSize)
+        public PagedResults(List<TOut> items, int total, int offset, int pageSize)
         {
             Items = items;
             TotalItems = total;
@@ -75,6 +75,6 @@ namespace Redmine.Net.Api.Common
         /// <summary>
         /// 
         /// </summary>
-        public IEnumerable<TOut> Items { get; }
+        public List<TOut> Items { get; }
     }
 }

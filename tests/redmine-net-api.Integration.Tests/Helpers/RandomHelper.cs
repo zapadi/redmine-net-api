@@ -202,7 +202,7 @@ internal static class RandomHelper
     }
 
     // Fisher-Yates shuffle algorithm
-    public static void Shuffle<T>(this IList<T> list)
+    public static void Shuffle<T>(this List<T> list)
     {
         var n = list.Count;
         var random = ThreadRandom.Value;

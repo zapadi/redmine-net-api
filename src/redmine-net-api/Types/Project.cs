@@ -108,7 +108,7 @@ namespace Redmine.Net.Api.Types
         /// The trackers.
         /// </value>
         /// <remarks>Available in Redmine starting with 2.6.0 version.</remarks>
-        public IList<ProjectTracker> Trackers { get; set; }
+        public List<ProjectTracker> Trackers { get; set; }
 
         /// <summary>
         /// Gets or sets the enabled modules.
@@ -117,7 +117,7 @@ namespace Redmine.Net.Api.Types
         /// The enabled modules.
         /// </value>
         /// <remarks>Available in Redmine starting with 2.6.0 version.</remarks>
-        public IList<ProjectEnabledModule> EnabledModules { get; set; }
+        public List<ProjectEnabledModule> EnabledModules { get; set; }
 
         /// <summary>
         /// 
@@ -136,13 +136,13 @@ namespace Redmine.Net.Api.Types
         /// The issue categories.
         /// </value>
         /// <remarks>Available in Redmine starting with the 2.6.0 version.</remarks>
-        public IList<ProjectIssueCategory> IssueCategories { get; internal set; }
+        public List<ProjectIssueCategory> IssueCategories { get; internal set; }
 
         /// <summary>
         /// Gets the time entry activities.
         /// </summary>
         /// <remarks>Available in Redmine starting with the 3.4.0 version.</remarks>
-        public IList<ProjectTimeEntryActivity> TimeEntryActivities { get; internal set; }
+        public List<ProjectTimeEntryActivity> TimeEntryActivities { get; internal set; }
 
         /// <summary>
         /// 
