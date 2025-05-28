@@ -157,7 +157,7 @@ namespace Redmine.Net.Api.Types
         /// Gets or sets the user's mail_notification.
         /// </summary>
         /// <value>
-        /// only_my_events, only_assigned, ...
+        /// only_my_events, only_assigned, only_owner
         /// </value>
         public string MailNotification { get; set; }
         
