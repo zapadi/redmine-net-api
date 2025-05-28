@@ -148,10 +148,10 @@ namespace Redmine.Net.Api.Types
         public override void WriteXml(XmlWriter writer)
         {
             writer.WriteElementString(RedmineKeys.NAME, Name);
-            writer.WriteElementString(RedmineKeys.STATUS, Status.ToLowerInvariant());
+            writer.WriteElementString(RedmineKeys.STATUS, Status.ToLowerName());
             if (Sharing != VersionSharing.Unknown)
             {
-                writer.WriteElementString(RedmineKeys.SHARING, Sharing.ToLowerInvariant());
+                writer.WriteElementString(RedmineKeys.SHARING, Sharing.ToLowerName());
             }
 
             writer.WriteDateOrEmpty(RedmineKeys.DUE_DATE, DueDate);
@@ -224,8 +224,8 @@ namespace Redmine.Net.Api.Types
             using (new JsonObject(writer, RedmineKeys.VERSION))
             {
                 writer.WriteProperty(RedmineKeys.NAME, Name);
-                writer.WriteProperty(RedmineKeys.STATUS, Status.ToLowerInvariant());
-                writer.WriteProperty(RedmineKeys.SHARING, Sharing.ToLowerInvariant());
+                writer.WriteProperty(RedmineKeys.STATUS, Status.ToLowerName());
+                writer.WriteProperty(RedmineKeys.SHARING, Sharing.ToLowerName());
                 writer.WriteProperty(RedmineKeys.DESCRIPTION, Description);
                 writer.WriteDateOrEmpty(RedmineKeys.DUE_DATE, DueDate);
                 if (CustomFields != null)
