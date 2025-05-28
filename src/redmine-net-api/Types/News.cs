@@ -237,21 +237,18 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
         public override int GetHashCode()
         {
-            unchecked
-            {
-                var hashCode = 17;
-                hashCode = HashCodeHelper.GetHashCode(Id, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(Project, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(Author, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(Title, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(Summary, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(Description, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(CreatedOn, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(Comments, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(Attachments, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(Uploads, hashCode);
-                return hashCode;
-            }
+            var hashCode = 17;
+            hashCode = HashCodeHelper.GetHashCode(Id, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(Project, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(Author, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(Title, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(Summary, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(Description, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(CreatedOn, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(Comments, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(Attachments, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(Uploads, hashCode);
+            return hashCode;
         }
 
         /// <summary>

@@ -194,15 +194,12 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
         public override int GetHashCode()
         {
-            unchecked
-            {
-                var hashCode = 17;
-                hashCode = HashCodeHelper.GetHashCode(Revision, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(User, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(Comments, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(CommittedOn, hashCode);
-                return hashCode;
-            }
+            var hashCode = 17;
+            hashCode = HashCodeHelper.GetHashCode(Revision, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(User, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(Comments, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(CommittedOn, hashCode);
+            return hashCode;
         }
         
         /// <summary>

@@ -261,21 +261,18 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
         public override int GetHashCode()
         {
-            unchecked
-            {
-                var hashCode = base.GetHashCode();
-                hashCode = HashCodeHelper.GetHashCode(Issue, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(Project, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(SpentOn, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(Hours, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(Activity, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(User, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(Comments, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(CreatedOn, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(UpdatedOn, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(CustomFields, hashCode);
-                return hashCode;
-            }
+            var hashCode = base.GetHashCode();
+            hashCode = HashCodeHelper.GetHashCode(Issue, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(Project, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(SpentOn, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(Hours, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(Activity, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(User, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(Comments, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(CreatedOn, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(UpdatedOn, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(CustomFields, hashCode);
+            return hashCode;
         }
         
         /// <summary>

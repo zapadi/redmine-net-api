@@ -386,33 +386,30 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
         public override int GetHashCode()
         {
-            unchecked
-            {
-                var hashCode = 17;
-                hashCode = HashCodeHelper.GetHashCode(Id, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(AvatarUrl, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(Login, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(FirstName, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(LastName, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(Email, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(MailNotification, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(ApiKey, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(TwoFactorAuthenticationScheme, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(AuthenticationModeId, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(CreatedOn, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(LastLoginOn, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(Status, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(MustChangePassword, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(IsAdmin, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(PasswordChangedOn, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(UpdatedOn, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(CustomFields, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(Memberships, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(Groups, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(GeneratePassword, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(SendInformation, hashCode);
-                return hashCode;
-            }
+            var hashCode = 17;
+            hashCode = HashCodeHelper.GetHashCode(Id, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(AvatarUrl, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(Login, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(FirstName, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(LastName, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(Email, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(MailNotification, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(ApiKey, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(TwoFactorAuthenticationScheme, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(AuthenticationModeId, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(CreatedOn, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(LastLoginOn, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(Status, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(MustChangePassword, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(IsAdmin, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(PasswordChangedOn, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(UpdatedOn, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(CustomFields, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(Memberships, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(Groups, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(GeneratePassword, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(SendInformation, hashCode);
+            return hashCode;
         }
         
         /// <summary>

@@ -26,7 +26,7 @@ namespace Redmine.Net.Api;
 /// <summary>
 /// 
 /// </summary>
-public partial interface IRedmineManager
+public interface IRedmineManager
 {
     /// <summary>
     /// 

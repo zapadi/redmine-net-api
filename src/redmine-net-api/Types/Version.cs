@@ -279,22 +279,19 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
         public override int GetHashCode()
         {
-            unchecked
-            {
-                var hashCode = base.GetHashCode();
-                hashCode = HashCodeHelper.GetHashCode(Project, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(Description, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(Status, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(DueDate, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(Sharing, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(CreatedOn, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(UpdatedOn, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(CustomFields, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(WikiPageTitle, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(EstimatedHours, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(SpentHours, hashCode);
-                return hashCode;
-            }
+            var hashCode = base.GetHashCode();
+            hashCode = HashCodeHelper.GetHashCode(Project, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(Description, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(Status, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(DueDate, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(Sharing, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(CreatedOn, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(UpdatedOn, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(CustomFields, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(WikiPageTitle, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(EstimatedHours, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(SpentHours, hashCode);
+            return hashCode;
         }
         
         /// <summary>

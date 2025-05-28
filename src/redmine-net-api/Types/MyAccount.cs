@@ -214,21 +214,18 @@ namespace Redmine.Net.Api.Types
         /// <inheritdoc />
         public override int GetHashCode()
         {
-            unchecked
-            {
-                var hashCode = 17;
-                hashCode = HashCodeHelper.GetHashCode(Id, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(Login, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(FirstName, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(LastName, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(ApiKey, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(Email, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(IsAdmin, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(CreatedOn, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(LastLoginOn, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(CustomFields, hashCode);
-                return hashCode;
-            }
+            var hashCode = 17;
+            hashCode = HashCodeHelper.GetHashCode(Id, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(Login, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(FirstName, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(LastName, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(ApiKey, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(Email, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(IsAdmin, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(CreatedOn, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(LastLoginOn, hashCode);
+            hashCode = HashCodeHelper.GetHashCode(CustomFields, hashCode);
+            return hashCode;
         }
         
         /// <summary>
