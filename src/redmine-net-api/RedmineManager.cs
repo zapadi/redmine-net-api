@@ -52,28 +52,16 @@ namespace Redmine.Net.Api
             
             _redmineManagerOptions = optionsBuilder.Build();
    
+            Logger = _redmineManagerOptions.Logger;
             Serializer = _redmineManagerOptions.Serializer;
             RedmineApiUrls = new RedmineApiUrls(_redmineManagerOptions.Serializer.Format);
-            
-            Host = _redmineManagerOptions.BaseAddress.ToString();
-            PageSize = _redmineManagerOptions.PageSize;
-            Scheme = _redmineManagerOptions.BaseAddress.Scheme;
-            Format = Serializer.Format;
-            MimeFormat = RedmineConstants.XML.Equals(Serializer.Format, StringComparison.Ordinal) 
-                ? MimeFormat.Xml 
-                : MimeFormat.Json;
-            
-            if (_redmineManagerOptions.Authentication is RedmineApiKeyAuthentication)
-            {
-                ApiKey = _redmineManagerOptions.Authentication.Token;
-            }
-            
+           
             ApiClient =
 #if NET45_OR_GREATER || NETCOREAPP
              _redmineManagerOptions.WebClientOptions switch
             {
                 RedmineWebClientOptions => CreateWebClient(_redmineManagerOptions),
-                _ => CreateHttpClient(_redmineManagerOptions)
+                RedmineHttpClientOptions => CreateHttpClient(_redmineManagerOptions),
             };
 #else
             CreateWebClient(_redmineManagerOptions);
@@ -91,9 +79,9 @@ namespace Redmine.Net.Api
             options.WebClientOptions.SecurityProtocolType ??= ServicePointManager.SecurityProtocol;
 #pragma warning restore SYSLIB0014
 
-            Proxy = options.WebClientOptions.Proxy;
-            Timeout = options.WebClientOptions.Timeout;
-            SecurityProtocolType = options.WebClientOptions.SecurityProtocolType.GetValueOrDefault();
+            return new InternalRedmineApiWebClient(options);
+        }
+#if NET40_OR_GREATER || NET
 
 #if NET45_OR_GREATER
             if (options.VerifyServerCert)
@@ -301,5 +289,16 @@ namespace Redmine.Net.Api
             
             return response.DeserializeToPagedResults<T>(Serializer);
         }
+        
+        internal static readonly Dictionary<Type, bool> TypesWithOffset = new Dictionary<Type, bool>{
+            {typeof(Issue), true},
+            {typeof(Project), true},
+            {typeof(User), true},
+            {typeof(News), true},
+            {typeof(Query), true},
+            {typeof(TimeEntry), true},
+            {typeof(ProjectMembership), true},
+            {typeof(Search), true}
+        };
     }
 }

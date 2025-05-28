@@ -116,18 +116,6 @@ namespace Redmine.Net.Api.Types
         public IList<ProjectEnabledModule> EnabledModules { get; set; }
 
         /// <summary>
-        /// Gets or sets the custom fields.
-        /// </summary>
-        /// <value>
-        /// The custom fields.
-        /// </value>
-        [Obsolete($"{RedmineConstants.OBSOLETE_TEXT} Use {nameof(IssueCustomFields)} instead.")]
-        public IList<IssueCustomField> CustomFields
-        {
-            get => IssueCustomFields;
-            set => IssueCustomFields = (List<IssueCustomField>)value;
-        }
-        /// <summary>
         /// 
         /// </summary>
         public List<IssueCustomField> IssueCustomFields { get; set; }
