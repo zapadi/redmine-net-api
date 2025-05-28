@@ -327,7 +327,8 @@ namespace Redmine.Net.Api.Types
                    && DefaultVersion == other.DefaultVersion
                    && Parent == other.Parent
                    && (Trackers?.Equals<ProjectTracker>(other.Trackers) ?? other.Trackers == null)
-                   && (CustomFields?.Equals<IssueCustomField>(other.CustomFields) ?? other.CustomFields == null)
+                   && (IssueCustomFields?.Equals<IssueCustomField>(other.IssueCustomFields) ?? other.IssueCustomFields == null)
+                   && (CustomFieldValues?.Equals<IdentifiableName>(other.CustomFieldValues) ?? other.CustomFieldValues == null)
                    && (IssueCategories?.Equals<ProjectIssueCategory>(other.IssueCategories) ?? other.IssueCategories == null)
                    && (EnabledModules?.Equals<ProjectEnabledModule>(other.EnabledModules) ?? other.EnabledModules == null)
                    && (TimeEntryActivities?.Equals<ProjectTimeEntryActivity>(other.TimeEntryActivities) ?? other.TimeEntryActivities == null);
@@ -365,7 +366,8 @@ namespace Redmine.Net.Api.Types
                 hashCode = HashCodeHelper.GetHashCode(IsPublic, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(InheritMembers, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Trackers, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(CustomFields, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(IssueCustomFields, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(CustomFieldValues, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(IssueCategories, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(EnabledModules, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(TimeEntryActivities, hashCode);
