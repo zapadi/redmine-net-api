@@ -53,6 +53,7 @@ values  (1, 'Bug', 1, false, 0, 1, null),
 insert into projects (id, name, description, homepage, is_public, parent_id, created_on, updated_on, identifier, status, lft, rgt, inherit_members, default_version_id, default_assigned_to_id, default_issue_query_id)
 values  (1, 'Project-Test', null, '', true, null, '2024-09-02 10:14:33.789394', '2024-09-02 10:14:33.789394', 'project-test', 1, 1, 2, false, null, null, null);
 
+insert into public.wikis (id, project_id, start_page, status) values (1, 1, 'Wiki', 1);
 
 insert into versions (id, project_id, name, description, effective_date, created_on, updated_on, wiki_page_title, status, sharing)
 values  (1, 1, 'version1', '', null, '2025-04-28 17:56:49.245993', '2025-04-28 17:56:49.245993', '', 'open', 'none'),
@@ -65,3 +66,5 @@ values  (5, 1, 1, '#380', '', null, 1, 1, null, 2, 2, 90, 1, '2025-04-28 17:58:4
 insert into watchers (id, watchable_type, watchable_id, user_id)
 values  (8, 'Issue', 5, 90),
         (9, 'Issue', 5, 91);
+
+

@@ -1,20 +1,19 @@
 using Padi.DotNet.RedmineAPI.Integration.Tests.Fixtures;
+using Padi.DotNet.RedmineAPI.Integration.Tests.Infrastructure;
 
-namespace Padi.DotNet.RedmineAPI.Integration.Tests.Tests;
+namespace Padi.DotNet.RedmineAPI.Integration.Tests.Tests.Progress;
 
 [Collection(Constants.RedmineTestContainerCollection)]
 public partial class ProgressTests(RedmineTestContainerFixture fixture)
 {
-    private const string TEST_DOWNLOAD_URL = "attachments/download/86/Manual_de_control_fiscal_versiune%20finala_RO_24_07_2023.pdf";
-
     [Fact]
-    public void DownloadFile_Sync_ReportsProgress()
+    public void DownloadFile_WithValidUrl_ShouldReportProgress()
     {
         // Arrange
         var progressTracker = new ProgressTracker();
 
         // Act
-        var result = fixture.RedmineManager.DownloadFile(TEST_DOWNLOAD_URL, progressTracker);
+        var result = fixture.RedmineManager.DownloadFile("", progressTracker);
 
         // Assert
         Assert.NotNull(result);

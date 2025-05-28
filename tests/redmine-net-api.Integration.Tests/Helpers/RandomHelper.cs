@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace Padi.DotNet.RedmineAPI.Integration.Tests;
+namespace Padi.DotNet.RedmineAPI.Integration.Tests.Helpers;
 
 internal static class RandomHelper
 {

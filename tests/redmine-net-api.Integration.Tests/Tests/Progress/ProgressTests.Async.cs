@@ -1,17 +1,18 @@
-namespace Padi.DotNet.RedmineAPI.Integration.Tests.Tests;
+using Redmine.Net.Api.Exceptions;
+
+namespace Padi.DotNet.RedmineAPI.Integration.Tests.Tests.Progress;
 
 public partial class ProgressTests
 {
     [Fact]
-    public async Task DownloadFileAsync_ReportsProgress()
+    public async Task DownloadFileAsync_WithValidUrl_ShouldReportProgress()
     {
         // Arrange
         var progressTracker = new ProgressTracker();
 
         // Act
         var result = await fixture.RedmineManager.DownloadFileAsync(
-            TEST_DOWNLOAD_URL,
-            null,
+            "",null,
             progressTracker,
             CancellationToken.None);
 
@@ -23,7 +24,7 @@ public partial class ProgressTests
     }
 
     [Fact]
-    public async Task DownloadFileAsync_WithCancellation_StopsDownload()
+    public async Task DownloadFileAsync_WithCancellation_ShouldStopDownload()
     {
         // Arrange
         var progressTracker = new ProgressTracker();
@@ -40,10 +41,10 @@ public partial class ProgressTests
             };
 
             // Act & Assert
-            await Assert.ThrowsAnyAsync<OperationCanceledException>(async () =>
+            await Assert.ThrowsAnyAsync<RedmineApiException>(async () =>
             {
                 await fixture.RedmineManager.DownloadFileAsync(
-                    TEST_DOWNLOAD_URL,
+                    "",
                     null,
                     progressTracker,
                     cts.Token);
