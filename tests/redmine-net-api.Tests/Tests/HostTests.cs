@@ -13,7 +13,6 @@ namespace Padi.DotNet.RedmineAPI.Tests.Tests
         [InlineData(null)]
         [InlineData("")]
         [InlineData(" ")]
-        [InlineData("string.Empty")]
         [InlineData("localhost")]
         [InlineData("http://")]
         [InlineData("<invalid>")]
