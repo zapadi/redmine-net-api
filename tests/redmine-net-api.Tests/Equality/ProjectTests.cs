@@ -27,7 +27,7 @@ public sealed class ProjectTests : BaseEqualityTests<Project>
                 new() { Id = 2, Name = "Feature" }
             ],
             
-            CustomFields = 
+            CustomFieldValues = 
             [
                 new() { Id = 1, Name = "Field1"},
                 new() { Id = 2, Name = "Field2"}
@@ -47,7 +47,8 @@ public sealed class ProjectTests : BaseEqualityTests<Project>
             [
                 new() { Id = 1, Name = "Activity1" },
                 new() { Id = 2, Name = "Activity2" }
-            ]
+            ],
+            IssueCustomFields = [IssueCustomField.CreateSingle(1, "SingleCustomField", "SingleCustomFieldValue")]
         };
     }
 
@@ -69,7 +70,7 @@ public sealed class ProjectTests : BaseEqualityTests<Project>
             [
                 new() { Id = 3, Name = "Different Bug" }
             ],
-            CustomFields =
+            CustomFieldValues = 
             [
                 new() { Id = 3, Name = "DifferentField"}
             ],
@@ -84,7 +85,8 @@ public sealed class ProjectTests : BaseEqualityTests<Project>
             TimeEntryActivities = 
             [
                 new() { Id = 3, Name = "DifferentActivity" }
-            ]
+            ],
+            IssueCustomFields = [IssueCustomField.CreateSingle(1, "DifferentSingleCustomField", "DifferentSingleCustomFieldValue")]
         };
     }
 }
