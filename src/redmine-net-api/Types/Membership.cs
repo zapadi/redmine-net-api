@@ -53,7 +53,7 @@ namespace Redmine.Net.Api.Types
         /// Gets or sets the type.
         /// </summary>
         /// <value>The type.</value>
-        public IList<MembershipRole> Roles { get; internal set; }
+        public List<MembershipRole> Roles { get; internal set; }
         #endregion
 
         #region Implementation of IXmlSerialization

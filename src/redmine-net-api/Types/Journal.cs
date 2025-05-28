@@ -83,7 +83,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The details.
         /// </value>
-        public IList<Detail> Details { get; internal set; }
+        public List<Detail> Details { get; internal set; }
         
         /// <summary>
         /// 

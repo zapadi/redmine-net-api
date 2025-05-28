@@ -137,7 +137,7 @@ namespace Redmine.Net.Api.Types
         /// Gets or sets the custom fields.
         /// </summary>
         /// <value>The custom fields.</value>
-        public IList<IssueCustomField> CustomFields { get; set; }
+        public List<IssueCustomField> CustomFields { get; set; }
 
         /// <summary>
         /// Gets or sets the created on.
@@ -212,7 +212,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The journals.
         /// </value>
-        public IList<Journal> Journals { get; set; }
+        public List<Journal> Journals { get; set; }
 
         /// <summary>
         /// Gets or sets the change sets.
@@ -220,7 +220,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The change sets.
         /// </value>
-        public IList<ChangeSet> ChangeSets { get; set; }
+        public List<ChangeSet> ChangeSets { get; set; }
 
         /// <summary>
         /// Gets or sets the attachments.
@@ -228,7 +228,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The attachments.
         /// </value>
-        public IList<Attachment> Attachments { get; set; }
+        public List<Attachment> Attachments { get; set; }
 
         /// <summary>
         /// Gets or sets the issue relations.
@@ -236,7 +236,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The issue relations.
         /// </value>
-        public IList<IssueRelation> Relations { get; set; }
+        public List<IssueRelation> Relations { get; set; }
 
         /// <summary>
         /// Gets or sets the issue children.
@@ -245,7 +245,7 @@ namespace Redmine.Net.Api.Types
         /// The issue children.
         /// NOTE: Only Id, tracker and subject are filled.
         /// </value>
-        public IList<IssueChild> Children { get; set; }
+        public List<IssueChild> Children { get; set; }
 
         /// <summary>
         /// Gets or sets the attachments.
@@ -253,12 +253,12 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The attachment.
         /// </value>
-        public IList<Upload> Uploads { get; set; }
+        public List<Upload> Uploads { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
-        public IList<Watcher> Watchers { get; set; }
+        public List<Watcher> Watchers { get; set; }
         
         /// <summary>
         /// 
