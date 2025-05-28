@@ -17,7 +17,7 @@
 using System;
 using System.Xml.Serialization;
 
-namespace Redmine.Net.Api.Serialization
+namespace Redmine.Net.Api.Serialization.Xml
 {
     internal interface IXmlSerializerCache
     {

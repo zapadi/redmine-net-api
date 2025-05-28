@@ -19,6 +19,7 @@ using System.Globalization;
 using Newtonsoft.Json;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Serialization;
+using Redmine.Net.Api.Serialization.Json;
 
 namespace Redmine.Net.Api.Types
 {

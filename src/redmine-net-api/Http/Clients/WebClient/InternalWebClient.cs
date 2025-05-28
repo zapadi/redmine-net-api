@@ -13,16 +13,17 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
+
 using System;
 using System.Net;
 using Redmine.Net.Api.Exceptions;
-using Redmine.Net.Api.Extensions;
+using Redmine.Net.Api.Options;
 
-namespace Redmine.Net.Api.Net.WebClient;
+namespace Redmine.Net.Api.Http.Clients.WebClient;
 
 internal sealed class InternalWebClient : System.Net.WebClient
 {
-    private readonly IRedmineWebClientOptions _webClientOptions;
+    private readonly RedmineWebClientOptions _webClientOptions;
 
     #pragma warning disable SYSLIB0014
     public InternalWebClient(RedmineManagerOptions redmineManagerOptions)
@@ -43,9 +44,9 @@ internal sealed class InternalWebClient : System.Net.WebClient
                 return base.GetWebRequest(address);
             }
 
-            httpWebRequest.UserAgent = _webClientOptions.UserAgent.ValueOrFallback("RedmineDotNetAPIClient");
+            httpWebRequest.UserAgent = _webClientOptions.UserAgent;
 
-            httpWebRequest.AutomaticDecompression = _webClientOptions.DecompressionFormat ?? DecompressionMethods.GZip | DecompressionMethods.Deflate | DecompressionMethods.None;
+            AssignIfHasValue(_webClientOptions.DecompressionFormat, value => httpWebRequest.AutomaticDecompression = value);
 
             AssignIfHasValue(_webClientOptions.AutoRedirect, value => httpWebRequest.AllowAutoRedirect = value);
 
@@ -78,14 +79,14 @@ internal sealed class InternalWebClient : System.Net.WebClient
 
             httpWebRequest.Credentials = _webClientOptions.Credentials;
 
-            #if NET40_OR_GREATER || NETCOREAPP
+            #if NET40_OR_GREATER || NET
                 if (_webClientOptions.ClientCertificates != null)
                 {
                     httpWebRequest.ClientCertificates = _webClientOptions.ClientCertificates;
                 }
             #endif
 
-            #if (NET45_OR_GREATER || NETCOREAPP)
+            #if (NET45_OR_GREATER || NET)
                 httpWebRequest.ServerCertificateValidationCallback = _webClientOptions.ServerCertificateValidationCallback;
             #endif
 

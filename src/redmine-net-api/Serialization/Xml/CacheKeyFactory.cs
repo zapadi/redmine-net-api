@@ -15,12 +15,11 @@
 */
 
 using System;
-using System.Globalization;
 using System.Text;
 using System.Xml.Serialization;
 using Redmine.Net.Api.Extensions;
 
-namespace Redmine.Net.Api.Serialization
+namespace Redmine.Net.Api.Serialization.Xml
 {
     /// <summary>
     /// The CacheKeyFactory extracts a unique signature

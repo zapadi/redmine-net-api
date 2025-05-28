@@ -17,7 +17,7 @@
 using System.IO;
 using System.Xml;
 
-namespace Redmine.Net.Api.Internals
+namespace Redmine.Net.Api.Serialization.Xml
 {
     /// <summary>
     /// 

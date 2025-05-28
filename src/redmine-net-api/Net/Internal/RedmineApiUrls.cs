@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using Redmine.Net.Api.Exceptions;
 using Redmine.Net.Api.Extensions;
+using Redmine.Net.Api.Http;
 using Redmine.Net.Api.Types;
 using Version = Redmine.Net.Api.Types.Version;
 

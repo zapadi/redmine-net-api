@@ -14,9 +14,16 @@
    limitations under the License.
 */
 
-namespace Redmine.Net.Api.Net.WebClient;
+using System.Collections.Specialized;
+using System.Net;
 
-/// <summary>
-/// 
-/// </summary>
-public interface IRedmineWebClientOptions : IRedmineApiClientOptions;
+namespace Redmine.Net.Api.Http.Messages;
+
+internal sealed class RedmineApiResponse
+{
+    public NameValueCollection Headers { get; init; }
+    public byte[] Content { get; init; }
+    
+    public HttpStatusCode StatusCode { get; init; }
+
+}

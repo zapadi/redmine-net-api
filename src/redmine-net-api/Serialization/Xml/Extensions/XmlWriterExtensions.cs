@@ -20,9 +20,11 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Xml;
 using System.Xml.Serialization;
+using Redmine.Net.Api.Common;
+using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Types;
 
-namespace Redmine.Net.Api.Extensions
+namespace Redmine.Net.Api.Serialization.Xml.Extensions
 {
     /// <summary>
     /// 

@@ -16,7 +16,7 @@
 
 using System.Collections.Generic;
 
-namespace Redmine.Net.Api.Serialization
+namespace Redmine.Net.Api.Common
 {
     /// <summary>
     /// 

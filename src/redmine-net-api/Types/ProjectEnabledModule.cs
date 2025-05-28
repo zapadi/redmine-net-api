@@ -17,6 +17,7 @@ limitations under the License.
 using System;
 using System.Diagnostics;
 using System.Xml.Serialization;
+using Redmine.Net.Api.Common;
 using Redmine.Net.Api.Extensions;
 
 namespace Redmine.Net.Api.Types
