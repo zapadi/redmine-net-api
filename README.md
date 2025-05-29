@@ -93,6 +93,11 @@ Detailed API reference, guides, and tutorials are available in the [GitHub Wiki]
 
 See the [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
 
+## 💬 Join on Slack
+
+Want to talk about Redmine integration, features, or contribute ideas?  
+Join Slack channel here: [dotnet-redmine](https://join.slack.com/t/dotnet-redmine/shared_invite/zt-36cvwm98j-10Sw3w4LITk1N6eqKKHWRw)
+
 
 ## 🤝 Contributors
 
