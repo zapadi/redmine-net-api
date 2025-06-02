@@ -78,11 +78,30 @@ namespace Redmine.Net.Api.Http.Clients.WebClient
             {
                 req.QueryString = requestOptions.QueryString;
                 req.ImpersonateUser = requestOptions.ImpersonateUser;
+                if (!requestOptions.Accept.IsNullOrWhiteSpace())
+                {
+                    req.Accept = requestOptions.Accept;
+                }
+
+                if (requestOptions.Headers != null)
+                {
+                    req.Headers = requestOptions.Headers;
+                }
+
+                if (!requestOptions.UserAgent.IsNullOrWhiteSpace())
+                {
+                    req.UserAgent = requestOptions.UserAgent;
+                }
             }
 
             if (content != null)
             {
                 req.Content = content;
+                req.ContentType = content.ContentType;
+            }
+            else
+            {
+                req.ContentType = serializer.ContentType;
             }
 
             return req;

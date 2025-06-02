@@ -34,7 +34,13 @@ namespace Redmine.Net.Api.Http.Clients.WebClient
         protected override async Task<RedmineApiResponse> HandleRequestAsync(string address, string verb, RequestOptions requestOptions = null, object content = null,
             IProgress<int> progress = null, CancellationToken cancellationToken = default)
         {
-            return await SendAsync(CreateRequestMessage(address, verb, requestOptions, content as RedmineApiRequestContent), progress, cancellationToken: cancellationToken).ConfigureAwait(false);
+            LogRequest(verb, address, requestOptions);
+            
+            var response = await SendAsync(CreateRequestMessage(address, verb, Serializer, requestOptions, content as RedmineApiRequestContent), progress, cancellationToken: cancellationToken).ConfigureAwait(false);
+            
+            LogResponse((int)response.StatusCode);
+
+            return response;
         }
         
         private async Task<RedmineApiResponse> SendAsync(RedmineApiRequest requestMessage, IProgress<int> progress = null, CancellationToken cancellationToken = default)
@@ -44,7 +50,7 @@ namespace Redmine.Net.Api.Http.Clients.WebClient
             HttpStatusCode? statusCode = null;
             NameValueCollection responseHeaders = null;
             CancellationTokenRegistration cancellationTokenRegistration = default;
-                
+
             try
             {
                 webClient = _webClientFunc();
@@ -53,20 +59,22 @@ namespace Redmine.Net.Api.Http.Clients.WebClient
                         static state => ((System.Net.WebClient)state).CancelAsync(),
                         webClient
                     );
-                
+
                 cancellationToken.ThrowIfCancellationRequested();
 
                 if (progress != null)
                 {
-                    webClient.DownloadProgressChanged += (_, e) =>
-                    {
-                        progress.Report(e.ProgressPercentage);
-                    };
+                    webClient.DownloadProgressChanged += (_, e) => { progress.Report(e.ProgressPercentage); };
+                }
+
+                if (requestMessage.QueryString != null)
+                {
+                    webClient.QueryString = requestMessage.QueryString;
                 }
                 
-                SetWebClientHeaders(webClient, requestMessage);
+                webClient.ApplyHeaders(requestMessage, Credentials);
 
-                if(IsGetOrDownload(requestMessage.Method))
+                if (IsGetOrDownload(requestMessage.Method))
                 {
                     response = await webClient.DownloadDataTaskAsync(requestMessage.RequestUri)
                         .ConfigureAwait(false);

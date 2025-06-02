@@ -47,7 +47,7 @@ internal static class RedmineHttpMethodHelper
     /// </summary>
     /// <param name="statusCode">The HTTP response status code.</param>
     /// <returns>True if the status code represents a transient error; otherwise, false.</returns>
-    private static bool IsTransientError(int statusCode)
+    internal static bool IsTransientError(int statusCode)
     {
         return statusCode switch
         {

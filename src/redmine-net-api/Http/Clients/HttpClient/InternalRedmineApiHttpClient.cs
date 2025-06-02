@@ -31,7 +31,6 @@ namespace Redmine.Net.Api.Http.Clients.HttpClient;
 internal sealed partial class InternalRedmineApiHttpClient : RedmineApiClient
 {
     private static readonly HttpMethod PatchMethod = new HttpMethod("PATCH");
-    private static readonly HttpMethod DownloadMethod = new HttpMethod("DOWNLOAD");
     private static readonly Encoding DefaultEncoding = Encoding.UTF8;
 
     private readonly System.Net.Http.HttpClient _httpClient;
@@ -68,19 +67,14 @@ internal sealed partial class InternalRedmineApiHttpClient : RedmineApiClient
         var httpMethod = GetHttpMethod(verb);
         using (var requestMessage = CreateRequestMessage(address, httpMethod, requestOptions, content as HttpContent))
         {
-            //  LogRequest(verb, address, requestOptions);
-
             var response = Send(requestMessage, progress);
-
-            //  LogResponse(response.StatusCode);
-
             return response;
         }
     }
     
     private RedmineApiResponse Send(HttpRequestMessage requestMessage, IProgress<int> progress = null)
     {
-        return TaskExtensions.Synchronize(()=>SendAsync(requestMessage, progress));
+        return TaskExtensions.Synchronize(() => SendAsync(requestMessage, progress));
     }
 
     private HttpRequestMessage CreateRequestMessage(string address, HttpMethod method,
@@ -136,11 +130,35 @@ internal sealed partial class InternalRedmineApiHttpClient : RedmineApiClient
             {
                 httpRequest.Headers.Add(RedmineConstants.IMPERSONATE_HEADER_KEY, requestOptions.ImpersonateUser);
             }
+            
+            if (!requestOptions.Accept.IsNullOrWhiteSpace())
+            {
+                httpRequest.Headers.Accept.ParseAdd(requestOptions.Accept);
+            }
+        
+            if (!requestOptions.UserAgent.IsNullOrWhiteSpace())
+            {
+                httpRequest.Headers.UserAgent.ParseAdd(requestOptions.UserAgent);
+            }
+        
+            if (requestOptions.Headers != null)
+            {
+                foreach (var header in requestOptions.Headers)
+                {
+                    httpRequest.Headers.TryAddWithoutValidation(header.Key, header.Value);
+                }
+            }
         }
 
-        if (content != null)
+        if (content == null)
         {
-            httpRequest.Content = content ;
+            return httpRequest;
+        }
+        
+        httpRequest.Content = content;
+        if (requestOptions?.ContentType != null)
+        {
+            content.Headers.ContentType = new MediaTypeHeaderValue(requestOptions.ContentType);
         }
 
         return httpRequest;

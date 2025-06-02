@@ -1,7 +1,11 @@
 using System;
+using System.Net;
 using Redmine.Net.Api.Authentication;
+using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Http.Constants;
+using Redmine.Net.Api.Http.Extensions;
 using Redmine.Net.Api.Http.Messages;
+using Redmine.Net.Api.Logging;
 using Redmine.Net.Api.Options;
 using Redmine.Net.Api.Serialization;
 
@@ -77,35 +81,26 @@ internal abstract partial class RedmineApiClient : IRedmineApiClient
         return method is HttpConstants.HttpVerbs.GET or HttpConstants.HttpVerbs.DOWNLOAD;
     }
     
-    protected static void ReportProgress(IProgress<int>progress, long total, long bytesRead)
+    protected void LogRequest(string verb, string address, RequestOptions requestOptions)
     {
-        if (progress == null || total <= 0)
+        if (Options.LoggingOptions?.IncludeHttpDetails != true)
         {
             return;
         }
-        var percent = (int)(bytesRead * 100L / total);
-        progress.Report(percent);
+        
+        Options.Logger.Info($"Request HTTP {verb} {address}");
+            
+        if (requestOptions?.QueryString != null)
+        {
+            Options.Logger.Info($"Query parameters: {requestOptions.QueryString.ToQueryString()}");
+        }
     }
     
-    // protected void LogRequest(string verb, string address, RequestOptions requestOptions)
-    // {
-    //     if (_options.LoggingOptions?.IncludeHttpDetails == true)
-    //     {
-    //         _options.Logger.Debug($"Request HTTP {verb} {address}");
-    //         
-    //         if (requestOptions?.QueryString != null)
-    //         {
-    //             _options.Logger.Debug($"Query parameters: {requestOptions.QueryString.ToQueryString()}");
-    //         }
-    //     }
-    // }
-    //
-    // protected void LogResponse(HttpStatusCode statusCode)
-    // {
-    //     if (_options.LoggingOptions?.IncludeHttpDetails == true)
-    //     {
-    //         _options.Logger.Debug($"Response status: {statusCode}");
-    //     }
-    // }
-
+    protected void LogResponse(int statusCode)
+    {
+        if (Options.LoggingOptions?.IncludeHttpDetails == true)
+        {
+            Options.Logger.Info($"Response status: {statusCode.ToInvariantString()}");
+        }
+    }
 }

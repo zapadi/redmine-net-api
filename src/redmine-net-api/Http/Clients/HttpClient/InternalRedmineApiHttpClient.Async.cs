@@ -139,7 +139,7 @@ internal sealed partial class InternalRedmineApiHttpClient
                                 
                     var progressPercentage = (int)(totalBytesRead * 100 / contentLength);
                     progress?.Report(progressPercentage);
-                    ReportProgress(progress, contentLength, totalBytesRead);
+                    ClientHelper.ReportProgress(progress, contentLength, totalBytesRead);
                 }
             }
         }
