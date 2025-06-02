@@ -4,6 +4,7 @@ using DotNet.Testcontainers.Containers;
 using DotNet.Testcontainers.Networks;
 using Npgsql;
 using Padi.DotNet.RedmineAPI.Integration.Tests.Infrastructure;
+using Padi.DotNet.RedmineAPI.Integration.Tests.Infrastructure.Options;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Options;
 using Testcontainers.PostgreSql;
@@ -13,19 +14,11 @@ namespace Padi.DotNet.RedmineAPI.Integration.Tests.Fixtures;
 
 public class RedmineTestContainerFixture : IAsyncLifetime
 {
-    private const int RedminePort = 3000;
-    private const int PostgresPort = 5432;
-    private const string PostgresImage = "postgres:17.4-alpine";
-    private const string RedmineImage = "redmine:6.0.5-alpine";
-    private const string PostgresDb = "postgres";
-    private const string PostgresUser = "postgres";
-    private const string PostgresPassword = "postgres";
-    private const string RedmineSqlFilePath = "TestData/init-redmine.sql";
-
-    private readonly string RedmineNetworkAlias = Guid.NewGuid().ToString();
+    private readonly RedmineConfiguration _configuration;
+    private readonly string _redmineNetworkAlias = Guid.NewGuid().ToString();
     
     private readonly ITestOutputHelper _output;
-    private readonly TestContainerOptions _redmineOptions;
+    private readonly TestContainerOptions _testContainerOptions;
 
     private INetwork Network { get; set; }
     private PostgreSqlContainer PostgresContainer { get; set; }
@@ -35,9 +28,10 @@ public class RedmineTestContainerFixture : IAsyncLifetime
 
     public RedmineTestContainerFixture()
     {
-        _redmineOptions = ConfigurationHelper.GetConfiguration();
+        //_configuration = configuration;
+        _testContainerOptions = ConfigurationHelper.GetConfiguration();
         
-        if (_redmineOptions.Mode != TestContainerMode.UseExisting)
+        if (_testContainerOptions.Mode != TestContainerMode.UseExisting)
         {
             BuildContainers();
         }
@@ -60,52 +54,50 @@ public class RedmineTestContainerFixture : IAsyncLifetime
             .Build();
 
         var postgresBuilder = new PostgreSqlBuilder()
-            .WithImage(PostgresImage)
+            .WithImage(_testContainerOptions.Postgres.Image)
             .WithNetwork(Network)
-            .WithNetworkAliases(RedmineNetworkAlias)
-            .WithPortBinding(PostgresPort, assignRandomHostPort: true)
+            .WithNetworkAliases(_redmineNetworkAlias)
             .WithEnvironment(new Dictionary<string, string>
             {
-                { "POSTGRES_DB", PostgresDb },
-                { "POSTGRES_USER", PostgresUser },
-                { "POSTGRES_PASSWORD", PostgresPassword },
+                { "POSTGRES_DB", _testContainerOptions.Postgres.Database },
+                { "POSTGRES_USER", _testContainerOptions.Postgres.User },
+                { "POSTGRES_PASSWORD", _testContainerOptions.Postgres.Password },
             })
-            .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(PostgresPort));
+            .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(_testContainerOptions.Postgres.Port));
        
-        if (_redmineOptions.Mode == TestContainerMode.CreateNewWithRandomPorts)
+        if (_testContainerOptions.Mode == TestContainerMode.CreateNewWithRandomPorts)
         {
-            postgresBuilder.WithPortBinding(PostgresPort, assignRandomHostPort: true);
+            postgresBuilder.WithPortBinding(_testContainerOptions.Postgres.Port, assignRandomHostPort: true);
         }
         else
         {
-            postgresBuilder.WithPortBinding(PostgresPort, PostgresPort);
+            postgresBuilder.WithPortBinding(_testContainerOptions.Postgres.Port, _testContainerOptions.Postgres.Port);
         }
         
         PostgresContainer = postgresBuilder.Build();
         
         var redmineBuilder = new ContainerBuilder()
-            .WithImage(RedmineImage)
+            .WithImage(_testContainerOptions.Redmine.Image)
             .WithNetwork(Network)
-            .WithPortBinding(RedminePort, assignRandomHostPort: true)
             .WithEnvironment(new Dictionary<string, string>
             {
-                { "REDMINE_DB_POSTGRES", RedmineNetworkAlias },
-                { "REDMINE_DB_PORT", PostgresPort.ToString() },
-                { "REDMINE_DB_DATABASE", PostgresDb },
-                { "REDMINE_DB_USERNAME", PostgresUser },
-                { "REDMINE_DB_PASSWORD", PostgresPassword },
+                { "REDMINE_DB_POSTGRES", _redmineNetworkAlias },
+                { "REDMINE_DB_PORT", _testContainerOptions.Redmine.Port.ToString() },
+                { "REDMINE_DB_DATABASE", _testContainerOptions.Postgres.Database },
+                { "REDMINE_DB_USERNAME", _testContainerOptions.Postgres.User },
+                { "REDMINE_DB_PASSWORD", _testContainerOptions.Postgres.Password },
             })
             .DependsOn(PostgresContainer)
             .WithWaitStrategy(Wait.ForUnixContainer()
-                .UntilHttpRequestIsSucceeded(request => request.ForPort(RedminePort).ForPath("/")));
+                .UntilHttpRequestIsSucceeded(request => request.ForPort((ushort)_testContainerOptions.Redmine.Port).ForPath("/")));
         
-        if (_redmineOptions.Mode == TestContainerMode.CreateNewWithRandomPorts)
+        if (_testContainerOptions.Mode == TestContainerMode.CreateNewWithRandomPorts)
         {
-            redmineBuilder.WithPortBinding(RedminePort, assignRandomHostPort: true);
+            redmineBuilder.WithPortBinding(_testContainerOptions.Redmine.Port, assignRandomHostPort: true);
         }
         else
         {
-            redmineBuilder.WithPortBinding(RedminePort, RedminePort);
+            redmineBuilder.WithPortBinding(_testContainerOptions.Redmine.Port, _testContainerOptions.Redmine.Port);
         }
         
         RedmineContainer = redmineBuilder.Build();
@@ -115,22 +107,22 @@ public class RedmineTestContainerFixture : IAsyncLifetime
     {
         var rmgBuilder = new RedmineManagerOptionsBuilder();
     
-        switch (_redmineOptions.AuthenticationMode)
+        switch (_testContainerOptions.Redmine.AuthenticationMode)
         {
             case AuthenticationMode.ApiKey:
-                var apiKey = _redmineOptions.Authentication.ApiKey;
+                var apiKey = _testContainerOptions.Redmine.Authentication.ApiKey;
                     rmgBuilder.WithApiKeyAuthentication(apiKey);
                 break;
             case AuthenticationMode.Basic:
-                var username = _redmineOptions.Authentication.Basic.Username;
-                var password = _redmineOptions.Authentication.Basic.Password;
+                var username = _testContainerOptions.Redmine.Authentication.Basic.Username;
+                var password = _testContainerOptions.Redmine.Authentication.Basic.Password;
                 rmgBuilder.WithBasicAuthentication(username, password);
                 break;
         }
         
-        if (_redmineOptions.Mode == TestContainerMode.UseExisting)
+        if (_testContainerOptions.Mode == TestContainerMode.UseExisting)
         {
-            RedmineHost = _redmineOptions.Url;
+            RedmineHost = _testContainerOptions.Redmine.Url;
         }
         else
         {
@@ -142,32 +134,60 @@ public class RedmineTestContainerFixture : IAsyncLifetime
 
             await SeedTestDataAsync(PostgresContainer, CancellationToken.None);
 
-            RedmineHost = $"http://{RedmineContainer.Hostname}:{RedmineContainer.GetMappedPublicPort(RedminePort)}";
+            RedmineHost = $"http://{RedmineContainer.Hostname}:{RedmineContainer.GetMappedPublicPort(_testContainerOptions.Redmine.Port)}";
         }
 
-        rmgBuilder
-            .WithHost(RedmineHost)
-            .UseHttpClient()
-            //.UseWebClient()
-            .WithXmlSerialization();
-        
+        rmgBuilder.WithHost(RedmineHost);
+
+        if (_configuration != null)
+        {
+            switch (_configuration.Client)
+            {
+                case ClientType.Http:
+                    rmgBuilder.UseHttpClient();
+                    break;
+                case ClientType.Web:
+                    rmgBuilder.UseWebClient();
+                    break;
+            }
+
+            switch (_configuration.Serialization)
+            {
+                case SerializationType.Xml:
+                    rmgBuilder.WithXmlSerialization();
+                    break;
+                case SerializationType.Json:
+                    rmgBuilder.WithJsonSerialization();
+                    break;
+            }
+        }
+        else
+        {
+            rmgBuilder
+                .UseHttpClient()
+      //          .UseWebClient()
+                .WithXmlSerialization();
+        }
+
         RedmineManager = new RedmineManager(rmgBuilder);
     }
 
     public async Task DisposeAsync()
     {
         var exceptions = new List<Exception>();
-        
-        if (_redmineOptions.Mode != TestContainerMode.UseExisting)
-        {
-            await SafeDisposeAsync(() => RedmineContainer.StopAsync());
-            await SafeDisposeAsync(() => PostgresContainer.StopAsync());
-            await SafeDisposeAsync(() => Network.DisposeAsync().AsTask());
 
-            if (exceptions.Count > 0)
-            {
-                throw new AggregateException(exceptions);
-            }
+        if (_testContainerOptions.Mode == TestContainerMode.UseExisting)
+        {
+            return;
+        }
+        
+        await SafeDisposeAsync(() => RedmineContainer.StopAsync());
+        await SafeDisposeAsync(() => PostgresContainer.StopAsync());
+        await SafeDisposeAsync(() => Network.DisposeAsync().AsTask());
+
+        if (exceptions.Count > 0)
+        {
+            throw new AggregateException(exceptions);
         }
 
         return;
@@ -207,23 +227,11 @@ public class RedmineTestContainerFixture : IAsyncLifetime
                 await Task.Delay(dbRetryDelay, ct);
             }
         }
-        var sql = await System.IO.File.ReadAllTextAsync(RedmineSqlFilePath, ct);
+        var sql = await System.IO.File.ReadAllTextAsync(_testContainerOptions.Redmine.SqlFilePath, ct);
         var res = await container.ExecScriptAsync(sql, ct);
         if (!string.IsNullOrWhiteSpace(res.Stderr))
         {
             _output.WriteLine(res.Stderr);
         }
     }
-} 
-
-/// <summary>
-/// Enum defining how containers should be managed
-/// </summary>
-public enum TestContainerMode
-{
-    /// <summary>Use existing running containers at specified URL</summary>
-    UseExisting,
-        
-    /// <summary>Create new containers with random ports (CI-friendly)</summary>
-    CreateNewWithRandomPorts
 }

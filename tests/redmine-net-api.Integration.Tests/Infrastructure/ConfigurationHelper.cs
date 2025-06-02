@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Padi.DotNet.RedmineAPI.Integration.Tests.Infrastructure.Options;
 
 namespace Padi.DotNet.RedmineAPI.Integration.Tests.Infrastructure
 {
