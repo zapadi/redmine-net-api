@@ -1,6 +1,8 @@
+using System;
 using Redmine.Net.Api.Exceptions;
 using Redmine.Net.Api.Types;
-    
+using Version = Redmine.Net.Api.Types.Version;
+
 namespace Redmine.Net.Api.Extensions
 {
     /// <summary>
@@ -57,7 +59,7 @@ namespace Redmine.Net.Api.Extensions
         {
             if (val <= 0)
             {
-                throw new RedmineException(nameof(val), "Value must be greater than zero");
+                throw new ArgumentException("Value must be greater than zero", nameof(val));
             }
 
             return new IdentifiableName(val, null);
@@ -73,7 +75,7 @@ namespace Redmine.Net.Api.Extensions
         {
             if (val <= 0)
             {
-                throw new RedmineException(nameof(val), "Value must be greater than zero");
+                throw new ArgumentException("Value must be greater than zero", nameof(val));
             }
 
             return new IssueStatus(val, null);
