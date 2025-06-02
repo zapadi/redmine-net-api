@@ -18,10 +18,12 @@ public static class HttpConstants
         public const int Conflict = 409;
         public const int UnprocessableEntity = 422;
         public const int TooManyRequests = 429;
+        public const int ClientCloseRequest = 499;
         public const int InternalServerError = 500;
         public const int BadGateway = 502;
         public const int ServiceUnavailable = 503;
         public const int GatewayTimeout = 504;
+        public const int Unknown = 999;
     }
 
     /// <summary>

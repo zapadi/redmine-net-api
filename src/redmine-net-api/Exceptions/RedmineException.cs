@@ -15,8 +15,8 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
 using System.Runtime.Serialization;
 
 namespace Redmine.Net.Api.Exceptions
@@ -30,63 +30,53 @@ namespace Redmine.Net.Api.Exceptions
     public class RedmineException : Exception
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="RedmineException"/> class.
+        /// 
         /// </summary>
-        public RedmineException()
-        {
-        }
+        public virtual string ErrorCode => "REDMINE-GEN-001";
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RedmineException"/> class.
-        /// </summary>
-        /// <param name="message">The message that describes the error.</param>
-        public RedmineException(string message)
-            : base(message)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RedmineException"/> class.
-        /// </summary>
-        /// <param name="format">The format.</param>
-        /// <param name="args">The arguments.</param>
-        public RedmineException(string format, params object[] args)
-            : base(string.Format(CultureInfo.InvariantCulture,format, args))
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RedmineException"/> class.
-        /// </summary>
-        /// <param name="message">The error message that explains the reason for the exception.</param>
-        /// <param name="innerException">The exception that is the cause of the current exception, or a null reference (Nothing in Visual Basic) if no inner exception is specified.</param>
-        public RedmineException(string message, Exception innerException)
-            : base(message, innerException)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RedmineException" /> class.
-        /// </summary>
-        /// <param name="format">The format.</param>
-        /// <param name="innerException">The inner exception.</param>
-        /// <param name="args">The arguments.</param>
-        public RedmineException(string format, Exception innerException, params object[] args)
-            : base(string.Format(CultureInfo.InvariantCulture,format, args), innerException)
-        {
-        }
-
-        #if !(NET8_0_OR_GREATER) 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="serializationInfo"></param>
-        /// <param name="streamingContext"></param>
-        protected RedmineException(SerializationInfo serializationInfo, StreamingContext streamingContext):base(serializationInfo, streamingContext)
+        public Dictionary<string, string> ErrorDetails { get; private set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public RedmineException() { }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        public RedmineException(string message) : base(message) { }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="innerException"></param>
+        public RedmineException(string message, Exception innerException) : base(message, innerException) { }
+        
+#if !(NET8_0_OR_GREATER) 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        protected RedmineException(SerializationInfo info, StreamingContext context) : base(info, context) { }
+#endif
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public RedmineException AddErrorDetail(string key, string value)
         {
+            ErrorDetails ??= new Dictionary<string, string>();
             
+            ErrorDetails[key] = value;
+            return this;
         }
-        #endif
         
         private string DebuggerDisplay => $"[{Message}]";
     }

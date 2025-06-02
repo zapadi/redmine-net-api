@@ -16,17 +16,13 @@
 
 using System;
 using System.Collections.Specialized;
-using System.Globalization;
 using System.Net;
 using System.Text;
-using Redmine.Net.Api.Authentication;
 using Redmine.Net.Api.Exceptions;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Http.Constants;
-using Redmine.Net.Api.Http.Extensions;
 using Redmine.Net.Api.Http.Helpers;
 using Redmine.Net.Api.Http.Messages;
-using Redmine.Net.Api.Logging;
 using Redmine.Net.Api.Options;
 using Redmine.Net.Api.Serialization;
 
@@ -63,29 +59,14 @@ namespace Redmine.Net.Api.Http.Clients.WebClient
         
         protected override RedmineApiResponse HandleRequest(string address, string verb, RequestOptions requestOptions = null, object content = null, IProgress<int> progress = null)
         {
-            var requestMessage = CreateRequestMessage(address, verb, requestOptions, content as RedmineApiRequestContent);
+            var requestMessage = CreateRequestMessage(address, verb, Serializer, requestOptions, content as RedmineApiRequestContent);
             
-            if (Options.LoggingOptions?.IncludeHttpDetails == true)
-            {
-                Options.Logger.Debug($"Request HTTP {verb} {address}");
-                
-                if (requestOptions?.QueryString != null)
-                {
-                    Options.Logger.Debug($"Query parameters: {requestOptions.QueryString.ToQueryString()}");
-                }
-            }
-
             var responseMessage = Send(requestMessage, progress);
-            
-            if (Options.LoggingOptions?.IncludeHttpDetails == true)
-            {
-                Options.Logger.Debug($"Response status: {responseMessage.StatusCode}");
-            }
             
             return responseMessage;
         }
 
-        private static RedmineApiRequest CreateRequestMessage(string address, string verb, RequestOptions requestOptions = null, RedmineApiRequestContent content = null)
+        private static RedmineApiRequest CreateRequestMessage(string address, string verb, IRedmineSerializer serializer, RequestOptions requestOptions = null, RedmineApiRequestContent content = null)
         {
             var req = new RedmineApiRequest()
             {
@@ -117,13 +98,18 @@ namespace Redmine.Net.Api.Http.Clients.WebClient
             try
             {
                 webClient = _webClientFunc();
-                
-                SetWebClientHeaders(webClient, requestMessage);
+
+                if (requestMessage.QueryString != null)
+                {
+                    webClient.QueryString = requestMessage.QueryString;
+                }
+
+                webClient.ApplyHeaders(requestMessage, Credentials);
 
                 if (IsGetOrDownload(requestMessage.Method))
                 {
-                    response = requestMessage.Method == HttpConstants.HttpVerbs.DOWNLOAD 
-                        ? DownloadWithProgress(requestMessage.RequestUri, webClient, progress) 
+                    response = requestMessage.Method == HttpConstants.HttpVerbs.DOWNLOAD
+                        ? webClient.DownloadWithProgress(requestMessage.RequestUri, progress)
                         : webClient.DownloadData(requestMessage.RequestUri);
                 }
                 else
@@ -143,14 +129,30 @@ namespace Redmine.Net.Api.Http.Clients.WebClient
                 }
 
                 responseHeaders = webClient.ResponseHeaders;
-                if (webClient is InternalWebClient iwc)
-                {
-                    statusCode = iwc.StatusCode;
-                }
+                statusCode = webClient.GetStatusCode();
+            }
+            catch (WebException webException) when (webException.Status == WebExceptionStatus.ProtocolError)
+            {
+                HandleResponseException(webException, requestMessage.RequestUri, Serializer);
             }
             catch (WebException webException)
             {
-                HandleWebException(webException, Serializer);
+                if (webException.Status == WebExceptionStatus.RequestCanceled)
+                {
+                    throw new RedmineOperationCanceledException(webException.Message, requestMessage.RequestUri, webException.InnerException);
+                }
+
+                if (webException.Status == WebExceptionStatus.Timeout)
+                {
+                    throw new RedmineTimeoutException(webException.Message, requestMessage.RequestUri, webException.InnerException);
+                }
+                
+                var errStatusCode = GetExceptionStatusCode(webException);
+                throw new RedmineApiException(webException.Message, requestMessage.RequestUri, errStatusCode, webException.InnerException);
+            }
+            catch (Exception ex)
+            {
+                throw new RedmineApiException(ex.Message, requestMessage.RequestUri, HttpConstants.StatusCodes.Unknown, ex.InnerException);
             }
             finally
             {
@@ -164,118 +166,36 @@ namespace Redmine.Net.Api.Http.Clients.WebClient
                 StatusCode = statusCode ?? HttpStatusCode.OK,
             };
         }
-
-        private void SetWebClientHeaders(System.Net.WebClient webClient, RedmineApiRequest requestMessage)
+       
+        private static void HandleResponseException(WebException exception, string url, IRedmineSerializer serializer)
         {
-            if (requestMessage.QueryString != null)
-            {
-                webClient.QueryString = requestMessage.QueryString;
-            }
-
-            switch (Credentials)
-            {
-                case RedmineApiKeyAuthentication:
-                    webClient.Headers.Add(RedmineConstants.API_KEY_AUTHORIZATION_HEADER_KEY,Credentials.Token);
-                    break;
-                case RedmineBasicAuthentication:
-                    webClient.Headers.Add(RedmineConstants.AUTHORIZATION_HEADER_KEY, Credentials.Token);
-                    break;
-            }
-
-            if (!requestMessage.ImpersonateUser.IsNullOrWhiteSpace())
-            {
-                webClient.Headers.Add(RedmineConstants.IMPERSONATE_HEADER_KEY, requestMessage.ImpersonateUser);
-            }
-        }
-
-        private static byte[] DownloadWithProgress(string url, System.Net.WebClient webClient, IProgress<int> progress)
-        {
-            var contentLength = GetContentLength(webClient);
-            byte[] data;
-            if (contentLength > 0)
-            {
-                using (var respStream = webClient.OpenRead(url))
-                {
-                    data = new byte[contentLength];
-                    var buffer = new byte[4096];
-                    int bytesRead;
-                    var totalBytesRead = 0;
-
-                    while ((bytesRead = respStream.Read(buffer, 0, buffer.Length)) > 0)
-                    {
-                        Buffer.BlockCopy(buffer, 0, data, totalBytesRead, bytesRead);
-                        totalBytesRead += bytesRead;
-                                
-                        ReportProgress(progress, contentLength, totalBytesRead);
-                    }
-                }
-            }
-            else
-            {
-                data = webClient.DownloadData(url);
-                progress?.Report(100);    
-            }
-            
-            return data;
-        }
-
-        private static int GetContentLength(System.Net.WebClient webClient)
-        {
-            var total = -1;
-            if (webClient.ResponseHeaders == null)
-            {
-                return total;
-            }
-            
-            var contentLengthAsString = webClient.ResponseHeaders[HttpRequestHeader.ContentLength];
-            total = Convert.ToInt32(contentLengthAsString, CultureInfo.InvariantCulture);
-
-            return total;
-        }
-
-        /// <summary>
-        /// Handles the web exception.
-        /// </summary>
-        /// <param name="exception">The exception.</param>
-        /// <param name="serializer"></param>
-        /// <exception cref="RedmineTimeoutException">Timeout!</exception>
-        /// <exception cref="NameResolutionFailureException">Bad domain name!</exception>
-        /// <exception cref="NotFoundException"></exception>
-        /// <exception cref="InternalServerErrorException"></exception>
-        /// <exception cref="UnauthorizedException"></exception>
-        /// <exception cref="ForbiddenException"></exception>
-        /// <exception cref="ConflictException">The page that you are trying to update is staled!</exception>
-        /// <exception cref="RedmineException"> </exception>
-        /// <exception cref="NotAcceptableException"></exception>
-        public static void HandleWebException(WebException exception, IRedmineSerializer serializer)
-        {
-            if (exception == null)
-            {
-                return;
-            }
-
             var innerException = exception.InnerException ?? exception;
 
-            switch (exception.Status)
+            if (exception.Response == null)
             {
-                case WebExceptionStatus.Timeout:
-                    throw new RedmineTimeoutException(nameof(WebExceptionStatus.Timeout), innerException);
-                case WebExceptionStatus.NameResolutionFailure:
-                    throw new NameResolutionFailureException("Bad domain name.", innerException);
-                case WebExceptionStatus.ProtocolError:
-                    if (exception.Response != null)
-                    {
-                        var statusCode = exception.Response is HttpWebResponse httpResponse 
-                            ? (int)httpResponse.StatusCode 
-                            : (int)HttpStatusCode.InternalServerError;
-                
-                        using var responseStream = exception.Response.GetResponseStream();
-                        RedmineExceptionHelper.MapStatusCodeToException(statusCode, responseStream, innerException, serializer);
-                    }
-
-                    break;
+                throw new RedmineApiException(exception.Message, url, null, innerException);                
             }
-            throw new RedmineException(exception.Message, innerException);
+            
+            var statusCode = GetExceptionStatusCode(exception);
+        
+            using var responseStream = exception.Response.GetResponseStream();
+            throw statusCode switch
+            {
+                HttpConstants.StatusCodes.NotFound => new RedmineNotFoundException(exception.Message, url, innerException),
+                HttpConstants.StatusCodes.Unauthorized => new RedmineUnauthorizedException(exception.Message, url, innerException),
+                HttpConstants.StatusCodes.Forbidden => new RedmineForbiddenException(exception.Message, url, innerException),
+                HttpConstants.StatusCodes.UnprocessableEntity => RedmineExceptionHelper.CreateUnprocessableEntityException(url, responseStream, innerException, serializer),
+                HttpConstants.StatusCodes.NotAcceptable => new RedmineNotAcceptableException(exception.Message, innerException),
+                _ => new RedmineApiException(exception.Message, url, statusCode, innerException),
+            };
+        }
+
+        private static int? GetExceptionStatusCode(WebException webException)
+        {
+            var statusCode = webException.Response is HttpWebResponse httpResponse 
+                ? (int)httpResponse.StatusCode 
+                : HttpConstants.StatusCodes.Unknown;
+            return statusCode;
         }
     }
 }

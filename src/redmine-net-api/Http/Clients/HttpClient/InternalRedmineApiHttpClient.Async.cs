@@ -16,11 +16,14 @@
 */
 
 using System;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Redmine.Net.Api.Exceptions;
+using Redmine.Net.Api.Extensions;
+using Redmine.Net.Api.Http.Constants;
 using Redmine.Net.Api.Http.Helpers;
 using Redmine.Net.Api.Http.Messages;
 
@@ -32,10 +35,9 @@ internal sealed partial class InternalRedmineApiHttpClient
         object content = null, IProgress<int> progress = null, CancellationToken cancellationToken = default)
     {
         var httpMethod = GetHttpMethod(verb);
-        using (var requestMessage = CreateRequestMessage(address, httpMethod, requestOptions, content as HttpContent))
-        {
-            return await SendAsync(requestMessage, progress: progress, cancellationToken: cancellationToken).ConfigureAwait(false);
-        }
+        using var requestMessage = CreateRequestMessage(address, httpMethod, requestOptions, content as HttpContent);
+        var response = await SendAsync(requestMessage, progress: progress, cancellationToken: cancellationToken).ConfigureAwait(false);
+        return response;
     }
 
     private async Task<RedmineApiResponse> SendAsync(HttpRequestMessage requestMessage, IProgress<int> progress = null, CancellationToken cancellationToken = default)
@@ -73,36 +75,45 @@ internal sealed partial class InternalRedmineApiHttpClient
                 using (var stream = await httpResponseMessage.Content.ReadAsStreamAsync(cancellationToken)
                            .ConfigureAwait(false))
                 {
-                    RedmineExceptionHelper.MapStatusCodeToException(statusCode, stream, null, Serializer);
+                    var url = requestMessage.RequestUri?.ToString();
+                    var message = httpResponseMessage.ReasonPhrase;
+                    
+                    throw statusCode switch
+                    {
+                        HttpConstants.StatusCodes.NotFound => new RedmineNotFoundException(message, url),
+                        HttpConstants.StatusCodes.Unauthorized => new RedmineUnauthorizedException(message, url),
+                        HttpConstants.StatusCodes.Forbidden => new RedmineForbiddenException(message, url),
+                        HttpConstants.StatusCodes.UnprocessableEntity => RedmineExceptionHelper.CreateUnprocessableEntityException(url, stream, null, Serializer),
+                        HttpConstants.StatusCodes.NotAcceptable => new RedmineNotAcceptableException(message),
+                        _ => new RedmineApiException(message, url, statusCode),
+                    };
                 }
             }
         }
         catch (OperationCanceledException ex) when (cancellationToken.IsCancellationRequested)
         {
-            throw new RedmineApiException("Token has been cancelled", ex);
+            throw new RedmineOperationCanceledException(ex.Message, requestMessage.RequestUri, ex);
         }
         catch (OperationCanceledException ex) when (ex.InnerException is TimeoutException tex)
         {
-            throw new RedmineApiException("Operation has timed out", ex);
+            throw new RedmineTimeoutException(tex.Message, requestMessage.RequestUri, tex);
         }
         catch (TaskCanceledException tcex) when (cancellationToken.IsCancellationRequested)
         {
-            throw new RedmineApiException("Operation ahs been cancelled by user", tcex);
+            throw new RedmineOperationCanceledException(tcex.Message, requestMessage.RequestUri, tcex);
         }
         catch (TaskCanceledException tce)
         {
-            throw new RedmineApiException(tce.Message, tce);
+            throw new RedmineTimeoutException(tce.Message, requestMessage.RequestUri, tce);
         }
         catch (HttpRequestException ex)
         {
-            throw new RedmineApiException(ex.Message, ex);
+            throw new RedmineApiException(ex.Message, requestMessage.RequestUri, HttpConstants.StatusCodes.Unknown, ex);
         }
         catch (Exception ex) when (ex is not RedmineException)
         {
-            throw new RedmineApiException(ex.Message, ex);
+            throw new RedmineApiException(ex.Message, requestMessage.RequestUri, HttpConstants.StatusCodes.Unknown, ex);
         }
-
-        return null;
     }
     
     private static async Task<byte[]> DownloadWithProgressAsync(HttpContent httpContent, IProgress<int> progress = null, CancellationToken cancellationToken = default)

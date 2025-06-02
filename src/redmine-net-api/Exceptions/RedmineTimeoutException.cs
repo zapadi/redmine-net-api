@@ -15,77 +15,76 @@
 */
 
 using System;
-using System.Globalization;
-using System.Runtime.Serialization;
+using Redmine.Net.Api.Http.Constants;
 
 namespace Redmine.Net.Api.Exceptions
 {
     /// <summary>
+    /// Represents an exception thrown when a Redmine API request times out (HTTP 408).
     /// </summary>
-    /// <seealso cref="Redmine.Net.Api.Exceptions.RedmineException" />
     [Serializable]
-    public sealed class RedmineTimeoutException : RedmineException
+    public sealed class RedmineTimeoutException : RedmineApiException
     {
+        /// <inheritdoc />
+        public override string ErrorCode => "REDMINE-TIMEOUT-004";
+
         /// <summary>
-        ///     Initializes a new instance of the <see cref="RedmineTimeoutException" /> class.
+        /// Initializes a new instance of the <see cref="RedmineTimeoutException"/> class.
         /// </summary>
         public RedmineTimeoutException()
+            : base("The Redmine API request timed out.", (string)null, HttpConstants.StatusCodes.RequestTimeout, null)
         {
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="RedmineTimeoutException" /> class.
-        /// </summary>
-        /// <param name="message">The message that describes the error.</param>
-        public RedmineTimeoutException(string message)
-            : base(message)
-        {
-        }
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="RedmineTimeoutException" /> class.
-        /// </summary>
-        /// <param name="format">The format.</param>
-        /// <param name="args">The arguments.</param>
-        public RedmineTimeoutException(string format, params object[] args)
-            : base(string.Format(CultureInfo.InvariantCulture,format, args))
-        {
-        }
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="RedmineTimeoutException" /> class.
+        /// Initializes a new instance of the <see cref="RedmineTimeoutException"/> class with a specified error message.
         /// </summary>
         /// <param name="message">The error message that explains the reason for the exception.</param>
-        /// <param name="innerException">
-        ///     The exception that is the cause of the current exception, or a null reference (Nothing in
-        ///     Visual Basic) if no inner exception is specified.
-        /// </param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="message"/> is null.</exception>
+        public RedmineTimeoutException(string message)
+            : base(message, (string)null, HttpConstants.StatusCodes.RequestTimeout, null)
+        { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RedmineTimeoutException"/> class with a specified error message and URL.
+        /// </summary>
+        /// <param name="message">The error message that explains the reason for the exception.</param>
+        /// <param name="url">The URL of the Redmine API resource that timed out.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="message"/> or <paramref name="url"/> is null.</exception>
+        public RedmineTimeoutException(string message, string url)
+            : base(message, url, HttpConstants.StatusCodes.RequestTimeout, null)
+        { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RedmineTimeoutException"/> class with a specified error message and inner exception.
+        /// </summary>
+        /// <param name="message">The error message that explains the reason for the exception.</param>
+        /// <param name="innerException">The exception that is the cause of the current exception.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="message"/> or <paramref name="innerException"/> is null.</exception>
         public RedmineTimeoutException(string message, Exception innerException)
-            : base(message, innerException)
-        {
-        }
+            : base(message, (string)null, HttpConstants.StatusCodes.RequestTimeout, innerException)
+        { }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="RedmineTimeoutException" /> class.
+        /// Initializes a new instance of the <see cref="RedmineTimeoutException"/> class with a specified error message, URL, and inner exception.
         /// </summary>
-        /// <param name="format">The format.</param>
-        /// <param name="innerException">The inner exception.</param>
-        /// <param name="args">The arguments.</param>
-        public RedmineTimeoutException(string format, Exception innerException, params object[] args)
-            : base(string.Format(CultureInfo.InvariantCulture,format, args), innerException)
-        {
-        }
+        /// <param name="message">The error message that explains the reason for the exception.</param>
+        /// <param name="url">The URL of the Redmine API resource that timed out.</param>
+        /// <param name="innerException">The exception that is the cause of the current exception, or null if none.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="message"/> or <paramref name="url"/> is null.</exception>
+        public RedmineTimeoutException(string message, string url, Exception innerException)
+            : base(message, url, HttpConstants.StatusCodes.RequestTimeout, innerException)
+        { }
 
-#if !(NET8_0_OR_GREATER) 
         /// <summary>
-        /// 
+        /// Initializes a new instance of the <see cref="RedmineTimeoutException"/> class with a specified error message, URL, and inner exception.
         /// </summary>
-        /// <param name="serializationInfo"></param>
-        /// <param name="streamingContext"></param>
-        private RedmineTimeoutException(SerializationInfo serializationInfo, StreamingContext streamingContext):base(serializationInfo, streamingContext)
-        {
-         
-        }
-#endif
+        /// <param name="message">The error message that explains the reason for the exception.</param>
+        /// <param name="url">The URL of the Redmine API resource that timed out.</param>
+        /// <param name="innerException">The exception that is the cause of the current exception, or null if none.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="message"/> or <paramref name="url"/> is null.</exception>
+        public RedmineTimeoutException(string message, Uri url, Exception innerException)
+            : base(message, url?.ToString(), HttpConstants.StatusCodes.RequestTimeout, innerException)
+        { }
     }
 }

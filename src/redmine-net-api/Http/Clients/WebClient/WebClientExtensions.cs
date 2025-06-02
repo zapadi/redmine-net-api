@@ -28,5 +28,13 @@ internal static class WebClientExtensions
         {
             client.Headers.Add(header.Key, header.Value);
         }
+    internal static HttpStatusCode? GetStatusCode(this System.Net.WebClient webClient)
+    {
+        if (webClient is InternalWebClient iwc)
+        {
+            return iwc.StatusCode;
+        }
+        
+        return null;
     }
 }

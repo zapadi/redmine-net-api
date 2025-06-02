@@ -84,26 +84,33 @@ namespace Redmine.Net.Api.Http.Clients.WebClient
                         payload = EmptyBytes;
                     }
 
-                    response = await webClient.UploadDataTaskAsync(requestMessage.RequestUri, requestMessage.Method, payload)
+                    response = await webClient
+                        .UploadDataTaskAsync(requestMessage.RequestUri, requestMessage.Method, payload)
                         .ConfigureAwait(false);
                 }
-                
+
                 responseHeaders = webClient.ResponseHeaders;
-                if (webClient is InternalWebClient iwc)
-                {
-                    statusCode = iwc.StatusCode;
-                }
+                statusCode = webClient.GetStatusCode();
             }
             catch (WebException ex) when (ex.Status == WebExceptionStatus.RequestCanceled)
             {
-                if (cancellationToken.IsCancellationRequested)
-                {
-                    throw new RedmineApiException("The operation was canceled by the user.", ex);
-                }
+                throw new RedmineOperationCanceledException(ex.Message, requestMessage.RequestUri, ex);
             }
-            catch (WebException webException)
+            catch (WebException ex) when (ex.Status == WebExceptionStatus.Timeout)
             {
-                HandleWebException(webException, Serializer);
+                throw new RedmineTimeoutException(ex.Message, requestMessage.RequestUri, ex);
+            }
+            catch (WebException webException)when (webException.Status == WebExceptionStatus.ProtocolError)
+            {
+                HandleResponseException(webException, requestMessage.RequestUri, Serializer);
+            }
+            catch (OperationCanceledException ex)
+            {
+                throw new RedmineOperationCanceledException(ex.Message, requestMessage.RequestUri, ex);
+            }
+            catch (Exception ex)
+            {
+                throw new RedmineApiException(ex.Message, requestMessage.RequestUri, null, ex);
             }
             finally
             {
