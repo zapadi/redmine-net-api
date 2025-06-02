@@ -14,6 +14,7 @@
    limitations under the License.
 */
 
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using Redmine.Net.Api.Http.Clients.WebClient;
 using Redmine.Net.Api.Http.Constants;
@@ -22,11 +23,46 @@ namespace Redmine.Net.Api.Http.Messages;
 
 internal sealed class RedmineApiRequest
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public RedmineApiRequestContent Content { get; set; }
+    
+    /// <summary>
+    /// 
+    /// </summary>
     public string Method { get; set; } = HttpConstants.HttpVerbs.GET;
+    
+    /// <summary>
+    /// 
+    /// </summary>
     public string RequestUri { get; set; }
+    
+    /// <summary>
+    /// 
+    /// </summary>
     public NameValueCollection QueryString { get; set; }
+    /// <summary>
+    /// 
+    /// </summary>
     public string ImpersonateUser { get; set; }
         
+    /// <summary>
+    /// 
+    /// </summary>
     public string ContentType { get; set; }
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    public string Accept { get; set; }
+    /// <summary>
+    /// 
+    /// </summary>
+    public string UserAgent { get; set; }
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    public Dictionary<string, string> Headers { get; set; }
 }
