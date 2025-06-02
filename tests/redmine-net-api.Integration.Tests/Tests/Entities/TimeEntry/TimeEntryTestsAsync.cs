@@ -1,6 +1,6 @@
 using Padi.DotNet.RedmineAPI.Integration.Tests.Fixtures;
-using Padi.DotNet.RedmineAPI.Integration.Tests.Helpers;
 using Padi.DotNet.RedmineAPI.Integration.Tests.Infrastructure;
+using Padi.DotNet.RedmineAPI.Integration.Tests.Tests.Common;
 using Redmine.Net.Api.Exceptions;
 using Redmine.Net.Api.Extensions;
 
@@ -13,7 +13,7 @@ public class TimeEntryTestsAsync(RedmineTestContainerFixture fixture)
     {
         var (issue, _)  = await IssueTestHelper.CreateRandomIssueAsync(fixture.RedmineManager);
         
-        var timeEntry = TestEntityFactory.CreateRandomTimeEntryPayload(TestConstants.Projects.DefaultProjectId, issue.Id);
+        var timeEntry = TestEntityFactory.CreateRandomTimeEntryPayload(TestConstants.Projects.DefaultProjectId, issue.Id, activityId: 8);
         return (await fixture.RedmineManager.CreateAsync(timeEntry), timeEntry);
     }
 
@@ -86,6 +86,6 @@ public class TimeEntryTestsAsync(RedmineTestContainerFixture fixture)
         await fixture.RedmineManager.DeleteAsync<Redmine.Net.Api.Types.TimeEntry>(timeEntryId);
 
         //Assert
-        await Assert.ThrowsAsync<NotFoundException>(async () => await fixture.RedmineManager.GetAsync<Redmine.Net.Api.Types.TimeEntry>(timeEntryId));
+        await Assert.ThrowsAsync<RedmineNotFoundException>(async () => await fixture.RedmineManager.GetAsync<Redmine.Net.Api.Types.TimeEntry>(timeEntryId));
     }
 }

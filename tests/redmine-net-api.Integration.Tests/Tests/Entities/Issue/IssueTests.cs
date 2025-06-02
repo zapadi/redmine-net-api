@@ -1,6 +1,7 @@
 using Padi.DotNet.RedmineAPI.Integration.Tests.Fixtures;
 using Padi.DotNet.RedmineAPI.Integration.Tests.Helpers;
 using Padi.DotNet.RedmineAPI.Integration.Tests.Infrastructure;
+using Padi.DotNet.RedmineAPI.Integration.Tests.Tests.Common;
 using Redmine.Net.Api.Exceptions;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Http;
@@ -90,7 +91,7 @@ public class IssueTests(RedmineTestContainerFixture fixture)
         fixture.RedmineManager.Delete<Redmine.Net.Api.Types.Issue>(issueId);
 
         //Assert
-        Assert.Throws<NotFoundException>(() => fixture.RedmineManager.Get<Redmine.Net.Api.Types.Issue>(issueId));
+        Assert.Throws<RedmineNotFoundException>(() => fixture.RedmineManager.Get<Redmine.Net.Api.Types.Issue>(issueId));
     }
 
     [Fact]
@@ -113,7 +114,7 @@ public class IssueTests(RedmineTestContainerFixture fixture)
             customFields: [TestEntityFactory.CreateRandomIssueCustomFieldWithMultipleValuesPayload()],
             watchers: [new Watcher() { Id = 1 }, new Watcher() { Id = userId }]);
 
-        var issueRelation = new IssueRelation()
+        var issueRelation = new Redmine.Net.Api.Types.IssueRelation()
         {
             Type = IssueRelationType.Relates,
             IssueToId = firstIssue.Id,

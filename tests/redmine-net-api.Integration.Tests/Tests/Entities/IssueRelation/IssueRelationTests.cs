@@ -1,11 +1,10 @@
 using Padi.DotNet.RedmineAPI.Integration.Tests.Fixtures;
-using Padi.DotNet.RedmineAPI.Integration.Tests.Helpers;
 using Padi.DotNet.RedmineAPI.Integration.Tests.Infrastructure;
+using Padi.DotNet.RedmineAPI.Integration.Tests.Tests.Common;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Http;
-using Redmine.Net.Api.Types;
 
-namespace Padi.DotNet.RedmineAPI.Integration.Tests.Tests.Entities.Issue;
+namespace Padi.DotNet.RedmineAPI.Integration.Tests.Tests.Entities.IssueRelation;
 
 [Collection(Constants.RedmineTestContainerCollection)]
 public class IssueRelationTests(RedmineTestContainerFixture fixture)
@@ -25,7 +24,7 @@ public class IssueRelationTests(RedmineTestContainerFixture fixture)
     public void DeleteIssueRelation_Should_Succeed()
     {
         var (rel, _, _) = IssueTestHelper.CreateRandomIssueRelation(fixture.RedmineManager);
-        fixture.RedmineManager.Delete<IssueRelation>(rel.Id.ToString());
+        fixture.RedmineManager.Delete<Redmine.Net.Api.Types.IssueRelation>(rel.Id.ToString());
 
         var issue = fixture.RedmineManager.Get<Redmine.Net.Api.Types.Issue>(
             rel.IssueId.ToString(),

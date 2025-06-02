@@ -74,7 +74,7 @@ public class ProjectTestsAsync(RedmineTestContainerFixture fixture)
         await Task.Delay(200);
         
         //Assert
-        await Assert.ThrowsAsync<NotFoundException>(TestCode);
+        await Assert.ThrowsAsync<RedmineNotFoundException>(TestCode);
         return;
 
         async Task TestCode()

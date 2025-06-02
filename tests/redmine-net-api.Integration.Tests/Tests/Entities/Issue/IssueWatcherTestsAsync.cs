@@ -16,7 +16,7 @@ public class IssueWatcherTestsAsync(RedmineTestContainerFixture fixture)
         {
             Project = new IdentifiableName { Id = 1 },
             Tracker = new IdentifiableName { Id = 1 },
-            Status = new IssueStatus { Id = 1 },
+            Status = new Redmine.Net.Api.Types.IssueStatus { Id = 1 },
             Priority = new IdentifiableName { Id = 4 },
             Subject = $"Test issue subject {Guid.NewGuid()}",
             Description = "Test issue description"

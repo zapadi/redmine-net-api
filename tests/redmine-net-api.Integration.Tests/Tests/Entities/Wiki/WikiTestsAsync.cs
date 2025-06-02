@@ -1,6 +1,7 @@
 using Padi.DotNet.RedmineAPI.Integration.Tests.Fixtures;
 using Padi.DotNet.RedmineAPI.Integration.Tests.Helpers;
 using Padi.DotNet.RedmineAPI.Integration.Tests.Infrastructure;
+using Padi.DotNet.RedmineAPI.Integration.Tests.Tests.Common;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Exceptions;
 using Redmine.Net.Api.Extensions;
@@ -78,7 +79,7 @@ public class WikiTestsAsync(RedmineTestContainerFixture fixture)
         await fixture.RedmineManager.DeleteWikiPageAsync(TestConstants.Projects.DefaultProjectIdentifier, wikiPage.Title);
         
         // Assert
-        await Assert.ThrowsAsync<NotFoundException>(async () => await fixture.RedmineManager.GetWikiPageAsync(TestConstants.Projects.DefaultProjectIdentifier, wikiPage.Title));
+        await Assert.ThrowsAsync<RedmineNotFoundException>(async () => await fixture.RedmineManager.GetWikiPageAsync(TestConstants.Projects.DefaultProjectIdentifier, wikiPage.Title));
     }
 
     [Fact]

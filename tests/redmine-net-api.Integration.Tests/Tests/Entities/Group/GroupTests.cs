@@ -1,6 +1,7 @@
 using Padi.DotNet.RedmineAPI.Integration.Tests.Fixtures;
 using Padi.DotNet.RedmineAPI.Integration.Tests.Helpers;
 using Padi.DotNet.RedmineAPI.Integration.Tests.Infrastructure;
+using Padi.DotNet.RedmineAPI.Integration.Tests.Tests.Common;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Exceptions;
 using Redmine.Net.Api.Extensions;
@@ -73,7 +74,7 @@ public class GroupTests(RedmineTestContainerFixture fixture)
 
         fixture.RedmineManager.Delete<Redmine.Net.Api.Types.Group>(groupId);
 
-        Assert.Throws<NotFoundException>(() =>
+        Assert.Throws<RedmineNotFoundException>(() =>
             fixture.RedmineManager.Get<Redmine.Net.Api.Types.Group>(groupId));
     }
 
@@ -84,14 +85,12 @@ public class GroupTests(RedmineTestContainerFixture fixture)
         var group = fixture.RedmineManager.Create(groupPayload);
         Assert.NotNull(group);
 
-        var userId = 1; 
-
-        fixture.RedmineManager.AddUserToGroup(group.Id, userId);
+        fixture.RedmineManager.AddUserToGroup(group.Id, userId: 1);
         var updatedGroup = fixture.RedmineManager.Get<Redmine.Net.Api.Types.Group>(group.Id.ToString(), RequestOptions.Include(RedmineKeys.USERS));
 
         Assert.NotNull(updatedGroup);
         Assert.NotNull(updatedGroup.Users);
-        Assert.Contains(updatedGroup.Users, u => u.Id == userId);
+        Assert.Contains(updatedGroup.Users, u => u.Id == 1);
     }
 
     [Fact]

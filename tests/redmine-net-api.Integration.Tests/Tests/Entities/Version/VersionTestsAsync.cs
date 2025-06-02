@@ -1,6 +1,7 @@
 using Padi.DotNet.RedmineAPI.Integration.Tests.Fixtures;
 using Padi.DotNet.RedmineAPI.Integration.Tests.Helpers;
 using Padi.DotNet.RedmineAPI.Integration.Tests.Infrastructure;
+using Padi.DotNet.RedmineAPI.Integration.Tests.Tests.Common;
 using Redmine.Net.Api.Exceptions;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Types;
@@ -80,7 +81,7 @@ public class VersionTestsAsync(RedmineTestContainerFixture fixture)
         await fixture.RedmineManager.DeleteAsync<Redmine.Net.Api.Types.Version>(version);
 
         // Assert
-        await Assert.ThrowsAsync<NotFoundException>(async () =>
+        await Assert.ThrowsAsync<RedmineNotFoundException>(async () =>
             await fixture.RedmineManager.GetAsync<Redmine.Net.Api.Types.Version>(version));
     }
 }

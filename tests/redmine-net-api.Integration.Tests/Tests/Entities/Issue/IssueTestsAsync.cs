@@ -132,7 +132,7 @@ public class IssueTestsAsync(RedmineTestContainerFixture fixture)
         await fixture.RedmineManager.DeleteAsync<Redmine.Net.Api.Types.Issue>(issueId);
 
         //Assert
-        await Assert.ThrowsAsync<NotFoundException>(async () => await fixture.RedmineManager.GetAsync<Redmine.Net.Api.Types.Issue>(issueId));
+        await Assert.ThrowsAsync<RedmineNotFoundException>(async () => await fixture.RedmineManager.GetAsync<Redmine.Net.Api.Types.Issue>(issueId));
     }
 
     [Fact]

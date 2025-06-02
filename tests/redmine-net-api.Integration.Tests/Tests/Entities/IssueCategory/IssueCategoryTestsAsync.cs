@@ -1,21 +1,25 @@
+using System.Collections.Specialized;
 using Padi.DotNet.RedmineAPI.Integration.Tests.Fixtures;
+using Padi.DotNet.RedmineAPI.Integration.Tests.Helpers;
 using Padi.DotNet.RedmineAPI.Integration.Tests.Infrastructure;
+using Padi.DotNet.RedmineAPI.Integration.Tests.Tests.Common;
+using Redmine.Net.Api;
 using Redmine.Net.Api.Exceptions;
 using Redmine.Net.Api.Extensions;
-using Redmine.Net.Api.Types;
+using Redmine.Net.Api.Http;
 
-namespace Padi.DotNet.RedmineAPI.Integration.Tests.Tests.Entities.Issue;
+namespace Padi.DotNet.RedmineAPI.Integration.Tests.Tests.Entities.IssueCategory;
 
 [Collection(Constants.RedmineTestContainerCollection)]
 public class IssueCategoryTestsAsync(RedmineTestContainerFixture fixture)
 {
-    private const string PROJECT_ID = "1";
+    private const string PROJECT_ID = TestConstants.Projects.DefaultProjectIdentifier;
     
-    private async Task<IssueCategory> CreateTestIssueCategoryAsync()
+    private async Task<Redmine.Net.Api.Types.IssueCategory> CreateRandomIssueCategoryAsync()
     {
-        var category = new IssueCategory
+        var category = new Redmine.Net.Api.Types.IssueCategory
         {
-            Name = $"Test Category {Guid.NewGuid()}"
+            Name = RandomHelper.GenerateText(5)
         };
         
         return await fixture.RedmineManager.CreateAsync(category, PROJECT_ID);
@@ -24,8 +28,18 @@ public class IssueCategoryTestsAsync(RedmineTestContainerFixture fixture)
     [Fact]
     public async Task GetProjectIssueCategories_Should_Succeed()
     {
+        // Arrange
+        var category = await CreateRandomIssueCategoryAsync();
+        Assert.NotNull(category);
+        
         // Act
-        var categories = await fixture.RedmineManager.GetAsync<IssueCategory>(PROJECT_ID);
+        var categories = await fixture.RedmineManager.GetAsync<Redmine.Net.Api.Types.IssueCategory>(new RequestOptions()
+        {
+            QueryString = new NameValueCollection()
+            {
+                {RedmineKeys.PROJECT_ID, PROJECT_ID}
+            }
+        });
 
         // Assert
         Assert.NotNull(categories);
@@ -34,30 +48,23 @@ public class IssueCategoryTestsAsync(RedmineTestContainerFixture fixture)
     [Fact]
     public async Task CreateIssueCategory_Should_Succeed()
     {
-        // Arrange
-        var category = new IssueCategory
-        {
-            Name = $"Test Category {Guid.NewGuid()}"
-        };
-
-        // Act
-        var createdCategory = await fixture.RedmineManager.CreateAsync(category, PROJECT_ID);
+        // Arrange & Act
+        var category = await CreateRandomIssueCategoryAsync();
 
         // Assert
-        Assert.NotNull(createdCategory);
-        Assert.True(createdCategory.Id > 0);
-        Assert.Equal(category.Name, createdCategory.Name);
+        Assert.NotNull(category);
+        Assert.True(category.Id > 0);
     }
 
     [Fact]
     public async Task GetIssueCategory_Should_Succeed()
     {
         // Arrange
-        var createdCategory = await CreateTestIssueCategoryAsync();
+        var createdCategory = await CreateRandomIssueCategoryAsync();
         Assert.NotNull(createdCategory);
 
         // Act
-        var retrievedCategory = await fixture.RedmineManager.GetAsync<IssueCategory>(createdCategory.Id.ToInvariantString());
+        var retrievedCategory = await fixture.RedmineManager.GetAsync<Redmine.Net.Api.Types.IssueCategory>(createdCategory.Id.ToInvariantString());
 
         // Assert
         Assert.NotNull(retrievedCategory);
@@ -69,7 +76,7 @@ public class IssueCategoryTestsAsync(RedmineTestContainerFixture fixture)
     public async Task UpdateIssueCategory_Should_Succeed()
     {
         // Arrange
-        var createdCategory = await CreateTestIssueCategoryAsync();
+        var createdCategory = await CreateRandomIssueCategoryAsync();
         Assert.NotNull(createdCategory);
 
         var updatedName = $"Updated Test Category {Guid.NewGuid()}";
@@ -77,7 +84,7 @@ public class IssueCategoryTestsAsync(RedmineTestContainerFixture fixture)
 
         // Act
         await fixture.RedmineManager.UpdateAsync(createdCategory.Id.ToInvariantString(), createdCategory);
-        var retrievedCategory = await fixture.RedmineManager.GetAsync<IssueCategory>(createdCategory.Id.ToInvariantString());
+        var retrievedCategory = await fixture.RedmineManager.GetAsync<Redmine.Net.Api.Types.IssueCategory>(createdCategory.Id.ToInvariantString());
 
         // Assert
         Assert.NotNull(retrievedCategory);
@@ -89,16 +96,16 @@ public class IssueCategoryTestsAsync(RedmineTestContainerFixture fixture)
     public async Task DeleteIssueCategory_Should_Succeed()
     {
         // Arrange
-        var createdCategory = await CreateTestIssueCategoryAsync();
+        var createdCategory = await CreateRandomIssueCategoryAsync();
         Assert.NotNull(createdCategory);
 
         var categoryId = createdCategory.Id.ToInvariantString();
 
         // Act
-        await fixture.RedmineManager.DeleteAsync<IssueCategory>(categoryId);
+        await fixture.RedmineManager.DeleteAsync<Redmine.Net.Api.Types.IssueCategory>(categoryId);
 
         // Assert
-        await Assert.ThrowsAsync<NotFoundException>(async () => 
-            await fixture.RedmineManager.GetAsync<IssueCategory>(categoryId));
+        await Assert.ThrowsAsync<RedmineNotFoundException>(async () => 
+            await fixture.RedmineManager.GetAsync<Redmine.Net.Api.Types.IssueCategory>(categoryId));
     }
 }

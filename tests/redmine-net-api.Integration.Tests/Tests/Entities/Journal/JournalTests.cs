@@ -1,11 +1,11 @@
 using Padi.DotNet.RedmineAPI.Integration.Tests.Fixtures;
-using Padi.DotNet.RedmineAPI.Integration.Tests.Helpers;
 using Padi.DotNet.RedmineAPI.Integration.Tests.Infrastructure;
+using Padi.DotNet.RedmineAPI.Integration.Tests.Tests.Common;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Http;
 
-namespace Padi.DotNet.RedmineAPI.Integration.Tests.Tests.Entities.Issue;
+namespace Padi.DotNet.RedmineAPI.Integration.Tests.Tests.Entities.Journal;
 
 [Collection(Constants.RedmineTestContainerCollection)]
 public class JournalTests(RedmineTestContainerFixture fixture)

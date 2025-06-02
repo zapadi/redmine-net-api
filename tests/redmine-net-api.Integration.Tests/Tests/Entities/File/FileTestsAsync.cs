@@ -1,6 +1,7 @@
 using Padi.DotNet.RedmineAPI.Integration.Tests.Fixtures;
 using Padi.DotNet.RedmineAPI.Integration.Tests.Helpers;
 using Padi.DotNet.RedmineAPI.Integration.Tests.Infrastructure;
+using Padi.DotNet.RedmineAPI.Integration.Tests.Tests.Common;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Exceptions;
 using Redmine.Net.Api.Extensions;
@@ -38,13 +39,14 @@ public class FileTestsAsync(RedmineTestContainerFixture fixture)
     [Fact]
     public async Task CreateFile_Without_Token_Should_Fail()
     {
-        await Assert.ThrowsAsync<NotFoundException>(() => fixture.RedmineManager.CreateAsync<Redmine.Net.Api.Types.File>(
+        await Assert.ThrowsAsync<RedmineNotFoundException>(() => fixture.RedmineManager.CreateAsync<Redmine.Net.Api.Types.File>(
             new Redmine.Net.Api.Types.File { Filename = "VBpMc.txt" }, PROJECT_ID));
     }
     
     [Fact]
     public async Task CreateFile_With_OptionalParameters_Should_Succeed()
     {
+        // Arrange
         var (fileName, token) = await UploadFileAsync();
       
         var filePayload = new Redmine.Net.Api.Types.File
@@ -55,6 +57,7 @@ public class FileTestsAsync(RedmineTestContainerFixture fixture)
             ContentType = "text/plain",
         };
 
+        // Act
         _ = await fixture.RedmineManager.CreateAsync<Redmine.Net.Api.Types.File>(filePayload, PROJECT_ID);
         var files = await fixture.RedmineManager.GetProjectFilesAsync(PROJECT_ID);
         var file = files.Items.FirstOrDefault(x => x.Filename == fileName);
@@ -71,6 +74,11 @@ public class FileTestsAsync(RedmineTestContainerFixture fixture)
     [Fact]
     public async Task CreateFile_With_Version_Should_Succeed()
     {
+        // Arrange
+        var versionPayload = TestEntityFactory.CreateRandomVersionPayload();
+        var version = await fixture.RedmineManager.CreateAsync(versionPayload, TestConstants.Projects.DefaultProjectIdentifier);
+        Assert.NotNull(version);
+        
         var (fileName, token) = await UploadFileAsync();
       
         var filePayload = new Redmine.Net.Api.Types.File
@@ -79,13 +87,15 @@ public class FileTestsAsync(RedmineTestContainerFixture fixture)
             Filename = fileName,
             Description = RandomHelper.GenerateText(9),
             ContentType = "text/plain",
-            Version = 1.ToIdentifier(),
+            Version = version
         };
 
+        // Act
         _ = await fixture.RedmineManager.CreateAsync<Redmine.Net.Api.Types.File>(filePayload, PROJECT_ID);
         var files = await fixture.RedmineManager.GetProjectFilesAsync(PROJECT_ID);
         var file = files.Items.FirstOrDefault(x => x.Filename == fileName);
-        
+
+        // Assert
         Assert.NotNull(file);
         Assert.True(file.Id > 0);
         Assert.NotEmpty(file.Digest);

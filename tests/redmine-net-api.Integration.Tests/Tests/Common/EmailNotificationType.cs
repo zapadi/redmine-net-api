@@ -1,4 +1,4 @@
-namespace Padi.DotNet.RedmineAPI.Integration.Tests.Helpers;
+namespace Padi.DotNet.RedmineAPI.Integration.Tests.Tests.Common;
 
 public sealed record EmailNotificationType
 {

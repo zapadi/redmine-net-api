@@ -1,6 +1,6 @@
 using Padi.DotNet.RedmineAPI.Integration.Tests.Fixtures;
-using Padi.DotNet.RedmineAPI.Integration.Tests.Helpers;
 using Padi.DotNet.RedmineAPI.Integration.Tests.Infrastructure;
+using Padi.DotNet.RedmineAPI.Integration.Tests.Tests.Common;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Http;

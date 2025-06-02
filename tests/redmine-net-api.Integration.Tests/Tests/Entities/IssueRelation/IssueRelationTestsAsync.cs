@@ -1,11 +1,11 @@
 using Padi.DotNet.RedmineAPI.Integration.Tests.Fixtures;
-using Padi.DotNet.RedmineAPI.Integration.Tests.Helpers;
 using Padi.DotNet.RedmineAPI.Integration.Tests.Infrastructure;
+using Padi.DotNet.RedmineAPI.Integration.Tests.Tests.Common;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Http;
 using Redmine.Net.Api.Types;
 
-namespace Padi.DotNet.RedmineAPI.Integration.Tests.Tests.Entities.Issue;
+namespace Padi.DotNet.RedmineAPI.Integration.Tests.Tests.Entities.IssueRelation;
 
 [Collection(Constants.RedmineTestContainerCollection)]
 public class IssueRelationTestsAsync(RedmineTestContainerFixture fixture)
@@ -16,7 +16,7 @@ public class IssueRelationTestsAsync(RedmineTestContainerFixture fixture)
         // Arrange
         var (issue1, issue2) = await IssueTestHelper.CreateRandomTwoIssuesAsync(fixture.RedmineManager);
         
-        var relation = new IssueRelation
+        var relation = new Redmine.Net.Api.Types.IssueRelation
         {
             IssueId = issue1.Id,
             IssueToId = issue2.Id,
@@ -42,7 +42,7 @@ public class IssueRelationTestsAsync(RedmineTestContainerFixture fixture)
         Assert.NotNull(relation);
 
         // Act & Assert
-        await fixture.RedmineManager.DeleteAsync<IssueRelation>(relation.Id.ToString());
+        await fixture.RedmineManager.DeleteAsync<Redmine.Net.Api.Types.IssueRelation>(relation.Id.ToString());
         
         var issue = await fixture.RedmineManager.GetAsync<Redmine.Net.Api.Types.Issue>(relation.IssueId.ToString(), RequestOptions.Include(RedmineKeys.RELATIONS));
         

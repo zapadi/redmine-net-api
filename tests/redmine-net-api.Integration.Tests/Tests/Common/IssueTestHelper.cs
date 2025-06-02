@@ -1,7 +1,7 @@
 using Redmine.Net.Api;
 using Redmine.Net.Api.Types;
 
-namespace Padi.DotNet.RedmineAPI.Integration.Tests.Helpers;
+namespace Padi.DotNet.RedmineAPI.Integration.Tests.Tests.Common;
 
 internal static class IssueTestHelper
 {

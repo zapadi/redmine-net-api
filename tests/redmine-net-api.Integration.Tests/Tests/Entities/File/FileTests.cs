@@ -1,6 +1,7 @@
 using Padi.DotNet.RedmineAPI.Integration.Tests.Fixtures;
 using Padi.DotNet.RedmineAPI.Integration.Tests.Helpers;
 using Padi.DotNet.RedmineAPI.Integration.Tests.Infrastructure;
+using Padi.DotNet.RedmineAPI.Integration.Tests.Tests.Common;
 using Redmine.Net.Api.Extensions;
 
 namespace Padi.DotNet.RedmineAPI.Integration.Tests.Tests.Entities.File;
@@ -71,7 +72,6 @@ public class FileTests(RedmineTestContainerFixture fixture)
             Filename = fileName,
             Description = RandomHelper.GenerateText(9),
             ContentType = "text/plain",
-            Version = 1.ToIdentifier(),
         };
 
         _ = fixture.RedmineManager.Create<Redmine.Net.Api.Types.File>(filePayload, TestConstants.Projects.DefaultProjectIdentifier);
@@ -85,7 +85,6 @@ public class FileTests(RedmineTestContainerFixture fixture)
         Assert.Equal(filePayload.Description, file.Description);
         Assert.Equal(filePayload.ContentType, file.ContentType);
         Assert.EndsWith($"/attachments/download/{file.Id}/{fileName}", file.ContentUrl);
-        Assert.Equal(filePayload.Version.Id, file.Version.Id);
     }
 
     private (string fileName, string token) UploadFile()

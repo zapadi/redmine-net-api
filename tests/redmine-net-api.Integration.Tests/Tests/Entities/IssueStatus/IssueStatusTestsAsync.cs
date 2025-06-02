@@ -1,8 +1,7 @@
 using Padi.DotNet.RedmineAPI.Integration.Tests.Fixtures;
 using Padi.DotNet.RedmineAPI.Integration.Tests.Infrastructure;
-using Redmine.Net.Api.Types;
 
-namespace Padi.DotNet.RedmineAPI.Integration.Tests.Tests.Entities.Issue;
+namespace Padi.DotNet.RedmineAPI.Integration.Tests.Tests.Entities.IssueStatus;
 
 [Collection(Constants.RedmineTestContainerCollection)]
 public class IssueStatusAsyncTests(RedmineTestContainerFixture fixture)
@@ -11,7 +10,7 @@ public class IssueStatusAsyncTests(RedmineTestContainerFixture fixture)
     public async Task GetAllIssueStatuses_Should_Succeed()
     {
         // Act
-        var statuses = await fixture.RedmineManager.GetAsync<IssueStatus>();
+        var statuses = await fixture.RedmineManager.GetAsync<Redmine.Net.Api.Types.IssueStatus>();
 
         // Assert
         Assert.NotNull(statuses);

@@ -1,6 +1,6 @@
 using Padi.DotNet.RedmineAPI.Integration.Tests.Fixtures;
-using Padi.DotNet.RedmineAPI.Integration.Tests.Helpers;
 using Padi.DotNet.RedmineAPI.Integration.Tests.Infrastructure;
+using Padi.DotNet.RedmineAPI.Integration.Tests.Tests.Common;
 using Redmine.Net.Api.Extensions;
 
 namespace Padi.DotNet.RedmineAPI.Integration.Tests.Tests.Entities.News;
@@ -13,7 +13,7 @@ public class NewsTests(RedmineTestContainerFixture fixture)
     {
         _ = fixture.RedmineManager.AddProjectNews(TestConstants.Projects.DefaultProjectIdentifier, TestEntityFactory.CreateRandomNewsPayload());
 
-        _ = fixture.RedmineManager.AddProjectNews("2", TestEntityFactory.CreateRandomNewsPayload());
+        _ = fixture.RedmineManager.AddProjectNews(TestConstants.Projects.DefaultProjectIdentifier, TestEntityFactory.CreateRandomNewsPayload());
 
         var news = fixture.RedmineManager.Get<Redmine.Net.Api.Types.News>();
 

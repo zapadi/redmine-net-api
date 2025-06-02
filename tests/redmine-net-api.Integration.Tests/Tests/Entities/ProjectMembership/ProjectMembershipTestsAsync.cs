@@ -1,6 +1,6 @@
 using Padi.DotNet.RedmineAPI.Integration.Tests.Fixtures;
-using Padi.DotNet.RedmineAPI.Integration.Tests.Helpers;
 using Padi.DotNet.RedmineAPI.Integration.Tests.Infrastructure;
+using Padi.DotNet.RedmineAPI.Integration.Tests.Tests.Common;
 using Redmine.Net.Api.Exceptions;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Types;
@@ -87,7 +87,7 @@ public class ProjectMembershipTestsAsync(RedmineTestContainerFixture fixture)
         await fixture.RedmineManager.DeleteAsync<Redmine.Net.Api.Types.ProjectMembership>(membershipId);
         
         // Assert
-        await Assert.ThrowsAsync<NotFoundException>(() => fixture.RedmineManager.GetAsync<Redmine.Net.Api.Types.ProjectMembership>(membershipId));
+        await Assert.ThrowsAsync<RedmineNotFoundException>(() => fixture.RedmineManager.GetAsync<Redmine.Net.Api.Types.ProjectMembership>(membershipId));
     }
     
     [Fact]
