@@ -158,9 +158,9 @@ namespace Redmine.Net.Api.Extensions
             };
         }
 
-        private const string CRLR = "\r\n";
         private const string CR = "\r";
         private const string LR = "\n";
+        private const string CRLR = $"{CR}{LR}";
         
         internal static string ReplaceEndings(this string input, string replacement = CRLR)
         {
@@ -170,9 +170,9 @@ namespace Redmine.Net.Api.Extensions
             }
 
             #if NET6_0_OR_GREATER
-            input =  input.ReplaceLineEndings(CRLR);
+            input =  input.ReplaceLineEndings(replacement);
             #else
-            input = Regex.Replace(input, $"{CRLR}|{CR}|{LR}", CRLR);
+            input = Regex.Replace(input, $"{CRLR}|{CR}|{LR}", replacement);
             #endif
             return input;
         }
