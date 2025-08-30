@@ -223,7 +223,7 @@ public partial class RedmineManager: IRedmineManagerAsync
     public async Task<byte[]> DownloadFileAsync(string address, RequestOptions requestOptions = null, IProgress<int> progress = null, CancellationToken cancellationToken = default)
     {
         var response = await ApiClient.DownloadAsync(address, requestOptions, progress, cancellationToken: cancellationToken).ConfigureAwait(false);
-        return response.Content;
+        return response.RawContent;
     }
     
     private const int MAX_CONCURRENT_TASKS = 3;

@@ -1,6 +1,7 @@
-using Padi.DotNet.RedmineAPI.Integration.Tests.Fixtures;
+using Padi.RedmineAPI.Integration.Tests.Fixtures;
+using Padi.RedmineAPI.Integration.Tests.Infrastructure;
 
-namespace Padi.DotNet.RedmineAPI.Integration.Tests.Tests;
+namespace Padi.RedmineAPI.Integration.Tests.Tests.Progress;
 
 [Collection(Constants.RedmineTestContainerCollection)]
 public partial class ProgressTests(RedmineTestContainerFixture fixture)
@@ -41,7 +42,7 @@ public partial class ProgressTests(RedmineTestContainerFixture fixture)
         public List<int> ProgressValues { get; } = [];
         public int ReportCount => ProgressValues.Count;
 
-        public event EventHandler<ProgressReportedEventArgs> OnProgressReported;
+        public event EventHandler<ProgressReportedEventArgs>? OnProgressReported;
 
         public void Report(int value)
         {

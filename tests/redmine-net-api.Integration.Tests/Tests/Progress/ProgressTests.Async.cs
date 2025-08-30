@@ -1,4 +1,4 @@
-namespace Padi.DotNet.RedmineAPI.Integration.Tests.Tests;
+namespace Padi.RedmineAPI.Integration.Tests.Tests.Progress;
 
 public partial class ProgressTests
 {
