@@ -913,26 +913,5 @@ namespace Redmine.Net.Api.Extensions
         }
         #endif
         
-        internal static RequestOptions CreateRequestOptions(NameValueCollection parameters = null, string impersonateUserName = null)
-        {
-            RequestOptions requestOptions = null;
-            if (parameters != null)
-            {
-                requestOptions = new RequestOptions()
-                {
-                    QueryString = parameters
-                };
-            }
-
-            if (impersonateUserName.IsNullOrWhiteSpace())
-            {
-                return requestOptions;
-            }
-            
-            requestOptions ??= new RequestOptions();
-            requestOptions.ImpersonateUser = impersonateUserName;
-
-            return requestOptions;
-        }
     }
 }
