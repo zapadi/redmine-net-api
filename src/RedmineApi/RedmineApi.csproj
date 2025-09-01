@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  
+  <PropertyGroup Label="Build">
+    <AssemblyName>Padi.RedmineApi</AssemblyName>
+    <RootNamespace>$(AssemblyName)</RootNamespace>
+    <TargetFrameworks>net9.0;net8.0;net7.0;net6.0;net5.0;net481;net48;net472;net471;net47;net462;net461;net46;net452;net451;net45;net40;net20</TargetFrameworks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <Deterministic>True</Deterministic>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <DefineConstants>TRACE</DefineConstants>
+    <Configurations>Debug;Release;DebugJson</Configurations>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <NoWarn>
+      NU5105;
+      CA1303;
+      CA1056;
+      CA1062;
+      CA1707;
+      CA1716;
+      CA1724;
+      CA1806;
+      CA2227;
+      CS0612; <!--Obsolete-->
+      CS0618; <!--Obsolete-->
+      CA1002; <!--Change 'List<T>' to use 'Collection<T>', 'ReadOnlyCollection<T>' or 'KeyedCollection<K,V>' -->
+    </NoWarn>
+  </PropertyGroup>
+  
+  <PropertyGroup Label="Analyzers">
+    <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+    <AnalysisLevel>latest</AnalysisLevel>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <DebugType Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">full</DebugType>
+    <DebugType Condition="'$(DebugType)' == ''">portable</DebugType> <!-- Default to portable if not set -->    
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <PackageOutputPath>$(SolutionDir)/artifacts</PackageOutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Package">
+    <Authors>Adrian Popescu</Authors>
+    <Description>Redmine Api is a .NET rest client for Redmine.</Description>
+    <Company>p.adi</Company>
+    <Copyright>Adrian Popescu, 2011 - $([System.DateTime]::Now.Year.ToString()) </Copyright>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <PackageId Condition="'$(Sign)' == '' OR '$(Sign)' == 'false'">redmine-api</PackageId>
+    <PackageId Condition="'$(Sign)' == 'true'">redmine-api-signed</PackageId>
+    <PackageIconUrl>https://raw.githubusercontent.com/zapadi/redmine-net-api/master/logo.png</PackageIconUrl>
+    <PackageIcon>logo.png</PackageIcon>
+    <PackageLicense>LICENSE</PackageLicense>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/zapadi/redmine-net-api</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageTags>Redmine; REST; API; Client; .NET; Adrian Popescu;</PackageTags>
+    <Product>Redmine .NET API Client</Product>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/zapadi/redmine-net-api</RepositoryUrl>
+    <Title>Redmine .NET API Client</Title>
+
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <!-- Build symbol package (.snupkg) to distribute the PDB containing Source Link -->
+    <IncludeSymbols>true</IncludeSymbols>
+    <DebugSymbols>true</DebugSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <IsPackable>true</IsPackable>
+  </PropertyGroup>
+  
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net20' " Label=".NET 2.0 Package References">
+    <Reference Include="System.Web" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net40' " Label=".NET 4.0 Package References">
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+    <PackageReference Include="Microsoft.Bcl.Async" Version="1.0.168" />
+    <PackageReference Include="Microsoft.Net.Http" Version="2.2.29" />
+  </ItemGroup>
+
+    <ItemGroup Label="Package References">
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    </ItemGroup>
+    
+  <ItemGroup>
+    <EmbeddedResource Remove="Logging\**" />
+    <Compile Remove="Properties\AssemblyInfo.cs" />
+    <Compile Remove="Extensions\LoggerExtensions.cs" />
+    <Compile Remove="Logging\**" />
+    <None Remove="Logging\**" />
+    <None Include="..\..\redmine-net-api.snk">
+      <Link>redmine-net-api.snk</Link>
+    </None>
+    <None Include="..\..\logo.png" Pack="true" PackagePath="\" />
+    <None Include="..\..\LICENSE" Pack="true" PackagePath="" />
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+    
+</Project>

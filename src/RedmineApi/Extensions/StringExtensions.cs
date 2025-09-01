@@ -1,0 +1,143 @@
+/*
+   Copyright 2011 - 2025 Adrian Popescu
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
+
+using System;
+using System.Globalization;
+#if !NET6_0_OR_GREATER
+using System.Text.RegularExpressions;
+#endif
+
+namespace Padi.RedmineApi.Extensions;
+
+/// <summary>
+/// 
+/// </summary>
+public static class StringExtensions
+{
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    public static bool IsNullOrWhiteSpace(this string value)
+    {
+        if (value == null)
+        {
+            return true;
+        }
+
+        foreach (var ch in value)
+        {
+            if (!char.IsWhiteSpace(ch))
+            {
+                return false;
+            }
+        }
+            
+        return true;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="text"></param>
+    /// <param name="maximumLength"></param>
+    /// <returns></returns>
+    public static string Truncate(this string text, int maximumLength)
+    {
+        if (text.IsNullOrWhiteSpace() || maximumLength < 1 || text.Length <= maximumLength)
+        {
+            return text;
+        }
+            
+#if (NET)
+            return text.AsSpan()[..maximumLength].ToString();
+#else
+        return text.Substring(0, maximumLength);
+#endif
+    }
+    
+    internal static string RemoveTrailingSlash(this string s)
+    {
+        if (string.IsNullOrEmpty(s))
+        {
+            return s;
+        }
+
+#if (NET)
+            if (s.EndsWith('/') || s.EndsWith('\\'))
+            {
+                return s.AsSpan()[..(s.Length - 1)].ToString();
+            }
+#else
+        if (s.EndsWith("/", StringComparison.OrdinalIgnoreCase) || s.EndsWith(@"\", StringComparison.OrdinalIgnoreCase))
+        {
+            return s.Substring(0, s.Length - 1);
+        }
+#endif
+            
+        return s;
+    }
+        
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="value"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    public static string ToInvariantString<T>(this T value) where T : struct
+    {
+        return value switch
+        {
+            sbyte v => v.ToString(CultureInfo.InvariantCulture),
+            byte v => v.ToString(CultureInfo.InvariantCulture),
+            short v => v.ToString(CultureInfo.InvariantCulture),
+            ushort v => v.ToString(CultureInfo.InvariantCulture),
+            int v => v.ToString(CultureInfo.InvariantCulture),
+            uint v => v.ToString(CultureInfo.InvariantCulture),
+            long v => v.ToString(CultureInfo.InvariantCulture),
+            ulong v => v.ToString(CultureInfo.InvariantCulture),
+            float v => v.ToString("G7", CultureInfo.InvariantCulture), // Specify precision explicitly for backward compatibility
+            double v => v.ToString("G15", CultureInfo.InvariantCulture), // Specify precision explicitly for backward compatibility
+            decimal v => v.ToString(CultureInfo.InvariantCulture),
+            TimeSpan ts => ts.ToString(),
+            DateTime d => d.ToString(CultureInfo.InvariantCulture),
+#pragma warning disable CA1308
+            bool b => b ? "true" : "false",
+#pragma warning restore CA1308
+            _ => value.ToString(),
+        };
+    }
+
+    private const string CR = "\r";
+    private const string LR = "\n";
+    private const string CRLR = $"{CR}{LR}";
+        
+    internal static string ReplaceEndings(this string input, string replacement = CRLR)
+    {
+        if (input.IsNullOrWhiteSpace())
+        {
+            return input;
+        }
+
+#if NET6_0_OR_GREATER
+            input =  input.ReplaceLineEndings(replacement);
+#else
+        input = Regex.Replace(input, $"{CRLR}|{CR}|{LR}", replacement);
+#endif
+        return input;
+    }
+}

@@ -1,6 +1,0 @@
-<Project>
-    <PropertyGroup>
-        <PackageReleaseNotes>$(PackageReleaseNotes)
-            See $(PackageProjectUrl)/blob/master/CHANGELOG.md#v$(VersionPrefix.Replace('.','')) for more details.</PackageReleaseNotes>
-    </PropertyGroup>
-</Project>
