@@ -1,7 +1,7 @@
 # ![Redmine .NET API](https://raw.githubusercontent.com/zapadi/redmine-net-api/master/logo.png) redmine-net-api
 
-[![NuGet](https://img.shields.io/nuget/v/redmine-api.svg)](https://www.nuget.org/packages/redmine-api) 
-[![NuGet Downloads](https://img.shields.io/nuget/dt/redmine-api)](https://www.nuget.org/packages/redmine-api) 
+[![NuGet](https://img.shields.io/nuget/v/redmine-api.svg)](https://www.nuget.org/packages/redmine-api)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/redmine-api)](https://www.nuget.org/packages/redmine-api)
 [![License](https://img.shields.io/github/license/zapadi/redmine-net-api)](LICENSE)
 [![Contributors](https://img.shields.io/github/contributors/zapadi/redmine-net-api)](https://github.com/zapadi/redmine-net-api/graphs/contributors)
 
@@ -17,29 +17,30 @@ A modern and flexible .NET client library to interact with [Redmine](https://www
 - Easy integration via NuGet package
 - Actively maintained and community-driven
 
-| Resource             | Read | Create | Update | Delete |
-|----------------------|:----:|:------:|:------:|:------:|
-| Attachments          | ✅   | ✅     | ❌     | ❌     |
-| Custom Fields        | ✅   | ❌     | ❌     | ❌     |
-| Enumerations         | ✅   | ❌     | ❌     | ❌     |
-| Files                | ✅   | ✅     | ❌     | ❌     |
-| Groups               | ✅   | ✅     | ✅     | ✅     |
-| Issues               | ✅   | ✅     | ✅     | ✅     |
-| Issue Categories     | ✅   | ✅     | ✅     | ✅     |
-| Issue Relations      | ✅   | ✅     | ✅     | ✅     |
-| Issue Statuses       | ✅   | ❌     | ❌     | ❌     |
-| My Account           | ✅   | ❌     | ✅     | ❌     |
-| News                 | ✅   | ✅     | ✅     | ✅     |
-| Projects             | ✅   | ✅     | ✅     | ✅     |
-| Project Memberships  | ✅   | ✅     | ✅     | ✅     |
-| Queries              | ✅   | ❌     | ❌     | ❌     |
-| Roles                | ✅   | ❌     | ❌     | ❌     |
-| Search               | ✅   |        |        |        |
-| Time Entries         | ✅   | ✅     | ✅     | ✅     |
-| Trackers             | ✅   | ❌     | ❌     | ❌     |
-| Users                | ✅   | ✅     | ✅     | ✅     |
-| Versions             | ✅   | ✅     | ✅     | ✅     |
-| Wiki Pages           | ✅   | ✅     | ✅     | ✅     |
+| Resource              | Read | Create | Update | Delete |
+|-----------------------|:----:|:------:|:------:|:------:|
+| Attachments           |  ✅   |   ✅    |   ✅    |   ✅    |
+| Custom Fields         |  ✅   |   ❌    |   ❌    |   ❌    |
+| Enumerations          |  ✅   |   ❌    |   ❌    |   ❌    |
+| Files                 |  ✅   |   ✅    |   ❌    |   ❌    |
+| Groups                |  ✅   |   ✅    |   ✅    |   ✅    |
+| Issues                |  ✅   |   ✅    |   ✅    |   ✅    |
+| Issue Categories      |  ✅   |   ❌    |   ✅    |   ✅    |
+| Issue Relations       |  ✅   |   ✅    |   ✅    |   ✅    |
+| Issue Statuses        |  ✅   |   ❌    |   ❌    |   ❌    |
+| My Account            |  ✅   |   ❌    |   ✅    |   ❌    |
+| News                  |  ✅   |   ✅    |   ✅    |   ✅    |
+| Projects              |  ✅   |   ✅    |   ✅    |   ✅    |
+| Project Memberships   |  ✅   |   ✅    |   ✅    |   ✅    |
+| Project Categories    |  ✅   |   ✅    |   ❌    |   ❌    |
+| Queries               |  ✅   |   ❌    |   ❌    |   ❌    |
+| Roles                 |  ✅   |   ❌    |   ❌    |   ❌    |
+| Search                |  ✅   |        |        |        |
+| Time Entries          |  ✅   |   ✅    |   ✅    |   ✅    |
+| Trackers              |  ✅   |   ❌    |   ❌    |   ❌    |
+| Users                 |  ✅   |   ✅    |   ✅    |   ✅    |
+| Versions              |  ✅   |   ✅    |   ✅    |   ✅    |
+| Wiki Pages            |  ✅   |   ✅    |   ✅    |   ✅    |
 
 
 ## 📦 Installation
