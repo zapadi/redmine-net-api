@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>net9.0;net8.0;net7.0;net6.0;net5.0;net481;net48;net472;net471;net47;net462;net461;net46;net452;net451;net45;net40;</TargetFrameworks>
+        <LangVersion>latestmajor</LangVersion>
+        <ImplicitUsings>disable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <AssemblyName>Padi.RedmineApi.HttpClient</AssemblyName>
+        <RootNamespace>$(AssemblyName)</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\RedmineApi\RedmineApi.csproj" />
+    </ItemGroup>
+    
+    <ItemGroup Condition=" '$(TargetFrameworkIdentifier)' == '.NETFramework'
+  and $([MSBuild]::VersionGreaterThanOrEquals('$(TargetFrameworkVersion)', 'v4.5'))
+  and $([MSBuild]::VersionLessThanOrEquals('$(TargetFrameworkVersion)', 'v4.8.1'))  ">
+      <PackageReference Include="Microsoft.Net.Http" Version="2.2.29" />
+    </ItemGroup>
+    
+    
+</Project>
