@@ -15,7 +15,7 @@ namespace Padi.RedmineAPI.Tests.Infrastructure.Order;
 public sealed class CollectionOrderer : ITestCollectionOrderer
 {
     // public const string TYPE_NAME = "redmine.net.api.Tests.Infrastructure.CollectionOrderer";
-    // public const string ASSEMBLY_NAME = "redmine-net-api.Tests";
+    // public const string ASSEMBLY_NAME = "RedmineApi.Tests";
 
     public IEnumerable<ITestCollection> OrderTestCollections(IEnumerable<ITestCollection> testCollections)
     {
