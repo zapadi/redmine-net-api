@@ -1,14 +1,16 @@
 using System;
 using System.Collections.Specialized;
-using Redmine.Net.Api;
-using Redmine.Net.Api.Exceptions;
-using Redmine.Net.Api.Net;
-using Redmine.Net.Api.Types;
+using Padi.RedmineApi;
+using Padi.RedmineApi.Exceptions;
+using Padi.RedmineApi.Internals;
+using Padi.RedmineApi.Net;
+using Padi.RedmineAPI.Tests.Infrastructure.Fixtures;
+using Padi.RedmineApi.Types;
 using Xunit;
-using Version = Redmine.Net.Api.Types.Version;
+using Version = Padi.RedmineApi.Types.Version;
 
 
-namespace Padi.DotNet.RedmineAPI.Tests.Tests;
+namespace Padi.RedmineAPI.Tests.Tests;
 
 public class RedmineApiUrlsTests(RedmineApiUrlsFixture fixture) : IClassFixture<RedmineApiUrlsFixture>
 {

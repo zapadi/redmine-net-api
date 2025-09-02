@@ -1,12 +1,12 @@
 using System.Collections.Specialized;
-using Padi.DotNet.RedmineAPI.Tests.Tests;
-using Redmine.Net.Api;
-using Redmine.Net.Api.Extensions;
-using Redmine.Net.Api.Net;
-using Redmine.Net.Api.Types;
+using Padi.RedmineApi;
+using Padi.RedmineApi.Extensions;
+using Padi.RedmineApi.Net;
+using Padi.RedmineAPI.Tests.Infrastructure.Fixtures;
+using Padi.RedmineApi.Types;
 using Xunit;
 
-namespace Padi.DotNet.RedmineAPI.Tests.Bugs;
+namespace Padi.RedmineAPI.Tests.Bugs;
 
 public sealed class RedmineApi371 : IClassFixture<RedmineApiUrlsFixture>
 {

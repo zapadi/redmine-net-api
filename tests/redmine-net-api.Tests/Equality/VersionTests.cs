@@ -1,8 +1,8 @@
 using System;
-using Redmine.Net.Api.Types;
-using Version = Redmine.Net.Api.Types.Version;
+using Padi.RedmineApi.Types;
+using Version = Padi.RedmineApi.Types.Version;
 
-namespace Padi.DotNet.RedmineAPI.Tests.Equality;
+namespace Padi.RedmineAPI.Tests.Equality;
 
 public sealed class VersionTests : BaseEqualityTests<Version>
 {

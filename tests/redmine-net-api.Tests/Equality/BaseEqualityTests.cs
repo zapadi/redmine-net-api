@@ -1,7 +1,7 @@
 using System;
 using Xunit;
 
-namespace Padi.DotNet.RedmineAPI.Tests.Equality;
+namespace Padi.RedmineAPI.Tests.Equality;
 
 public abstract class BaseEqualityTests<T> where T : class, IEquatable<T>
     {

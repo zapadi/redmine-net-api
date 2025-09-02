@@ -1,7 +1,7 @@
 using System.Diagnostics;
-using Redmine.Net.Api.Net;
+using Padi.RedmineApi.Internals;
 
-namespace Padi.DotNet.RedmineAPI.Tests.Tests;
+namespace Padi.RedmineAPI.Tests.Infrastructure.Fixtures;
 
 public sealed class RedmineApiUrlsFixture
 {
@@ -26,6 +26,6 @@ public sealed class RedmineApiUrlsFixture
     [Conditional("DEBUG_XML")]
     private void SetMimeTypeXml()
     {
-        Format = "json";
+        Format = "xml";
     }
 }

@@ -1,7 +1,7 @@
 using System;
-using Redmine.Net.Api.Types;
+using Padi.RedmineApi.Types;
 
-namespace Padi.DotNet.RedmineAPI.Tests.Equality;
+namespace Padi.RedmineAPI.Tests.Equality;
 
 public sealed class MyAccountTests : BaseEqualityTests<MyAccount>
 {

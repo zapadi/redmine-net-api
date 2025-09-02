@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using Redmine.Net.Api.Types;
+using Padi.RedmineApi.Types;
 using Xunit;
 
-namespace Padi.DotNet.RedmineAPI.Tests.Clone;
+namespace Padi.RedmineAPI.Tests.Clone;
 
 public sealed class JournalCloneTests
 {

@@ -3,7 +3,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     
     <PropertyGroup Label="Build">
-        <AssemblyName>Padi.DotNet.RedmineAPI.Tests</AssemblyName>
+        <AssemblyName>Padi.RedmineAPI.Tests</AssemblyName>
         <RootNamespace>$(AssemblyName)</RootNamespace>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
         <TargetFramework>net481</TargetFramework>
@@ -70,7 +70,7 @@
     </ItemGroup>
     
     <ItemGroup>
-        <ProjectReference Include="..\..\src\redmine-net-api\redmine-net-api.csproj" />
+        <ProjectReference Include="..\..\src\RedmineApi\RedmineApi.csproj" />
     </ItemGroup>
     
     <ItemGroup>

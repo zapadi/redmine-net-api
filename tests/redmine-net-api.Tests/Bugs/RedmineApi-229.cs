@@ -1,8 +1,8 @@
 using System;
-using Redmine.Net.Api.Types;
+using Padi.RedmineApi.Types;
 using Xunit;
 
-namespace Padi.DotNet.RedmineAPI.Tests.Bugs;
+namespace Padi.RedmineAPI.Tests.Bugs;
 
 public sealed class RedmineApi229
 {

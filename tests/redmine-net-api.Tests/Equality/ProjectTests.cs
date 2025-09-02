@@ -1,7 +1,7 @@
 using System;
-using Redmine.Net.Api.Types;
+using Padi.RedmineApi.Types;
 
-namespace Padi.DotNet.RedmineAPI.Tests.Equality;
+namespace Padi.RedmineAPI.Tests.Equality;
 
 public sealed class ProjectTests : BaseEqualityTests<Project>
 {
@@ -28,7 +28,7 @@ public sealed class ProjectTests : BaseEqualityTests<Project>
                 new() { Id = 2, Name = "Feature" }
             ],
             
-            CustomFields = 
+            IssueCustomFields = 
             [
                 new() { Id = 1, Name = "Field1"},
                 new() { Id = 2, Name = "Field2"}
@@ -70,7 +70,7 @@ public sealed class ProjectTests : BaseEqualityTests<Project>
             [
                 new() { Id = 3, Name = "Different Bug" }
             ],
-            CustomFields =
+            IssueCustomFields =
             [
                 new() { Id = 3, Name = "DifferentField"}
             ],
