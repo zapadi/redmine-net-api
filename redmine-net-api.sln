@@ -47,6 +47,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Others", "Others", "{4ADECA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "redmine-net-api.Integration.Tests", "tests\redmine-net-api.Integration.Tests\redmine-net-api.Integration.Tests.csproj", "{254DABFE-7C92-4C16-84A5-630330D56D4D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedmineApi.Serialization.Xml", "src\RedmineApi.Serialization.Xml\RedmineApi.Serialization.Xml.csproj", "{93BB1715-2311-4256-8AE9-F5E4D8E97187}"
+EndProject
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +74,12 @@ Global
 		{254DABFE-7C92-4C16-84A5-630330D56D4D}.DebugJson|Any CPU.Build.0 = Debug|Any CPU
 		{254DABFE-7C92-4C16-84A5-630330D56D4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{254DABFE-7C92-4C16-84A5-630330D56D4D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93BB1715-2311-4256-8AE9-F5E4D8E97187}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93BB1715-2311-4256-8AE9-F5E4D8E97187}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93BB1715-2311-4256-8AE9-F5E4D8E97187}.DebugJson|Any CPU.ActiveCfg = Debug|Any CPU
+		{93BB1715-2311-4256-8AE9-F5E4D8E97187}.DebugJson|Any CPU.Build.0 = Debug|Any CPU
+		{93BB1715-2311-4256-8AE9-F5E4D8E97187}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93BB1715-2311-4256-8AE9-F5E4D8E97187}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -83,6 +92,7 @@ Global
 		{1D340EEB-C535-45D4-80D7-ADD4434D7B77} = {E8C35EC2-DD90-46E8-9B63-84EFD5F2FDE3}
 		{4ADECA2A-4D7B-4F05-85A2-0C0963A83689} = {E8C35EC2-DD90-46E8-9B63-84EFD5F2FDE3}
 		{254DABFE-7C92-4C16-84A5-630330D56D4D} = {F3F4278D-6271-4F77-BA88-41555D53CBD1}
+		{93BB1715-2311-4256-8AE9-F5E4D8E97187} = {0DFF4758-5C19-4D8F-BA6C-76E618323F6A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4AA87D90-ABD0-4793-BE47-955B35FAE2BB}

@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>net9.0;net8.0;net7.0;net6.0;net5.0;net481;net48;net472;net471;net47;net462;net461;net46;net452;net451;net45;net40;net20</TargetFrameworks>
+        <LangVersion>latestmajor</LangVersion>
+        <ImplicitUsings>disable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <AssemblyName>Padi.RedmineApi.Serialization.Xml</AssemblyName>
+        <RootNamespace>$(AssemblyName)</RootNamespace>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\RedmineApi\RedmineApi.csproj" />
+    </ItemGroup>
+
+</Project>
