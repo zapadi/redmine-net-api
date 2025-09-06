@@ -38,7 +38,19 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
         public static T Create<T>(int id) where T: IdentifiableName, new()
         { 
-            var t = new T (){Id = id};
+            var t = new T 
+            {
+                Id = id
+            };
+            return t;
+        }
+        
+        internal static T Create<T>(int id, string name) where T: IdentifiableName, new()
+        { 
+            var t = new T
+            {
+                Id = id, Name = name
+            };
             return t;
         }
         
