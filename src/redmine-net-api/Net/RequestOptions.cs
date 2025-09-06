@@ -16,6 +16,7 @@
 
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using Redmine.Net.Api.Extensions;
 
 namespace Redmine.Net.Api.Net;
 
@@ -65,5 +66,50 @@ public sealed class RequestOptions
             UserAgent = UserAgent,
             Headers = Headers != null ? new Dictionary<string, string>(Headers) : null,
         };
+    }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="include"></param>
+    /// <returns></returns>
+    public static RequestOptions Include(string include)
+    {
+        if (include.IsNullOrWhiteSpace())
+        {
+            return null;
+        }
+        
+        var requestOptions = new RequestOptions
+        {
+            QueryString = new NameValueCollection
+            {
+                {RedmineKeys.INCLUDE, include}
+            }
+        };
+
+        return requestOptions;
+    }
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="include"></param>
+    /// <returns></returns>
+    public static RequestOptions Include(params string[] include)
+    {
+        if (include is null or { Length: 0 })
+        {
+            return null;
+        }
+
+        var requestOptions = new RequestOptions
+        {
+            QueryString = new NameValueCollection
+            {
+                {RedmineKeys.INCLUDE, string.Join(",", include)}
+            }
+        };
+
+        return requestOptions;
     }
 }
