@@ -447,7 +447,11 @@ namespace Redmine.Net.Api.Extensions
         {
             var parameters = CreateSearchParameters(q, limit, offset, searchFilter);
 
-            var response = redmineManager.GetPaginated<Search>(new RequestOptions() {QueryString = parameters});
+            var response = redmineManager.GetPaginated<Search>(new RequestOptions
+            {
+                QueryString = parameters, 
+                ImpersonateUser = impersonateUserName
+            });
 
             return response;
         }
@@ -670,16 +674,21 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="searchFilter"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public static async Task<PagedResults<Search>> SearchAsync(this RedmineManager redmineManager, string q, int limit = RedmineManager.DEFAULT_PAGE_SIZE_VALUE, int offset = 0, SearchFilterBuilder searchFilter = null, CancellationToken cancellationToken = default)
+        public static async Task<PagedResults<Search>> SearchAsync(this RedmineManager redmineManager, 
+            string q, 
+            int limit = RedmineManager.DEFAULT_PAGE_SIZE_VALUE, 
+            int offset = 0, 
+            SearchFilterBuilder searchFilter = null,
+            CancellationToken cancellationToken = default)
         {
             var parameters = CreateSearchParameters(q, limit, offset, searchFilter);
 
-            var response = await redmineManager.ApiClient.GetPagedAsync("", new RequestOptions()
+            var response = await redmineManager.GetPagedAsync<Search>(new RequestOptions()
             {
                 QueryString = parameters
             }, cancellationToken).ConfigureAwait(false);
 
-            return response.DeserializeToPagedResults<Search>(redmineManager.Serializer);
+            return response;
         }
 
         /// <summary>
