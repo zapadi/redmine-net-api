@@ -15,6 +15,7 @@
 */
 
 using System.Collections.Specialized;
+using System.Net;
 
 namespace Redmine.Net.Api.Net;
 
@@ -22,4 +23,7 @@ internal sealed class ApiResponseMessage
 {
     public NameValueCollection Headers { get; init; }
     public byte[] Content { get; init; }
+    
+    public HttpStatusCode? StatusCode { get; init; }
+
 }
