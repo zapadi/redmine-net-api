@@ -78,6 +78,7 @@ namespace Redmine.Net.Api.Net
     /// </summary>
     long? MaxResponseContentBufferSize { get; set; }
 
+#if NET471_OR_GREATER || NETCOREAPP
     /// <summary>
     /// 
     /// </summary>
@@ -87,7 +88,7 @@ namespace Redmine.Net.Api.Net
     /// 
     /// </summary>
     int? MaxResponseHeadersLength { get; set; }
-
+#endif
     /// <summary>
     /// 
     /// </summary>
@@ -179,18 +180,18 @@ namespace Redmine.Net.Api.Net
     /// </summary>
     SecurityProtocolType? SecurityProtocolType { get; set; }
     
-    #if NET40_OR_GREATER || NETCOREAPP
+#if NET40_OR_GREATER || NETCOREAPP
     /// <summary>
     /// 
     /// </summary>
     public X509CertificateCollection ClientCertificates { get;  set; }
-    #endif
+#endif
     
-    #if(NET46_OR_GREATER || NETCOREAPP)
+#if(NET46_OR_GREATER || NETCOREAPP)
     /// <summary>
     /// 
     /// </summary>
     public bool? ReusePort { get; set; }
-    #endif
+#endif
     }
 }
