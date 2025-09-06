@@ -29,7 +29,7 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// Support for adding attachments through the REST API is added in Redmine 1.4.0.
     /// </summary>
-    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
+    [DebuggerDisplay("{DebuggerDisplay,nq}")]
     [XmlRoot(RedmineKeys.UPLOAD)]
     public sealed class Upload : IXmlSerializable, IJsonSerializable, IEquatable<Upload>
         , ICloneable<Upload>

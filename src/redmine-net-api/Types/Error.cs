@@ -28,7 +28,7 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// 
     /// </summary>
-    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
+    [DebuggerDisplay("{DebuggerDisplay,nq}")]
     [XmlRoot(RedmineKeys.ERROR)]
     public sealed class Error : IXmlSerializable, IJsonSerializable, IEquatable<Error>
     {

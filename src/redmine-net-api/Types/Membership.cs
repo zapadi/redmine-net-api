@@ -27,7 +27,7 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// Only the roles can be updated, the project and the user of a membership are read-only.
     /// </summary>
-    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
+    [DebuggerDisplay("{DebuggerDisplay,nq}")]
     [XmlRoot(RedmineKeys.MEMBERSHIP)]
     public sealed class Membership : Identifiable<Membership>
     {

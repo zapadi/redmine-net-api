@@ -24,7 +24,7 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// the module name: boards, calendar, documents, files, gant, issue_tracking, news, repository, time_tracking, wiki.
     /// </summary>
-    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
+    [DebuggerDisplay("{DebuggerDisplay,nq}")]
     [XmlRoot(RedmineKeys.ENABLED_MODULE)]
     public sealed class ProjectEnabledModule : IdentifiableName, IValue
     {

@@ -28,7 +28,7 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// 
     /// </summary>
-    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
+    [DebuggerDisplay("{DebuggerDisplay,nq}")]
     [XmlRoot(RedmineKeys.ISSUE)]
     public sealed class IssueChild : Identifiable<IssueChild>
         ,ICloneable<IssueChild>

@@ -16,7 +16,6 @@
 
 using System;
 using System.Diagnostics;
-using System.Globalization;
 using System.Xml;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
@@ -29,7 +28,7 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// Availability 1.3
     /// </summary>
-    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
+    [DebuggerDisplay("{DebuggerDisplay,nq}")]
     [XmlRoot(RedmineKeys.ATTACHMENT)]
     public sealed class Attachment : 
         Identifiable<Attachment>

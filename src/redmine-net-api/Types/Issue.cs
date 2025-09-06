@@ -36,7 +36,7 @@ namespace Redmine.Net.Api.Types
     /// Possible values: children, attachments, relations, changesets and journals. To fetch multiple associations use comma (e.g ?include=relations,journals). 
     /// See Issue journals for more information.
     /// </remarks>
-    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
+    [DebuggerDisplay("{DebuggerDisplay,nq}")]
     [XmlRoot(RedmineKeys.ISSUE)]
     public sealed class Issue : 
         Identifiable<Issue>

@@ -30,11 +30,9 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// Availability 1.3
     /// </summary>
-    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
+    [DebuggerDisplay("{DebuggerDisplay,nq}")]
     [XmlRoot(RedmineKeys.RELATION)]
-    public sealed class IssueRelation : 
-        Identifiable<IssueRelation>
-        ,ICloneable<IssueRelation>
+    public sealed class IssueRelation : Identifiable<IssueRelation>, ICloneable<IssueRelation>
     {
         #region Properties
         /// <summary>

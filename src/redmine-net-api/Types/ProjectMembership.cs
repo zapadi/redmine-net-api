@@ -34,7 +34,7 @@ namespace Redmine.Net.Api.Types
     /// PUT - Updates the membership of given :id. Only the roles can be updated, the project and the user of a membership are read-only.
     /// DELETE - Deletes a memberships. Memberships inherited from a group membership can not be deleted. You must delete the group membership.
     /// </remarks>
-    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
+    [DebuggerDisplay("{DebuggerDisplay,nq}")]
     [XmlRoot(RedmineKeys.MEMBERSHIP)]
     public sealed class ProjectMembership : Identifiable<ProjectMembership>
     {

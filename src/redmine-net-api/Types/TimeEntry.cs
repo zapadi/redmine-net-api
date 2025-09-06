@@ -31,7 +31,7 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// Availability 1.1
     /// </summary>
-    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
+    [DebuggerDisplay("{DebuggerDisplay,nq}")]
     [XmlRoot(RedmineKeys.TIME_ENTRY)]
     public sealed class TimeEntry : Identifiable<TimeEntry>
         , ICloneable<TimeEntry>

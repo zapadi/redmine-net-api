@@ -27,7 +27,7 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// 
     /// </summary>
-    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
+    [DebuggerDisplay("{DebuggerDisplay,nq}")]
     [XmlRoot(RedmineKeys.COMMENT)]
     public sealed class NewsComment: Identifiable<NewsComment>
     {

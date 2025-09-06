@@ -30,7 +30,7 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// Availability 1.1
     /// </summary>
-    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
+    [DebuggerDisplay("{DebuggerDisplay,nq}")]
     [XmlRoot(RedmineKeys.USER)]
     public sealed class User : Identifiable<User>
     {

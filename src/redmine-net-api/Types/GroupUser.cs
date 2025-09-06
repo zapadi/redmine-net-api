@@ -24,7 +24,7 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// 
     /// </summary>
-    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
+    [DebuggerDisplay("{DebuggerDisplay,nq}")]
     [XmlRoot(RedmineKeys.USER)]
     public sealed class GroupUser : IdentifiableName, IValue
     {

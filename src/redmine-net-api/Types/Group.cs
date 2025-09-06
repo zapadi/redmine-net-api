@@ -29,7 +29,7 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// Availability 2.1
     /// </summary>
-    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
+    [DebuggerDisplay("{DebuggerDisplay,nq}")]
     [XmlRoot(RedmineKeys.GROUP)]
     public sealed class Group : IdentifiableName, IEquatable<Group>
     {

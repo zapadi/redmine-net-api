@@ -28,7 +28,7 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// Availability 1.4
     /// </summary>
-    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
+    [DebuggerDisplay("{DebuggerDisplay,nq}")]
     [XmlRoot(RedmineKeys.ROLE)]
     public sealed class Role : IdentifiableName, IEquatable<Role>
     {

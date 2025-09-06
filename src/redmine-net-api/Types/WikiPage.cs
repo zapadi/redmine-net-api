@@ -29,7 +29,7 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// Availability 2.2
     /// </summary>
-    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
+    [DebuggerDisplay("{DebuggerDisplay,nq}")]
     [XmlRoot(RedmineKeys.WIKI_PAGE)]
     public sealed class WikiPage : Identifiable<WikiPage>
     {

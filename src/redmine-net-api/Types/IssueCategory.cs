@@ -27,7 +27,7 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// Availability 1.3
     /// </summary>
-    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
+    [DebuggerDisplay("{DebuggerDisplay,nq}")]
     [XmlRoot(RedmineKeys.ISSUE_CATEGORY)]
     public sealed class IssueCategory : Identifiable<IssueCategory>
     {

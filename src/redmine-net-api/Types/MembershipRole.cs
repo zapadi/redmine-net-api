@@ -28,7 +28,7 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// 
     /// </summary>
-    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
+    [DebuggerDisplay("{DebuggerDisplay,nq}")]
     [XmlRoot(RedmineKeys.ROLE)]
     public sealed class MembershipRole : IdentifiableName, IEquatable<MembershipRole>, IValue
     {
