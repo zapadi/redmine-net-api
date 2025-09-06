@@ -14,6 +14,7 @@
    limitations under the License.
 */
 
+using System.Collections.Generic;
 using System.Collections.Specialized;
 
 namespace Redmine.Net.Api.Net;
@@ -43,6 +44,11 @@ public sealed class RequestOptions
     /// 
     /// </summary>
     public string UserAgent { get; set; }
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    public Dictionary<string, string> Headers { get; set; }
 
     /// <summary>
     /// 
@@ -56,7 +62,8 @@ public sealed class RequestOptions
             ImpersonateUser = ImpersonateUser,
             ContentType = ContentType,
             Accept = Accept,
-            UserAgent = UserAgent
+            UserAgent = UserAgent,
+            Headers = Headers != null ? new Dictionary<string, string>(Headers) : null,
         };
     }
 }
