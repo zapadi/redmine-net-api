@@ -14,6 +14,7 @@ public sealed class RedmineApi229
 
         // Act & Assert
         Assert.True(timeEntry.Equals(timeEntry), "TimeEntry should equal itself (reference equality)");
+        // ReSharper disable once EqualExpressionComparison
         Assert.True(timeEntry == timeEntry, "TimeEntry should equal itself using == operator");
         Assert.True(timeEntry.Equals((object)timeEntry), "TimeEntry should equal itself when cast to object");
         Assert.Equal(timeEntry.GetHashCode(), timeEntry.GetHashCode());
