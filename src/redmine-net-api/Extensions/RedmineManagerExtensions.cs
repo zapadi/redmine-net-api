@@ -349,10 +349,8 @@ namespace Redmine.Net.Api.Extensions
             }
 
             var uri = redmineManager.RedmineApiUrls.ProjectWikiPageUpdate(projectId, pageName);
-
-            var escapedUri = Uri.EscapeDataString(uri);
             
-            var response = redmineManager.ApiClient.Create(escapedUri, payload, requestOptions);
+            var response = redmineManager.ApiClient.Update(uri, payload, requestOptions);
 
             return response.DeserializeTo<WikiPage>(redmineManager.Serializer);
         }
@@ -730,16 +728,19 @@ namespace Redmine.Net.Api.Extensions
         {
             var payload = redmineManager.Serializer.Serialize(wikiPage);
 
+            if (pageName.IsNullOrWhiteSpace())
+            {
+                throw new RedmineException("Page name cannot be blank");
+            }
+            
             if (string.IsNullOrEmpty(payload))
             {
                 throw new RedmineException("The payload is empty");
             }
 
-            var url = redmineManager.RedmineApiUrls.ProjectWikiPageUpdate(projectId, pageName);
+            var uri = redmineManager.RedmineApiUrls.ProjectWikiPageUpdate(projectId, pageName);
 
-            var escapedUri = Uri.EscapeDataString(url);
-
-            var response = await redmineManager.ApiClient.CreateAsync(escapedUri, payload,requestOptions, cancellationToken).ConfigureAwait(false);
+            var response = await redmineManager.ApiClient.UpdateAsync(uri, payload, requestOptions, cancellationToken).ConfigureAwait(false);
 
             return response.DeserializeTo<WikiPage>(redmineManager.Serializer);
         }
