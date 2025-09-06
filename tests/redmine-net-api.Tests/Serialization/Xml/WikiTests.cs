@@ -79,6 +79,55 @@ public class WikiTests(XmlSerializerFixture fixture)
         Assert.Equal(new DateTime(2008, 3, 9, 12, 7, 8, DateTimeKind.Utc).ToLocalTime(), wikiPages[0].CreatedOn);
         Assert.Equal(new DateTime(2008, 3, 9, 22, 41, 33, DateTimeKind.Utc).ToLocalTime(), wikiPages[0].UpdatedOn);
     }
+
+    [Fact]
+    public void Should_Deserialize_Empty_Wiki_Pages()
+    {
+        const string input = """
+        <?xml version="1.0" encoding="UTF-8"?>
+        <wiki_pages type="array">
+        </wiki_pages>
+        """;
+        
+        var output = fixture.Serializer.DeserializeToPagedResults<Redmine.Net.Api.Types.WikiPage>(input);
+        
+        Assert.NotNull(output);
+        Assert.Equal(0, output.TotalItems);
+    }
+    
+    [Fact]
+    public void Should_Deserialize_Wiki_With_Attachments()
+    {
+        const string input = """
+        <?xml version="1.0" encoding="UTF-8"?>
+        <wiki_page>
+            <title>Te$t</title>
+            <text>QEcISExBVZ</text>
+            <version>3</version>
+            <author id="1" name="Redmine Admin"/>
+            <comments>uAqCrmSBDUpNMOU</comments>
+            <created_on>2025-05-26T16:32:41Z</created_on>
+            <updated_on>2025-05-26T16:43:01Z</updated_on>
+            <attachments type="array">
+                <attachment>
+                    <id>155</id>
+                    <filename>test-file_QPqCTEa</filename>
+                    <filesize>512000</filesize>
+                    <content_type>text/plain</content_type>
+                    <description>JIIMEcwtuZUsIHY</description>
+                    <content_url>http://localhost:8089/attachments/download/155/test-file_QPqCTEa</content_url>
+                    <author id="1" name="Redmine Admin"/>
+                    <created_on>2025-05-26T16:32:36Z</created_on>
+                </attachment>
+            </attachments>
+        </wiki_page>
+        """;
+        
+        var output = fixture.Serializer.Deserialize<Redmine.Net.Api.Types.WikiPage>(input);
+        
+        Assert.NotNull(output);
+        Assert.Single(output.Attachments);
+    }
 }
 
                             
