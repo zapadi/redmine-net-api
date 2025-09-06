@@ -132,6 +132,10 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         public List<IssueCustomField> IssueCustomFields { get; set; }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        public List<IdentifiableName> CustomFieldValues { get; set; }
 
         /// <summary>
         /// Gets the issue categories.
@@ -303,11 +307,8 @@ namespace Redmine.Net.Api.Types
                 writer.WriteRepeatableElement(RedmineKeys.ISSUE_CUSTOM_FIELD_IDS, (IEnumerable<IValue>)IssueCustomFields);
                 if (Id == 0)
                 {
-                    writer.WriteRepeatableElement(RedmineKeys.ISSUE_CUSTOM_FIELD_IDS, (IEnumerable<IValue>)CustomFields);
-                    return;
+                    writer.WriteArray(RedmineKeys.CUSTOM_FIELD_VALUES, CustomFieldValues);
                 }
-
-                writer.WriteArray(RedmineKeys.CUSTOM_FIELDS, CustomFields);
             }
         }
         #endregion
@@ -340,6 +341,7 @@ namespace Redmine.Net.Api.Types
                    && Parent == other.Parent
                    && (Trackers?.Equals<ProjectTracker>(other.Trackers) ?? other.Trackers == null)
                    && (IssueCustomFields?.Equals<IssueCustomField>(other.IssueCustomFields) ?? other.IssueCustomFields == null)
+                   && (CustomFieldValues?.Equals<IdentifiableName>(other.CustomFieldValues) ?? other.CustomFieldValues == null)
                    && (IssueCategories?.Equals<ProjectIssueCategory>(other.IssueCategories) ?? other.IssueCategories == null)
                    && (EnabledModules?.Equals<ProjectEnabledModule>(other.EnabledModules) ?? other.EnabledModules == null)
                    && (TimeEntryActivities?.Equals<ProjectTimeEntryActivity>(other.TimeEntryActivities) ?? other.TimeEntryActivities == null);
@@ -378,6 +380,7 @@ namespace Redmine.Net.Api.Types
                 hashCode = HashCodeHelper.GetHashCode(InheritMembers, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Trackers, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(IssueCustomFields, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(CustomFieldValues, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(IssueCategories, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(EnabledModules, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(TimeEntryActivities, hashCode);
