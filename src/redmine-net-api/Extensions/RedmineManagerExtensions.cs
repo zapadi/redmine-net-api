@@ -661,7 +661,6 @@ namespace Redmine.Net.Api.Extensions
             
             return response.DeserializeToPagedResults<File>(redmineManager.Serializer);
         }
-
         
         /// <summary>
         ///  
@@ -701,6 +700,22 @@ namespace Redmine.Net.Api.Extensions
             return response.DeserializeTo<User>(redmineManager.Serializer);
         }
 
+        /// <summary>
+        /// Retrieves the account details of the currently authenticated user.
+        /// </summary>
+        /// <param name="redmineManager">The instance of the RedmineManager used to perform the API call.</param>
+        /// <param name="requestOptions">Optional configuration for the API request.</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>Returns the account details of the authenticated user as a MyAccount object.</returns>
+        public static async Task<MyAccount> GetMyAccountAsync(this RedmineManager redmineManager, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
+        {
+            var uri = redmineManager.RedmineApiUrls.MyAccount();
+
+            var response = await redmineManager.ApiClient.GetAsync(uri, requestOptions, cancellationToken).ConfigureAwait(false);
+
+            return response.DeserializeTo<MyAccount>(redmineManager.Serializer);
+        }
+        
         /// <summary>
         ///     Creates or updates wiki page asynchronous.
         /// </summary>
