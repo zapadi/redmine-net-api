@@ -31,6 +31,7 @@ namespace Redmine.Net.Api.Net
         {
             {typeof(Attachment), RedmineKeys.ATTACHMENTS},
             {typeof(CustomField), RedmineKeys.CUSTOM_FIELDS},
+            {typeof(DocumentCategory), RedmineKeys.ENUMERATION_DOCUMENT_CATEGORIES},
             {typeof(Group), RedmineKeys.GROUPS},
             {typeof(Issue), RedmineKeys.ISSUES},
             {typeof(IssueCategory), RedmineKeys.ISSUE_CATEGORIES},

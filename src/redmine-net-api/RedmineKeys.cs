@@ -269,6 +269,10 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
+        public const string ENUMERATION_DOCUMENT_CATEGORIES = "enumerations/document_categories";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string ENUMERATION_ISSUE_PRIORITIES = "enumerations/issue_priorities";
         /// <summary>
         /// 
