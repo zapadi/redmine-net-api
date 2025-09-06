@@ -50,8 +50,180 @@ namespace Redmine.Net.Api.Extensions
                 writer.WriteElementString(elementName, identifiableName.Id.ToString(CultureInfo.InvariantCulture));
             }
         }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+        /// <param name="elementName"></param>
+        /// <param name="ident"></param>
+        public static void WriteIdOrEmpty(this XmlWriter writer, string elementName, IdentifiableName ident)
+        {
+            writer.WriteElementString(elementName, ident != null ? ident.Id.ToString(CultureInfo.InvariantCulture) : string.Empty);
+        }
 
         /// <summary>
+        /// Writes if not default or null.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="writer">The writer.</param>
+        /// <param name="value">The value.</param>
+        /// <param name="elementName">The tag.</param>
+        public static void WriteIfNotDefaultOrNull<T>(this XmlWriter writer, string elementName, T value)
+        {
+            if (EqualityComparer<T>.Default.Equals(value, default))
+            {
+                return;
+            }
+
+            if (value is bool)
+            {
+                writer.WriteElementString(elementName, value.ToString().ToLowerInv());
+            }
+            else
+            {
+                writer.WriteElementString(elementName, value.ToString());
+            }
+        }
+
+        /// <summary>
+        /// Writes the boolean value
+        /// </summary>
+        /// <param name="writer">The writer.</param>
+        /// <param name="value">The value.</param>
+        /// <param name="elementName">The tag.</param>
+        public static void WriteBoolean(this XmlWriter writer, string elementName, bool value)
+        {
+            writer.WriteElementString(elementName, value.ToString().ToLowerInv());
+        }
+
+        /// <summary>
+        /// Writes string empty if T has default value or null.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="writer">The writer.</param>
+        /// <param name="val">The value.</param>
+        /// <param name="elementName">The tag.</param>
+        public static void WriteValueOrEmpty<T>(this XmlWriter writer, string elementName, T? val) where T : struct
+        {
+            if (!val.HasValue || EqualityComparer<T>.Default.Equals(val.Value, default))
+            {
+                writer.WriteElementString(elementName, string.Empty);
+            }
+            else
+            {
+                writer.WriteElementString(elementName, val.Value.ToString().ToLowerInv());
+            }
+        }
+
+        /// <summary>
+        /// Writes the date or empty.
+        /// </summary>
+        /// <param name="writer">The writer.</param>
+        /// <param name="elementName">The tag.</param>
+        /// <param name="val">The value.</param>
+        /// <param name="dateTimeFormat"></param>
+        public static void WriteDateOrEmpty(this XmlWriter writer, string elementName, DateTime? val, string dateTimeFormat = "yyyy-MM-dd")
+        {
+            if (!val.HasValue || val.Value.Equals(default))
+            {
+                writer.WriteElementString(elementName, string.Empty);
+            }
+            else
+            {
+                writer.WriteElementString(elementName, val.Value.ToString(dateTimeFormat, CultureInfo.InvariantCulture));
+            }
+        }
+        
+         /// <summary>
+    /// Writes the list elements.
+    /// </summary>
+    /// <param name="xmlWriter">The XML writer.</param>
+    /// <param name="collection">The collection.</param>
+    /// <param name="elementName">Name of the element.</param>
+    public static void WriteListElements<T>(this XmlWriter xmlWriter, string elementName, List<T> collection) where T : IValue
+    {
+        WriteRepeatableElement(xmlWriter, elementName, collection);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="xmlWriter"></param>
+    /// <param name="elementName"></param>
+    /// <param name="collection"></param>
+    public static void WriteRepeatableElement<T>(this XmlWriter xmlWriter, string elementName, List<T>? collection) where T : IValue
+    {
+        if (collection == null)
+        {
+            return;
+        }
+
+        foreach (var item in collection)
+        {
+            xmlWriter.WriteElementString(elementName, item.Value);
+        }
+    }
+
+    public static void WriteArrayIds<T>(this XmlWriter writer, string rootName, string elementName, List<T> collection, Func<T, string> f)
+    {
+        WriteArray(writer, rootName, elementName, collection, f);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="writer"></param>
+    /// <param name="elementName"></param>
+    /// <param name="collection"></param>
+    /// <param name="f"></param>
+    public static void WriteArrayStringElement(this XmlWriter writer, string elementName, IEnumerable collection, Func<object, string> f)
+    {
+        WriteArray(writer, elementName, elementName, collection, f);
+    }
+
+    public static void WriteArray(this XmlWriter writer, string rootName, string elementName, IEnumerable collection, Func<object, string> valueFunc)
+    {
+        WriteArray(writer, rootName, elementName, (IEnumerable<object>)collection, valueFunc);
+    }
+    
+    public static void WriteArray<T>(this XmlWriter writer, string rootName, string elementName, IEnumerable<T>? collection, Func<T, string> valueFunc)
+    {
+        if (collection == null)
+        {
+            return;
+        }
+
+        writer.WriteStartElement(rootName);
+        writer.WriteAttributeString("type", "array");
+
+        foreach (var item in collection)
+        {
+            writer.WriteElementString(elementName, valueFunc.Invoke(item));
+        }
+
+        writer.WriteEndElement();
+    }
+
+    public static void WriteArray<T>(this XmlWriter writer, string rootName, IEnumerable<T>? collection, Action<T>? action)
+    {
+        if (collection == null || action == null)
+        {
+            return;
+        }
+
+        writer.WriteStartElement(rootName);
+        writer.WriteAttributeString("type", "array");
+
+        foreach (var item in collection)
+        {
+            action.Invoke(item);
+        }
+
+        writer.WriteEndElement();
+    }
+    
+     /// <summary>
         /// Writes the array.
         /// </summary>
         /// <param name="writer">The writer.</param>
@@ -160,6 +332,39 @@ namespace Redmine.Net.Api.Extensions
 
             writer.WriteEndElement();
         }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+        /// <param name="elementName"></param>
+        /// <param name="collection"></param>
+        /// <param name="root"></param>
+        /// <param name="defaultNamespace"></param>
+        /// <typeparam name="T"></typeparam>
+        public static void WriteArray<T>(this XmlWriter writer, string elementName, IEnumerable<T> collection, string root, string defaultNamespace = null)
+        {
+            if (collection == null)
+            {
+                return;
+            }
+
+            var type = typeof(T);
+            writer.WriteStartElement(elementName);
+            writer.WriteAttributeString("type", "array");
+
+            var rootAttribute = new XmlRootAttribute(root);
+
+            var serializer = new XmlSerializer(type, XmlAttributeOverrides, EmptyTypeArray, rootAttribute,
+                defaultNamespace);
+
+            foreach (var item in collection)
+            {
+                serializer.Serialize(writer, item);
+            }
+
+            writer.WriteEndElement();
+        }
 
         /// <summary>
         /// Writes the list elements.
@@ -196,115 +401,6 @@ namespace Redmine.Net.Api.Extensions
             foreach (var item in collection)
             {
                 xmlWriter.WriteElementString(elementName, item.Value);
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="writer"></param>
-        /// <param name="elementName"></param>
-        /// <param name="collection"></param>
-        /// <param name="f"></param>
-        public static void WriteArrayStringElement(this XmlWriter writer, string elementName, IEnumerable collection, Func<object, string> f)
-        {
-            if (collection == null)
-            {
-                return;
-            }
-
-            writer.WriteStartElement(elementName);
-            writer.WriteAttributeString("type", "array");
-
-            foreach (var item in collection)
-            {
-                writer.WriteElementString(elementName, f.Invoke(item));
-            }
-
-            writer.WriteEndElement();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="writer"></param>
-        /// <param name="elementName"></param>
-        /// <param name="ident"></param>
-        public static void WriteIdOrEmpty(this XmlWriter writer, string elementName, IdentifiableName ident)
-        {
-            writer.WriteElementString(elementName, ident != null ? ident.Id.ToString(CultureInfo.InvariantCulture) : string.Empty);
-        }
-
-        /// <summary>
-        /// Writes if not default or null.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="writer">The writer.</param>
-        /// <param name="value">The value.</param>
-        /// <param name="elementName">The tag.</param>
-        public static void WriteIfNotDefaultOrNull<T>(this XmlWriter writer, string elementName, T value)
-        {
-            if (EqualityComparer<T>.Default.Equals(value, default))
-            {
-                return;
-            }
-
-            if (value is bool)
-            {
-                writer.WriteElementString(elementName, value.ToString().ToLowerInv());
-            }
-            else
-            {
-                writer.WriteElementString(elementName, value.ToString());
-            }
-        }
-
-        /// <summary>
-        /// Writes the boolean value
-        /// </summary>
-        /// <param name="writer">The writer.</param>
-        /// <param name="value">The value.</param>
-        /// <param name="elementName">The tag.</param>
-        public static void WriteBoolean(this XmlWriter writer, string elementName, bool value)
-        {
-            writer.WriteElementString(elementName, value.ToString().ToLowerInv());
-        }
-
-        /// <summary>
-        /// Writes string empty if T has default value or null.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="writer">The writer.</param>
-        /// <param name="val">The value.</param>
-        /// <param name="elementName">The tag.</param>
-        public static void WriteValueOrEmpty<T>(this XmlWriter writer, string elementName, T? val) where T : struct
-        {
-            if (!val.HasValue || EqualityComparer<T>.Default.Equals(val.Value, default))
-            {
-                writer.WriteElementString(elementName, string.Empty);
-            }
-            else
-            {
-                writer.WriteElementString(elementName, val.Value.ToString().ToLowerInv());
-            }
-        }
-
-        /// <summary>
-        /// Writes the date or empty.
-        /// </summary>
-        /// <param name="writer">The writer.</param>
-        /// <param name="elementName">The tag.</param>
-        /// <param name="val">The value.</param>
-        /// <param name="dateTimeFormat"></param>
-        public static void WriteDateOrEmpty(this XmlWriter writer, string elementName, DateTime? val, string dateTimeFormat = "yyyy-MM-dd")
-        {
-            if (!val.HasValue || val.Value.Equals(default))
-            {
-                writer.WriteElementString(elementName, string.Empty);
-            }
-            else
-            {
-                writer.WriteElementString(elementName, val.Value.ToString(dateTimeFormat, CultureInfo.InvariantCulture));
             }
         }
     }
