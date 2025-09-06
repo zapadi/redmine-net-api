@@ -55,13 +55,14 @@ namespace Redmine.Net.Api.Net.WebClient
             _serializer = serializer;
         }
 
+        
         private static void ConfigureServicePointManager(IRedmineWebClientOptions webClientOptions)
         {
             if (webClientOptions == null)
             {
                 return;
             }
-            
+#pragma warning disable SYSLIB0014           
             if (webClientOptions.MaxServicePoints.HasValue)
             {
                 ServicePointManager.MaxServicePoints = webClientOptions.MaxServicePoints.Value;
@@ -97,6 +98,7 @@ namespace Redmine.Net.Api.Net.WebClient
                 ServicePointManager.ReusePort = webClientOptions.ReusePort.Value;
             }
             #endif
+#pragma warning restore SYSLIB0014
         }
 
         public ApiResponseMessage Get(string address, RequestOptions requestOptions = null)
