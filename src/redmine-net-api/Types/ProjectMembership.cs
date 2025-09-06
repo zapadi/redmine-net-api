@@ -102,7 +102,11 @@ namespace Redmine.Net.Api.Types
         /// <param name="writer"></param>
         public override void WriteXml(XmlWriter writer)
         {
-            writer.WriteIdIfNotNull(RedmineKeys.USER_ID, User);
+            if (Id <= 0)
+            {
+                writer.WriteIdIfNotNull(RedmineKeys.USER_ID, User);
+            }
+
             writer.WriteArray(RedmineKeys.ROLE_IDS, Roles, typeof(MembershipRole), RedmineKeys.ROLE_ID);
         }
         #endregion
@@ -146,7 +150,11 @@ namespace Redmine.Net.Api.Types
         {
             using (new JsonObject(writer, RedmineKeys.MEMBERSHIP))
             {
-                writer.WriteIdIfNotNull(RedmineKeys.USER_ID, User);
+                if (Id <= 0)
+                {
+                    writer.WriteIdIfNotNull(RedmineKeys.USER_ID, User);
+                }
+
                 writer.WriteRepeatableElement(RedmineKeys.ROLE_IDS, (IEnumerable<IValue>)Roles);
             }
         }
