@@ -326,5 +326,53 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <returns></returns>
         private string DebuggerDisplay => $"[IssueCustomField: Id={Id.ToInvariantString()}, Name={Name}, Multiple={Multiple.ToInvariantString()}]";
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static IssueCustomField CreateSingle(int id, string name, string value)
+        {
+            return new IssueCustomField
+            {
+                Id = id,
+                Name = name,
+                Values = [new CustomFieldValue { Info = value }]
+            };
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="name"></param>
+        /// <param name="values"></param>
+        /// <returns></returns>
+        public static IssueCustomField CreateMultiple(int id, string name, string[] values)
+        {
+            var isf = new IssueCustomField
+            {
+                Id = id,
+                Name = name,
+                Multiple = true,
+            };
+
+            if (values is not { Length: > 0 })
+            {
+                return isf;
+            }
+            
+            isf.Values = new List<CustomFieldValue>(values.Length);
+                
+            foreach (var value in values)
+            {
+                isf.Values.Add(new CustomFieldValue { Info = value });    
+            }
+
+            return isf;
+        }
     }
 }
