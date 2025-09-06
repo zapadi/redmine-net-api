@@ -90,7 +90,6 @@ namespace Redmine.Net.Api.Types
         /// <param name="writer"></param>
         public override void WriteXml(XmlWriter writer)
         {
-            writer.WriteIdIfNotNull(RedmineKeys.PROJECT_ID, Project);
             writer.WriteElementString(RedmineKeys.NAME, Name);
             writer.WriteIdIfNotNull(RedmineKeys.ASSIGNED_TO_ID, AssignTo);
         }
@@ -134,7 +133,6 @@ namespace Redmine.Net.Api.Types
         {
             using (new JsonObject(writer, RedmineKeys.ISSUE_CATEGORY))
             {
-                writer.WriteIdIfNotNull(RedmineKeys.PROJECT_ID, Project);
                 writer.WriteProperty(RedmineKeys.NAME, Name);
                 writer.WriteIdIfNotNull(RedmineKeys.ASSIGNED_TO_ID, AssignTo);
             }
