@@ -174,11 +174,9 @@ namespace Redmine.Net.Api.Extensions
             
             var payload = redmineManager.Serializer.Serialize(news);
             
-            var uri = Uri.EscapeDataString(redmineManager.RedmineApiUrls.ProjectNews(projectIdentifier));
-            
-            var escapedUri = Uri.EscapeDataString(uri);
+            var uri = redmineManager.RedmineApiUrls.ProjectNews(projectIdentifier);
 
-            var response = redmineManager.ApiClient.Create(escapedUri, payload, requestOptions);
+            var response = redmineManager.ApiClient.Create(uri, payload, requestOptions);
 
             return response.DeserializeTo<News>(redmineManager.Serializer);
         }
@@ -325,9 +323,7 @@ namespace Redmine.Net.Api.Extensions
 
             var uri = redmineManager.RedmineApiUrls.ProjectWikiPageUpdate(projectId, pageName);
 
-            var escapedUri = Uri.EscapeDataString(uri);
-            
-            redmineManager.ApiClient.Patch(escapedUri, payload, requestOptions);
+            redmineManager.ApiClient.Patch(uri, payload, requestOptions);
         }
 
         /// <summary>
@@ -370,9 +366,7 @@ namespace Redmine.Net.Api.Extensions
                 ? redmineManager.RedmineApiUrls.ProjectWikiPage(projectId, pageName)
                 : redmineManager.RedmineApiUrls.ProjectWikiPageVersion(projectId, pageName, version.ToString(CultureInfo.InvariantCulture));
             
-            var escapedUri = Uri.EscapeDataString(uri);
-
-            var response = redmineManager.ApiClient.Get(escapedUri, requestOptions);
+            var response = redmineManager.ApiClient.Get(uri, requestOptions);
 
             return response.DeserializeTo<WikiPage>(redmineManager.Serializer);
         }
@@ -405,9 +399,7 @@ namespace Redmine.Net.Api.Extensions
         {
             var uri = redmineManager.RedmineApiUrls.ProjectWikiPageDelete(projectId, pageName);
             
-            var escapedUri = Uri.EscapeDataString(uri);
-           
-            redmineManager.ApiClient.Delete(escapedUri,  requestOptions);
+            redmineManager.ApiClient.Delete(uri,  requestOptions);
         }
 
         /// <summary>
@@ -588,9 +580,7 @@ namespace Redmine.Net.Api.Extensions
         {
             var uri = redmineManager.RedmineApiUrls.ProjectNews(projectIdentifier);
 
-            var escapedUri = Uri.EscapeDataString(uri);
-            
-            var response = await redmineManager.ApiClient.GetPagedAsync(escapedUri, requestOptions, cancellationToken).ConfigureAwait(false);
+            var response = await redmineManager.ApiClient.GetPagedAsync(uri, requestOptions, cancellationToken).ConfigureAwait(false);
 
             return response.DeserializeToPagedResults<News>(redmineManager.Serializer);
         }
@@ -619,11 +609,9 @@ namespace Redmine.Net.Api.Extensions
             
             var payload = redmineManager.Serializer.Serialize(news);
             
-            var uri = Uri.EscapeDataString(redmineManager.RedmineApiUrls.ProjectNews(projectIdentifier));
+            var uri = redmineManager.RedmineApiUrls.ProjectNews(projectIdentifier);
             
-            var escapedUri = Uri.EscapeDataString(uri);
-
-            var response = await redmineManager.ApiClient.CreateAsync(escapedUri, payload, requestOptions, cancellationToken).ConfigureAwait(false);
+            var response = await redmineManager.ApiClient.CreateAsync(uri, payload, requestOptions, cancellationToken).ConfigureAwait(false);
 
             return response.DeserializeTo<News>(redmineManager.Serializer);
         }
@@ -775,9 +763,7 @@ namespace Redmine.Net.Api.Extensions
 
             var url = redmineManager.RedmineApiUrls.ProjectWikiPageUpdate(projectId, pageName);
 
-            var escapedUri = Uri.EscapeDataString(url);
-            
-            await redmineManager.ApiClient.PatchAsync(escapedUri, payload, requestOptions, cancellationToken).ConfigureAwait(false);
+            await redmineManager.ApiClient.PatchAsync(url, payload, requestOptions, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -793,9 +779,7 @@ namespace Redmine.Net.Api.Extensions
         {
             var uri = redmineManager.RedmineApiUrls.ProjectWikiPageDelete(projectId, pageName);
             
-            var escapedUri = Uri.EscapeDataString(uri);
-           
-            await redmineManager.ApiClient.DeleteAsync(escapedUri,  requestOptions, cancellationToken).ConfigureAwait(false);
+            await redmineManager.ApiClient.DeleteAsync(uri,  requestOptions, cancellationToken).ConfigureAwait(false);
         }
         
         /// <summary>
@@ -814,9 +798,7 @@ namespace Redmine.Net.Api.Extensions
                 ? redmineManager.RedmineApiUrls.ProjectWikiPage(projectId, pageName)
                 : redmineManager.RedmineApiUrls.ProjectWikiPageVersion(projectId, pageName, version.ToString(CultureInfo.InvariantCulture));
             
-            var escapedUri = Uri.EscapeDataString(uri);
-
-            var response = await redmineManager.ApiClient.GetAsync(escapedUri, requestOptions, cancellationToken).ConfigureAwait(false);
+            var response = await redmineManager.ApiClient.GetAsync(uri, requestOptions, cancellationToken).ConfigureAwait(false);
 
             return response.DeserializeTo<WikiPage>(redmineManager.Serializer);
         }
