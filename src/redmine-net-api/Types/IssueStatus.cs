@@ -31,9 +31,21 @@ namespace Redmine.Net.Api.Types
     [XmlRoot(RedmineKeys.ISSUE_STATUS)]
     public sealed class IssueStatus : IdentifiableName, IEquatable<IssueStatus>, ICloneable<IssueStatus>
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public IssueStatus()
         {
             
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        public IssueStatus(int id)
+        {
+            Id = id;
         }
         
         /// <summary>
