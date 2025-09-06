@@ -231,7 +231,24 @@ namespace Redmine.Net.Api.Types
             return !Equals(left, right);
         }
         #endregion
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="identifiableName"></param>
+        /// <returns></returns>
+        public static implicit operator string(IdentifiableName identifiableName) => FromIdentifiableName(identifiableName);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="identifiableName"></param>
+        /// <returns></returns>
+        public static string FromIdentifiableName(IdentifiableName identifiableName)
+        {
+            return identifiableName?.Id.ToInvariantString();
+        }
+        
         /// <summary>
         /// 
         /// </summary>
