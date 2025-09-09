@@ -39,6 +39,14 @@ namespace Redmine.Net.Api.Serialization
 
             if (pageSize <= 0 || total == 0)
             {
+                if (items is ICollection<TOut> list)
+                {
+                    TotalItems = list.Count;
+                    PageSize  = pageSize > 0 ? pageSize : RedmineConstants.DEFAULT_PAGE_SIZE_VALUE;
+                    CurrentPage = offset / PageSize + 1;
+                    TotalPages = total / PageSize + 1;
+                }
+                
                 return;
             }
 
