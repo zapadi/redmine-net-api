@@ -152,7 +152,7 @@ namespace Redmine.Net.Api.Extensions
                 TimeSpan ts => ts.ToString(),
                 DateTime d => d.ToString(CultureInfo.InvariantCulture),
                 #pragma warning disable CA1308
-                bool b => b.ToString().ToLowerInvariant(),
+                bool b => b.ToString(CultureInfo.InvariantCulture),
                 #pragma warning restore CA1308
                 _ => value.ToString(),
             };
