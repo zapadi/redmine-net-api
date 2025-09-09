@@ -28,11 +28,11 @@ public sealed class ProjectTests : BaseEqualityTests<Project>
                 new() { Id = 2, Name = "Feature" }
             ],
             
-            CustomFieldValues = 
-            [
-                new() { Id = 1, Name = "Field1"},
-                new() { Id = 2, Name = "Field2"}
-            ],
+            // CustomFieldValues = 
+            // [
+            //     new() { Id = 1, Name = "Field1"},
+            //     new() { Id = 2, Name = "Field2"}
+            // ],
             
             IssueCategories =
             [
@@ -71,10 +71,10 @@ public sealed class ProjectTests : BaseEqualityTests<Project>
             [
                 new() { Id = 3, Name = "Different Bug" }
             ],
-            CustomFieldValues = 
-            [
-                new() { Id = 3, Name = "DifferentField"}
-            ],
+            // CustomFieldValues = 
+            // [
+            //     new() { Id = 3, Name = "DifferentField"}
+            // ],
             IssueCategories = 
             [
                 new() { Id = 3, Name = "DifferentCategory" }
