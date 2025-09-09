@@ -105,9 +105,9 @@ namespace Redmine.Net.Api.Types
                 switch (reader.Value)
                 {
                     case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
-                    case RedmineKeys.GROUP: Project = new IdentifiableName(reader); break;
+                    case RedmineKeys.GROUP: Group = new IdentifiableName(reader); break;
                     case RedmineKeys.PROJECT: Project = new IdentifiableName(reader); break;
-                    case RedmineKeys.USER: Project = new IdentifiableName(reader); break;
+                    case RedmineKeys.USER: User = new IdentifiableName(reader); break;
                     case RedmineKeys.ROLES: Roles = reader.ReadAsCollection<MembershipRole>(); break;
                     default: reader.Read(); break;
                 }
