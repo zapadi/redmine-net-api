@@ -15,15 +15,19 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.IO;
 using System.Net;
 using System.Text;
 using System.Threading;
 using Redmine.Net.Api.Authentication;
+using Redmine.Net.Api.Exceptions;
 #if!(NET20)
 using System.Threading.Tasks;
 #endif
 using Redmine.Net.Api.Extensions;
+using Redmine.Net.Api.Internals;
 using Redmine.Net.Api.Net.WebClient.MessageContent;
 using Redmine.Net.Api.Serialization;
 
@@ -197,20 +201,42 @@ namespace Redmine.Net.Api.Net.WebClient
 
         private async Task<ApiResponseMessage> SendAsync(ApiRequestMessage requestMessage, CancellationToken cancellationToken)
         {
-            System.Net.WebClient webClient = null;
-            byte[] response = null;
-            NameValueCollection responseHeaders = null;
+            System.Net.WebClient? webClient = null;
+            string? response = null;
+            byte[]? responseAsBytes = null;
+            HttpStatusCode? statusCode = null;
+            NameValueCollection? responseHeaders = null;
+            CancellationTokenRegistration cancellationTokenRegistration = default;
+
             try
             {
                 webClient = _webClientFunc();
+                cancellationTokenRegistration =
+                    cancellationToken.Register(
+                        static state => (state as System.Net.WebClient)?.CancelAsync(),
+                        webClient
+                    );
 
-                cancellationToken.Register(webClient.CancelAsync);
-                
+                cancellationToken.ThrowIfCancellationRequested();
+
                 SetWebClientHeaders(webClient, requestMessage);
-
-                if(IsGetOrDownload(requestMessage.Method))
+                if (requestMessage.QueryString != null)
                 {
-                    response = await webClient.DownloadDataTaskAsync(requestMessage.RequestUri).ConfigureAwait(false);
+                    webClient.QueryString = requestMessage.QueryString;
+                }
+
+                if (IsGetOrDownload(requestMessage.Method))
+                {
+                    if (requestMessage.Method == HttpConstants.HttpVerbs.DOWNLOAD)
+                    {
+                        responseAsBytes = await webClient.DownloadDataTaskAsync((string)requestMessage.RequestUri)
+                            .ConfigureAwait(false);
+                    }
+                    else
+                    {
+                        response = await webClient.DownloadStringTaskAsync((string)requestMessage.RequestUri)
+                            .ConfigureAwait(false);
+                    }
                 }
                 else
                 {
@@ -225,28 +251,51 @@ namespace Redmine.Net.Api.Net.WebClient
                         payload = EmptyBytes;
                     }
 
-                    response = await webClient.UploadDataTaskAsync(requestMessage.RequestUri, requestMessage.Method, payload).ConfigureAwait(false);
+                    responseAsBytes = await webClient.UploadDataTaskAsync((string)requestMessage.RequestUri, requestMessage.Method, payload)
+                        .ConfigureAwait(false);
                 }
-                
+
                 responseHeaders = webClient.ResponseHeaders;
+                if (webClient is InternalWebClient iwc)
+                {
+                    statusCode = iwc.StatusCode;
+                }
             }
             catch (WebException ex) when (ex.Status == WebExceptionStatus.RequestCanceled)
             {
-                //TODO: Handle cancellation...
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    throw new RedmineApiException("The operation was canceled by the user.", ex);
+                }
             }
             catch (WebException webException)
             {
-                webException.HandleWebException(_serializer);
+                var content = HandleWebException(webException);
+                return new ApiResponseMessage
+                {
+                    Headers = responseHeaders,
+                    Content = content.Value,
+                    StatusCode = (int)content.Key,
+                };
             }
             finally
             {
+#if NET
+                await cancellationTokenRegistration.DisposeAsync().ConfigureAwait(false);
+#else
+                cancellationTokenRegistration.Dispose();
+#endif
+
                 webClient?.Dispose();
             }
 
             return new ApiResponseMessage()
             {
+                IsSuccessful = true,
                 Headers = responseHeaders,
-                Content = response
+                Content = response,
+                RawContent = responseAsBytes,
+                StatusCode = (int)(statusCode ?? HttpStatusCode.OK),
             };
         }
         #endif
@@ -281,19 +330,28 @@ namespace Redmine.Net.Api.Net.WebClient
 
         private ApiResponseMessage Send(ApiRequestMessage requestMessage)
         {
-            System.Net.WebClient webClient = null;
-            byte[] response = null;
+            System.Net.WebClient? webClient = null;
+            string? response = null;
+            byte[]? responseAsBytes = null;
             HttpStatusCode? statusCode = null;
-            NameValueCollection responseHeaders = null;
+            NameValueCollection? responseHeaders = null;
 
             try
             {
                 webClient = _webClientFunc();
+
                 SetWebClientHeaders(webClient, requestMessage);
+                if (requestMessage.QueryString != null)
+                {
+                    webClient.QueryString = requestMessage.QueryString;
+                }
 
                 if (IsGetOrDownload(requestMessage.Method))
                 {
-                    response = webClient.DownloadData(requestMessage.RequestUri);
+                    if (requestMessage.Method == HttpConstants.HttpVerbs.GET)
+                    {
+                        response = webClient.DownloadString((string)requestMessage.RequestUri);
+                    }
                 }
                 else
                 {
@@ -308,7 +366,7 @@ namespace Redmine.Net.Api.Net.WebClient
                         payload = EmptyBytes;
                     }
 
-                    response = webClient.UploadData(requestMessage.RequestUri, requestMessage.Method, payload);
+                    responseAsBytes = webClient.UploadData((string)requestMessage.RequestUri, requestMessage.Method, payload);
                 }
 
                 responseHeaders = webClient.ResponseHeaders;
@@ -319,18 +377,26 @@ namespace Redmine.Net.Api.Net.WebClient
             }
             catch (WebException webException)
             {
-                webException.HandleWebException(_serializer);
+                var content = HandleWebException(webException);
+                return new ApiResponseMessage
+                {
+                    Headers = responseHeaders,
+                    Content = content.Value,
+                    StatusCode = (int)content.Key,
+                };
             }
             finally
             {
                 webClient?.Dispose();
             }
 
-            return new ApiResponseMessage()
+            return new ApiResponseMessage
             {
+                IsSuccessful = true,
                 Headers = responseHeaders,
                 Content = response,
-                StatusCode = statusCode,
+                RawContent = responseAsBytes,
+                StatusCode = (int)(statusCode ?? HttpStatusCode.OK),
             };
         }
 
@@ -366,5 +432,52 @@ namespace Redmine.Net.Api.Net.WebClient
         {
             return serializer.Format == RedmineConstants.XML ? RedmineConstants.CONTENT_TYPE_APPLICATION_XML : RedmineConstants.CONTENT_TYPE_APPLICATION_JSON;
         }
+        
+        /// <summary>
+    /// Handles the web exception.
+    /// </summary>
+    /// <param name="exception">The exception.</param>
+    /// <exception cref="RedmineException"> </exception>
+    private static KeyValuePair<HttpStatusCode, string> HandleWebException(WebException exception)
+    {
+        var innerException = exception.InnerException ?? exception;
+
+        switch (exception.Status)
+        {
+            case WebExceptionStatus.Timeout:
+                throw new RedmineApiException(nameof(WebExceptionStatus.Timeout), innerException);
+            case WebExceptionStatus.ProtocolError:
+                if (exception.Response != null)
+                {
+                    var statusCode = exception.Response is HttpWebResponse httpResponse
+                        ? (int)httpResponse.StatusCode
+                        : (int)HttpStatusCode.InternalServerError;
+
+                    using var responseStream = exception.Response.GetResponseStream();
+                    if (statusCode == HttpConstants.StatusCodes.UnprocessableEntity)
+                    {
+                        try
+                        {
+                            if (responseStream != null)
+                            {
+                                using var reader = new StreamReader(responseStream);
+                                var content = reader.ReadToEnd();
+                                return new KeyValuePair<HttpStatusCode, string>((HttpStatusCode)HttpConstants.StatusCodes.UnprocessableEntity, content);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new RedmineApiException(ex.Message, ex);
+                        }
+                    }
+
+                    RedmineApiExceptionHelper.MapStatusCodeToException(statusCode, innerException);
+                }
+
+                break;
+        }
+
+        throw new RedmineApiException(exception.Message, innerException);
+    }
     }
 }
