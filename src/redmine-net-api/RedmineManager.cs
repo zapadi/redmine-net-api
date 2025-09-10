@@ -204,7 +204,7 @@ namespace Redmine.Net.Api
         {
             var response = ApiClient.Download(address);
             
-            return response.Content;
+            return response.RawContent;
         }
         
          /// <summary>

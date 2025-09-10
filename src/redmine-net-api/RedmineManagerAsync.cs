@@ -24,7 +24,9 @@ using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Net;
 using Redmine.Net.Api.Serialization;
 using Redmine.Net.Api.Types;
+#if NET40
 using TaskExtensions = Redmine.Net.Api.Extensions.TaskExtensions;
+#endif
 
 namespace Redmine.Net.Api;
 
@@ -220,7 +222,7 @@ public partial class RedmineManager: IRedmineManagerAsync
     public async Task<byte[]> DownloadFileAsync(string address, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
     {
         var response = await ApiClient.DownloadAsync(address, requestOptions,cancellationToken: cancellationToken).ConfigureAwait(false);
-        return response.Content;
+        return response.RawContent;
     }
     
     private const int MAX_CONCURRENT_TASKS = 3;
