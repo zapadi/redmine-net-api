@@ -30,8 +30,8 @@ internal sealed class ApiResponseMessage
     /// </summary>
     public NameValueCollection Headers { get; init; }
     /// <summary>
-    
-    public HttpStatusCode? StatusCode { get; init; }
+    /// 
+    /// </summary>
     public string Content { get; init; }
     
     /// <summary>
