@@ -80,6 +80,11 @@ internal static class RedmineApiUrlsExtensions
 
         return $"{RedmineKeys.PROJECTS}/{projectIdentifier}/{RedmineKeys.MEMBERSHIPS}.{redmineApiUrls.Format}";
     }
+    
+    public static string ProjectIssueCategories(this RedmineApiUrls redmineApiUrls, string projectIdentifier)
+    {
+        return $"{RedmineKeys.PROJECTS}/{projectIdentifier}/{RedmineKeys.ISSUE_CATEGORIES}.{redmineApiUrls.Format}";
+    }
 
     public static string ProjectWikiIndex(this RedmineApiUrls redmineApiUrls, string projectId)
     {

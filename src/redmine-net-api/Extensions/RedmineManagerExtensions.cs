@@ -214,6 +214,22 @@ namespace Redmine.Net.Api.Extensions
             
             return response;
         }
+        
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="redmineManager"></param>
+        /// <param name="projectIdentifier"> The id or the identifier of the project</param>
+        /// <param name="requestOptions"></param>
+        /// <returns>Returns the issue categories available for the specified project</returns>
+        public static PagedResults<ProjectIssueCategory> GetProjectIssueCategories(this RedmineManager redmineManager, string projectIdentifier, RequestOptions requestOptions = null)
+        {
+            var uri = redmineManager.RedmineApiUrls.ProjectIssueCategories(projectIdentifier);
+
+            var response =  redmineManager.ApiClient.GetPaged(uri, requestOptions);
+
+            return response.DeserializeToPagedResults<ProjectIssueCategory>(redmineManager.Serializer);
+        }
 
         /// <summary>
         ///     Returns the user whose credentials are used to access the API.
@@ -650,6 +666,23 @@ namespace Redmine.Net.Api.Extensions
             var response = await redmineManager.ApiClient.GetPagedAsync(uri, requestOptions, cancellationToken).ConfigureAwait(false);
             
             return response.DeserializeToPagedResults<File>(redmineManager.Serializer);
+        }
+        
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="redmineManager"></param>
+        /// <param name="projectIdentifier"> The id or the identifier of the project</param>
+        /// <param name="requestOptions"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>Returns the issue categories available for the specified project</returns>
+        public static async Task<PagedResults<ProjectIssueCategory>> GetProjectIssueCategoriesAsync(this RedmineManager redmineManager, string projectIdentifier, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
+        {
+            var uri = redmineManager.RedmineApiUrls.ProjectIssueCategories(projectIdentifier);
+
+            var response = await redmineManager.ApiClient.GetPagedAsync(uri, requestOptions, cancellationToken).ConfigureAwait(false);
+
+            return response.DeserializeToPagedResults<ProjectIssueCategory>(redmineManager.Serializer);
         }
         
         /// <summary>
