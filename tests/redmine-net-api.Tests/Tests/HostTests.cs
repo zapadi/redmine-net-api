@@ -1,12 +1,10 @@
-﻿using Padi.DotNet.RedmineAPI.Tests.Infrastructure.Order;
-using Redmine.Net.Api;
+﻿using Redmine.Net.Api;
 using Redmine.Net.Api.Exceptions;
 using Xunit;
 
 namespace Padi.DotNet.RedmineAPI.Tests.Tests
 {
     [Trait("Redmine-api", "Host")]
-    [Order(1)]
     public sealed class HostTests
     {
         [Theory]
