@@ -392,6 +392,10 @@ namespace Redmine.Net.Api
         /// 
         /// </summary>
         public const string ISSUE_CATEGORY = "issue_category";
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string ISSUE_CUSTOM_FIELDS = "issue_custom_fields";
 
         /// <summary>
         /// 
