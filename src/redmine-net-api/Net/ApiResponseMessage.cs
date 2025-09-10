@@ -14,16 +14,48 @@
    limitations under the License.
 */
 
+using System;
 using System.Collections.Specialized;
 using System.Net;
 
 namespace Redmine.Net.Api.Net;
 
+/// <summary>
+/// 
+/// </summary>
 internal sealed class ApiResponseMessage
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public NameValueCollection Headers { get; init; }
     public byte[] Content { get; init; }
     
     public HttpStatusCode? StatusCode { get; init; }
 
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    public byte[] RawContent { get; init; }
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    public int? StatusCode { get; init; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public string EndPoint { get; init; }
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    public bool IsSuccessful  { get; init; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public Exception Exception { get; set; }
 }
