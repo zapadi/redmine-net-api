@@ -14,47 +14,72 @@
    limitations under the License.
 */
 
+using System;
 using System.Collections.Generic;
 using System.Text;
+using Redmine.Net.Api.Exceptions;
+using Redmine.Net.Api.Extensions;
+using Redmine.Net.Api.Internals;
 using Redmine.Net.Api.Serialization;
 
 namespace Redmine.Net.Api.Net;
 
 internal static class ApiResponseMessageExtensions
 {
-    internal static T DeserializeTo<T>(this ApiResponseMessage responseMessage, IRedmineSerializer redmineSerializer) where T : new()
+     internal static T DeserializeTo<T>(this ApiResponseMessage responseMessage, IRedmineSerializer redmineSerializer) where T : new()
     {
-        if (responseMessage?.Content == null)
-        {
-            return default;
-        }
-            
-        var responseAsString = Encoding.UTF8.GetString(responseMessage.Content);
-            
-        return redmineSerializer.Deserialize<T>(responseAsString);
+        var responseAsString = GetResponseContentAsString(responseMessage, redmineSerializer);
+        return responseAsString.IsNullOrWhiteSpace() ? default : redmineSerializer.Deserialize<T>(responseAsString);
     }
         
     internal static PagedResults<T> DeserializeToPagedResults<T>(this ApiResponseMessage responseMessage, IRedmineSerializer redmineSerializer) where T : class, new()
     {
-        if (responseMessage?.Content == null)
-        {
-            return default;
-        }
-            
-        var responseAsString = Encoding.UTF8.GetString(responseMessage.Content);
-            
-        return redmineSerializer.DeserializeToPagedResults<T>(responseAsString);
+        var responseAsString = GetResponseContentAsString(responseMessage, redmineSerializer);
+        return responseAsString.IsNullOrWhiteSpace() ? null : redmineSerializer.DeserializeToPagedResults<T>(responseAsString);
     }
         
     internal static List<T> DeserializeToList<T>(this ApiResponseMessage responseMessage, IRedmineSerializer redmineSerializer) where T : class, new()
     {
-        if (responseMessage?.Content == null)
+        var responseAsString = GetResponseContentAsString(responseMessage, redmineSerializer);
+        var data = responseAsString.IsNullOrWhiteSpace() ? null : redmineSerializer.DeserializeToPagedResults<T>(responseAsString);
+        return data.Items as List<T>;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="responseMessage"></param>
+    /// <param name="redmineSerializer"></param>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
+    /// <exception cref="RedmineException"></exception>
+    private static string GetResponseContentAsString(ApiResponseMessage responseMessage, IRedmineSerializer redmineSerializer)
+    {
+        if (responseMessage == null)
         {
-            return default;
+            return string.Empty;
         }
-            
-        var responseAsString = Encoding.UTF8.GetString(responseMessage.Content);
-            
-        return redmineSerializer.Deserialize<List<T>>(responseAsString);
+
+        if (!responseMessage.IsSuccessful)
+        {
+            if (responseMessage.Exception is not null)
+            {
+                throw responseMessage.Exception;
+            }
+
+            if (responseMessage.StatusCode == HttpConstants.StatusCodes.UnprocessableEntity)
+            {
+                throw RedmineApiExceptionHelper.CreateUnprocessableEntityException(responseMessage.Content, null, redmineSerializer);
+            }
+        }
+        else
+        {
+            if (responseMessage.RawContent is not null)
+            {
+                return Encoding.UTF8.GetString(responseMessage.RawContent);
+            }
+        }
+
+        return responseMessage.Content;
     }
 }
