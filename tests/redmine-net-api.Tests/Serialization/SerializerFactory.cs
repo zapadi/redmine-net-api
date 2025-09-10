@@ -4,7 +4,7 @@ using Redmine.Net.Api.Serialization;
 
 namespace Padi.DotNet.RedmineAPI.Tests.Serialization;
 
-public static class SerializerFactory
+internal static class SerializerFactory
 {
     private static readonly Dictionary<SerializerKind, IRedmineSerializer> _serializers = new Dictionary<SerializerKind, IRedmineSerializer>();
     

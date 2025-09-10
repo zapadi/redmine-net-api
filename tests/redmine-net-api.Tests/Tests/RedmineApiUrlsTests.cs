@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using Padi.DotNet.RedmineAPI.Tests.Infrastructure.Fixtures;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Exceptions;
 using Redmine.Net.Api.Net;

@@ -12,13 +12,6 @@
         <Configurations>Release;Debug;DebugJson</Configurations>
         <OutputType>exe</OutputType>
     </PropertyGroup>
-
-    <PropertyGroup>
-        <Net40_Net461>|net40|net45|net451|net452|net46|net461|</Net40_Net461>
-        <Net45_Net461>|net45|net451|net452|net46|net461|</Net45_Net461>
-        <Net40_Net480>|net40|net45|net451|net452|net46|net461|net462|net470|net471|net472|net48|</Net40_Net480>
-        <Net45_Net480>|net45|net451|net452|net46|net461|net462|net470|net471|net472|net48|</Net45_Net480>
-    </PropertyGroup>
     
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
         <DefineConstants>DEBUG;TRACE;DEBUG_XML</DefineConstants>
@@ -27,58 +20,17 @@
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DebugJson|AnyCPU' ">
         <DefineConstants>DEBUG;TRACE;DEBUG_JSON</DefineConstants>
     </PropertyGroup>
-    
-    <ItemGroup Condition=" '$(TargetFramework)' == 'net40' " Label=".NET 4.0 Package References">
-        <Reference Include="System.Net" />
-        <PackageReference Include="xunit" Version="1.9.2" />
-        <PackageReference Include="xunit.abstractions" Version="2.0.3" />
-        <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" PrivateAssets="all">
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-    </ItemGroup>
 
-
-    <ItemGroup Condition="$(Net45_Net461.Contains('|$(TargetFramework)|'))" Label=".NET 4.5 to .NET 4.6.1">
-        <PackageReference Include="Microsoft.Extensions.Configuration" Version="1.1.0" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="1.1.0" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="1.1.0" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="1.1.0" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="1.1.0" />
-    </ItemGroup>
-    
-   
-    <ItemGroup Condition="$(Net45_Net461.Contains('|$(TargetFramework)|'))" Label=".NET 4.5.X to .NET 4.6.1">
-        <PackageReference Include="xunit" Version="2.6.2" />
-        <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3" PrivateAssets="all">
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-    </ItemGroup>
-
-    <ItemGroup Condition="$(Net40_Net461.Contains('|$(TargetFramework)|')) == FALSE AND '$(TargetFramework)' != 'net461'" Label=".NET 4.6.1 onwards">
-        <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.1" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.1" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.1" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="9.0.1" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="9.0.1" />
+    <ItemGroup >
         <PackageReference Include="xunit.v3" Version="3.0.1" />
-        <PackageReference Include="xunit.v3.runner.common" Version="3.0.1" />
-        <PackageReference Include="xunit.v3.common" Version="3.0.1">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-        <PackageReference Include="xunit.runner.visualstudio" Version="3.0.1" PrivateAssets="all">
+        <PackageReference Include="xunit.v3.extensibility.core" Version="3.0.1" />
+        <PackageReference Include="xunit.runner.visualstudio" Version="3.1.0" PrivateAssets="all">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
     </ItemGroup>
     
     <ItemGroup>
         <ProjectReference Include="..\..\src\redmine-net-api\redmine-net-api.csproj" />
-    </ItemGroup>
-    
-    <ItemGroup>
-        <None Update="appsettings.json">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
     </ItemGroup>
     
 </Project>
