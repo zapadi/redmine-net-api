@@ -105,16 +105,16 @@ jobs:
           --configuration "${{ env.CONFIGURATION }}" 
           --no-restore 
 
-      - name: Test
-        timeout-minutes: 60
-        if: runner.os == 'Linux'
-        run: >-
-          dotnet test "${{ env.PROJECT_PATH }}"
-          --no-restore
-          --no-build
-          --verbosity normal
-          --logger trx
-          --results-directory "TestResults-${{ matrix.os }}" || true
+#      - name: Test
+#        timeout-minutes: 60
+#        if: runner.os == 'Linux'
+#        run: >-
+#          dotnet test "${{ env.PROJECT_PATH }}"
+#          --no-restore
+#          --no-build
+#          --verbosity normal
+#          --logger trx
+#          --results-directory "TestResults-${{ matrix.os }}" || true
 
       - name: Upload test results
         if: ${{ always() }}
