@@ -106,13 +106,14 @@ public partial interface IRedmineManager
     /// </returns>
     /// <exception cref="RedmineException"></exception>
     Upload UploadFile(byte[] data, string fileName = null);
-        
+
     /// <summary>
     ///     Downloads a file from the specified address.
     /// </summary>
     /// <param name="address">The address.</param>
+    /// <param name="requestOptions"></param>
     /// <param name="progress"></param>
     /// <returns>The content of the downloaded file as a byte array.</returns>
     /// <exception cref="RedmineException"></exception>
-    byte[] DownloadFile(string address, IProgress<int> progress = null);
+    byte[] DownloadFile(string address,RequestOptions requestOptions = null, IProgress<int> progress = null);
 }

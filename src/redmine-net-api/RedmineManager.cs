@@ -200,9 +200,9 @@ namespace Redmine.Net.Api
         }
         
         /// <inheritdoc />
-        public byte[] DownloadFile(string address, IProgress<int> progress = null)
+        public byte[] DownloadFile(string address, RequestOptions requestOptions = null, IProgress<int> progress = null)
         {
-            var response = ApiClient.Download(address, progress: progress);
+            var response = ApiClient.Download(address, requestOptions, progress: progress);
             
             return response.RawContent;
         }
