@@ -210,6 +210,24 @@ public class IssueTests()
          Assert.Equal(289, attachments[0].Id);
     }
     
+    [Theory]
+    [MemberData(nameof(IssueWithHierarchicalChildrenDeserializeTheoryData))]
+    public void Should_Deserialize_Issue_With_Hierarchical_Children(string input, SerializerKind kind)
+    {
+        var serializer = SerializerFactory.Create(kind);
+      
+        var output = serializer.Deserialize<Redmine.Net.Api.Types.Issue>(input);
+        
+        Assert.NotNull(output);
+        Assert.Equal(21512, output.Id);
+         
+        var list = output.Children.ToList();
+        Assert.Single(list);
+
+        var children = list[0].Children;
+        Assert.Equal(8, children.Count);
+    }
+    
     public static IEnumerable<TheoryDataRow<string, SerializerKind>> IssuesDeserializeTheoryData
     {
         get
@@ -615,6 +633,302 @@ public class IssueTests()
                                            <created_on>2025-09-12T09:29:46Z</created_on>
                                        </attachment>
                                    </attachments>
+                               </issue>
+                               """;
+
+            yield return new TheoryDataRow<string, SerializerKind>(json, SerializerKind.NewtonsoftJson).WithTestDisplayName(Constants.JsonNewtonsoft);
+            // yield return new TheoryDataRow<string, SerializerKind>(json, SerializerKind.SystemTextJson).WithTestDisplayName(Constants.JsonSystemText)
+            yield return new TheoryDataRow<string, SerializerKind>(xml, SerializerKind.Xml).WithTestDisplayName(Constants.Xml);
+        }
+    }
+    
+    public static IEnumerable<TheoryDataRow<string, SerializerKind>> IssueWithHierarchicalChildrenDeserializeTheoryData
+    {
+        get
+        {
+            const string json = """
+                                {
+                                  "issue": {
+                                    "id": 21512,
+                                    "project": { "id": 1498, "name": "project name" },
+                                    "tracker": { "id": 9, "name": "group" },
+                                    "status": { "id": 2, "name": "start", "is_closed": false },
+                                    "priority": { "id": 2, "name": "normal" },
+                                    "author": { "id": 25, "name": "foo" },
+                                    "subject": "parent issue",
+                                    "description": null,
+                                    "start_date": "2025-04-17",
+                                    "due_date": "2025-09-30",
+                                    "done_ratio": 64,
+                                    "is_private": false,
+                                    "estimated_hours": null,
+                                    "total_estimated_hours": 0.0,
+                                    "spent_hours": 0.0,
+                                    "total_spent_hours": 125.2,
+                                    "created_on": "2025-02-03T08:35:55Z",
+                                    "updated_on": "2025-08-18T23:48:17Z",
+                                    "closed_on": null,
+                                      "children": [
+                                      {
+                                        "id": 21558,
+                                        "tracker": { "id": 5, "name": "func" },
+                                        "subject": "issue-10 dev",
+                                        "children": [
+                                          {
+                                            "id": 21641,
+                                            "tracker": { "id": 9, "name": "group" },
+                                            "subject": "issue-10 #plan survey",
+                                            "children": [
+                                              { "id": 21642, "tracker": { "id": 6, "name": "task" }, "subject": "issue-10 #plan 1" },
+                                              { "id": 23139, "tracker": { "id": 6, "name": "task" }, "subject": "issue-10 #plan 2" }
+                                            ]
+                                          },
+                                          {
+                                            "id": 21644,
+                                            "tracker": { "id": 9, "name": "group" },
+                                            "subject": "issue-10 #UID",
+                                            "children": [
+                                              { "id": 23055, "tracker": { "id": 6, "name": "task" }, "subject": "issue-10 #UI task-1" },
+                                              { "id": 23319, "tracker": { "id": 6, "name": "task" }, "subject": "issue-10 #UI task-2" }
+                                            ]
+                                          },
+                                          {
+                                            "id": 21645,
+                                            "tracker": { "id": 9, "name": "group" },
+                                            "subject": "issue-10 #SSD",
+                                            "children": [
+                                              { "id": 21646, "tracker": { "id": 6, "name": "task" }, "subject": "issue-10 #SS task-1" },
+                                              { "id": 23062, "tracker": { "id": 6, "name": "task" }, "subject": "issue-10 #SS task-2-1" },
+                                              { "id": 23063, "tracker": { "id": 6, "name": "task" }, "subject": "issue-10 #SS task-2-2" }
+                                            ]
+                                          },
+                                          {
+                                            "id": 21648,
+                                            "tracker": { "id": 9, "name": "group" },
+                                            "subject": "issue-10 #PG",
+                                            "children": [
+                                              { "id": 21649, "tracker": { "id": 6, "name": "task" }, "subject": "issue-10 #PG task-1-1" },
+                                              { "id": 23442, "tracker": { "id": 6, "name": "task" }, "subject": "issue-10 #PG task-1-2" },
+                                              { "id": 23443, "tracker": { "id": 6, "name": "task" }, "subject": "issue-10 #PG task-1-3" },
+                                              { "id": 23571, "tracker": { "id": 6, "name": "task" }, "subject": "issue-10 #PG task-2-1" },
+                                              { "id": 23572, "tracker": { "id": 6, "name": "task" }, "subject": "issue-10 #PG task-2-2" }
+                                            ]
+                                          },
+                                          {
+                                            "id": 21650,
+                                            "tracker": { "id": 9, "name": "group" },
+                                            "subject": "issue-10 #PT",
+                                            "children": [
+                                              { "id": 21651, "tracker": { "id": 6, "name": "task" }, "subject": "issue-10 #PT task-1-1" },
+                                              { "id": 23577, "tracker": { "id": 6, "name": "task" }, "subject": "issue-10 #PT task-1-2" },
+                                              { "id": 23578, "tracker": { "id": 6, "name": "task" }, "subject": "issue-10 #PT task-1-3" },
+                                              { "id": 23579, "tracker": { "id": 6, "name": "task" }, "subject": "issue-10 #PT task-2-1" },
+                                              { "id": 23580, "tracker": { "id": 6, "name": "task" }, "subject": "issue-10 #PT task-2-2" }
+                                            ]
+                                          },
+                                          {
+                                            "id": 21652,
+                                            "tracker": { "id": 9, "name": "group" },
+                                            "subject": "issue-10 #IT",
+                                            "children": [
+                                              { "id": 21653, "tracker": { "id": 6, "name": "task" }, "subject": "issue-10 #IT task-1" },
+                                              { "id": 23585, "tracker": { "id": 6, "name": "task" }, "subject": "issue-10 #IT task-2" }
+                                            ]
+                                          },
+                                          {
+                                            "id": 23056,
+                                            "tracker": { "id": 9, "name": "group" },
+                                            "subject": "issue-10 #ST",
+                                            "children": [
+                                              { "id": 23057, "tracker": { "id": 6, "name": "task" }, "subject": "issue-10 #ST task" }
+                                            ]
+                                          },
+                                          {
+                                            "id": 23591,
+                                            "tracker": { "id": 9, "name": "group" },
+                                            "subject": "issue-10 #MAN",
+                                            "children": [
+                                              { "id": 23592, "tracker": { "id": 6, "name": "task" }, "subject": "issue-10 #MAN A" },
+                                              { "id": 23593, "tracker": { "id": 6, "name": "task" }, "subject": "issue-10 #MAN B" },
+                                              { "id": 23797, "tracker": { "id": 6, "name": "task" }, "subject": "issue-10 #MAN C" }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                }
+                                """;
+
+            const string xml = """
+                               <issue>
+                                   <id>21512</id>
+                                   <project id="1498" name="project name" />
+                                   <tracker id="9" name="group" />
+                                   <status id="2" name="start" is_closed="false" />
+                                   <priority id="2" name="normal" />
+                                   <author id="25" name="foo" />
+                                   <subject>parent issue</subject>
+                                   <description />
+                                   <start_date>2025-04-17</start_date>
+                                   <due_date>2025-09-30</due_date>
+                                   <done_ratio>64</done_ratio>
+                                   <is_private>false</is_private>
+                                   <estimated_hours />
+                                   <total_estimated_hours>0.0</total_estimated_hours>
+                                   <spent_hours>0.0</spent_hours>
+                                   <total_spent_hours>125.2</total_spent_hours>
+                                   <created_on>2025-02-03T08:35:55Z</created_on>
+                                   <updated_on>2025-08-18T23:48:17Z</updated_on>
+                                   <closed_on />
+                                   <children type="array">
+                                       <issue id="21558">
+                                           <tracker id="5" name="func" />
+                                           <subject>issue-10 dev</subject>
+                                           <children type="array">
+                                               <issue id="21641">
+                                                   <tracker id="9" name="group" />
+                                                   <subject>issue-10 #plan survey</subject>
+                                                   <children type="array">
+                                                       <issue id="21642">
+                                                           <tracker id="6" name="task" />
+                                                           <subject>issue-10 #plan 1</subject>
+                                                       </issue>
+                                                       <issue id="23139">
+                                                           <tracker id="6" name="task" />
+                                                           <subject>issue-10 #plan 2</subject>
+                                                       </issue>
+                                                   </children>
+                                               </issue>
+                                               <issue id="21644">
+                                                   <tracker id="9" name="group" />
+                                                   <subject>issue-10 #UID</subject>
+                                                   <children type="array">
+                                                       <issue id="23055">
+                                                           <tracker id="6" name="task" />
+                                                           <subject>issue-10 #UI task-1</subject>
+                                                       </issue>
+                                                       <issue id="23319">
+                                                           <tracker id="6" name="task" />
+                                                           <subject>issue-10 #UI task-2</subject>
+                                                       </issue>
+                                                   </children>
+                                               </issue>
+                                               <issue id="21645">
+                                                   <tracker id="9" name="group" />
+                                                   <subject>issue-10 #SSD</subject>
+                                                   <children type="array">
+                                                       <issue id="21646">
+                                                           <tracker id="6" name="task" />
+                                                           <subject>issue-10 #SS task-1</subject>
+                                                       </issue>
+                                                       <issue id="23062">
+                                                           <tracker id="6" name="task" />
+                                                           <subject>issue-10 #SS task-2-1</subject>
+                                                       </issue>
+                                                       <issue id="23063">
+                                                           <tracker id="6" name="task" />
+                                                           <subject>issue-10 #SS task-2-2</subject>
+                                                       </issue>
+                                                   </children>
+                                               </issue>
+                                               <issue id="21648">
+                                                   <tracker id="9" name="group" />
+                                                   <subject>issue-10 #PG</subject>
+                                                   <children type="array">
+                                                       <issue id="21649">
+                                                           <tracker id="6" name="task" />
+                                                           <subject>issue-10 #PG task-1-1</subject>
+                                                       </issue>
+                                                       <issue id="23442">
+                                                           <tracker id="6" name="task" />
+                                                           <subject>issue-10 #PG task-1-2</subject>
+                                                       </issue>
+                                                       <issue id="23443">
+                                                           <tracker id="6" name="task" />
+                                                           <subject>issue-10 #PG task-1-3</subject>
+                                                       </issue>
+                                                       <issue id="23571">
+                                                           <tracker id="6" name="task" />
+                                                           <subject>issue-10 #PG task-2-1</subject>
+                                                       </issue>
+                                                       <issue id="23572">
+                                                           <tracker id="6" name="task" />
+                                                           <subject>issue-10 #PG task-2-2</subject>
+                                                       </issue>
+                                                   </children>
+                                               </issue>
+                                               <issue id="21650">
+                                                   <tracker id="9" name="group" />
+                                                   <subject>issue-10 #PT</subject>
+                                                   <children type="array">
+                                                       <issue id="21651">
+                                                           <tracker id="6" name="task" />
+                                                           <subject>issue-10 #PT task-1-1</subject>
+                                                       </issue>
+                                                       <issue id="23577">
+                                                           <tracker id="6" name="task" />
+                                                           <subject>issue-10 #PT task-1-2</subject>
+                                                       </issue>
+                                                       <issue id="23578">
+                                                           <tracker id="6" name="task" />
+                                                           <subject>issue-10 #PT task-1-3</subject>
+                                                       </issue>
+                                                       <issue id="23579">
+                                                           <tracker id="6" name="task" />
+                                                           <subject>issue-10 #PT task-2-1</subject>
+                                                       </issue>
+                                                       <issue id="23580">
+                                                           <tracker id="6" name="task" />
+                                                           <subject>issue-10 #PT task-2-2</subject>
+                                                       </issue>
+                                                    </children>
+                                               </issue>
+                                               <issue id="21652">
+                                                   <tracker id="9" name="group" />
+                                                   <subject>issue-10 #IT</subject>
+                                                   <children type="array">
+                                                       <issue id="21653">
+                                                           <tracker id="6" name="task" />
+                                                           <subject>issue-10 #IT task-1</subject>
+                                                       </issue>
+                                                       <issue id="23585">
+                                                           <tracker id="6" name="task" />
+                                                           <subject>issue-10 #IT task-2</subject>
+                                                       </issue>
+                                                   </children>
+                                               </issue>
+                                               <issue id="23056">
+                                                   <tracker id="9" name="group" />
+                                                   <subject>issue-10 #ST</subject>
+                                                   <children type="array">
+                                                       <issue id="23057">
+                                                           <tracker id="6" name="task" />
+                                                           <subject>issue-10 #ST task</subject>
+                                                       </issue>
+                                                   </children>
+                                               </issue>
+                                               <issue id="23591">
+                                                   <tracker id="9" name="group" />
+                                                   <subject>issue-10 #MAN</subject>
+                                                   <children type="array">
+                                                       <issue id="23592">
+                                                           <tracker id="6" name="task" />
+                                                           <subject>issue-10 #MAN A</subject>
+                                                       </issue>
+                                                       <issue id="23593">
+                                                           <tracker id="6" name="task" />
+                                                           <subject>issue-10 #MAN B</subject>
+                                                       </issue>
+                                                       <issue id="23797">
+                                                           <tracker id="6" name="task" />
+                                                           <subject>issue-10 #MAN C</subject>
+                                                       </issue>
+                                                   </children>
+                                               </issue>
+                                           </children>
+                                       </issue>
+                                   </children>
                                </issue>
                                """;
 
