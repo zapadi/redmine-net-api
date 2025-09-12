@@ -16,7 +16,7 @@ public partial class ProgressTests(RedmineTestContainerFixture fixture)
         var progressTracker = new ProgressTracker();
 
         // Act
-        var result = fixture.RedmineManager.DownloadFile(DOWNLOAD_URL_FORMAT, progressTracker);
+        var result = fixture.RedmineManager.DownloadFile(DOWNLOAD_URL_FORMAT, progress: progressTracker);
 
         // Assert
         Assert.NotNull(result);
