@@ -17,6 +17,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using Newtonsoft.Json;
+using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Serialization;
 
 namespace Redmine.Net.Api.Types
@@ -43,7 +44,7 @@ namespace Redmine.Net.Api.Types
                 writer.WriteStartArray();
                 foreach (var item in this)
                 {
-                    writer.WritePropertyName(item.Key.ToString(CultureInfo.InvariantCulture));
+                    writer.WritePropertyName(item.Key.ToInvariantString());
                     item.Value.WriteJson(writer);
                 }
                 writer.WriteEndArray();

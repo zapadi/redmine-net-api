@@ -18,6 +18,7 @@ using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.Xml.Serialization;
+using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Internals;
 
 namespace Redmine.Net.Api.Types
@@ -36,7 +37,7 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// 
         /// </summary>
-        public string Value => Id.ToString(CultureInfo.InvariantCulture);
+        public string Value => Id.ToInvariantString();
 
         #endregion
 

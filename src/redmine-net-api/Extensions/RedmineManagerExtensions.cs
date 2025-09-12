@@ -266,7 +266,7 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="requestOptions"></param>
         public static void AddWatcherToIssue(this RedmineManager redmineManager, int issueId, int userId, RequestOptions requestOptions = null)
         {
-            var uri = redmineManager.RedmineApiUrls.IssueWatcherAdd(issueId.ToString(CultureInfo.InvariantCulture));
+            var uri = redmineManager.RedmineApiUrls.IssueWatcherAdd(issueId.ToInvariantString());
 
             var payload = SerializationHelper.SerializeUserId(userId, redmineManager.Serializer);
             
@@ -282,7 +282,7 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="requestOptions"></param>
         public static void RemoveWatcherFromIssue(this RedmineManager redmineManager, int issueId, int userId, RequestOptions requestOptions = null)
         {
-            var uri = redmineManager.RedmineApiUrls.IssueWatcherRemove(issueId.ToString(CultureInfo.InvariantCulture), userId.ToString(CultureInfo.InvariantCulture));
+            var uri = redmineManager.RedmineApiUrls.IssueWatcherRemove(issueId.ToInvariantString(), userId.ToInvariantString());
            
             redmineManager.ApiClient.Delete(uri,  requestOptions);
         }
@@ -296,7 +296,7 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="requestOptions"></param>
         public static void AddUserToGroup(this RedmineManager redmineManager, int groupId, int userId, RequestOptions requestOptions = null)
         {
-            var uri = redmineManager.RedmineApiUrls.GroupUserAdd(groupId.ToString(CultureInfo.InvariantCulture));
+            var uri = redmineManager.RedmineApiUrls.GroupUserAdd(groupId.ToInvariantString());
 
             var payload = SerializationHelper.SerializeUserId(userId, redmineManager.Serializer);
             
@@ -312,7 +312,7 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="requestOptions"></param>
         public static void RemoveUserFromGroup(this RedmineManager redmineManager, int groupId, int userId, RequestOptions requestOptions = null)
         {
-            var uri = redmineManager.RedmineApiUrls.GroupUserRemove(groupId.ToString(CultureInfo.InvariantCulture), userId.ToString(CultureInfo.InvariantCulture));
+            var uri = redmineManager.RedmineApiUrls.GroupUserRemove(groupId.ToInvariantString(), userId.ToInvariantString());
            
             redmineManager.ApiClient.Delete(uri, requestOptions);
         }
@@ -378,7 +378,7 @@ namespace Redmine.Net.Api.Extensions
         {
             var uri = version == 0
                 ? redmineManager.RedmineApiUrls.ProjectWikiPage(projectId, pageName)
-                : redmineManager.RedmineApiUrls.ProjectWikiPageVersion(projectId, pageName, version.ToString(CultureInfo.InvariantCulture));
+                : redmineManager.RedmineApiUrls.ProjectWikiPageVersion(projectId, pageName, version.ToInvariantString());
             
             var response = redmineManager.ApiClient.Get(uri, requestOptions);
 
@@ -432,7 +432,7 @@ namespace Redmine.Net.Api.Extensions
 
             var data = redmineManager.Serializer.Serialize(attachments);
             
-            var uri = redmineManager.RedmineApiUrls.AttachmentUpdate(issueId.ToString(CultureInfo.InvariantCulture));
+            var uri = redmineManager.RedmineApiUrls.AttachmentUpdate(issueId.ToInvariantString());
 
             redmineManager.ApiClient.Patch(uri,  data, requestOptions);
         }
@@ -472,8 +472,8 @@ namespace Redmine.Net.Api.Extensions
             var parameters = new NameValueCollection
             {
                 {RedmineKeys.Q, q},
-                {RedmineKeys.LIMIT, limit.ToString(CultureInfo.InvariantCulture)},
-                {RedmineKeys.OFFSET, offset.ToString(CultureInfo.InvariantCulture)},
+                {RedmineKeys.LIMIT, limit.ToInvariantString()},
+                {RedmineKeys.OFFSET, offset.ToInvariantString()},
             };
 
             return searchFilter != null ? searchFilter.Build(parameters) : parameters;
@@ -827,7 +827,7 @@ namespace Redmine.Net.Api.Extensions
         {
             var uri = version == 0
                 ? redmineManager.RedmineApiUrls.ProjectWikiPage(projectId, pageName)
-                : redmineManager.RedmineApiUrls.ProjectWikiPageVersion(projectId, pageName, version.ToString(CultureInfo.InvariantCulture));
+                : redmineManager.RedmineApiUrls.ProjectWikiPageVersion(projectId, pageName, version.ToInvariantString());
             
             var response = await redmineManager.ApiClient.GetAsync(uri, requestOptions, cancellationToken).ConfigureAwait(false);
 
@@ -864,7 +864,7 @@ namespace Redmine.Net.Api.Extensions
         /// </returns>
         public static async Task AddUserToGroupAsync(this RedmineManager redmineManager, int groupId, int userId, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
         {
-            var uri = redmineManager.RedmineApiUrls.GroupUserAdd(groupId.ToString(CultureInfo.InvariantCulture));
+            var uri = redmineManager.RedmineApiUrls.GroupUserAdd(groupId.ToInvariantString());
 
             var payload = SerializationHelper.SerializeUserId(userId, redmineManager.Serializer);
             
@@ -882,7 +882,7 @@ namespace Redmine.Net.Api.Extensions
         /// <returns></returns>
         public static async Task RemoveUserFromGroupAsync(this RedmineManager redmineManager, int groupId, int userId, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
         {
-            var uri = redmineManager.RedmineApiUrls.GroupUserRemove(groupId.ToString(CultureInfo.InvariantCulture), userId.ToString(CultureInfo.InvariantCulture));
+            var uri = redmineManager.RedmineApiUrls.GroupUserRemove(groupId.ToInvariantString(), userId.ToInvariantString());
            
             await redmineManager.ApiClient.DeleteAsync(uri,  requestOptions, cancellationToken).ConfigureAwait(false);
         }
@@ -898,7 +898,7 @@ namespace Redmine.Net.Api.Extensions
         /// <returns></returns>
         public static async Task AddWatcherToIssueAsync(this RedmineManager redmineManager, int issueId, int userId, RequestOptions requestOptions = null , CancellationToken cancellationToken = default)
         {
-            var uri = redmineManager.RedmineApiUrls.IssueWatcherAdd(issueId.ToString(CultureInfo.InvariantCulture));
+            var uri = redmineManager.RedmineApiUrls.IssueWatcherAdd(issueId.ToInvariantString());
 
             var payload = SerializationHelper.SerializeUserId(userId, redmineManager.Serializer);
             
@@ -916,7 +916,7 @@ namespace Redmine.Net.Api.Extensions
         /// <returns></returns>
         public static async Task RemoveWatcherFromIssueAsync(this RedmineManager redmineManager, int issueId, int userId, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
         {
-            var uri = redmineManager.RedmineApiUrls.IssueWatcherRemove(issueId.ToString(CultureInfo.InvariantCulture), userId.ToString(CultureInfo.InvariantCulture));
+            var uri = redmineManager.RedmineApiUrls.IssueWatcherRemove(issueId.ToInvariantString(), userId.ToInvariantString());
            
             await redmineManager.ApiClient.DeleteAsync(uri,  requestOptions, cancellationToken).ConfigureAwait(false);
         }

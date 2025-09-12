@@ -15,6 +15,7 @@
 */
 
 using System.Globalization;
+using Redmine.Net.Api.Extensions;
 
 namespace Redmine.Net.Api.Serialization
 {
@@ -32,8 +33,8 @@ namespace Redmine.Net.Api.Serialization
         public static string SerializeUserId(int userId, IRedmineSerializer redmineSerializer)
         {
             return redmineSerializer is XmlRedmineSerializer
-                ? $"<user_id>{userId.ToString(CultureInfo.InvariantCulture)}</user_id>"
-                : $"{{\"user_id\":\"{userId.ToString(CultureInfo.InvariantCulture)}\"}}";
+                ? $"<user_id>{userId.ToInvariantString()}</user_id>"
+                : $"{{\"user_id\":\"{userId.ToInvariantString()}\"}}";
         }
     }
 }

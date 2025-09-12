@@ -124,7 +124,7 @@ namespace Redmine.Net.Api.Types
         /// <param name="writer"></param>
         public override void WriteXml(XmlWriter writer)
         {
-            writer.WriteAttributeString(RedmineKeys.ID, Id.ToString(CultureInfo.InvariantCulture));
+            writer.WriteAttributeString(RedmineKeys.ID, Id.ToInvariantString());
             writer.WriteAttributeString(RedmineKeys.NAME, Name);
         }
 

@@ -425,7 +425,7 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        private string DebuggerDisplay => $"[User: Id={Id.ToInvariantString()}, Login={Login}, IsAdmin={IsAdmin.ToString(CultureInfo.InvariantCulture)}, Status={Status:G}]";
+        private string DebuggerDisplay => $"[User: Id={Id.ToInvariantString()}, Login={Login}, IsAdmin={IsAdmin.ToInvariantString()}, Status={Status:G}]";
 
     }
 }
