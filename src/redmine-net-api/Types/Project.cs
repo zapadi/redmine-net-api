@@ -135,7 +135,7 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// 
         /// </summary>
-        public List<IdentifiableName> CustomFieldValues { get; set; }
+        public List<CustomField> CustomFieldValues { get; set; }
 
         /// <summary>
         /// Gets the issue categories.
@@ -183,7 +183,7 @@ namespace Redmine.Net.Api.Types
                 {
                     case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
                     case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
-                    case RedmineKeys.CUSTOM_FIELDS: IssueCustomFields = reader.ReadElementContentAsCollection<IssueCustomField>(); break;
+                    case RedmineKeys.CUSTOM_FIELDS: CustomFieldValues = reader.ReadElementContentAsCollection<CustomField>(); break;
                     case RedmineKeys.DESCRIPTION: Description = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.ENABLED_MODULES: EnabledModules = reader.ReadElementContentAsCollection<ProjectEnabledModule>(); break;
                     case RedmineKeys.HOMEPAGE: HomePage = reader.ReadElementContentAsString(); break;
@@ -191,6 +191,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.INHERIT_MEMBERS: InheritMembers = reader.ReadElementContentAsBoolean(); break;
                     case RedmineKeys.IS_PUBLIC: IsPublic = reader.ReadElementContentAsBoolean(); break;
                     case RedmineKeys.ISSUE_CATEGORIES: IssueCategories = reader.ReadElementContentAsCollection<ProjectIssueCategory>(); break;
+                    case RedmineKeys.ISSUE_CUSTOM_FIELDS: IssueCustomFields = reader.ReadElementContentAsCollection<IssueCustomField>(); break;
                     case RedmineKeys.NAME: Name = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.PARENT: Parent = new IdentifiableName(reader); break;
                     case RedmineKeys.STATUS: Status = (ProjectStatus)reader.ReadElementContentAsInt(); break;
@@ -260,7 +261,7 @@ namespace Redmine.Net.Api.Types
                 {
                     case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
                     case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadAsDateTime(); break;
-                    case RedmineKeys.CUSTOM_FIELDS: IssueCustomFields = reader.ReadAsCollection<IssueCustomField>(); break;
+                    case RedmineKeys.CUSTOM_FIELDS: CustomFieldValues = reader.ReadAsCollection<CustomField>(); break;
                     case RedmineKeys.DESCRIPTION: Description = reader.ReadAsString(); break;
                     case RedmineKeys.ENABLED_MODULES: EnabledModules = reader.ReadAsCollection<ProjectEnabledModule>(); break;
                     case RedmineKeys.HOMEPAGE: HomePage = reader.ReadAsString(); break;
@@ -268,6 +269,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.INHERIT_MEMBERS: InheritMembers = reader.ReadAsBool(); break;
                     case RedmineKeys.IS_PUBLIC: IsPublic = reader.ReadAsBool(); break;
                     case RedmineKeys.ISSUE_CATEGORIES: IssueCategories = reader.ReadAsCollection<ProjectIssueCategory>(); break;
+                    case RedmineKeys.ISSUE_CUSTOM_FIELDS: IssueCustomFields = reader.ReadAsCollection<IssueCustomField>(); break;
                     case RedmineKeys.NAME: Name = reader.ReadAsString(); break;
                     case RedmineKeys.PARENT: Parent = new IdentifiableName(reader); break;
                     case RedmineKeys.STATUS: Status = (ProjectStatus)reader.ReadAsInt(); break;
@@ -341,7 +343,7 @@ namespace Redmine.Net.Api.Types
                    && Parent == other.Parent
                    && (Trackers?.Equals<ProjectTracker>(other.Trackers) ?? other.Trackers == null)
                    && (IssueCustomFields?.Equals<IssueCustomField>(other.IssueCustomFields) ?? other.IssueCustomFields == null)
-                   && (CustomFieldValues?.Equals<IdentifiableName>(other.CustomFieldValues) ?? other.CustomFieldValues == null)
+                   && (CustomFieldValues?.Equals<CustomField>(other.CustomFieldValues) ?? other.CustomFieldValues == null)
                    && (IssueCategories?.Equals<ProjectIssueCategory>(other.IssueCategories) ?? other.IssueCategories == null)
                    && (EnabledModules?.Equals<ProjectEnabledModule>(other.EnabledModules) ?? other.EnabledModules == null)
                    && (TimeEntryActivities?.Equals<ProjectTimeEntryActivity>(other.TimeEntryActivities) ?? other.TimeEntryActivities == null);
