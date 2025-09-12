@@ -5,16 +5,10 @@ namespace Padi.RedmineAPI.Integration.Tests.Tests.Common;
 
 public static class TestConstants
 {
-    public static class Projects
+    public static class Project
     {
-        public const int DefaultProjectId = 1;
-        public const string DefaultProjectIdentifier = "1";
-        public static readonly IdentifiableName DefaultProject = DefaultProject.ToIdentifiableName();
+        public const int DefaultId = 1;
+        public const string DefaultIdentifier = "1";
     }
-    
-    public static class Users
-    {
-        public const string DefaultPassword = "password123";
-    }
-    
+
 }

@@ -16,7 +16,7 @@ public class AttachmentTestsAsync(RedmineTestContainerFixture fixture)
     public async Task CreateIssueWithAttachment_Should_Succeed()
     {
         // Arrange
-        var upload = FileTestHelper.UploadRandom500KbFile(fixture.RedmineManager);
+        var (upload,_,_) = FileTestHelper.UploadRandom500KbFile(fixture.RedmineManager);
         Assert.NotNull(upload);
 
         // Act
@@ -32,7 +32,7 @@ public class AttachmentTestsAsync(RedmineTestContainerFixture fixture)
     public async Task GetIssueWithAttachments_Should_Succeed()
     {
         // Arrange
-        var upload = FileTestHelper.UploadRandom500KbFile(fixture.RedmineManager);
+        var (upload,_,_) = FileTestHelper.UploadRandom500KbFile(fixture.RedmineManager);
         var issue = IssueTestHelper.CreateIssue(uploads: [upload]);
         var createdIssue = await fixture.RedmineManager.CreateAsync(issue, cancellationToken: TestContext.Current.CancellationToken);
 
@@ -49,7 +49,7 @@ public class AttachmentTestsAsync(RedmineTestContainerFixture fixture)
     public async Task GetAttachmentById_Should_Succeed()
     {
         // Arrange
-        var upload = FileTestHelper.UploadRandom500KbFile(fixture.RedmineManager);
+        var (upload,_,_) = FileTestHelper.UploadRandom500KbFile(fixture.RedmineManager);
         var issue = IssueTestHelper.CreateIssue(uploads: [upload]);
         var createdIssue = await fixture.RedmineManager.CreateAsync(issue, cancellationToken: TestContext.Current.CancellationToken);
         Assert.NotNull(createdIssue);
@@ -72,7 +72,7 @@ public class AttachmentTestsAsync(RedmineTestContainerFixture fixture)
     public async Task UploadLargeFile_Should_Succeed()
     {
         // Arrange & Act
-        var upload = await FileTestHelper.UploadRandom1MbFileAsync(fixture.RedmineManager);
+        var (upload,_,_) = await FileTestHelper.UploadRandom1MbFileAsync(fixture.RedmineManager);
 
         // Assert
         Assert.NotNull(upload);
@@ -83,11 +83,11 @@ public class AttachmentTestsAsync(RedmineTestContainerFixture fixture)
     public async Task UploadMultipleFiles_Should_Succeed()
     {
         // Arrange & Act
-        var upload1 = await FileTestHelper.UploadRandom500KbFileAsync(fixture.RedmineManager);
+        var (upload1,_,_) = await FileTestHelper.UploadRandom500KbFileAsync(fixture.RedmineManager);
         Assert.NotNull(upload1);
         Assert.NotEmpty(upload1.Token);
 
-        var upload2 = await FileTestHelper.UploadRandom500KbFileAsync(fixture.RedmineManager);
+        var (upload2,_,_) = await FileTestHelper.UploadRandom500KbFileAsync(fixture.RedmineManager);
         Assert.NotNull(upload2);
         Assert.NotEmpty(upload2.Token);
 

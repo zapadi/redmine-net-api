@@ -15,10 +15,11 @@ internal static class FileTestHelper
         
         return (fileName, fileContent);
     }
-    public static Upload UploadRandomFile(IRedmineManager client, int sizeInKb, RequestOptions? options = null)
+    public static (Upload upload, string fileName,  byte[]fileContent) UploadRandomFile(IRedmineManager client, int sizeInKb, RequestOptions? options = null)
     {
         var (fileName, fileContent) = GenerateFile(sizeInKb);
-        return client.UploadFile(fileContent, fileName);
+        var upload = client.UploadFile(fileContent, fileName);
+        return (upload, fileName, fileContent);
     }
 
     /// <summary>
@@ -27,7 +28,7 @@ internal static class FileTestHelper
     /// <param name="client">The Redmine API client.</param>
     /// <param name="options">Request options.</param>
     /// <returns>API response message containing the uploaded file information.</returns>
-    public static Upload UploadRandom500KbFile(IRedmineManager client, RequestOptions? options = null)
+    public static (Upload upload, string fileName,  byte[]fileContent) UploadRandom500KbFile(IRedmineManager client, RequestOptions? options = null)
     {
         return UploadRandomFile(client, 500, options);
     }
@@ -38,16 +39,17 @@ internal static class FileTestHelper
     /// <param name="client">The Redmine API client.</param>
     /// <param name="options">Request options.</param>
     /// <returns>API response message containing the uploaded file information.</returns>
-    public static Upload UploadRandom1MbFile(IRedmineManager client, RequestOptions? options = null)
+    public static (Upload upload, string fileName,  byte[]fileContent) UploadRandom1MbFile(IRedmineManager client, RequestOptions? options = null)
     {
         return UploadRandomFile(client, 1024, options);
     }
 
-    public static async Task<Upload> UploadRandomFileAsync(IRedmineManagerAsync client, int sizeInKb, RequestOptions? options = null)
+    public static async Task<(Upload upload, string fileName,  byte[]fileContent)> UploadRandomFileAsync(IRedmineManagerAsync client, int sizeInKb, RequestOptions? options = null)
     {
         var (fileName, fileContent) = GenerateFile(sizeInKb);
         
-        return await client.UploadFileAsync(fileContent, fileName, options);
+        var upload = await client.UploadFileAsync(fileContent, fileName, options);
+        return  (upload, fileName, fileContent);
     }
 
     /// <summary>
@@ -56,7 +58,7 @@ internal static class FileTestHelper
     /// <param name="client">The Redmine API client.</param>
     /// <param name="options">Request options.</param>
     /// <returns>API response message containing the uploaded file information.</returns>
-    public static Task<Upload> UploadRandom500KbFileAsync(IRedmineManagerAsync client, RequestOptions? options = null)
+    public static Task<(Upload upload, string fileName,  byte[]fileContent)> UploadRandom500KbFileAsync(IRedmineManagerAsync client, RequestOptions? options = null)
     {
         return UploadRandomFileAsync(client, 500, options);
     }
@@ -67,7 +69,7 @@ internal static class FileTestHelper
     /// <param name="client">The Redmine API client.</param>
     /// <param name="options">Request options.</param>
     /// <returns>API response message containing the uploaded file information.</returns>
-    public static Task<Upload> UploadRandom1MbFileAsync(IRedmineManagerAsync client, RequestOptions? options = null)
+    public static Task<(Upload upload, string fileName,  byte[]fileContent)> UploadRandom1MbFileAsync(IRedmineManagerAsync client, RequestOptions? options = null)
     {
         return UploadRandomFileAsync(client, 1024, options);
     }

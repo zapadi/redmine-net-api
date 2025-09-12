@@ -15,7 +15,7 @@ public class AttachmentTests(RedmineTestContainerFixture fixture)
     public void UploadAndGetAttachment_Should_Succeed()
     {
         // Arrange
-        var upload = FileTestHelper.UploadRandom500KbFile(fixture.RedmineManager);
+        var (upload,_,_) = FileTestHelper.UploadRandom500KbFile(fixture.RedmineManager);
         Assert.NotNull(upload);
         Assert.NotEmpty(upload.Token);
 
