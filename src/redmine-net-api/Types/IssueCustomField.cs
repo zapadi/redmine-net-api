@@ -63,6 +63,11 @@ namespace Redmine.Net.Api.Types
 
             reader.Read();
 
+            if (reader.NodeType == XmlNodeType.EndElement)
+            {
+                return;
+            }
+            
             if (reader.NodeType == XmlNodeType.Whitespace)
             {
                 reader.Read();
