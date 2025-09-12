@@ -15,6 +15,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Xml;
@@ -45,6 +46,11 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <value>The subject.</value>
         public string Subject { get; internal set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public List<Issue> Children { get; set; }
         #endregion
 
         #region Implementation of IXmlSerialization
@@ -69,6 +75,7 @@ namespace Redmine.Net.Api.Types
                 {
                     case RedmineKeys.SUBJECT: Subject = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.TRACKER: Tracker = new IdentifiableName(reader); break;
+                    case RedmineKeys.CHILDREN: Children = reader.ReadElementContentAsCollection<Issue>(); break;
                     default: reader.Read(); break;
                 }
             }
@@ -99,6 +106,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
                     case RedmineKeys.SUBJECT: Subject = reader.ReadAsString(); break;
                     case RedmineKeys.TRACKER: Tracker = new IdentifiableName(reader); break;
+                    case RedmineKeys.CHILDREN: Children = reader.ReadAsCollection<Issue>(); break;
                     default: reader.Read(); break;
                 }
             }
@@ -116,7 +124,8 @@ namespace Redmine.Net.Api.Types
             if (other == null) return false;
             return base.Equals(other) 
                    && Tracker == other.Tracker 
-                   && string.Equals(Subject, other.Subject, StringComparison.Ordinal);
+                   && string.Equals(Subject, other.Subject, StringComparison.Ordinal)
+                   && (Children?.Equals<Issue>(other.Children) ?? other.Children == null);
         }
 
         /// <summary>
@@ -143,6 +152,7 @@ namespace Redmine.Net.Api.Types
                 var hashCode = base.GetHashCode();
                 hashCode = HashCodeHelper.GetHashCode(Tracker, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Subject, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Children, hashCode);
                 return hashCode;
             }
         }
