@@ -227,7 +227,7 @@ namespace Redmine.Net.Api.Types
             }
             
             writer.WriteBoolean(RedmineKeys.MUST_CHANGE_PASSWORD, MustChangePassword);
-            writer.WriteElementString(RedmineKeys.STATUS, ((int)Status).ToString(CultureInfo.InvariantCulture));
+            writer.WriteElementString(RedmineKeys.STATUS, ((int)Status).ToInvariantString());
             
             if(CustomFields != null)
             { 
@@ -311,7 +311,7 @@ namespace Redmine.Net.Api.Types
                 }
             
                 writer.WriteBoolean(RedmineKeys.MUST_CHANGE_PASSWORD, MustChangePassword);
-                writer.WriteProperty(RedmineKeys.STATUS, ((int)Status).ToString(CultureInfo.InvariantCulture));
+                writer.WriteProperty(RedmineKeys.STATUS, ((int)Status).ToInvariantString());
             
                 if(CustomFields != null)
                 { 
