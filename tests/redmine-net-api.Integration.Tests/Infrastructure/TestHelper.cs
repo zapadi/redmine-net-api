@@ -5,13 +5,27 @@ namespace Padi.RedmineAPI.Integration.Tests.Infrastructure
 {
     internal static class ConfigurationHelper
     {
+        /// <summary>
+        /// Detects if running in a CI/CD environment
+        /// </summary>
+        private static bool IsRunningInCiEnvironment()
+        {
+            return !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("CI")) ||
+                   !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("GITHUB_ACTIONS"));
+
+        }
+        
         private static IConfigurationRoot GetIConfigurationRoot(string outputPath)
         {
-            return new ConfigurationBuilder()
+            var config = new ConfigurationBuilder()
                 .SetBasePath(outputPath)
-                .AddJsonFile("appsettings.json", optional: true)
-                .AddJsonFile($"appsettings.local.json", optional: true)
-                .Build();
+                .AddJsonFile("appsettings.json", optional: true);
+
+            if (!IsRunningInCiEnvironment())
+            {
+                config.AddJsonFile("appsettings.local.json", optional: true);
+            }
+            return config.Build();
         }
 
         public static TestContainerOptions GetConfiguration(string outputPath = "")

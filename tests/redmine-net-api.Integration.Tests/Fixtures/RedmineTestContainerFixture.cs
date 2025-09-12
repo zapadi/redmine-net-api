@@ -35,16 +35,6 @@ public class RedmineTestContainerFixture : IAsyncLifetime
             BuildContainers();
         }
     }
-
-    /// <summary>
-    /// Detects if running in a CI/CD environment
-    /// </summary>
-    private static bool IsRunningInCiEnvironment()
-    {
-        return !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("CI")) ||
-               !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("GITHUB_ACTIONS"));
-
-    }
     
     private void BuildContainers()
     {
