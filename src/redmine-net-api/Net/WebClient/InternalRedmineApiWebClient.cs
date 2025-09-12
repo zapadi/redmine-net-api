@@ -138,9 +138,9 @@ namespace Redmine.Net.Api.Net.WebClient
             return HandleRequest(address, HttpVerbs.DELETE, requestOptions);
         }
 
-        public ApiResponseMessage Download(string address, RequestOptions requestOptions = null)
+        public ApiResponseMessage Download(string address, RequestOptions requestOptions = null, IProgress<int> progress = null)
         {
-            return HandleRequest(address, HttpVerbs.DOWNLOAD, requestOptions);
+            return HandleRequest(address, HttpVerbs.DOWNLOAD, requestOptions, progress: progress);
         }
 
         public ApiResponseMessage Upload(string address, byte[] data, RequestOptions requestOptions = null)
@@ -189,17 +189,17 @@ namespace Redmine.Net.Api.Net.WebClient
             return await HandleRequestAsync(address, HttpVerbs.DELETE, requestOptions, cancellationToken:cancellationToken).ConfigureAwait(false);
         }
         
-        public async Task<ApiResponseMessage> DownloadAsync(string address, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
+        public async Task<ApiResponseMessage> DownloadAsync(string address, RequestOptions requestOptions = null, IProgress<int> progress = null, CancellationToken cancellationToken = default)
         {
-            return await HandleRequestAsync(address, HttpVerbs.DOWNLOAD, requestOptions, cancellationToken:cancellationToken).ConfigureAwait(false);
+            return await HandleRequestAsync(address, HttpVerbs.DOWNLOAD, requestOptions, progress: progress, cancellationToken:cancellationToken).ConfigureAwait(false);
         }
         
-        private Task<ApiResponseMessage> HandleRequestAsync(string address, string verb, RequestOptions requestOptions = null, ApiRequestMessageContent content = null, CancellationToken cancellationToken = default)
+        private Task<ApiResponseMessage> HandleRequestAsync(string address, string verb, RequestOptions requestOptions = null, ApiRequestMessageContent content = null, IProgress<int> progress = null, CancellationToken cancellationToken = default)
         {
-            return SendAsync(CreateRequestMessage(address, verb, requestOptions, content), cancellationToken);
+            return SendAsync(CreateRequestMessage(address, verb, requestOptions, content),progress: progress, cancellationToken: cancellationToken);
         }
 
-        private async Task<ApiResponseMessage> SendAsync(ApiRequestMessage requestMessage, CancellationToken cancellationToken)
+        private async Task<ApiResponseMessage> SendAsync(ApiRequestMessage requestMessage, CancellationToken cancellationToken, IProgress<int> progress = null)
         {
             System.Net.WebClient? webClient = null;
             string? response = null;
@@ -218,6 +218,11 @@ namespace Redmine.Net.Api.Net.WebClient
                     );
 
                 cancellationToken.ThrowIfCancellationRequested();
+                
+                if (progress != null)
+                {
+                    webClient.DownloadProgressChanged += (_, e) => { progress.Report(e.ProgressPercentage); };
+                }
 
                 SetWebClientHeaders(webClient, requestMessage);
                 if (requestMessage.QueryString != null)
@@ -323,12 +328,12 @@ namespace Redmine.Net.Api.Net.WebClient
             return req;
         }
 
-        private ApiResponseMessage HandleRequest(string address, string verb, RequestOptions requestOptions = null, ApiRequestMessageContent content = null)
+        private ApiResponseMessage HandleRequest(string address, string verb, RequestOptions requestOptions = null, ApiRequestMessageContent content = null, IProgress<int> progress = null)
         {
-            return Send(CreateRequestMessage(address, verb, requestOptions, content));
+            return Send(CreateRequestMessage(address, verb, requestOptions, content), progress);
         }
 
-        private ApiResponseMessage Send(ApiRequestMessage requestMessage)
+        private ApiResponseMessage Send(ApiRequestMessage requestMessage, IProgress<int> progress = null)
         {
             System.Net.WebClient? webClient = null;
             string? response = null;
@@ -339,7 +344,15 @@ namespace Redmine.Net.Api.Net.WebClient
             try
             {
                 webClient = _webClientFunc();
-
+                
+                if (progress != null)
+                {
+                    webClient.DownloadProgressChanged += (_, e) =>
+                    {
+                        progress.Report(e.ProgressPercentage);
+                    };
+                }
+                
                 SetWebClientHeaders(webClient, requestMessage);
                 if (requestMessage.QueryString != null)
                 {

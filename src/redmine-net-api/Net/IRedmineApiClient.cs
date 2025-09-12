@@ -14,8 +14,10 @@
    limitations under the License.
 */
 
+using System;
 using System.Threading;
 #if!(NET20)
+using System;
 using System.Threading.Tasks;
 #endif
 
@@ -33,7 +35,7 @@ internal interface IRedmineApiClient
     ApiResponseMessage Patch(string address, string payload, RequestOptions requestOptions = null);
     ApiResponseMessage Delete(string address, RequestOptions requestOptions = null);
     ApiResponseMessage Upload(string address, byte[] data, RequestOptions requestOptions = null);
-    ApiResponseMessage Download(string address, RequestOptions requestOptions = null);
+    ApiResponseMessage Download(string address, RequestOptions requestOptions = null, IProgress<int> progress = null);
     
     #if !(NET20)
     Task<ApiResponseMessage> GetAsync(string address, RequestOptions requestOptions = null, CancellationToken cancellationToken = default);
@@ -43,6 +45,6 @@ internal interface IRedmineApiClient
     Task<ApiResponseMessage> PatchAsync(string address, string payload, RequestOptions requestOptions = null, CancellationToken cancellationToken = default);
     Task<ApiResponseMessage> DeleteAsync(string address, RequestOptions requestOptions = null, CancellationToken cancellationToken = default);
     Task<ApiResponseMessage> UploadFileAsync(string address, byte[] data, RequestOptions requestOptions = null, CancellationToken cancellationToken = default);
-    Task<ApiResponseMessage> DownloadAsync(string address, RequestOptions requestOptions = null, CancellationToken cancellationToken = default);
+    Task<ApiResponseMessage> DownloadAsync(string address, RequestOptions requestOptions = null, IProgress<int> progress = null, CancellationToken cancellationToken = default);
     #endif
 }
