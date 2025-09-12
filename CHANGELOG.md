@@ -1,5 +1,76 @@
 # Changelog
 
+## [v4.50.0]
+
+🚀 Features
+*	Added download progress tracking (DownloadFileAsync with progress reporting) (#214)
+*	Added hierarchical children support for issues (IssueChild) (#392)
+*	Added extra properties to ApiResponseMessage and RedmineApiException
+*	Introduced RedmineApiExceptionHelper and HttpConstants
+*	Added GetProjectIssueCategories (sync & async) extensions
+*	Implemented ProjectIssueCategory read/write overrides
+*	Extended RedmineKeys with ISSUE_CUSTOM_FIELDS
+*	Added custom field values property to the Project
+*	Introduced InternalVisibleTo attribute
+*	Added StatusCode property to ApiResponseMessage
+*	Introduced EnumHelper and ToLowerInvariant enum extensions
+*	Added RequestOptions static helpers and Headers property
+*	Added generic Version enum parsing
+*	Introduced IdentifiableName extensions, conversion operators, and factory method
+*	Added IssueStatus constructor overload
+*	Enabled serialization for the project default assignee and version
+*	Added static methods for creating IssueCustomField with single/multiple values
+*	Added GetMyAccountAsync extension
+*	Added support for document categories
+
+🛠 Fixes
+
+*	Fixed IssueCustomField XML parsing when the element is empty
+*	Fixed GetProjectNews URI escaping
+*	Fixed deserialization of the project (issue) custom fields
+*	Fixed User status serialization
+*	Fixed ToInvariantString returning incorrect type
+*	Fixed PageResult when total items = 0
+*	Fixed Membership XML deserialization
+*	Fixed Project custom field type handling
+*	Fixed unnecessary URI escaping in RedmineManagesExtension
+*	Fixed ProjectNews extension URL
+*	Fixed ProjectMembership XML roles serialization
+*	Fixed ReplaceEndings to respect the replacement parameter
+*	Fixed SearchAsync extension
+*	Fixed CreateWikiPage sync/async extensions
+*	Fixed upload API URL to support ownerId
+
+
+🔄 Refactors
+*	Replaced ToString(CultureInvariant) with ToInvariantString()
+*	Refactored integration tests, deserialization tests, and RedmineApiUrlsTests
+*	Refactored XmlWriterExtensions
+*	Refactored ApiResponseMessage extensions
+*	Refactored internal RedmineApiWebClient send (a)sync logic
+*	Removed redundant StatusCode handling (later reintroduced properly)
+*	Changed Content type to string
+*	Refactored IssueRelation & Version to use EnumHelper
+*	Removed redundant properties from IRedmineApiClientOptions
+*	Updated IssueCategory to not serialize the project id
+*	Updated ProjectMembership to only serialize userId on create
+
+🧪 Tests
+*	Added integration support for local appsettings (non-CI)
+*	Added hierarchical issue children deserialization tests
+*	Added download progress tests
+*	Added AssertDateTime helper
+*	Added wiki XML deserialization tests
+*	Refactored and cleaned up multiple test suites
+*	Disabled time entry EqualExpressionComparison warning
+*	Removed obsolete files and order logic
+*	Upgraded xUnit to v3
+
+
+📦 Chore
+*	Simplified debugger display name
+*	Disabled ServiceManager SYSLIB0014 warning
+
 ## [v4.4.0]
 
 Added:
