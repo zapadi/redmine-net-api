@@ -144,9 +144,7 @@ namespace Redmine.Net.Api.Extensions
         {
             var uri = redmineManager.RedmineApiUrls.ProjectNews(projectIdentifier);
 
-            var escapedUri = Uri.EscapeDataString(uri);
-            
-            var response = redmineManager.GetPaginatedInternal<News>(escapedUri, requestOptions);
+            var response = redmineManager.GetPaginatedInternal<News>(uri, requestOptions);
 
             return response;
         }
