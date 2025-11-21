@@ -36,7 +36,7 @@ namespace Redmine.Net.Api
     {
         /// <summary>
         /// </summary>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use RedmineConstants.DEFAULT_PAGE_SIZE")]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use RedmineConstants.DEFAULT_PAGE_SIZE_VALUE")]
         public const int DEFAULT_PAGE_SIZE_VALUE = 25;
 
         /// <summary>

@@ -695,7 +695,7 @@ namespace Redmine.Net.Api.Extensions
         /// <returns></returns>
         public static async Task<PagedResults<Search>> SearchAsync(this RedmineManager redmineManager, 
             string q, 
-            int limit = RedmineManager.DEFAULT_PAGE_SIZE_VALUE, 
+            int limit = RedmineConstants.DEFAULT_PAGE_SIZE_VALUE, 
             int offset = 0, 
             SearchFilterBuilder searchFilter = null,
             CancellationToken cancellationToken = default)

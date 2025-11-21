@@ -296,7 +296,7 @@ namespace Redmine.Net.Api.Async
         /// <param name="searchFilter"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public static Task<PagedResults<Search>> SearchAsync(this RedmineManager redmineManager, string q, int limit = RedmineManager.DEFAULT_PAGE_SIZE_VALUE, int offset = 0, SearchFilterBuilder searchFilter = null)
+        public static Task<PagedResults<Search>> SearchAsync(this RedmineManager redmineManager, string q, int limit = RedmineConstants.DEFAULT_PAGE_SIZE_VALUE, int offset = 0, SearchFilterBuilder searchFilter = null)
         {
             if (q.IsNullOrWhiteSpace())
             {
