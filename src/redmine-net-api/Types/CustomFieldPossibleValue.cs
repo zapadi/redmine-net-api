@@ -32,6 +32,15 @@ namespace Redmine.Net.Api.Types
     [XmlRoot(RedmineKeys.POSSIBLE_VALUE)]
     public sealed class CustomFieldPossibleValue : IXmlSerializable, IJsonSerializable, IEquatable<CustomFieldPossibleValue>
     {
+        public CustomFieldPossibleValue()
+        {
+        }
+
+        public CustomFieldPossibleValue(string value)
+        {
+            Value = value;
+        }
+
         #region Properties
             /// <summary>
             /// 
