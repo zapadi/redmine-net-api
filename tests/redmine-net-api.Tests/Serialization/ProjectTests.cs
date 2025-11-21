@@ -70,7 +70,53 @@ public class ProjectTests(XmlPrettyPrintFixture _) : IClassFixture<XmlPrettyPrin
 
         Assert.Equal(2, projects[1].Id);
     }
-    
+
+    [Theory]
+    [MemberData(nameof(ProjectSerializeTheoryData))]
+    public void Should_Serialize_Project(string expected, SerializerKind kind)
+    {
+        var project = new Project
+        {
+            Id = 1,
+            Name = "Redmine",
+            Identifier = "redmine",
+            Description = "Redmine",
+            CreatedOn = DateTime.Parse("2025-9-11T15:25:46"),
+            IsPublic = true,
+            UpdatedOn = DateTime.Parse("2025-9-11T15:25:46"),
+            Status = ProjectStatus.Archived,
+            Parent = 2.ToIdentifier(),
+            InheritMembers = true,
+            HomePage = "www.redmine.com",
+            DefaultAssignee = 3.ToIdentifier(),
+            DefaultVersion = 4.ToIdentifier(),
+            Trackers = [new ProjectTracker(1, "Tracker1"), new ProjectTracker(2, "Tracker2")],
+            EnabledModules = [new ProjectEnabledModule("module1"), new ProjectEnabledModule("module2"), new ProjectEnabledModule("module3")],
+            TimeEntryActivities = [new ProjectTimeEntryActivity(90, "prjTimeEntryActivity")],
+            IssueCategories = [new ProjectIssueCategory(123, "prjIssueCategory"), new ProjectIssueCategory(234, "prjIssueCategory2")],
+            IssueCustomFields = [IssueCustomField.CreateSingle(500, "icf500", "val500"), IssueCustomField.CreateMultiple(501, "icf501", ["val501", "501val"])],
+            CustomFieldValues =
+            [
+                new CustomField()
+                {
+                    Id = 789,
+                    Name = "Custom Field789",
+                },
+                new CustomField()
+                {
+                    Id = 790,
+                    Name = "Custom Field790",
+                }
+            ]
+        };
+        
+        var serializer = SerializerFactory.Create(kind);
+
+        var output = serializer.Serialize(project);
+
+        Assert.Equal(expected, output);
+    }
+
     public static IEnumerable<TheoryDataRow<string, SerializerKind>> ProjectDeserializeTheoryData
     {
         get
@@ -274,6 +320,68 @@ public class ProjectTests(XmlPrettyPrintFixture _) : IClassFixture<XmlPrettyPrin
                                    <updated_on>2025-09-11T15:25:46Z</updated_on>
                                </project>
 
+                               """;
+
+            yield return new TheoryDataRow<string, SerializerKind>(json, SerializerKind.NewtonsoftJson).WithTestDisplayName(Constants.JsonNewtonsoft);
+            // yield return new TheoryDataRow<string, SerializerKind>(json, SerializerKind.SystemTextJson).WithTestDisplayName(Constants.JsonSystemText)
+            yield return new TheoryDataRow<string, SerializerKind>(xml, SerializerKind.Xml).WithTestDisplayName(Constants.Xml);
+        }
+    }
+
+    public static IEnumerable<TheoryDataRow<string, SerializerKind>> ProjectSerializeTheoryData
+    {
+        get
+        {
+            const string json = """
+                                {
+                                  "project": {
+                                    "name": "Redmine",
+                                    "identifier": "redmine",
+                                    "description": "Redmine",
+                                    "homepage": "www.redmine.com",
+                                    "inherit_members": "true",
+                                    "is_public": "true",
+                                    "parent_id": 2,
+                                    "default_assigned_to_id": 3,
+                                    "default_version_id": 4,
+                                    "tracker_ids": [
+                                      1,
+                                      2
+                                    ],
+                                    "enabled_module_names": [
+                                      "module1",
+                                      "module2",
+                                      "module3"
+                                    ],
+                                    "custom_field_values": {
+                                      "789": "Custom Field789",
+                                      "790": "Custom Field790"
+                                    }
+                                  }
+                                }
+                                """;
+
+            const string xml = """
+                               <project>
+                               <name>Redmine</name>
+                               <identifier>redmine</identifier>
+                               <description>Redmine</description>
+                               <homepage>www.redmine.com</homepage>
+                               <inherit_members>true</inherit_members>
+                               <is_public>true</is_public>
+                               <parent_id>2</parent_id>
+                               <default_assigned_to_id>3</default_assigned_to_id>
+                               <default_version_id>4</default_version_id>
+                               <tracker_ids>1</tracker_ids>
+                               <tracker_ids>2</tracker_ids>
+                               <enabled_module_names>module1</enabled_module_names>
+                               <enabled_module_names>module2</enabled_module_names>
+                               <enabled_module_names>module3</enabled_module_names>
+                               <custom_field_values type="array">
+                               <custom_field id="789" name="Custom Field789" />
+                               <custom_field id="790" name="Custom Field790" />
+                               </custom_field_values>
+                               </project>
                                """;
 
             yield return new TheoryDataRow<string, SerializerKind>(json, SerializerKind.NewtonsoftJson).WithTestDisplayName(Constants.JsonNewtonsoft);
