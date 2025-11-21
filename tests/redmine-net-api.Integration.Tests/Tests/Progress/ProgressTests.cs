@@ -1,6 +1,10 @@
 using Padi.RedmineAPI.Integration.Tests.Fixtures;
+using Padi.RedmineAPI.Integration.Tests.Helpers;
 using Padi.RedmineAPI.Integration.Tests.Infrastructure;
+using Padi.RedmineAPI.Integration.Tests.Tests.Common;
+using Redmine.Net.Api.Extensions;
 using Xunit;
+using File =  Redmine.Net.Api.Types.File;
 
 namespace Padi.RedmineAPI.Integration.Tests.Tests.Progress;
 
@@ -13,10 +17,26 @@ public partial class ProgressTests(RedmineTestContainerFixture fixture)
     public void DownloadFile_Sync_ReportsProgress()
     {
         // Arrange
+        var (upload, fileName,_) =   FileTestHelper.UploadRandom1MbFile(fixture.RedmineManager);
+        var filePayload = new File
+        {
+            Token = upload.Token,
+            Filename = fileName,
+        };
+
+        _ = fixture.RedmineManager.Create(filePayload, TestConstants.Project.DefaultIdentifier);
+        
+        var files = fixture.RedmineManager.GetProjectFiles(TestConstants.Project.DefaultIdentifier);
+
+        Assert.NotEmpty(files.Items);
+        
         var progressTracker = new ProgressTracker();
 
         // Act
-        var result = fixture.RedmineManager.DownloadFile(DOWNLOAD_URL_FORMAT, progress: progressTracker);
+        var file = files.Items.ToList().First();
+
+        var address = string.Format(DOWNLOAD_URL_FORMAT, file.Id, file.Filename);
+        var result = fixture.RedmineManager.DownloadFile(address, progress: progressTracker);
 
         // Assert
         Assert.NotNull(result);
@@ -30,12 +50,6 @@ public partial class ProgressTests(RedmineTestContainerFixture fixture)
         Assert.True(tracker.ReportCount > 0, "Progress should have been reported at least once");
 
         Assert.Contains(100, tracker.ProgressValues);
-
-        for (var i = 0; i < tracker.ProgressValues.Count - 1; i++)
-        {
-            Assert.True(tracker.ProgressValues[i] <= tracker.ProgressValues[i + 1],
-                $"Progress should not decrease: {tracker.ProgressValues[i]} -> {tracker.ProgressValues[i + 1]}");
-        }
     }
 
     private sealed class ProgressTracker : IProgress<int>

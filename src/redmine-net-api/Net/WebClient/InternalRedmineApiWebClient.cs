@@ -308,8 +308,96 @@ namespace Redmine.Net.Api.Net.WebClient
         }
 #endif
 
+        private sealed class DownloadFileResult
+        {
+            public byte[]? Data { get; }
+            public int? StatusCode { get; }
+            public string? StatusDescription { get; }
 
-        private static ApiRequestMessage CreateRequestMessage(string address, string verb, RequestOptions requestOptions = null, ApiRequestMessageContent content = null)
+            public DownloadFileResult(byte[]? data, int? statusCode, string? statusDescription = null)
+            {
+                Data = data;
+                StatusCode = statusCode;
+                StatusDescription = statusDescription;
+            }
+        }
+        
+        private sealed class CallbackContext
+        {
+            public System.Net.WebClient? Client;
+
+            public DownloadDataCompletedEventHandler? CompletedHandler;
+            public DownloadProgressChangedEventHandler? ProgressHandler;
+
+            public byte[]? Data;
+            public Exception? Error;
+        }
+
+        private static DownloadFileResult DownloadFile(System.Net.WebClient wc, string address,
+            IProgress<int>? progress = null)
+        {
+            var done = new ManualResetEvent(initialState: false);
+            var context = new CallbackContext
+            {
+                Client = wc,
+            };
+
+            try
+            {
+                context.CompletedHandler = (sender, e) =>
+                {
+                    context.Data = e.Cancelled ? null : e.Result;
+                    context.Error = e.Error;
+
+                    context.Client.DownloadDataCompleted -= context.CompletedHandler;
+                    if (context.ProgressHandler != null)
+                    {
+                        context.Client.DownloadProgressChanged -= context.ProgressHandler;
+                    }
+
+                    done.Set();
+                };
+
+                if (progress != null)
+                {
+                    context.ProgressHandler = (sender, e) =>
+                    {
+                        try
+                        {
+                            progress.Report(e.ProgressPercentage);
+                        }
+                        catch
+                        {
+                        }
+                    };
+                    wc.DownloadProgressChanged += context.ProgressHandler;
+                }
+
+                wc.DownloadDataCompleted += context.CompletedHandler;
+
+                var uri = new UriBuilder($"{wc.BaseAddress}/{address}").Uri;
+                wc.DownloadDataAsync(uri, context);
+
+                done.WaitOne();
+            }
+            finally
+            {
+#if NET40_OR_GREATER
+            done.Dispose();
+#else
+                done.Close();
+#endif
+            }
+
+            if (context.Error != null)
+            {
+                throw context.Error as WebException ?? new WebException("Download failed", context.Error);
+            }
+
+            return new DownloadFileResult(context.Data ?? [], (int)HttpStatusCode.OK);
+        }
+
+        private static ApiRequestMessage CreateRequestMessage(string address, string verb, RequestOptions? requestOptions = null, ApiRequestMessageContent? content = null)
         {
             var req = new ApiRequestMessage()
             {
@@ -347,15 +435,7 @@ namespace Redmine.Net.Api.Net.WebClient
             try
             {
                 webClient = _webClientFunc();
-                
-                if (progress != null)
-                {
-                    webClient.DownloadProgressChanged += (_, e) =>
-                    {
-                        progress.Report(e.ProgressPercentage);
-                    };
-                }
-                
+
                 SetWebClientHeaders(webClient, requestMessage);
                 if (requestMessage.QueryString != null)
                 {
@@ -367,6 +447,13 @@ namespace Redmine.Net.Api.Net.WebClient
                     if (requestMessage.Method == HttpConstants.HttpVerbs.GET)
                     {
                         response = webClient.DownloadString((string)requestMessage.RequestUri);
+                    }
+                    else if (requestMessage.Method == HttpConstants.HttpVerbs.DOWNLOAD)
+                    {
+                        var downloadResponse = DownloadFile(webClient, (string)requestMessage.RequestUri, progress);
+
+                        responseAsBytes = downloadResponse.Data;
+                        // statusCode = downloadResponse.StatusCode ?? HttpStatusCode.InternalServerError;
                     }
                 }
                 else
