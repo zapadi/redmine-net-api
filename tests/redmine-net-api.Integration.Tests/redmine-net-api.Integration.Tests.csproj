@@ -1,21 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     
+    <PropertyGroup Label="Build">
+        <TargetFramework>net481</TargetFramework>
+        <AssemblyName>Padi.RedmineAPI.Integration.Tests</AssemblyName>
+        <RootNamespace>$(AssemblyName)</RootNamespace>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <IsPackable>false</IsPackable>
+        <Configurations>Release;Debug;DebugJson</Configurations>
+        <OutputType>exe</OutputType>
+    </PropertyGroup>
+
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
         <DefineConstants>DEBUG;TRACE;DEBUG_XML</DefineConstants>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DebugJson|AnyCPU' ">
         <DefineConstants>DEBUG;TRACE;DEBUG_JSON</DefineConstants>
-    </PropertyGroup>
-    
-    <PropertyGroup>
-        <TargetFramework>net9.0</TargetFramework>
-        <RootNamespace>redmine_net_api.Integration.Tests</RootNamespace>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-        <IsPackable>false</IsPackable>
-        <AssemblyName>Padi.RedmineAPI.Integration.Tests</AssemblyName>
-        <RootNamespace>$(AssemblyName)</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
