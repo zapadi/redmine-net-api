@@ -221,7 +221,7 @@ namespace Redmine.Net.Api.Extensions
                                 continue;
                             }
 
-                            var subTree = xmlTextReader.ReadSubtree();
+                            using var subTree = xmlTextReader.ReadSubtree();
                             entity = serializer.Deserialize(subTree) as T;
                         }
 
