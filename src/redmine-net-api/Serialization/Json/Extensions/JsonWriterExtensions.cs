@@ -214,21 +214,10 @@ namespace Redmine.Net.Api.Extensions
             jsonWriter.WritePropertyName(tag);
             jsonWriter.WriteStartArray();
 
-            var sb = new StringBuilder();
-
             foreach (var identifiableName in collection)
             {
-                sb.Append(identifiableName.Id.ToInvariantString()).Append(',');
+                jsonWriter.WriteValue(identifiableName.Id);
             }
-
-            if (sb.Length > 1)
-            {
-                sb.Length -= 1;
-            }
-            
-            jsonWriter.WriteValue(sb.ToString());
-            
-            sb.Length = 0;
 
             jsonWriter.WriteEndArray();
         }
@@ -249,21 +238,13 @@ namespace Redmine.Net.Api.Extensions
             jsonWriter.WritePropertyName(tag);
             jsonWriter.WriteStartArray();
 
-            var sb = new StringBuilder();
-
             foreach (var identifiableName in collection)
             {
-                sb.Append(identifiableName.Name).Append(',');
+                if (!identifiableName.Name.IsNullOrWhiteSpace())
+                {
+                    jsonWriter.WriteValue(identifiableName.Name);
+                }
             }
-
-            if (sb.Length > 1)
-            {
-                sb.Length -= 1;
-            }
-
-            jsonWriter.WriteValue(sb.ToString());
-            
-            sb.Length = 0;
 
             jsonWriter.WriteEndArray();
         }
@@ -275,7 +256,8 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="jsonWriter"></param>
         /// <param name="tag"></param>
         /// <param name="collection"></param>
-        public static void WriteArray<T>(this JsonWriter jsonWriter, string tag, ICollection<T> collection) where T : IJsonSerializable
+        /// <param name="writeRoot"></param>
+        public static void WriteArray<T>(this JsonWriter jsonWriter, string tag, ICollection<T> collection, bool writeRoot = true) where T : IJsonSerializable
         {
             if (collection == null)
             {
@@ -288,6 +270,33 @@ namespace Redmine.Net.Api.Extensions
             foreach (var item in collection)
             {
                 item.WriteJson(jsonWriter);
+            }
+
+            jsonWriter.WriteEndArray();
+        }
+        
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="jsonWriter"></param>
+        /// <param name="rootName"></param>
+        /// <param name="collection"></param>
+        /// <param name="action"></param>
+        /// <typeparam name="T"></typeparam>
+        public static void WriteArray<T>(this JsonWriter jsonWriter, string rootName, IEnumerable<T>? collection, Action<T>? action)
+        {
+            if (collection == null || action == null)
+            {
+                return;
+            }
+
+            jsonWriter.WritePropertyName(rootName);
+            jsonWriter.WriteStartArray();
+
+            foreach (var item in collection)
+            {
+                action.Invoke(item);
             }
 
             jsonWriter.WriteEndArray();
