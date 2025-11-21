@@ -223,8 +223,8 @@ namespace Redmine.Net.Api.Types
             //It works only with existing shared versions.
             writer.WriteIdIfNotNull(RedmineKeys.DEFAULT_VERSION_ID, DefaultVersion);
 
-            writer.WriteRepeatableElement(RedmineKeys.TRACKER_IDS, (IEnumerable<IValue>)Trackers);
-            writer.WriteRepeatableElement(RedmineKeys.ENABLED_MODULE_NAMES, (IEnumerable<IValue>)EnabledModules);
+            writer.WriteRepeatableElement(RedmineKeys.TRACKER_IDS, RedmineKeys.TRACKER_ID, (IEnumerable<IValue>)Trackers);
+            writer.WriteRepeatableElement(RedmineKeys.ENABLED_MODULE_NAMES, RedmineKeys.ENABLED_MODULE_NAME,(IEnumerable<IValue>)EnabledModules);
 
             if (Id == 0)
             {
