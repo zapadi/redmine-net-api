@@ -212,12 +212,10 @@ namespace Redmine.Net.Api.Types
         {
             writer.WriteElementString(RedmineKeys.NAME, Name);
             writer.WriteElementString(RedmineKeys.IDENTIFIER, Identifier);
-
             writer.WriteIfNotDefaultOrNull(RedmineKeys.DESCRIPTION, Description);
+            writer.WriteIfNotDefaultOrNull(RedmineKeys.HOMEPAGE, HomePage);
             writer.WriteBoolean(RedmineKeys.INHERIT_MEMBERS, InheritMembers);
             writer.WriteBoolean(RedmineKeys.IS_PUBLIC, IsPublic);
-            writer.WriteIfNotDefaultOrNull(RedmineKeys.HOMEPAGE, HomePage);
-
             writer.WriteIdIfNotNull(RedmineKeys.PARENT_ID, Parent);
 
             //It works only when the new project is a subproject and it inherits the members. 
@@ -234,7 +232,34 @@ namespace Redmine.Net.Api.Types
                 return;
             }
 
-            writer.WriteArray(RedmineKeys.CUSTOM_FIELDS, CustomFields);
+            // writer.WriteArray(RedmineKeys.CUSTOM_FIELD_VALUES, CustomFieldValues);
+            if (CustomFieldValues != null && CustomFieldValues.Count > 0)
+            {
+                writer.WriteStartElement(RedmineKeys.CUSTOM_FIELD_VALUES);
+
+                foreach (var customField in CustomFieldValues)
+                {
+                    if (customField.PossibleValues != null && customField.PossibleValues.Count > 0)
+                    {
+                        writer.WriteStartElement(RedmineKeys.CUSTOM_FIELD);
+                        writer.WriteAttributeString(RedmineKeys.ID, customField.Id.ToInvariantString());
+                        if (customField.PossibleValues.Count > 1)
+                        {
+                            foreach (var customFieldPossibleValue in customField.PossibleValues)
+                            {
+                                writer.WriteElementString(RedmineKeys.VALUE, customFieldPossibleValue.Value);
+                            }
+                        }
+                        else
+                        {
+                            writer.WriteString(customField.PossibleValues[0].Value);
+                        }
+                    }
+
+                    writer.WriteEndElement();
+                }
+                writer.WriteEndElement();
+            }
         }
         #endregion
 
