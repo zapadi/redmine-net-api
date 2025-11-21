@@ -181,7 +181,26 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.TITLE: Title = reader.ReadAsString(); break;
                     case RedmineKeys.UPDATED_ON: UpdatedOn = reader.ReadAsDateTime(); break;
                     case RedmineKeys.VERSION: Version = reader.ReadAsInt(); break;
-                    case RedmineKeys.PARENT: ParentTitle = reader.ReadAsString(); break;
+                    case RedmineKeys.PARENT:
+                        while (reader.Read())
+                        {
+                            if (reader.TokenType == JsonToken.EndObject)
+                            {
+                                break;
+                            }
+
+                            if (reader.TokenType != JsonToken.PropertyName)
+                            {
+                                continue;
+                            }
+                           
+                            if (RedmineKeys.TITLE.Equals(reader.Value as string, StringComparison.OrdinalIgnoreCase))
+                            {
+                                ParentTitle = reader.ReadAsString();
+                            }
+                        }
+
+                        break;
                     default: reader.Read(); break;
                 }
             }
