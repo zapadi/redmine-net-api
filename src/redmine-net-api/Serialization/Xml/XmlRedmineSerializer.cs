@@ -16,6 +16,7 @@
 
 using System;
 using System.IO;
+using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 using Redmine.Net.Api.Exceptions;
@@ -24,20 +25,29 @@ using Redmine.Net.Api.Internals;
 
 namespace Redmine.Net.Api.Serialization
 {
-    internal sealed class XmlRedmineSerializer : IRedmineSerializer
+    internal sealed class XmlRedmineSerializer(XmlWriterSettings xmlWriterSettings) : IRedmineSerializer
     {
+        private const string LF = "\n";
 
-        public XmlRedmineSerializer() : this(new XmlWriterSettings
+        private static readonly XmlWriterSettings DefaultXmlWriterSettings = new()
         {
-            OmitXmlDeclaration = true
-        }) { }
+            Encoding = Encoding.UTF8,
+            OmitXmlDeclaration = true,
+        };
+        
+        private static readonly XmlWriterSettings PrettyXmlWriterSettings = new()
+        {
+            Encoding = Encoding.UTF8,
+            OmitXmlDeclaration = true,
+            Indent = PrettyPrintEnabled,
+            IndentChars = "",
+            NewLineChars = LF,
+            NewLineHandling = NewLineHandling.Replace
+        };
 
-        public XmlRedmineSerializer(XmlWriterSettings xmlWriterSettings)
+        public XmlRedmineSerializer() : this(PrettyPrintEnabled ? PrettyXmlWriterSettings : DefaultXmlWriterSettings)
         {
-            this._xmlWriterSettings = xmlWriterSettings;
         }
-
-        private readonly XmlWriterSettings _xmlWriterSettings;
 
         public T Deserialize<T>(string response) where T : new()
         {
@@ -155,7 +165,7 @@ namespace Redmine.Net.Api.Serialization
 
             using (var stringWriter = new StringWriter())
             {
-                using (var xmlWriter = XmlWriter.Create(stringWriter, _xmlWriterSettings))
+                using (var xmlWriter = XmlWriter.Create(stringWriter, xmlWriterSettings))
                 {
                     var serializer = new XmlSerializer(typeof(T));
 
@@ -203,5 +213,10 @@ namespace Redmine.Net.Api.Serialization
                 }
             }
         }
+       
+        /// <summary>
+        /// 
+        /// </summary>
+        private static bool PrettyPrintEnabled => string.Equals(Environment.GetEnvironmentVariable(RedmineConstants.PRETTY_XML_SWITCH), "1", StringComparison.Ordinal);
     }
 }
