@@ -206,6 +206,19 @@ namespace Redmine.Net.Api
         /// </summary>
         public bool VerifyServerCert { get; private set; }
 
+        private bool _isSerializationIgnored;
+        
+        /// <summary>
+        /// For testing purposes only.
+        /// </summary>
+        /// <param name="ignoreSerialization"></param>
+        /// <returns></returns>
+        internal RedmineManagerOptionsBuilder IgnoreSerialization(bool ignoreSerialization)
+        {
+            _isSerializationIgnored = ignoreSerialization;
+            return this;
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -243,7 +256,7 @@ namespace Redmine.Net.Api
                 BaseAddress = baseAddress,
                 PageSize = PageSize > 0 ? PageSize : RedmineConstants.DEFAULT_PAGE_SIZE_VALUE,
                 VerifyServerCert = VerifyServerCert,
-                Serializer = RedmineSerializerFactory.CreateSerializer(SerializationType),
+                Serializer = (_isSerializationIgnored) ? null : RedmineSerializerFactory.CreateSerializer(SerializationType),
                 RedmineVersion = Version,
                 Authentication = Authentication ?? new RedmineNoAuthentication(),
                 WebClientOptions = WebClientOptions 

@@ -1,5 +1,6 @@
 ﻿using Redmine.Net.Api;
 using Redmine.Net.Api.Exceptions;
+using Redmine.Net.Api.Serialization;
 using Xunit;
 
 namespace Padi.DotNet.RedmineAPI.Tests.Tests
@@ -79,7 +80,7 @@ namespace Padi.DotNet.RedmineAPI.Tests.Tests
         public void Should_Not_Throw_Redmine_Exception_When_Host_Is_Valid(string host, string expected)
         {
             // Arrange
-            var optionsBuilder = new RedmineManagerOptionsBuilder().WithHost(host);
+            var optionsBuilder = new RedmineManagerOptionsBuilder().WithHost(host).IgnoreSerialization(true);
             
             // Act
            var options = optionsBuilder.Build();
