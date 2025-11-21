@@ -404,11 +404,36 @@ namespace Redmine.Net.Api.Extensions
             {
                 return;
             }
-
+            
             foreach (var item in collection)
             {
                 xmlWriter.WriteElementString(elementName, item.Value);
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="xmlWriter"></param>
+        /// <param name="rootName"></param>
+        /// <param name="elementName"></param>
+        /// <param name="collection"></param>
+        public static void WriteRepeatableElement(this XmlWriter xmlWriter, string rootName, string elementName, IEnumerable<IValue> collection)
+        {
+            if (collection == null)
+            {
+                return;
+            }
+
+            xmlWriter.WriteStartElement(rootName);
+            xmlWriter.WriteAttributeString("type", "array");
+            
+            foreach (var item in collection)
+            {
+                xmlWriter.WriteElementString(elementName, item.Value);
+            }
+            
+            xmlWriter.WriteEndElement();
         }
     }
 }
