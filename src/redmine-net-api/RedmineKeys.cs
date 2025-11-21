@@ -665,6 +665,10 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
+        public const string RESULTS = "results";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string REVISION = "revision";
         /// <summary>
         /// 
