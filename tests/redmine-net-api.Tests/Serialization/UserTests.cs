@@ -28,7 +28,7 @@ public class UserTests(XmlPrettyPrintFixture _) : IClassFixture<XmlPrettyPrintFi
         // AssertDateTime.Equal("2011-8-1T18:05:45", output.LastLoginOn);
         // AssertDateTime.Equal("2011-8-1T18:05:45", output.PasswordChangedOn);
         Assert.Equal("ebc3f6b781a6fb3f2b0a83ce0ebb80e0d585189d", output.ApiKey);
-        Assert.Empty(output.AvatarUrl);
+        AssertAvatarUrl(output.AvatarUrl, kind);
         Assert.Equal(UserStatus.StatusActive, output.Status);
     }
     
@@ -51,7 +51,7 @@ public class UserTests(XmlPrettyPrintFixture _) : IClassFixture<XmlPrettyPrintFi
         // AssertDateTime.Equal("2011-8-1T18:05:45", output.LastLoginOn);
         // AssertDateTime.Equal("2011-8-1T18:05:45", output.PasswordChangedOn);
         Assert.Equal("ebc3f6b781a6fb3f2b0a83ce0ebb80e0d585189d", output.ApiKey);
-        Assert.Empty(output.AvatarUrl);
+        AssertAvatarUrl(output.AvatarUrl, kind);
         Assert.Equal(UserStatus.StatusActive, output.Status);
 
         var memberships = output.Memberships.ToList();
@@ -85,7 +85,7 @@ public class UserTests(XmlPrettyPrintFixture _) : IClassFixture<XmlPrettyPrintFi
         // AssertDateTime.Equal("2011-8-1T18:05:45", output.LastLoginOn);
         // AssertDateTime.Equal("2011-8-1T18:05:45", output.PasswordChangedOn);
         Assert.Equal("ebc3f6b781a6fb3f2b0a83ce0ebb80e0d585189d", output.ApiKey);
-        Assert.Empty(output.AvatarUrl);
+        AssertAvatarUrl(output.AvatarUrl, kind);
         Assert.Equal(UserStatus.StatusActive, output.Status);
 
         var groups = output.Groups.ToList();
@@ -270,6 +270,18 @@ public class UserTests(XmlPrettyPrintFixture _) : IClassFixture<XmlPrettyPrintFi
             yield return new TheoryDataRow<string, SerializerKind>(json, SerializerKind.NewtonsoftJson).WithTestDisplayName(Constants.JsonNewtonsoft);
             // yield return new TheoryDataRow<string, SerializerKind>(json, SerializerKind.SystemTextJson).WithTestDisplayName(Constants.JsonSystemText);
             yield return new TheoryDataRow<string, SerializerKind>(xml, SerializerKind.Xml).WithTestDisplayName(Constants.Xml);
+        }
+    }
+
+    private static void AssertAvatarUrl(string avatarUrlValue, SerializerKind kind)
+    {
+        if (kind == SerializerKind.Xml)
+        {
+            Assert.Empty(avatarUrlValue);
+        }
+        else
+        {
+            Assert.Null(avatarUrlValue);
         }
     }
 }
