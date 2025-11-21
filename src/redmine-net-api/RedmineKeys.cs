@@ -266,6 +266,10 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
+        public const string ENABLED_MODULE_NAME = "enabled_module_name";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string ENABLED_MODULE_NAMES = "enabled_module_names";
         /// <summary>
         /// 
