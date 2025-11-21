@@ -1,4 +1,5 @@
 using System.Text;
+using Padi.RedmineAPI.Integration.Tests.Extensions;
 
 namespace Padi.RedmineAPI.Integration.Tests.Helpers;
 
@@ -11,7 +12,7 @@ internal static class RandomHelper
     /// <returns>A random string, 32 characters long, consisting of hexadecimal characters, without hyphens.</returns>
     private static string GenerateSuffix()
     {
-        return Guid.NewGuid().ToString("N");
+        return Guid.NewGuid().ToNoDash();
     }
 
     private static readonly char[] EnglishAlphabetChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
