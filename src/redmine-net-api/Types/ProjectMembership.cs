@@ -155,7 +155,7 @@ namespace Redmine.Net.Api.Types
                     writer.WriteIdIfNotNull(RedmineKeys.USER_ID, User);
                 }
 
-                writer.WriteArray(RedmineKeys.ROLE_IDS, Roles);
+                writer.WriteArrayIds(RedmineKeys.ROLE_IDS, (IEnumerable<IdentifiableName>)Roles);
             }
         }
         #endregion
