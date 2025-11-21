@@ -98,17 +98,4 @@
     <None Include="..\..\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
-  <ItemGroup>
-    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
-      <_Parameter1>Padi.DotNet.RedmineAPI.Tests</_Parameter1>
-    </AssemblyAttribute>
-    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
-      <_Parameter1>Padi.DotNet.RedmineAPI.Integration.Tests</_Parameter1>
-    </AssemblyAttribute>
-  </ItemGroup>
-  
-<!--  <ItemGroup Label="Internals Visible To">-->
-<!--    <InternalsVisibleToProject Include="Padi.DotNet.RedmineAPI.Tests" />-->
-<!--  </ItemGroup>-->
-
 </Project>
