@@ -3,10 +3,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
     
     <PropertyGroup Label="Build">
+        <TargetFramework>net481</TargetFramework>
         <AssemblyName>Padi.DotNet.RedmineAPI.Tests</AssemblyName>
         <RootNamespace>$(AssemblyName)</RootNamespace>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-        <TargetFramework>net481</TargetFramework>
         <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
         <UserSecretsId>f8b9e946-b547-42f1-861c-f719dca00a84</UserSecretsId>
         <Configurations>Release;Debug;DebugJson</Configurations>

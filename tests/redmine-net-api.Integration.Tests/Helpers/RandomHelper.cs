@@ -115,13 +115,13 @@ internal static class RandomHelper
 
         var localPart = GenerateRandomString(localPartLength);
         var domain = GenerateRandomString(domainLength).ToLower();
-
-        // Use common TLDs
-        var tlds = new[] { "com", "org", "net", "io" };
+        
         var tld = tlds[ThreadRandom.Value.Next(tlds.Length)];
 
         return $"{localPart}@{domain}.{tld}";
     }
+    
+    private static string[] tlds = new[] { "com", "org", "net", "io" };
 
     /// <summary>
     /// Generates a random webpage URL with alphabetic characters only.
@@ -139,9 +139,7 @@ internal static class RandomHelper
         }
 
         var domain = GenerateRandomString(domainLength).ToLower();
-
-        // Use common TLDs
-        var tlds = new[] { "com", "org", "net", "io" };
+        
         var tld = tlds[ThreadRandom.Value.Next(tlds.Length)];
 
         // Generate path segments

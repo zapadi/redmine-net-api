@@ -196,7 +196,8 @@ public partial class RedmineManager: IRedmineManagerAsync
         
         payload = payload.ReplaceEndings();
         
-        await ApiClient.UpdateAsync(url, payload, requestOptions, cancellationToken: cancellationToken).ConfigureAwait(false);
+        var response = await ApiClient.UpdateAsync(url, payload, requestOptions, cancellationToken: cancellationToken).ConfigureAwait(false);
+        
     }
 
     /// <inheritdoc />

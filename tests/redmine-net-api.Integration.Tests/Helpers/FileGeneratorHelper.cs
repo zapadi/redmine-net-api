@@ -40,7 +40,7 @@ internal static class FileGeneratorHelper
 
         if (text.Length > roughCharCount)
         {
-            text = text[..roughCharCount];
+            text = text.Substring(0,roughCharCount);
         }
         
         return Encoding.UTF8.GetBytes(text);
