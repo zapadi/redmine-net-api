@@ -146,14 +146,13 @@ public class WikiTests(XmlPrettyPrintFixture _) : IClassFixture<XmlPrettyPrintFi
                                 """;
 
             const string xml = """
-                               <?xml version="1.0"?>
+                               <?xml version="1.0" encoding="UTF-8" standalone="no"?>
                                <wiki_pages type="array">
                                    <wiki_page>
                                        <title>UsersGuide</title>
                                        <version>2</version>
                                        <created_on>2008-03-09T12:07:08Z</created_on>
                                        <updated_on>2008-03-09T23:41:33+01:00</updated_on>
-                                       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
                                    </wiki_page>
                                </wiki_pages>
                                """;
