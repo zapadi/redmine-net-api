@@ -50,28 +50,35 @@ public class FileTests(RedmineTestContainerFixture fixture)
         };
 
         var createdFile = fixture.RedmineManager.Create<File>(filePayload, PROJECT_ID);
-        Assert.NotNull(createdFile);
+        Assert.Null(createdFile);
     }
 
     [Fact]
     public void CreateFile_With_Version_Should_Succeed()
     {
-        var (fileName, token) = UploadFile();
+        var (fileName, initialToken) = UploadFile();
 
         var filePayload = new File
         {
-            Token = token,
+            Token = initialToken,
             Filename = fileName,
             Description = RandomHelper.GenerateText(9),
             ContentType = "text/plain",
             Version = 1.ToIdentifier(),
         };
 
-        var createdFile = fixture.RedmineManager.Create<File>(filePayload, PROJECT_ID);
-        Assert.NotNull(createdFile);
+        _ = fixture.RedmineManager.Create<File>(filePayload, PROJECT_ID);
+        var (_, token) =  UploadFile(fileName);
+        
+        filePayload.Token = token;
+        filePayload.Version = 2.ToIdentifier();
+        
+        var versionFile =  fixture.RedmineManager.Create(filePayload, PROJECT_ID);
+        
+        Assert.Null(versionFile);
     }
 
-    private (string fileName, string token) UploadFile()
+    private (string fileName, string token) UploadFile(string? filename = null)
     {
         var bytes = "Hello World!"u8.ToArray();
         var fileName = $"{RandomHelper.GenerateText(5)}.txt";

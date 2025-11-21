@@ -22,7 +22,13 @@ public class NewsTests(RedmineTestContainerFixture fixture)
             Description = RandomHelper.GenerateText(20),
         });
 
-        _ = fixture.RedmineManager.AddProjectNews("2", new News
+        var project = fixture.RedmineManager.Create(new Project()
+        {
+            Identifier = RandomHelper.GenerateText(lowerCase: true),
+            Name = RandomHelper.GenerateText(5),
+        });
+        
+        _ = fixture.RedmineManager.AddProjectNews(project.Id.ToInvariantString(), new News
         {
             Title       = RandomHelper.GenerateText(5),
             Summary     = RandomHelper.GenerateText(10),

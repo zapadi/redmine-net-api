@@ -9,7 +9,7 @@ namespace Padi.RedmineAPI.Integration.Tests.Tests.Types.Base;
 public abstract class IssueTestsBase
 {
     protected readonly RedmineTestContainerFixture Fixture;
-    protected static readonly IdentifiableName ProjectIdName = IdentifiableName.Create<Project>(1);
+    protected static readonly IdentifiableName ProjectIdName = 1.ToIdentifier();
 
     protected IssueTestsBase(RedmineTestContainerFixture fixture)
     {

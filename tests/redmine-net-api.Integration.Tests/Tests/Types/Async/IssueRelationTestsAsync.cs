@@ -1,5 +1,6 @@
 using Padi.RedmineAPI.Integration.Tests.Fixtures;
 using Padi.RedmineAPI.Integration.Tests.Infrastructure;
+using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Net;
 using Redmine.Net.Api.Types;
 using Xunit;
@@ -13,20 +14,20 @@ public class IssueRelationTestsAsync(RedmineTestContainerFixture fixture)
     {
         var issue1 = new Issue
         {
-            Project = new IdentifiableName { Id = 1 },
-            Tracker = new IdentifiableName { Id = 1 },
-            Status = new IssueStatus { Id = 1 },
-            Priority = new IdentifiableName { Id = 4 },
+            Project =  1.ToIdentifier(),
+            Tracker = 1.ToIdentifier(),
+            Status = 1.ToIssueStatusIdentifier(),
+            Priority = 4.ToIdentifier(),
             Subject = $"Test issue 1 subject {Guid.NewGuid()}",
             Description = "Test issue 1 description"
         };
         
         var issue2 = new Issue
         {
-            Project = new IdentifiableName { Id = 1 },
-            Tracker = new IdentifiableName { Id = 1 },
-            Status = new IssueStatus { Id = 1 },
-            Priority = new IdentifiableName { Id = 4 },
+            Project = 1.ToIdentifier(),
+            Tracker = 1.ToIdentifier(),
+            Status = 1.ToIssueStatusIdentifier(),
+            Priority = 5.ToIdentifier(),
             Subject = $"Test issue 2 subject {Guid.NewGuid()}",
             Description = "Test issue 2 description"
         };
@@ -48,7 +49,7 @@ public class IssueRelationTestsAsync(RedmineTestContainerFixture fixture)
             Type = IssueRelationType.Relates
         };
         
-        return await fixture.RedmineManager.CreateAsync( relation, issue1.Id.ToString());
+        return await fixture.RedmineManager.CreateAsync( relation, issue1.Id.ToInvariantString());
     }
 
     [Fact]
@@ -65,7 +66,7 @@ public class IssueRelationTestsAsync(RedmineTestContainerFixture fixture)
         };
 
         // Act
-        var createdRelation = await fixture.RedmineManager.CreateAsync(relation, issue1.Id.ToString(), cancellationToken: TestContext.Current.CancellationToken);
+        var createdRelation = await fixture.RedmineManager.CreateAsync(relation, issue1.Id.ToInvariantString(), cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
         Assert.NotNull(createdRelation);
@@ -83,9 +84,8 @@ public class IssueRelationTestsAsync(RedmineTestContainerFixture fixture)
         Assert.NotNull(relation);
 
         // Act & Assert
-        await fixture.RedmineManager.DeleteAsync<IssueRelation>(relation.Id.ToString(), cancellationToken: TestContext.Current.CancellationToken);
+        await fixture.RedmineManager.DeleteAsync<IssueRelation>(relation.Id.ToInvariantString(), cancellationToken: TestContext.Current.CancellationToken);
         
-        // Verify the relation no longer exists by checking the issue doesn't have it
         var issue = await fixture.RedmineManager.GetAsync<Issue>(relation.IssueId.ToString(), RequestOptions.Include("relations"), TestContext.Current.CancellationToken);
         
         Assert.Null(issue.Relations?.FirstOrDefault(r => r.Id == relation.Id));

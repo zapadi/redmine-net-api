@@ -11,12 +11,8 @@ using Xunit;
 namespace Padi.RedmineAPI.Integration.Tests.Tests.Types.Async;
 
 [Collection(Constants.RedmineTestContainerCollection)]
-public class IssueTestsAsync : IssueTestsBase
+public class IssueTestsAsync(RedmineTestContainerFixture fixture) : IssueTestsBase(fixture)
 {
-    public IssueTestsAsync(RedmineTestContainerFixture fixture) : base(fixture)
-    {
-    }
-
     private async Task<Issue> CreateTestIssueAsync(bool withCustomFields = false)
     {
         var issue = CreateTestIssueData(withCustomFields);

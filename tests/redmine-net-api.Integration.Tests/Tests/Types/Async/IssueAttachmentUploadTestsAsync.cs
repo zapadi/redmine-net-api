@@ -2,6 +2,7 @@ using Padi.RedmineAPI.Integration.Tests.Fixtures;
 using Padi.RedmineAPI.Integration.Tests.Helpers;
 using Padi.RedmineAPI.Integration.Tests.Infrastructure;
 using Redmine.Net.Api;
+using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Net;
 using Redmine.Net.Api.Types;
 using Xunit;
@@ -24,10 +25,10 @@ public class IssueAttachmentTestsAsync(RedmineTestContainerFixture fixture)
         // Arrange
         var issue = new Issue
         {
-            Project = new IdentifiableName { Id = 1 },
-            Tracker = new IdentifiableName { Id = 1 },
-            Status = new IssueStatus() { Id = 1 },
-            Priority = new IdentifiableName { Id = 4 },
+            Project = 1.ToIdentifier(),
+            Tracker = 1.ToIdentifier(),
+            Status = 1.ToIssueStatusIdentifier(),
+            Priority = 4.ToIdentifier(),
             Subject = $"Test issue for attachment {Guid.NewGuid()}",
             Description = "Test issue description",
             Uploads = [upload]

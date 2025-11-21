@@ -16,7 +16,7 @@ public class AttachmentTestsAsync(RedmineTestContainerFixture fixture)
     public async Task CreateIssueWithAttachment_Should_Succeed()
     {
         // Arrange
-        var (upload,_,_) = FileTestHelper.UploadRandom500KbFile(fixture.RedmineManager);
+        var (upload,_,_) = await FileTestHelper.UploadRandom500KbFileAsync(fixture.RedmineManager);
         Assert.NotNull(upload);
 
         // Act
@@ -32,7 +32,7 @@ public class AttachmentTestsAsync(RedmineTestContainerFixture fixture)
     public async Task GetIssueWithAttachments_Should_Succeed()
     {
         // Arrange
-        var (upload,_,_) = FileTestHelper.UploadRandom500KbFile(fixture.RedmineManager);
+        var (upload,_,_) = await FileTestHelper.UploadRandom500KbFileAsync(fixture.RedmineManager);
         var issue = IssueTestHelper.CreateIssue(uploads: [upload]);
         var createdIssue = await fixture.RedmineManager.CreateAsync(issue, cancellationToken: TestContext.Current.CancellationToken);
 
@@ -49,7 +49,7 @@ public class AttachmentTestsAsync(RedmineTestContainerFixture fixture)
     public async Task GetAttachmentById_Should_Succeed()
     {
         // Arrange
-        var (upload,_,_) = FileTestHelper.UploadRandom500KbFile(fixture.RedmineManager);
+        var (upload,_,_) = await FileTestHelper.UploadRandom500KbFileAsync(fixture.RedmineManager);
         var issue = IssueTestHelper.CreateIssue(uploads: [upload]);
         var createdIssue = await fixture.RedmineManager.CreateAsync(issue, cancellationToken: TestContext.Current.CancellationToken);
         Assert.NotNull(createdIssue);

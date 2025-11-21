@@ -15,10 +15,10 @@ public class IssueWatcherTestsAsync(RedmineTestContainerFixture fixture)
     {
         var issue = new Issue
         {
-            Project = new IdentifiableName { Id = 1 },
-            Tracker = new IdentifiableName { Id = 1 },
-            Status = new IssueStatus { Id = 1 },
-            Priority = new IdentifiableName { Id = 4 },
+            Project =  1.ToIdentifier(),
+            Tracker = 1.ToIdentifier(),
+            Status = 1.ToIssueStatusIdentifier(),
+            Priority = 4.ToIdentifier(),
             Subject = $"Test issue subject {Guid.NewGuid()}",
             Description = "Test issue description"
         };

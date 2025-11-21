@@ -58,6 +58,7 @@ public class MembershipTestsAsync(RedmineTestContainerFixture fixture)
     {
         // Arrange
         var roles = await fixture.RedmineManager.GetAsync<Role>(cancellationToken: TestContext.Current.CancellationToken);
+        var prj = await fixture.RedmineManager.GetAsync<Project>("1",cancellationToken: TestContext.Current.CancellationToken);
         Assert.NotEmpty(roles);
         
         var user = new User
@@ -81,7 +82,7 @@ public class MembershipTestsAsync(RedmineTestContainerFixture fixture)
         };
 
         // Act
-        var createdMembership = await fixture.RedmineManager.CreateAsync(membership, PROJECT_ID, cancellationToken: TestContext.Current.CancellationToken);
+        var createdMembership = await fixture.RedmineManager.CreateAsync(membership, prj.Identifier, cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
         Assert.NotNull(createdMembership);

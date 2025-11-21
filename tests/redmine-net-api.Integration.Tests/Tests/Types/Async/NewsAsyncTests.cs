@@ -1,6 +1,7 @@
 using Padi.RedmineAPI.Integration.Tests.Fixtures;
 using Padi.RedmineAPI.Integration.Tests.Helpers;
 using Padi.RedmineAPI.Integration.Tests.Infrastructure;
+using Redmine.Net.Api;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Types;
 using Xunit;
@@ -22,12 +23,17 @@ public class NewsTestsAsync(RedmineTestContainerFixture fixture)
             Description = RandomHelper.GenerateText(20),
         }, cancellationToken: TestContext.Current.CancellationToken);
 
-        var project = fixture.RedmineManager.CreateAsync(new Project()
+        var project = await fixture.RedmineManager.CreateAsync(new Project()
         {
             Identifier = RandomHelper.GenerateText(lowerCase: true),
             Name = RandomHelper.GenerateText(5),
+            EnabledModules = new List<ProjectEnabledModule>()
+            {
+                new ProjectEnabledModule(RedmineKeys.NEWS)
+            }
         }, cancellationToken: TestContext.Current.CancellationToken);
         
+        // Act
         _ = await fixture.RedmineManager.AddProjectNewsAsync(project.Id.ToInvariantString(), new News
         {
             Title       = RandomHelper.GenerateText(5),

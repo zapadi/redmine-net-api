@@ -16,6 +16,7 @@ public class CustomFieldTests(RedmineTestContainerFixture fixture)
         var customFields = fixture.RedmineManager.Get<CustomField>();
 
         // Assert
-        Assert.Null(customFields);
+        Assert.NotNull(customFields);
+        Assert.NotEmpty(customFields);
     }
 }

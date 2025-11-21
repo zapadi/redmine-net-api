@@ -1,3 +1,4 @@
+using Padi.RedmineAPI.Integration.Tests.Extensions;
 using Padi.RedmineAPI.Integration.Tests.Fixtures;
 using Padi.RedmineAPI.Integration.Tests.Helpers;
 using Padi.RedmineAPI.Integration.Tests.Infrastructure;
@@ -13,36 +14,15 @@ namespace Padi.RedmineAPI.Integration.Tests.Tests.Types.Async;
 public class WikiTestsAsync(RedmineTestContainerFixture fixture)
 {
     private const string PROJECT_ID = "1";
-    private const string WIKI_PAGE_TITLE = "TestWikiPage";
-
-    private async Task<WikiPage> CreateOrUpdateTestWikiPageAsync()
-    {
-        var wikiPage = new WikiPage
-        {
-            Title = WIKI_PAGE_TITLE,
-            Text = $"Test wiki page content {Guid.NewGuid()}",
-            Comments = "Initial wiki page creation"
-        };
-
-        return await fixture.RedmineManager.CreateWikiPageAsync(PROJECT_ID, wikiPage.Title, wikiPage);
-    }
 
     [Fact]
     public async Task CreateOrUpdateWikiPage_Should_Succeed()
     {
         // Arrange
-        var wikiPage = new WikiPage
-        {
-            Title = $"TestWikiPage_{Guid.NewGuid()}".Replace("-", "").Substring(0, 20),
-            Text = "Test wiki page content",
-            Comments = "Initial wiki page creation"
-        };
-
-        // Act
-        var createdPage = await fixture.RedmineManager.CreateWikiPageAsync(PROJECT_ID, "wikiPageName", wikiPage, cancellationToken: TestContext.Current.CancellationToken);
-
+        var (page, _, _) = await CreateTestWikiPageAsync();
+        
         // Assert
-        Assert.Null(createdPage);
+        Assert.NotNull(page);
     }
 
     [Fact]
@@ -65,8 +45,8 @@ public class WikiTestsAsync(RedmineTestContainerFixture fixture)
     public async Task GetAllWikiPages_Should_Succeed()
     {
         // Arrange
-        await CreateOrUpdateTestWikiPageAsync();
-
+       _ = await CreateTestWikiPageAsync();
+       
         // Act
         var wikiPages = await fixture.RedmineManager.GetAllWikiPagesAsync(PROJECT_ID, cancellationToken: TestContext.Current.CancellationToken);
 
@@ -107,16 +87,16 @@ public class WikiTestsAsync(RedmineTestContainerFixture fixture)
         string initialText = "Default initial text for wiki page.",
         string initialComments = "Initial comments for wiki page.")
     {
-        var pageTitle = $"TestWikiPage_{(pageTitleSuffix ?? RandomHelper.GenerateText(5))}";
+        var pageName = $"{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}{(pageTitleSuffix ?? RandomHelper.GenerateText(5))}";
         var wikiPageData = new WikiPage
         {
             Text = initialText,
             Comments = initialComments
         };
 
-        var createdPage = await fixture.RedmineManager.CreateWikiPageAsync(PROJECT_ID, pageTitle, wikiPageData);
+        var createdPage = await fixture.RedmineManager.CreateWikiPageAsync(PROJECT_ID, pageName, wikiPageData);
 
-        return (createdPage, PROJECT_ID, pageTitle);
+        return (createdPage, PROJECT_ID, pageName);
     }
 
     [Fact]
@@ -145,10 +125,10 @@ public class WikiTestsAsync(RedmineTestContainerFixture fixture)
         //Arrange
         var (initialPage, projectId, pageTitle) = await CreateTestWikiPageAsync("UpdateTest", "Original Text.", "Original Comments.");
 
-        var updatedText = $"Updated wiki text content {Guid.NewGuid():N}";
+        var updatedText = $"Updated wiki text content {Guid.NewGuid().ToNoDash()}";
         var updatedComments = $"These are updated comments for the wiki page update({DateTime.Now.Ticks.ToInvariantString()}).";
 
-        var version = -1;
+        var version = 0;
 
         if (initialPage is not null)
         {
@@ -159,29 +139,55 @@ public class WikiTestsAsync(RedmineTestContainerFixture fixture)
         {
             Text = updatedText,
             Comments = updatedComments,
-            Version = ++version
+            Version = version
         };
 
         //Act
         await fixture.RedmineManager.UpdateWikiPageAsync(projectId, pageTitle, wikiPageToUpdate, cancellationToken: TestContext.Current.CancellationToken);
 
-        WikiPage? retrievedPage = null;
-        if (initialPage is not null)
-        {
-             retrievedPage = await fixture.RedmineManager.GetAsync<WikiPage>(initialPage.Id.ToInvariantString(), cancellationToken: TestContext.Current.CancellationToken);
-        }
-        else
-        {
-            retrievedPage = await fixture.RedmineManager.GetWikiPageAsync(PROJECT_ID, pageTitle, cancellationToken: TestContext.Current.CancellationToken);
-        }
+        var retrievedPage = await fixture.RedmineManager.GetWikiPageAsync(projectId, pageTitle, cancellationToken: TestContext.Current.CancellationToken);
 
         //Assert
         Assert.NotNull(retrievedPage);
         Assert.Equal(updatedText, retrievedPage.Text);
         Assert.Equal(updatedComments, retrievedPage.Comments);
 
-        Assert.True(retrievedPage.Version > version
-                    || (retrievedPage.Version == 1 && version == 0)
-                    || (retrievedPage.Version ==0 && version ==0));
+        Assert.True(retrievedPage.Version > version);
+    }
+    
+    [Fact]
+    public async Task GetWikiPageByVersion_Should_Succeed()
+    {
+        //Arrange
+        var (initialPage, projectId, pageTitle) = await CreateTestWikiPageAsync("UpdateTest", "Original Text.", "Original Comments.");
+
+        var updatedText = $"Updated wiki text content {Guid.NewGuid().ToNoDash()}";
+        var updatedComments = $"These are updated comments for the wiki page update({DateTime.Now.Ticks.ToInvariantString()}).";
+
+        var version = 0;
+
+        if (initialPage is not null)
+        {
+            version = initialPage.Version;
+        }
+        
+        var wikiPageToUpdate = new WikiPage
+        {
+            Text = updatedText,
+            Comments = updatedComments,
+            Version = version
+        };
+
+        //Act
+         await fixture.RedmineManager.UpdateWikiPageAsync(projectId, pageTitle, wikiPageToUpdate, cancellationToken: TestContext.Current.CancellationToken);
+
+        var retrievedPage = await fixture.RedmineManager.GetWikiPageAsync(projectId, pageTitle, version: (uint)version, cancellationToken: TestContext.Current.CancellationToken);
+
+        //Assert
+        Assert.NotNull(retrievedPage);
+        Assert.NotEqual(updatedText, retrievedPage.Text);
+        Assert.NotEqual(updatedComments, retrievedPage.Comments);
+
+        Assert.True(retrievedPage.Version == version);
     }
 }

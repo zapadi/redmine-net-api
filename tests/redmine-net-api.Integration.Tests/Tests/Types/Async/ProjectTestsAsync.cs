@@ -88,6 +88,107 @@ public class ProjectTestsAsync(RedmineTestContainerFixture fixture)
 , TestContext.Current.CancellationToken);
 
         Assert.NotNull(project);
+        Assert.Equal(projectName, project.Name);
+        Assert.Equal(projectPayload.Name, project.Name);
+        Assert.Equal(projectPayload.Identifier, project.Identifier);
+        Assert.Equal(projectPayload.Description, project.Description);
+        Assert.Equal(projectPayload.HomePage, project.HomePage);
+        Assert.Equal(projectPayload.IsPublic, project.IsPublic);
+        Assert.Equal(projectPayload.InheritMembers, project.InheritMembers);
+        
+        Assert.Equal(9, project.EnabledModules.Count);
+        Assert.All(project.EnabledModules, module => Assert.True(module.Id > 0));
+        
+        Assert.Equal(3, project.Trackers.Count);
+        Assert.All(project.Trackers, tracker => Assert.True(tracker.Id > 0));
+        
+       // Assert.Equal(2, project.IssueCustomFields.Count);
+        Assert.All(project.IssueCustomFields, icf => Assert.True(icf.Id > 0));
+    }
+    
+      [Fact]
+    public async Task UpdateProject_Should_Succeed()
+    {
+        var projectName = RandomHelper.GenerateText(7);
+        var projectPayload = new Project
+        {
+            Name = projectName,
+            Identifier = projectName.ToLowerInvariant(),
+            Description = RandomHelper.GenerateText(7),
+            HomePage = RandomHelper.GenerateText(7),
+            IsPublic = true,
+            InheritMembers = false,
+            Trackers =
+            [
+                new ProjectTracker(1),
+            ],
+            IssueCustomFields =
+            [
+                // Issue custom field should be already defined.
+                // An existing icf is associated with the new project
+                 IssueCustomField.CreateSingle(2, RandomHelper.GenerateText(5), RandomHelper.GenerateText(7))
+            ],
+        };
+
+        //Act
+        var createdProject = await fixture.RedmineManager.CreateAsync(projectPayload, cancellationToken: TestContext.Current.CancellationToken);
+        Assert.NotNull(createdProject);
+
+        createdProject.Description = "Changed description";
+        createdProject.CustomFieldValues =
+        [
+            new CustomField()
+            {
+                Id = 1,PossibleValues =new List<CustomFieldPossibleValue>()
+                {
+                    new CustomFieldPossibleValue(value: "VALUE")
+                }
+            },
+            new CustomField
+            {
+                Id = 2,
+                PossibleValues =new List<CustomFieldPossibleValue>()
+                {
+                    new CustomFieldPossibleValue(value: "OTHER_VALUE")
+                }
+            },
+            new CustomField
+            {
+                Id = 3,
+                PossibleValues =new List<CustomFieldPossibleValue>()
+                {
+                    new CustomFieldPossibleValue(value: "OTHER_VALUE_3")
+                }
+            },
+        ];
+        
+        await fixture.RedmineManager.UpdateAsync(createdProject.Identifier, createdProject, cancellationToken: TestContext.Current.CancellationToken);
+
+        var project = await fixture.RedmineManager.GetAsync<Project>(createdProject, RequestOptions.Include(
+                RedmineKeys.TRACKERS,
+                RedmineKeys.ENABLED_MODULES,
+                RedmineKeys.ISSUE_CATEGORIES,
+                RedmineKeys.TIME_ENTRY_ACTIVITIES,
+                RedmineKeys.ISSUE_CUSTOM_FIELDS)
+, TestContext.Current.CancellationToken);
+
+        Assert.NotNull(project);
+        Assert.Equal(projectName, project.Name);
+        Assert.Equal(projectPayload.Name, project.Name);
+        Assert.Equal(projectPayload.Identifier, project.Identifier);
+        Assert.Equal(createdProject.Description, project.Description);
+        Assert.Equal(projectPayload.HomePage, project.HomePage);
+        Assert.Equal(projectPayload.IsPublic, project.IsPublic);
+        Assert.Equal(projectPayload.InheritMembers, project.InheritMembers);
+        
+        Assert.NotNull(project.EnabledModules);
+        Assert.NotNull(project.Trackers);
+
+        Assert.NotEmpty(project.TimeEntryActivities);
+        
+        Assert.NotEmpty(project.IssueCustomFields);
+        Assert.Single(project.IssueCustomFields);
+        Assert.All(project.IssueCustomFields, icf => Assert.True(icf.Id > 0));
     }
 
     [Fact]
