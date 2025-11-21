@@ -193,15 +193,15 @@ public class IssueTests(XmlPrettyPrintFixture _) : IClassFixture<XmlPrettyPrintF
         Assert.Equal(1, output.Status.Id);
         Assert.Equal("Normal", output.Priority.Name);
         Assert.Equal(2, output.Priority.Id);
-        // Assert.True(output.Status.IsClosed);
-        // Assert.False(output.Status.IsDefault);
-         Assert.Equal(21, output.FixedVersion.Id);
-        // Assert.Equal("version2", output.FixedVersion.Name);
-        // AssertDateTime.Equal("2025-4-28", output.StartDate);
-        // Assert.Null(output.DueDate);
-        // Assert.Equal(0, output.DoneRatio);
-        // Assert.Null(output.EstimatedHours);
-        // Assert.Null(output.TotalEstimatedHours);
+        Assert.False(output.Status.IsClosed);
+        Assert.False(output.Status.IsDefault);
+        Assert.Equal(21, output.FixedVersion.Id);
+        Assert.Equal("Test Version Create KwQThN", output.FixedVersion.Name);
+        Assert.Null(output.StartDate);
+        Assert.Null(output.DueDate);
+        Assert.Equal(0, output.DoneRatio);
+        Assert.Null(output.EstimatedHours);
+        Assert.Null(output.TotalEstimatedHours);
 
          var customFields = output.CustomFields.ToList();
          Assert.Single(customFields);
@@ -225,7 +225,13 @@ public class IssueTests(XmlPrettyPrintFixture _) : IClassFixture<XmlPrettyPrintF
         var list = output.Children.ToList();
         Assert.Single(list);
 
-        var children = list[0].Children;
+        var child = list[0];
+        Assert.Equal(21558, child.Id);
+        Assert.Equal("func", child.Tracker.Name);
+        Assert.Equal(5, child.Tracker.Id);
+        Assert.Equal("issue-10 dev", child.Subject);
+        
+        var children = child.Children;
         Assert.Equal(8, children.Count);
     }
     
