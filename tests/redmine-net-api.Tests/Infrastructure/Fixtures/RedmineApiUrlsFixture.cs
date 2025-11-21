@@ -1,4 +1,6 @@
 using System.Diagnostics;
+using Padi.DotNet.RedmineAPI.Tests.Infrastructure;
+using Redmine.Net.Api;
 using Redmine.Net.Api.Net;
 
 namespace Padi.DotNet.RedmineAPI.Tests.Tests;
@@ -17,15 +19,15 @@ public sealed class RedmineApiUrlsFixture
     
     internal RedmineApiUrls Sut { get; } 
 
-    [Conditional("DEBUG_JSON")]
+    [Conditional(Constants.ConditionalCompilationSymbol.DebugJson)]
     private void SetMimeTypeJson()
     {
-        Format = "json";
+        Format = RedmineConstants.JSON;
     }
 
-    [Conditional("DEBUG_XML")]
+    [Conditional(Constants.ConditionalCompilationSymbol.DebugXml)]
     private void SetMimeTypeXml()
     {
-        Format = "json";
+        Format = RedmineConstants.XML;
     }
 }
