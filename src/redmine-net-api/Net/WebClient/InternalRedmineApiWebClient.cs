@@ -14,6 +14,8 @@
    limitations under the License.
 */
 
+
+#nullable enable
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -50,8 +52,8 @@ namespace Redmine.Net.Api.Net.WebClient
         }
 
         public InternalRedmineApiWebClient(
-            Func<System.Net.WebClient> webClientFunc, 
-            IRedmineAuthentication authentication, 
+            Func<System.Net.WebClient> webClientFunc,
+            IRedmineAuthentication authentication,
             IRedmineSerializer serializer)
         {
             _webClientFunc = webClientFunc;
@@ -59,14 +61,14 @@ namespace Redmine.Net.Api.Net.WebClient
             _serializer = serializer;
         }
 
-        
-        private static void ConfigureServicePointManager(IRedmineWebClientOptions webClientOptions)
+
+        private static void ConfigureServicePointManager(IRedmineWebClientOptions? webClientOptions)
         {
             if (webClientOptions == null)
             {
                 return;
             }
-#pragma warning disable SYSLIB0014           
+#pragma warning disable SYSLIB0014
             if (webClientOptions.MaxServicePoints.HasValue)
             {
                 ServicePointManager.MaxServicePoints = webClientOptions.MaxServicePoints.Value;
@@ -96,110 +98,111 @@ namespace Redmine.Net.Api.Net.WebClient
                 ServicePointManager.EnableDnsRoundRobin = webClientOptions.EnableDnsRoundRobin.Value;
             }
 
-            #if(NET46_OR_GREATER || NETCOREAPP)
+#if(NET46_OR_GREATER || NETCOREAPP)
             if (webClientOptions.ReusePort.HasValue)
             {
                 ServicePointManager.ReusePort = webClientOptions.ReusePort.Value;
             }
-            #endif
+#endif
 #pragma warning restore SYSLIB0014
         }
 
-        public ApiResponseMessage Get(string address, RequestOptions requestOptions = null)
+        public ApiResponseMessage Get(string address, RequestOptions? requestOptions = null)
         {
             return HandleRequest(address, HttpVerbs.GET, requestOptions);
         }
 
-        public ApiResponseMessage GetPaged(string address, RequestOptions requestOptions = null)
+        public ApiResponseMessage GetPaged(string address, RequestOptions? requestOptions = null)
         {
             return Get(address, requestOptions);
         }
 
-        public ApiResponseMessage Create(string address, string payload, RequestOptions requestOptions = null)
+        public ApiResponseMessage Create(string address, string payload, RequestOptions? requestOptions = null)
         {
             var content = new StringApiRequestMessageContent(payload, GetContentType(_serializer));
             return HandleRequest(address, HttpVerbs.POST, requestOptions, content);
         }
 
-        public ApiResponseMessage Update(string address, string payload, RequestOptions requestOptions = null)
+        public ApiResponseMessage Update(string address, string payload, RequestOptions? requestOptions = null)
         {
             var content = new StringApiRequestMessageContent(payload, GetContentType(_serializer));
             return HandleRequest(address, HttpVerbs.PUT, requestOptions, content);
         }
 
-        public ApiResponseMessage Patch(string address, string payload, RequestOptions requestOptions = null)
+        public ApiResponseMessage Patch(string address, string payload, RequestOptions? requestOptions = null)
         {
             var content = new StringApiRequestMessageContent(payload, GetContentType(_serializer));
             return HandleRequest(address, HttpVerbs.PATCH, requestOptions, content);
         }
 
-        public ApiResponseMessage Delete(string address, RequestOptions requestOptions = null)
+        public ApiResponseMessage Delete(string address, RequestOptions? requestOptions = null)
         {
             return HandleRequest(address, HttpVerbs.DELETE, requestOptions);
         }
 
-        public ApiResponseMessage Download(string address, RequestOptions requestOptions = null, IProgress<int> progress = null)
+        public ApiResponseMessage Download(string address, RequestOptions? requestOptions = null, IProgress<int>? progress = null)
         {
             return HandleRequest(address, HttpVerbs.DOWNLOAD, requestOptions, progress: progress);
         }
 
-        public ApiResponseMessage Upload(string address, byte[] data, RequestOptions requestOptions = null)
+        public ApiResponseMessage Upload(string address, byte[] data, RequestOptions? requestOptions = null)
         {
             var content = new StreamApiRequestMessageContent(data);
             return HandleRequest(address, HttpVerbs.POST, requestOptions, content);
         }
 
-        #if !(NET20)
-        public async Task<ApiResponseMessage> GetAsync(string address, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
+#if !(NET20)
+        public async Task<ApiResponseMessage> GetAsync(string address, RequestOptions? requestOptions = null, CancellationToken cancellationToken = default)
         {
-            return await HandleRequestAsync(address, HttpVerbs.GET, requestOptions, cancellationToken:cancellationToken).ConfigureAwait(false);
+            return await HandleRequestAsync(address, HttpVerbs.GET, requestOptions, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
-        public Task<ApiResponseMessage> GetPagedAsync(string address, RequestOptions requestOptions = null, CancellationToken cancellationToken = default) 
+        public Task<ApiResponseMessage> GetPagedAsync(string address, RequestOptions? requestOptions = null, CancellationToken cancellationToken = default)
         {
             return GetAsync(address, requestOptions, cancellationToken);
         }
-        
-        public async Task<ApiResponseMessage> CreateAsync(string address, string payload, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
+
+        public async Task<ApiResponseMessage> CreateAsync(string address, string payload, RequestOptions? requestOptions = null, CancellationToken cancellationToken = default)
         {
             var content = new StringApiRequestMessageContent(payload, GetContentType(_serializer));
-            return await HandleRequestAsync(address, HttpVerbs.POST, requestOptions, content, cancellationToken:cancellationToken).ConfigureAwait(false);
+            return await HandleRequestAsync(address, HttpVerbs.POST, requestOptions, content, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<ApiResponseMessage> UpdateAsync(string address, string payload, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
+        public async Task<ApiResponseMessage> UpdateAsync(string address, string payload, RequestOptions? requestOptions = null, CancellationToken cancellationToken = default)
         {
             var content = new StringApiRequestMessageContent(payload, GetContentType(_serializer));
-            return await HandleRequestAsync(address, HttpVerbs.PUT, requestOptions, content, cancellationToken:cancellationToken).ConfigureAwait(false);
+            return await HandleRequestAsync(address, HttpVerbs.PUT, requestOptions, content, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
-        
-        public async Task<ApiResponseMessage> UploadFileAsync(string address, byte[] data, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
+
+        public async Task<ApiResponseMessage> UploadFileAsync(string address, byte[] data, RequestOptions? requestOptions = null, CancellationToken cancellationToken = default)
         {
             var content = new StreamApiRequestMessageContent(data);
-            return await HandleRequestAsync(address, HttpVerbs.POST, requestOptions, content, cancellationToken:cancellationToken).ConfigureAwait(false);
+            return await HandleRequestAsync(address, HttpVerbs.POST, requestOptions, content, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<ApiResponseMessage> PatchAsync(string address, string payload, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
+        public async Task<ApiResponseMessage> PatchAsync(string address, string payload, RequestOptions? requestOptions = null, CancellationToken cancellationToken = default)
         {
             var content = new StringApiRequestMessageContent(payload, GetContentType(_serializer));
-            return await HandleRequestAsync(address, HttpVerbs.PATCH, requestOptions, content, cancellationToken:cancellationToken).ConfigureAwait(false);
+            return await HandleRequestAsync(address, HttpVerbs.PATCH, requestOptions, content, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<ApiResponseMessage> DeleteAsync(string address, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
+        public async Task<ApiResponseMessage> DeleteAsync(string address, RequestOptions? requestOptions = null, CancellationToken cancellationToken = default)
         {
-            return await HandleRequestAsync(address, HttpVerbs.DELETE, requestOptions, cancellationToken:cancellationToken).ConfigureAwait(false);
-        }
-        
-        public async Task<ApiResponseMessage> DownloadAsync(string address, RequestOptions requestOptions = null, IProgress<int> progress = null, CancellationToken cancellationToken = default)
-        {
-            return await HandleRequestAsync(address, HttpVerbs.DOWNLOAD, requestOptions, progress: progress, cancellationToken:cancellationToken).ConfigureAwait(false);
-        }
-        
-        private Task<ApiResponseMessage> HandleRequestAsync(string address, string verb, RequestOptions requestOptions = null, ApiRequestMessageContent content = null, IProgress<int> progress = null, CancellationToken cancellationToken = default)
-        {
-            return SendAsync(CreateRequestMessage(address, verb, requestOptions, content),progress: progress, cancellationToken: cancellationToken);
+            return await HandleRequestAsync(address, HttpVerbs.DELETE, requestOptions, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
-        private async Task<ApiResponseMessage> SendAsync(ApiRequestMessage requestMessage, CancellationToken cancellationToken, IProgress<int> progress = null)
+        public async Task<ApiResponseMessage> DownloadAsync(string address, RequestOptions? requestOptions = null, IProgress<int>? progress = null, CancellationToken cancellationToken = default)
+        {
+            return await HandleRequestAsync(address, HttpVerbs.DOWNLOAD, requestOptions, progress: progress, cancellationToken: cancellationToken).ConfigureAwait(false);
+        }
+
+        private Task<ApiResponseMessage> HandleRequestAsync(string address, string verb, RequestOptions? requestOptions = null, ApiRequestMessageContent? content = null, IProgress<int>? progress = null,
+            CancellationToken cancellationToken = default)
+        {
+            return SendAsync(CreateRequestMessage(address, verb, requestOptions, content), progress: progress, cancellationToken: cancellationToken);
+        }
+
+        private async Task<ApiResponseMessage> SendAsync(ApiRequestMessage requestMessage, CancellationToken cancellationToken, IProgress<int>? progress = null)
         {
             System.Net.WebClient? webClient = null;
             string? response = null;
@@ -218,7 +221,7 @@ namespace Redmine.Net.Api.Net.WebClient
                     );
 
                 cancellationToken.ThrowIfCancellationRequested();
-                
+
                 if (progress != null)
                 {
                     webClient.DownloadProgressChanged += (_, e) => { progress.Report(e.ProgressPercentage); };
@@ -303,7 +306,7 @@ namespace Redmine.Net.Api.Net.WebClient
                 StatusCode = (int)(statusCode ?? HttpStatusCode.OK),
             };
         }
-        #endif
+#endif
 
 
         private static ApiRequestMessage CreateRequestMessage(string address, string verb, RequestOptions requestOptions = null, ApiRequestMessageContent content = null)
@@ -328,12 +331,12 @@ namespace Redmine.Net.Api.Net.WebClient
             return req;
         }
 
-        private ApiResponseMessage HandleRequest(string address, string verb, RequestOptions requestOptions = null, ApiRequestMessageContent content = null, IProgress<int> progress = null)
+        private ApiResponseMessage HandleRequest(string address, string verb, RequestOptions? requestOptions = null, ApiRequestMessageContent? content = null, IProgress<int>? progress = null)
         {
             return Send(CreateRequestMessage(address, verb, requestOptions, content), progress);
         }
 
-        private ApiResponseMessage Send(ApiRequestMessage requestMessage, IProgress<int> progress = null)
+        private ApiResponseMessage Send(ApiRequestMessage requestMessage, IProgress<int>? progress = null)
         {
             System.Net.WebClient? webClient = null;
             string? response = null;
@@ -423,7 +426,7 @@ namespace Redmine.Net.Api.Net.WebClient
             switch (_credentials)
             {
                 case RedmineApiKeyAuthentication:
-                    webClient.Headers.Add(_credentials.AuthenticationType,_credentials.Token);
+                    webClient.Headers.Add(_credentials.AuthenticationType, _credentials.Token);
                     break;
                 case RedmineBasicAuthentication:
                     webClient.Headers.Add("Authorization", $"{_credentials.AuthenticationType} {_credentials.Token}");
@@ -445,52 +448,52 @@ namespace Redmine.Net.Api.Net.WebClient
         {
             return serializer.Format == RedmineConstants.XML ? RedmineConstants.CONTENT_TYPE_APPLICATION_XML : RedmineConstants.CONTENT_TYPE_APPLICATION_JSON;
         }
-        
+
         /// <summary>
-    /// Handles the web exception.
-    /// </summary>
-    /// <param name="exception">The exception.</param>
-    /// <exception cref="RedmineException"> </exception>
-    private static KeyValuePair<HttpStatusCode, string> HandleWebException(WebException exception)
-    {
-        var innerException = exception.InnerException ?? exception;
-
-        switch (exception.Status)
+        /// Handles the web exception.
+        /// </summary>
+        /// <param name="exception">The exception.</param>
+        /// <exception cref="RedmineException"> </exception>
+        private static KeyValuePair<HttpStatusCode, string> HandleWebException(WebException exception)
         {
-            case WebExceptionStatus.Timeout:
-                throw new RedmineApiException(nameof(WebExceptionStatus.Timeout), innerException);
-            case WebExceptionStatus.ProtocolError:
-                if (exception.Response != null)
-                {
-                    var statusCode = exception.Response is HttpWebResponse httpResponse
-                        ? (int)httpResponse.StatusCode
-                        : (int)HttpStatusCode.InternalServerError;
+            var innerException = exception.InnerException ?? exception;
 
-                    using var responseStream = exception.Response.GetResponseStream();
-                    if (statusCode == HttpConstants.StatusCodes.UnprocessableEntity)
+            switch (exception.Status)
+            {
+                case WebExceptionStatus.Timeout:
+                    throw new RedmineApiException(nameof(WebExceptionStatus.Timeout), innerException);
+                case WebExceptionStatus.ProtocolError:
+                    if (exception.Response != null)
                     {
-                        try
+                        var statusCode = exception.Response is HttpWebResponse httpResponse
+                            ? (int)httpResponse.StatusCode
+                            : (int)HttpStatusCode.InternalServerError;
+
+                        using var responseStream = exception.Response.GetResponseStream();
+                        if (statusCode == HttpConstants.StatusCodes.UnprocessableEntity)
                         {
-                            if (responseStream != null)
+                            try
                             {
-                                using var reader = new StreamReader(responseStream);
-                                var content = reader.ReadToEnd();
-                                return new KeyValuePair<HttpStatusCode, string>((HttpStatusCode)HttpConstants.StatusCodes.UnprocessableEntity, content);
+                                if (responseStream != null)
+                                {
+                                    using var reader = new StreamReader(responseStream);
+                                    var content = reader.ReadToEnd();
+                                    return new KeyValuePair<HttpStatusCode, string>((HttpStatusCode)HttpConstants.StatusCodes.UnprocessableEntity, content);
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                throw new RedmineApiException(ex.Message, ex);
                             }
                         }
-                        catch (Exception ex)
-                        {
-                            throw new RedmineApiException(ex.Message, ex);
-                        }
+
+                        RedmineApiExceptionHelper.MapStatusCodeToException(statusCode, innerException);
                     }
 
-                    RedmineApiExceptionHelper.MapStatusCodeToException(statusCode, innerException);
-                }
+                    break;
+            }
 
-                break;
+            throw new RedmineApiException(exception.Message, innerException);
         }
-
-        throw new RedmineApiException(exception.Message, innerException);
-    }
     }
 }
