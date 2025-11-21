@@ -304,12 +304,41 @@ namespace Redmine.Net.Api.Types
                 //It works only with existing shared versions.
                 writer.WriteIdIfNotNull(RedmineKeys.DEFAULT_VERSION_ID, DefaultVersion);
                 
-                writer.WriteRepeatableElement(RedmineKeys.TRACKER_IDS, (IEnumerable<IValue>)Trackers);
-                writer.WriteRepeatableElement(RedmineKeys.ENABLED_MODULE_NAMES, (IEnumerable<IValue>)EnabledModules);
-                writer.WriteRepeatableElement(RedmineKeys.ISSUE_CUSTOM_FIELD_IDS, (IEnumerable<IValue>)IssueCustomFields);
+                writer.WriteArrayIds(RedmineKeys.TRACKER_IDS, (IEnumerable<IdentifiableName>)Trackers);
+                writer.WriteArrayNames(RedmineKeys.ENABLED_MODULE_NAMES, (IEnumerable<IdentifiableName>)EnabledModules);
+               
                 if (Id == 0)
                 {
-                    writer.WriteArray(RedmineKeys.CUSTOM_FIELD_VALUES, CustomFieldValues);
+                    writer.WriteArrayIds(RedmineKeys.ISSUE_CUSTOM_FIELD_IDS, (IEnumerable<IdentifiableName>)IssueCustomFields);
+                    return;
+                }
+
+                if (CustomFieldValues != null && CustomFieldValues.Count > 0)
+                {
+                    writer.WritePropertyName(RedmineKeys.CUSTOM_FIELD_VALUES);
+                    writer.WriteStartObject();
+
+                    foreach (var customField in CustomFieldValues)
+                    {
+                        if (customField.PossibleValues != null && customField.PossibleValues.Count > 0)
+                        {
+                            if (customField.PossibleValues.Count > 1)
+                            {
+                                writer.WriteStartArray();
+                                foreach (var customFieldPossibleValue in customField.PossibleValues)
+                                {
+                                    writer.WriteValue(customFieldPossibleValue.Value);
+                                }
+                                writer.WriteEndArray();
+                            }
+                            else
+                            {
+                                writer.WriteProperty(customField.Id.ToInvariantString(), customField.PossibleValues[0].Value);
+                            }
+                        }
+                    }
+                    
+                    writer.WriteEndObject();
                 }
             }
         }
