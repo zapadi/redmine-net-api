@@ -1,4 +1,4 @@
-﻿/*
+/*
    Copyright 2011 - 2025 Adrian Popescu
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -76,9 +76,9 @@ namespace Redmine.Net.Api.Extensions
                 return;
             }
 
-            if (value is bool)
+            if (value is bool boolValue)
             {
-                writer.WriteElementString(elementName, value.ToString().ToLowerInv());
+                writer.WriteElementString(elementName, boolValue.ToLowerString());
             }
             else
             {
@@ -94,11 +94,11 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="elementName">The tag.</param>
         public static void WriteBoolean(this XmlWriter writer, string elementName, bool value)
         {
-            writer.WriteElementString(elementName, value.ToString().ToLowerInv());
+            writer.WriteElementString(elementName, value.ToLowerString());
         }
 
         /// <summary>
-        /// Writes string empty if T has default value or null.
+        /// Writes string empty if T has a default value or null.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="writer">The writer.</param>
@@ -112,7 +112,14 @@ namespace Redmine.Net.Api.Extensions
             }
             else
             {
-                writer.WriteElementString(elementName, val.Value.ToString().ToLowerInv());
+                if (val is bool boolValue)
+                {
+                    writer.WriteElementString(elementName, boolValue.ToLowerString());
+                }
+                else
+                {
+                    writer.WriteElementString(elementName, val.Value.ToInvariantString());
+                }
             }
         }
 

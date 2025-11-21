@@ -334,7 +334,7 @@ namespace Redmine.Net.Api.Types
             }
 
             writer.WriteElementString(RedmineKeys.DESCRIPTION, Description);
-            writer.WriteElementString(RedmineKeys.IS_PRIVATE, IsPrivate.ToInvariantString());
+            writer.WriteElementString(RedmineKeys.IS_PRIVATE, IsPrivate.ToLowerString());
 
             writer.WriteIdIfNotNull(RedmineKeys.PROJECT_ID, Project);
             writer.WriteIdIfNotNull(RedmineKeys.PRIORITY_ID, Priority);

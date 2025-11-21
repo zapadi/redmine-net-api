@@ -159,6 +159,11 @@ namespace Redmine.Net.Api.Extensions
             };
         }
 
+        internal static string ToLowerString(this bool value)
+        {
+            return value ? "true" : "false";
+        }
+
         private const string CR = "\r";
         private const string LR = "\n";
         private const string CRLR = $"{CR}{LR}";

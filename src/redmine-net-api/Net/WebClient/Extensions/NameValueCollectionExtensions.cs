@@ -133,7 +133,7 @@ namespace Redmine.Net.Api.Extensions
         {
             if (value.HasValue)
             {
-                nameValueCollection.Add(key, value.Value.ToInvariantString());
+                nameValueCollection.Add(key, value.Value.ToLowerString());
             }
         }   
     }

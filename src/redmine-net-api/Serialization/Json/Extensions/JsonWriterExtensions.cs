@@ -18,7 +18,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
 using Newtonsoft.Json;
 using Redmine.Net.Api.Serialization;
 using Redmine.Net.Api.Types;
@@ -61,7 +60,14 @@ namespace Redmine.Net.Api.Extensions
                 return;
             }
 
-            writer.WriteProperty(elementName, typeof(T) == typeof(bool) ? value.ToString().ToLowerInv() : value.ToString());
+            if (value is bool boolValue)
+            {
+                writer.WriteProperty(elementName, boolValue.ToLowerString());
+            }
+            else
+            {
+                writer.WriteProperty(elementName, value.ToString());
+            }
         }
 
         /// <summary>
@@ -72,7 +78,7 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="elementName">The property name.</param>
         public static void WriteBoolean(this JsonWriter writer, string elementName, bool value)
         {
-            writer.WriteProperty(elementName, value.ToInvariantString());
+            writer.WriteProperty(elementName, value.ToLowerString());
         }
 
         /// <summary>
@@ -121,7 +127,7 @@ namespace Redmine.Net.Api.Extensions
             }
             else
             {
-                jsonWriter.WriteProperty(tag, val.Value);
+                jsonWriter.WriteProperty(tag, val.Value.ToInvariantString());
             }
         }
 
