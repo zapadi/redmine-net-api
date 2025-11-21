@@ -39,8 +39,7 @@ namespace Padi.RedmineAPI.Integration.Tests.Infrastructure
 
             var iConfig = GetIConfigurationRoot(outputPath);
 
-            iConfig.GetSection("TestContainer")
-                .Bind(testContainerOptions);
+            iConfig.GetSection("TestContainer").Bind(testContainerOptions);
                 
             return testContainerOptions;
         }
