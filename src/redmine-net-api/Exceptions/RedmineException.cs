@@ -21,8 +21,42 @@ using System.Runtime.Serialization;
 namespace Redmine.Net.Api.Exceptions
 {
     /// <summary>
-    /// Thrown in case something went wrong in Redmine
+    /// The base exception class for all Redmine API-related errors.
     /// </summary>
+    /// <remarks>
+    /// <para>
+    /// This exception is thrown when general errors occur during Redmine API operations,
+    /// such as configuration errors, validation failures, or unexpected conditions.
+    /// </para>
+    /// <para>
+    /// More specific exceptions like <see cref="RedmineApiException"/>, <see cref="UnauthorizedException"/>,
+    /// and <see cref="NotFoundException"/> derive from this class for specific error scenarios.
+    /// </para>
+    /// </remarks>
+    /// <example>
+    /// <code>
+    /// try
+    /// {
+    ///     var manager = new RedmineManager(options);
+    ///     var issue = await manager.GetAsync&lt;Issue&gt;("12345");
+    /// }
+    /// catch (UnauthorizedException ex)
+    /// {
+    ///     // Handle authentication errors
+    ///     Console.WriteLine("Authentication failed: " + ex.Message);
+    /// }
+    /// catch (NotFoundException ex)
+    /// {
+    ///     // Handle not found errors
+    ///     Console.WriteLine("Resource not found: " + ex.Message);
+    /// }
+    /// catch (RedmineException ex)
+    /// {
+    ///     // Handle other Redmine errors
+    ///     Console.WriteLine("Redmine error: " + ex.Message);
+    /// }
+    /// </code>
+    /// </example>
     /// <seealso cref="System.Exception" />
     [Serializable]
     public class RedmineException : Exception
@@ -76,10 +110,10 @@ namespace Redmine.Net.Api.Exceptions
 
         #if !(NET8_0_OR_GREATER) 
         /// <summary>
-        /// 
+        /// Initializes a new instance of the <see cref="RedmineException"/> class with serialized data.
         /// </summary>
-        /// <param name="serializationInfo"></param>
-        /// <param name="streamingContext"></param>
+        /// <param name="serializationInfo">The serialization information.</param>
+        /// <param name="streamingContext">The streaming context.</param>
         protected RedmineException(SerializationInfo serializationInfo, StreamingContext streamingContext):base(serializationInfo, streamingContext)
         {
             

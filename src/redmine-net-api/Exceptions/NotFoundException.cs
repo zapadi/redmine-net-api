@@ -21,8 +21,38 @@ using System.Runtime.Serialization;
 namespace Redmine.Net.Api.Exceptions
 {
     /// <summary>
-    /// Thrown in case the objects requested for could not be found.
+    /// Thrown when the requested resource could not be found (HTTP 404 Not Found).
     /// </summary>
+    /// <remarks>
+    /// <para>
+    /// This exception indicates that the specified resource (issue, project, user, etc.) does not exist
+    /// on the Redmine server or the current user doesn't have permission to view it.
+    /// </para>
+    /// <para>
+    /// Common scenarios:
+    /// <list type="bullet">
+    /// <item><description>Resource ID doesn't exist</description></item>
+    /// <item><description>Resource was deleted</description></item>
+    /// <item><description>User lacks permission to view the resource (appears as "not found" for security)</description></item>
+    /// <item><description>Incorrect resource identifier format</description></item>
+    /// </list>
+    /// </para>
+    /// </remarks>
+    /// <example>
+    /// <code>
+    /// try
+    /// {
+    ///     var issue = await manager.GetAsync&lt;Issue&gt;("99999");
+    /// }
+    /// catch (NotFoundException ex)
+    /// {
+    ///     Console.WriteLine($"Issue not found: {ex.Message}");
+    ///     // Verify the ID is correct
+    ///     // Check if the resource was deleted
+    ///     // Ensure user has permission to view the resource
+    /// }
+    /// </code>
+    /// </example>
     /// <seealso cref="Redmine.Net.Api.Exceptions.RedmineException" />
     [Serializable]
     public sealed class NotFoundException : RedmineException

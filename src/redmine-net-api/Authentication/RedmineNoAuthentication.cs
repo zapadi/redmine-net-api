@@ -19,8 +19,29 @@ using System.Net;
 namespace Redmine.Net.Api.Authentication;
 
 /// <summary>
-/// 
+/// Represents no authentication for accessing public Redmine resources that don't require authentication.
 /// </summary>
+/// <remarks>
+/// <para>
+/// This authentication type is used internally when no authentication is explicitly configured.
+/// It allows access to public Redmine resources that don't require user authentication.
+/// </para>
+/// <para>
+/// Most Redmine API endpoints require authentication, so this is typically only useful
+/// for accessing publicly visible projects or resources.
+/// </para>
+/// </remarks>
+/// <example>
+/// <code>
+/// // This is used internally when no authentication is provided
+/// var options = new RedmineManagerOptionsBuilder()
+///     .WithHost("https://redmine.example.com");
+/// // No authentication method called - RedmineNoAuthentication is used by default
+/// 
+/// var manager = new RedmineManager(options);
+/// // Can only access public resources
+/// </code>
+/// </example>
 public sealed class RedmineNoAuthentication: IRedmineAuthentication
 {
     /// <inheritdoc />

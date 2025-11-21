@@ -21,8 +21,38 @@ using System.Runtime.Serialization;
 namespace Redmine.Net.Api.Exceptions
 {
     /// <summary>
-    /// Thrown in case something went wrong while trying to login.
+    /// Thrown when authentication is required or has failed (HTTP 401 Unauthorized).
     /// </summary>
+    /// <remarks>
+    /// <para>
+    /// This exception indicates that the request requires authentication or that the provided
+    /// credentials (API key or username/password) are invalid or expired.
+    /// </para>
+    /// <para>
+    /// Common causes:
+    /// <list type="bullet">
+    /// <item><description>Invalid or expired API key</description></item>
+    /// <item><description>Incorrect username or password</description></item>
+    /// <item><description>No authentication credentials provided</description></item>
+    /// <item><description>User account is locked or disabled</description></item>
+    /// </list>
+    /// </para>
+    /// </remarks>
+    /// <example>
+    /// <code>
+    /// try
+    /// {
+    ///     var manager = new RedmineManager(options);
+    ///     var issues = await manager.GetAsync&lt;Issue&gt;();
+    /// }
+    /// catch (UnauthorizedException ex)
+    /// {
+    ///     Console.WriteLine("Authentication failed. Please check your API key or credentials.");
+    ///     // Verify API key is valid and not expired
+    ///     // Check that authentication is properly configured
+    /// }
+    /// </code>
+    /// </example>
     /// <seealso cref="Redmine.Net.Api.Exceptions.RedmineException" />
     [Serializable]
     public sealed class UnauthorizedException : RedmineException

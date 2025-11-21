@@ -21,7 +21,38 @@ using System.Runtime.Serialization;
 namespace Redmine.Net.Api.Exceptions
 {
     /// <summary>
+    /// Thrown when the user doesn't have permission to access the requested resource (HTTP 403 Forbidden).
     /// </summary>
+    /// <remarks>
+    /// <para>
+    /// This exception indicates that the authenticated user lacks the necessary permissions to perform
+    /// the requested operation. Unlike <see cref="UnauthorizedException"/>, authentication succeeded
+    /// but authorization failed.
+    /// </para>
+    /// <para>
+    /// Common causes:
+    /// <list type="bullet">
+    /// <item><description>User role doesn't have required permissions</description></item>
+    /// <item><description>Project is private and user is not a member</description></item>
+    /// <item><description>Attempting to modify a resource without edit permissions</description></item>
+    /// <item><description>Attempting to delete a resource without delete permissions</description></item>
+    /// </list>
+    /// </para>
+    /// </remarks>
+    /// <example>
+    /// <code>
+    /// try
+    /// {
+    ///     await manager.DeleteAsync&lt;Issue&gt;("12345");
+    /// }
+    /// catch (ForbiddenException ex)
+    /// {
+    ///     Console.WriteLine("Access denied. You don't have permission to delete this issue.");
+    ///     // Check user's role and permissions in Redmine
+    ///     // Verify user is a member of the project
+    /// }
+    /// </code>
+    /// </example>
     /// <seealso cref="Redmine.Net.Api.Exceptions.RedmineException" />
     [Serializable]
     public sealed class ForbiddenException : RedmineException
