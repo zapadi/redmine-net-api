@@ -189,13 +189,10 @@ namespace Redmine.Net.Api.Types
         {
             using (new JsonObject(writer, RedmineKeys.FILE))
             {
-                using (new JsonObject(writer))
-                {
-                    writer.WriteProperty(RedmineKeys.TOKEN, Token);
-                    writer.WriteIdIfNotNull(RedmineKeys.VERSION_ID, Version);
-                    writer.WriteProperty(RedmineKeys.FILE_NAME, Filename);
-                    writer.WriteProperty(RedmineKeys.DESCRIPTION, Description);
-                }
+                writer.WriteProperty(RedmineKeys.TOKEN, Token);
+                writer.WriteIdIfNotNull(RedmineKeys.VERSION_ID, Version);
+                writer.WriteProperty(RedmineKeys.FILE_NAME, Filename);
+                writer.WriteProperty(RedmineKeys.DESCRIPTION, Description);
             }
         }
         #endregion
