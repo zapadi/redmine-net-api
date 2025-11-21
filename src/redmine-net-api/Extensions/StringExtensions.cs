@@ -46,7 +46,7 @@ namespace Redmine.Net.Api.Extensions
                     return false;
                 }
             }
-            
+
             return true;
         }
 
@@ -62,12 +62,12 @@ namespace Redmine.Net.Api.Extensions
             {
                 return text;
             }
-            
-            #if (NET5_0_OR_GREATER)
+
+#if (NET5_0_OR_GREATER)
             return text.AsSpan()[..maximumLength].ToString();
-            #else
+#else
             return text.Substring(0, maximumLength);
-            #endif
+#endif
         }
 
         /// <summary>
@@ -99,12 +99,12 @@ namespace Redmine.Net.Api.Extensions
             }
 
             var rv = new SecureString();
-            
+
             for (var index = 0; index < value.Length; ++index)
             {
                 rv.AppendChar(value[index]);
             }
-            
+
             return rv;
         }
 
@@ -115,26 +115,26 @@ namespace Redmine.Net.Api.Extensions
                 return s;
             }
 
-            #if (NET5_0_OR_GREATER)
+#if (NET5_0_OR_GREATER)
             if (s.EndsWith('/') || s.EndsWith('\\'))
             {
                 return s.AsSpan()[..(s.Length - 1)].ToString();
             }
-            #else
+#else
             if (s.EndsWith("/", StringComparison.OrdinalIgnoreCase) || s.EndsWith(@"\", StringComparison.OrdinalIgnoreCase))
             {
                 return s.Substring(0, s.Length - 1);
             }
-            #endif
-            
+#endif
+
             return s;
         }
-        
+
         internal static string ValueOrFallback(this string value, string fallback)
         {
             return !value.IsNullOrWhiteSpace() ? value : fallback;
         }
-        
+
         internal static string ToInvariantString<T>(this T value) where T : struct
         {
             return value switch
@@ -152,9 +152,9 @@ namespace Redmine.Net.Api.Extensions
                 decimal v => v.ToString(CultureInfo.InvariantCulture),
                 TimeSpan ts => ts.ToString(),
                 DateTime d => d.ToString(CultureInfo.InvariantCulture),
-                #pragma warning disable CA1308
+#pragma warning disable CA1308
                 bool b => b.ToString(CultureInfo.InvariantCulture),
-                #pragma warning restore CA1308
+#pragma warning restore CA1308
                 _ => value.ToString(),
             };
         }
@@ -167,7 +167,7 @@ namespace Redmine.Net.Api.Extensions
         private const string CR = "\r";
         private const string LR = "\n";
         private const string CRLR = $"{CR}{LR}";
-        
+
         internal static string ReplaceEndings(this string input, string replacement = CRLR)
         {
             if (input.IsNullOrWhiteSpace())
@@ -175,11 +175,11 @@ namespace Redmine.Net.Api.Extensions
                 return input;
             }
 
-            #if NET6_0_OR_GREATER
-            input =  input.ReplaceLineEndings(replacement);
-            #else
+#if NET6_0_OR_GREATER
+            input = input.ReplaceLineEndings(replacement);
+#else
             input = Regex.Replace(input, $"{CRLR}|{CR}|{LR}", replacement);
-            #endif
+#endif
             return input;
         }
     }

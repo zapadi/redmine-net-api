@@ -60,7 +60,7 @@ namespace Redmine.Net.Api.Serialization
                 throw new RedmineException(ex.GetBaseException().Message, ex);
             }
         }
-        
+
         public PagedResults<T> DeserializeToPagedResults<T>(string response) where T : class, new()
         {
             try
@@ -126,12 +126,12 @@ namespace Redmine.Net.Api.Serialization
                     }
 
                     var totalItems = xmlReader.ReadAttributeAsInt(RedmineKeys.TOTAL_COUNT);
-                    
+
                     if (onlyCount)
                     {
                         return new PagedResults<T>(null, totalItems, 0, 0);
                     }
-                    
+
                     var offset = xmlReader.ReadAttributeAsInt(RedmineKeys.OFFSET);
                     var limit = xmlReader.ReadAttributeAsInt(RedmineKeys.LIMIT);
                     var result = xmlReader.ReadElementContentAsCollection<T>();

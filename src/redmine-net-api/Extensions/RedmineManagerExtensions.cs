@@ -754,12 +754,12 @@ namespace Redmine.Net.Api.Extensions
         /// <returns></returns>
         public static async Task<WikiPage> CreateWikiPageAsync(this RedmineManager redmineManager, string projectId, string pageName, WikiPage wikiPage, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
         {
-            var payload = redmineManager.Serializer.Serialize(wikiPage);
-
             if (pageName.IsNullOrWhiteSpace())
             {
                 throw new RedmineException("Page name cannot be blank");
             }
+            
+            var payload = redmineManager.Serializer.Serialize(wikiPage);
             
             if (string.IsNullOrEmpty(payload))
             {
@@ -767,7 +767,7 @@ namespace Redmine.Net.Api.Extensions
             }
 
             var uri = redmineManager.RedmineApiUrls.ProjectWikiPageUpdate(projectId, pageName);
-
+            
             var response = await redmineManager.ApiClient.UpdateAsync(uri, payload, requestOptions, cancellationToken).ConfigureAwait(false);
 
             return response.DeserializeTo<WikiPage>(redmineManager.Serializer);

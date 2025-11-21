@@ -212,7 +212,7 @@ internal static class RandomHelper
     }
 
     /// <summary>
-    /// Suffles a list using Fisher-Yates shuffle algorithm
+    /// Shuffles a list using Fisher-Yates shuffle algorithm
     /// </summary>
     /// <param name="list"></param>
     /// <typeparam name="T"></typeparam>

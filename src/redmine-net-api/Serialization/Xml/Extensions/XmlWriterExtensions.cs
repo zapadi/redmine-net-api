@@ -1,4 +1,4 @@
-/*
+﻿/*
    Copyright 2011 - 2025 Adrian Popescu
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,11 +29,11 @@ namespace Redmine.Net.Api.Extensions
     /// </summary>
     public static partial class XmlExtensions
     {
-
+        private static readonly Type[] EmptyTypeArray =
 #if !(NET20 || NET40 || NET45 || NET451 || NET452)
-        private static readonly Type[] EmptyTypeArray = Array.Empty<Type>();
+         Array.Empty<Type>();
 #else
-        private static readonly Type[] EmptyTypeArray = new Type[0];
+         new Type[0];
 #endif
         private static readonly XmlAttributeOverrides XmlAttributeOverrides = new XmlAttributeOverrides();
 
@@ -142,95 +142,129 @@ namespace Redmine.Net.Api.Extensions
             }
         }
         
-         /// <summary>
-    /// Writes the list elements.
-    /// </summary>
-    /// <param name="xmlWriter">The XML writer.</param>
-    /// <param name="collection">The collection.</param>
-    /// <param name="elementName">Name of the element.</param>
-    public static void WriteListElements<T>(this XmlWriter xmlWriter, string elementName, List<T> collection) where T : IValue
-    {
-        WriteRepeatableElement(xmlWriter, elementName, collection);
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="xmlWriter"></param>
-    /// <param name="elementName"></param>
-    /// <param name="collection"></param>
-    public static void WriteRepeatableElement<T>(this XmlWriter xmlWriter, string elementName, List<T>? collection) where T : IValue
-    {
-        if (collection == null)
+        /// <summary>
+        /// Writes the list elements.
+        /// </summary>
+        /// <param name="xmlWriter">The XML writer.</param>
+        /// <param name="collection">The collection.</param>
+        /// <param name="elementName">Name of the element.</param>
+        public static void WriteListElements<T>(this XmlWriter xmlWriter, string elementName, List<T> collection) where T : IValue
         {
-            return;
+            WriteRepeatableElement(xmlWriter, elementName, collection);
         }
 
-        foreach (var item in collection)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="xmlWriter"></param>
+        /// <param name="elementName"></param>
+        /// <param name="collection"></param>
+        public static void WriteRepeatableElement<T>(this XmlWriter xmlWriter, string elementName, List<T>? collection) where T : IValue
         {
-            xmlWriter.WriteElementString(elementName, item.Value);
+            if (collection == null)
+            {
+                return;
+            }
+
+            foreach (var item in collection)
+            {
+                xmlWriter.WriteElementString(elementName, item.Value);
+            }
         }
-    }
 
-    public static void WriteArrayIds<T>(this XmlWriter writer, string rootName, string elementName, List<T> collection, Func<T, string> f)
-    {
-        WriteArray(writer, rootName, elementName, collection, f);
-    }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+        /// <param name="rootName"></param>
+        /// <param name="elementName"></param>
+        /// <param name="collection"></param>
+        /// <param name="f"></param>
+        /// <typeparam name="T"></typeparam>
+        public static void WriteArrayIds<T>(this XmlWriter writer, string rootName, string elementName, List<T> collection, Func<T, string> f)
+        {
+            WriteArray(writer, rootName, elementName, collection, f);
+        }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="writer"></param>
-    /// <param name="elementName"></param>
-    /// <param name="collection"></param>
-    /// <param name="f"></param>
-    public static void WriteArrayStringElement(this XmlWriter writer, string elementName, IEnumerable collection, Func<object, string> f)
-    {
-        WriteArray(writer, elementName, elementName, collection, f);
-    }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+        /// <param name="elementName"></param>
+        /// <param name="collection"></param>
+        /// <param name="f"></param>
+        public static void WriteArrayStringElement(this XmlWriter writer, string elementName, IEnumerable collection, Func<object, string> f)
+        {
+            WriteArray(writer, elementName, elementName, collection, f);
+        }
 
-    public static void WriteArray(this XmlWriter writer, string rootName, string elementName, IEnumerable collection, Func<object, string> valueFunc)
-    {
-        WriteArray(writer, rootName, elementName, (IEnumerable<object>)collection, valueFunc);
-    }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+        /// <param name="rootName"></param>
+        /// <param name="elementName"></param>
+        /// <param name="collection"></param>
+        /// <param name="valueFunc"></param>
+        public static void WriteArray(this XmlWriter writer, string rootName, string elementName, IEnumerable collection, Func<object, string> valueFunc)
+        {
+            WriteArray(writer, rootName, elementName, (IEnumerable<object>)collection, valueFunc);
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+        /// <param name="rootName"></param>
+        /// <param name="elementName"></param>
+        /// <param name="collection"></param>
+        /// <param name="valueFunc"></param>
+        /// <typeparam name="T"></typeparam>
+        public static void WriteArray<T>(this XmlWriter writer, string rootName, string elementName, IEnumerable<T>? collection, Func<T, string> valueFunc)
+        {
+            if (collection == null)
+            {
+                return;
+            }
+
+            writer.WriteStartElement(rootName);
+            writer.WriteAttributeString("type", "array");
+
+            foreach (var item in collection)
+            {
+                writer.WriteElementString(elementName, valueFunc.Invoke(item));
+            }
+
+            writer.WriteEndElement();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+        /// <param name="rootName"></param>
+        /// <param name="collection"></param>
+        /// <param name="action"></param>
+        /// <typeparam name="T"></typeparam>
+        public static void WriteArray<T>(this XmlWriter writer, string rootName, IEnumerable<T>? collection, Action<T>? action)
+        {
+            if (collection == null || action == null)
+            {
+                return;
+            }
+
+            writer.WriteStartElement(rootName);
+            writer.WriteAttributeString("type", "array");
+
+            foreach (var item in collection)
+            {
+                action.Invoke(item);
+            }
+
+            writer.WriteEndElement();
+        }
     
-    public static void WriteArray<T>(this XmlWriter writer, string rootName, string elementName, IEnumerable<T>? collection, Func<T, string> valueFunc)
-    {
-        if (collection == null)
-        {
-            return;
-        }
-
-        writer.WriteStartElement(rootName);
-        writer.WriteAttributeString("type", "array");
-
-        foreach (var item in collection)
-        {
-            writer.WriteElementString(elementName, valueFunc.Invoke(item));
-        }
-
-        writer.WriteEndElement();
-    }
-
-    public static void WriteArray<T>(this XmlWriter writer, string rootName, IEnumerable<T>? collection, Action<T>? action)
-    {
-        if (collection == null || action == null)
-        {
-            return;
-        }
-
-        writer.WriteStartElement(rootName);
-        writer.WriteAttributeString("type", "array");
-
-        foreach (var item in collection)
-        {
-            action.Invoke(item);
-        }
-
-        writer.WriteEndElement();
-    }
-    
-     /// <summary>
+        /// <summary>
         /// Writes the array.
         /// </summary>
         /// <param name="writer">The writer.</param>

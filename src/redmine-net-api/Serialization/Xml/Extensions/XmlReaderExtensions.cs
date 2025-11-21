@@ -1,4 +1,4 @@
-﻿/*
+/*
    Copyright 2011 - 2025 Adrian Popescu
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -103,7 +103,7 @@ namespace Redmine.Net.Api.Extensions
 
             return result;
         }
-        
+
         /// <summary>
         /// Reads the element content as nullable date time.
         /// </summary>
@@ -252,7 +252,7 @@ namespace Redmine.Net.Api.Extensions
         {
             var serializer = new XmlSerializer(typeof(T));
             var outerXml = reader.ReadOuterXml();
-            
+
             if (string.IsNullOrEmpty(outerXml))
             {
                yield return null;
