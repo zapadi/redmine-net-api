@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using Padi.DotNet.RedmineAPI.Tests.Infrastructure;
+using Padi.DotNet.RedmineAPI.Tests.Tests;
 using Xunit;
 
 namespace Padi.DotNet.RedmineAPI.Tests.Serialization;
 
 [Collection(Constants.DeserializeCollection)]
-public class UploadTests()
+public class UploadTests(XmlPrettyPrintFixture _) : IClassFixture<XmlPrettyPrintFixture>
 {
     [Theory]
     [MemberData(nameof(UploadDeserializeTheoryData))]

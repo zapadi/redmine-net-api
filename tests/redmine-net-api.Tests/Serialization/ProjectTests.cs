@@ -1,12 +1,16 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Padi.DotNet.RedmineAPI.Tests.Infrastructure;
+using Padi.DotNet.RedmineAPI.Tests.Tests;
+using Redmine.Net.Api.Extensions;
+using Redmine.Net.Api.Types;
 using Xunit;
 
 namespace Padi.DotNet.RedmineAPI.Tests.Serialization;
 
 [Collection(Constants.DeserializeCollection)]
-public class ProjectTests()
+public class ProjectTests(XmlPrettyPrintFixture _) : IClassFixture<XmlPrettyPrintFixture>
 {
     [Theory]
     [MemberData(nameof(ProjectDeserializeTheoryData))]
@@ -14,7 +18,7 @@ public class ProjectTests()
     {
         var serializer = SerializerFactory.Create(kind);
         var output = serializer.Deserialize<Redmine.Net.Api.Types.Project>(input);
-        
+
         Assert.NotNull(output);
 
         Assert.Equal(1, output.Id);
@@ -25,14 +29,14 @@ public class ProjectTests()
         AssertDateTime.Equal("2009-3-15T11:35:11", output.UpdatedOn);
         Assert.True(output.IsPublic);
     }
-    
+
     [Theory]
     [MemberData(nameof(ProjectWithIncludeDeserializeTheoryData))]
     public void Should_Deserialize_Project_With_Includes(string input, SerializerKind kind)
     {
         var serializer = SerializerFactory.Create(kind);
         var output = serializer.Deserialize<Redmine.Net.Api.Types.Project>(input);
-        
+
         Assert.NotNull(output);
 
         Assert.Equal(45, output.Id);
@@ -43,15 +47,15 @@ public class ProjectTests()
         AssertDateTime.Equal("2025-9-11T15:25:46", output.UpdatedOn);
         Assert.True(output.IsPublic);
     }
-    
+
     [Theory]
     [MemberData(nameof(ProjectsDeserializeTheoryData))]
     public void Should_Deserialize_Projects(string input, SerializerKind kind)
     {
         var serializer = SerializerFactory.Create(kind);
-       
+
         var output = serializer.DeserializeToPagedResults<Redmine.Net.Api.Types.Project>(input);
-        
+
         Assert.NotNull(output);
         Assert.Equal(2, output.TotalItems);
 
@@ -123,7 +127,8 @@ public class ProjectTests()
             // yield return new TheoryDataRow<string, SerializerKind>(json, SerializerKind.SystemTextJson).WithTestDisplayName(Constants.JsonSystemText)
             yield return new TheoryDataRow<string, SerializerKind>(xml, SerializerKind.Xml).WithTestDisplayName(Constants.Xml);
         }
-    } 
+    }
+
     public static IEnumerable<TheoryDataRow<string, SerializerKind>> ProjectsDeserializeTheoryData
     {
         get
@@ -172,7 +177,7 @@ public class ProjectTests()
             yield return new TheoryDataRow<string, SerializerKind>(xml, SerializerKind.Xml).WithTestDisplayName(Constants.Xml);
         }
     }
-    
+
     public static IEnumerable<TheoryDataRow<string, SerializerKind>> ProjectWithIncludeDeserializeTheoryData
     {
         get
@@ -268,7 +273,7 @@ public class ProjectTests()
                                    <created_on>2025-09-11T15:25:46Z</created_on>
                                    <updated_on>2025-09-11T15:25:46Z</updated_on>
                                </project>
-                               
+
                                """;
 
             yield return new TheoryDataRow<string, SerializerKind>(json, SerializerKind.NewtonsoftJson).WithTestDisplayName(Constants.JsonNewtonsoft);
