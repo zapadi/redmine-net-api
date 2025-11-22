@@ -399,8 +399,16 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
+        public const string ISSUE_CUSTOM_FIELD = "issue_custom_field";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string ISSUE_CUSTOM_FIELDS = "issue_custom_fields";
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string ISSUE_CUSTOM_FIELD_ID = "issue_custom_field_id";
         /// <summary>
         /// 
         /// </summary>

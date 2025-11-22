@@ -228,7 +228,7 @@ namespace Redmine.Net.Api.Types
 
             if (Id == 0)
             {
-                writer.WriteRepeatableElement(RedmineKeys.ISSUE_CUSTOM_FIELD_IDS, (IEnumerable<IValue>)CustomFields);
+                writer.WriteRepeatableElement(RedmineKeys.ISSUE_CUSTOM_FIELDS, RedmineKeys.ISSUE_CUSTOM_FIELD,(IEnumerable<IValue>)CustomFields);
                 return;
             }
 
