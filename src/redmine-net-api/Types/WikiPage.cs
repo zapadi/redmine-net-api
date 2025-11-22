@@ -216,7 +216,10 @@ namespace Redmine.Net.Api.Types
             {
                 writer.WriteProperty(RedmineKeys.TEXT, Text);
                 writer.WriteProperty(RedmineKeys.COMMENTS, Comments);
-                writer.WriteValueOrEmpty<int>(RedmineKeys.VERSION, Version);
+                if (Version > 0)
+                {
+                    writer.WriteProperty(RedmineKeys.VERSION, Version);
+                }
                 writer.WriteArray(RedmineKeys.UPLOADS, Uploads);
             }
         }
