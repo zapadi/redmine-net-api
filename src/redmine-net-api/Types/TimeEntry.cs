@@ -70,12 +70,12 @@ namespace Redmine.Net.Api.Types
         public IdentifiableName Activity { get; set; }
 
         /// <summary>
-        /// Gets the user.
+        /// Gets or sets the user.
         /// </summary>
         /// <value>
         /// The user.
         /// </value>
-        public IdentifiableName User { get; internal set; }
+        public IdentifiableName User { get; set; }
 
         /// <summary>
         /// Gets or sets the short description for the entry (255 characters max).
@@ -151,6 +151,7 @@ namespace Redmine.Net.Api.Types
         {
             writer.WriteIdIfNotNull(RedmineKeys.ISSUE_ID, Issue);
             writer.WriteIdIfNotNull(RedmineKeys.PROJECT_ID, Project);
+            writer.WriteIdIfNotNull(RedmineKeys.USER_ID, User);
             writer.WriteDateOrEmpty(RedmineKeys.SPENT_ON, SpentOn.GetValueOrDefault(DateTime.Now));
             writer.WriteValueOrEmpty<decimal>(RedmineKeys.HOURS, Hours);
             writer.WriteIdIfNotNull(RedmineKeys.ACTIVITY_ID, Activity);
@@ -210,6 +211,7 @@ namespace Redmine.Net.Api.Types
                 writer.WriteIdIfNotNull(RedmineKeys.ISSUE_ID, Issue);
                 writer.WriteIdIfNotNull(RedmineKeys.PROJECT_ID, Project);
                 writer.WriteIdIfNotNull(RedmineKeys.ACTIVITY_ID, Activity);
+                writer.WriteIdIfNotNull(RedmineKeys.USER_ID, User);
                 writer.WriteDateOrEmpty(RedmineKeys.SPENT_ON, SpentOn.GetValueOrDefault(DateTime.Now));
                 writer.WriteProperty(RedmineKeys.HOURS, Hours);
                 writer.WriteProperty(RedmineKeys.COMMENTS, Comments);
