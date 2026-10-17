@@ -95,6 +95,7 @@ public class ProjectTests(XmlPrettyPrintFixture _) : IClassFixture<XmlPrettyPrin
             TimeEntryActivities = [new ProjectTimeEntryActivity(90, "prjTimeEntryActivity")],
             IssueCategories = [new ProjectIssueCategory(123, "prjIssueCategory"), new ProjectIssueCategory(234, "prjIssueCategory2")],
             IssueCustomFields = [IssueCustomField.CreateSingle(500, "icf500", "val500"), IssueCustomField.CreateMultiple(501, "icf501", ["val501", "501val"])],
+#pragma warning disable CS0618
             CustomFieldValues =
             [
                 new CustomField()
@@ -108,6 +109,7 @@ public class ProjectTests(XmlPrettyPrintFixture _) : IClassFixture<XmlPrettyPrin
                     PossibleValues = [new CustomFieldPossibleValue("val790"), new CustomFieldPossibleValue("790val")]
                 }
             ]
+#pragma warning restore CS0618
         };
         
         var serializer = SerializerFactory.Create(kind);
@@ -115,6 +117,115 @@ public class ProjectTests(XmlPrettyPrintFixture _) : IClassFixture<XmlPrettyPrin
         var output = serializer.Serialize(project);
 
         Assert.Equal(expected, output);
+    }
+
+    [Theory]
+    [MemberData(nameof(ProjectCustomFieldsSerializeTheoryData))]
+    public void Should_Serialize_Project_With_ProjectCustomFields(string expected, SerializerKind kind)
+    {
+        var project = new Project
+        {
+            Name = "Redmine",
+            Identifier = "redmine",
+            ProjectCustomFields = [IssueCustomField.CreateSingle(1, "PcfString", "hello"), IssueCustomField.CreateMultiple(2, "PcfList", ["a", "c"])]
+        };
+
+        var serializer = SerializerFactory.Create(kind);
+
+        var output = serializer.Serialize(project);
+
+        Assert.Equal(expected, output);
+    }
+
+    [Theory]
+    [MemberData(nameof(ProjectWithCustomFieldValuesDeserializeTheoryData))]
+    public void Should_Deserialize_Project_ProjectCustomFields(string input, SerializerKind kind)
+    {
+        var serializer = SerializerFactory.Create(kind);
+        var output = serializer.Deserialize<Project>(input);
+
+        Assert.NotNull(output);
+        Assert.Equal(2, output.ProjectCustomFields.Count);
+
+        Assert.Equal(1, output.ProjectCustomFields[0].Id);
+        Assert.Equal("PcfString", output.ProjectCustomFields[0].Name);
+        Assert.Equal(["hello"], output.ProjectCustomFields[0].Values.Select(v => v.Info));
+
+        Assert.Equal(2, output.ProjectCustomFields[1].Id);
+        Assert.Equal("PcfList", output.ProjectCustomFields[1].Name);
+        Assert.True(output.ProjectCustomFields[1].Multiple);
+        Assert.Equal(["a", "c"], output.ProjectCustomFields[1].Values.Select(v => v.Info));
+
+#pragma warning disable CS0618
+        Assert.Equal(2, output.CustomFieldValues.Count);
+        Assert.Equal(1, output.CustomFieldValues[0].Id);
+        Assert.Equal("PcfString", output.CustomFieldValues[0].Name);
+        Assert.Equal(2, output.CustomFieldValues[1].Id);
+        Assert.Equal("PcfList", output.CustomFieldValues[1].Name);
+#pragma warning restore CS0618
+    }
+
+    [Theory]
+    [MemberData(nameof(ProjectCustomFieldsSerializeTheoryData))]
+    public void Should_Serialize_ProjectCustomFields_Instead_Of_CustomFieldValues_When_Both_Are_Set(string expected, SerializerKind kind)
+    {
+        var project = new Project
+        {
+            Name = "Redmine",
+            Identifier = "redmine",
+            ProjectCustomFields = [IssueCustomField.CreateSingle(1, "PcfString", "hello"), IssueCustomField.CreateMultiple(2, "PcfList", ["a", "c"])],
+#pragma warning disable CS0618
+            CustomFieldValues = [new CustomField { Id = 99, Name = "legacy" }]
+#pragma warning restore CS0618
+        };
+
+        var serializer = SerializerFactory.Create(kind);
+
+        var output = serializer.Serialize(project);
+
+        Assert.Equal(expected, output);
+    }
+
+    [Theory]
+    [MemberData(nameof(ProjectWithEmptyCustomFieldValuesDeserializeTheoryData))]
+    public void Should_Deserialize_Empty_ProjectCustomFields_And_Write_Xml_With_Ids(string input, SerializerKind kind)
+    {
+        var serializer = SerializerFactory.Create(kind);
+        var output = serializer.Deserialize<Project>(input);
+
+        Assert.Equal(2, output.ProjectCustomFields.Count);
+        Assert.All(output.ProjectCustomFields, cf => Assert.True(cf.Values == null || cf.Values.Count == 0));
+
+        var xml = SerializerFactory.Create(SerializerKind.Xml).Serialize(output);
+
+        Assert.DoesNotContain("<custom_field />", xml);
+        Assert.Contains("<custom_field id=\"1\"", xml);
+        Assert.Contains("<custom_field id=\"2\"", xml);
+    }
+
+    [Fact]
+    public void Should_Serialize_Xml_Custom_Field_Without_Values_With_Id_Only()
+    {
+        var project = new Project
+        {
+            Name = "Redmine",
+            Identifier = "redmine",
+            ProjectCustomFields = [IssueCustomField.CreateMultiple(2, "PcfList", [])]
+        };
+
+        var output = SerializerFactory.Create(SerializerKind.Xml).Serialize(project);
+
+        Assert.Equal("""
+                     <project>
+                     <name>Redmine</name>
+                     <identifier>redmine</identifier>
+                     <inherit_members>false</inherit_members>
+                     <is_public>false</is_public>
+                     <custom_fields type="array">
+                     <custom_field id="2" />
+                     </custom_fields>
+                     </project>
+                     """, output);
     }
 
     public static IEnumerable<TheoryDataRow<string, SerializerKind>> ProjectDeserializeTheoryData
@@ -324,6 +435,99 @@ public class ProjectTests(XmlPrettyPrintFixture _) : IClassFixture<XmlPrettyPrin
 
             yield return new TheoryDataRow<string, SerializerKind>(json, SerializerKind.NewtonsoftJson).WithTestDisplayName(Constants.JsonNewtonsoft);
             // yield return new TheoryDataRow<string, SerializerKind>(json, SerializerKind.SystemTextJson).WithTestDisplayName(Constants.JsonSystemText)
+            yield return new TheoryDataRow<string, SerializerKind>(xml, SerializerKind.Xml).WithTestDisplayName(Constants.Xml);
+        }
+    }
+
+    public static IEnumerable<TheoryDataRow<string, SerializerKind>> ProjectWithCustomFieldValuesDeserializeTheoryData
+    {
+        get
+        {
+            const string json = """
+                                {"project":{"id":3,"name":"pcf","identifier":"pcf","description":null,"homepage":"","status":1,"is_public":false,"inherit_members":false,"custom_fields":[{"id":1,"name":"PcfString","value":"hello"},{"id":2,"name":"PcfList","multiple":true,"value":["a","c"]}],"created_on":"2026-10-17T17:50:15Z","updated_on":"2026-10-17T17:50:15Z"}}
+                                """;
+
+            const string xml = """
+                               <?xml version="1.0" encoding="UTF-8"?><project><id>3</id><name>pcf</name><identifier>pcf</identifier><description/><homepage></homepage><status>1</status><is_public>false</is_public><inherit_members>false</inherit_members><custom_fields type="array"><custom_field id="1" name="PcfString"><value>hello</value></custom_field><custom_field id="2" name="PcfList" multiple="true"><value type="array"><value>a</value><value>c</value></value></custom_field></custom_fields><created_on>2026-10-17T17:50:15Z</created_on><updated_on>2026-10-17T17:50:15Z</updated_on></project>
+                               """;
+
+            yield return new TheoryDataRow<string, SerializerKind>(json, SerializerKind.NewtonsoftJson).WithTestDisplayName(Constants.JsonNewtonsoft);
+            yield return new TheoryDataRow<string, SerializerKind>(xml, SerializerKind.Xml).WithTestDisplayName(Constants.Xml);
+        }
+    }
+
+    public static IEnumerable<TheoryDataRow<string, SerializerKind>> ProjectWithEmptyCustomFieldValuesDeserializeTheoryData
+    {
+        get
+        {
+            const string json = """
+                                {"project":{"id":3,"name":"pcf","identifier":"pcf","custom_fields":[{"id":1,"name":"PcfString","value":null},{"id":2,"name":"PcfList","multiple":true,"value":[]}]}}
+                                """;
+
+            const string xml = """
+                               <?xml version="1.0" encoding="UTF-8"?><project><id>3</id><name>pcf</name><identifier>pcf</identifier><custom_fields type="array"><custom_field id="1" name="PcfString"><value/></custom_field><custom_field id="2" name="PcfList" multiple="true"><value type="array"></value></custom_field></custom_fields></project>
+                               """;
+
+            yield return new TheoryDataRow<string, SerializerKind>(json, SerializerKind.NewtonsoftJson).WithTestDisplayName(Constants.JsonNewtonsoft);
+            yield return new TheoryDataRow<string, SerializerKind>(xml, SerializerKind.Xml).WithTestDisplayName(Constants.Xml);
+        }
+    }
+
+    public static IEnumerable<TheoryDataRow<string, SerializerKind>> ProjectCustomFieldsSerializeTheoryData
+    {
+        get
+        {
+            const string json = """
+                                {
+                                  "project": {
+                                    "name": "Redmine",
+                                    "identifier": "redmine",
+                                    "inherit_members": "false",
+                                    "is_public": "false",
+                                    "custom_fields": [
+                                      {
+                                        "id": 1,
+                                        "name": "PcfString",
+                                        "multiple": "false",
+                                        "value": "hello"
+                                      },
+                                      {
+                                        "id": 2,
+                                        "name": "PcfList",
+                                        "multiple": "true",
+                                        "value": [
+                                          "a",
+                                          "c"
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                }
+                                """;
+
+            const string xml = """
+                               <project>
+                               <name>Redmine</name>
+                               <identifier>redmine</identifier>
+                               <inherit_members>false</inherit_members>
+                               <is_public>false</is_public>
+                               <custom_fields type="array">
+                               <custom_field id="1">
+                               <multiple>false</multiple>
+                               <value>hello</value>
+                               </custom_field>
+                               <custom_field id="2">
+                               <multiple>true</multiple>
+                               <value type="array">
+                               <value>a</value>
+                               <value>c</value>
+                               </value>
+                               </custom_field>
+                               </custom_fields>
+                               </project>
+                               """;
+
+            yield return new TheoryDataRow<string, SerializerKind>(json, SerializerKind.NewtonsoftJson).WithTestDisplayName(Constants.JsonNewtonsoft);
             yield return new TheoryDataRow<string, SerializerKind>(xml, SerializerKind.Xml).WithTestDisplayName(Constants.Xml);
         }
     }

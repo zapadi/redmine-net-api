@@ -133,9 +133,19 @@ namespace Redmine.Net.Api.Types
         public List<IssueCustomField> IssueCustomFields { get; set; }
         
         /// <summary>
-        /// 
+        /// Obsolete. When read from Redmine, holds only the Id and Name of each project custom field (no values).
+        /// Use <see cref="ProjectCustomFields"/> instead.
         /// </summary>
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use ProjectCustomFields instead.")]
         public List<CustomField> CustomFieldValues { get; set; }
+
+        /// <summary>
+        /// Gets or sets the project custom fields and their values.
+        /// </summary>
+        /// <value>
+        /// The project custom fields.
+        /// </value>
+        public List<IssueCustomField> ProjectCustomFields { get; set; }
 
         /// <summary>
         /// Gets the issue categories.
@@ -183,7 +193,7 @@ namespace Redmine.Net.Api.Types
                 {
                     case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
                     case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
-                    case RedmineKeys.CUSTOM_FIELDS: CustomFieldValues = reader.ReadElementContentAsCollection<CustomField>(); break;
+                    case RedmineKeys.CUSTOM_FIELDS: ProjectCustomFields = reader.ReadElementContentAsCollection<IssueCustomField>(); break;
                     case RedmineKeys.DESCRIPTION: Description = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.ENABLED_MODULES: EnabledModules = reader.ReadElementContentAsCollection<ProjectEnabledModule>(); break;
                     case RedmineKeys.HOMEPAGE: HomePage = reader.ReadElementContentAsString(); break;
@@ -203,6 +213,8 @@ namespace Redmine.Net.Api.Types
                     default: reader.Read(); break;
                 }
             }
+
+            SetCustomFieldValues();
         }
 
         /// <summary>
@@ -231,7 +243,11 @@ namespace Redmine.Net.Api.Types
                 writer.WriteRepeatableElement(RedmineKeys.ISSUE_CUSTOM_FIELD_IDS, RedmineKeys.ISSUE_CUSTOM_FIELD_ID, (IEnumerable<IValue>)IssueCustomFields);
             }
 
-            if (CustomFieldValues != null && CustomFieldValues.Count > 0)
+            if (ProjectCustomFields != null && ProjectCustomFields.Count > 0)
+            {
+                writer.WriteArray(RedmineKeys.CUSTOM_FIELDS, ProjectCustomFields);
+            }
+            else if (CustomFieldValues != null && CustomFieldValues.Count > 0)
             {
                 writer.WriteStartElement(RedmineKeys.CUSTOM_FIELDS);
                 writer.WriteAttributeString(RedmineKeys.TYPE, "array");
@@ -270,7 +286,7 @@ namespace Redmine.Net.Api.Types
             {
                 if (reader.TokenType == JsonToken.EndObject)
                 {
-                    return;
+                    break;
                 }
 
                 if (reader.TokenType != JsonToken.PropertyName)
@@ -282,7 +298,7 @@ namespace Redmine.Net.Api.Types
                 {
                     case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
                     case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadAsDateTime(); break;
-                    case RedmineKeys.CUSTOM_FIELDS: CustomFieldValues = reader.ReadAsCollection<CustomField>(); break;
+                    case RedmineKeys.CUSTOM_FIELDS: ProjectCustomFields = reader.ReadAsCollection<IssueCustomField>(); break;
                     case RedmineKeys.DESCRIPTION: Description = reader.ReadAsString(); break;
                     case RedmineKeys.ENABLED_MODULES: EnabledModules = reader.ReadAsCollection<ProjectEnabledModule>(); break;
                     case RedmineKeys.HOMEPAGE: HomePage = reader.ReadAsString(); break;
@@ -302,6 +318,8 @@ namespace Redmine.Net.Api.Types
                     default: reader.Read(); break;
                 }
             }
+
+            SetCustomFieldValues();
         }
 
         /// <summary>
@@ -333,7 +351,11 @@ namespace Redmine.Net.Api.Types
                     writer.WriteArrayIds(RedmineKeys.ISSUE_CUSTOM_FIELD_IDS, (IEnumerable<IdentifiableName>)IssueCustomFields);
                 }
 
-                if (CustomFieldValues != null && CustomFieldValues.Count > 0)
+                if (ProjectCustomFields != null && ProjectCustomFields.Count > 0)
+                {
+                    writer.WriteArray(RedmineKeys.CUSTOM_FIELDS, ProjectCustomFields);
+                }
+                else if (CustomFieldValues != null && CustomFieldValues.Count > 0)
                 {
                     writer.WritePropertyName(RedmineKeys.CUSTOM_FIELD_VALUES);
                     writer.WriteStartObject();
@@ -365,6 +387,20 @@ namespace Redmine.Net.Api.Types
         }
         #endregion
 
+        private void SetCustomFieldValues()
+        {
+            if (ProjectCustomFields == null)
+            {
+                return;
+            }
+
+            CustomFieldValues = new List<CustomField>(ProjectCustomFields.Count);
+            foreach (var projectCustomField in ProjectCustomFields)
+            {
+                CustomFieldValues.Add(Create<CustomField>(projectCustomField.Id, projectCustomField.Name));
+            }
+        }
+
         #region Implementation of IEquatable<Project>
         /// <summary>
         /// 
@@ -394,6 +430,7 @@ namespace Redmine.Net.Api.Types
                    && (Trackers?.Equals<ProjectTracker>(other.Trackers) ?? other.Trackers == null)
                    && (IssueCustomFields?.Equals<IssueCustomField>(other.IssueCustomFields) ?? other.IssueCustomFields == null)
                    && (CustomFieldValues?.Equals<CustomField>(other.CustomFieldValues) ?? other.CustomFieldValues == null)
+                   && (ProjectCustomFields?.Equals<IssueCustomField>(other.ProjectCustomFields) ?? other.ProjectCustomFields == null)
                    && (IssueCategories?.Equals<ProjectIssueCategory>(other.IssueCategories) ?? other.IssueCategories == null)
                    && (EnabledModules?.Equals<ProjectEnabledModule>(other.EnabledModules) ?? other.EnabledModules == null)
                    && (TimeEntryActivities?.Equals<ProjectTimeEntryActivity>(other.TimeEntryActivities) ?? other.TimeEntryActivities == null);
@@ -433,6 +470,7 @@ namespace Redmine.Net.Api.Types
                 hashCode = HashCodeHelper.GetHashCode(Trackers, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(IssueCustomFields, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(CustomFieldValues, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(ProjectCustomFields, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(IssueCategories, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(EnabledModules, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(TimeEntryActivities, hashCode);
