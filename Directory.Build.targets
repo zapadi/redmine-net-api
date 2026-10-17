@@ -1,0 +1,11 @@
+<Project>
+    <PropertyGroup Label="Signing" Condition=" '$(Sign)' == 'true' ">
+        <SignAssembly>true</SignAssembly>
+        <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)redmine-net-api.snk</AssemblyOriginatorKeyFile>
+    </PropertyGroup>
+
+    <PropertyGroup Label="Release Notes" Condition=" '$(IsPackable)' == 'true' ">
+        <PackageReleaseNotes>$(PackageReleaseNotes)
+            See $(PackageProjectUrl)/blob/master/CHANGELOG.md#v$([System.Text.RegularExpressions.Regex]::Replace('$(Version)', '-.*$|\.', '')) for more details.</PackageReleaseNotes>
+    </PropertyGroup>
+</Project>
