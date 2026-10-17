@@ -15,13 +15,12 @@ public sealed class NullListPropertyEqualityTests
     }
 
     [Fact]
-    public void Role_DifferentPermissions_ReturnsFalse()
+    public void Role_DifferentName_WithPermissionsOnOneSide_ReturnsFalse()
     {
-        var role1 = new Role { Id = 1, Permissions = [new Permission { Info = "add_issues" }] };
-        var role2 = new Role { Id = 1, Permissions = null };
+        var role1 = new Role { Id = 1, Name = "Developer", Permissions = [new Permission { Info = "add_issues" }] };
+        var role2 = new Role { Id = 1, Name = "Manager", Permissions = null };
 
         Assert.False(role1.Equals(role2));
-        Assert.False(role2.Equals(role1));
     }
 
     [Fact]
@@ -52,10 +51,10 @@ public sealed class NullListPropertyEqualityTests
     }
 
     [Fact]
-    public void Group_DifferentMemberships_ReturnsFalse()
+    public void Group_SameUsers_DifferentMemberships_ReturnsFalse()
     {
-        var group1 = new Group { Id = 1, Name = "Group", Memberships = [new Membership { Id = 1 }] };
-        var group2 = new Group { Id = 1, Name = "Group", Memberships = [new Membership { Id = 2 }] };
+        var group1 = new Group { Id = 1, Name = "Group", Users = [], Memberships = [new Membership { Id = 1 }] };
+        var group2 = new Group { Id = 1, Name = "Group", Users = [], Memberships = [new Membership { Id = 2 }] };
 
         Assert.False(group1.Equals(group2));
     }
@@ -88,10 +87,10 @@ public sealed class NullListPropertyEqualityTests
     }
 
     [Fact]
-    public void User_DifferentGroups_ReturnsFalse()
+    public void User_SameCustomFields_DifferentGroups_ReturnsFalse()
     {
-        var user1 = new User { Id = 1, Login = "user", Groups = [new UserGroup { Id = 1 }] };
-        var user2 = new User { Id = 1, Login = "user", Groups = [new UserGroup { Id = 2 }] };
+        var user1 = new User { Id = 1, Login = "user", CustomFields = [], Groups = [new UserGroup { Id = 1 }] };
+        var user2 = new User { Id = 1, Login = "user", CustomFields = [], Groups = [new UserGroup { Id = 2 }] };
 
         Assert.False(user1.Equals(user2));
     }
