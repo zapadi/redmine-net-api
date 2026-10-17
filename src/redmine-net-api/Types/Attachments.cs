@@ -41,13 +41,14 @@ namespace Redmine.Net.Api.Types
         {
             using (new JsonObject(writer, RedmineKeys.ATTACHMENTS))
             {
-                writer.WriteStartArray();
                 foreach (var item in this)
                 {
                     writer.WritePropertyName(item.Key.ToInvariantString());
-                    item.Value.WriteJson(writer);
+                    writer.WriteStartObject();
+                    writer.WriteIfNotDefaultOrNull(RedmineKeys.FILE_NAME, item.Value.FileName);
+                    writer.WriteIfNotDefaultOrNull(RedmineKeys.DESCRIPTION, item.Value.Description);
+                    writer.WriteEndObject();
                 }
-                writer.WriteEndArray();
             }
         }
     }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
 using Padi.DotNet.RedmineAPI.Tests.Infrastructure;
 using Padi.DotNet.RedmineAPI.Tests.Tests;
 using Xunit;
@@ -8,6 +9,28 @@ namespace Padi.DotNet.RedmineAPI.Tests.Serialization;
 [Collection(Constants.DeserializeCollection)]
 public class AttachmentTests(XmlPrettyPrintFixture _) : IClassFixture<XmlPrettyPrintFixture>
 {
+    [Fact]
+    public void Attachments_Should_Serialize_Json_For_Issue_Attachment_Update()
+    {
+        var attachments = new Redmine.Net.Api.Types.Attachments
+        {
+            { 6243, new Redmine.Net.Api.Types.Attachment { FileName = "test.txt", Description = "updated" } },
+            { 6244, new Redmine.Net.Api.Types.Attachment { FileName = "other.txt" } }
+        };
+
+        var output = SerializerFactory.Create(SerializerKind.NewtonsoftJson).Serialize(attachments);
+
+        var expected = JObject.Parse("""
+                                     {
+                                       "attachments": {
+                                         "6243": { "filename": "test.txt", "description": "updated" },
+                                         "6244": { "filename": "other.txt" }
+                                       }
+                                     }
+                                     """);
+        Assert.True(JToken.DeepEquals(expected, JObject.Parse(output)), output);
+    }
+
     [Theory]
     [MemberData(nameof(AttachmentDeserializeTheoryData))]
     public void Attachment_Should_Deserialize(string input, SerializerKind kind)
