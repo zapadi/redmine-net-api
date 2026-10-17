@@ -262,7 +262,8 @@ namespace Redmine.Net.Api
                 Serializer = (_isSerializationIgnored) ? null : RedmineSerializerFactory.CreateSerializer(SerializationType),
                 RedmineVersion = Version,
                 Authentication = Authentication ?? new RedmineNoAuthentication(),
-                WebClientOptions = WebClientOptions 
+                WebClientOptions = WebClientOptions,
+                ClientFunc = ClientFunc
             };
             
             return options;

@@ -46,9 +46,28 @@ namespace Redmine.Net.Api.Net.WebClient
         private readonly IRedmineSerializer _serializer;
 
         public InternalRedmineApiWebClient(RedmineManagerOptions redmineManagerOptions)
-            : this(() => new InternalWebClient(redmineManagerOptions), redmineManagerOptions.Authentication, redmineManagerOptions.Serializer)
+            : this(CreateWebClientFunc(redmineManagerOptions), redmineManagerOptions.Authentication, redmineManagerOptions.Serializer)
         {
             ConfigureServicePointManager(redmineManagerOptions.WebClientOptions);
+        }
+
+        private static Func<System.Net.WebClient> CreateWebClientFunc(RedmineManagerOptions redmineManagerOptions)
+        {
+            if (redmineManagerOptions.ClientFunc == null)
+            {
+                return () => new InternalWebClient(redmineManagerOptions);
+            }
+
+            return () =>
+            {
+                var webClient = redmineManagerOptions.ClientFunc();
+                if (webClient.BaseAddress.IsNullOrWhiteSpace())
+                {
+                    webClient.BaseAddress = redmineManagerOptions.BaseAddress.ToString();
+                }
+
+                return webClient;
+            };
         }
 
         public InternalRedmineApiWebClient(

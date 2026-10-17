@@ -88,18 +88,14 @@ namespace Redmine.Net.Api
     #if NET45_OR_GREATER || NETCOREAPP
             if (_redmineManagerOptions.WebClientOptions is RedmineWebClientOptions)
             {
-                ApiClient = _redmineManagerOptions.ClientFunc != null 
-                    ? new InternalRedmineApiWebClient(_redmineManagerOptions.ClientFunc, _redmineManagerOptions.Authentication, _redmineManagerOptions.Serializer)
-                    : new InternalRedmineApiWebClient(_redmineManagerOptions);
+                ApiClient = new InternalRedmineApiWebClient(_redmineManagerOptions);
             }
             else
             {
               
             }
     #else
-            ApiClient = _redmineManagerOptions.ClientFunc != null 
-            ? new InternalRedmineApiWebClient(_redmineManagerOptions.ClientFunc, _redmineManagerOptions.Authentication, _redmineManagerOptions.Serializer)
-            : new InternalRedmineApiWebClient(_redmineManagerOptions);
+            ApiClient = new InternalRedmineApiWebClient(_redmineManagerOptions);
     #endif
         }
 
