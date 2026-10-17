@@ -12,6 +12,37 @@ namespace Padi.DotNet.RedmineAPI.Tests.Serialization;
 public class VersionTests(XmlPrettyPrintFixture _) : IClassFixture<XmlPrettyPrintFixture>
 {
     [Theory]
+    [InlineData(SerializerKind.Xml)]
+    [InlineData(SerializerKind.NewtonsoftJson)]
+    public void Should_Not_Serialize_Unset_Status_And_Sharing(SerializerKind kind)
+    {
+        var version = new Redmine.Net.Api.Types.Version { Name = "1.0" };
+
+        var output = SerializerFactory.Create(kind).Serialize(version);
+
+        Assert.DoesNotContain("status", output);
+        Assert.DoesNotContain("sharing", output);
+    }
+
+    [Theory]
+    [InlineData(SerializerKind.Xml)]
+    [InlineData(SerializerKind.NewtonsoftJson)]
+    public void Should_Serialize_Set_Status_And_Sharing(SerializerKind kind)
+    {
+        var version = new Redmine.Net.Api.Types.Version
+        {
+            Name = "1.0",
+            Status = VersionStatus.Locked,
+            Sharing = VersionSharing.System
+        };
+
+        var output = SerializerFactory.Create(kind).Serialize(version);
+
+        Assert.Contains("locked", output);
+        Assert.Contains("system", output);
+    }
+
+    [Theory]
     [MemberData(nameof(VersionDeserializeTheoryData))]
     public void Should_Deserialize_Version(string input, SerializerKind kind)
     {
