@@ -149,7 +149,7 @@ namespace Redmine.Net.Api
         /// </summary>
         /// <param name="clientOptions"></param>
         /// <returns></returns>
-        [Obsolete("Use WithWebClientOptions(IRedmineWebClientOptions clientOptions) instead.")]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use WithWebClientOptions(IRedmineWebClientOptions clientOptions) instead.")]
         public RedmineManagerOptionsBuilder WithWebClientOptions(IRedmineApiClientOptions clientOptions)
         {
             return WithWebClientOptions((IRedmineWebClientOptions)clientOptions);
@@ -170,7 +170,7 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
-        [Obsolete("Use WebClientOptions instead.")]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use WebClientOptions instead.")]
         public IRedmineApiClientOptions ClientOptions
         {
             get => WebClientOptions;
