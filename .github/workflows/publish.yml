@@ -1,178 +1,134 @@
-name: 'Publish to NuGet'
+name: Publish to NuGet
 
 on:
   workflow_dispatch:
     inputs:
-      reason:
-        description: 'The reason for running the workflow'
-        required: false
-        default: 'Manual publish'
       version:
-        description: 'Version'
+        description: 'Version (SemVer, e.g. 4.51.0)'
         required: true
+        type: string
   push:
     tags:
       - '[0-9]+.[0-9]+.[0-9]+*'
 
+permissions:
+  contents: read
+
+concurrency:
+  group: publish-nuget
+  cancel-in-progress: false
+
 env:
-  # Disable the .NET logo in the console output.
   DOTNET_NOLOGO: true
-  
-  # Disable sending usage data to Microsoft
   DOTNET_CLI_TELEMETRY_OPTOUT: true
-  
-  # Set working directory
-  PROJECT_PATH: ./src/redmine-net-api/redmine-net-api.csproj
-  
-  # Configuration
-  CONFIGURATION: Release
 
 jobs:
-  check-tag-branch:
-    name: Check Tag and Master Branch hashes
-    # This job is based on replies in https://github.community/t/how-to-create-filter-on-both-tag-and-branch/16936/6
+  version:
+    name: Validate version
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     outputs:
-      ver: ${{ steps.set-version.outputs.VERSION }}
+      version: ${{ steps.version.outputs.version }}
     steps:
-      - name: Get tag commit hash
-        id: tag-commit-hash
+      - id: version
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
+          GH_TOKEN: ${{ github.token }}
         run: |
-          hash=${{ github.sha }}
-          echo "tag-hash=${hash}" >> "$GITHUB_OUTPUT"
-          echo $hash
-
-      - name: Checkout master
-        uses: actions/checkout@v4
-        with:
-          ref: master
-
-      - name: Get latest master commit hash
-        id: master-commit-hash
-        run: |
-          hash=$(git log -n1 --format=format:"%H")
-          echo "master-hash=${hash}" >> "$GITHUB_OUTPUT"
-          echo $hash
-
-      - name: Verify tag commit matches master commit - exit if they don't match
-        if: steps.tag-commit-hash.outputs.tag-hash != steps.master-commit-hash.outputs.master-hash
-        run: |
-          echo "Tag was not on the master branch. Exiting."
-          exit 1
-
-      - name: Get Dispatched Version
-        if: github.event_name == 'workflow_dispatch'
-        run: |
-          echo "VERSION=${{ github.event.inputs.version }}" >> $GITHUB_ENV
-
-      - name: Get Tag Version
-        if: github.event_name == 'push'
-        run: |
-          echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV   
-
-      - name: Set Version
-        id: set-version
-        run: |
-          echo "VERSION=${{ env.VERSION }}" >> "$GITHUB_OUTPUT"
-  
-  validate-version:
-    name: Validate Version
-    needs: check-tag-branch
-    runs-on: ubuntu-latest
-    steps:
-      - name: Get Version
-        run: echo "VERSION=${{ needs.check-tag-branch.outputs.ver }}" >> $GITHUB_ENV
-
-      - name: Display Version
-        run: echo "$VERSION"
-
-      - name: Check Version Is Declared
-        run: |
-          if [[ -z "$VERSION" ]]; then
-            echo "Version is not declared."
+          if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]; then
+            version="$INPUT_VERSION"
+          else
+            version="$GITHUB_REF_NAME"
+          fi
+          if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$ ]]; then
+            echo "::error::'$version' is not a valid SemVer version (X.Y.Z[-prerelease])."
             exit 1
           fi
-
-      - name: Validate Version matches SemVer format
-        run: |
-          if [[ ! "$VERSION" =~ ^([0-9]+\.){2,3}[0-9]+(-[a-zA-Z0-9.-]+)*$ ]]; then
-            echo "The version does not match the SemVer format (X.Y.Z). Please provide a valid version."
+          master_sha=$(gh api "repos/$GITHUB_REPOSITORY/commits/master" --jq .sha)
+          if [[ "$GITHUB_SHA" != "$master_sha" ]]; then
+            echo "::error::$GITHUB_REF_NAME ($GITHUB_SHA) is not the master HEAD ($master_sha)."
             exit 1
           fi
-  
-  call-build-and-test:
-    name: Call Build and Test
-    needs: validate-version
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+  test:
+    name: Build and Test
+    needs: version
     uses: ./.github/workflows/build-and-test.yml
-  
+
   pack:
     name: Pack
-    needs: [check-tag-branch, validate-version, call-build-and-test]
+    needs: [ version, test ]
     runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      id-token: write
+      attestations: write
+      artifact-metadata: write
+    env:
+      VERSION: ${{ needs.version.outputs.version }}
     steps:
-      - name: Get Version
-        run: echo "VERSION=${{ needs.check-tag-branch.outputs.ver }}" >> $GITHUB_ENV
-
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
-          lfs: true
-          fetch-depth: 0
+          persist-credentials: false
 
-      - name: Setup .NET Core (global.json)
-        uses: actions/setup-dotnet@v4
+      - uses: actions/setup-dotnet@v6
 
-      - name: Display dotnet version
-        run: dotnet --version
-
-      - name: Install dependencies
-        run: dotnet restore "${{ env.PROJECT_PATH }}"
-
-      - name: Create the package
+      - name: Pack
         run: >-
-          dotnet pack "${{ env.PROJECT_PATH }}"
+          dotnet pack src/redmine-net-api/redmine-net-api.csproj
+          --configuration Release
           --output ./artifacts
-          --configuration "${{ env.CONFIGURATION }}"
           --include-symbols
-          --include-source
-          -p:Version=$VERSION
-          -p:PackageVersion=$VERSION
-          -p:IncludeSymbols=true
           -p:SymbolPackageFormat=snupkg
+          -p:Version="$VERSION"
+          -p:PackageVersion="$VERSION"
 
-      - name: Create the package - Signed
+      - name: Pack signed
         run: >-
-          dotnet pack "${{ env.PROJECT_PATH }}"
+          dotnet pack src/redmine-net-api/redmine-net-api.csproj
+          --configuration Release
           --output ./artifacts
-          --configuration "${{ env.CONFIGURATION }}"
           --include-symbols
-          --include-source
-          -p:Version=$VERSION
-          -p:PackageVersion=$VERSION
-          -p:IncludeSymbols=true
           -p:SymbolPackageFormat=snupkg
+          -p:Version="$VERSION"
+          -p:PackageVersion="$VERSION"
           -p:Sign=true
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+      - uses: actions/attest@v4
         with:
-          name: artifacts
-          path: ./artifacts
-  
-  publish:
-    name: Publish to Nuget
-    needs: pack
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
+          subject-path: ./artifacts/*.nupkg
+
+      - uses: actions/upload-artifact@v7
         with:
-          name: artifacts
+          name: packages
           path: ./artifacts
 
-      - name: Publish packages
+  publish:
+    name: Publish
+    needs: pack
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: nuget
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: packages
+          path: ./artifacts
+
+      - id: login
+        uses: NuGet/login@v1
+        with:
+          user: ${{ secrets.NUGET_USER }}
+
+      - name: Push
+        env:
+          NUGET_API_KEY: ${{ steps.login.outputs.NUGET_API_KEY }}
         run: >-
-          dotnet nuget push ./artifacts/**.nupkg
-          --source 'https://api.nuget.org/v3/index.json'
-          --api-key ${{secrets.NUGET_TOKEN}}
+          dotnet nuget push "./artifacts/*.nupkg"
+          --api-key "$NUGET_API_KEY"
+          --source https://api.nuget.org/v3/index.json
           --skip-duplicate
