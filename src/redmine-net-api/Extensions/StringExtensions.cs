@@ -75,7 +75,7 @@ namespace Redmine.Net.Api.Extensions
         /// </summary>
         /// <param name="text"></param>
         /// <returns></returns>
-        [Obsolete()]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use text?.ToLowerInvariant() instead.")]
         [SuppressMessage("ReSharper", "CA1308")]
         public static string ToLowerInv(this string text)
         {
