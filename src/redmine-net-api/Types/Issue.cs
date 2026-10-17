@@ -463,7 +463,10 @@ namespace Redmine.Net.Api.Types
                 writer.WriteArray(RedmineKeys.UPLOADS, Uploads);
                 writer.WriteArray(RedmineKeys.CUSTOM_FIELDS, CustomFields);
 
-                writer.WriteArrayIds(RedmineKeys.WATCHER_USER_IDS, (IEnumerable<IdentifiableName>)Watchers);
+                if (Watchers != null && Watchers.Count > 0)
+                {
+                    writer.WriteArrayIds(RedmineKeys.WATCHER_USER_IDS, (IEnumerable<IdentifiableName>)Watchers);
+                }
             }
         }
         #endregion

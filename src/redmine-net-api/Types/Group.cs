@@ -147,7 +147,10 @@ namespace Redmine.Net.Api.Types
             using (new JsonObject(writer, RedmineKeys.GROUP))
             {
                 writer.WriteProperty(RedmineKeys.NAME, Name);
-                writer.WriteArrayIds(RedmineKeys.USER_IDS, (IEnumerable<IdentifiableName>)Users);
+                if (Users != null && Users.Count > 0)
+                {
+                    writer.WriteArrayIds(RedmineKeys.USER_IDS, (IEnumerable<IdentifiableName>)Users);
+                }
             }
         }
         #endregion

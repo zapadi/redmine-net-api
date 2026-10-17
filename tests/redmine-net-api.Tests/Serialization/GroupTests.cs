@@ -27,6 +27,16 @@ public class GroupTests(XmlPrettyPrintFixture _) : IClassFixture<XmlPrettyPrintF
         Assert.Equal([5, 8], userIds.Values<int>());
     }
 
+    [Fact]
+    public void Should_Omit_Json_Group_User_Ids_When_Empty()
+    {
+        var group = new Group { Name = "Developers", Users = [] };
+
+        var output = SerializerFactory.Create(SerializerKind.NewtonsoftJson).Serialize(group);
+
+        Assert.Null(JObject.Parse(output)["group"]!["user_ids"]);
+    }
+
     [Theory]
     [MemberData(nameof(GroupDeserializeTheoryData))]
     public void Should_Deserialize_Group(string input, SerializerKind kind)

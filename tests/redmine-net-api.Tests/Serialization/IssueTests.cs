@@ -42,6 +42,16 @@ public class IssueTests(XmlPrettyPrintFixture _) : IClassFixture<XmlPrettyPrintF
     }
 
     [Fact]
+    public void Should_Omit_Json_Issue_Watcher_User_Ids_When_Empty()
+    {
+        var issue = new Redmine.Net.Api.Types.Issue { Subject = "subject", Watchers = [] };
+
+        var output = SerializerFactory.Create(SerializerKind.NewtonsoftJson).Serialize(issue);
+
+        Assert.Null(JObject.Parse(output)["issue"]!["watcher_user_ids"]);
+    }
+
+    [Fact]
     public void Should_Serialize_Xml_Issue_Watcher_User_Ids_As_Repeated_Elements()
     {
         var issue = new Redmine.Net.Api.Types.Issue
