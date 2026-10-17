@@ -80,6 +80,10 @@ namespace Redmine.Net.Api.Extensions
             {
                 writer.WriteElementString(elementName, boolValue.ToLowerString());
             }
+            else if (value is IFormattable formattable)
+            {
+                writer.WriteElementString(elementName, formattable.ToString(null, CultureInfo.InvariantCulture));
+            }
             else
             {
                 writer.WriteElementString(elementName, value.ToString());

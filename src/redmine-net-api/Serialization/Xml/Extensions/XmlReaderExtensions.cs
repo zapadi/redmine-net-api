@@ -113,7 +113,7 @@ namespace Redmine.Net.Api.Extensions
         {
             var content = reader.ReadElementContentAsString();
 
-            if (!content.IsNullOrWhiteSpace() && DateTime.TryParse(content, out var result))
+            if (!content.IsNullOrWhiteSpace() && DateTime.TryParse(content, CultureInfo.InvariantCulture, DateTimeStyles.None, out var result))
             {
                 return result;
             }
