@@ -9,6 +9,21 @@ namespace Padi.DotNet.RedmineAPI.Tests.Serialization;
 [Collection(Constants.DeserializeCollection)]
 public class IssueTests(XmlPrettyPrintFixture _) : IClassFixture<XmlPrettyPrintFixture>
 {
+    [Fact]
+    public void Should_Serialize_Xml_Issue_Custom_Field_Without_Values_With_Id()
+    {
+        var issue = new Redmine.Net.Api.Types.Issue
+        {
+            Subject = "subject",
+            CustomFields = [Redmine.Net.Api.Types.IssueCustomField.CreateMultiple(4, "IcfList", [])]
+        };
+
+        var output = SerializerFactory.Create(SerializerKind.Xml).Serialize(issue);
+
+        Assert.Contains("<custom_field id=\"4\" />", output);
+        Assert.DoesNotContain("<custom_field />", output);
+    }
+
     [Theory]
     [MemberData(nameof(IssuesDeserializeTheoryData))]
     public void Should_Deserialize_Issues(string input, SerializerKind kind)

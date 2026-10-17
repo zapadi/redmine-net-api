@@ -111,14 +111,14 @@ namespace Redmine.Net.Api.Types
         /// <param name="writer"></param>
         public override void WriteXml(XmlWriter writer)
         {
+            writer.WriteAttributeString(RedmineKeys.ID, Id.ToInvariantString());
+
             if (Values == null)
             {
                 return;
             }
 
             var itemsCount = Values.Count;
-
-            writer.WriteAttributeString(RedmineKeys.ID, Id.ToInvariantString());
 
             Multiple = itemsCount > 1;
             
