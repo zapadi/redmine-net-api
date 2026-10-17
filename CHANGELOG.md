@@ -1,5 +1,24 @@
 # Changelog
 
+## [Unreleased]
+
+⚠️ Deprecations
+*	Deprecated .NET Framework 2.0 and 4.0 targets: RedmineManager, IRedmineManager and RedmineManagerOptionsBuilder are marked [Obsolete] on those targets and will be removed in the next version (builds with TreatWarningsAsErrors will fail)
+
+🛠 Fixes
+*	Fixed Project custom field values being ignored by Redmine (XML now uses custom_fields; values are also sent on create)
+*	Fixed invalid JSON for multi-value Project custom field values
+*	Fixed Project XML create not associating issue custom fields (now sent as issue_custom_field_ids)
+
+🧪 Tests
+*	Unit tests now run in CI on net10.0 and fail the build on failure
+
+📦 Chore
+*	Converted the solution to .slnx
+*	Set minimum .NET SDK to 10.0.102 (global.json)
+*	Added Central Package Management (Directory.Packages.props)
+*	Moved signing and release notes to Directory.Build.targets; signed packages are now actually strong-named
+
 ## [v4.50.0]
 
 🚀 Features
