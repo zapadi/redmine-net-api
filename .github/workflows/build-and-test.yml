@@ -15,12 +15,20 @@ on:
       - '**.cs'
       - '**.csproj'
       - '**.slnx'
+      - '**.props'
+      - '**.targets'
+      - 'global.json'
+      - '.github/workflows/build-and-test.yml'
   pull_request:
     branches: [ master ]
     paths:
       - '**.cs'
       - '**.csproj'
       - '**.slnx'
+      - '**.props'
+      - '**.targets'
+      - 'global.json'
+      - '.github/workflows/build-and-test.yml'
 
 # concurrency:
 #   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
