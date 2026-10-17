@@ -19,6 +19,7 @@
 *	Set minimum .NET SDK to 10.0.102 (global.json)
 *	Added Central Package Management (Directory.Packages.props)
 *	Moved signing and release notes to Directory.Build.targets; signed packages are now actually strong-named
+*	CodeQL uses build-mode none (no build or SDK needed)
 
 ## [v4.50.0]
 

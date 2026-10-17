@@ -39,7 +39,7 @@ jobs:
         id: tag-commit-hash
         run: |
           hash=${{ github.sha }}
-          echo "{name}=tag-hash::${hash}" >> $GITHUB_OUTPUT
+          echo "tag-hash=${hash}" >> "$GITHUB_OUTPUT"
           echo $hash
 
       - name: Checkout master
@@ -51,7 +51,7 @@ jobs:
         id: master-commit-hash
         run: |
           hash=$(git log -n1 --format=format:"%H")
-          echo "{name}=master-hash::${hash}" >> $GITHUB_OUTPUT
+          echo "master-hash=${hash}" >> "$GITHUB_OUTPUT"
           echo $hash
 
       - name: Verify tag commit matches master commit - exit if they don't match
