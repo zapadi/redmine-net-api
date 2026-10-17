@@ -26,6 +26,11 @@
 *	Added Central Package Management (Directory.Packages.props)
 *	Moved signing and release notes to Directory.Build.targets; signed packages are now actually strong-named
 *	CodeQL uses build-mode none (no build or SDK needed)
+*	Modernized GitHub workflows (least-privilege permissions, concurrency, timeouts, latest actions)
+*	Publishing to NuGet uses Trusted Publishing (OIDC) instead of an API key
+*	Added build provenance attestations for NuGet packages
+*	Added Dependabot for GitHub Actions and NuGet
+*	Removed AppVeyor
 
 ## [v4.50.0]
 
