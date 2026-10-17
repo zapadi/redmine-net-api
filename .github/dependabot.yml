@@ -13,5 +13,8 @@ updates:
     schedule:
       interval: weekly
     groups:
+      library:
+        patterns: [ 'Newtonsoft.Json' ]
       nuget:
         patterns: [ '*' ]
+        exclude-patterns: [ 'Newtonsoft.Json' ]
