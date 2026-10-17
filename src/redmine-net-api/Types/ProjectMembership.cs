@@ -173,7 +173,7 @@ namespace Redmine.Net.Api.Types
                 && Project == other.Project
                 && User == other.User
                 && Group == other.Group
-                && Roles != null ? Roles.Equals<MembershipRole>(other.Roles) : other.Roles == null;
+                && (Roles?.Equals<MembershipRole>(other.Roles) ?? other.Roles == null);
         }
 
         /// <summary>

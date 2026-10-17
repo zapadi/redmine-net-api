@@ -165,9 +165,9 @@ namespace Redmine.Net.Api.Types
         {
             if (other == null) return false;
             return base.Equals(other)
-                   && Users != null ? Users.Equals<GroupUser>(other.Users) : other.Users == null
-                   && CustomFields != null ? CustomFields.Equals<IssueCustomField>(other.CustomFields) : other.CustomFields == null
-                   && Memberships != null ? Memberships.Equals<Membership>(other.Memberships) : other.Memberships == null;
+                   && (Users?.Equals<GroupUser>(other.Users) ?? other.Users == null)
+                   && (CustomFields?.Equals<IssueCustomField>(other.CustomFields) ?? other.CustomFields == null)
+                   && (Memberships?.Equals<Membership>(other.Memberships) ?? other.Memberships == null);
         }
 
         /// <summary>

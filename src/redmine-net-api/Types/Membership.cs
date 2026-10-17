@@ -126,7 +126,7 @@ namespace Redmine.Net.Api.Types
             if (other == null) return false;
             return Id == other.Id
                 && Project == other.Project 
-                && Roles != null ? Roles.Equals<MembershipRole>(other.Roles) : other.Roles == null;
+                && (Roles?.Equals<MembershipRole>(other.Roles) ?? other.Roles == null);
         }
         
         /// <summary>
