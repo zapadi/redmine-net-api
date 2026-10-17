@@ -161,6 +161,10 @@ INSERT INTO public."custom_fields" ("type", "name", field_format, min_length, ma
 VALUES('IssueCustomField', 'IssueCustomField2', 'string', 2, 7,false, false, false,  true, false, 'ICF2 description'),
       ('IssueCustomField', 'IssueCustomField3', 'string', 2, 7,false, true, true,  true, true, 'ICF3 description');
 
+INSERT INTO public."custom_fields" ("type", "name", field_format, possible_values, is_required, is_for_all, is_filter, visible, multiple, description)
+VALUES('ProjectCustomField', 'ProjectCustomField3', 'string', null, false, false, false, true, false, 'PCF3 description'),
+      ('ProjectCustomField', 'ProjectCustomField4', 'list', E'---\n- a\n- b\n- c\n', false, false, false, true, true, 'PCF4 description');
+
 INSERT INTO wikis (project_id, start_page, status)
 SELECT id, 'Home', 1
 FROM projects

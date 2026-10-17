@@ -1,3 +1,5 @@
+using System.Text;
+using Newtonsoft.Json.Linq;
 using Padi.RedmineAPI.Integration.Tests.Fixtures;
 using Padi.RedmineAPI.Integration.Tests.Helpers;
 using Padi.RedmineAPI.Integration.Tests.Infrastructure;
@@ -23,6 +25,15 @@ public class ProjectTestsAsync(RedmineTestContainerFixture fixture)
         };
 
         return await fixture.RedmineManager.CreateAsync(entity);
+    }
+
+    // Project custom field values are read straight from the API response,
+    // because Project.CustomFieldValues does not deserialize the values.
+    private async Task<JToken?> GetProjectCustomFieldValueAsync(int projectId, int customFieldId)
+    {
+        var content = await fixture.RedmineManager.DownloadFileAsync($"{fixture.RedmineHost}/projects/{projectId}.json", cancellationToken: TestContext.Current.CancellationToken);
+        var customFields = JObject.Parse(Encoding.UTF8.GetString(content))["project"]?["custom_fields"];
+        return customFields?.FirstOrDefault(cf => (int?)cf["id"] == customFieldId)?["value"];
     }
 
     [Fact]
@@ -62,15 +73,17 @@ public class ProjectTestsAsync(RedmineTestContainerFixture fixture)
                 // An existing icf is associated with the new project
                  IssueCustomField.CreateSingle(1, RandomHelper.GenerateText(5), RandomHelper.GenerateText(7))
             ],
+            // Project custom fields 3 (string) and 4 (multi-value list) are seeded in init-redmine.sql.
             CustomFieldValues = [
                 new CustomField()
                 {
-                    Id = 1,
-                    Name = "VALUE"
+                    Id = 3,
+                    PossibleValues = [new CustomFieldPossibleValue(value: "VALUE")]
                 },
-                new CustomField{
-                    Id = 2,
-                    Name = "OTHER_VALUE"
+                new CustomField
+                {
+                    Id = 4,
+                    PossibleValues = [new CustomFieldPossibleValue(value: "a"), new CustomFieldPossibleValue(value: "b")]
                 },
             ]
         };
@@ -104,6 +117,9 @@ public class ProjectTestsAsync(RedmineTestContainerFixture fixture)
         
        // Assert.Equal(2, project.IssueCustomFields.Count);
         Assert.All(project.IssueCustomFields, icf => Assert.True(icf.Id > 0));
+
+        Assert.Equal("VALUE", (string?)await GetProjectCustomFieldValueAsync(project.Id, 3));
+        Assert.Equal(["a", "b"], Assert.IsType<JArray>(await GetProjectCustomFieldValueAsync(project.Id, 4)).Values<string>());
     }
     
       [Fact]
@@ -135,30 +151,18 @@ public class ProjectTestsAsync(RedmineTestContainerFixture fixture)
         Assert.NotNull(createdProject);
 
         createdProject.Description = "Changed description";
+        // Project custom fields 3 (string) and 4 (multi-value list) are seeded in init-redmine.sql.
         createdProject.CustomFieldValues =
         [
             new CustomField()
             {
-                Id = 1,PossibleValues =new List<CustomFieldPossibleValue>()
-                {
-                    new CustomFieldPossibleValue(value: "VALUE")
-                }
-            },
-            new CustomField
-            {
-                Id = 2,
-                PossibleValues =new List<CustomFieldPossibleValue>()
-                {
-                    new CustomFieldPossibleValue(value: "OTHER_VALUE")
-                }
-            },
-            new CustomField
-            {
                 Id = 3,
-                PossibleValues =new List<CustomFieldPossibleValue>()
-                {
-                    new CustomFieldPossibleValue(value: "OTHER_VALUE_3")
-                }
+                PossibleValues = [new CustomFieldPossibleValue(value: "OTHER_VALUE")]
+            },
+            new CustomField
+            {
+                Id = 4,
+                PossibleValues = [new CustomFieldPossibleValue(value: "b"), new CustomFieldPossibleValue(value: "c")]
             },
         ];
         
@@ -189,6 +193,9 @@ public class ProjectTestsAsync(RedmineTestContainerFixture fixture)
         Assert.NotEmpty(project.IssueCustomFields);
         Assert.Single(project.IssueCustomFields);
         Assert.All(project.IssueCustomFields, icf => Assert.True(icf.Id > 0));
+
+        Assert.Equal("OTHER_VALUE", (string?)await GetProjectCustomFieldValueAsync(project.Id, 3));
+        Assert.Equal(["b", "c"], Assert.IsType<JArray>(await GetProjectCustomFieldValueAsync(project.Id, 4)).Values<string>());
     }
 
     [Fact]
