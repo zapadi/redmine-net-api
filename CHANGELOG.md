@@ -5,6 +5,7 @@
 🚀 Features
 *	Added Project.ProjectCustomFields to set and read project custom field values
 *	A project read from Redmine now re-sends its custom field values (ProjectCustomFields) on update
+*	WithWebClient is now honored; the function must return a new WebClient on every call (the library disposes it after each request and WebClientOptions are not applied to it)
 
 ⚠️ Deprecations
 *	Project.CustomFieldValues is obsolete; use ProjectCustomFields
@@ -15,6 +16,19 @@
 *	Fixed invalid JSON for multi-value Project custom field values
 *	Fixed Project XML create not associating issue custom fields (now sent as issue_custom_field_ids)
 *	Fixed XML for empty custom field values (Values == null) being sent without an id
+*	Fixed Equals on types with list properties (operator precedence made unequal objects compare equal)
+*	Fixed JSON watcher_user_ids (Issue) and user_ids (Group) not being sent as arrays
+*	Fixed Version status and sharing being sent when unset
+*	Fixed invalid JSON for UpdateIssueAttachment
+*	Fixed ChangeSet revision not being read from XML
+*	Fixed XML dates and decimal values depending on the current culture (now invariant)
+*	Fixed memory leak from XmlSerializer instances created on every array write
+*	Fixed WithWebClient being ignored
+*	Fixed DefaultHeaders removing authentication headers
+*	UseProxy = true now uses the system proxy when no Proxy is configured
+*	Fixed 422 validation errors not being thrown for Update, Delete and other calls without a result
+*	Fixed async archive/unarchive project using the wrong HTTP method (now PUT) and project/repository action URLs being escaped
+*	Fixed Count and Get modifying the caller's RequestOptions; CountAsync now sends limit=1
 
 🧪 Tests
 *	Unit tests now run in CI on net10.0 and fail the build on failure
