@@ -28,6 +28,10 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
+        internal const string OBSOLETE_NET20_NET40_TEXT = "The next version will no longer support .NET Framework 2.0 and 4.0.";
+        /// <summary>
+        /// 
+        /// </summary>
         public const int DEFAULT_PAGE_SIZE_VALUE = 25;
         
         /// <summary>

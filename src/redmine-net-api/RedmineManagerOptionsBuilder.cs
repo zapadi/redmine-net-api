@@ -28,6 +28,9 @@ namespace Redmine.Net.Api
     /// <summary>
     /// 
     /// </summary>
+    #if NET20 || NET40
+    [Obsolete(RedmineConstants.OBSOLETE_NET20_NET40_TEXT)]
+    #endif
     public sealed class RedmineManagerOptionsBuilder
     {
         private enum ClientType
