@@ -36,6 +36,24 @@ namespace Redmine.Net.Api.Extensions
          new Type[0];
 #endif
         private static readonly XmlAttributeOverrides XmlAttributeOverrides = new XmlAttributeOverrides();
+        private static readonly Dictionary<string, XmlSerializer> ArraySerializers = new Dictionary<string, XmlSerializer>();
+        private static readonly object ArraySerializersLock = new object();
+
+        private static XmlSerializer GetArraySerializer(Type type, string root, string defaultNamespace)
+        {
+            var key = type.AssemblyQualifiedName + "|" + root + "|" + defaultNamespace;
+
+            lock (ArraySerializersLock)
+            {
+                if (!ArraySerializers.TryGetValue(key, out var serializer))
+                {
+                    serializer = new XmlSerializer(type, XmlAttributeOverrides, EmptyTypeArray, new XmlRootAttribute(root), defaultNamespace);
+                    ArraySerializers.Add(key, serializer);
+                }
+
+                return serializer;
+            }
+        }
 
         /// <summary>
         /// Writes the id if not null.
@@ -365,10 +383,7 @@ namespace Redmine.Net.Api.Extensions
             writer.WriteStartElement(elementName);
             writer.WriteAttributeString("type", "array");
 
-            var rootAttribute = new XmlRootAttribute(root);
-
-            var serializer = new XmlSerializer(type, XmlAttributeOverrides, EmptyTypeArray, rootAttribute,
-                defaultNamespace);
+            var serializer = GetArraySerializer(type, root, defaultNamespace);
 
             foreach (var item in collection)
             {
@@ -398,10 +413,7 @@ namespace Redmine.Net.Api.Extensions
             writer.WriteStartElement(elementName);
             writer.WriteAttributeString("type", "array");
 
-            var rootAttribute = new XmlRootAttribute(root);
-
-            var serializer = new XmlSerializer(type, XmlAttributeOverrides, EmptyTypeArray, rootAttribute,
-                defaultNamespace);
+            var serializer = GetArraySerializer(type, root, defaultNamespace);
 
             foreach (var item in collection)
             {
