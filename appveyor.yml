@@ -49,11 +49,10 @@ before_build:
   - ps: dotnet --version
 
 build_script:
-  - ps: dotnet build src\redmine-net-api\redmine-net-api.csproj -c Release --version-suffix=$env:BUILD_SUFFIX 
-  - ps: dotnet build src\redmine-net-api\redmine-net-api.csproj -c Release --version-suffix=$env:BUILD_SUFFIX -p:Sign=true
-    
-after_build:
+  # Build and pack each variant in turn: both share bin/obj, so the signed build would overwrite the unsigned output
+  - ps: dotnet build src\redmine-net-api\redmine-net-api.csproj -c Release --version-suffix=$env:BUILD_SUFFIX
   - ps: dotnet pack src\redmine-net-api\redmine-net-api.csproj -c Release --output .\artifacts --include-symbols -p:SymbolPackageFormat=snupkg --no-build $env:VERSION_SUFFIX
+  - ps: dotnet build src\redmine-net-api\redmine-net-api.csproj -c Release --version-suffix=$env:BUILD_SUFFIX -p:Sign=true
   - ps: dotnet pack src\redmine-net-api\redmine-net-api.csproj -c Release --output .\artifacts --include-symbols -p:SymbolPackageFormat=snupkg --no-build $env:VERSION_SUFFIX -p:Sign=true
 
 test: off

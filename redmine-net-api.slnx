@@ -30,9 +30,8 @@
   </Folder>
   <Folder Name="/SolutionFolder/Props/">
     <File Path="Directory.Build.props" />
-    <File Path="releasenotes.props" />
-    <File Path="signing.props" />
-    <File Path="version.props" />
+    <File Path="Directory.Build.targets" />
+    <File Path="Directory.Packages.props" />
   </Folder>
   <Folder Name="/src/">
     <Project Path="src/redmine-net-api/redmine-net-api.csproj" />
