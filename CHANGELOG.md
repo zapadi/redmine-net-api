@@ -12,6 +12,7 @@
 
 🧪 Tests
 *	Unit tests now run in CI on net10.0 and fail the build on failure
+*	Moved test projects to Microsoft.Testing.Platform with TRX reports
 
 📦 Chore
 *	Converted the solution to .slnx

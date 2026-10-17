@@ -19,11 +19,10 @@
         <PackageVersion Include="Microsoft.Extensions.Configuration.Binder" Version="10.0.0" />
         <PackageVersion Include="Microsoft.Extensions.Configuration.FileExtensions" Version="10.0.0" />
         <PackageVersion Include="Microsoft.Extensions.Configuration.UserSecrets" Version="10.0.0" />
-        <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
+        <PackageVersion Include="Microsoft.Testing.Extensions.TrxReport" Version="2.4.1" />
         <PackageVersion Include="Npgsql" Version="8.0.8" />
         <PackageVersion Include="Testcontainers.PostgreSql" Version="4.8.1" />
-        <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.5" />
-        <PackageVersion Include="xunit.v3" Version="3.2.0" />
+        <PackageVersion Include="xunit.v3.mtp-v2" Version="3.2.0" />
         <PackageVersion Include="xunit.v3.extensibility.core" Version="3.2.0" />
     </ItemGroup>
 </Project>
