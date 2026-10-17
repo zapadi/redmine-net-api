@@ -77,6 +77,10 @@ internal sealed class InternalWebClient : System.Net.WebClient
             {
                 httpWebRequest.Proxy = _webClientOptions.Proxy;
             }
+            else if (_webClientOptions.UseProxy != true)
+            {
+                httpWebRequest.Proxy = null;
+            }
 
             if (_webClientOptions.Credentials != null)
             {

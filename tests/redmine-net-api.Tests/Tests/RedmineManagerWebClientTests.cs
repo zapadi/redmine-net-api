@@ -66,6 +66,14 @@ public sealed class RedmineManagerWebClientTests(XmlPrettyPrintFixture _) : ICla
     }
 
     [Fact]
+    public void Custom_WebClient_Func_Returning_Null_Should_Throw_RedmineException()
+    {
+        var manager = new RedmineManager(new RedmineManagerOptionsBuilder().WithHost(Host).WithWebClient(() => null));
+
+        Assert.Throws<RedmineException>(() => manager.Get<Project>("1"));
+    }
+
+    [Fact]
     public void Count_Should_Not_Mutate_Caller_RequestOptions()
     {
         var (manager, clients) = CreateManager(_ => new FakeWebResponse(IssuesPage));
@@ -161,24 +169,46 @@ public sealed class RedmineManagerWebClientTests(XmlPrettyPrintFixture _) : ICla
         Assert.Equal($"{Host}/projects/foo/unarchive.xml", request.RequestUri.ToString());
     }
 
-    [Fact]
-    public void InternalWebClient_Should_Merge_DefaultHeaders_And_Keep_Default_Proxy()
+    private static HttpWebRequest CreateInternalWebRequest(RedmineWebClientOptions clientOptions, Action<InternalWebClient> configure = null)
     {
         var options = new RedmineManagerOptionsBuilder()
             .WithHost(Host)
-            .WithWebClientOptions(new RedmineWebClientOptions
-            {
-                DefaultHeaders = new Dictionary<string, string> { { "X-Custom", "custom" } }
-            })
+            .WithWebClientOptions(clientOptions)
             .Build();
         using var webClient = new InternalWebClient(options);
-        webClient.Headers.Add("X-Redmine-API-Key", "secret");
+        configure?.Invoke(webClient);
 
         var getWebRequest = typeof(InternalWebClient).GetMethod("GetWebRequest", BindingFlags.Instance | BindingFlags.NonPublic, null, [typeof(Uri)], null);
-        var request = (HttpWebRequest)getWebRequest!.Invoke(webClient, [new Uri($"{Host}/projects.xml")]);
+        return (HttpWebRequest)getWebRequest!.Invoke(webClient, [new Uri($"{Host}/projects.xml")]);
+    }
 
-        Assert.Equal("secret", request!.Headers["X-Redmine-API-Key"]);
+    [Fact]
+    public void InternalWebClient_Should_Merge_DefaultHeaders_And_Bypass_Proxy_By_Default()
+    {
+        var request = CreateInternalWebRequest(
+            new RedmineWebClientOptions { DefaultHeaders = new Dictionary<string, string> { { "X-Custom", "custom" } } },
+            webClient => webClient.Headers.Add("X-Redmine-API-Key", "secret"));
+
+        Assert.Equal("secret", request.Headers["X-Redmine-API-Key"]);
         Assert.Equal("custom", request.Headers["X-Custom"]);
-        Assert.NotNull(request.Proxy);
+        Assert.Null(request.Proxy);
+    }
+
+    [Fact]
+    public void InternalWebClient_Should_Keep_Default_Proxy_When_UseProxy_Is_True()
+    {
+        var request = CreateInternalWebRequest(new RedmineWebClientOptions { UseProxy = true });
+
+        Assert.Same(WebRequest.DefaultWebProxy, request.Proxy);
+    }
+
+    [Fact]
+    public void InternalWebClient_Should_Use_Configured_Proxy()
+    {
+        var proxy = new WebProxy("http://proxy.local:8080");
+
+        var request = CreateInternalWebRequest(new RedmineWebClientOptions { Proxy = proxy });
+
+        Assert.Same(proxy, request.Proxy);
     }
 }
