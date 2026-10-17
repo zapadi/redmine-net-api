@@ -56,6 +56,40 @@ public class IssueTests(XmlPrettyPrintFixture _) : IClassFixture<XmlPrettyPrintF
         Assert.Contains("<watcher_user_ids>2</watcher_user_ids>", output);
     }
 
+    [Fact]
+    public void Should_Deserialize_Xml_Issue_ChangeSets_With_Revision()
+    {
+        const string input = """
+                             <?xml version="1.0" encoding="UTF-8"?>
+                             <issue>
+                                 <id>1</id>
+                                 <subject>subject</subject>
+                                 <changesets type="array">
+                                     <changeset revision="abc123">
+                                         <user id="1" name="Redmine Admin"/>
+                                         <comments>first commit</comments>
+                                         <committed_on>2024-06-15T10:00:00Z</committed_on>
+                                     </changeset>
+                                     <changeset revision="def456">
+                                         <user id="2" name="John Smith"/>
+                                         <comments>second commit</comments>
+                                         <committed_on>2024-06-16T10:00:00Z</committed_on>
+                                     </changeset>
+                                 </changesets>
+                             </issue>
+                             """;
+
+        var output = SerializerFactory.Create(SerializerKind.Xml).Deserialize<Redmine.Net.Api.Types.Issue>(input);
+
+        Assert.NotNull(output.ChangeSets);
+        Assert.Equal(2, output.ChangeSets.Count);
+        Assert.Equal("abc123", output.ChangeSets[0].Revision);
+        Assert.Equal("first commit", output.ChangeSets[0].Comments);
+        Assert.Equal(1, output.ChangeSets[0].User.Id);
+        Assert.Equal("def456", output.ChangeSets[1].Revision);
+        Assert.Equal("second commit", output.ChangeSets[1].Comments);
+    }
+
     [Theory]
     [MemberData(nameof(IssuesDeserializeTheoryData))]
     public void Should_Deserialize_Issues(string input, SerializerKind kind)

@@ -70,6 +70,7 @@ namespace Redmine.Net.Api.Types
         /// <param name="reader"></param>
         public void ReadXml(XmlReader reader)
         {
+            Revision = reader.GetAttribute(RedmineKeys.REVISION);
             reader.Read();
             while (!reader.EOF)
             {
@@ -78,8 +79,6 @@ namespace Redmine.Net.Api.Types
                     reader.Read();
                     continue;
                 }
-
-                Revision = reader.GetAttribute(RedmineKeys.REVISION);
 
                 switch (reader.Name)
                 {
