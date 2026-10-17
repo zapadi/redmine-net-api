@@ -115,14 +115,14 @@ jobs:
 
       - name: Test
         timeout-minutes: 60
-        if: runner.os == 'Linux'
         run: >-
-          dotnet test "${{ env.PROJECT_PATH }}"
+          dotnet test "tests/redmine-net-api.Tests/redmine-net-api.Tests.csproj"
+          --configuration "${{ env.CONFIGURATION }}"
+          --framework net10.0
           --no-restore
-          --no-build
           --verbosity normal
           --logger trx
-          --results-directory "TestResults-${{ matrix.os }}" || true
+          --results-directory "TestResults-${{ matrix.os }}"
 
       - name: Upload test results
         if: ${{ always() }}
