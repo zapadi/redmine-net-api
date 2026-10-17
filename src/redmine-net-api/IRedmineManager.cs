@@ -55,6 +55,9 @@ namespace Redmine.Net.Api.Types;
 /// var created = manager.Create(newIssue);
 /// </code>
 /// </example>
+#if NET20 || NET40
+[Obsolete(RedmineConstants.OBSOLETE_NET20_NET40_TEXT)]
+#endif
 public partial interface IRedmineManager
 {
     /// <summary>

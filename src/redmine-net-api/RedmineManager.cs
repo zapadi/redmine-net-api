@@ -32,6 +32,9 @@ namespace Redmine.Net.Api
     /// <summary>
     ///     The main class to access Redmine API.
     /// </summary>
+    #if NET20 || NET40
+    [Obsolete(RedmineConstants.OBSOLETE_NET20_NET40_TEXT)]
+    #endif
     public partial class RedmineManager : IRedmineManager
     {
         private readonly RedmineManagerOptions _redmineManagerOptions;
