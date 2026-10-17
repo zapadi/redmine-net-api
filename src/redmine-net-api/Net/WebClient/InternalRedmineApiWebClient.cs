@@ -297,13 +297,7 @@ namespace Redmine.Net.Api.Net.WebClient
             }
             catch (WebException webException)
             {
-                var content = HandleWebException(webException);
-                return new ApiResponseMessage
-                {
-                    Headers = responseHeaders,
-                    Content = content.Value,
-                    StatusCode = (int)content.Key,
-                };
+                throw HandleWebException(webException, _serializer);
             }
             finally
             {
@@ -499,13 +493,7 @@ namespace Redmine.Net.Api.Net.WebClient
             }
             catch (WebException webException)
             {
-                var content = HandleWebException(webException);
-                return new ApiResponseMessage
-                {
-                    Headers = responseHeaders,
-                    Content = content.Value,
-                    StatusCode = (int)content.Key,
-                };
+                throw HandleWebException(webException, _serializer);
             }
             finally
             {
@@ -559,15 +547,16 @@ namespace Redmine.Net.Api.Net.WebClient
         /// Handles the web exception.
         /// </summary>
         /// <param name="exception">The exception.</param>
+        /// <param name="serializer">The serializer.</param>
         /// <exception cref="RedmineException"> </exception>
-        private static KeyValuePair<HttpStatusCode, string> HandleWebException(WebException exception)
+        private static RedmineApiException HandleWebException(WebException exception, IRedmineSerializer serializer)
         {
             var innerException = exception.InnerException ?? exception;
 
             switch (exception.Status)
             {
                 case WebExceptionStatus.Timeout:
-                    throw new RedmineApiException(nameof(WebExceptionStatus.Timeout), innerException);
+                    return new RedmineApiException(nameof(WebExceptionStatus.Timeout), innerException);
                 case WebExceptionStatus.ProtocolError:
                     if (exception.Response != null)
                     {
@@ -576,21 +565,20 @@ namespace Redmine.Net.Api.Net.WebClient
                             : (int)HttpStatusCode.InternalServerError;
 
                         using var responseStream = exception.Response.GetResponseStream();
-                        if (statusCode == HttpConstants.StatusCodes.UnprocessableEntity)
+                        if (statusCode == HttpConstants.StatusCodes.UnprocessableEntity && responseStream != null)
                         {
+                            string content;
                             try
                             {
-                                if (responseStream != null)
-                                {
-                                    using var reader = new StreamReader(responseStream);
-                                    var content = reader.ReadToEnd();
-                                    return new KeyValuePair<HttpStatusCode, string>((HttpStatusCode)HttpConstants.StatusCodes.UnprocessableEntity, content);
-                                }
+                                using var reader = new StreamReader(responseStream);
+                                content = reader.ReadToEnd();
                             }
                             catch (Exception ex)
                             {
-                                throw new RedmineApiException(ex.Message, ex);
+                                return new RedmineApiException(ex.Message, ex);
                             }
+
+                            return RedmineApiExceptionHelper.CreateUnprocessableEntityException(content, null, serializer);
                         }
 
                         RedmineApiExceptionHelper.MapStatusCodeToException(statusCode, innerException);
@@ -599,7 +587,7 @@ namespace Redmine.Net.Api.Net.WebClient
                     break;
             }
 
-            throw new RedmineApiException(exception.Message, innerException);
+            return new RedmineApiException(exception.Message, innerException);
         }
     }
 }
