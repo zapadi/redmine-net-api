@@ -45,9 +45,7 @@ namespace Redmine.Net.Api.Extensions
         {
             var uri = redmineManager.RedmineApiUrls.ProjectArchive(projectIdentifier);
 
-            var escapedUri = Uri.EscapeDataString(uri);
-            
-            redmineManager.ApiClient.Update(escapedUri, string.Empty ,requestOptions);
+            redmineManager.ApiClient.Update(uri, string.Empty ,requestOptions);
         }
         
         /// <summary>
@@ -61,9 +59,7 @@ namespace Redmine.Net.Api.Extensions
         {
             var uri = redmineManager.RedmineApiUrls.ProjectUnarchive(projectIdentifier);
 
-            var escapedUri = Uri.EscapeDataString(uri);
-            
-            redmineManager.ApiClient.Update(escapedUri, string.Empty ,requestOptions);
+            redmineManager.ApiClient.Update(uri, string.Empty ,requestOptions);
         }
         
         /// <summary>
@@ -77,9 +73,7 @@ namespace Redmine.Net.Api.Extensions
         {
             var uri = redmineManager.RedmineApiUrls.ProjectReopen(projectIdentifier);
 
-            var escapedUri = Uri.EscapeDataString(uri);
-            
-            redmineManager.ApiClient.Update(escapedUri, string.Empty ,requestOptions);
+            redmineManager.ApiClient.Update(uri, string.Empty ,requestOptions);
         }
         
         /// <summary>
@@ -93,9 +87,7 @@ namespace Redmine.Net.Api.Extensions
         {
             var uri = redmineManager.RedmineApiUrls.ProjectClose(projectIdentifier);
 
-            var escapedUri = Uri.EscapeDataString(uri);
-            
-            redmineManager.ApiClient.Update(escapedUri,string.Empty, requestOptions);
+            redmineManager.ApiClient.Update(uri,string.Empty, requestOptions);
         }
         
         /// <summary>
@@ -110,9 +102,7 @@ namespace Redmine.Net.Api.Extensions
         {
             var uri = redmineManager.RedmineApiUrls.ProjectRepositoryAddRelatedIssue(projectIdentifier, repositoryIdentifier, revision);
             
-            var escapedUri = Uri.EscapeDataString(uri);
-            
-            _ = redmineManager.ApiClient.Create(escapedUri,string.Empty, requestOptions);
+            _ = redmineManager.ApiClient.Create(uri,string.Empty, requestOptions);
         }
 
         /// <summary>
@@ -128,9 +118,7 @@ namespace Redmine.Net.Api.Extensions
         {
             var uri = redmineManager.RedmineApiUrls.ProjectRepositoryRemoveRelatedIssue(projectIdentifier, repositoryIdentifier, revision, issueIdentifier);
             
-            var escapedUri = Uri.EscapeDataString(uri);
-           
-            _ = redmineManager.ApiClient.Delete(escapedUri, requestOptions);
+            _ = redmineManager.ApiClient.Delete(uri, requestOptions);
         }
         
         /// <summary>
@@ -492,9 +480,7 @@ namespace Redmine.Net.Api.Extensions
         {
             var uri = redmineManager.RedmineApiUrls.ProjectArchive(projectIdentifier);
             
-            var escapedUri = Uri.EscapeDataString(uri);
-           
-            await redmineManager.ApiClient.DeleteAsync(escapedUri,  requestOptions, cancellationToken).ConfigureAwait(false);
+            await redmineManager.ApiClient.UpdateAsync(uri, string.Empty, requestOptions, cancellationToken).ConfigureAwait(false);
         }
         
         /// <summary>
@@ -508,9 +494,7 @@ namespace Redmine.Net.Api.Extensions
         {
             var uri = redmineManager.RedmineApiUrls.ProjectUnarchive(projectIdentifier);
             
-            var escapedUri = Uri.EscapeDataString(uri);
-           
-            await redmineManager.ApiClient.DeleteAsync(escapedUri,  requestOptions, cancellationToken).ConfigureAwait(false);
+            await redmineManager.ApiClient.UpdateAsync(uri, string.Empty, requestOptions, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -524,9 +508,7 @@ namespace Redmine.Net.Api.Extensions
         {
             var uri = redmineManager.RedmineApiUrls.ProjectClose(projectIdentifier);
             
-            var escapedUri = Uri.EscapeDataString(uri);
-           
-            await redmineManager.ApiClient.UpdateAsync(escapedUri, string.Empty,  requestOptions, cancellationToken).ConfigureAwait(false);
+            await redmineManager.ApiClient.UpdateAsync(uri, string.Empty,  requestOptions, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -540,9 +522,7 @@ namespace Redmine.Net.Api.Extensions
         {
             var uri = redmineManager.RedmineApiUrls.ProjectReopen(projectIdentifier);
             
-            var escapedUri = Uri.EscapeDataString(uri);
-           
-            await redmineManager.ApiClient.UpdateAsync(escapedUri, string.Empty, requestOptions, cancellationToken).ConfigureAwait(false);
+            await redmineManager.ApiClient.UpdateAsync(uri, string.Empty, requestOptions, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -558,9 +538,7 @@ namespace Redmine.Net.Api.Extensions
         {
             var uri = redmineManager.RedmineApiUrls.ProjectRepositoryAddRelatedIssue(projectIdentifier, repositoryIdentifier, revision);
             
-            var escapedUri = Uri.EscapeDataString(uri);
-           
-            await redmineManager.ApiClient.CreateAsync(escapedUri, string.Empty ,requestOptions, cancellationToken).ConfigureAwait(false);
+            await redmineManager.ApiClient.CreateAsync(uri, string.Empty ,requestOptions, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -577,9 +555,7 @@ namespace Redmine.Net.Api.Extensions
         {
             var uri = redmineManager.RedmineApiUrls.ProjectRepositoryRemoveRelatedIssue(projectIdentifier, repositoryIdentifier, revision, issueIdentifier);
             
-            var escapedUri = Uri.EscapeDataString(uri);
-           
-            await redmineManager.ApiClient.DeleteAsync(escapedUri,  requestOptions, cancellationToken).ConfigureAwait(false);
+            await redmineManager.ApiClient.DeleteAsync(uri,  requestOptions, cancellationToken).ConfigureAwait(false);
         }
         
         /// <summary>
