@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json.Linq;
 using Padi.DotNet.RedmineAPI.Tests.Infrastructure;
 using Padi.DotNet.RedmineAPI.Tests.Tests;
 using Xunit;
@@ -22,6 +23,37 @@ public class IssueTests(XmlPrettyPrintFixture _) : IClassFixture<XmlPrettyPrintF
 
         Assert.Contains("<custom_field id=\"4\" />", output);
         Assert.DoesNotContain("<custom_field />", output);
+    }
+
+    [Fact]
+    public void Should_Serialize_Json_Issue_Watcher_User_Ids_As_Array()
+    {
+        var issue = new Redmine.Net.Api.Types.Issue
+        {
+            Subject = "subject",
+            Watchers = [new Redmine.Net.Api.Types.Watcher { Id = 1 }, new Redmine.Net.Api.Types.Watcher { Id = 2 }]
+        };
+
+        var output = SerializerFactory.Create(SerializerKind.NewtonsoftJson).Serialize(issue);
+
+        var watcherUserIds = JObject.Parse(output)["issue"]!["watcher_user_ids"];
+        Assert.Equal(JTokenType.Array, watcherUserIds!.Type);
+        Assert.Equal([1, 2], watcherUserIds.Values<int>());
+    }
+
+    [Fact]
+    public void Should_Serialize_Xml_Issue_Watcher_User_Ids_As_Repeated_Elements()
+    {
+        var issue = new Redmine.Net.Api.Types.Issue
+        {
+            Subject = "subject",
+            Watchers = [new Redmine.Net.Api.Types.Watcher { Id = 1 }, new Redmine.Net.Api.Types.Watcher { Id = 2 }]
+        };
+
+        var output = SerializerFactory.Create(SerializerKind.Xml).Serialize(issue);
+
+        Assert.Contains("<watcher_user_ids>1</watcher_user_ids>", output);
+        Assert.Contains("<watcher_user_ids>2</watcher_user_ids>", output);
     }
 
     [Theory]
