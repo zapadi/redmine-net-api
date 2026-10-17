@@ -61,6 +61,11 @@ namespace Redmine.Net.Api.Net.WebClient
             return () =>
             {
                 var webClient = redmineManagerOptions.ClientFunc();
+                if (webClient == null)
+                {
+                    throw new RedmineException("The web client function configured with WithWebClient returned null.");
+                }
+
                 if (webClient.BaseAddress.IsNullOrWhiteSpace())
                 {
                     webClient.BaseAddress = redmineManagerOptions.BaseAddress.ToString();
@@ -520,16 +525,16 @@ namespace Redmine.Net.Api.Net.WebClient
             switch (_credentials)
             {
                 case RedmineApiKeyAuthentication:
-                    webClient.Headers.Add(_credentials.AuthenticationType, _credentials.Token);
+                    webClient.Headers[_credentials.AuthenticationType] = _credentials.Token;
                     break;
                 case RedmineBasicAuthentication:
-                    webClient.Headers.Add("Authorization", $"{_credentials.AuthenticationType} {_credentials.Token}");
+                    webClient.Headers["Authorization"] = $"{_credentials.AuthenticationType} {_credentials.Token}";
                     break;
             }
 
             if (!requestMessage.ImpersonateUser.IsNullOrWhiteSpace())
             {
-                webClient.Headers.Add(RedmineConstants.IMPERSONATE_HEADER_KEY, requestMessage.ImpersonateUser);
+                webClient.Headers[RedmineConstants.IMPERSONATE_HEADER_KEY] = requestMessage.ImpersonateUser;
             }
         }
 
