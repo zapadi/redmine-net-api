@@ -71,7 +71,7 @@ jobs:
           
   build:
     needs: before
-    name: Build ${{ matrix.os }} - dotnet ${{ matrix.dotnet }}
+    name: Build ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
