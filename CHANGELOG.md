@@ -2,13 +2,19 @@
 
 ## [Unreleased]
 
+🚀 Features
+*	Added Project.ProjectCustomFields to set and read project custom field values
+*	A project read from Redmine now re-sends its custom field values (ProjectCustomFields) on update
+
 ⚠️ Deprecations
+*	Project.CustomFieldValues is obsolete; use ProjectCustomFields
 *	Deprecated .NET Framework 2.0 and 4.0 targets: RedmineManager, IRedmineManager and RedmineManagerOptionsBuilder are marked [Obsolete] on those targets and will be removed in the next version (builds with TreatWarningsAsErrors will fail)
 
 🛠 Fixes
 *	Fixed Project custom field values being ignored by Redmine (XML now uses custom_fields; values are also sent on create)
 *	Fixed invalid JSON for multi-value Project custom field values
 *	Fixed Project XML create not associating issue custom fields (now sent as issue_custom_field_ids)
+*	Fixed XML for empty custom field values (Values == null) being sent without an id
 
 🧪 Tests
 *	Unit tests now run in CI on net10.0 and fail the build on failure
