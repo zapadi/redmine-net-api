@@ -1,0 +1,48 @@
+<Solution>
+  <Configurations>
+    <BuildType Name="Debug" />
+    <BuildType Name="DebugJson" />
+    <BuildType Name="Release" />
+  </Configurations>
+  <Folder Name="/SolutionFolder/">
+    <File Path="CHANGELOG.md" />
+    <File Path="CONTRIBUTING.md" />
+    <File Path="ISSUE_TEMPLATE.md" />
+    <File Path="LICENSE" />
+    <File Path="PULL_REQUEST_TEMPLATE.md" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/SolutionFolder/AppVeyor/">
+    <File Path="appveyor.yml" />
+  </Folder>
+  <Folder Name="/SolutionFolder/Docker/">
+    <File Path="docker-compose.yml" />
+  </Folder>
+  <Folder Name="/SolutionFolder/GitActions/">
+    <File Path=".github/workflows/build-and-test.yml" />
+    <File Path=".github/workflows/codeql-analysis.yml" />
+    <File Path=".github/workflows/publish.yml" />
+  </Folder>
+  <Folder Name="/SolutionFolder/Others/">
+    <File Path="global.json" />
+    <File Path="logo.png" />
+    <File Path="redmine-net-api.snk" />
+  </Folder>
+  <Folder Name="/SolutionFolder/Props/">
+    <File Path="Directory.Build.props" />
+    <File Path="releasenotes.props" />
+    <File Path="signing.props" />
+    <File Path="version.props" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/redmine-net-api/redmine-net-api.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/redmine-net-api.Integration.Tests/redmine-net-api.Integration.Tests.csproj">
+      <BuildType Solution="DebugJson|*" Project="Debug" />
+    </Project>
+    <Project Path="tests/redmine-net-api.Tests/redmine-net-api.Tests.csproj">
+      <Build Solution="Release|*" Project="false" />
+    </Project>
+  </Folder>
+</Solution>

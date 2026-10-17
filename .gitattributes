@@ -13,6 +13,7 @@
 *.vcxproj text eol=crlf
 *.props text eol=crlf
 *.sln text eol=crlf
+*.slnx text eol=crlf
 *.vcxproj.filters text eol=crlf
 *.rc text=auto
 *.rc2 text=auto

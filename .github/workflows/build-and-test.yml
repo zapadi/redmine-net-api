@@ -14,13 +14,13 @@ on:
     paths:
       - '**.cs'
       - '**.csproj'
-      - '**.sln'
+      - '**.slnx'
   pull_request:
     branches: [ master ]
     paths:
       - '**.cs'
       - '**.csproj'
-      - '**.sln'
+      - '**.slnx'
 
 # concurrency:
 #   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}

@@ -37,7 +37,7 @@ init:
   - ps: $env:VERSION_SUFFIX = $(If ([string]::IsNullOrEmpty($suffix)) {[string]::Empty} Else {"--version-suffix=$suffix"});
 
 install:
-  - ps: dotnet restore redmine-net-api.sln
+  - ps: dotnet restore redmine-net-api.slnx
       
 before_build:
   - ps: write-host "Is repo tag = $isRepoTag" -foregroundcolor Green  
