@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json.Linq;
 using Padi.DotNet.RedmineAPI.Tests.Infrastructure;
 using Padi.DotNet.RedmineAPI.Tests.Tests;
 using Redmine.Net.Api.Types;
@@ -10,6 +11,22 @@ namespace Padi.DotNet.RedmineAPI.Tests.Serialization;
 [Collection(Constants.DeserializeCollection)]
 public class GroupTests(XmlPrettyPrintFixture _) : IClassFixture<XmlPrettyPrintFixture>
 {
+    [Fact]
+    public void Should_Serialize_Json_Group_User_Ids_As_Array()
+    {
+        var group = new Group
+        {
+            Name = "Developers",
+            Users = [new GroupUser { Id = 5 }, new GroupUser { Id = 8 }]
+        };
+
+        var output = SerializerFactory.Create(SerializerKind.NewtonsoftJson).Serialize(group);
+
+        var userIds = JObject.Parse(output)["group"]!["user_ids"];
+        Assert.Equal(JTokenType.Array, userIds!.Type);
+        Assert.Equal([5, 8], userIds.Values<int>());
+    }
+
     [Theory]
     [MemberData(nameof(GroupDeserializeTheoryData))]
     public void Should_Deserialize_Group(string input, SerializerKind kind)
