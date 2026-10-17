@@ -12,13 +12,11 @@
     <File Path="PULL_REQUEST_TEMPLATE.md" />
     <File Path="README.md" />
   </Folder>
-  <Folder Name="/SolutionFolder/AppVeyor/">
-    <File Path="appveyor.yml" />
-  </Folder>
   <Folder Name="/SolutionFolder/Docker/">
     <File Path="docker-compose.yml" />
   </Folder>
   <Folder Name="/SolutionFolder/GitActions/">
+    <File Path=".github/dependabot.yml" />
     <File Path=".github/workflows/build-and-test.yml" />
     <File Path=".github/workflows/codeql-analysis.yml" />
     <File Path=".github/workflows/publish.yml" />
