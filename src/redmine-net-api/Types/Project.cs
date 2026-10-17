@@ -228,14 +228,13 @@ namespace Redmine.Net.Api.Types
 
             if (Id == 0)
             {
-                writer.WriteRepeatableElement(RedmineKeys.ISSUE_CUSTOM_FIELDS, RedmineKeys.ISSUE_CUSTOM_FIELD,(IEnumerable<IValue>)CustomFields);
-                return;
+                writer.WriteRepeatableElement(RedmineKeys.ISSUE_CUSTOM_FIELD_IDS, RedmineKeys.ISSUE_CUSTOM_FIELD_ID, (IEnumerable<IValue>)IssueCustomFields);
             }
 
-            // writer.WriteArray(RedmineKeys.CUSTOM_FIELD_VALUES, CustomFieldValues);
             if (CustomFieldValues != null && CustomFieldValues.Count > 0)
             {
-                writer.WriteStartElement(RedmineKeys.CUSTOM_FIELD_VALUES);
+                writer.WriteStartElement(RedmineKeys.CUSTOM_FIELDS);
+                writer.WriteAttributeString(RedmineKeys.TYPE, "array");
 
                 foreach (var customField in CustomFieldValues)
                 {
@@ -245,18 +244,15 @@ namespace Redmine.Net.Api.Types
                         writer.WriteAttributeString(RedmineKeys.ID, customField.Id.ToInvariantString());
                         if (customField.PossibleValues.Count > 1)
                         {
-                            foreach (var customFieldPossibleValue in customField.PossibleValues)
-                            {
-                                writer.WriteElementString(RedmineKeys.VALUE, customFieldPossibleValue.Value);
-                            }
+                            writer.WriteArray(RedmineKeys.VALUE, RedmineKeys.VALUE, customField.PossibleValues, possibleValue => possibleValue.Value);
                         }
                         else
                         {
-                            writer.WriteString(customField.PossibleValues[0].Value);
+                            writer.WriteElementString(RedmineKeys.VALUE, customField.PossibleValues[0].Value);
                         }
-                    }
 
-                    writer.WriteEndElement();
+                        writer.WriteEndElement();
+                    }
                 }
                 writer.WriteEndElement();
             }
@@ -335,7 +331,6 @@ namespace Redmine.Net.Api.Types
                 if (Id == 0)
                 {
                     writer.WriteArrayIds(RedmineKeys.ISSUE_CUSTOM_FIELD_IDS, (IEnumerable<IdentifiableName>)IssueCustomFields);
-                    return;
                 }
 
                 if (CustomFieldValues != null && CustomFieldValues.Count > 0)
@@ -349,6 +344,7 @@ namespace Redmine.Net.Api.Types
                         {
                             if (customField.PossibleValues.Count > 1)
                             {
+                                writer.WritePropertyName(customField.Id.ToInvariantString());
                                 writer.WriteStartArray();
                                 foreach (var customFieldPossibleValue in customField.PossibleValues)
                                 {

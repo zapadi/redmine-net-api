@@ -100,12 +100,12 @@ public class ProjectTests(XmlPrettyPrintFixture _) : IClassFixture<XmlPrettyPrin
                 new CustomField()
                 {
                     Id = 789,
-                    Name = "Custom Field789",
+                    PossibleValues = [new CustomFieldPossibleValue("val789")]
                 },
                 new CustomField()
                 {
                     Id = 790,
-                    Name = "Custom Field790",
+                    PossibleValues = [new CustomFieldPossibleValue("val790"), new CustomFieldPossibleValue("790val")]
                 }
             ]
         };
@@ -354,8 +354,11 @@ public class ProjectTests(XmlPrettyPrintFixture _) : IClassFixture<XmlPrettyPrin
                                       "module3"
                                     ],
                                     "custom_field_values": {
-                                      "789": "Custom Field789",
-                                      "790": "Custom Field790"
+                                      "789": "val789",
+                                      "790": [
+                                        "val790",
+                                        "790val"
+                                      ]
                                     }
                                   }
                                 }
@@ -372,15 +375,26 @@ public class ProjectTests(XmlPrettyPrintFixture _) : IClassFixture<XmlPrettyPrin
                                <parent_id>2</parent_id>
                                <default_assigned_to_id>3</default_assigned_to_id>
                                <default_version_id>4</default_version_id>
-                               <tracker_ids>1</tracker_ids>
-                               <tracker_ids>2</tracker_ids>
-                               <enabled_module_names>module1</enabled_module_names>
-                               <enabled_module_names>module2</enabled_module_names>
-                               <enabled_module_names>module3</enabled_module_names>
-                               <custom_field_values type="array">
-                               <custom_field id="789" name="Custom Field789" />
-                               <custom_field id="790" name="Custom Field790" />
-                               </custom_field_values>
+                               <tracker_ids type="array">
+                               <tracker_id>1</tracker_id>
+                               <tracker_id>2</tracker_id>
+                               </tracker_ids>
+                               <enabled_module_names type="array">
+                               <enabled_module_name>module1</enabled_module_name>
+                               <enabled_module_name>module2</enabled_module_name>
+                               <enabled_module_name>module3</enabled_module_name>
+                               </enabled_module_names>
+                               <custom_fields type="array">
+                               <custom_field id="789">
+                               <value>val789</value>
+                               </custom_field>
+                               <custom_field id="790">
+                               <value type="array">
+                               <value>val790</value>
+                               <value>790val</value>
+                               </value>
+                               </custom_field>
+                               </custom_fields>
                                </project>
                                """;
 
