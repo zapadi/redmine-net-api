@@ -47,6 +47,8 @@ public sealed class CustomTransportTests
     {
         public int Calls;
 
+        public TaskCompletionSource<bool> Entered { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
+
         public RedmineTransportResponse Send(RedmineTransportRequest request)
         {
             throw new NotSupportedException();
@@ -55,6 +57,7 @@ public sealed class CustomTransportTests
         public async Task<RedmineTransportResponse> SendAsync(RedmineTransportRequest request, CancellationToken cancellationToken)
         {
             Interlocked.Increment(ref Calls);
+            Entered.TrySetResult(true);
             await Task.Delay(Timeout.Infinite, cancellationToken);
             return new RedmineTransportResponse(200, null, null);
         }
@@ -415,9 +418,11 @@ public sealed class CustomTransportTests
         var transport = new HangingTransport();
         var manager = CreateManager(transport);
         using var cts = CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken);
-        cts.CancelAfter(TimeSpan.FromMilliseconds(100));
 
-        var exception = await Assert.ThrowsAsync<RedmineApiException>(() => manager.GetAsync<Project>("1", cancellationToken: cts.Token));
+        var call = manager.GetAsync<Project>("1", cancellationToken: cts.Token);
+        await transport.Entered.Task;
+        cts.Cancel();
+        var exception = await Assert.ThrowsAsync<RedmineApiException>(() => call);
 
         Assert.Equal("The operation was canceled by the user.", exception.Message);
         Assert.IsAssignableFrom<OperationCanceledException>(exception.InnerException);
