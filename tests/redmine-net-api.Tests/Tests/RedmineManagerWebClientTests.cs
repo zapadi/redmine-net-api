@@ -123,6 +123,88 @@ public sealed class RedmineManagerWebClientTests(XmlPrettyPrintFixture _) : ICla
     }
 
     [Fact]
+    public void Create_Should_Apply_RequestOptions_Headers()
+    {
+        var (manager, clients) = CreateManager(_ => new FakeWebResponse("<project><id>1</id><name>foo</name></project>"));
+        var requestOptions = new RequestOptions
+        {
+            Accept = "application/xml",
+            UserAgent = "custom-agent",
+            ContentType = "application/custom+xml",
+            Headers = new Dictionary<string, string> { { "X-Custom", "custom" } }
+        };
+
+        manager.Create(new Project { Name = "foo" }, requestOptions: requestOptions);
+
+        var request = clients[0].Requests[0];
+        Assert.Equal("application/xml", request.Headers[HttpRequestHeader.Accept]);
+        Assert.Equal("custom-agent", request.Headers[HttpRequestHeader.UserAgent]);
+        Assert.Equal("application/custom+xml", request.Headers[HttpRequestHeader.ContentType]);
+        Assert.Equal("custom", request.Headers["X-Custom"]);
+    }
+
+    [Fact]
+    public void Get_Should_Not_Override_Authentication_And_Impersonation_With_RequestOptions_Headers()
+    {
+        var clients = new List<FakeWebClient>();
+        var manager = new RedmineManager(new RedmineManagerOptionsBuilder()
+            .WithHost(Host)
+            .WithApiKeyAuthentication("secret")
+            .WithWebClient(() =>
+            {
+                var client = new FakeWebClient(_ => new FakeWebResponse("<project><id>1</id></project>"));
+                clients.Add(client);
+                return client;
+            }));
+        var requestOptions = new RequestOptions
+        {
+            ImpersonateUser = "bob",
+            Headers = new Dictionary<string, string>
+            {
+                { "X-Redmine-API-Key", "other" },
+                { RedmineConstants.IMPERSONATE_HEADER_KEY, "alice" }
+            }
+        };
+
+        manager.Get<Project>("1", requestOptions);
+
+        var request = clients[0].Requests[0];
+        Assert.Equal("secret", request.Headers["X-Redmine-API-Key"]);
+        Assert.Equal("bob", request.Headers[RedmineConstants.IMPERSONATE_HEADER_KEY]);
+    }
+
+    [Fact]
+    public void Create_Without_RequestOptions_Should_Send_Default_Headers()
+    {
+        var (manager, clients) = CreateManager(_ => new FakeWebResponse("<project><id>1</id><name>foo</name></project>"));
+
+        manager.Create(new Project { Name = "foo" });
+
+        var request = clients[0].Requests[0];
+        Assert.Equal(RedmineConstants.CONTENT_TYPE_APPLICATION_XML, request.Headers[HttpRequestHeader.ContentType]);
+        Assert.Null(request.Headers[HttpRequestHeader.Accept]);
+        Assert.Null(request.Headers[HttpRequestHeader.UserAgent]);
+    }
+
+    [Fact]
+    public void InternalWebClient_Should_Keep_Per_Request_UserAgent()
+    {
+        var request = CreateInternalWebRequest(
+            new RedmineWebClientOptions { UserAgent = "options-agent" },
+            webClient => webClient.Headers[HttpRequestHeader.UserAgent] = "request-agent");
+
+        Assert.Equal("request-agent", request.UserAgent);
+    }
+
+    [Fact]
+    public void InternalWebClient_Should_Use_Options_UserAgent_By_Default()
+    {
+        var request = CreateInternalWebRequest(new RedmineWebClientOptions { UserAgent = "options-agent" });
+
+        Assert.Equal("options-agent", request.UserAgent);
+    }
+
+    [Fact]
     public void Build_Should_Copy_ClientFunc()
     {
         Func<WebClient> clientFunc = () => new WebClient();

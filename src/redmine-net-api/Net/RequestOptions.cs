@@ -47,7 +47,7 @@ public sealed class RequestOptions
     public string UserAgent { get; set; }
     
     /// <summary>
-    /// 
+    /// Additional headers sent with the request; authentication and impersonation headers set by the client take precedence over these.
     /// </summary>
     public Dictionary<string, string> Headers { get; set; }
 

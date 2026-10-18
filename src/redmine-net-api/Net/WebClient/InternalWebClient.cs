@@ -43,7 +43,7 @@ internal sealed class InternalWebClient : System.Net.WebClient
                 return webRequest;
             }
 
-            httpWebRequest.UserAgent = _webClientOptions.UserAgent.ValueOrFallback("RedmineDotNetAPIClient");
+            httpWebRequest.UserAgent = httpWebRequest.UserAgent.ValueOrFallback(_webClientOptions.UserAgent.ValueOrFallback("RedmineDotNetAPIClient"));
 
             httpWebRequest.AutomaticDecompression = _webClientOptions.DecompressionFormat ?? DecompressionMethods.GZip | DecompressionMethods.Deflate | DecompressionMethods.None;
 

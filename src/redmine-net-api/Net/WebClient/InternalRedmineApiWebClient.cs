@@ -283,7 +283,7 @@ namespace Redmine.Net.Api.Net.WebClient
                     byte[] payload;
                     if (requestMessage.Content != null)
                     {
-                        webClient.Headers.Add(HttpRequestHeader.ContentType, requestMessage.Content.ContentType);
+                        webClient.Headers[HttpRequestHeader.ContentType] = requestMessage.ContentType.ValueOrFallback(requestMessage.Content.ContentType);
                         payload = requestMessage.Content.Body;
                     }
                     else
@@ -472,6 +472,10 @@ namespace Redmine.Net.Api.Net.WebClient
             {
                 req.QueryString = requestOptions.QueryString;
                 req.ImpersonateUser = requestOptions.ImpersonateUser;
+                req.ContentType = requestOptions.ContentType;
+                req.Accept = requestOptions.Accept;
+                req.UserAgent = requestOptions.UserAgent;
+                req.Headers = requestOptions.Headers;
             }
 
             if (content != null)
@@ -524,7 +528,7 @@ namespace Redmine.Net.Api.Net.WebClient
                     byte[] payload;
                     if (requestMessage.Content != null)
                     {
-                        webClient.Headers.Add(HttpRequestHeader.ContentType, requestMessage.Content.ContentType);
+                        webClient.Headers[HttpRequestHeader.ContentType] = requestMessage.ContentType.ValueOrFallback(requestMessage.Content.ContentType);
                         payload = requestMessage.Content.Body;
                     }
                     else
@@ -565,6 +569,24 @@ namespace Redmine.Net.Api.Net.WebClient
             if (requestMessage.QueryString != null)
             {
                 webClient.QueryString = requestMessage.QueryString;
+            }
+
+            if (requestMessage.Headers != null)
+            {
+                foreach (var header in requestMessage.Headers)
+                {
+                    webClient.Headers[header.Key] = header.Value;
+                }
+            }
+
+            if (!requestMessage.Accept.IsNullOrWhiteSpace())
+            {
+                webClient.Headers[HttpRequestHeader.Accept] = requestMessage.Accept;
+            }
+
+            if (!requestMessage.UserAgent.IsNullOrWhiteSpace())
+            {
+                webClient.Headers[HttpRequestHeader.UserAgent] = requestMessage.UserAgent;
             }
 
             switch (_credentials)
