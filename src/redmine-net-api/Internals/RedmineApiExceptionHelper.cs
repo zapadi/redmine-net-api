@@ -16,6 +16,7 @@ namespace Redmine.Net.Api.Internals;
 internal static class RedmineApiExceptionHelper
 {
     private const string RequestIdHeader = "X-Request-Id";
+    internal const string UnknownErrorCode = "UNKNOWN";
 
     /// <summary>
     /// Maps an HTTP status code to an appropriate Redmine exception.
@@ -42,7 +43,7 @@ internal static class RedmineApiExceptionHelper
         throw Create(message, inner, statusCode, method, endpoint, responseHeaders);
     }
 
-    internal static RedmineApiException Create(string message, Exception inner, int? statusCode, string method, string endpoint, IDictionary<string, string> responseHeaders, bool isTransient = false)
+    internal static RedmineApiException Create(string message, Exception inner, int? statusCode, string method, string endpoint, IDictionary<string, string> responseHeaders, bool isTransient = false, string errorCode = null)
     {
         string correlationId = null;
         responseHeaders?.TryGetValue(RequestIdHeader, out correlationId);
@@ -50,6 +51,7 @@ internal static class RedmineApiExceptionHelper
         return new RedmineApiException(
             message,
             inner,
+            errorCode,
             isTransient || (statusCode.HasValue && IsTransientStatusCode(statusCode.Value)),
             correlationId,
             method,
@@ -60,7 +62,7 @@ internal static class RedmineApiExceptionHelper
 
     private static bool IsTransientStatusCode(int statusCode)
     {
-        return statusCode is 408 or 429 or 500 or 502 or 503 or 504;
+        return statusCode is 408 or 429 or 502 or 503 or 504;
     }
 
     /// <summary>

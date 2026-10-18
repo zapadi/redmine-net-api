@@ -92,11 +92,28 @@ public sealed class RedmineManagerWebClientTests(XmlPrettyPrintFixture _) : ICla
         Assert.Equal("abc", exception.CorrelationId);
         Assert.Equal("abc", exception.ResponseHeaders["x-request-id"]);
         Assert.False(exception.IsTransient);
+        Assert.Null(exception.ErrorCode);
     }
 
     [Theory]
-    [InlineData(HttpStatusCode.ServiceUnavailable)]
+    [InlineData(HttpStatusCode.InternalServerError)]
+    [InlineData(HttpStatusCode.BadRequest)]
+    public void Get_Should_Not_Mark_Exception_As_Transient(HttpStatusCode statusCode)
+    {
+        var (manager, _) = CreateManager(_ => throw ProtocolError(statusCode));
+
+        var exception = Assert.Throws<RedmineApiException>(() => manager.Get<Project>("1"));
+
+        Assert.Equal((int)statusCode, exception.HttpStatusCode);
+        Assert.False(exception.IsTransient);
+    }
+
+    [Theory]
+    [InlineData(HttpStatusCode.RequestTimeout)]
     [InlineData((HttpStatusCode)429)]
+    [InlineData(HttpStatusCode.BadGateway)]
+    [InlineData(HttpStatusCode.ServiceUnavailable)]
+    [InlineData(HttpStatusCode.GatewayTimeout)]
     public async Task GetAsync_Should_Mark_Exception_As_Transient(HttpStatusCode statusCode)
     {
         var (manager, _) = CreateManager(_ => throw ProtocolError(statusCode, new WebHeaderCollection { { "Retry-After", "120" } }));
@@ -120,6 +137,7 @@ public sealed class RedmineManagerWebClientTests(XmlPrettyPrintFixture _) : ICla
         Assert.Null(exception.HttpStatusCode);
         Assert.Null(exception.ResponseHeaders);
         Assert.Equal("GET", exception.Method);
+        Assert.Equal("UNKNOWN", exception.ErrorCode);
     }
 
     [Fact]
@@ -194,6 +212,14 @@ public sealed class RedmineManagerWebClientTests(XmlPrettyPrintFixture _) : ICla
             webClient => webClient.Headers[HttpRequestHeader.UserAgent] = "request-agent");
 
         Assert.Equal("request-agent", request.UserAgent);
+    }
+
+    [Fact]
+    public void InternalWebClient_Should_Fall_Back_To_Default_UserAgent()
+    {
+        var request = CreateInternalWebRequest(new RedmineWebClientOptions { UserAgent = null });
+
+        Assert.Equal("RedmineDotNetAPIClient", request.UserAgent);
     }
 
     [Fact]
@@ -452,6 +478,7 @@ public sealed class RedmineManagerWebClientTests(XmlPrettyPrintFixture _) : ICla
         Assert.True(exception.IsTransient);
         Assert.Equal("GET", exception.Method);
         Assert.Equal($"{Host}/projects/1.xml", exception.Endpoint);
+        Assert.Equal("UNKNOWN", exception.ErrorCode);
     }
 
     [Fact]
@@ -476,6 +503,20 @@ public sealed class RedmineManagerWebClientTests(XmlPrettyPrintFixture _) : ICla
         Assert.NotEqual(nameof(WebExceptionStatus.Timeout), exception.Message);
         Assert.False(exception.IsTransient);
         Assert.True(cts.IsCancellationRequested);
+    }
+
+    [Fact]
+    public async Task GetAsync_Should_Throw_With_Unknown_ErrorCode_When_Canceled_By_User()
+    {
+        var manager = CreateHangingManager(TimeSpan.FromSeconds(30));
+        using var cts = System.Threading.CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken);
+        cts.CancelAfter(TimeSpan.FromMilliseconds(200));
+
+        var exception = await Assert.ThrowsAsync<RedmineApiException>(() => Bounded(manager.GetAsync<Project>("1", cancellationToken: cts.Token)));
+
+        Assert.Equal("The operation was canceled by the user.", exception.Message);
+        Assert.Equal("UNKNOWN", exception.ErrorCode);
+        Assert.False(exception.IsTransient);
     }
 
     [Fact]

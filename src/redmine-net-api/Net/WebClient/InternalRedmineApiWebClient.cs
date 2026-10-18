@@ -319,7 +319,7 @@ namespace Redmine.Net.Api.Net.WebClient
             {
                 if (cancellationToken.IsCancellationRequested)
                 {
-                    throw RedmineApiExceptionHelper.Create("The operation was canceled by the user.", ex, null, GetMethod(requestMessage), GetEndpoint(webClient?.BaseAddress, requestMessage), null);
+                    throw RedmineApiExceptionHelper.Create("The operation was canceled by the user.", ex, null, GetMethod(requestMessage), GetEndpoint(webClient?.BaseAddress, requestMessage), null, errorCode: RedmineApiExceptionHelper.UnknownErrorCode);
                 }
 
                 if (timeoutTokenSource?.IsCancellationRequested == true)
@@ -632,7 +632,7 @@ namespace Redmine.Net.Api.Net.WebClient
             switch (exception.Status)
             {
                 case WebExceptionStatus.Timeout:
-                    return RedmineApiExceptionHelper.Create(nameof(WebExceptionStatus.Timeout), innerException, null, method, endpoint, null, isTransient: true);
+                    return RedmineApiExceptionHelper.Create(nameof(WebExceptionStatus.Timeout), innerException, null, method, endpoint, null, isTransient: true, errorCode: RedmineApiExceptionHelper.UnknownErrorCode);
                 case WebExceptionStatus.ProtocolError:
                     if (exception.Response != null)
                     {
@@ -652,7 +652,7 @@ namespace Redmine.Net.Api.Net.WebClient
                             }
                             catch (Exception ex)
                             {
-                                return RedmineApiExceptionHelper.Create(ex.Message, ex, statusCode, method, endpoint, responseHeaders);
+                                return RedmineApiExceptionHelper.Create(ex.Message, ex, statusCode, method, endpoint, responseHeaders, errorCode: RedmineApiExceptionHelper.UnknownErrorCode);
                             }
 
                             return RedmineApiExceptionHelper.CreateUnprocessableEntityException(content, null, serializer, method, endpoint, responseHeaders);
@@ -664,7 +664,7 @@ namespace Redmine.Net.Api.Net.WebClient
                     break;
             }
 
-            return RedmineApiExceptionHelper.Create(exception.Message, innerException, null, method, endpoint, null, IsTransient(exception.Status));
+            return RedmineApiExceptionHelper.Create(exception.Message, innerException, null, method, endpoint, null, IsTransient(exception.Status), RedmineApiExceptionHelper.UnknownErrorCode);
         }
 
         private static bool IsTransient(WebExceptionStatus status)
