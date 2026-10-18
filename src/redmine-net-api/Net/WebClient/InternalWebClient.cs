@@ -40,7 +40,7 @@ internal sealed class InternalWebClient : System.Net.WebClient
 
             if (webRequest is not HttpWebRequest httpWebRequest)
             {
-                return base.GetWebRequest(address);
+                return webRequest;
             }
 
             httpWebRequest.UserAgent = _webClientOptions.UserAgent.ValueOrFallback("RedmineDotNetAPIClient");
@@ -60,8 +60,6 @@ internal sealed class InternalWebClient : System.Net.WebClient
             AssignIfHasValue(_webClientOptions.UseCookies, value => httpWebRequest.CookieContainer = _webClientOptions.CookieContainer);
 
             AssignIfHasValue(_webClientOptions.UnsafeAuthenticatedConnectionSharing, value => httpWebRequest.UnsafeAuthenticatedConnectionSharing = value);
-
-            AssignIfHasValue(_webClientOptions.MaxResponseContentBufferSize, value => { });
 
             if (_webClientOptions.DefaultHeaders != null)
             {
