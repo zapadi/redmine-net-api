@@ -14,11 +14,13 @@
    limitations under the License.
 */
 
+#nullable enable
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using Newtonsoft.Json;
+using Redmine.Net.Api.Exceptions;
 using Redmine.Net.Api.Serialization;
 using Redmine.Net.Api.Types;
 
@@ -35,7 +37,7 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="jsonWriter"></param>
         /// <param name="tag"></param>
         /// <param name="value"></param>
-        public static void WriteIdIfNotNull(this JsonWriter jsonWriter, string tag, IdentifiableName value)
+        public static void WriteIdIfNotNull(this JsonWriter jsonWriter, string tag, IdentifiableName? value)
         {
             if (value == null)
             {
@@ -53,24 +55,24 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="writer">The writer.</param>
         /// <param name="value">The value.</param>
         /// <param name="elementName">The property name.</param>
-        public static void WriteIfNotDefaultOrNull<T>(this JsonWriter writer, string elementName, T value)
+        public static void WriteIfNotDefaultOrNull<T>(this JsonWriter writer, string elementName, T? value)
         {
             if (EqualityComparer<T>.Default.Equals(value, default))
             {
                 return;
             }
 
-            if (value is bool boolValue)
+            switch (value)
             {
-                writer.WriteProperty(elementName, boolValue.ToLowerString());
-            }
-            else if (value is IFormattable formattable)
-            {
-                writer.WriteProperty(elementName, formattable.ToString(null, CultureInfo.InvariantCulture));
-            }
-            else
-            {
-                writer.WriteProperty(elementName, value.ToString());
+                case bool boolValue:
+                    writer.WriteProperty(elementName, boolValue.ToLowerString());
+                    break;
+                case IFormattable formattable:
+                    writer.WriteProperty(elementName, formattable.ToString(null, CultureInfo.InvariantCulture));
+                    break;
+                default:
+                    writer.WriteProperty(elementName, value?.ToString() ?? throw new RedmineException($"The value of '{elementName}' could not be converted to a string."));
+                    break;
             }
         }
 
@@ -92,7 +94,7 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="tag"></param>
         /// <param name="ident"></param>
         /// <param name="emptyValue"></param>
-        public static void WriteIdOrEmpty(this JsonWriter jsonWriter, string tag, IdentifiableName ident, string emptyValue = null)
+        public static void WriteIdOrEmpty(this JsonWriter jsonWriter, string tag, IdentifiableName? ident, string? emptyValue = null)
         {
             jsonWriter.WriteProperty(tag, ident != null ? ident.Id.ToInvariantString() : emptyValue);
         }
@@ -153,7 +155,7 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="jsonWriter"></param>
         /// <param name="tag"></param>
         /// <param name="value"></param>
-        public static void WriteProperty(this JsonWriter jsonWriter, string tag, object value)
+        public static void WriteProperty(this JsonWriter jsonWriter, string tag, object? value)
         {
             jsonWriter.WritePropertyName(tag);
             jsonWriter.WriteValue(value);
@@ -189,7 +191,7 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="jsonWriter"></param>
         /// <param name="tag"></param>
         /// <param name="collection"></param>
-        public static void WriteRepeatableElement(this JsonWriter jsonWriter, string tag, IEnumerable<IValue> collection)
+        public static void WriteRepeatableElement(this JsonWriter jsonWriter, string tag, IEnumerable<IValue>? collection)
         {
             if (collection == null)
             {
@@ -208,7 +210,7 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="jsonWriter"></param>
         /// <param name="tag"></param>
         /// <param name="collection"></param>
-        public static void WriteArrayIds(this JsonWriter jsonWriter, string tag, IEnumerable<IdentifiableName> collection)
+        public static void WriteArrayIds(this JsonWriter jsonWriter, string tag, IEnumerable<IdentifiableName>? collection)
         {
             if (collection == null)
             {
@@ -232,7 +234,7 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="jsonWriter"></param>
         /// <param name="tag"></param>
         /// <param name="collection"></param>
-        public static void WriteArrayNames(this JsonWriter jsonWriter, string tag, IEnumerable<IdentifiableName> collection)
+        public static void WriteArrayNames(this JsonWriter jsonWriter, string tag, IEnumerable<IdentifiableName>? collection)
         {
             if (collection == null)
             {
@@ -261,7 +263,7 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="tag"></param>
         /// <param name="collection"></param>
         /// <param name="writeRoot"></param>
-        public static void WriteArray<T>(this JsonWriter jsonWriter, string tag, ICollection<T> collection, bool writeRoot = true) where T : IJsonSerializable
+        public static void WriteArray<T>(this JsonWriter jsonWriter, string tag, ICollection<T>? collection, bool writeRoot = true) where T : IJsonSerializable
         {
             if (collection == null)
             {
@@ -312,7 +314,7 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="jsonWriter"></param>
         /// <param name="tag"></param>
         /// <param name="collection"></param>
-        public static void WriteListAsProperty(this JsonWriter jsonWriter, string tag, ICollection collection)
+        public static void WriteListAsProperty(this JsonWriter jsonWriter, string tag, ICollection? collection)
         {
             if (collection == null)
             {
