@@ -20,7 +20,7 @@ internal static class RedmineApiExceptionHelper
     /// </summary>
     /// <param name="statusCode">The HTTP status code.</param>
     /// <param name="inner">The inner exception, if any.</param>
-    /// <exception cref="RedmineException">A specific Redmine exception based on the status code.</exception>
+    /// <exception cref="RedmineApiException">Always thrown, with the status code in <see cref="RedmineApiException.HttpStatusCode"/>.</exception>
     internal static void MapStatusCodeToException(int statusCode, Exception inner)
     {
         throw statusCode switch
