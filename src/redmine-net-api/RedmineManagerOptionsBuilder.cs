@@ -41,8 +41,11 @@ namespace Redmine.Net.Api
         private ClientType _clientType = ClientType.WebClient;
         
         /// <summary>
-        /// 
+        /// Sets the page size used when fetching lists. Values less than or equal to 0 use the default page size (25).
         /// </summary>
+        /// <remarks>
+        /// Redmine caps the page size (100 by default); Get and GetAsync still return all the items.
+        /// </remarks>
         /// <param name="pageSize"></param>
         /// <returns></returns>
         public RedmineManagerOptionsBuilder WithPageSize(int pageSize)

@@ -56,7 +56,10 @@ namespace Redmine.Net.Api
         /// <typeparam name="T"></typeparam>
         /// <param name="requestOptions"></param>
         /// <param name="cancellationToken"></param>
-        /// <returns></returns>
+        /// <returns>All the objects, or <c>null</c> when there are no items.</returns>
+        /// <remarks>
+        /// This method automatically handles pagination. When the query string contains a <c>limit</c>, at most that many items are returned.
+        /// </remarks>
         Task<List<T>> GetAsync<T>(RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
             where T : class, new();
 

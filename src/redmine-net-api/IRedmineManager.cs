@@ -88,11 +88,12 @@ public partial interface IRedmineManager
     /// </summary>
     /// <typeparam name="T">The type of Redmine resource to retrieve.</typeparam>
     /// <param name="requestOptions">Optional request options for filtering or sorting.</param>
-    /// <returns>A list of all resources matching the specified criteria.</returns>
+    /// <returns>A list of all resources matching the specified criteria, or <c>null</c> when there are no items.</returns>
     /// <exception cref="RedmineApiException">Thrown when the server returns an error status code (for example 401, 403 or 404; see <see cref="RedmineApiException.HttpStatusCode"/>), or when the request fails or times out.</exception>
     /// <exception cref="RedmineException">Thrown when a general error occurs.</exception>
     /// <remarks>
-    /// This method automatically handles pagination. For large result sets, consider using <see cref="GetPaginated{T}"/>.
+    /// This method automatically handles pagination. When the query string contains a <c>limit</c>, at most that many items are returned.
+    /// For large result sets, consider using <see cref="GetPaginated{T}"/>.
     /// </remarks>
     List<T> Get<T>(RequestOptions requestOptions = null) 
         where T : class, new();
