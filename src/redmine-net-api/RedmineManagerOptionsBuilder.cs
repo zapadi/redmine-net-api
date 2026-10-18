@@ -441,7 +441,7 @@ namespace Redmine.Net.Api
                 path = path.Substring(0, lastSegmentStart);
             }
 
-            return path.EndsWith("/", StringComparison.Ordinal) ? path : path + "/";
+            return path.Length > 0 && path[path.Length - 1] == '/' ? path : path + "/";
         }
 
         private static bool IsSchemaHttpOrHttps(string scheme)
