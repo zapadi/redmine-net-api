@@ -85,9 +85,30 @@ jobs:
           -p:Version="$VERSION"
           -p:PackageVersion="$VERSION"
 
+      - name: Pack HttpClient transport
+        run: >-
+          dotnet pack src/redmine-net-api.Http/redmine-net-api.Http.csproj
+          --configuration Release
+          --output ./artifacts
+          --include-symbols
+          -p:SymbolPackageFormat=snupkg
+          -p:Version="$VERSION"
+          -p:PackageVersion="$VERSION"
+
       - name: Pack signed
         run: >-
           dotnet pack src/redmine-net-api/redmine-net-api.csproj
+          --configuration Release
+          --output ./artifacts
+          --include-symbols
+          -p:SymbolPackageFormat=snupkg
+          -p:Version="$VERSION"
+          -p:PackageVersion="$VERSION"
+          -p:Sign=true
+
+      - name: Pack HttpClient transport signed
+        run: >-
+          dotnet pack src/redmine-net-api.Http/redmine-net-api.Http.csproj
           --configuration Release
           --output ./artifacts
           --include-symbols

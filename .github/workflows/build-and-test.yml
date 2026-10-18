@@ -87,7 +87,9 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: |
           dotnet pack src/redmine-net-api/redmine-net-api.csproj --configuration Release --no-build --output ./artifacts
+          dotnet pack src/redmine-net-api.Http/redmine-net-api.Http.csproj --configuration Release --no-build --output ./artifacts
           dotnet pack src/redmine-net-api/redmine-net-api.csproj --configuration Release --output ./artifacts -p:Sign=true
+          dotnet pack src/redmine-net-api.Http/redmine-net-api.Http.csproj --configuration Release --output ./artifacts -p:Sign=true
 
       - name: Upload test results
         if: always()
