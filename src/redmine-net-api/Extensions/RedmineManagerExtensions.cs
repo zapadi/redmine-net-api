@@ -687,6 +687,41 @@ namespace Redmine.Net.Api.Extensions
         }
 
         /// <summary>
+        /// Searches asynchronously using the specified request options (query string, impersonation, headers).
+        /// </summary>
+        /// <param name="redmineManager"></param>
+        /// <param name="q">query strings. enable to specify multiple values separated by a space " ".</param>
+        /// <param name="requestOptions">The request options. q, limit, offset and the search filters replace the same keys of its query string.</param>
+        /// <param name="limit">number of results in response.</param>
+        /// <param name="offset">skip this number of results in response</param>
+        /// <param name="searchFilter">Optional filters.</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>
+        /// Returns the search results by the specified condition parameters.
+        /// </returns>
+        public static async Task<PagedResults<Search>> SearchAsync(this RedmineManager redmineManager,
+            string q,
+            RequestOptions requestOptions,
+            int limit = RedmineConstants.DEFAULT_PAGE_SIZE_VALUE,
+            int offset = 0,
+            SearchFilterBuilder searchFilter = null,
+            CancellationToken cancellationToken = default)
+        {
+            var parameters = CreateSearchParameters(q, limit, offset, searchFilter);
+
+            var options = requestOptions != null ? requestOptions.Clone() : new RequestOptions();
+            options.QueryString ??= new NameValueCollection();
+            foreach (string key in parameters)
+            {
+                options.QueryString.Set(key, parameters[key]);
+            }
+
+            var response = await redmineManager.GetPagedAsync<Search>(options, cancellationToken).ConfigureAwait(false);
+
+            return response;
+        }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="redmineManager"></param>
