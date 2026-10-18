@@ -7,6 +7,9 @@
 *	A project read from Redmine now re-sends its custom field values (ProjectCustomFields) on update
 *	WithWebClient is now honored; the function must return a new WebClient on every call (the library disposes it after each request and WebClientOptions are not applied to it)
 *	RedmineApiException now includes Method, Endpoint, ResponseHeaders and IsTransient (timeouts, connection failures, HTTP 408, 429, 502, 503 and 504); IsTransient was previously always false
+*	Added RedmineManagerOptionsBuilder.WithQueryStringEncoding() (opt-in) to URL-encode query string keys and values
+*	Added RedmineManagerOptionsBuilder.WithMaxConcurrentRequests(int) to set how many pages GetAsync fetches in parallel (default 3)
+*	Added SearchAsync overload with RequestOptions (impersonation, headers, extra query string)
 
 ⚠️ Deprecations
 *	Project.CustomFieldValues is obsolete; use ProjectCustomFields
@@ -45,6 +48,16 @@
 *	RequestOptions ContentType, Accept, UserAgent and Headers are now applied to the request; these properties were previously ignored, so values set on them are now sent
 *	WebClientOptions.DefaultHeaders no longer override per-request or authentication headers
 *	Sync DownloadFile with progress no longer crashes the process on HTTP or connection errors
+*	Fixed Get/GetAsync losing items when the page size or limit is above the server maximum (100); offsets now advance by the items returned and a limit above 100 returns up to limit items
+*	Fixed hosts with a sub-path (e.g. https://host/redmine) sending requests to the server root, and base paths containing '.' being dropped; a trailing *.xml/*.json segment is still removed
+*	Fixed attachment create/update URL ignoring the base sub-path
+*	URL path segments (ids, project identifiers, wiki page names, repository ids, revisions) are now escaped
+*	Fixed RequestOptions.QueryString being dropped when the address already has a query (e.g. UploadFileAsync with a file name)
+*	Fixed PagedResults.TotalPages being one too many (now 0 when there are no items)
+*	Fixed async paging disposing its semaphore while page requests were still running on cancellation or error
+*	Fixed JSON paged results using unknown top-level properties as the item list
+*	Fixed NullReferenceException for hosts without scheme starting with "https" (e.g. httpsfoo.example)
+*	VerifyServerCert no longer overwrites a user ServerCertificateValidationCallback and RedmineManager no longer mutates the caller's WebClientOptions; obsolete Proxy, Timeout and SecurityProtocolType are set for any IRedmineWebClientOptions
 
 🧪 Tests
 *	Unit tests now run in CI on net10.0 and fail the build on failure
