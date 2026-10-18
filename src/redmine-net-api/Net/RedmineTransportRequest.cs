@@ -14,6 +14,7 @@
    limitations under the License.
 */
 
+#nullable enable
 using System;
 using System.Collections.Specialized;
 
@@ -21,12 +22,12 @@ namespace Redmine.Net.Api.Net;
 
 internal sealed class RedmineTransportRequest
 {
-    public string Method { get; init; }
-    public string Address { get; init; }
-    public NameValueCollection QueryString { get; init; }
-    public NameValueCollection Headers { get; init; }
-    public string ContentType { get; init; }
-    public byte[] Body { get; init; }
-    public IProgress<int> Progress { get; init; }
-    public string BaseAddress { get; set; }
+    public string Method { get; init; } = null!;
+    public string Address { get; init; } = null!;
+    public NameValueCollection? QueryString { get; init; }
+    public NameValueCollection? Headers { get; init; }
+    public string? ContentType { get; init; }
+    public byte[]? Body { get; init; }
+    public IProgress<int>? Progress { get; init; }
+    public string? BaseAddress { get; set; }
 }

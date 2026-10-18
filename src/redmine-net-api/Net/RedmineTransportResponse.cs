@@ -14,6 +14,7 @@
    limitations under the License.
 */
 
+#nullable enable
 using System;
 using System.Collections.Specialized;
 
@@ -23,9 +24,9 @@ internal sealed class RedmineTransportResponse
 {
     public int StatusCode { get; init; }
     public bool IsSuccessStatusCode { get; init; }
-    public NameValueCollection Headers { get; init; }
-    public byte[] Body { get; init; }
-    public string Content { get; init; }
-    public Exception Error { get; init; }
-    public Exception BodyError { get; init; }
+    public NameValueCollection? Headers { get; init; }
+    public byte[]? Body { get; init; }
+    public string? Content { get; init; }
+    public Exception? Error { get; init; }
+    public Exception? BodyError { get; init; }
 }
