@@ -255,6 +255,7 @@ public sealed class CustomTransportTests
     [InlineData("application/xml", "utf-8", false)]
     [InlineData(null, "utf-8", false)]
     [InlineData("application/xml; charset=unknown-charset", "utf-8", false)]
+    [InlineData("application/xml; charset=utf-7", "utf-8", false)]
     [InlineData("application/xml", "utf-8", true)]
     [InlineData("application/xml; charset=iso-8859-1", "utf-8", true)]
     public void Text_Should_Be_Decoded_With_Charset_Or_Utf8(string contentType, string encoding, bool withBom)

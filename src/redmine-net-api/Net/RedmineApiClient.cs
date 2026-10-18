@@ -407,7 +407,7 @@ namespace Redmine.Net.Api.Net
                 {
                     return Encoding.GetEncoding(parameter.Substring(separator + 1).Trim().Trim('"'));
                 }
-                catch (ArgumentException)
+                catch (Exception ex) when (ex is ArgumentException or NotSupportedException)
                 {
                     return Encoding.UTF8;
                 }
