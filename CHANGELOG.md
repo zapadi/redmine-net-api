@@ -6,7 +6,7 @@
 *	Added Project.ProjectCustomFields to set and read project custom field values
 *	A project read from Redmine now re-sends its custom field values (ProjectCustomFields) on update
 *	WithWebClient is now honored; the function must return a new WebClient on every call (the library disposes it after each request and WebClientOptions are not applied to it)
-*	RedmineApiException now includes Method, Endpoint, ResponseHeaders and IsTransient (timeouts, connection failures, 408/429/5xx)
+*	RedmineApiException now includes Method, Endpoint, ResponseHeaders and IsTransient (timeouts, connection failures, HTTP 408, 429, 502, 503 and 504); IsTransient was previously always false
 
 ⚠️ Deprecations
 *	Project.CustomFieldValues is obsolete; use ProjectCustomFields
@@ -42,7 +42,7 @@
 *	Fixed XML collection reader hanging on empty items
 *	Clone now copies all fields and honours resetId (Issue.Clone(false) now keeps Id)
 *	GetHashCode is now consistent with Equals for Issue and Membership
-*	RequestOptions ContentType, Accept, UserAgent and Headers are now applied to the request
+*	RequestOptions ContentType, Accept, UserAgent and Headers are now applied to the request; these properties were previously ignored, so values set on them are now sent
 
 🧪 Tests
 *	Unit tests now run in CI on net10.0 and fail the build on failure
