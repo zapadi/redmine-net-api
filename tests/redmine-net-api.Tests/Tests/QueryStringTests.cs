@@ -47,6 +47,25 @@ public sealed class QueryStringTests
     }
 
     [Theory]
+    [InlineData(false, "/uploads.xml?filename=a.txt&x=1")]
+    [InlineData(true, "/uploads.xml?filename=a.txt&x=1")]
+    public void Address_Query_Keys_Are_Not_Duplicated(bool encode, string expected)
+    {
+        using var server = new TestHttpServer(_ => RedminePagedServer.Response(UploadXml));
+        var builder = new RedmineManagerOptionsBuilder().WithHost(server.Url);
+        if (encode)
+        {
+            builder.WithQueryStringEncoding();
+        }
+
+        var manager = new RedmineManager(builder);
+
+        manager.ApiClient.Upload(manager.RedmineApiUrls.UploadFragment("a.txt"), [1], Query(("filename", "b.txt"), ("x", "1")));
+
+        Assert.Equal(expected, server.Requests.Single().RawUrl);
+    }
+
+    [Theory]
     [InlineData(false)]
     [InlineData(true)]
     public async Task Address_Without_Query_Is_Unchanged(bool withQueryString)

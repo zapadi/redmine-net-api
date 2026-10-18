@@ -213,14 +213,36 @@ namespace Redmine.Net.Api.Net
         private string AppendQueryString(string address, NameValueCollection queryString)
         {
             var builder = new StringBuilder(address);
-            var delimiter = HasQuery(address) ? '&' : '?';
+            var queryStart = address.IndexOf('?');
+            var delimiter = queryStart >= 0 ? '&' : '?';
+            var addressQuery = queryStart >= 0 ? address.Substring(queryStart + 1).Split('&') : null;
             for (var i = 0; i < queryString.Count; i++)
             {
-                builder.Append(delimiter).Append(EncodeQueryValue(queryString.GetKey(i))).Append('=').Append(EncodeQueryValue(queryString.Get(i)));
+                var key = EncodeQueryValue(queryString.GetKey(i));
+                if (addressQuery != null && key != null && HasQueryKey(addressQuery, key))
+                {
+                    continue;
+                }
+
+                builder.Append(delimiter).Append(key).Append('=').Append(EncodeQueryValue(queryString.Get(i)));
                 delimiter = '&';
             }
 
             return builder.ToString();
+        }
+
+        private static bool HasQueryKey(string[] query, string key)
+        {
+            foreach (var pair in query)
+            {
+                var separator = pair.IndexOf('=');
+                if (string.Equals(separator >= 0 ? pair.Substring(0, separator) : pair, key, StringComparison.Ordinal))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private static bool HasQuery(string address)
