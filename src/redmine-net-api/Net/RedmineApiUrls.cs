@@ -269,7 +269,12 @@ namespace Redmine.Net.Api.Net
 
         internal static string Escape(string value)
         {
-            return string.IsNullOrEmpty(value) ? value ?? string.Empty : Uri.EscapeDataString(value);
+            if (string.IsNullOrEmpty(value))
+            {
+                return string.Empty;
+            }
+
+            return Uri.UnescapeDataString(value) != value ? value : Uri.EscapeDataString(value);
         }
 
         public string UploadFragment(string fileName = null)

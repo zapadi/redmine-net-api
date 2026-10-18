@@ -21,6 +21,8 @@ public sealed class UrlEscapingTests
     [InlineData("100%", "100%25")]
     [InlineData("a&b=c", "a%26b%3Dc")]
     [InlineData("Page_1-x.y~z", "Page_1-x.y~z")]
+    [InlineData("My%20Page", "My%20Page")]
+    [InlineData("Caf%C3%A9", "Caf%C3%A9")]
     public void Path_Segments_Are_Escaped(string value, string escaped)
     {
         Assert.Equal($"projects/{escaped}/wiki/{escaped}.xml", Xml.ProjectWikiPage(value, value));
