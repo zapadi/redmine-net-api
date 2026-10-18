@@ -13,7 +13,6 @@
     <NoWarn>
       CA1510; <!--ArgumentNullException.ThrowIfNull is not available on .NET Framework -->
       CA1835; <!--Stream.ReadAsync(Memory<byte>) is not available on .NET Framework -->
-      CA1849; <!--MemoryStream.Write is synchronous by design -->
     </NoWarn>
   </PropertyGroup>
 

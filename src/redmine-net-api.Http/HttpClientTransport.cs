@@ -234,7 +234,9 @@ public sealed class HttpClientTransport : IRedmineTransport
         int read;
         while ((read = await stream.ReadAsync(buffer, 0, buffer.Length, cancellationToken).ConfigureAwait(false)) > 0)
         {
+#pragma warning disable CA1849
             output.Write(buffer, 0, read);
+#pragma warning restore CA1849
             Report(progress, output.Length, length);
         }
 
