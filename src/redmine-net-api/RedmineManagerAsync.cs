@@ -32,6 +32,8 @@ namespace Redmine.Net.Api;
 
 public partial class RedmineManager: IRedmineManagerAsync
 {
+    private const int MAX_CONCURRENT_TASKS = 3;
+    
     /// <inheritdoc />
     public async Task<int> CountAsync<T>(RequestOptions requestOptions, CancellationToken cancellationToken = default) 
         where T : class, new()
@@ -82,7 +84,7 @@ public partial class RedmineManager: IRedmineManagerAsync
             int.TryParse(baseRequestOptions.QueryString[RedmineKeys.OFFSET], out offset);
         }
 
-        if (pageSize == default)
+        if (pageSize == 0)
         {
             pageSize = _redmineManagerOptions.PageSize > 0
                 ? _redmineManagerOptions.PageSize
@@ -152,17 +154,15 @@ public partial class RedmineManager: IRedmineManagerAsync
 
             return Truncate(resultList, maxItems);
         }
-        else
+
+        var result = await GetPagedAsync<T>(baseRequestOptions, cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+        if (result?.Items != null)
         {
-            var result = await GetPagedAsync<T>(baseRequestOptions, cancellationToken: cancellationToken)
-                .ConfigureAwait(false);
-            if (result?.Items != null)
-            {
-                return new List<T>(result.Items);
-            }
+            return [.. result.Items];
         }
 
-        return resultList;
+        return null;
     }
 
     /// <inheritdoc />
@@ -206,7 +206,7 @@ public partial class RedmineManager: IRedmineManagerAsync
         
         payload = payload.ReplaceEndings();
         
-        var response = await ApiClient.UpdateAsync(url, payload, requestOptions, cancellationToken: cancellationToken).ConfigureAwait(false);
+        _ = await ApiClient.UpdateAsync(url, payload, requestOptions, cancellationToken: cancellationToken).ConfigureAwait(false);
         
     }
 
@@ -236,8 +236,6 @@ public partial class RedmineManager: IRedmineManagerAsync
         return response.RawContent;
     }
     
-    private const int MAX_CONCURRENT_TASKS = 3;
-
     private static Task<AggregateException[]> WhenAllCompleted<T>(List<Task<T>> tasks)
     {
         var completions = new List<Task<AggregateException>>(tasks.Count);
