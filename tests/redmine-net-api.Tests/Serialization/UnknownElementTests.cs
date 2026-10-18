@@ -111,6 +111,28 @@ public class UnknownElementTests
     }
 
     [Fact]
+    public void Should_Deserialize_Json_Issue_List_With_Null_Nested_Objects()
+    {
+        const string input = """
+                             {
+                                 "issues": [
+                                     { "id": 1, "assigned_to": null, "status": null, "subject": "subject", "project": { "id": 2, "name": "Project" }, "status": { "id": 3, "name": "New" } },
+                                     { "id": 2, "assigned_to": null, "subject": "subject", "project": { "id": 2, "name": "Project" }, "status": { "id": 3, "name": "New" } }
+                                 ],
+                                 "total_count": 2
+                             }
+                             """;
+
+        var output = SerializerFactory.Create(SerializerKind.NewtonsoftJson).DeserializeToPagedResults<Issue>(input);
+
+        var issues = output.Items.ToList();
+        Assert.Equal(2, issues.Count);
+        AssertIssue(issues[0], 1);
+        AssertIssue(issues[1], 2);
+        Assert.Equal(0, issues[0].AssignedTo.Id);
+    }
+
+    [Fact]
     public void Should_Skip_Unknown_Nested_Json_Elements_In_Project()
     {
         const string input = """

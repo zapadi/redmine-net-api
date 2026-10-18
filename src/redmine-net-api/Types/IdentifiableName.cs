@@ -139,7 +139,7 @@ namespace Redmine.Net.Api.Types
         {
             while (reader.Read())
             {
-                if (reader.TokenType == JsonToken.EndObject)
+                if (reader.TokenType == JsonToken.EndObject || reader.TokenType == JsonToken.Null)
                 {
                     return;
                 }
