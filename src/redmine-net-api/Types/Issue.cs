@@ -542,7 +542,6 @@ namespace Redmine.Net.Api.Types
             hashCode = HashCodeHelper.GetHashCode(Subject, hashCode);
             hashCode = HashCodeHelper.GetHashCode(Description, hashCode);
             hashCode = HashCodeHelper.GetHashCode(StartDate, hashCode);
-            hashCode = HashCodeHelper.GetHashCode(Project, hashCode);
             hashCode = HashCodeHelper.GetHashCode(DueDate, hashCode);
             hashCode = HashCodeHelper.GetHashCode(DoneRatio, hashCode);
             hashCode = HashCodeHelper.GetHashCode(PrivateNotes, hashCode);
@@ -553,9 +552,7 @@ namespace Redmine.Net.Api.Types
 
             hashCode = HashCodeHelper.GetHashCode(Notes, hashCode);
             hashCode = HashCodeHelper.GetHashCode(AssignedTo, hashCode);
-            hashCode = HashCodeHelper.GetHashCode(ParentIssue, hashCode);
             hashCode = HashCodeHelper.GetHashCode(FixedVersion, hashCode);
-            hashCode = HashCodeHelper.GetHashCode(IsPrivate, hashCode);
             hashCode = HashCodeHelper.GetHashCode(Journals, hashCode);
             hashCode = HashCodeHelper.GetHashCode(CustomFields, hashCode);
 
@@ -563,7 +560,6 @@ namespace Redmine.Net.Api.Types
             hashCode = HashCodeHelper.GetHashCode(Attachments, hashCode);
             hashCode = HashCodeHelper.GetHashCode(Relations, hashCode);
             hashCode = HashCodeHelper.GetHashCode(Children, hashCode);
-            hashCode = HashCodeHelper.GetHashCode(Uploads, hashCode);
             hashCode = HashCodeHelper.GetHashCode(Watchers, hashCode);
 
             return hashCode;
