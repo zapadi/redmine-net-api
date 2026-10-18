@@ -71,6 +71,7 @@ jobs:
           --report-trx
           --hangdump
           --hangdump-timeout 5m
+          --hangdump-type Mini
           --results-directory TestResults
 
       - name: Test (.NET Framework)
@@ -85,6 +86,7 @@ jobs:
           --report-trx
           --hangdump
           --hangdump-timeout 5m
+          --hangdump-type Mini
           --results-directory TestResults
 
       - name: Validate package
