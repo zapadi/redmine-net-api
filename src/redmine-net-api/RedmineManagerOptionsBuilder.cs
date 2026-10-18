@@ -337,15 +337,12 @@ namespace Redmine.Net.Api
             {
                 host = host.TrimEnd('/', '\\');
                 EnsureDomainNameIsValid(host);
-                
-                if (!host.StartsWith(Uri.UriSchemeHttp, StringComparison.OrdinalIgnoreCase) || !host.StartsWith(Uri.UriSchemeHttps, StringComparison.OrdinalIgnoreCase))
-                {
-                    host = $"{scheme ?? Uri.UriSchemeHttps}://{host}";
 
-                    if (!Uri.TryCreate(host, UriKind.Absolute, out uri))
-                    {
-                        throw new RedmineException("The host is not valid.");
-                    }
+                host = $"{scheme ?? Uri.UriSchemeHttps}://{host}";
+
+                if (!Uri.TryCreate(host, UriKind.Absolute, out uri))
+                {
+                    throw new RedmineException("The host is not valid.");
                 }
             }
             

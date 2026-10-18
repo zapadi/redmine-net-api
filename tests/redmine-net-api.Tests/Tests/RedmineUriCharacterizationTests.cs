@@ -36,6 +36,15 @@ public sealed class RedmineUriCharacterizationTests
     }
 
     [Theory]
+    [InlineData("httpsfoo.example", null, "https://httpsfoo.example/")]
+    [InlineData("httpsfoo.example", "http", "http://httpsfoo.example/")]
+    [InlineData("https-redmine.example.com", null, "https://https-redmine.example.com/")]
+    public void CreateRedmineUri_Host_Starting_With_Https_Without_Scheme_Gets_Scheme(string host, string scheme, string expected)
+    {
+        Assert.Equal(expected, RedmineManagerOptionsBuilder.CreateRedmineUri(host, scheme).ToString());
+    }
+
+    [Theory]
     [InlineData("")]
     [InlineData("   ")]
     [InlineData("[::1]")]
