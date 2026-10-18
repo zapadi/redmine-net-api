@@ -286,7 +286,7 @@ namespace Redmine.Net.Api
 
         private static List<T> Truncate<T>(List<T> resultList, int maxItems)
         {
-            if (resultList != null && resultList.Count > maxItems)
+            if (resultList != null && maxItems >= 0 && resultList.Count > maxItems)
             {
                 resultList.RemoveRange(maxItems, resultList.Count - maxItems);
             }

@@ -109,4 +109,20 @@ public sealed class PagingTests
         Assert.Equal(50, issues.Count);
         Assert.Equal(["/issues.xml?limit=25&offset=0", "/issues.xml?limit=25&offset=25", "/issues.xml?limit=25&offset=50"], SortedUrls(server));
     }
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task Negative_User_Limit_Returns_First_Page(bool async)
+    {
+        using var server = new TestHttpServer(r => RedminePagedServer.Issues(r, 60));
+        var manager = CreateManager(server);
+        var options = Query(("limit", "-5"));
+
+        var issues = async
+            ? await manager.GetAsync<Issue>(options, TestContext.Current.CancellationToken)
+            : manager.Get<Issue>(options);
+
+        Assert.Equal(25, issues.Count);
+        Assert.Equal(["/issues.xml?limit=-5&offset=0"], SortedUrls(server));
+    }
 }
