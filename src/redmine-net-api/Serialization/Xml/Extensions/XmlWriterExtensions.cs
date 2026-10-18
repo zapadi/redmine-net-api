@@ -404,23 +404,7 @@ namespace Redmine.Net.Api.Extensions
         /// <typeparam name="T"></typeparam>
         public static void WriteArray<T>(this XmlWriter writer, string elementName, IEnumerable<T> collection, string root, string defaultNamespace = null)
         {
-            if (collection == null)
-            {
-                return;
-            }
-
-            var type = typeof(T);
-            writer.WriteStartElement(elementName);
-            writer.WriteAttributeString("type", "array");
-
-            var serializer = GetArraySerializer(type, root, defaultNamespace);
-
-            foreach (var item in collection)
-            {
-                serializer.Serialize(writer, item);
-            }
-
-            writer.WriteEndElement();
+            WriteArray(writer, elementName, collection, typeof(T), root, defaultNamespace);
         }
 
         /// <summary>
@@ -431,15 +415,7 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="elementName">Name of the element.</param>
         public static void WriteListElements(this XmlWriter xmlWriter, string elementName, IEnumerable<IValue> collection)
         {
-            if (collection == null)
-            {
-                return;
-            }
-
-            foreach (var item in collection)
-            {
-                xmlWriter.WriteElementString(elementName, item.Value);
-            }
+            WriteRepeatableElement(xmlWriter, elementName, collection);
         }
 
         /// <summary>
