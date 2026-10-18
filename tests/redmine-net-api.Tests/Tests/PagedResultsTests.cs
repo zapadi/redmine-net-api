@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Redmine.Net.Api.Serialization;
 using Xunit;
 
@@ -34,13 +35,22 @@ public sealed class PagedResultsTests
     }
 
     [Fact]
-    public void Empty_Result_Has_No_Pages()
+    public void Empty_Result_Without_Total_Has_One_Page()
     {
         var result = new PagedResults<string>(new List<string>(), 0, 0, 25);
 
         Assert.Equal(0, result.TotalItems);
-        Assert.Equal(0, result.TotalPages);
+        Assert.Equal(1, result.TotalPages);
         Assert.Equal(1, result.CurrentPage);
+    }
+
+    [Fact]
+    public void Without_Total_Has_One_Page_Regardless_Of_Item_Count()
+    {
+        var result = new PagedResults<string>(Enumerable.Repeat("a", 30).ToList(), 0, 0, 25);
+
+        Assert.Equal(30, result.TotalItems);
+        Assert.Equal(1, result.TotalPages);
     }
 
     [Fact]
