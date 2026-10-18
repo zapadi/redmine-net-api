@@ -102,15 +102,17 @@ public partial class RedmineManager: IRedmineManagerAsync
                 return null;
             }
             
-            var totalCount = isLimitSet ? pageSize : firstPage.TotalItems;
             resultList =  new List<T>(firstPage.Items);
 
-            var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
-            var remainingPages = totalPages - 1 - (offset / pageSize);
-            if (remainingPages <= 0)
+            var maxItems = isLimitSet ? pageSize : int.MaxValue;
+            var effectivePageSize = resultList.Count;
+            var remainingItems = Math.Min(firstPage.TotalItems - offset, maxItems) - effectivePageSize;
+            if (effectivePageSize == 0 || remainingItems <= 0)
             {
-                return resultList;
+                return Truncate(resultList, maxItems);
             }
+
+            var remainingPages = remainingItems / effectivePageSize + (remainingItems % effectivePageSize > 0 ? 1 : 0);
 
             using (var semaphore = new SemaphoreSlim(MAX_CONCURRENT_TASKS))
             {
@@ -118,7 +120,7 @@ public partial class RedmineManager: IRedmineManagerAsync
                 for (int page = 1; page <= remainingPages; page++)
                 {
                     await semaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
-                    var pageOffset = (page * pageSize) + offset;
+                    var pageOffset = (page * effectivePageSize) + offset;
                     var pageRequestOptions = baseRequestOptions.Clone();
                     pageRequestOptions.QueryString.Set(RedmineKeys.OFFSET, pageOffset.ToInvariantString());
                     pageFetchTasks.Add(GetPagedInternalAsync<T>(semaphore, pageRequestOptions, cancellationToken));
@@ -141,6 +143,8 @@ public partial class RedmineManager: IRedmineManagerAsync
                     resultList.AddRange(pageResult.Items);
                 }
             }
+
+            return Truncate(resultList, maxItems);
         }
         else
         {

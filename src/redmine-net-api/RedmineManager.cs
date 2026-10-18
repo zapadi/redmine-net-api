@@ -227,6 +227,7 @@ namespace Redmine.Net.Api
             var hasOffset = TypesWithOffset.ContainsKey(typeof(T));
             if (hasOffset)
             {
+                var maxItems = isLimitSet ? pageSize : int.MaxValue;
                 int totalCount;
                 do
                 {
@@ -234,23 +235,18 @@ namespace Redmine.Net.Api
 
                     var tempResult = GetPaginatedInternal<T>(uri, requestOptions);
 
-                    totalCount = isLimitSet ? pageSize : tempResult?.TotalItems ?? 0;
-
-                    if (tempResult?.Items != null)
+                    var itemsCount = AddItems(ref resultList, tempResult);
+                    if (itemsCount == 0)
                     {
-                        if (resultList == null)
-                        {
-                            resultList = new List<T>(tempResult.Items);
-                        }
-                        else
-                        {
-                            resultList.AddRange(tempResult.Items);
-                        }
+                        break;
                     }
 
-                    offset += pageSize;
+                    totalCount = tempResult?.TotalItems ?? 0;
+                    offset += itemsCount;
                 }
-                while (offset < totalCount);
+                while (offset < totalCount && resultList?.Count < maxItems);
+
+                return Truncate(resultList, maxItems);
             }
             else
             {
@@ -264,6 +260,37 @@ namespace Redmine.Net.Api
             return resultList;
         }
          
+        private static int AddItems<T>(ref List<T> resultList, PagedResults<T> page)
+            where T : class
+        {
+            if (page?.Items == null)
+            {
+                return 0;
+            }
+
+            var previousCount = resultList?.Count ?? 0;
+            if (resultList == null)
+            {
+                resultList = new List<T>(page.Items);
+            }
+            else
+            {
+                resultList.AddRange(page.Items);
+            }
+
+            return resultList.Count - previousCount;
+        }
+
+        private static List<T> Truncate<T>(List<T> resultList, int maxItems)
+        {
+            if (resultList != null && resultList.Count > maxItems)
+            {
+                resultList.RemoveRange(maxItems, resultList.Count - maxItems);
+            }
+
+            return resultList;
+        }
+
         /// <summary>
         /// 
         /// </summary>
