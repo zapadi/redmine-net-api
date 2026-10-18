@@ -1,0 +1,19 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "bootstrap-sha": "d36303cf3a89e7ac04b26cf14bdcabbb1460d9e1",
+  "release-type": "simple",
+  "include-component-in-tag": true,
+  "bump-minor-pre-major": true,
+  "separate-pull-requests": false,
+  "skip-changelog": true,
+  "packages": {
+    "src/redmine-net-api": {
+      "component": "redmine-api",
+      "extra-files": [ "redmine-net-api.csproj" ]
+    },
+    "src/redmine-net-api.Http": {
+      "component": "redmine-api.http",
+      "extra-files": [ "redmine-net-api.Http.csproj" ]
+    }
+  }
+}

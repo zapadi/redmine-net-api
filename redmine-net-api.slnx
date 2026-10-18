@@ -20,9 +20,13 @@
     <File Path=".github/workflows/build-and-test.yml" />
     <File Path=".github/workflows/codeql-analysis.yml" />
     <File Path=".github/workflows/publish.yml" />
+    <File Path=".github/workflows/release.yml" />
+    <File Path=".github/scripts/nuget-versions.sh" />
   </Folder>
   <Folder Name="/SolutionFolder/Others/">
     <File Path="global.json" />
+    <File Path="release-please-config.json" />
+    <File Path=".release-please-manifest.json" />
     <File Path="logo.png" />
     <File Path="redmine-net-api.snk" />
   </Folder>
@@ -30,6 +34,7 @@
     <File Path="Directory.Build.props" />
     <File Path="Directory.Build.targets" />
     <File Path="Directory.Packages.props" />
+    <File Path="src/Directory.Build.props" />
   </Folder>
   <Folder Name="/src/">
     <Project Path="src/redmine-net-api/redmine-net-api.csproj" />
