@@ -306,7 +306,7 @@ namespace Redmine.Net.Api.Types
 
             if (Values != null)
             {
-                clone.Values = new List<CustomFieldValue>(Values);
+                clone.Values = Values.Clone(false);
             }
 
             return clone;

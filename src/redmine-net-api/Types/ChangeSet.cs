@@ -167,7 +167,7 @@ namespace Redmine.Net.Api.Types
         {
             return new ChangeSet()
             {
-                User = User,
+                User = User?.Clone(false),
                 Comments = Comments,
                 Revision = Revision,
                 CommittedOn = CommittedOn,

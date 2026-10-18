@@ -628,7 +628,14 @@ namespace Redmine.Net.Api.Types
                 Children = Children?.Clone(false),
                 Watchers = Watchers?.Clone(false),
                 Uploads = Uploads?.Clone(false),
+                ChangeSets = ChangeSets?.Clone(false),
+                AllowedStatuses = AllowedStatuses?.ConvertAll(status => new IssueAllowedStatus { Id = status.Id, Name = status.Name, IsClosed = status.IsClosed }),
             };
+
+            if (!resetId)
+            {
+                issue.Id = Id;
+            }
 
             return issue;
         }

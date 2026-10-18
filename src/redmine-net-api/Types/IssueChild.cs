@@ -187,12 +187,19 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
         public new IssueChild Clone(bool resetId)
         {
-            return new IssueChild
+            var issueChild = new IssueChild
             {
-                Id = Id,
                 Tracker = Tracker?.Clone(false),
-                Subject = Subject
+                Subject = Subject,
+                Children = Children?.ConvertAll(child => child.Clone(false))
             };
+
+            if (!resetId)
+            {
+                issueChild.Id = Id;
+            }
+
+            return issueChild;
         }
 
         #endregion

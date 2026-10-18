@@ -267,7 +267,9 @@ namespace Redmine.Net.Api.Types
                     Notes = Notes,
                     CreatedOn = CreatedOn,
                     PrivateNotes = PrivateNotes,
-                    Details = Details?.Clone(false)
+                    Details = Details?.Clone(false),
+                    UpdatedOn = UpdatedOn,
+                    UpdatedBy = UpdatedBy?.Clone(false)
                 };
             }
             return new Journal
@@ -277,7 +279,9 @@ namespace Redmine.Net.Api.Types
                 Notes = Notes,
                 CreatedOn = CreatedOn,
                 PrivateNotes = PrivateNotes,
-                Details = Details?.Clone(false)
+                Details = Details?.Clone(false),
+                UpdatedOn = UpdatedOn,
+                UpdatedBy = UpdatedBy?.Clone(false)
             };
         }
     }

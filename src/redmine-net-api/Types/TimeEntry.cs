@@ -310,15 +310,23 @@ namespace Redmine.Net.Api.Types
         {
             var timeEntry = new TimeEntry
             {
-                Activity = Activity,
+                Activity = Activity?.Clone(false),
                 Comments = Comments,
                 Hours = Hours,
-                Issue = Issue,
-                Project = Project,
+                Issue = Issue?.Clone(false),
+                Project = Project?.Clone(false),
                 SpentOn = SpentOn,
-                User = User,
-                CustomFields = CustomFields
+                User = User?.Clone(false),
+                CreatedOn = CreatedOn,
+                UpdatedOn = UpdatedOn,
+                CustomFields = CustomFields?.Clone(false)
             };
+
+            if (!resetId)
+            {
+                timeEntry.Id = Id;
+            }
+
             return timeEntry;
         }
         #endregion
