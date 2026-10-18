@@ -49,11 +49,6 @@ namespace Redmine.Net.Api
         /// <param name="optionsBuilder"></param>
         /// <exception cref="ArgumentNullException"></exception>
         public RedmineManager(RedmineManagerOptionsBuilder optionsBuilder)
-            : this(optionsBuilder, null)
-        {
-        }
-
-        internal RedmineManager(RedmineManagerOptionsBuilder optionsBuilder, IRedmineTransport transport)
         {
             ArgumentNullThrowHelper.ThrowIfNull(optionsBuilder, nameof(optionsBuilder));
             
@@ -88,7 +83,8 @@ namespace Redmine.Net.Api
                 : MimeFormat.Json;
             
             RedmineApiUrls = new RedmineApiUrls(Serializer.Format);
-            ApiClient = new RedmineApiClient(transport ?? new WebClientTransport(_redmineManagerOptions), _redmineManagerOptions.Authentication, _redmineManagerOptions.Serializer, _redmineManagerOptions.EncodeQueryString);
+            var transport = _redmineManagerOptions.Transport;
+            ApiClient = new RedmineApiClient(transport ?? new WebClientTransport(_redmineManagerOptions), _redmineManagerOptions.Authentication, _redmineManagerOptions.Serializer, _redmineManagerOptions.EncodeQueryString, _redmineManagerOptions.BaseAddress, transport != null);
         }
 
         /// <inheritdoc />
@@ -213,7 +209,7 @@ namespace Redmine.Net.Api
             
             if (requestOptions.QueryString == null)
             {
-                requestOptions.QueryString = new NameValueCollection();
+                requestOptions.QueryString = [];
             }
             else
             {
@@ -221,7 +217,7 @@ namespace Redmine.Net.Api
                 int.TryParse(requestOptions.QueryString[RedmineKeys.OFFSET], out offset);
             }
             
-            if (pageSize == default)
+            if (pageSize == 0)
             {
                 pageSize = _redmineManagerOptions.PageSize > 0 ? _redmineManagerOptions.PageSize : RedmineConstants.DEFAULT_PAGE_SIZE_VALUE;
                 requestOptions.QueryString.Set(RedmineKeys.LIMIT, pageSize.ToInvariantString());
@@ -251,16 +247,14 @@ namespace Redmine.Net.Api
 
                 return Truncate(resultList, maxItems);
             }
-            else
+
+            var result = GetPaginatedInternal<T>(uri, requestOptions);
+            if (result?.Items != null)
             {
-                var result = GetPaginatedInternal<T>(uri, requestOptions);
-                if (result?.Items != null)
-                {
-                    return new List<T>(result.Items);
-                }
+                return [.. result.Items];
             }
-            
-            return resultList;
+
+            return null;
         }
          
         private static int AddItems<T>(ref List<T> resultList, PagedResults<T> page)

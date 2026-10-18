@@ -66,8 +66,6 @@ internal static class HttpConstants
         /// </summary>
         public const string DELETE = "DELETE";
         
-        internal const string DOWNLOAD = "DOWNLOAD";
-        
         internal const string UPLOAD = "UPLOAD";
     }
 }

@@ -36,17 +36,23 @@ namespace Redmine.Net.Api.Net
 {
     internal sealed class RedmineApiClient : IRedmineApiClient
     {
+        private const string CanceledByUserMessage = "The operation was canceled by the user.";
+
         private readonly IRedmineTransport _transport;
         private readonly IRedmineAuthentication _credentials;
         private readonly IRedmineSerializer _serializer;
         private readonly bool _encodeQueryString;
+        private readonly Uri? _baseAddress;
+        private readonly bool _isCustomTransport;
 
-        public RedmineApiClient(IRedmineTransport transport, IRedmineAuthentication authentication, IRedmineSerializer serializer, bool encodeQueryString = false)
+        public RedmineApiClient(IRedmineTransport transport, IRedmineAuthentication authentication, IRedmineSerializer serializer, bool encodeQueryString = false, Uri? baseAddress = null, bool isCustomTransport = false)
         {
             _transport = transport;
             _credentials = authentication;
             _serializer = serializer;
             _encodeQueryString = encodeQueryString;
+            _baseAddress = baseAddress;
+            _isCustomTransport = isCustomTransport;
         }
 
         public ApiResponseMessage Get(string address, RequestOptions? requestOptions = null)
@@ -84,7 +90,7 @@ namespace Redmine.Net.Api.Net
 
         public ApiResponseMessage Download(string address, RequestOptions? requestOptions = null, IProgress<int>? progress = null)
         {
-            return HandleRequest(address, HttpVerbs.DOWNLOAD, requestOptions, progress: progress);
+            return HandleRequest(address, HttpVerbs.GET, requestOptions, isDownload: true, progress: progress);
         }
 
         public ApiResponseMessage Upload(string address, byte[] data, RequestOptions? requestOptions = null)
@@ -135,17 +141,22 @@ namespace Redmine.Net.Api.Net
 
         public async Task<ApiResponseMessage> DownloadAsync(string address, RequestOptions? requestOptions = null, IProgress<int>? progress = null, CancellationToken cancellationToken = default)
         {
-            return await HandleRequestAsync(address, HttpVerbs.DOWNLOAD, requestOptions, progress: progress, cancellationToken: cancellationToken).ConfigureAwait(false);
+            return await HandleRequestAsync(address, HttpVerbs.GET, requestOptions, isDownload: true, progress: progress, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
-        private Task<ApiResponseMessage> HandleRequestAsync(string address, string verb, RequestOptions? requestOptions = null, ApiRequestMessageContent? content = null, IProgress<int>? progress = null,
+        private Task<ApiResponseMessage> HandleRequestAsync(string address, string verb, RequestOptions? requestOptions = null, ApiRequestMessageContent? content = null, bool isDownload = false, IProgress<int>? progress = null,
             CancellationToken cancellationToken = default)
         {
-            return SendAsync(CreateTransportRequest(CreateRequestMessage(address, verb, requestOptions, content), progress), cancellationToken);
+            return SendAsync(CreateTransportRequest(CreateRequestMessage(address, verb, requestOptions, content), isDownload, progress), cancellationToken);
         }
 
         private async Task<ApiResponseMessage> SendAsync(RedmineTransportRequest request, CancellationToken cancellationToken)
         {
+            if (_isCustomTransport)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+            }
+
             RedmineTransportResponse response;
             try
             {
@@ -153,11 +164,15 @@ namespace Redmine.Net.Api.Net
             }
             catch (OperationCanceledException ex) when (ex.InnerException is WebException { Status: WebExceptionStatus.RequestCanceled })
             {
-                throw RedmineApiExceptionHelper.Create("The operation was canceled by the user.", ex.InnerException, null, GetMethod(request), GetEndpoint(request), null, errorCode: RedmineApiExceptionHelper.UnknownErrorCode);
+                throw RedmineApiExceptionHelper.Create(CanceledByUserMessage, ex.InnerException, null, GetMethod(request), GetEndpoint(request), null, errorCode: RedmineApiExceptionHelper.UnknownErrorCode);
             }
             catch (WebException webException)
             {
                 throw HandleWebException(webException, request);
+            }
+            catch (Exception exception) when (_isCustomTransport)
+            {
+                throw HandleCustomTransportException(exception, request, cancellationToken.IsCancellationRequested);
             }
 
             return CreateResponseMessage(response, request);
@@ -190,7 +205,7 @@ namespace Redmine.Net.Api.Net
             return req;
         }
 
-        private RedmineTransportRequest CreateTransportRequest(ApiRequestMessage requestMessage, IProgress<int>? progress)
+        private RedmineTransportRequest CreateTransportRequest(ApiRequestMessage requestMessage, bool isDownload, IProgress<int>? progress)
         {
             var address = requestMessage.RequestUri;
             var queryString = requestMessage.QueryString;
@@ -200,14 +215,27 @@ namespace Redmine.Net.Api.Net
                 queryString = null;
             }
 
-            return new RedmineTransportRequest(requestMessage.Method, address)
+            return new RedmineTransportRequest(requestMessage.Method, address, CreateUri(address, queryString))
             {
                 QueryString = queryString,
                 Headers = CreateHeaders(requestMessage),
                 ContentType = requestMessage.Content != null ? requestMessage.ContentType.ValueOrFallback(requestMessage.Content.ContentType) : null,
                 Body = requestMessage.Content?.Body,
+                IsDownload = isDownload,
                 Progress = progress,
+                BaseAddress = _isCustomTransport ? _baseAddress?.ToString() : null,
             };
+        }
+
+        private Uri CreateUri(string? address, NameValueCollection? queryString)
+        {
+            var value = address == null ? string.Empty : queryString is { Count: > 0 } ? AppendQueryString(address, queryString) : address;
+            if (_baseAddress != null && Uri.TryCreate(_baseAddress, value, out var uri))
+            {
+                return uri;
+            }
+
+            return Uri.TryCreate(value, UriKind.RelativeOrAbsolute, out uri) ? uri : new Uri(string.Empty, UriKind.Relative);
         }
 
         private string AppendQueryString(string address, NameValueCollection queryString)
@@ -299,9 +327,9 @@ namespace Redmine.Net.Api.Net
             return headers;
         }
 
-        private ApiResponseMessage HandleRequest(string address, string verb, RequestOptions? requestOptions = null, ApiRequestMessageContent? content = null, IProgress<int>? progress = null)
+        private ApiResponseMessage HandleRequest(string address, string verb, RequestOptions? requestOptions = null, ApiRequestMessageContent? content = null, bool isDownload = false, IProgress<int>? progress = null)
         {
-            return Send(CreateTransportRequest(CreateRequestMessage(address, verb, requestOptions, content), progress));
+            return Send(CreateTransportRequest(CreateRequestMessage(address, verb, requestOptions, content), isDownload, progress));
         }
 
         private ApiResponseMessage Send(RedmineTransportRequest request)
@@ -315,25 +343,77 @@ namespace Redmine.Net.Api.Net
             {
                 throw HandleWebException(webException, request);
             }
+            catch (Exception exception) when (_isCustomTransport)
+            {
+                throw HandleCustomTransportException(exception, request, false);
+            }
 
             return CreateResponseMessage(response, request);
         }
 
-        private ApiResponseMessage CreateResponseMessage(RedmineTransportResponse response, RedmineTransportRequest request)
+        private ApiResponseMessage CreateResponseMessage(RedmineTransportResponse? response, RedmineTransportRequest request)
         {
+            if (response == null)
+            {
+                throw RedmineApiExceptionHelper.Create("The transport returned no response.", null, null, GetMethod(request), GetEndpoint(request), null, errorCode: RedmineApiExceptionHelper.UnknownErrorCode);
+            }
+
             if (!response.IsSuccessStatusCode)
             {
-                ThrowHttpException(response, request, _serializer);
+                ThrowHttpException(response, request, _serializer, _isCustomTransport);
             }
 
             return new ApiResponseMessage
             {
                 IsSuccessful = true,
                 Headers = response.Headers,
-                Content = response.Content,
+                Content = response.Content ?? (_isCustomTransport && !request.IsDownload ? DecodeBody(response.Body, response.Headers) : null),
                 RawContent = response.Body,
                 StatusCode = response.StatusCode,
             };
+        }
+
+        private static string? DecodeBody(byte[]? body, NameValueCollection? headers)
+        {
+            if (body == null)
+            {
+                return null;
+            }
+
+            if (body.Length >= 3 && body[0] == 0xEF && body[1] == 0xBB && body[2] == 0xBF)
+            {
+                return Encoding.UTF8.GetString(body, 3, body.Length - 3);
+            }
+
+            return GetEncoding(headers?["Content-Type"]).GetString(body);
+        }
+
+        private static Encoding GetEncoding(string? contentType)
+        {
+            if (contentType == null)
+            {
+                return Encoding.UTF8;
+            }
+
+            foreach (var parameter in contentType.Split(';'))
+            {
+                var separator = parameter.IndexOf('=');
+                if (separator < 0 || !string.Equals(parameter.Substring(0, separator).Trim(), "charset", StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
+                try
+                {
+                    return Encoding.GetEncoding(parameter.Substring(separator + 1).Trim().Trim('"'));
+                }
+                catch (ArgumentException)
+                {
+                    return Encoding.UTF8;
+                }
+            }
+
+            return Encoding.UTF8;
         }
 
         private static string GetContentType(IRedmineSerializer serializer)
@@ -341,7 +421,7 @@ namespace Redmine.Net.Api.Net
             return serializer.Format == RedmineConstants.XML ? RedmineConstants.CONTENT_TYPE_APPLICATION_XML : RedmineConstants.CONTENT_TYPE_APPLICATION_JSON;
         }
 
-        private static void ThrowHttpException(RedmineTransportResponse response, RedmineTransportRequest request, IRedmineSerializer serializer)
+        private static void ThrowHttpException(RedmineTransportResponse response, RedmineTransportRequest request, IRedmineSerializer serializer, bool isCustomTransport)
         {
             var statusCode = response.StatusCode;
             var method = GetMethod(request);
@@ -357,6 +437,11 @@ namespace Redmine.Net.Api.Net
 
                 if (response.Body != null)
                 {
+                    if (isCustomTransport)
+                    {
+                        throw RedmineApiExceptionHelper.CreateUnprocessableEntityException(DecodeBody(response.Body, response.Headers), null, serializer, method, endpoint, responseHeaders);
+                    }
+
                     using var reader = new StreamReader(new MemoryStream(response.Body));
                     throw RedmineApiExceptionHelper.CreateUnprocessableEntityException(reader.ReadToEnd(), null, serializer, method, endpoint, responseHeaders);
                 }
@@ -380,6 +465,20 @@ namespace Redmine.Net.Api.Net
             return RedmineApiExceptionHelper.Create(exception.Message, innerException, null, method, endpoint, null, IsTransient(exception.Status), RedmineApiExceptionHelper.UnknownErrorCode);
         }
 
+        private static RedmineApiException HandleCustomTransportException(Exception exception, RedmineTransportRequest request, bool isCanceledByCaller)
+        {
+            var method = GetMethod(request);
+            var endpoint = GetEndpoint(request);
+
+            return exception switch
+            {
+                RedmineApiException apiException => new RedmineApiException(apiException.Message, apiException.InnerException, apiException.ErrorCode, apiException.IsTransient, apiException.CorrelationId, method, endpoint, apiException.HttpStatusCode, apiException.ResponseHeaders),
+                OperationCanceledException when isCanceledByCaller => RedmineApiExceptionHelper.Create(CanceledByUserMessage, exception, null, method, endpoint, null, errorCode: RedmineApiExceptionHelper.UnknownErrorCode),
+                TimeoutException or OperationCanceledException { InnerException: TimeoutException } => RedmineApiExceptionHelper.Create(nameof(WebExceptionStatus.Timeout), exception, null, method, endpoint, null, isTransient: true, errorCode: RedmineApiExceptionHelper.UnknownErrorCode),
+                _ => RedmineApiExceptionHelper.Create(exception.Message, exception, null, method, endpoint, null, errorCode: RedmineApiExceptionHelper.UnknownErrorCode),
+            };
+        }
+
         private static bool IsTransient(WebExceptionStatus status)
         {
             return status is WebExceptionStatus.ConnectFailure
@@ -393,7 +492,7 @@ namespace Redmine.Net.Api.Net
 
         private static string GetMethod(RedmineTransportRequest request)
         {
-            return request.Method == HttpVerbs.DOWNLOAD ? HttpVerbs.GET : request.Method;
+            return request.Method;
         }
 
         private static string GetEndpoint(RedmineTransportRequest request)

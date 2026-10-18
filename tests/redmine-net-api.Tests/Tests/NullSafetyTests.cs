@@ -35,7 +35,7 @@ public sealed class NullSafetyTests
     {
         var headers = new NameValueCollection { { null, "orphan" }, { "X-Empty", null }, { "X-Request-Id", "abc" } };
         var options = new RedmineManagerOptionsBuilder().WithHost("http://localhost:3000").Build();
-        var client = new RedmineApiClient(new FixedTransport(new RedmineTransportResponse { StatusCode = 404, Headers = headers }), new RedmineNoAuthentication(), options.Serializer);
+        var client = new RedmineApiClient(new FixedTransport(new RedmineTransportResponse(404, headers, null)), new RedmineNoAuthentication(), options.Serializer);
 
         var exception = Assert.ThrowsAny<RedmineApiException>(() => client.Get("projects/1.xml"));
 
@@ -55,7 +55,7 @@ public sealed class NullSafetyTests
             WebClientOptions = new RedmineWebClientOptions(),
         });
 
-        var response = transport.Send(new RedmineTransportRequest(HttpVerbs.GET, server.Url + "projects/1.xml"));
+        var response = transport.Send(new RedmineTransportRequest(HttpVerbs.GET, new Uri(server.Url + "projects/1.xml")));
 
         Assert.True(response.IsSuccessStatusCode);
         Assert.Equal("/projects/1.xml", server.Requests.Single().RawUrl);

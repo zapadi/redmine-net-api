@@ -21,11 +21,51 @@ using System.Threading.Tasks;
 
 namespace Redmine.Net.Api.Net;
 
+/// <summary>
+/// Sends the HTTP requests built by <see cref="RedmineManager"/> and returns the raw responses.
+/// Plug a custom implementation in with <see cref="RedmineManagerOptionsBuilder.WithTransport(IRedmineTransport)"/>.
+/// </summary>
+/// <remarks>
+/// <para>
+/// The request is complete: <see cref="RedmineTransportRequest.Uri"/> is absolute and already contains the query string,
+/// and <see cref="RedmineTransportRequest.Headers"/> already contains authentication, impersonation and the
+/// <see cref="RequestOptions"/> headers. A transport may add its own default headers only when the request does not
+/// already have a header with the same name; it must never override a request header.
+/// </para>
+/// <para>
+/// A transport must never throw for an HTTP status code; it returns every response, including 4xx and 5xx,
+/// and the library maps it to a <see cref="Exceptions.RedmineApiException"/>.
+/// It throws only for transport failures: a <see cref="Exceptions.RedmineApiException"/> (set
+/// <see cref="Exceptions.RedmineApiException.IsTransient"/> for failures that can be retried) or an
+/// <see cref="System.OperationCanceledException"/> when the caller cancels the request.
+/// A <see cref="System.TimeoutException"/>, or a cancellation caused by one, is reported as a transient timeout;
+/// any other exception is wrapped in a <see cref="Exceptions.RedmineApiException"/>.
+/// </para>
+/// <para>
+/// A transport owns its timeouts, proxy and certificate configuration, and must be thread-safe:
+/// the same instance sends requests concurrently (for example when GetAsync fetches pages in parallel).
+/// </para>
+/// </remarks>
+#if NET20
 internal interface IRedmineTransport
+#else
+public interface IRedmineTransport
+#endif
 {
+    /// <summary>
+    /// Sends the request and returns the response, whatever its status code.
+    /// </summary>
+    /// <param name="request">The request to send.</param>
+    /// <returns>The response.</returns>
     RedmineTransportResponse Send(RedmineTransportRequest request);
 
 #if !(NET20)
+    /// <summary>
+    /// Sends the request asynchronously and returns the response, whatever its status code.
+    /// </summary>
+    /// <param name="request">The request to send.</param>
+    /// <param name="cancellationToken">The caller's cancellation token.</param>
+    /// <returns>The response.</returns>
     Task<RedmineTransportResponse> SendAsync(RedmineTransportRequest request, CancellationToken cancellationToken);
 #endif
 }

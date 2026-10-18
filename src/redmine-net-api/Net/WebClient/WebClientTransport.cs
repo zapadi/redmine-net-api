@@ -120,7 +120,7 @@ namespace Redmine.Net.Api.Net.WebClient
         {
             System.Net.WebClient? webClient = null;
             CancellationTokenRegistration cancellationTokenRegistration = default;
-            using var timeoutTokenSource = _timeout.HasValue && request.Method != HttpConstants.HttpVerbs.DOWNLOAD
+            using var timeoutTokenSource = _timeout.HasValue && !request.IsDownload
                 ? CancellationTokenSource.CreateLinkedTokenSource(cancellationToken)
                 : null;
 
@@ -146,9 +146,9 @@ namespace Redmine.Net.Api.Net.WebClient
 
                 Task<string>? responseTask = null;
                 Task<byte[]>? responseAsBytesTask = null;
-                if (IsGetOrDownload(request.Method))
+                if (request.Method == HttpVerbs.GET)
                 {
-                    if (request.Method == HttpConstants.HttpVerbs.DOWNLOAD)
+                    if (request.IsDownload)
                     {
                         responseAsBytesTask = webClient.DownloadDataTaskAsync(request.Address);
                     }
@@ -225,15 +225,15 @@ namespace Redmine.Net.Api.Net.WebClient
 
                 string? response = null;
                 byte[]? responseAsBytes = null;
-                if (IsGetOrDownload(request.Method))
+                if (request.Method == HttpVerbs.GET)
                 {
-                    if (request.Method == HttpConstants.HttpVerbs.GET)
-                    {
-                        response = webClient.DownloadString(request.Address);
-                    }
-                    else if (request.Method == HttpConstants.HttpVerbs.DOWNLOAD)
+                    if (request.IsDownload)
                     {
                         responseAsBytes = DownloadFile(webClient, request.Address, request.Progress);
+                    }
+                    else
+                    {
+                        response = webClient.DownloadString(request.Address);
                     }
                 }
                 else
@@ -385,13 +385,10 @@ namespace Redmine.Net.Api.Net.WebClient
         {
             var statusCode = webClient is InternalWebClient iwc ? iwc.StatusCode : null;
 
-            return new RedmineTransportResponse
+            return new RedmineTransportResponse((int)(statusCode ?? HttpStatusCode.OK), webClient.ResponseHeaders, body)
             {
-                StatusCode = (int)(statusCode ?? HttpStatusCode.OK),
                 IsSuccessStatusCode = true,
-                Headers = webClient.ResponseHeaders,
                 Content = content,
-                Body = body,
             };
         }
 
@@ -420,11 +417,9 @@ namespace Redmine.Net.Api.Net.WebClient
                 }
             }
 
-            return new RedmineTransportResponse
+            return new RedmineTransportResponse(statusCode, headers, body)
             {
-                StatusCode = statusCode,
-                Headers = headers,
-                Body = body,
+                IsSuccessStatusCode = false,
                 BodyError = bodyError,
                 Error = exception,
             };
@@ -457,11 +452,6 @@ namespace Redmine.Net.Api.Net.WebClient
             }
 
             return memoryStream.ToArray();
-        }
-
-        private static bool IsGetOrDownload(string method)
-        {
-            return method is HttpVerbs.GET or HttpVerbs.DOWNLOAD;
         }
     }
 }

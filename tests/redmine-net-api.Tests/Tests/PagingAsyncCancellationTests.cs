@@ -1,5 +1,7 @@
 using System;
 using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Padi.DotNet.RedmineAPI.Tests.Infrastructure;
@@ -34,7 +36,8 @@ public sealed class PagingAsyncCancellationTests
 
         public async Task<RedmineTransportResponse> SendAsync(RedmineTransportRequest request, CancellationToken cancellationToken)
         {
-            var offset = int.Parse(request.QueryString?["offset"] ?? "0");
+            var match = Regex.Match(request.Uri.Query, "[?&]offset=([0-9]+)");
+            var offset = match.Success ? int.Parse(match.Groups[1].Value) : 0;
             if (offset == 0)
             {
                 return Page(offset);
@@ -52,31 +55,26 @@ public sealed class PagingAsyncCancellationTests
             Interlocked.Increment(ref _completed);
 
             return offset == failingOffset
-                ? new RedmineTransportResponse { StatusCode = 500 }
+                ? new RedmineTransportResponse(500, null, null)
                 : Page(offset);
         }
 
         private static RedmineTransportResponse Page(int offset)
         {
             var items = string.Concat(Enumerable.Range(offset + 1, 25).Select(id => $"<issue><id>{id}</id></issue>"));
-            return new RedmineTransportResponse
-            {
-                IsSuccessStatusCode = true,
-                StatusCode = 200,
-                Content = $"<issues type=\"array\" total_count=\"{Total}\" offset=\"{offset}\" limit=\"25\">{items}</issues>",
-            };
+            return new RedmineTransportResponse(200, null, Encoding.UTF8.GetBytes($"<issues type=\"array\" total_count=\"{Total}\" offset=\"{offset}\" limit=\"25\">{items}</issues>"));
         }
     }
 
     private static RedmineManager CreateManager(IRedmineTransport transport, int maxConcurrentRequests = 0)
     {
-        var builder = new RedmineManagerOptionsBuilder().WithHost("http://localhost:3000");
+        var builder = new RedmineManagerOptionsBuilder().WithHost("http://localhost:3000").WithTransport(transport);
         if (maxConcurrentRequests > 0)
         {
             builder.WithMaxConcurrentRequests(maxConcurrentRequests);
         }
 
-        return new RedmineManager(builder, transport);
+        return new RedmineManager(builder);
     }
 
     [Theory]

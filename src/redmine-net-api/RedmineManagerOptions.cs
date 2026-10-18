@@ -76,5 +76,7 @@ namespace Redmine.Net.Api
         internal bool EncodeQueryString { get; init; }
 
         internal int MaxConcurrentRequests { get; init; }
+
+        internal IRedmineTransport Transport { get; init; }
     }
 }
