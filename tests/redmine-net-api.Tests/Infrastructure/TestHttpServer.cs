@@ -30,7 +30,7 @@ internal sealed class TestHttpResponse
 
 internal sealed class TestHttpServer : IDisposable
 {
-    private static readonly TimeSpan MaxHold = TimeSpan.FromSeconds(30);
+    private static readonly TimeSpan MaxHold = TimeSpan.FromSeconds(60);
 
     private readonly HttpListener _listener;
     private readonly Func<RecordedRequest, TestHttpResponse> _handler;
