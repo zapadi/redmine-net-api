@@ -319,10 +319,11 @@ namespace Redmine.Net.Api
                 throw new RedmineException("The host is null or empty.");
             }
 
-            host = host.Trim();
-            if (host.IndexOf("://", StringComparison.Ordinal) < 0)
+            host = host.Trim().TrimEnd('\\');
+            var schemeSeparator = host.IndexOf("://", StringComparison.Ordinal);
+            if (schemeSeparator <= 0 || !Uri.CheckSchemeName(host.Substring(0, schemeSeparator)))
             {
-                if (host[0] != '[' && host.Split(':').Length > 2)
+                if (host.Length > 0 && host[0] != '[' && Uri.CheckHostName(host) == UriHostNameType.IPv6)
                 {
                     host = $"[{host}]";
                 }

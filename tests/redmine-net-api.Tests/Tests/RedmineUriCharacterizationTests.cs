@@ -19,6 +19,17 @@ public sealed class RedmineUriCharacterizationTests
     [InlineData("http://[::1]:8080", null, "http://[::1]:8080/")]
     [InlineData("https://[2001:db8::1]/redmine/", null, "https://[2001:db8::1]/redmine/")]
     [InlineData("[::1]", null, "https://[::1]/")]
+    [InlineData("example.com\\", null, "https://example.com/")]
+    [InlineData("localhost:3000?x=http://y", null, "https://localhost:3000/")]
+    [InlineData("example.com:3000/redmine", null, "https://example.com:3000/redmine/")]
+    [InlineData("localhost:3000/redmine", null, "https://localhost:3000/redmine/")]
+    [InlineData("user:pass@example.com:8080", null, "https://example.com:8080/")]
+    [InlineData("127.0.0.1:3000", null, "https://127.0.0.1:3000/")]
+    [InlineData("[::1]:8080", null, "https://[::1]:8080/")]
+    [InlineData("fe80::1%4", null, "https://[fe80::1]/")]
+    [InlineData("http://example.com/a/b.xml?x=1", null, "http://example.com/a/")]
+    [InlineData("https://example.com/redmine.JSON", null, "https://example.com/")]
+    [InlineData("http://example.com/redmine.json/", null, "http://example.com/redmine.json/")]
     [InlineData("::1", null, "https://[::1]/")]
     [InlineData("2001:db8::1", "http", "http://[2001:db8::1]/")]
     [InlineData("  example.com  ", null, "https://example.com/")]
@@ -55,6 +66,19 @@ public sealed class RedmineUriCharacterizationTests
     [InlineData("ftp://example.com")]
     [InlineData("example.com", "ftp")]
     [InlineData("http://")]
+    [InlineData("localhost:99999")]
+    [InlineData("localhost:abc")]
+    [InlineData("example.com:abc")]
+    [InlineData("example.com:3000:4000")]
+    [InlineData("::1]")]
+    [InlineData("[")]
+    [InlineData(":::")]
+    [InlineData("http://[")]
+    [InlineData("a:b")]
+    [InlineData("javascript:alert(1)")]
+    [InlineData("example.com:3000", "ftp")]
+    [InlineData("example.com", "")]
+    [InlineData("example.com", " ")]
     [InlineData("<invalid>")]
     [InlineData("file:///C:/x.txt")]
     [InlineData("exa mple.com")]
@@ -69,5 +93,11 @@ public sealed class RedmineUriCharacterizationTests
     public void CreateRedmineUri_Does_Not_Double_Escape_Path(string host, string expected)
     {
         Assert.Equal(expected, RedmineManagerOptionsBuilder.CreateRedmineUri(host).AbsoluteUri);
+    }
+
+    [Fact]
+    public void CreateRedmineUri_Very_Long_Host_Throws_RedmineException()
+    {
+        Assert.Throws<RedmineException>(() => RedmineManagerOptionsBuilder.CreateRedmineUri(new string('a', 70000)));
     }
 }
