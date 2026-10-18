@@ -66,7 +66,7 @@ namespace Redmine.Net.Api.Net
                 throw new RedmineException("The owner id(project id) is mandatory!");
             }
 
-            return $"{RedmineKeys.PROJECTS}/{projectId}/{RedmineKeys.FILES}.{Format}";
+            return $"{RedmineKeys.PROJECTS}/{Escape(projectId)}/{RedmineKeys.FILES}.{Format}";
         }
 
         public string IssueAttachmentFragment(string issueId)
@@ -76,7 +76,7 @@ namespace Redmine.Net.Api.Net
                 throw new RedmineException("The issue id is mandatory!");
             }
 
-            return $"{RedmineKeys.ATTACHMENTS}/{RedmineKeys.ISSUES}/{issueId}.{Format}";
+            return $"{RedmineKeys.ATTACHMENTS}/{RedmineKeys.ISSUES}/{Escape(issueId)}.{Format}";
         }
         
         public string ProjectParentFragment(string projectId, string mapTypeFragment)
@@ -86,7 +86,7 @@ namespace Redmine.Net.Api.Net
                 throw new RedmineException("The owner project id is mandatory!");
             }
 
-            return $"{RedmineKeys.PROJECTS}/{projectId}/{mapTypeFragment}.{Format}";
+            return $"{RedmineKeys.PROJECTS}/{Escape(projectId)}/{mapTypeFragment}.{Format}";
         }
 
         public string IssueParentFragment(string issueId, string mapTypeFragment)
@@ -96,7 +96,7 @@ namespace Redmine.Net.Api.Net
                 throw new RedmineException("The owner issue id is mandatory!");
             }
 
-            return $"{RedmineKeys.ISSUES}/{issueId}/{mapTypeFragment}.{Format}";
+            return $"{RedmineKeys.ISSUES}/{Escape(issueId)}/{mapTypeFragment}.{Format}";
         }
         
         public static string TypeFragment(Dictionary<Type, string> mapTypeUrlFragments, Type type)
@@ -170,7 +170,7 @@ namespace Redmine.Net.Api.Net
         }
         internal string GetFragment(Type type, string id)
         {
-            return $"{TypeFragment(TypeUrlFragments, type)}/{id}.{Format}";
+            return $"{TypeFragment(TypeUrlFragments, type)}/{Escape(id)}.{Format}";
         }
 
         public string PatchFragment<T>(string ownerId)
@@ -197,7 +197,7 @@ namespace Redmine.Net.Api.Net
         }
         internal string DeleteFragment(Type type, string id)
         {
-            return $"{TypeFragment(TypeUrlFragments, type)}/{id}.{Format}";
+            return $"{TypeFragment(TypeUrlFragments, type)}/{Escape(id)}.{Format}";
         }
 
         public string UpdateFragment<T>(string id)
@@ -208,7 +208,7 @@ namespace Redmine.Net.Api.Net
         }
         internal string UpdateFragment(Type type, string id)
         {
-            return $"{TypeFragment(TypeUrlFragments, type)}/{id}.{Format}";
+            return $"{TypeFragment(TypeUrlFragments, type)}/{Escape(id)}.{Format}";
         }
 
         public string GetListFragment<T>(string ownerId = null) where T : class, new()
@@ -255,6 +255,11 @@ namespace Redmine.Net.Api.Net
             }
 
             return $"{TypeFragment(TypeUrlFragments, type)}.{Format}";
+        }
+
+        internal static string Escape(string value)
+        {
+            return string.IsNullOrEmpty(value) ? value ?? string.Empty : Uri.EscapeDataString(value);
         }
 
         public string UploadFragment(string fileName = null)
