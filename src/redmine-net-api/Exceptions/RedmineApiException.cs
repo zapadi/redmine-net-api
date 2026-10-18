@@ -173,7 +173,7 @@ namespace Redmine.Net.Api.Exceptions
         /// Gets the API endpoint that was called.
         /// </summary>
         /// <value>
-        /// The relative endpoint path (e.g., "/issues/12345.json"), or <c>null</c> if not available.
+        /// The request URL (e.g., "https://redmine.example.com/issues/12345.json"), or <c>null</c> if not available.
         /// </value>
         public string? Endpoint { get; }
     

@@ -251,7 +251,7 @@ namespace Redmine.Net.Api.Net.WebClient
                 cancellationToken.ThrowIfCancellationRequested();
                 if (timeoutTokenSource?.IsCancellationRequested == true)
                 {
-                    throw CreateTimeoutException();
+                    throw CreateTimeoutException(requestMessage, webClient.BaseAddress);
                 }
 
                 if (progress != null)
@@ -319,19 +319,19 @@ namespace Redmine.Net.Api.Net.WebClient
             {
                 if (cancellationToken.IsCancellationRequested)
                 {
-                    throw new RedmineApiException("The operation was canceled by the user.", ex);
+                    throw RedmineApiExceptionHelper.Create("The operation was canceled by the user.", ex, null, GetMethod(requestMessage), GetEndpoint(webClient?.BaseAddress, requestMessage), null);
                 }
 
                 if (timeoutTokenSource?.IsCancellationRequested == true)
                 {
-                    throw CreateTimeoutException(ex);
+                    throw CreateTimeoutException(requestMessage, webClient?.BaseAddress, ex);
                 }
 
-                throw HandleWebException(ex, _serializer);
+                throw HandleWebException(ex, requestMessage, webClient?.BaseAddress, _serializer);
             }
             catch (WebException webException)
             {
-                throw HandleWebException(webException, _serializer);
+                throw HandleWebException(webException, requestMessage, webClient?.BaseAddress, _serializer);
             }
             finally
             {
@@ -354,9 +354,9 @@ namespace Redmine.Net.Api.Net.WebClient
             };
         }
 
-        private RedmineApiException CreateTimeoutException(Exception? innerException = null)
+        private RedmineApiException CreateTimeoutException(ApiRequestMessage requestMessage, string? baseAddress, Exception? innerException = null)
         {
-            return HandleWebException(new WebException(nameof(WebExceptionStatus.Timeout), innerException, WebExceptionStatus.Timeout, null), _serializer);
+            return HandleWebException(new WebException(nameof(WebExceptionStatus.Timeout), innerException, WebExceptionStatus.Timeout, null), requestMessage, baseAddress, _serializer);
         }
 #endif
 
@@ -543,7 +543,7 @@ namespace Redmine.Net.Api.Net.WebClient
             }
             catch (WebException webException)
             {
-                throw HandleWebException(webException, _serializer);
+                throw HandleWebException(webException, requestMessage, webClient?.BaseAddress, _serializer);
             }
             finally
             {
@@ -597,22 +597,27 @@ namespace Redmine.Net.Api.Net.WebClient
         /// Handles the web exception.
         /// </summary>
         /// <param name="exception">The exception.</param>
+        /// <param name="requestMessage">The request that failed.</param>
+        /// <param name="baseAddress">The base address of the web client.</param>
         /// <param name="serializer">The serializer.</param>
         /// <exception cref="RedmineException"> </exception>
-        private static RedmineApiException HandleWebException(WebException exception, IRedmineSerializer serializer)
+        private static RedmineApiException HandleWebException(WebException exception, ApiRequestMessage requestMessage, string? baseAddress, IRedmineSerializer serializer)
         {
             var innerException = exception.InnerException ?? exception;
+            var method = GetMethod(requestMessage);
+            var endpoint = GetEndpoint(baseAddress, requestMessage);
 
             switch (exception.Status)
             {
                 case WebExceptionStatus.Timeout:
-                    return new RedmineApiException(nameof(WebExceptionStatus.Timeout), innerException);
+                    return RedmineApiExceptionHelper.Create(nameof(WebExceptionStatus.Timeout), innerException, null, method, endpoint, null, isTransient: true);
                 case WebExceptionStatus.ProtocolError:
                     if (exception.Response != null)
                     {
                         var statusCode = exception.Response is HttpWebResponse httpResponse
                             ? (int)httpResponse.StatusCode
                             : (int)HttpStatusCode.InternalServerError;
+                        var responseHeaders = GetResponseHeaders(exception.Response);
 
                         using var responseStream = exception.Response.GetResponseStream();
                         if (statusCode == HttpConstants.StatusCodes.UnprocessableEntity && responseStream != null)
@@ -625,19 +630,59 @@ namespace Redmine.Net.Api.Net.WebClient
                             }
                             catch (Exception ex)
                             {
-                                return new RedmineApiException(ex.Message, ex);
+                                return RedmineApiExceptionHelper.Create(ex.Message, ex, statusCode, method, endpoint, responseHeaders);
                             }
 
-                            return RedmineApiExceptionHelper.CreateUnprocessableEntityException(content, null, serializer);
+                            return RedmineApiExceptionHelper.CreateUnprocessableEntityException(content, null, serializer, method, endpoint, responseHeaders);
                         }
 
-                        RedmineApiExceptionHelper.MapStatusCodeToException(statusCode, innerException);
+                        RedmineApiExceptionHelper.MapStatusCodeToException(statusCode, innerException, method, endpoint, responseHeaders);
                     }
 
                     break;
             }
 
-            return new RedmineApiException(exception.Message, innerException);
+            return RedmineApiExceptionHelper.Create(exception.Message, innerException, null, method, endpoint, null, IsTransient(exception.Status));
+        }
+
+        private static bool IsTransient(WebExceptionStatus status)
+        {
+            return status is WebExceptionStatus.ConnectFailure
+                or WebExceptionStatus.ConnectionClosed
+                or WebExceptionStatus.KeepAliveFailure
+                or WebExceptionStatus.ReceiveFailure
+                or WebExceptionStatus.SendFailure
+                or WebExceptionStatus.PipelineFailure
+                or WebExceptionStatus.Timeout;
+        }
+
+        private static string GetMethod(ApiRequestMessage requestMessage)
+        {
+            return requestMessage.Method == HttpVerbs.DOWNLOAD ? HttpVerbs.GET : requestMessage.Method;
+        }
+
+        private static string GetEndpoint(string? baseAddress, ApiRequestMessage requestMessage)
+        {
+            var address = requestMessage.RequestUri;
+            return !baseAddress.IsNullOrWhiteSpace() && Uri.TryCreate(new Uri(baseAddress), address, out var uri)
+                ? uri.ToString()
+                : address;
+        }
+
+        private static IDictionary<string, string>? GetResponseHeaders(WebResponse response)
+        {
+            if (response is not HttpWebResponse httpResponse)
+            {
+                return null;
+            }
+
+            var headers = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var key in httpResponse.Headers.AllKeys)
+            {
+                headers[key] = httpResponse.Headers[key];
+            }
+
+            return headers;
         }
     }
 }

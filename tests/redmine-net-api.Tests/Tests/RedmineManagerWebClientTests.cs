@@ -74,6 +74,54 @@ public sealed class RedmineManagerWebClientTests(XmlPrettyPrintFixture _) : ICla
         return new WebException("422", null, WebExceptionStatus.ProtocolError, FakeHttpWebResponse.Create((HttpStatusCode)422, Errors));
     }
 
+    private static WebException ProtocolError(HttpStatusCode statusCode, WebHeaderCollection headers = null)
+    {
+        return new WebException(statusCode.ToString(), null, WebExceptionStatus.ProtocolError, FakeHttpWebResponse.Create(statusCode, string.Empty, headers));
+    }
+
+    [Fact]
+    public void Get_Should_Set_Exception_Details_On_Not_Found()
+    {
+        var (manager, _) = CreateManager(_ => throw ProtocolError(HttpStatusCode.NotFound, new WebHeaderCollection { { "X-Request-Id", "abc" } }));
+
+        var exception = Assert.Throws<RedmineApiException>(() => manager.Get<Project>("1"));
+
+        Assert.Equal(404, exception.HttpStatusCode);
+        Assert.Equal("GET", exception.Method);
+        Assert.Equal($"{Host}/projects/1.xml", exception.Endpoint);
+        Assert.Equal("abc", exception.CorrelationId);
+        Assert.Equal("abc", exception.ResponseHeaders["x-request-id"]);
+        Assert.False(exception.IsTransient);
+    }
+
+    [Theory]
+    [InlineData(HttpStatusCode.ServiceUnavailable)]
+    [InlineData((HttpStatusCode)429)]
+    public async Task GetAsync_Should_Mark_Exception_As_Transient(HttpStatusCode statusCode)
+    {
+        var (manager, _) = CreateManager(_ => throw ProtocolError(statusCode, new WebHeaderCollection { { "Retry-After", "120" } }));
+
+        var exception = await Assert.ThrowsAsync<RedmineApiException>(() => manager.GetAsync<Project>("1", cancellationToken: TestContext.Current.CancellationToken));
+
+        Assert.Equal((int)statusCode, exception.HttpStatusCode);
+        Assert.True(exception.IsTransient);
+        Assert.Equal("120", exception.ResponseHeaders["Retry-After"]);
+    }
+
+    [Fact]
+    public void Get_Should_Mark_Connection_Failure_As_Transient()
+    {
+        var (manager, _) = CreateManager(_ => throw new WebException("refused", WebExceptionStatus.ConnectFailure));
+
+        var exception = Assert.Throws<RedmineApiException>(() => manager.Get<Project>("1"));
+
+        Assert.Equal("refused", exception.Message);
+        Assert.True(exception.IsTransient);
+        Assert.Null(exception.HttpStatusCode);
+        Assert.Null(exception.ResponseHeaders);
+        Assert.Equal("GET", exception.Method);
+    }
+
     [Fact]
     public void Build_Should_Copy_ClientFunc()
     {
@@ -152,6 +200,10 @@ public sealed class RedmineManagerWebClientTests(XmlPrettyPrintFixture _) : ICla
 
         Assert.Equal(422, exception.HttpStatusCode);
         Assert.Equal("Name cannot be blank", exception.Message);
+        Assert.Equal("PUT", exception.Method);
+        Assert.Equal($"{Host}/projects/1.xml", exception.Endpoint);
+        Assert.NotNull(exception.ResponseHeaders);
+        Assert.False(exception.IsTransient);
     }
 
     [Fact]
@@ -315,6 +367,9 @@ public sealed class RedmineManagerWebClientTests(XmlPrettyPrintFixture _) : ICla
         var exception = await Assert.ThrowsAsync<RedmineApiException>(() => Bounded(manager.GetAsync<Project>("1", cancellationToken: TestContext.Current.CancellationToken)));
 
         Assert.Equal(nameof(WebExceptionStatus.Timeout), exception.Message);
+        Assert.True(exception.IsTransient);
+        Assert.Equal("GET", exception.Method);
+        Assert.Equal($"{Host}/projects/1.xml", exception.Endpoint);
     }
 
     [Fact]
@@ -337,6 +392,7 @@ public sealed class RedmineManagerWebClientTests(XmlPrettyPrintFixture _) : ICla
         var exception = await Assert.ThrowsAsync<RedmineApiException>(() => Bounded(manager.GetAsync<Project>("1", cancellationToken: cts.Token)));
 
         Assert.NotEqual(nameof(WebExceptionStatus.Timeout), exception.Message);
+        Assert.False(exception.IsTransient);
         Assert.True(cts.IsCancellationRequested);
     }
 
