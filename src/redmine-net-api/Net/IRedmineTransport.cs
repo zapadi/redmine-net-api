@@ -41,6 +41,13 @@ namespace Redmine.Net.Api.Net;
 /// <see cref="System.OperationCanceledException"/> when the caller cancels the request.
 /// A <see cref="System.TimeoutException"/>, or a cancellation caused by one, is reported as a transient timeout;
 /// any other exception is wrapped in a <see cref="Exceptions.RedmineApiException"/>.
+/// On frameworks where an HttpClient timeout surfaces as a <see cref="System.Threading.Tasks.TaskCanceledException"/>
+/// without an inner <see cref="System.TimeoutException"/>, throw a <see cref="System.TimeoutException"/> (or a
+/// <see cref="Exceptions.RedmineApiException"/> with <see cref="Exceptions.RedmineApiException.IsTransient"/> set) yourself;
+/// otherwise the timeout is reported as a non-transient failure.
+/// </para>
+/// <para>
+/// A transport may ignore <see cref="RedmineTransportRequest.Progress"/>.
 /// </para>
 /// <para>
 /// A transport owns its timeouts, proxy and certificate configuration, and must be thread-safe:
