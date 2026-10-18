@@ -55,6 +55,10 @@ namespace Redmine.Net.Api.Serialization
             keyBuilder.Append("??");
             keyBuilder.Append(root?.Namespace);
             keyBuilder.Append("??");
+            keyBuilder.Append(root?.DataType);
+            keyBuilder.Append("??");
+            keyBuilder.Append(root?.IsNullable.ToString(CultureInfo.InvariantCulture));
+            keyBuilder.Append("??");
             keyBuilder.Append(defaultNamespace);
 
             return keyBuilder.ToString();
