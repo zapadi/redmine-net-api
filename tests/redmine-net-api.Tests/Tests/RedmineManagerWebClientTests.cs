@@ -23,7 +23,7 @@ public sealed class RedmineManagerWebClientTests(XmlPrettyPrintFixture _) : ICla
     private const string IssuesPage = """<issues type="array" total_count="3" offset="0" limit="1"></issues>""";
     private const string Errors = """<errors type="array"><error>Name cannot be blank</error></errors>""";
 
-    private static (RedmineManager Manager, List<FakeWebClient> Clients) CreateManager(Func<FakeWebRequest, WebResponse> responder)
+    private static (RedmineManager Manager, List<FakeWebClient> Clients) CreateManager(Func<FakeWebRequest, WebResponse> responder, IRedmineWebClientOptions clientOptions = null)
     {
         var clients = new List<FakeWebClient>();
         var builder = new RedmineManagerOptionsBuilder()
@@ -35,7 +35,22 @@ public sealed class RedmineManagerWebClientTests(XmlPrettyPrintFixture _) : ICla
                 return client;
             });
 
+        if (clientOptions != null)
+        {
+            builder.WithWebClientOptions(clientOptions);
+        }
+
         return (new RedmineManager(builder), clients);
+    }
+
+    private static RedmineManager CreateHangingManager(TimeSpan? timeout)
+    {
+        var builder = new RedmineManagerOptionsBuilder()
+            .WithHost(Host)
+            .WithWebClientOptions(new RedmineWebClientOptions { Timeout = timeout })
+            .WithWebClient(() => new HangingWebClient());
+
+        return new RedmineManager(builder);
     }
 
     private static WebException UnprocessableEntity()
@@ -210,5 +225,141 @@ public sealed class RedmineManagerWebClientTests(XmlPrettyPrintFixture _) : ICla
         var request = CreateInternalWebRequest(new RedmineWebClientOptions { Proxy = proxy });
 
         Assert.Same(proxy, request.Proxy);
+    }
+
+    [Fact]
+    public void Custom_WebClientOptions_Implementation_Should_Create_ApiClient()
+    {
+        var (manager, _) = CreateManager(_ => new FakeWebResponse("<project><id>1</id><name>foo</name></project>"), new CustomWebClientOptions());
+
+        var project = manager.Get<Project>("1");
+
+        Assert.Equal("foo", project.Name);
+    }
+
+    [Fact]
+    public async Task GetAsync_Should_Throw_When_Request_Is_Canceled_Without_Caller_Cancellation()
+    {
+        var (manager, _) = CreateManager(_ => throw new WebException("canceled", WebExceptionStatus.RequestCanceled));
+
+        await Assert.ThrowsAsync<RedmineApiException>(() => manager.GetAsync<Project>("1", cancellationToken: TestContext.Current.CancellationToken));
+    }
+
+    [Theory]
+    [InlineData("attachments/download/1/a.txt", Host + "/attachments/download/1/a.txt")]
+    [InlineData("http://files.local:8080/attachments/download/1/a.txt", "http://files.local:8080/attachments/download/1/a.txt")]
+    public void DownloadFile_Should_Resolve_Address(string address, string expected)
+    {
+        var (manager, clients) = CreateManager(_ => new FakeWebResponse("abc"));
+
+        var data = manager.DownloadFile(address);
+
+        Assert.Equal("abc", System.Text.Encoding.UTF8.GetString(data));
+        Assert.Equal(expected, clients[0].Requests[0].RequestUri.ToString());
+    }
+
+    [Theory]
+    [InlineData("attachments/download/1/a.txt", Host + "/attachments/download/1/a.txt")]
+    [InlineData("http://files.local:8080/attachments/download/1/a.txt", "http://files.local:8080/attachments/download/1/a.txt")]
+    public void DownloadFile_With_Progress_Should_Resolve_Address(string address, string expected)
+    {
+        var (manager, clients) = CreateManager(_ => new FakeWebResponse("abc"));
+
+        var data = manager.DownloadFile(address, progress: new Progress<int>());
+
+        Assert.Equal("abc", System.Text.Encoding.UTF8.GetString(data));
+        Assert.Equal(expected, clients[0].Requests[0].RequestUri.ToString());
+    }
+
+    [Fact]
+    public void DownloadFile_With_Progress_Should_Throw_Timeout_When_Timeout_Is_Set()
+    {
+        var manager = CreateHangingManager(TimeSpan.FromMilliseconds(200));
+
+        var exception = Assert.Throws<RedmineApiException>(() => manager.DownloadFile("attachments/download/1/a.txt", progress: new Progress<int>()));
+
+        Assert.Equal(nameof(WebExceptionStatus.Timeout), exception.Message);
+    }
+
+    [Fact]
+    public async Task GetAsync_Should_Throw_Timeout_When_Timeout_Is_Set()
+    {
+        var manager = CreateHangingManager(TimeSpan.FromMilliseconds(200));
+
+        var exception = await Assert.ThrowsAsync<RedmineApiException>(() => manager.GetAsync<Project>("1", cancellationToken: TestContext.Current.CancellationToken));
+
+        Assert.Equal(nameof(WebExceptionStatus.Timeout), exception.Message);
+    }
+
+    [Fact]
+    public async Task GetAsync_Should_Not_Time_Out_When_Timeout_Is_Not_Set()
+    {
+        var manager = CreateHangingManager(null);
+        using var cts = System.Threading.CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken);
+        cts.CancelAfter(TimeSpan.FromMilliseconds(500));
+
+        var exception = await Assert.ThrowsAsync<RedmineApiException>(() => manager.GetAsync<Project>("1", cancellationToken: cts.Token));
+
+        Assert.NotEqual(nameof(WebExceptionStatus.Timeout), exception.Message);
+        Assert.True(cts.IsCancellationRequested);
+    }
+
+    [Fact]
+    public void Creating_Manager_Should_Not_Reset_CheckCertificateRevocationList()
+    {
+        var original = ServicePointManager.CheckCertificateRevocationList;
+        try
+        {
+            ServicePointManager.CheckCertificateRevocationList = true;
+
+            CreateManager(_ => new FakeWebResponse(string.Empty));
+
+            Assert.True(ServicePointManager.CheckCertificateRevocationList);
+        }
+        finally
+        {
+            ServicePointManager.CheckCertificateRevocationList = original;
+        }
+    }
+
+#pragma warning disable CS0618
+    [Fact]
+    public async Task Obsolete_GetCurrentUserAsync_Should_Pass_Parameters_And_Impersonation()
+    {
+        var (manager, clients) = CreateManager(_ => new FakeWebResponse("<user><id>1</id></user>"));
+
+        await Redmine.Net.Api.Async.RedmineManagerAsyncExtensions.GetCurrentUserAsync(manager, new NameValueCollection { { "include", "groups" } }, "bob", TestContext.Current.CancellationToken);
+
+        var request = clients[0].Requests[0];
+        Assert.Contains("include=groups", request.RequestUri.Query);
+        Assert.Equal("bob", request.Headers[RedmineConstants.IMPERSONATE_HEADER_KEY]);
+    }
+
+    [Fact]
+    public async Task Obsolete_CountAsync_Should_Pass_Include()
+    {
+        var (manager, clients) = CreateManager(_ => new FakeWebResponse(IssuesPage));
+
+        var count = await Redmine.Net.Api.Async.RedmineManagerAsyncExtensions.CountAsync<Issue>(manager, "journals", "watchers");
+
+        Assert.Equal(3, count);
+        Assert.Contains("include=journals,watchers", Uri.UnescapeDataString(clients[0].Requests[0].RequestUri.Query));
+    }
+#pragma warning restore CS0618
+
+    [Fact]
+    public void Get_List_Should_Return_Null_On_Empty_Response()
+    {
+        var (manager, _) = CreateManager(_ => new FakeWebResponse(string.Empty));
+
+        Assert.Null(manager.Get<Issue>());
+    }
+
+    [Fact]
+    public async Task GetAllWikiPagesAsync_Should_Return_Null_On_Empty_Response()
+    {
+        var (manager, _) = CreateManager(_ => new FakeWebResponse(string.Empty));
+
+        Assert.Null(await manager.GetAllWikiPagesAsync("foo", cancellationToken: TestContext.Current.CancellationToken));
     }
 }
