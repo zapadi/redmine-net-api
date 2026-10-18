@@ -42,7 +42,14 @@ public abstract class RedmineTransportContractTests
 
     protected static RedmineTransportRequest Request(string method, string url, NameValueCollection headers = null, string contentType = null, byte[] body = null, bool isDownload = false, IProgress<int> progress = null)
     {
-        return new RedmineTransportRequest(method, new Uri(url), headers ?? new NameValueCollection(), contentType, body, isDownload, progress);
+        return new RedmineTransportRequest(method, new Uri(url))
+        {
+            Headers = headers ?? new NameValueCollection(),
+            ContentType = contentType,
+            Body = body,
+            IsDownload = isDownload,
+            Progress = progress,
+        };
     }
 
     protected static string Text(RedmineTransportResponse response)

@@ -483,6 +483,17 @@ public sealed class CustomTransportTests
         Assert.Null(request.Body);
         Assert.False(request.IsDownload);
         Assert.Null(request.Progress);
+        Assert.Empty(new RedmineTransportRequest("GET", uri) { Headers = null }.Headers);
+
+        var headers = new NameValueCollection { { "X-Custom", "value" } };
+        var body = new byte[] { 1 };
+        var progress = new RecordingProgress();
+        var initialized = new RedmineTransportRequest("POST", uri) { Headers = headers, ContentType = "application/xml", Body = body, IsDownload = true, Progress = progress };
+        Assert.Same(headers, initialized.Headers);
+        Assert.Equal("application/xml", initialized.ContentType);
+        Assert.Same(body, initialized.Body);
+        Assert.True(initialized.IsDownload);
+        Assert.Same(progress, initialized.Progress);
     }
 
     [Theory]

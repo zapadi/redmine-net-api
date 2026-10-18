@@ -27,19 +27,16 @@ namespace Redmine.Net.Api.Net;
 /// </summary>
 public sealed class RedmineTransportRequest
 {
+    private readonly NameValueCollection _headers = new NameValueCollection();
+
     /// <summary>
     /// Creates a request.
     /// </summary>
     /// <param name="method">The HTTP method (for example GET, POST, PUT, PATCH or DELETE).</param>
     /// <param name="uri">The absolute request URI, including the query string.</param>
-    /// <param name="headers">The request headers; <c>null</c> for none.</param>
-    /// <param name="contentType">The content type of <paramref name="body"/>; <c>null</c> when there is no body.</param>
-    /// <param name="body">The request body; <c>null</c> when there is no body.</param>
-    /// <param name="isDownload">Whether the request downloads a file.</param>
-    /// <param name="progress">Receives the download progress percentage; <c>null</c> for none.</param>
     /// <exception cref="ArgumentNullException"><paramref name="method"/> or <paramref name="uri"/> is <c>null</c>.</exception>
     /// <exception cref="RedmineException"><paramref name="uri"/> is not absolute.</exception>
-    public RedmineTransportRequest(string method, Uri uri, NameValueCollection? headers = null, string? contentType = null, byte[]? body = null, bool isDownload = false, IProgress<int>? progress = null)
+    public RedmineTransportRequest(string method, Uri uri)
     {
         ArgumentNullThrowHelper.ThrowIfNull(method, nameof(method));
         ArgumentNullThrowHelper.ThrowIfNull(uri, nameof(uri));
@@ -51,11 +48,6 @@ public sealed class RedmineTransportRequest
         Method = method;
         Uri = uri;
         Address = uri.AbsoluteUri;
-        Headers = headers ?? new NameValueCollection();
-        ContentType = contentType;
-        Body = body;
-        IsDownload = isDownload;
-        Progress = progress;
     }
 
     internal RedmineTransportRequest(string method, string address, Uri uri)
@@ -79,7 +71,12 @@ public sealed class RedmineTransportRequest
     /// Gets the request headers: authentication, impersonation and the <see cref="RequestOptions"/> headers, already merged.
     /// A transport must not override them with its own defaults.
     /// </summary>
-    public NameValueCollection Headers { get; internal init; } = new NameValueCollection();
+    /// <remarks>Never <c>null</c>; setting <c>null</c> leaves the headers empty.</remarks>
+    public NameValueCollection Headers
+    {
+        get => _headers;
+        init => _headers = value ?? new NameValueCollection();
+    }
 
     /// <summary>
     /// Gets the content type of <see cref="Body"/>, or <c>null</c> when the request has no body.
@@ -88,22 +85,22 @@ public sealed class RedmineTransportRequest
     /// This value is authoritative for the body: a transport must send it as the body content type
     /// and must not use a Content-Type entry in <see cref="Headers"/> for the body.
     /// </remarks>
-    public string? ContentType { get; internal init; }
+    public string? ContentType { get; init; }
 
     /// <summary>
     /// Gets the request body, or <c>null</c> when the request has no body.
     /// </summary>
-    public byte[]? Body { get; internal init; }
+    public byte[]? Body { get; init; }
 
     /// <summary>
     /// Gets a value indicating whether the request downloads a file; the response body is returned as is.
     /// </summary>
-    public bool IsDownload { get; internal init; }
+    public bool IsDownload { get; init; }
 
     /// <summary>
     /// Gets the receiver of the download progress percentage, or <c>null</c>.
     /// </summary>
-    public IProgress<int>? Progress { get; internal init; }
+    public IProgress<int>? Progress { get; init; }
 
     internal string Address { get; }
 
