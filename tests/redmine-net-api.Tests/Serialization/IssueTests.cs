@@ -356,7 +356,8 @@ public class IssueTests(XmlPrettyPrintFixture _) : IClassFixture<XmlPrettyPrintF
                                         "changesets": [],
                                         "custom_fields": []
                                       }
-                                  ]
+                                  ],
+                                  "total_count": 1640
                                 }
                                 """;
 
@@ -439,7 +440,8 @@ public class IssueTests(XmlPrettyPrintFixture _) : IClassFixture<XmlPrettyPrintF
                                           { "id": 2, "name": "Resolution", "value": "Fixed" }
                                         ]
                                       }
-                                  ]
+                                  ],
+                                  "total_count": 1640
                                 }
                                 """;
 
