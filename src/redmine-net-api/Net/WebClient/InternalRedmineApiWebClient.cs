@@ -44,10 +44,12 @@ namespace Redmine.Net.Api.Net.WebClient
         private readonly Func<System.Net.WebClient> _webClientFunc;
         private readonly IRedmineAuthentication _credentials;
         private readonly IRedmineSerializer _serializer;
+        private readonly TimeSpan? _timeout;
 
         public InternalRedmineApiWebClient(RedmineManagerOptions redmineManagerOptions)
             : this(CreateWebClientFunc(redmineManagerOptions), redmineManagerOptions.Authentication, redmineManagerOptions.Serializer)
         {
+            _timeout = redmineManagerOptions.WebClientOptions?.Timeout;
             ConfigureServicePointManager(redmineManagerOptions.WebClientOptions);
         }
 
@@ -115,7 +117,10 @@ namespace Redmine.Net.Api.Net.WebClient
                 ServicePointManager.DnsRefreshTimeout = webClientOptions.DnsRefreshTimeout.Value;
             }
 
-            ServicePointManager.CheckCertificateRevocationList = webClientOptions.CheckCertificateRevocationList;
+            if (webClientOptions.CheckCertificateRevocationList)
+            {
+                ServicePointManager.CheckCertificateRevocationList = true;
+            }
 
             if (webClientOptions.EnableDnsRoundRobin.HasValue)
             {
@@ -234,12 +239,15 @@ namespace Redmine.Net.Api.Net.WebClient
             HttpStatusCode? statusCode = null;
             NameValueCollection? responseHeaders = null;
             CancellationTokenRegistration cancellationTokenRegistration = default;
+            using var timeoutTokenSource = _timeout.HasValue ? CancellationTokenSource.CreateLinkedTokenSource(cancellationToken) : null;
 
             try
             {
                 webClient = _webClientFunc();
+                timeoutTokenSource?.CancelAfter(_timeout.GetValueOrDefault());
+
                 cancellationTokenRegistration =
-                    cancellationToken.Register(
+                    (timeoutTokenSource?.Token ?? cancellationToken).Register(
                         static state => (state as System.Net.WebClient)?.CancelAsync(),
                         webClient
                     );
@@ -299,6 +307,13 @@ namespace Redmine.Net.Api.Net.WebClient
                 {
                     throw new RedmineApiException("The operation was canceled by the user.", ex);
                 }
+
+                if (timeoutTokenSource?.IsCancellationRequested == true)
+                {
+                    throw HandleWebException(new WebException(nameof(WebExceptionStatus.Timeout), ex, WebExceptionStatus.Timeout, null), _serializer);
+                }
+
+                throw HandleWebException(ex, _serializer);
             }
             catch (WebException webException)
             {
@@ -352,8 +367,15 @@ namespace Redmine.Net.Api.Net.WebClient
         }
 
         private static DownloadFileResult DownloadFile(System.Net.WebClient wc, string address,
-            IProgress<int>? progress = null)
+            IProgress<int>? progress = null, TimeSpan? timeout = null)
         {
+            var uri = new Uri(new Uri(wc.BaseAddress), address);
+            if (progress == null)
+            {
+                return new DownloadFileResult(wc.DownloadData(uri), (int)HttpStatusCode.OK);
+            }
+
+            var timedOut = false;
             var done = new ManualResetEvent(initialState: false);
             var context = new CallbackContext
             {
@@ -376,25 +398,36 @@ namespace Redmine.Net.Api.Net.WebClient
                     done.Set();
                 };
 
-                if (progress != null)
+                context.ProgressHandler = (sender, e) =>
                 {
-                    context.ProgressHandler = (sender, e) =>
+                    try
                     {
-                        try
-                        {
-                            progress.Report(e.ProgressPercentage);
-                        }
-                        catch
-                        {
-                        }
-                    };
-                    wc.DownloadProgressChanged += context.ProgressHandler;
-                }
+                        progress.Report(e.ProgressPercentage);
+                    }
+                    catch
+                    {
+                    }
+                };
+                wc.DownloadProgressChanged += context.ProgressHandler;
 
                 wc.DownloadDataCompleted += context.CompletedHandler;
 
-                var uri = new UriBuilder($"{wc.BaseAddress}/{address}").Uri;
-                wc.DownloadDataAsync(uri, context);
+                var synchronizationContext = SynchronizationContext.Current;
+                try
+                {
+                    SynchronizationContext.SetSynchronizationContext(null);
+                    wc.DownloadDataAsync(uri, context);
+                }
+                finally
+                {
+                    SynchronizationContext.SetSynchronizationContext(synchronizationContext);
+                }
+
+                if (timeout.HasValue && !done.WaitOne(timeout.Value))
+                {
+                    timedOut = true;
+                    wc.CancelAsync();
+                }
 
                 done.WaitOne();
             }
@@ -405,6 +438,11 @@ namespace Redmine.Net.Api.Net.WebClient
 #else
                 done.Close();
 #endif
+            }
+
+            if (timedOut)
+            {
+                throw new WebException(nameof(WebExceptionStatus.Timeout), null, WebExceptionStatus.Timeout, null);
             }
 
             if (context.Error != null)
@@ -468,7 +506,7 @@ namespace Redmine.Net.Api.Net.WebClient
                     }
                     else if (requestMessage.Method == HttpConstants.HttpVerbs.DOWNLOAD)
                     {
-                        var downloadResponse = DownloadFile(webClient, (string)requestMessage.RequestUri, progress);
+                        var downloadResponse = DownloadFile(webClient, (string)requestMessage.RequestUri, progress, _timeout);
 
                         responseAsBytes = downloadResponse.Data;
                         // statusCode = downloadResponse.StatusCode ?? HttpStatusCode.InternalServerError;
