@@ -23,6 +23,11 @@ namespace Padi.DotNet.RedmineAPI.Tests.Tests
         [InlineData("file://server/filename.ext")]
         [InlineData("ftp://myUrl/../..")]
         [InlineData("ftp://myUrl/%2E%2E/%2E%2E")]
+        [InlineData("https:/example.com")]
+        [InlineData("https//example.com")]
+        [InlineData("HTTP:/example.com")]
+        [InlineData("ex@mple.com")]
+        [InlineData("mailto:a@b.com")]
         public void Should_Throw_Redmine_Exception_When_Host_Is_Invalid(string host)
         {
             // Arrange
@@ -76,6 +81,7 @@ namespace Padi.DotNet.RedmineAPI.Tests.Tests
         [InlineData("-example.com", "https://-example.com/")]
         [InlineData("example.com-", "https://example.com-/")]
         [InlineData("example.com/-", "https://example.com/-/")]
+        [InlineData("https://user:pw@example.com", "https://example.com/")]
         [InlineData("C:/test/path/file.txt", "https://c/test/path/file.txt/")]
         [InlineData("http://example.com/redmine/issues.xml", "http://example.com/redmine/")]
         [InlineData("http://user:password@www.localhost.com/index.htm ", "http://www.localhost.com/index.htm/")]

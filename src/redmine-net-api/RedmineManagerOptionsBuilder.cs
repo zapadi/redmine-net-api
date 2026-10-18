@@ -321,7 +321,8 @@ namespace Redmine.Net.Api
 
             host = host.Trim().TrimEnd('\\');
             var schemeSeparator = host.IndexOf("://", StringComparison.Ordinal);
-            if (schemeSeparator <= 0 || !Uri.CheckSchemeName(host.Substring(0, schemeSeparator)))
+            var isSchemeAdded = schemeSeparator <= 0 || !Uri.CheckSchemeName(host.Substring(0, schemeSeparator));
+            if (isSchemeAdded)
             {
                 if (host.Length > 0 && host[0] != '[' && Uri.CheckHostName(host) == UriHostNameType.IPv6)
                 {
@@ -331,7 +332,10 @@ namespace Redmine.Net.Api
                 host = $"{scheme ?? Uri.UriSchemeHttps}://{host}";
             }
 
-            if (!Uri.TryCreate(host, UriKind.Absolute, out var uri) || uri.Host.IsNullOrWhiteSpace())
+            if (!Uri.TryCreate(host, UriKind.Absolute, out var uri)
+                || uri.Host.IsNullOrWhiteSpace()
+                || IsSchemaHttpOrHttps(uri.Host.ToLowerInvariant())
+                || (isSchemeAdded && !uri.UserInfo.IsNullOrWhiteSpace()))
             {
                 throw new RedmineException("The host is not valid.");
             }

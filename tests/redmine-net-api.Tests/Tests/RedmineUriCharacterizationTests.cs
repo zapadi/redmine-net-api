@@ -23,7 +23,6 @@ public sealed class RedmineUriCharacterizationTests
     [InlineData("localhost:3000?x=http://y", null, "https://localhost:3000/")]
     [InlineData("example.com:3000/redmine", null, "https://example.com:3000/redmine/")]
     [InlineData("localhost:3000/redmine", null, "https://localhost:3000/redmine/")]
-    [InlineData("user:pass@example.com:8080", null, "https://example.com:8080/")]
     [InlineData("127.0.0.1:3000", null, "https://127.0.0.1:3000/")]
     [InlineData("[::1]:8080", null, "https://[::1]:8080/")]
     [InlineData("fe80::1%4", null, "https://[fe80::1]/")]
@@ -82,6 +81,7 @@ public sealed class RedmineUriCharacterizationTests
     [InlineData("<invalid>")]
     [InlineData("file:///C:/x.txt")]
     [InlineData("exa mple.com")]
+    [InlineData("user:pass@example.com:8080")]
     public void CreateRedmineUri_Invalid_Hosts_Throw_RedmineException(string host, string scheme = null)
     {
         Assert.Throws<RedmineException>(() => RedmineManagerOptionsBuilder.CreateRedmineUri(host, scheme));
