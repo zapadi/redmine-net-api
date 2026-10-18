@@ -24,11 +24,12 @@ internal sealed class TestHttpResponse
     public byte[] Body { get; init; } = [];
     public Dictionary<string, string> Headers { get; init; } = new();
     public TimeSpan Delay { get; init; }
+    public long? ContentLength { get; init; }
 }
 
 internal sealed class TestHttpServer : IDisposable
 {
-    private readonly HttpListener _listener = new();
+    private readonly HttpListener _listener;
     private readonly Func<RecordedRequest, TestHttpResponse> _handler;
     private readonly ManualResetEvent _stopped = new(false);
     private readonly List<RecordedRequest> _requests = [];
@@ -36,9 +37,22 @@ internal sealed class TestHttpServer : IDisposable
     public TestHttpServer(Func<RecordedRequest, TestHttpResponse> handler)
     {
         _handler = handler;
-        Url = $"http://localhost:{GetFreePort()}/";
-        _listener.Prefixes.Add(Url);
-        _listener.Start();
+        for (var attempt = 1; ; attempt++)
+        {
+            Url = $"http://localhost:{GetFreePort()}/";
+            _listener = new HttpListener();
+            _listener.Prefixes.Add(Url);
+            try
+            {
+                _listener.Start();
+                break;
+            }
+            catch (HttpListenerException) when (attempt < 5)
+            {
+                _listener.Close();
+            }
+        }
+
         _ = Task.Run(ListenAsync);
     }
 
@@ -112,8 +126,16 @@ internal sealed class TestHttpServer : IDisposable
                 context.Response.Headers[header.Key] = header.Value;
             }
 
-            context.Response.ContentLength64 = response.Body.Length;
+            context.Response.ContentLength64 = response.ContentLength ?? response.Body.Length;
             context.Response.OutputStream.Write(response.Body, 0, response.Body.Length);
+            if (response.ContentLength.HasValue)
+            {
+                context.Response.OutputStream.Flush();
+                _stopped.WaitOne();
+                context.Response.Abort();
+                return;
+            }
+
             context.Response.Close();
         }
         catch

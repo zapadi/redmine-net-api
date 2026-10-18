@@ -159,12 +159,12 @@ public sealed class RedmineApiClientTests(XmlPrettyPrintFixture _) : IClassFixtu
         Assert.Same(queryString, request.QueryString);
         Assert.Equal("application/custom+xml", request.ContentType);
         Assert.Equal(["x-custom", "accept", "User-Agent", "X-Redmine-API-Key", RedmineConstants.IMPERSONATE_HEADER_KEY, "Content-Type"], request.Headers.AllKeys);
-        Assert.Equal("request", request.Headers["X-Custom"]);
-        Assert.Equal("application/xml", request.Headers["Accept"]);
-        Assert.Equal("custom-agent", request.Headers["User-Agent"]);
-        Assert.Equal("secret", request.Headers["X-Redmine-API-Key"]);
-        Assert.Equal("bob", request.Headers[RedmineConstants.IMPERSONATE_HEADER_KEY]);
-        Assert.Equal("text/html", request.Headers["Content-Type"]);
+        Assert.Equal(["request"], request.Headers.GetValues("X-Custom"));
+        Assert.Equal(["text/html", "application/xml"], request.Headers.GetValues("Accept"));
+        Assert.Equal(["header-agent", "custom-agent"], request.Headers.GetValues("User-Agent"));
+        Assert.Equal(["other", "secret"], request.Headers.GetValues("X-Redmine-API-Key"));
+        Assert.Equal(["alice", "bob"], request.Headers.GetValues(RedmineConstants.IMPERSONATE_HEADER_KEY));
+        Assert.Equal(["text/html"], request.Headers.GetValues("Content-Type"));
     }
 
     [Fact]
@@ -186,7 +186,7 @@ public sealed class RedmineApiClientTests(XmlPrettyPrintFixture _) : IClassFixtu
 
         client.Get("a.xml", new RequestOptions { Headers = new Dictionary<string, string> { { "Authorization", "Bearer other" } } });
 
-        Assert.Equal("Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes("user:pass")), transport.Requests[0].Headers["Authorization"]);
+        Assert.Equal(["Bearer other", "Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes("user:pass"))], transport.Requests[0].Headers.GetValues("Authorization"));
     }
 
     [Fact]
@@ -375,10 +375,11 @@ public sealed class RedmineApiClientTests(XmlPrettyPrintFixture _) : IClassFixtu
     [Theory]
     [InlineData(false)]
     [InlineData(true)]
-    public async Task Transport_TimeoutException_Should_Map_To_Timeout(bool withInner)
+    public async Task Transport_Timeout_WebException_Should_Map_To_Timeout(bool withInner)
     {
         var inner = new WebException("canceled", WebExceptionStatus.RequestCanceled);
-        var client = new RedmineApiClient(new ThrowingTransport(withInner ? new TimeoutException("t", inner) : new TimeoutException(), BaseAddress), new RedmineNoAuthentication(), null);
+        var timeout = new WebException(nameof(WebExceptionStatus.Timeout), withInner ? inner : null, WebExceptionStatus.Timeout, null);
+        var client = new RedmineApiClient(new ThrowingTransport(timeout, BaseAddress), new RedmineNoAuthentication(), null);
 
         var exception = await Assert.ThrowsAsync<RedmineApiException>(() => client.GetAsync("a.xml", cancellationToken: TestContext.Current.CancellationToken));
 
@@ -387,17 +388,7 @@ public sealed class RedmineApiClientTests(XmlPrettyPrintFixture _) : IClassFixtu
         Assert.Equal("UNKNOWN", exception.ErrorCode);
         Assert.Null(exception.HttpStatusCode);
         Assert.Equal(BaseAddress + "a.xml", exception.Endpoint);
-        if (withInner)
-        {
-            Assert.Same(inner, exception.InnerException);
-        }
-        else
-        {
-            var timeout = Assert.IsType<WebException>(exception.InnerException);
-            Assert.Equal(WebExceptionStatus.Timeout, timeout.Status);
-            Assert.Equal("Timeout", timeout.Message);
-            Assert.Null(timeout.InnerException);
-        }
+        Assert.Same(withInner ? inner : timeout, exception.InnerException);
     }
 
     [Fact]

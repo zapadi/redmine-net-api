@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -646,6 +647,50 @@ public sealed class RedmineApiClientCharacterizationTests(XmlPrettyPrintFixture 
     }
 
     [Fact]
+    public void DownloadFile_With_Progress_Error_Should_Throw_Like_Without_Progress()
+    {
+        using var server = new TestHttpServer(_ => Response("error", 404, "text/plain"));
+        var manager = CreateManager(server.Url);
+        var expected = Assert.Throws<RedmineApiException>(() => manager.DownloadFile("attachments/download/1/a.bin"));
+        Exception error = null;
+
+        var thread = new Thread(() =>
+        {
+            try
+            {
+                manager.DownloadFile("attachments/download/1/a.bin", progress: new RecordingProgress());
+            }
+            catch (Exception ex)
+            {
+                error = ex;
+            }
+        }) { IsBackground = true };
+        thread.Start();
+        Assert.True(thread.Join(TimeSpan.FromSeconds(10)));
+
+        var exception = Assert.IsType<RedmineApiException>(error);
+        Assert.Equal(expected.Message, exception.Message);
+        Assert.Equal(expected.HttpStatusCode, exception.HttpStatusCode);
+        Assert.Equal("GET", exception.Method);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task Not_Found_With_Stalled_Body_Should_Throw_Without_Reading_Body(bool async)
+    {
+        using var server = new TestHttpServer(_ => new TestHttpResponse { StatusCode = 404, ContentType = "text/plain", Body = Encoding.UTF8.GetBytes("error"), ContentLength = 1024 });
+        var manager = CreateManager(server.Url);
+
+        var call = Task.Run(() => CatchAsync(async,
+            () => manager.ApiClient.Get("projects/1.xml"),
+            () => manager.ApiClient.GetAsync("projects/1.xml", cancellationToken: TestContext.Current.CancellationToken)), TestContext.Current.CancellationToken);
+
+        Assert.Same(call, await Task.WhenAny(call, Task.Delay(TimeSpan.FromSeconds(3), TestContext.Current.CancellationToken)));
+        AssertException(await call, "The requested resource was not found.", 404, "GET", $"{server.Url}projects/1.xml", false, null);
+    }
+
+    [Fact]
     public async Task DownloadAsync_With_Progress_Error_Should_Throw()
     {
         using var server = new TestHttpServer(_ => Response("error", 404, "text/plain"));
@@ -719,7 +764,9 @@ public sealed class RedmineApiClientCharacterizationTests(XmlPrettyPrintFixture 
     [InlineData(true)]
     public async Task Connection_Failure_Should_Be_Transient(bool async)
     {
-        var url = $"http://localhost:{TestHttpServer.GetFreePort()}/";
+        using var reserved = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        reserved.Bind(new IPEndPoint(IPAddress.Loopback, 0));
+        var url = $"http://127.0.0.1:{((IPEndPoint)reserved.LocalEndPoint).Port}/";
         var manager = CreateManager(url);
 
         var exception = await CatchAsync(async,
@@ -794,7 +841,7 @@ public sealed class RedmineApiClientCharacterizationTests(XmlPrettyPrintFixture 
     [Fact]
     public async Task DownloadAsync_With_Timeout_Should_Time_Out_On_Request_Timeout()
     {
-        using var server = new TestHttpServer(_ => new TestHttpResponse { Body = [1, 2], Delay = TimeSpan.FromMilliseconds(600) });
+        using var server = new TestHttpServer(_ => new TestHttpResponse { Body = [1, 2], Delay = TimeSpan.FromSeconds(2) });
         var manager = CreateManager(server.Url, b => b.WithWebClientOptions(new RedmineWebClientOptions { Timeout = TimeSpan.FromMilliseconds(200) }));
 
         var exception = await Record.ExceptionAsync(() => manager.ApiClient.DownloadAsync("attachments/download/1/a.bin", cancellationToken: TestContext.Current.CancellationToken));
@@ -887,6 +934,61 @@ public sealed class RedmineApiClientCharacterizationTests(XmlPrettyPrintFixture 
         var exception = await Assert.ThrowsAsync<RedmineException>(() => manager.ApiClient.GetAsync("projects/1.xml", cancellationToken: cts.Token));
 
         Assert.Equal("The web client function configured with WithWebClient returned null.", exception.Message);
+    }
+
+    [Fact]
+    public async Task Custom_WebClient_Func_Throwing_TimeoutException_Should_Propagate()
+    {
+        var timeout = new TimeoutException("t", new WebException("canceled", WebExceptionStatus.RequestCanceled));
+        var manager = new RedmineManager(new RedmineManagerOptionsBuilder().WithHost("http://localhost:3000").WithWebClient(() => throw timeout));
+
+        var exception = await Assert.ThrowsAsync<TimeoutException>(() => manager.ApiClient.GetAsync("projects/1.xml", cancellationToken: TestContext.Current.CancellationToken));
+
+        Assert.Same(timeout, exception);
+    }
+
+    [Fact]
+    public async Task Custom_WebClient_Func_Throwing_OperationCanceledException_With_Inner_Should_Propagate()
+    {
+        var canceled = new OperationCanceledException("c", new InvalidOperationException("inner"));
+        var manager = new RedmineManager(new RedmineManagerOptionsBuilder().WithHost("http://localhost:3000").WithWebClient(() => throw canceled));
+
+        var exception = await Assert.ThrowsAsync<OperationCanceledException>(() => manager.ApiClient.GetAsync("projects/1.xml", cancellationToken: TestContext.Current.CancellationToken));
+
+        Assert.Same(canceled, exception);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task Invalid_RequestOptions_Header_Overridden_Later_Should_Still_Throw(bool async)
+    {
+        using var server = new TestHttpServer(_ => Response(ProjectXml));
+        var manager = CreateManager(server.Url);
+        var requestOptions = new RequestOptions { Accept = "application/xml", Headers = new Dictionary<string, string> { { "Accept", "bad\r\nvalue" } } };
+        var expected = Assert.ThrowsAny<ArgumentException>(() => new WebHeaderCollection { ["Accept"] = "bad\r\nvalue" });
+
+        var exception = async
+            ? await Assert.ThrowsAnyAsync<ArgumentException>(() => manager.ApiClient.GetAsync("projects/1.xml", requestOptions, TestContext.Current.CancellationToken))
+            : Assert.ThrowsAny<ArgumentException>(() => manager.ApiClient.Get("projects/1.xml", requestOptions));
+
+        Assert.Equal(expected.GetType(), exception.GetType());
+        Assert.Equal(expected.Message, exception.Message);
+        Assert.Empty(server.Requests);
+    }
+
+    [Fact]
+    public async Task Invalid_RequestOptions_Header_With_Canceled_Token_Should_Throw_OperationCanceledException()
+    {
+        using var server = new TestHttpServer(_ => Response(ProjectXml));
+        var manager = CreateManager(server.Url);
+        var requestOptions = new RequestOptions { Headers = new Dictionary<string, string> { { "Accept", "bad\r\nvalue" } } };
+        using var cts = new CancellationTokenSource();
+        cts.Cancel();
+
+        await Assert.ThrowsAsync<OperationCanceledException>(() => manager.ApiClient.GetAsync("projects/1.xml", requestOptions, cts.Token));
+
+        Assert.Empty(server.Requests);
     }
 
     [Fact]

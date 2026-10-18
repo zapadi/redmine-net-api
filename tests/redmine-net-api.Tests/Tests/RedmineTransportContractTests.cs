@@ -131,7 +131,7 @@ public abstract class RedmineTransportContractTests
     [InlineData(true, 503)]
     [InlineData(false, 422)]
     [InlineData(true, 422)]
-    public async Task Error_Status_Should_Be_Returned_With_Body_And_Headers(bool async, int statusCode)
+    public async Task Error_Status_Should_Be_Returned_With_Headers_And_Body_Only_For_Unprocessable_Entity(bool async, int statusCode)
     {
         var body = Encoding.UTF8.GetBytes("<errors type=\"array\"><error>Name ţ</error></errors>");
         using var server = new TestHttpServer(_ => new TestHttpResponse { StatusCode = statusCode, ContentType = "application/xml", Body = body, Headers = new Dictionary<string, string> { { "X-Request-Id", "abc" } } });
@@ -143,7 +143,7 @@ public abstract class RedmineTransportContractTests
 
         Assert.False(response.IsSuccessStatusCode);
         Assert.Equal(statusCode, response.StatusCode);
-        Assert.Equal(body, response.Body);
+        Assert.Equal(statusCode == 422 ? body : null, response.Body);
         Assert.Null(response.BodyError);
         Assert.Equal("abc", response.Headers["X-Request-Id"]);
         Assert.Equal(server.Url, request.BaseAddress);
@@ -176,7 +176,10 @@ public abstract class RedmineTransportContractTests
 
         var exception = await Record.ExceptionAsync(() => transport.SendAsync(new RedmineTransportRequest { Method = HttpVerbs.GET, Address = "projects/1.xml", Headers = Headers() }, TestContext.Current.CancellationToken));
 
-        Assert.True(exception is TimeoutException or WebException { Status: WebExceptionStatus.Timeout }, exception?.ToString());
+        var webException = Assert.IsType<WebException>(exception);
+        Assert.Equal(WebExceptionStatus.Timeout, webException.Status);
+        Assert.Equal("Timeout", webException.Message);
+        Assert.Equal(WebExceptionStatus.RequestCanceled, Assert.IsType<WebException>(webException.InnerException).Status);
     }
 
     [Fact]
@@ -189,7 +192,7 @@ public abstract class RedmineTransportContractTests
 
         var exception = await Assert.ThrowsAsync<OperationCanceledException>(() => transport.SendAsync(new RedmineTransportRequest { Method = HttpVerbs.GET, Address = "projects/1.xml", Headers = Headers() }, cts.Token));
 
-        Assert.NotNull(exception.InnerException);
+        Assert.Equal(WebExceptionStatus.RequestCanceled, Assert.IsType<WebException>(exception.InnerException).Status);
         Assert.Equal(cts.Token, exception.CancellationToken);
     }
 
@@ -243,6 +246,20 @@ public abstract class RedmineTransportContractTests
             { RedmineConstants.IMPERSONATE_HEADER_KEY, "bob" },
             { "Content-Type", "application/xml" }
         }, Assert.Single(server.Requests));
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task Multiple_Header_Values_Should_Be_Applied_In_Order(bool async)
+    {
+        using var server = new TestHttpServer(_ => new TestHttpResponse());
+        var transport = CreateTransport(server.Url);
+        var headers = new NameValueCollection { { "X-Custom", "first" }, { "X-Custom", "last" } };
+
+        await SendAsync(transport, new RedmineTransportRequest { Method = HttpVerbs.GET, Address = "projects/1.xml", Headers = headers }, async);
+
+        Assert.Equal("last", Assert.Single(server.Requests).Headers["X-Custom"]);
     }
 
     private sealed class RecordingProgress : IProgress<int>
