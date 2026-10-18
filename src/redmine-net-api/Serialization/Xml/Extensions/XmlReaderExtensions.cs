@@ -221,8 +221,12 @@ namespace Redmine.Net.Api.Extensions
                                 continue;
                             }
 
-                            using var subTree = xmlTextReader.ReadSubtree();
-                            entity = serializer.Deserialize(subTree) as T;
+                            using (var subTree = xmlTextReader.ReadSubtree())
+                            {
+                                entity = serializer.Deserialize(subTree) as T;
+                            }
+
+                            xmlTextReader.Read();
                         }
 
                         if (entity != null)
@@ -230,11 +234,6 @@ namespace Redmine.Net.Api.Extensions
                             result ??= new List<T>();
 
                             result.Add(entity);
-                        }
-
-                        if (!xmlTextReader.IsEmptyElement)
-                        {
-                            xmlTextReader.Read();
                         }
                     }
                 }
@@ -255,7 +254,7 @@ namespace Redmine.Net.Api.Extensions
 
             if (string.IsNullOrEmpty(outerXml))
             {
-               yield return null;
+                yield break;
             }
 
             using (var stringReader = new StringReader(outerXml))
@@ -279,17 +278,23 @@ namespace Redmine.Net.Api.Extensions
                         }
                         else
                         {
-                            var subTree = xmlTextReader.ReadSubtree();
-                            entity = serializer.Deserialize(subTree) as T;
+                            if (xmlTextReader.NodeType != XmlNodeType.Element)
+                            {
+                                xmlTextReader.Read();
+                                continue;
+                            }
+
+                            using (var subTree = xmlTextReader.ReadSubtree())
+                            {
+                                entity = serializer.Deserialize(subTree) as T;
+                            }
+
+                            xmlTextReader.Read();
                         }
+
                         if (entity != null)
                         {
                             yield return entity;
-                        }
-
-                        if (!xmlTextReader.IsEmptyElement)
-                        {
-                            xmlTextReader.Read();
                         }
                     }
                 }
