@@ -29,6 +29,18 @@
 *	Fixed 422 validation errors not being thrown for Update, Delete and other calls without a result
 *	Fixed async archive/unarchive project using the wrong HTTP method (now PUT) and project/repository action URLs being escaped
 *	Fixed Count and Get modifying the caller's RequestOptions; CountAsync now sends limit=1
+*	Fixed custom IRedmineWebClientOptions implementations not working
+*	Unexpected request cancellation now throws instead of returning an empty result
+*	Sync DownloadFile accepts absolute URLs (e.g. attachment ContentUrl), resolves relative addresses against the base address like WebClient, and no longer deadlocks on UI threads
+*	WebClientOptions.Timeout now also applies to async API calls on .NET Framework (not to downloads)
+*	Creating a RedmineManager no longer resets ServicePointManager.CheckCertificateRevocationList
+*	Fixed obsolete async GetCurrentUserAsync and CountAsync ignoring their arguments
+*	Empty responses now return null instead of throwing
+*	Search filters set to false are no longer sent as enabled
+*	Unknown XML/JSON elements, null nested JSON objects and unknown enum values (newer Redmine or plugins) no longer break deserialization
+*	Fixed XML collection reader hanging on empty items
+*	Clone now copies all fields and honours resetId (Issue.Clone(false) now keeps Id)
+*	GetHashCode is now consistent with Equals for Issue and Membership
 
 🧪 Tests
 *	Unit tests now run in CI on net10.0 and fail the build on failure
