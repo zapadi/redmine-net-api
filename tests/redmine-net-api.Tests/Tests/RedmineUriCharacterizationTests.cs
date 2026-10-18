@@ -62,4 +62,12 @@ public sealed class RedmineUriCharacterizationTests
     {
         Assert.Throws<RedmineException>(() => RedmineManagerOptionsBuilder.CreateRedmineUri(host, scheme));
     }
+    [Theory]
+    [InlineData("http://example.com/my%20redmine", "http://example.com/my%20redmine/")]
+    [InlineData("http://example.com/caf%C3%A9/", "http://example.com/caf%C3%A9/")]
+    [InlineData("http://example.com/a b", "http://example.com/a%20b/")]
+    public void CreateRedmineUri_Does_Not_Double_Escape_Path(string host, string expected)
+    {
+        Assert.Equal(expected, RedmineManagerOptionsBuilder.CreateRedmineUri(host).AbsoluteUri);
+    }
 }
