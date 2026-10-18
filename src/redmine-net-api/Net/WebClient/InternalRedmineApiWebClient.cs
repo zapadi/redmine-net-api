@@ -239,20 +239,20 @@ namespace Redmine.Net.Api.Net.WebClient
             HttpStatusCode? statusCode = null;
             NameValueCollection? responseHeaders = null;
             CancellationTokenRegistration cancellationTokenRegistration = default;
-            using var timeoutTokenSource = _timeout.HasValue ? CancellationTokenSource.CreateLinkedTokenSource(cancellationToken) : null;
+            using var timeoutTokenSource = _timeout.HasValue && requestMessage.Method != HttpConstants.HttpVerbs.DOWNLOAD
+                ? CancellationTokenSource.CreateLinkedTokenSource(cancellationToken)
+                : null;
 
             try
             {
                 webClient = _webClientFunc();
                 timeoutTokenSource?.CancelAfter(_timeout.GetValueOrDefault());
 
-                cancellationTokenRegistration =
-                    (timeoutTokenSource?.Token ?? cancellationToken).Register(
-                        static state => (state as System.Net.WebClient)?.CancelAsync(),
-                        webClient
-                    );
-
                 cancellationToken.ThrowIfCancellationRequested();
+                if (timeoutTokenSource?.IsCancellationRequested == true)
+                {
+                    throw CreateTimeoutException();
+                }
 
                 if (progress != null)
                 {
@@ -265,17 +265,17 @@ namespace Redmine.Net.Api.Net.WebClient
                     webClient.QueryString = requestMessage.QueryString;
                 }
 
+                Task<string>? responseTask = null;
+                Task<byte[]>? responseAsBytesTask = null;
                 if (IsGetOrDownload(requestMessage.Method))
                 {
                     if (requestMessage.Method == HttpConstants.HttpVerbs.DOWNLOAD)
                     {
-                        responseAsBytes = await webClient.DownloadDataTaskAsync((string)requestMessage.RequestUri)
-                            .ConfigureAwait(false);
+                        responseAsBytesTask = webClient.DownloadDataTaskAsync((string)requestMessage.RequestUri);
                     }
                     else
                     {
-                        response = await webClient.DownloadStringTaskAsync((string)requestMessage.RequestUri)
-                            .ConfigureAwait(false);
+                        responseTask = webClient.DownloadStringTaskAsync((string)requestMessage.RequestUri);
                     }
                 }
                 else
@@ -291,8 +291,22 @@ namespace Redmine.Net.Api.Net.WebClient
                         payload = EmptyBytes;
                     }
 
-                    responseAsBytes = await webClient.UploadDataTaskAsync((string)requestMessage.RequestUri, requestMessage.Method, payload)
-                        .ConfigureAwait(false);
+                    responseAsBytesTask = webClient.UploadDataTaskAsync((string)requestMessage.RequestUri, requestMessage.Method, payload);
+                }
+
+                cancellationTokenRegistration =
+                    (timeoutTokenSource?.Token ?? cancellationToken).Register(
+                        static state => (state as System.Net.WebClient)?.CancelAsync(),
+                        webClient
+                    );
+
+                if (responseTask != null)
+                {
+                    response = await responseTask.ConfigureAwait(false);
+                }
+                else
+                {
+                    responseAsBytes = await responseAsBytesTask!.ConfigureAwait(false);
                 }
 
                 responseHeaders = webClient.ResponseHeaders;
@@ -310,7 +324,7 @@ namespace Redmine.Net.Api.Net.WebClient
 
                 if (timeoutTokenSource?.IsCancellationRequested == true)
                 {
-                    throw HandleWebException(new WebException(nameof(WebExceptionStatus.Timeout), ex, WebExceptionStatus.Timeout, null), _serializer);
+                    throw CreateTimeoutException(ex);
                 }
 
                 throw HandleWebException(ex, _serializer);
@@ -338,6 +352,11 @@ namespace Redmine.Net.Api.Net.WebClient
                 RawContent = responseAsBytes,
                 StatusCode = (int)(statusCode ?? HttpStatusCode.OK),
             };
+        }
+
+        private RedmineApiException CreateTimeoutException(Exception? innerException = null)
+        {
+            return HandleWebException(new WebException(nameof(WebExceptionStatus.Timeout), innerException, WebExceptionStatus.Timeout, null), _serializer);
         }
 #endif
 
@@ -367,7 +386,7 @@ namespace Redmine.Net.Api.Net.WebClient
         }
 
         private static DownloadFileResult DownloadFile(System.Net.WebClient wc, string address,
-            IProgress<int>? progress = null, TimeSpan? timeout = null)
+            IProgress<int>? progress = null)
         {
             var uri = new Uri(new Uri(wc.BaseAddress), address);
             if (progress == null)
@@ -375,7 +394,6 @@ namespace Redmine.Net.Api.Net.WebClient
                 return new DownloadFileResult(wc.DownloadData(uri), (int)HttpStatusCode.OK);
             }
 
-            var timedOut = false;
             var done = new ManualResetEvent(initialState: false);
             var context = new CallbackContext
             {
@@ -423,12 +441,6 @@ namespace Redmine.Net.Api.Net.WebClient
                     SynchronizationContext.SetSynchronizationContext(synchronizationContext);
                 }
 
-                if (timeout.HasValue && !done.WaitOne(timeout.Value))
-                {
-                    timedOut = true;
-                    wc.CancelAsync();
-                }
-
                 done.WaitOne();
             }
             finally
@@ -438,11 +450,6 @@ namespace Redmine.Net.Api.Net.WebClient
 #else
                 done.Close();
 #endif
-            }
-
-            if (timedOut)
-            {
-                throw new WebException(nameof(WebExceptionStatus.Timeout), null, WebExceptionStatus.Timeout, null);
             }
 
             if (context.Error != null)
@@ -506,7 +513,7 @@ namespace Redmine.Net.Api.Net.WebClient
                     }
                     else if (requestMessage.Method == HttpConstants.HttpVerbs.DOWNLOAD)
                     {
-                        var downloadResponse = DownloadFile(webClient, (string)requestMessage.RequestUri, progress, _timeout);
+                        var downloadResponse = DownloadFile(webClient, (string)requestMessage.RequestUri, progress);
 
                         responseAsBytes = downloadResponse.Data;
                         // statusCode = downloadResponse.StatusCode ?? HttpStatusCode.InternalServerError;

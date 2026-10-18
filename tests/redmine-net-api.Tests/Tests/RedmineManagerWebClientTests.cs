@@ -53,6 +53,22 @@ public sealed class RedmineManagerWebClientTests(XmlPrettyPrintFixture _) : ICla
         return new RedmineManager(builder);
     }
 
+    private static WebResponse SlowResponse()
+    {
+        System.Threading.Thread.Sleep(500);
+        return new FakeWebResponse("abc");
+    }
+
+    private static async Task<T> Bounded<T>(Task<T> task)
+    {
+        if (await Task.WhenAny(task, Task.Delay(TimeSpan.FromSeconds(10))) != task)
+        {
+            throw new TimeoutException("Request did not complete.");
+        }
+
+        return await task;
+    }
+
     private static WebException UnprocessableEntity()
     {
         return new WebException("422", null, WebExceptionStatus.ProtocolError, FakeHttpWebResponse.Create((HttpStatusCode)422, Errors));
@@ -272,13 +288,23 @@ public sealed class RedmineManagerWebClientTests(XmlPrettyPrintFixture _) : ICla
     }
 
     [Fact]
-    public void DownloadFile_With_Progress_Should_Throw_Timeout_When_Timeout_Is_Set()
+    public async Task DownloadFile_With_Progress_Should_Not_Time_Out_When_Timeout_Is_Set()
     {
-        var manager = CreateHangingManager(TimeSpan.FromMilliseconds(200));
+        var (manager, _) = CreateManager(_ => SlowResponse(), new RedmineWebClientOptions { Timeout = TimeSpan.FromMilliseconds(100) });
 
-        var exception = Assert.Throws<RedmineApiException>(() => manager.DownloadFile("attachments/download/1/a.txt", progress: new Progress<int>()));
+        var data = await Bounded(Task.Run(() => manager.DownloadFile("attachments/download/1/a.txt", progress: new Progress<int>()), TestContext.Current.CancellationToken));
 
-        Assert.Equal(nameof(WebExceptionStatus.Timeout), exception.Message);
+        Assert.Equal("abc", System.Text.Encoding.UTF8.GetString(data));
+    }
+
+    [Fact]
+    public async Task DownloadFileAsync_Should_Not_Time_Out_When_Timeout_Is_Set()
+    {
+        var (manager, _) = CreateManager(_ => SlowResponse(), new RedmineWebClientOptions { Timeout = TimeSpan.FromMilliseconds(100) });
+
+        var data = await Bounded(manager.DownloadFileAsync("attachments/download/1/a.txt", cancellationToken: TestContext.Current.CancellationToken));
+
+        Assert.Equal("abc", System.Text.Encoding.UTF8.GetString(data));
     }
 
     [Fact]
@@ -286,7 +312,17 @@ public sealed class RedmineManagerWebClientTests(XmlPrettyPrintFixture _) : ICla
     {
         var manager = CreateHangingManager(TimeSpan.FromMilliseconds(200));
 
-        var exception = await Assert.ThrowsAsync<RedmineApiException>(() => manager.GetAsync<Project>("1", cancellationToken: TestContext.Current.CancellationToken));
+        var exception = await Assert.ThrowsAsync<RedmineApiException>(() => Bounded(manager.GetAsync<Project>("1", cancellationToken: TestContext.Current.CancellationToken)));
+
+        Assert.Equal(nameof(WebExceptionStatus.Timeout), exception.Message);
+    }
+
+    [Fact]
+    public async Task GetAsync_Should_Throw_Timeout_When_Timeout_Is_Zero()
+    {
+        var manager = CreateHangingManager(TimeSpan.Zero);
+
+        var exception = await Assert.ThrowsAsync<RedmineApiException>(() => Bounded(manager.GetAsync<Project>("1", cancellationToken: TestContext.Current.CancellationToken)));
 
         Assert.Equal(nameof(WebExceptionStatus.Timeout), exception.Message);
     }
@@ -298,7 +334,7 @@ public sealed class RedmineManagerWebClientTests(XmlPrettyPrintFixture _) : ICla
         using var cts = System.Threading.CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken);
         cts.CancelAfter(TimeSpan.FromMilliseconds(500));
 
-        var exception = await Assert.ThrowsAsync<RedmineApiException>(() => manager.GetAsync<Project>("1", cancellationToken: cts.Token));
+        var exception = await Assert.ThrowsAsync<RedmineApiException>(() => Bounded(manager.GetAsync<Project>("1", cancellationToken: cts.Token)));
 
         Assert.NotEqual(nameof(WebExceptionStatus.Timeout), exception.Message);
         Assert.True(cts.IsCancellationRequested);
