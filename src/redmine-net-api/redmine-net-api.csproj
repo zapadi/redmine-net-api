@@ -12,7 +12,6 @@
     <Configurations>Debug;Release;DebugJson</Configurations>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
     <NoWarn>
-      NU5105;
       CA1303;
       CA1056;
       CA1062;
