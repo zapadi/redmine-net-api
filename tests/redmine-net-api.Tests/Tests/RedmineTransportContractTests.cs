@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Padi.DotNet.RedmineAPI.Tests.Infrastructure;
 using Redmine.Net.Api;
+using Redmine.Net.Api.Exceptions;
 using Redmine.Net.Api.Net;
 using Redmine.Net.Api.Net.WebClient;
 using Xunit;
@@ -59,10 +60,8 @@ public abstract class RedmineTransportContractTests
     {
         using var server = new TestHttpServer(_ => new TestHttpResponse { ContentType = "application/xml; charset=utf-8", Body = Encoding.UTF8.GetBytes("<ok>ţ</ok>"), Headers = new Dictionary<string, string> { { "X-Response", "value" } } });
         var transport = CreateTransport(server.Url, userAgent: "agent");
-        var request = new RedmineTransportRequest
+        var request = new RedmineTransportRequest(HttpVerbs.GET, "issues.xml")
         {
-            Method = HttpVerbs.GET,
-            Address = "issues.xml",
             QueryString = new NameValueCollection { { "status_id", "open" }, { "limit", "1" } },
             Headers = Headers("X-Redmine-API-Key", "secret", RedmineConstants.IMPERSONATE_HEADER_KEY, "bob")
         };
@@ -91,10 +90,8 @@ public abstract class RedmineTransportContractTests
         using var server = new TestHttpServer(_ => new TestHttpResponse { StatusCode = 201, Body = [1, 2] });
         var transport = CreateTransport(server.Url, userAgent: "agent");
 
-        var response = await SendAsync(transport, new RedmineTransportRequest
+        var response = await SendAsync(transport, new RedmineTransportRequest(method, "projects.xml")
         {
-            Method = method,
-            Address = "projects.xml",
             Headers = Headers("Content-Type", "text/plain"),
             ContentType = "application/xml",
             Body = body
@@ -116,7 +113,7 @@ public abstract class RedmineTransportContractTests
         using var server = new TestHttpServer(_ => new TestHttpResponse());
         var transport = CreateTransport(server.Url, userAgent: "agent");
 
-        await SendAsync(transport, new RedmineTransportRequest { Method = HttpVerbs.DELETE, Address = "projects/1.xml", Headers = Headers() }, async);
+        await SendAsync(transport, new RedmineTransportRequest(HttpVerbs.DELETE, "projects/1.xml") { Headers = Headers() }, async);
 
         var sent = Assert.Single(server.Requests);
         Assert.Equal("DELETE", sent.Method);
@@ -137,7 +134,7 @@ public abstract class RedmineTransportContractTests
         using var server = new TestHttpServer(_ => new TestHttpResponse { StatusCode = statusCode, ContentType = "application/xml", Body = body, Headers = new Dictionary<string, string> { { "X-Request-Id", "abc" } } });
         var transport = CreateTransport(server.Url);
 
-        var request = new RedmineTransportRequest { Method = HttpVerbs.PUT, Address = "projects/1.xml", Headers = Headers(), ContentType = "application/xml", Body = [1] };
+        var request = new RedmineTransportRequest(HttpVerbs.PUT, "projects/1.xml") { Headers = Headers(), ContentType = "application/xml", Body = [1] };
 
         var response = await SendAsync(transport, request, async);
 
@@ -160,7 +157,7 @@ public abstract class RedmineTransportContractTests
         var transport = CreateTransport(server.Url);
         var progress = new RecordingProgress();
 
-        var response = await SendAsync(transport, new RedmineTransportRequest { Method = HttpVerbs.DOWNLOAD, Address = "attachments/download/1/a.bin", Headers = Headers(), Progress = progress }, async);
+        var response = await SendAsync(transport, new RedmineTransportRequest(HttpVerbs.DOWNLOAD, "attachments/download/1/a.bin") { Headers = Headers(), Progress = progress }, async);
 
         Assert.Equal("GET", Assert.Single(server.Requests).Method);
         Assert.Equal(data, response.Body);
@@ -174,7 +171,7 @@ public abstract class RedmineTransportContractTests
         using var server = new TestHttpServer(_ => new TestHttpResponse { Delay = TimeSpan.FromSeconds(5) });
         var transport = CreateTransport(server.Url, TimeSpan.FromMilliseconds(300));
 
-        var exception = await Record.ExceptionAsync(() => transport.SendAsync(new RedmineTransportRequest { Method = HttpVerbs.GET, Address = "projects/1.xml", Headers = Headers() }, TestContext.Current.CancellationToken));
+        var exception = await Record.ExceptionAsync(() => transport.SendAsync(new RedmineTransportRequest(HttpVerbs.GET, "projects/1.xml") { Headers = Headers() }, TestContext.Current.CancellationToken));
 
         var webException = Assert.IsType<WebException>(exception);
         Assert.Equal(WebExceptionStatus.Timeout, webException.Status);
@@ -190,7 +187,7 @@ public abstract class RedmineTransportContractTests
         using var cts = CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken);
         cts.CancelAfter(TimeSpan.FromMilliseconds(300));
 
-        var exception = await Assert.ThrowsAsync<OperationCanceledException>(() => transport.SendAsync(new RedmineTransportRequest { Method = HttpVerbs.GET, Address = "projects/1.xml", Headers = Headers() }, cts.Token));
+        var exception = await Assert.ThrowsAsync<OperationCanceledException>(() => transport.SendAsync(new RedmineTransportRequest(HttpVerbs.GET, "projects/1.xml") { Headers = Headers() }, cts.Token));
 
         Assert.Equal(WebExceptionStatus.RequestCanceled, Assert.IsType<WebException>(exception.InnerException).Status);
         Assert.Equal(cts.Token, exception.CancellationToken);
@@ -204,7 +201,7 @@ public abstract class RedmineTransportContractTests
         using var cts = new CancellationTokenSource();
         cts.Cancel();
 
-        var exception = await Assert.ThrowsAsync<OperationCanceledException>(() => transport.SendAsync(new RedmineTransportRequest { Method = HttpVerbs.GET, Address = "projects/1.xml", Headers = Headers() }, cts.Token));
+        var exception = await Assert.ThrowsAsync<OperationCanceledException>(() => transport.SendAsync(new RedmineTransportRequest(HttpVerbs.GET, "projects/1.xml") { Headers = Headers() }, cts.Token));
 
         Assert.Null(exception.InnerException);
         Assert.Empty(server.Requests);
@@ -227,10 +224,8 @@ public abstract class RedmineTransportContractTests
             { "Content-Type", "text/plain" }
         }, userAgent: "options-agent");
 
-        await SendAsync(transport, new RedmineTransportRequest
+        await SendAsync(transport, new RedmineTransportRequest(HttpVerbs.POST, "projects.xml")
         {
-            Method = HttpVerbs.POST,
-            Address = "projects.xml",
             Headers = Headers("X-Custom", "request", "Accept", "application/xml", "User-Agent", "custom-agent", "X-Redmine-API-Key", "secret", RedmineConstants.IMPERSONATE_HEADER_KEY, "bob"),
             ContentType = "application/xml",
             Body = [1]
@@ -257,9 +252,38 @@ public abstract class RedmineTransportContractTests
         var transport = CreateTransport(server.Url);
         var headers = new NameValueCollection { { "X-Custom", "first" }, { "X-Custom", "last" } };
 
-        await SendAsync(transport, new RedmineTransportRequest { Method = HttpVerbs.GET, Address = "projects/1.xml", Headers = headers }, async);
+        await SendAsync(transport, new RedmineTransportRequest(HttpVerbs.GET, "projects/1.xml") { Headers = headers }, async);
 
         Assert.Equal("last", Assert.Single(server.Requests).Headers["X-Custom"]);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task Header_Without_Values_Should_Be_Skipped(bool async)
+    {
+        using var server = new TestHttpServer(_ => new TestHttpResponse());
+        var transport = CreateTransport(server.Url, userAgent: "agent");
+        var headers = new NameValueCollection { { "X-Null", null }, { "X-Custom", "value" } };
+
+        await SendAsync(transport, new RedmineTransportRequest(HttpVerbs.GET, "projects/1.xml") { Headers = headers }, async);
+
+        AssertHeaders(new Dictionary<string, string> { { "User-Agent", "agent" }, { "X-Custom", "value" } }, Assert.Single(server.Requests));
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task Null_Body_With_Content_Type_Should_Throw_RedmineApiException(bool async)
+    {
+        using var server = new TestHttpServer(_ => new TestHttpResponse());
+        var transport = CreateTransport(server.Url);
+
+        var exception = await Assert.ThrowsAsync<RedmineApiException>(() => SendAsync(transport, new RedmineTransportRequest(HttpVerbs.POST, "uploads.xml") { Headers = Headers(), ContentType = "application/octet-stream" }, async));
+
+        Assert.Equal("POST", exception.Method);
+        Assert.Equal("uploads.xml", exception.Endpoint);
+        Assert.Empty(server.Requests);
     }
 
     private sealed class RecordingProgress : IProgress<int>

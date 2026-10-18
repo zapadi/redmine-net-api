@@ -141,6 +141,41 @@ public sealed class RedmineManagerWebClientTests(XmlPrettyPrintFixture _) : ICla
     }
 
     [Fact]
+    public void Get_Should_Throw_RedmineApiException_On_Protocol_Error_Without_Response()
+    {
+        var (manager, _) = CreateManager(_ => throw new WebException("protocol", null, WebExceptionStatus.ProtocolError, null));
+
+        var exception = Assert.Throws<RedmineApiException>(() => manager.Get<Project>("1"));
+
+        Assert.Equal("protocol", exception.Message);
+        Assert.Null(exception.HttpStatusCode);
+        Assert.Equal("UNKNOWN", exception.ErrorCode);
+    }
+
+    [Fact]
+    public async Task GetAsync_Should_Throw_RedmineApiException_On_Protocol_Error_Without_Response()
+    {
+        var (manager, _) = CreateManager(_ => throw new WebException("protocol", null, WebExceptionStatus.ProtocolError, null));
+
+        var exception = await Assert.ThrowsAsync<RedmineApiException>(() => manager.GetAsync<Project>("1", cancellationToken: TestContext.Current.CancellationToken));
+
+        Assert.Equal("protocol", exception.Message);
+        Assert.Null(exception.HttpStatusCode);
+        Assert.Equal("UNKNOWN", exception.ErrorCode);
+    }
+
+    [Fact]
+    public void UploadFile_With_Null_Data_Should_Throw_RedmineApiException()
+    {
+        var (manager, clients) = CreateManager(_ => new FakeWebResponse("<upload><token>t</token></upload>"));
+
+        var exception = Assert.Throws<RedmineApiException>(() => manager.UploadFile(null));
+
+        Assert.Equal("POST", exception.Method);
+        Assert.Empty(Assert.Single(clients).Requests);
+    }
+
+    [Fact]
     public void Create_Should_Apply_RequestOptions_Headers()
     {
         var (manager, clients) = CreateManager(_ => new FakeWebResponse("<project><id>1</id><name>foo</name></project>"));

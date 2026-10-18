@@ -174,9 +174,9 @@ namespace Redmine.Net.Api.Net.WebClient
                 {
                     response = await responseTask.ConfigureAwait(false);
                 }
-                else
+                else if (responseAsBytesTask != null)
                 {
-                    responseAsBytes = await responseAsBytesTask!.ConfigureAwait(false);
+                    responseAsBytes = await responseAsBytesTask.ConfigureAwait(false);
                 }
 
                 return CreateResponse(webClient, response, responseAsBytes);
@@ -195,9 +195,9 @@ namespace Redmine.Net.Api.Net.WebClient
 
                 throw;
             }
-            catch (WebException ex) when (ex.Status == WebExceptionStatus.ProtocolError && ex.Response != null)
+            catch (WebException ex) when (ex.Status == WebExceptionStatus.ProtocolError && ex.Response is { } errorResponse)
             {
-                return CreateErrorResponse(ex);
+                return CreateErrorResponse(ex, errorResponse);
             }
             finally
             {
@@ -243,9 +243,9 @@ namespace Redmine.Net.Api.Net.WebClient
 
                 return CreateResponse(webClient, response, responseAsBytes);
             }
-            catch (WebException ex) when (ex.Status == WebExceptionStatus.ProtocolError && ex.Response != null)
+            catch (WebException ex) when (ex.Status == WebExceptionStatus.ProtocolError && ex.Response is { } errorResponse)
             {
-                return CreateErrorResponse(ex);
+                return CreateErrorResponse(ex, errorResponse);
             }
             finally
             {
@@ -352,7 +352,13 @@ namespace Redmine.Net.Api.Net.WebClient
 
             foreach (string key in request.Headers)
             {
-                foreach (var value in request.Headers.GetValues(key)!)
+                var values = request.Headers.GetValues(key);
+                if (values == null)
+                {
+                    continue;
+                }
+
+                foreach (var value in values)
                 {
                     webClient.Headers[key] = value;
                 }
@@ -366,8 +372,13 @@ namespace Redmine.Net.Api.Net.WebClient
                 return EmptyBytes;
             }
 
+            if (request.Body == null)
+            {
+                throw RedmineApiExceptionHelper.Create("The request body cannot be null when a content type is set.", null, null, request.Method, request.Address, null, errorCode: RedmineApiExceptionHelper.UnknownErrorCode);
+            }
+
             webClient.Headers[HttpRequestHeader.ContentType] = request.ContentType;
-            return request.Body!;
+            return request.Body;
         }
 
         private static RedmineTransportResponse CreateResponse(System.Net.WebClient webClient, string? content, byte[]? body)
@@ -384,9 +395,9 @@ namespace Redmine.Net.Api.Net.WebClient
             };
         }
 
-        private static RedmineTransportResponse CreateErrorResponse(WebException exception)
+        private static RedmineTransportResponse CreateErrorResponse(WebException exception, WebResponse response)
         {
-            var httpResponse = exception.Response as HttpWebResponse;
+            var httpResponse = response as HttpWebResponse;
             var statusCode = httpResponse != null
                 ? (int)httpResponse.StatusCode
                 : (int)HttpStatusCode.InternalServerError;
@@ -394,7 +405,7 @@ namespace Redmine.Net.Api.Net.WebClient
 
             byte[]? body = null;
             Exception? bodyError = null;
-            using (var responseStream = exception.Response!.GetResponseStream())
+            using (var responseStream = response.GetResponseStream())
             {
                 if (statusCode == HttpConstants.StatusCodes.UnprocessableEntity && responseStream != null)
                 {

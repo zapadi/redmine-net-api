@@ -189,10 +189,8 @@ namespace Redmine.Net.Api.Net
 
         private RedmineTransportRequest CreateTransportRequest(ApiRequestMessage requestMessage, IProgress<int>? progress)
         {
-            return new RedmineTransportRequest
+            return new RedmineTransportRequest(requestMessage.Method, requestMessage.RequestUri)
             {
-                Method = requestMessage.Method,
-                Address = requestMessage.RequestUri,
                 QueryString = requestMessage.QueryString,
                 Headers = CreateHeaders(requestMessage),
                 ContentType = requestMessage.Content != null ? requestMessage.ContentType.ValueOrFallback(requestMessage.Content.ContentType) : null,
@@ -342,7 +340,7 @@ namespace Redmine.Net.Api.Net
         {
             var baseAddress = request.BaseAddress;
             var address = request.Address;
-            return !baseAddress.IsNullOrWhiteSpace() && Uri.TryCreate(new Uri(baseAddress!), address, out var uri)
+            return baseAddress != null && !baseAddress.IsNullOrWhiteSpace() && Uri.TryCreate(new Uri(baseAddress), address, out var uri)
                 ? uri.ToString()
                 : address;
         }

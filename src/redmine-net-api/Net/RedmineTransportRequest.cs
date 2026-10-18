@@ -20,10 +20,10 @@ using System.Collections.Specialized;
 
 namespace Redmine.Net.Api.Net;
 
-internal sealed class RedmineTransportRequest
+internal sealed class RedmineTransportRequest(string method, string address)
 {
-    public string Method { get; init; } = null!;
-    public string Address { get; init; } = null!;
+    public string Method { get; } = method;
+    public string Address { get; } = address;
     public NameValueCollection? QueryString { get; init; }
     public NameValueCollection? Headers { get; init; }
     public string? ContentType { get; init; }
