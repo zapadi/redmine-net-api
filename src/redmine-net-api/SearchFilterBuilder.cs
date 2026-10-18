@@ -131,19 +131,30 @@ namespace Redmine.Net.Api
         public NameValueCollection Build(NameValueCollection sb)
         {
             sb.AddIfNotNull(RedmineKeys.SCOPE,_internalScope);
-            sb.AddIfNotNull(RedmineKeys.PROJECTS, IncludeProjects);
-            sb.AddIfNotNull(RedmineKeys.OPEN_ISSUES, OpenIssues);
-            sb.AddIfNotNull(RedmineKeys.MESSAGES, IncludeMessages);
-            sb.AddIfNotNull(RedmineKeys.WIKI_PAGES, IncludeWikiPages);
-            sb.AddIfNotNull(RedmineKeys.CHANGE_SETS, IncludeChangeSets);
-            sb.AddIfNotNull(RedmineKeys.DOCUMENTS, IncludeDocuments);
-            sb.AddIfNotNull(RedmineKeys.NEWS, IncludeNews);
-            sb.AddIfNotNull(RedmineKeys.ISSUES, IncludeIssues);
-            sb.AddIfNotNull(RedmineKeys.TITLES_ONLY, TitlesOnly);
-            sb.AddIfNotNull(RedmineKeys.ALL_WORDS, AllWords);
+            AddIfTrue(sb, RedmineKeys.PROJECTS, IncludeProjects);
+            AddIfTrue(sb, RedmineKeys.OPEN_ISSUES, OpenIssues);
+            AddIfTrue(sb, RedmineKeys.MESSAGES, IncludeMessages);
+            AddIfTrue(sb, RedmineKeys.WIKI_PAGES, IncludeWikiPages);
+            AddIfTrue(sb, RedmineKeys.CHANGE_SETS, IncludeChangeSets);
+            AddIfTrue(sb, RedmineKeys.DOCUMENTS, IncludeDocuments);
+            AddIfTrue(sb, RedmineKeys.NEWS, IncludeNews);
+            AddIfTrue(sb, RedmineKeys.ISSUES, IncludeIssues);
+            AddIfTrue(sb, RedmineKeys.TITLES_ONLY, TitlesOnly);
+            if (AllWords.HasValue)
+            {
+                sb.Add(RedmineKeys.ALL_WORDS, AllWords.Value ? "1" : string.Empty);
+            }
             sb.AddIfNotNull(RedmineKeys.ATTACHMENTS, _internalAttachments);
                 
             return sb;
+        }
+
+        private static void AddIfTrue(NameValueCollection sb, string key, bool? value)
+        {
+            if (value == true)
+            {
+                sb.Add(key, "1");
+            }
         }
     }
 
