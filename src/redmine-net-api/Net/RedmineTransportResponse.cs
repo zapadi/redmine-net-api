@@ -30,7 +30,7 @@ public sealed class RedmineTransportResponse
     /// </summary>
     /// <param name="statusCode">The HTTP status code.</param>
     /// <param name="headers">The response headers; <c>null</c> for none.</param>
-    /// <param name="body">The response body; <c>null</c> for none. Text is decoded with the charset of the Content-Type header, or UTF-8.</param>
+    /// <param name="body">The response body; <c>null</c> for none. Text is decoded with the encoding of its UTF-8 or UTF-16 byte order mark, else the charset of the Content-Type header, else UTF-8.</param>
     public RedmineTransportResponse(int statusCode, NameValueCollection? headers, byte[]? body)
     {
         StatusCode = statusCode;

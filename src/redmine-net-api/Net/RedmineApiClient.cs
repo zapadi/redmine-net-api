@@ -398,6 +398,16 @@ namespace Redmine.Net.Api.Net
                 return Encoding.UTF8.GetString(body, 3, body.Length - 3);
             }
 
+            if (body.Length >= 2 && body[0] == 0xFF && body[1] == 0xFE)
+            {
+                return Encoding.Unicode.GetString(body, 2, body.Length - 2);
+            }
+
+            if (body.Length >= 2 && body[0] == 0xFE && body[1] == 0xFF)
+            {
+                return Encoding.BigEndianUnicode.GetString(body, 2, body.Length - 2);
+            }
+
             return GetEncoding(headers?["Content-Type"]).GetString(body);
         }
 

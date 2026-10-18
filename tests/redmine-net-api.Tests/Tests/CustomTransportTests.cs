@@ -288,12 +288,14 @@ public sealed class CustomTransportTests
     [InlineData("application/xml; charset=utf-7", "utf-8", false)]
     [InlineData("application/xml", "utf-8", true)]
     [InlineData("application/xml; charset=iso-8859-1", "utf-8", true)]
+    [InlineData("application/xml; charset=utf-8", "utf-16", true)]
+    [InlineData("application/xml", "utf-16BE", true)]
     public void Text_Should_Be_Decoded_With_Charset_Or_Utf8(string contentType, string encoding, bool withBom)
     {
         var body = Encoding.GetEncoding(encoding).GetBytes("<project><id>1</id><name>café</name></project>");
         if (withBom)
         {
-            body = [.. Encoding.UTF8.GetPreamble(), .. body];
+            body = [.. Encoding.GetEncoding(encoding).GetPreamble(), .. body];
         }
 
         var headers = contentType == null ? null : new NameValueCollection { { "Content-Type", contentType } };
