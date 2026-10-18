@@ -85,18 +85,7 @@ namespace Redmine.Net.Api
                 : MimeFormat.Json;
             
             RedmineApiUrls = new RedmineApiUrls(Serializer.Format);
-    #if NET45_OR_GREATER || NETCOREAPP
-            if (_redmineManagerOptions.WebClientOptions is RedmineWebClientOptions)
-            {
-                ApiClient = new InternalRedmineApiWebClient(_redmineManagerOptions);
-            }
-            else
-            {
-              
-            }
-    #else
             ApiClient = new InternalRedmineApiWebClient(_redmineManagerOptions);
-    #endif
         }
 
         /// <inheritdoc />
@@ -245,7 +234,7 @@ namespace Redmine.Net.Api
 
                     var tempResult = GetPaginatedInternal<T>(uri, requestOptions);
 
-                    totalCount = isLimitSet ? pageSize : tempResult.TotalItems;
+                    totalCount = isLimitSet ? pageSize : tempResult?.TotalItems ?? 0;
 
                     if (tempResult?.Items != null)
                     {
