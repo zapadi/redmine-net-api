@@ -53,6 +53,7 @@ namespace Redmine.Net.Api.Http;
 public sealed class HttpClientTransport : IRedmineTransport
 {
     private const string ContentTypeHeader = "Content-Type";
+    private const string ContentLengthHeader = "Content-Length";
     private const string UnknownErrorCode = "UNKNOWN";
     private const int BufferSize = 81920;
 
@@ -92,6 +93,10 @@ public sealed class HttpClientTransport : IRedmineTransport
         {
             throw MapHttpRequestException(exception);
         }
+        catch (IOException exception)
+        {
+            throw CreateTransientException(exception);
+        }
 #else
         return Task.Run(() => SendAsync(request, CancellationToken.None)).GetAwaiter().GetResult();
 #endif
@@ -121,6 +126,10 @@ public sealed class HttpClientTransport : IRedmineTransport
         {
             throw MapHttpRequestException(exception);
         }
+        catch (IOException exception) when (!cancellationToken.IsCancellationRequested)
+        {
+            throw CreateTransientException(exception);
+        }
     }
 
     private static HttpCompletionOption GetCompletionOption(RedmineTransportRequest request)
@@ -131,26 +140,28 @@ public sealed class HttpClientTransport : IRedmineTransport
     private static HttpRequestMessage CreateRequestMessage(RedmineTransportRequest request)
     {
         var message = new HttpRequestMessage(new HttpMethod(request.Method), request.Uri);
-        foreach (var name in request.Headers.AllKeys)
-        {
-            if (name is null || string.Equals(name, ContentTypeHeader, StringComparison.OrdinalIgnoreCase))
-            {
-                continue;
-            }
-
-            var values = request.Headers.GetValues(name);
-            if (values is { Length: > 0 } && values[values.Length - 1] is { } value)
-            {
-                message.Headers.TryAddWithoutValidation(name, value);
-            }
-        }
-
         if (request.Body is { } body)
         {
             message.Content = new ByteArrayContent(body);
             if (request.ContentType is { } contentType)
             {
                 message.Content.Headers.TryAddWithoutValidation(ContentTypeHeader, contentType);
+            }
+        }
+
+        foreach (var name in request.Headers.AllKeys)
+        {
+            if (name is null
+                || string.Equals(name, ContentTypeHeader, StringComparison.OrdinalIgnoreCase)
+                || string.Equals(name, ContentLengthHeader, StringComparison.OrdinalIgnoreCase))
+            {
+                continue;
+            }
+
+            var values = request.Headers.GetValues(name);
+            if (values is { Length: > 0 } && values[values.Length - 1] is { } value && !message.Headers.TryAddWithoutValidation(name, value))
+            {
+                message.Content?.Headers.TryAddWithoutValidation(name, value);
             }
         }
 
@@ -243,19 +254,33 @@ public sealed class HttpClientTransport : IRedmineTransport
         return new TimeoutException("The request timed out.", exception);
     }
 
+    private static RedmineApiException CreateTransientException(Exception exception)
+    {
+        return new RedmineApiException(exception.Message, exception, UnknownErrorCode, true);
+    }
+
     private static Exception MapHttpRequestException(HttpRequestException exception)
     {
+        var isTransient = false;
         for (var inner = exception.InnerException; inner != null; inner = inner.InnerException)
         {
             switch (inner)
             {
                 case WebException webException:
                     return webException;
-                case SocketException:
-                    return new RedmineApiException(exception.Message, exception, UnknownErrorCode, true);
+                case SocketException socketException:
+                    return new RedmineApiException(exception.Message, exception, UnknownErrorCode, !IsNameResolutionFailure(socketException.SocketErrorCode));
+                case IOException:
+                    isTransient = true;
+                    break;
             }
         }
 
-        return new RedmineApiException(exception.Message, exception, UnknownErrorCode, false);
+        return new RedmineApiException(exception.Message, exception, UnknownErrorCode, isTransient);
+    }
+
+    private static bool IsNameResolutionFailure(SocketError error)
+    {
+        return error is SocketError.HostNotFound or SocketError.NoData;
     }
 }

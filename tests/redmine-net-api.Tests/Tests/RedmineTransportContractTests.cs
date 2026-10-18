@@ -135,6 +135,19 @@ public abstract class RedmineTransportContractTests
     [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
+    public async Task Content_Headers_Should_Be_Sent_With_Body(bool async)
+    {
+        using var server = new TestHttpServer(_ => new TestHttpResponse());
+        var transport = CreateTransport(server.Url, userAgent: "agent");
+
+        await SendAsync(transport, Request(HttpVerbs.POST, server.Url + "projects.xml", Headers("Content-Language", "ro"), "application/xml", [1]), async);
+
+        AssertHeaders(new Dictionary<string, string> { { "User-Agent", "agent" }, { "Content-Type", "application/xml" }, { "Content-Language", "ro" } }, Assert.Single(server.Requests));
+    }
+
+    [Theory(Timeout = Constants.TestTimeout)]
+    [InlineData(false)]
+    [InlineData(true)]
     public async Task Delete_Without_Body_Should_Send_Empty_Body(bool async)
     {
         using var server = new TestHttpServer(_ => new TestHttpResponse());

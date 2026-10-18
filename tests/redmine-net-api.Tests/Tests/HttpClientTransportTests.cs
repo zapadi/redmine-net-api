@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Sockets;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -39,9 +40,10 @@ public sealed class HttpClientTransportTests : IDisposable
         return server;
     }
 
-    private RedmineManager Manager(string url, TimeSpan? timeout = null, Action<HttpClient> configure = null)
+    private RedmineManager Manager(string url, TimeSpan? timeout = null, Action<HttpClient> configure = null, HttpMessageHandler handler = null)
     {
-        var client = new HttpClient { Timeout = timeout ?? TimeSpan.FromSeconds(10) };
+        var client = handler == null ? new HttpClient() : new HttpClient(handler);
+        client.Timeout = timeout ?? TimeSpan.FromSeconds(10);
         _disposables.Add(client);
         configure?.Invoke(client);
         return new RedmineManager(new RedmineManagerOptionsBuilder()
@@ -263,6 +265,59 @@ public sealed class HttpClientTransportTests : IDisposable
         Assert.Equal("UNKNOWN", exception.ErrorCode);
     }
 
+    [Fact(Timeout = Constants.TestTimeout)]
+    public async Task Name_Resolution_Failure_Should_Throw_Non_Transient_Exception()
+    {
+        var manager = Manager("http://nonexistent.invalid/");
+
+        var exception = await Bounded(Assert.ThrowsAsync<RedmineApiException>(() => manager.GetAsync<Project>("1", cancellationToken: TestContext.Current.CancellationToken)));
+
+        Assert.False(exception.IsTransient);
+        Assert.Null(exception.HttpStatusCode);
+        Assert.Equal("GET", exception.Method);
+        Assert.Equal("UNKNOWN", exception.ErrorCode);
+    }
+
+    [Theory(Timeout = Constants.TestTimeout)]
+    [InlineData(false, SocketError.HostNotFound, false)]
+    [InlineData(true, SocketError.HostNotFound, false)]
+    [InlineData(false, SocketError.NoData, false)]
+    [InlineData(true, SocketError.NoData, false)]
+    [InlineData(false, SocketError.TryAgain, true)]
+    [InlineData(true, SocketError.ConnectionRefused, true)]
+    public async Task Socket_Error_Should_Be_Transient_Unless_Name_Resolution_Failed(bool async, SocketError error, bool isTransient)
+    {
+        var manager = Manager("http://localhost:3000/", handler: new ThrowingHandler(new HttpRequestException("failed", new SocketException((int)error))));
+
+        var exception = await CatchAsync(async, () => manager.Get<Project>("1"), () => manager.GetAsync<Project>("1", cancellationToken: TestContext.Current.CancellationToken));
+
+        Assert.Equal(isTransient, exception.IsTransient);
+        Assert.Null(exception.HttpStatusCode);
+        Assert.Equal("GET", exception.Method);
+        Assert.Equal("UNKNOWN", exception.ErrorCode);
+    }
+
+    [Theory(Timeout = Constants.TestTimeout)]
+    [InlineData(false, false)]
+    [InlineData(true, false)]
+    [InlineData(false, true)]
+    [InlineData(true, true)]
+    public async Task Connection_Reset_While_Reading_Body_Should_Throw_Transient_Exception(bool async, bool download)
+    {
+        var server = Server(_ => new TestHttpResponse { ContentType = "application/xml", Body = Encoding.UTF8.GetBytes("<project>"), ContentLength = 1024, AbortAfterBody = true });
+        var manager = Manager(server.Url);
+        var ct = TestContext.Current.CancellationToken;
+
+        var exception = download
+            ? await CatchAsync(async, () => manager.DownloadFile("attachments/download/1/a.bin"), () => manager.DownloadFileAsync("attachments/download/1/a.bin", cancellationToken: ct))
+            : await CatchAsync(async, () => manager.Get<Project>("1"), () => manager.GetAsync<Project>("1", cancellationToken: ct));
+
+        Assert.True(exception.IsTransient);
+        Assert.Null(exception.HttpStatusCode);
+        Assert.Equal("GET", exception.Method);
+        Assert.Equal("UNKNOWN", exception.ErrorCode);
+    }
+
     [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
@@ -318,6 +373,21 @@ public sealed class HttpClientTransportTests : IDisposable
         var headers = Assert.Single(server.Requests).Headers;
         Assert.Equal("default", headers["X-Default"]);
         Assert.Equal("secret", headers["X-Redmine-API-Key"]);
+    }
+
+    private sealed class ThrowingHandler(Exception exception) : HttpMessageHandler
+    {
+#if NET5_0_OR_GREATER
+        protected override HttpResponseMessage Send(HttpRequestMessage request, CancellationToken cancellationToken)
+        {
+            throw exception;
+        }
+#endif
+
+        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        {
+            return Task.FromException<HttpResponseMessage>(exception);
+        }
     }
 
     private sealed class RecordingProgress : IProgress<int>
