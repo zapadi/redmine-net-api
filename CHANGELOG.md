@@ -32,7 +32,7 @@
 *	Fixed custom IRedmineWebClientOptions implementations not working
 *	Unexpected request cancellation now throws instead of returning an empty result
 *	Sync DownloadFile accepts absolute URLs (e.g. attachment ContentUrl), resolves relative addresses against the base address like WebClient, and no longer deadlocks on UI threads
-*	WebClientOptions.Timeout now also applies to async API calls on .NET Framework (not to downloads)
+*	WebClientOptions.Timeout now also bounds async API calls on .NET Framework; downloads are not cut off while reading the response body
 *	Creating a RedmineManager no longer resets ServicePointManager.CheckCertificateRevocationList
 *	Fixed obsolete async GetCurrentUserAsync and CountAsync ignoring their arguments
 *	Empty responses now return null instead of throwing
