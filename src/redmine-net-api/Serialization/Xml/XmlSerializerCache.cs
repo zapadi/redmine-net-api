@@ -16,7 +16,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Serialization
@@ -42,6 +41,16 @@ namespace Redmine.Net.Api.Serialization
 		{
 			syncRoot = new object();
 			serializers = new Dictionary<string, XmlSerializer>();		
+		}
+
+		/// <summary>
+		/// Get an XmlSerializer instance for the specified type.
+		/// </summary>
+		/// <param name="type"></param>
+		/// <returns></returns>
+		public XmlSerializer GetSerializer(Type type)
+		{
+			return GetSerializer(type, null, EmptyTypes, null, null);
 		}
 
 		/// <summary>
@@ -121,26 +130,14 @@ namespace Redmine.Net.Api.Serialization
 		{
 			var key = CacheKeyFactory.Create(type, overrides, types, root, defaultNamespace);
 
-			XmlSerializer serializer = null;
 			lock (syncRoot)
 			{
-				if (serializers.ContainsKey(key) == false)
+				if (!serializers.TryGetValue(key, out var serializer))
 				{
-					lock (syncRoot)
-					{
-						if (serializers.ContainsKey(key) == false)
-						{
-							serializer = new XmlSerializer(type, overrides, types, root, defaultNamespace);
-							serializers.Add(key, serializer);
-						} 
-					} 
-				} 
-				else
-				{
-					serializer = serializers[key];
+					serializer = new XmlSerializer(type, overrides, types, root, defaultNamespace);
+					serializers.Add(key, serializer);
 				}
 
-				Debug.Assert(serializer != null);
 				return serializer;
 			}
 		}
