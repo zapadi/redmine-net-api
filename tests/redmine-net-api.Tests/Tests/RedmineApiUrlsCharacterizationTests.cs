@@ -63,8 +63,8 @@ public sealed class RedmineApiUrlsCharacterizationTests
         { typeof(File), "p-1", "projects/p-1/files.xml" },
         { typeof(Upload), null, "uploads.xml" },
         { typeof(Upload), "a.txt", "uploads.xml?filename=a.txt" },
-        { typeof(Attachment), "12", "/attachments/issues/12.xml" },
-        { typeof(Attachments), "12", "/attachments/issues/12.xml" },
+        { typeof(Attachment), "12", "attachments/issues/12.xml" },
+        { typeof(Attachments), "12", "attachments/issues/12.xml" },
     };
 
     [Theory]
@@ -114,11 +114,11 @@ public sealed class RedmineApiUrlsCharacterizationTests
     public void Owner_Fragments_Characterization()
     {
         Assert.Equal("projects/p-1/files.xml", Xml.ProjectFilesFragment("p-1"));
-        Assert.Equal("/attachments/issues/12.xml", Xml.IssueAttachmentFragment("12"));
+        Assert.Equal("attachments/issues/12.xml", Xml.IssueAttachmentFragment("12"));
         Assert.Equal("projects/p-1/news.xml", Xml.ProjectParentFragment("p-1", "news"));
         Assert.Equal("issues/12/watchers.xml", Xml.IssueParentFragment("12", "watchers"));
-        Assert.Equal("/attachments/issues/12.xml", Xml.PatchFragment(typeof(Attachment), "12"));
-        Assert.Equal("/attachments/issues/12.xml", Xml.PatchFragment(typeof(Attachments), "12"));
+        Assert.Equal("attachments/issues/12.xml", Xml.PatchFragment(typeof(Attachment), "12"));
+        Assert.Equal("attachments/issues/12.xml", Xml.PatchFragment(typeof(Attachments), "12"));
         Assert.Equal("uploads.xml", Xml.UploadFragment());
         Assert.Equal("uploads.xml?filename=a%20b%26c.txt", Xml.UploadFragment("a b&c.txt"));
     }

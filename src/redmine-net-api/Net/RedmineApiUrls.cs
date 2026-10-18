@@ -76,7 +76,7 @@ namespace Redmine.Net.Api.Net
                 throw new RedmineException("The issue id is mandatory!");
             }
 
-            return $"/{RedmineKeys.ATTACHMENTS}/{RedmineKeys.ISSUES}/{issueId}.{Format}";
+            return $"{RedmineKeys.ATTACHMENTS}/{RedmineKeys.ISSUES}/{issueId}.{Format}";
         }
         
         public string ProjectParentFragment(string projectId, string mapTypeFragment)

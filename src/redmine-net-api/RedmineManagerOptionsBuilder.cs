@@ -415,9 +415,9 @@ namespace Redmine.Net.Api
                     uriBuilder.Scheme = uri.Scheme;
                     uriBuilder.Port = int.TryParse(uri.LocalPath, out var port) ? port : uri.Port;
                     uriBuilder.Host = uri.Host;
-                    if (!uri.LocalPath.IsNullOrWhiteSpace() && !uri.LocalPath.Contains("."))
+                    if (!uri.LocalPath.IsNullOrWhiteSpace())
                     {
-                        uriBuilder.Path = uri.LocalPath;
+                        uriBuilder.Path = GetBasePath(uri.LocalPath);
                     }
                 }
             }
@@ -430,6 +430,18 @@ namespace Redmine.Net.Api
             {
                 throw new RedmineException(ex.Message);
             }
+        }
+
+        private static string GetBasePath(string path)
+        {
+            var lastSegmentStart = path.LastIndexOf('/') + 1;
+            var lastSegment = path.Substring(lastSegmentStart);
+            if (lastSegment.EndsWith(".xml", StringComparison.OrdinalIgnoreCase) || lastSegment.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
+            {
+                path = path.Substring(0, lastSegmentStart);
+            }
+
+            return path.EndsWith("/", StringComparison.Ordinal) ? path : path + "/";
         }
 
         private static bool IsSchemaHttpOrHttps(string scheme)

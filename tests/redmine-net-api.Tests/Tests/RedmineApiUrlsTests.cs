@@ -330,7 +330,7 @@ public class RedmineApiUrlsTests(RedmineApiUrlsFixture fixture) : IClassFixture<
             
             { typeof(File), "project1", "projects/project1/files.{0}" },
             { typeof(Upload), null, "uploads.{0}" },
-            { typeof(Attachment), "issue1", "/attachments/issues/issue1.{0}" },
+            { typeof(Attachment), "issue1", "attachments/issues/issue1.{0}" },
             
             { typeof(Issue), null, "issues.{0}" },
             { typeof(Project), null, "projects.{0}" },
