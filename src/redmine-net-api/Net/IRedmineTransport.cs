@@ -14,6 +14,7 @@
    limitations under the License.
 */
 
+#nullable enable
 #if !(NET20)
 using System.Threading;
 using System.Threading.Tasks;
