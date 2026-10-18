@@ -115,7 +115,7 @@ namespace Redmine.Net.Api.Types
 
                     case RedmineKeys.OLD_VALUE: OldValue = reader.ReadElementContentAsString(); break;
 
-                    default: reader.Read(); break;
+                    default: reader.Skip(); break;
                 }
             }
         }
@@ -162,7 +162,7 @@ namespace Redmine.Net.Api.Types
 
                     case RedmineKeys.OLD_VALUE: OldValue = reader.ReadAsString(); break;
 
-                    default: reader.Read(); break;
+                    default: reader.Skip(); break;
                 }
             }
         }

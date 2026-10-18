@@ -132,7 +132,7 @@ namespace Redmine.Net.Api.Types
                         
                         break;
                     }
-                    default: reader.Read(); break;
+                    default: reader.Skip(); break;
                 }
             }
         }
@@ -201,7 +201,7 @@ namespace Redmine.Net.Api.Types
                         }
 
                         break;
-                    default: reader.Read(); break;
+                    default: reader.Skip(); break;
                 }
             }
         }

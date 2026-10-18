@@ -83,7 +83,7 @@ namespace Redmine.Net.Api.Types
                 {
                     case RedmineKeys.LABEL: Label = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.VALUE: Value = reader.ReadElementContentAsString(); break;
-                    default: reader.Read(); break;
+                    default: reader.Skip(); break;
                 }
             }
         }
@@ -120,7 +120,7 @@ namespace Redmine.Net.Api.Types
                 {
                     case RedmineKeys.LABEL: Label = reader.ReadAsString(); break;
                     case RedmineKeys.VALUE: Value = reader.ReadAsString(); break;
-                    default: reader.Read(); break;
+                    default: reader.Skip(); break;
                 }
             }
         }

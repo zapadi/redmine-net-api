@@ -124,7 +124,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.TOKEN: Token = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.VERSION: Version = new IdentifiableName(reader); break;
                     case RedmineKeys.VERSION_ID: Version = IdentifiableName.Create<IdentifiableName>(reader.ReadElementContentAsInt()); break;
-                    default: reader.Read(); break;
+                    default: reader.Skip(); break;
                 }
             }
         }
@@ -176,7 +176,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.TOKEN: Token = reader.ReadAsString(); break;
                     case RedmineKeys.VERSION: Version = new IdentifiableName(reader); break;
                     case RedmineKeys.VERSION_ID: Version = IdentifiableName.Create<IdentifiableName>(reader.ReadAsInt32().GetValueOrDefault()); break;
-                    default: reader.Read(); break;
+                    default: reader.Skip(); break;
                 }
             }
         }

@@ -118,7 +118,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.LAST_NAME: LastName = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.LOGIN: Login = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.MAIL: Email = reader.ReadElementContentAsString(); break;
-                    default: reader.Read(); break;
+                    default: reader.Skip(); break;
                 }
             }
         }
@@ -162,7 +162,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.LAST_NAME: LastName = reader.ReadAsString(); break;
                     case RedmineKeys.LOGIN: Login = reader.ReadAsString(); break;
                     case RedmineKeys.MAIL: Email = reader.ReadAsString(); break;
-                    default: reader.Read(); break;
+                    default: reader.Skip(); break;
                 }
             }
         }

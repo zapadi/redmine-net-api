@@ -314,7 +314,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.TRACKER: Tracker = new IdentifiableName(reader); break;
                     case RedmineKeys.UPDATED_ON: UpdatedOn = reader.ReadElementContentAsNullableDateTime(); break;
                     case RedmineKeys.WATCHERS: Watchers = reader.ReadElementContentAsCollection<Watcher>(); break;
-                    default: reader.Read(); break;
+                    default: reader.Skip(); break;
                 }
             }
         }
@@ -413,7 +413,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.TRACKER: Tracker = new IdentifiableName(reader); break;
                     case RedmineKeys.UPDATED_ON: UpdatedOn = reader.ReadAsDateTime(); break;
                     case RedmineKeys.WATCHERS: Watchers = reader.ReadAsCollection<Watcher>(); break;
-                    default: reader.Read(); break;
+                    default: reader.Skip(); break;
                 }
             }
         }

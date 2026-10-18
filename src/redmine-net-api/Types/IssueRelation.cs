@@ -100,7 +100,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.ISSUE_ID: IssueId = reader.ReadElementContentAsInt(); break;
                     case RedmineKeys.ISSUE_TO_ID: IssueToId = reader.ReadElementContentAsInt(); break;
                     case RedmineKeys.RELATION_TYPE: Type = ReadIssueRelationType(reader.ReadElementContentAsString()); break;
-                    default: reader.Read(); break;
+                    default: reader.Skip(); break;
                 }
             }
         }

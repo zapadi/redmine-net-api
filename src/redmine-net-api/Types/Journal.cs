@@ -116,7 +116,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.PRIVATE_NOTES: PrivateNotes = reader.ReadElementContentAsBoolean(); break;
                     case RedmineKeys.USER: User = new IdentifiableName(reader); break;
                     case RedmineKeys.UPDATED_BY: UpdatedBy = new IdentifiableName(reader); break;
-                    default: reader.Read(); break;
+                    default: reader.Skip(); break;
                 }
             }
         }
@@ -158,7 +158,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.PRIVATE_NOTES: PrivateNotes = reader.ReadAsBool(); break;
                     case RedmineKeys.USER: User = new IdentifiableName(reader); break;
                     case RedmineKeys.UPDATED_BY: UpdatedBy = new IdentifiableName(reader); break;
-                    default: reader.Read(); break;
+                    default: reader.Skip(); break;
                 }
             }
         }

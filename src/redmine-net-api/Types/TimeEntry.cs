@@ -138,7 +138,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.SPENT_ON: SpentOn = reader.ReadElementContentAsNullableDateTime(); break;
                     case RedmineKeys.UPDATED_ON: UpdatedOn = reader.ReadElementContentAsNullableDateTime(); break;
                     case RedmineKeys.USER: User = new IdentifiableName(reader); break;
-                    default: reader.Read(); break;
+                    default: reader.Skip(); break;
                 }
             }
         }
@@ -195,7 +195,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.SPENT_ON: SpentOn = reader.ReadAsDateTime(); break;
                     case RedmineKeys.UPDATED_ON: UpdatedOn = reader.ReadAsDateTime(); break;
                     case RedmineKeys.USER: User = new IdentifiableName(reader); break;
-                    default: reader.Read(); break;
+                    default: reader.Skip(); break;
                 }
             }
         }

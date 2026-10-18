@@ -128,7 +128,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.WIKI_PAGE_TITLE: WikiPageTitle = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.ESTIMATED_HOURS: EstimatedHours = reader.ReadElementContentAsNullableFloat(); break;
                     case RedmineKeys.SPENT_HOURS: SpentHours = reader.ReadElementContentAsNullableFloat(); break;
-                    default: reader.Read(); break;
+                    default: reader.Skip(); break;
                 }
             }
         }
@@ -196,7 +196,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.SPENT_HOURS: SpentHours = (float?)reader.ReadAsDouble(); break;
                     
                     
-                    default: reader.Read(); break;
+                    default: reader.Skip(); break;
                 }
             }
         }

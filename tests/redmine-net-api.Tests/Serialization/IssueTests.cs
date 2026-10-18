@@ -332,9 +332,7 @@ public class IssueTests(XmlPrettyPrintFixture _) : IClassFixture<XmlPrettyPrintF
         {
             const string json = """
                                 {
-                                  "issues": {
-                                    "total_count": 1640,
-                                    "items": [
+                                  "issues": [
                                       {
                                         "id": 4326,
                                         "project": { "id": 1, "name": "Redmine" },
@@ -358,8 +356,7 @@ public class IssueTests(XmlPrettyPrintFixture _) : IClassFixture<XmlPrettyPrintF
                                         "changesets": [],
                                         "custom_fields": []
                                       }
-                                    ]
-                                  }
+                                  ]
                                 }
                                 """;
 
@@ -409,9 +406,7 @@ public class IssueTests(XmlPrettyPrintFixture _) : IClassFixture<XmlPrettyPrintF
         {
             const string json = """
                                 {
-                                  "issues": {
-                                    "count": 1640,
-                                    "items": [
+                                  "issues": [
                                       {
                                         "id": 4326,
                                         "project": { "id": 1, "name": "Redmine" },
@@ -444,8 +439,7 @@ public class IssueTests(XmlPrettyPrintFixture _) : IClassFixture<XmlPrettyPrintF
                                           { "id": 2, "name": "Resolution", "value": "Fixed" }
                                         ]
                                       }
-                                    ]
-                                  }
+                                  ]
                                 }
                                 """;
 

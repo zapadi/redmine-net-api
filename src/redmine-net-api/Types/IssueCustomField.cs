@@ -186,6 +186,11 @@ namespace Redmine.Net.Api.Types
                     return;
                 }
 
+                if (reader.TokenType != JsonToken.PropertyName)
+                {
+                    continue;
+                }
+
                 switch (reader.Value)
                 {
                     case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
@@ -204,6 +209,7 @@ namespace Redmine.Net.Api.Types
                                 break;
                         }
                         break;
+                    default: reader.Skip(); break;
                 }
             }
         }

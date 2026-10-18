@@ -95,7 +95,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.DESCRIPTION: Description = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.FILE_NAME: FileName = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.TOKEN: Token = reader.ReadElementContentAsString(); break;
-                    default: reader.Read(); break;
+                    default: reader.Skip(); break;
                 }
             }
         }
@@ -139,7 +139,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.DESCRIPTION: Description = reader.ReadAsString(); break;
                     case RedmineKeys.FILE_NAME: FileName = reader.ReadAsString(); break;
                     case RedmineKeys.TOKEN: Token = reader.ReadAsString(); break;
-                    default: reader.Read(); break;
+                    default: reader.Skip(); break;
                 }
             }
         }

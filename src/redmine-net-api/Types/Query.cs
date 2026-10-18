@@ -67,7 +67,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.IS_PUBLIC: IsPublic = reader.ReadElementContentAsBoolean(); break;
                     case RedmineKeys.NAME: Name = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.PROJECT_ID: ProjectId = reader.ReadElementContentAsNullableInt(); break;
-                    default: reader.Read(); break;
+                    default: reader.Skip(); break;
                 }
             }
         }
@@ -99,7 +99,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.IS_PUBLIC: IsPublic = reader.ReadAsBool(); break;
                     case RedmineKeys.NAME: Name = reader.ReadAsString(); break;
                     case RedmineKeys.PROJECT_ID: ProjectId = reader.ReadAsInt32(); break;
-                    default: reader.Read(); break;
+                    default: reader.Skip(); break;
                 }
             }
         }

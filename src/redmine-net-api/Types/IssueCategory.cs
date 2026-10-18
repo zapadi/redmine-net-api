@@ -79,7 +79,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.ASSIGNED_TO: AssignTo = new IdentifiableName(reader); break;
                     case RedmineKeys.NAME: Name = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.PROJECT: Project = new IdentifiableName(reader); break;
-                    default: reader.Read(); break;
+                    default: reader.Skip(); break;
                 }
             }
         }
@@ -120,7 +120,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.ASSIGNED_TO: AssignTo = new IdentifiableName(reader); break;
                     case RedmineKeys.NAME: Name = reader.ReadAsString(); break;
                     case RedmineKeys.PROJECT: Project = new IdentifiableName(reader); break;
-                    default: reader.Read(); break;
+                    default: reader.Skip(); break;
                 }
             }
         }

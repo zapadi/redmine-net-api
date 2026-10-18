@@ -75,7 +75,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.URL: Url = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.TYPE: Type = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.TITLE: Title = reader.ReadElementContentAsString(); break;
-                    default: reader.Read(); break;
+                    default: reader.Skip(); break;
                 }
             }
         }
@@ -113,7 +113,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.URL: Url = reader.ReadAsString(); break;
                     case RedmineKeys.TYPE: Type = reader.ReadAsString(); break;
                     case RedmineKeys.TITLE: Title = reader.ReadAsString(); break;
-                    default: reader.Read(); break;
+                    default: reader.Skip(); break;
                 }
             }
         }

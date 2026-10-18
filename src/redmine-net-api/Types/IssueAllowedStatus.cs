@@ -61,7 +61,7 @@ namespace Redmine.Net.Api.Types
                         case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
                         case RedmineKeys.NAME: Name = reader.ReadAsString(); break;
                         case RedmineKeys.IS_CLOSED: IsClosed = reader.ReadAsBoolean(); break;
-                        default: reader.Read(); break;
+                        default: reader.Skip(); break;
                     }
                 }
             }

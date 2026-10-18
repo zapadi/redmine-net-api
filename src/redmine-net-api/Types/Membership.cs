@@ -77,7 +77,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.PROJECT: Project = new IdentifiableName(reader); break;
                     case RedmineKeys.USER: User = new IdentifiableName(reader); break;
                     case RedmineKeys.ROLES: Roles = reader.ReadElementContentAsCollection<MembershipRole>(); break;
-                    default: reader.Read(); break;
+                    default: reader.Skip(); break;
                 }
             }
         }
@@ -109,7 +109,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.PROJECT: Project = new IdentifiableName(reader); break;
                     case RedmineKeys.USER: User = new IdentifiableName(reader); break;
                     case RedmineKeys.ROLES: Roles = reader.ReadAsCollection<MembershipRole>(); break;
-                    default: reader.Read(); break;
+                    default: reader.Skip(); break;
                 }
             }
         }

@@ -76,7 +76,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.SUBJECT: Subject = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.TRACKER: Tracker = new IdentifiableName(reader); break;
                     case RedmineKeys.CHILDREN: Children = reader.ReadElementContentAsCollection<Issue>(); break;
-                    default: reader.Read(); break;
+                    default: reader.Skip(); break;
                 }
             }
         }
@@ -107,7 +107,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.SUBJECT: Subject = reader.ReadAsString(); break;
                     case RedmineKeys.TRACKER: Tracker = new IdentifiableName(reader); break;
                     case RedmineKeys.CHILDREN: Children = reader.ReadAsCollection<Issue>(); break;
-                    default: reader.Read(); break;
+                    default: reader.Skip(); break;
                 }
             }
         }

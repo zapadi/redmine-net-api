@@ -88,7 +88,7 @@ namespace Redmine.Net.Api.Types
 
                     case RedmineKeys.USER: User = new IdentifiableName(reader); break;
 
-                    default: reader.Read(); break;
+                    default: reader.Skip(); break;
                 }
             }
         }
@@ -129,7 +129,7 @@ namespace Redmine.Net.Api.Types
 
                     case RedmineKeys.USER: User = new IdentifiableName(reader); break;
 
-                    default: reader.Read(); break;
+                    default: reader.Skip(); break;
                 }
             }
         }

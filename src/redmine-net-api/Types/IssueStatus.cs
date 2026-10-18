@@ -127,7 +127,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.IS_CLOSED: IsClosed = reader.ReadElementContentAsBoolean(); break;
                     case RedmineKeys.IS_DEFAULT: IsDefault = reader.ReadElementContentAsBoolean(); break;
                     case RedmineKeys.NAME: Name = reader.ReadElementContentAsString(); break;
-                    default: reader.Read(); break;
+                    default: reader.Skip(); break;
                 }
             }
         }
@@ -158,7 +158,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.IS_CLOSED: IsClosed = reader.ReadAsBool(); break;
                     case RedmineKeys.IS_DEFAULT: IsDefault = reader.ReadAsBool(); break;
                     case RedmineKeys.NAME: Name = reader.ReadAsString(); break;
-                    default: reader.Read(); break;
+                    default: reader.Skip(); break;
                 }
             }
         }
