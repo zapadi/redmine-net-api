@@ -60,7 +60,7 @@ namespace Redmine.Net.Api.Net.WebClient
 
                 if (webClient.BaseAddress.IsNullOrWhiteSpace())
                 {
-                    webClient.BaseAddress = redmineManagerOptions.BaseAddress.ToString();
+                    webClient.BaseAddress = redmineManagerOptions.BaseAddress?.ToString();
                 }
 
                 return webClient;
@@ -285,10 +285,10 @@ namespace Redmine.Net.Api.Net.WebClient
                     context.Data = e.Error == null && !e.Cancelled ? e.Result : null;
                     context.Error = e.Error;
 
-                    context.Client.DownloadDataCompleted -= context.CompletedHandler;
+                    wc.DownloadDataCompleted -= context.CompletedHandler;
                     if (context.ProgressHandler != null)
                     {
-                        context.Client.DownloadProgressChanged -= context.ProgressHandler;
+                        wc.DownloadProgressChanged -= context.ProgressHandler;
                     }
 
                     done.Set();

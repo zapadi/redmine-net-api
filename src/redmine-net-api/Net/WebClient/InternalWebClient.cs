@@ -31,7 +31,7 @@ internal sealed class InternalWebClient : System.Net.WebClient
     {
         _webClientOptions = redmineManagerOptions.WebClientOptions;
         _serverCertificateValidationCallback = redmineManagerOptions.ServerCertificateValidationCallback;
-        BaseAddress = redmineManagerOptions.BaseAddress.ToString();
+        BaseAddress = redmineManagerOptions.BaseAddress?.ToString();
     }
     #pragma warning restore SYSLIB0014
 

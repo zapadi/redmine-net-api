@@ -377,7 +377,12 @@ namespace Redmine.Net.Api.Net
             var headers = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
             foreach (var key in responseHeaders.AllKeys)
             {
-                headers[key] = responseHeaders[key];
+                if (key == null)
+                {
+                    continue;
+                }
+
+                headers[key] = responseHeaders[key] ?? string.Empty;
             }
 
             return headers;
