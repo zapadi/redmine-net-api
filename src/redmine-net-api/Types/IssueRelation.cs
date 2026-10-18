@@ -203,7 +203,7 @@ namespace Redmine.Net.Api.Types
                 return IssueRelationType.CopiedFrom;
             }
 
-            return EnumHelper.Parse<IssueRelationType> (value, true);
+            return EnumHelper.ParseOrDefault<IssueRelationType>(value, true);
         }
         
         #endregion

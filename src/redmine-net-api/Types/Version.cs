@@ -122,8 +122,8 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.DUE_DATE: DueDate = reader.ReadElementContentAsNullableDateTime(); break;
                     case RedmineKeys.NAME: Name = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.PROJECT: Project = new IdentifiableName(reader); break;
-                    case RedmineKeys.SHARING: Sharing = EnumHelper.Parse<VersionSharing>(reader.ReadElementContentAsString(), true); break;
-                    case RedmineKeys.STATUS: Status = EnumHelper.Parse<VersionStatus>(reader.ReadElementContentAsString(), true); break;
+                    case RedmineKeys.SHARING: Sharing = EnumHelper.ParseOrDefault<VersionSharing>(reader.ReadElementContentAsString(), true); break;
+                    case RedmineKeys.STATUS: Status = EnumHelper.ParseOrDefault<VersionStatus>(reader.ReadElementContentAsString(), true); break;
                     case RedmineKeys.UPDATED_ON: UpdatedOn = reader.ReadElementContentAsNullableDateTime(); break;
                     case RedmineKeys.WIKI_PAGE_TITLE: WikiPageTitle = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.ESTIMATED_HOURS: EstimatedHours = reader.ReadElementContentAsNullableFloat(); break;
@@ -188,8 +188,8 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.DUE_DATE: DueDate = reader.ReadAsDateTime(); break;
                     case RedmineKeys.NAME: Name = reader.ReadAsString(); break;
                     case RedmineKeys.PROJECT: Project = new IdentifiableName(reader); break;
-                    case RedmineKeys.SHARING: Sharing = EnumHelper.Parse<VersionSharing>(reader.ReadAsString(), true); break;
-                    case RedmineKeys.STATUS: Status = EnumHelper.Parse<VersionStatus>(reader.ReadAsString(), true); break;
+                    case RedmineKeys.SHARING: Sharing = EnumHelper.ParseOrDefault<VersionSharing>(reader.ReadAsString(), true); break;
+                    case RedmineKeys.STATUS: Status = EnumHelper.ParseOrDefault<VersionStatus>(reader.ReadAsString(), true); break;
                     case RedmineKeys.UPDATED_ON: UpdatedOn = reader.ReadAsDateTime(); break;
                     case RedmineKeys.WIKI_PAGE_TITLE: WikiPageTitle = reader.ReadAsString(); break;
                     case RedmineKeys.ESTIMATED_HOURS: EstimatedHours = (float?)reader.ReadAsDouble(); break;

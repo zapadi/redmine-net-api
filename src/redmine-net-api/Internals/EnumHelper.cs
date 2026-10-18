@@ -14,12 +14,12 @@ internal static class EnumHelper
     /// <param name="ignoreCase"></param>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    public static T Parse<T>(string value, bool ignoreCase) where T : struct
+    public static T ParseOrDefault<T>(string value, bool ignoreCase) where T : struct
     {
-#if NETFRAMEWORK
+#if NET20
         return (T)Enum.Parse(typeof(T), value, ignoreCase);
 #else
-        return Enum.Parse<T>(value, ignoreCase);
+        return Enum.TryParse(value, ignoreCase, out T result) ? result : default;
 #endif
     }
 }
