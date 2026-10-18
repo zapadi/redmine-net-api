@@ -102,7 +102,7 @@ namespace Redmine.Net.Api.Types
         /// <param name="reader"></param>
         public override void ReadXml(XmlReader reader)
         {
-            if (reader.HasAttributes && reader.Name == "status")
+            if (reader.HasAttributes && reader.Name == RedmineKeys.STATUS)
             {
                 Id = reader.ReadAttributeAsInt(RedmineKeys.ID);
                 IsClosed = reader.ReadAttributeAsBoolean(RedmineKeys.IS_CLOSED);
