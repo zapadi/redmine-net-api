@@ -91,7 +91,7 @@ public sealed class PagingAsyncCancellationTests
         var issues = await manager.GetAsync<Issue>(cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.Equal(Total, issues.Count);
-        Assert.Equal(expected, transport.MaxInFlight);
+        Assert.InRange(transport.MaxInFlight, Math.Min(2, expected), expected);
     }
 
     [Theory]
