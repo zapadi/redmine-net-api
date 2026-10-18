@@ -198,6 +198,8 @@ dotnet add package redmine-api.http
 ```csharp
 using Redmine.Net.Api.Http;
 
+var httpClient = new HttpClient { Timeout = TimeSpan.FromSeconds(100) };
+
 var manager = new RedmineManager(new RedmineManagerOptionsBuilder()
     .WithHost("https://redmine.example.com")
     .WithApiKeyAuthentication("your-api-key")
@@ -207,7 +209,9 @@ var manager = new RedmineManager(new RedmineManagerOptionsBuilder()
 The `HttpClient` belongs to you: the library never disposes it, so reuse a long-lived instance. Timeouts, proxy,
 certificates, decompression and message handlers are configured on the `HttpClient` and its handler.
 `HttpClient.Timeout` covers the whole request, including the reading of a download's body. On .NET 5+ the
-synchronous API uses `HttpClient.Send`, which skips message handlers that override only `SendAsync`.
+synchronous API uses `HttpClient.Send`, which skips message handlers that override only `SendAsync` and needs a handler
+that supports synchronous sends: `SocketsHttpHandler` (the default) does, while custom handlers or HTTP/2-only setups
+may throw `NotSupportedException`, surfaced as a `RedmineApiException`. Prefer the async API in those cases.
 `HttpClient.DefaultRequestHeaders` are sent only when the request does not set the same header, so authentication,
 impersonation and `RequestOptions` headers always win. `WithHttpClient` cannot be combined with `WithWebClient` or
 `WithWebClientOptions`.
