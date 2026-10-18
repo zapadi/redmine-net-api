@@ -56,7 +56,7 @@
 *	Fixed PagedResults.TotalPages being one too many (now 0 when there are no items)
 *	Fixed async paging disposing its semaphore while page requests were still running on cancellation or error
 *	Fixed JSON paged results using unknown top-level properties as the item list (the first array property is the item list)
-*	Fixed NullReferenceException for hosts without scheme starting with "https" (e.g. httpsfoo.example)
+*	Simplified host parsing (validated by System.Uri): fixed NullReferenceException for hosts starting with "https" without scheme, IPv6 hosts now keep their port and path, and single-label hosts (e.g. "redmine", "localhost") are accepted
 *	VerifyServerCert no longer overwrites a user ServerCertificateValidationCallback and RedmineManager no longer mutates the caller's WebClientOptions; obsolete Proxy, Timeout and SecurityProtocolType are set for any IRedmineWebClientOptions
 
 🧪 Tests
