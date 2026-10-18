@@ -22,9 +22,11 @@ The repository ships two NuGet packages, each with its own [SemVer](https://semv
 
 Releases are automated with [release-please](https://github.com/googleapis/release-please) (`release-please-config.json`, `.release-please-manifest.json`):
 
-1. Every push to `master` updates a single release pull request. A package is included only if commits since its last release changed files in its folder: `fix` bumps the patch version, `feat` the minor version and a breaking change (`feat!:` or a `BREAKING CHANGE:` footer) the major version (the minor version while a package is below 1.0.0).
+1. Every push to `master` updates a single release pull request. A package is included only if commits since its last release changed files in its folder: `fix` bumps the patch version, `feat` the minor version and a breaking change (`feat!:` or a `BREAKING CHANGE:` footer) the major version (the minor version while a package is below 1.0.0). The first `redmine-api.http` release is 0.1.0. Changes outside the package folders (e.g. `Directory.Packages.props`, `src/Directory.Build.props`) do not trigger a release on their own.
 2. Merging the release pull request bumps `<Version>` in the csproj, tags each released package (e.g. `redmine-api-v4.66.0`), creates the GitHub releases and publishes those packages to NuGet.
 3. To force a version, add a `Release-As: x.y.z` footer to a commit that touches the package folder.
+
+The release pull request is opened with the workflow's `GITHUB_TOKEN`, so CI does not run on it automatically, and the repository setting "Allow GitHub Actions to create and approve pull requests" must be enabled.
 
 To publish manually, run the **Publish to NuGet** workflow on `master` and choose the package. It publishes the `<Version>` from the csproj and fails if that version is already on NuGet.
 
