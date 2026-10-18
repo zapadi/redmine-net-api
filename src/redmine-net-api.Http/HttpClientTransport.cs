@@ -22,6 +22,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Sockets;
+using System.Runtime.ExceptionServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Redmine.Net.Api.Exceptions;
@@ -282,7 +283,7 @@ public sealed class HttpClientTransport : IRedmineTransport
         return new RedmineApiException(exception.Message, exception, UnknownErrorCode, true);
     }
 
-    private static Exception MapHttpRequestException(HttpRequestException exception)
+    private static RedmineApiException MapHttpRequestException(HttpRequestException exception)
     {
         var isTransient = false;
         for (var inner = exception.InnerException; inner != null; inner = inner.InnerException)
@@ -290,7 +291,8 @@ public sealed class HttpClientTransport : IRedmineTransport
             switch (inner)
             {
                 case WebException webException:
-                    return webException;
+                    ExceptionDispatchInfo.Capture(webException).Throw();
+                    break;
                 case SocketException socketException:
                     return new RedmineApiException(exception.Message, exception, UnknownErrorCode, !IsNameResolutionFailure(socketException.SocketErrorCode));
                 case IOException:

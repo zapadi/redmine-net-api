@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Sockets;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -279,6 +280,32 @@ public sealed class HttpClientTransportTests : IDisposable
 
         Assert.Equal("The operation was canceled by the user.", exception.Message);
         Assert.False(exception.IsTransient);
+    }
+
+    [Theory(Timeout = Constants.TestTimeout)]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task WebException_Should_Keep_Its_Stack_Trace(bool async)
+    {
+        var manager = Manager("http://localhost:3000/", handler: new ThrowingHandler(new HttpRequestException("failed", CreateThrownWebException())));
+
+        var exception = await CatchAsync(async, () => manager.Get<Project>("1"), () => manager.GetAsync<Project>("1", cancellationToken: TestContext.Current.CancellationToken));
+
+        var webException = Assert.IsType<WebException>(exception.InnerException);
+        Assert.Contains(nameof(CreateThrownWebException), webException.StackTrace, StringComparison.Ordinal);
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static WebException CreateThrownWebException()
+    {
+        try
+        {
+            throw new WebException("failed", WebExceptionStatus.ConnectFailure);
+        }
+        catch (WebException exception)
+        {
+            return exception;
+        }
     }
 
     [Theory(Timeout = Constants.TestTimeout)]
