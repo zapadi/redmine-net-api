@@ -28,8 +28,13 @@
         <PackageReference Include="xunit.v3.extensibility.core" />
     </ItemGroup>
     
+    <ItemGroup Condition=" '$(TargetFrameworkIdentifier)' == '.NETFramework' ">
+        <Reference Include="System.Net.Http" />
+    </ItemGroup>
+
     <ItemGroup>
         <ProjectReference Include="..\..\src\redmine-net-api\redmine-net-api.csproj" />
+        <ProjectReference Include="..\..\src\redmine-net-api.Http\redmine-net-api.Http.csproj" />
     </ItemGroup>
     
 </Project>
