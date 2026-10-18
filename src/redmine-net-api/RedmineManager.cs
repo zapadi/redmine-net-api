@@ -58,21 +58,19 @@ namespace Redmine.Net.Api
             ArgumentNullThrowHelper.ThrowIfNull(optionsBuilder, nameof(optionsBuilder));
             
             _redmineManagerOptions = optionsBuilder.Build();
+            var webClientOptions = _redmineManagerOptions.WebClientOptions;
     #if NET45_OR_GREATER
-            if (_redmineManagerOptions.VerifyServerCert)
+            if (_redmineManagerOptions.VerifyServerCert && webClientOptions?.ServerCertificateValidationCallback == null)
             {
-                _redmineManagerOptions.WebClientOptions.ServerCertificateValidationCallback = RemoteCertValidate;
+                _redmineManagerOptions.ServerCertificateValidationCallback = RemoteCertValidate;
             }
     #endif
 
-            if (_redmineManagerOptions.WebClientOptions is RedmineWebClientOptions)
+            if (webClientOptions != null)
             {
-                Proxy = _redmineManagerOptions.WebClientOptions.Proxy;
-                Timeout = _redmineManagerOptions.WebClientOptions.Timeout;
-                SecurityProtocolType = _redmineManagerOptions.WebClientOptions.SecurityProtocolType.GetValueOrDefault();
-    #pragma warning disable SYSLIB0014
-                _redmineManagerOptions.WebClientOptions.SecurityProtocolType ??= ServicePointManager.SecurityProtocol;
-    #pragma warning restore SYSLIB0014
+                Proxy = webClientOptions.Proxy;
+                Timeout = webClientOptions.Timeout;
+                SecurityProtocolType = webClientOptions.SecurityProtocolType.GetValueOrDefault();
             }
             
             if (_redmineManagerOptions.Authentication is RedmineApiKeyAuthentication)

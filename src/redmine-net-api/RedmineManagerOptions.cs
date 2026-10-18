@@ -16,6 +16,7 @@
 
 using System;
 using System.Net;
+using System.Net.Security;
 using Redmine.Net.Api.Authentication;
 using Redmine.Net.Api.Net;
 using Redmine.Net.Api.Net.WebClient;
@@ -69,5 +70,7 @@ namespace Redmine.Net.Api
         public Version RedmineVersion { get; init; }
         
         internal bool VerifyServerCert { get; init; }
+
+        internal RemoteCertificateValidationCallback ServerCertificateValidationCallback { get; set; }
     }
 }
