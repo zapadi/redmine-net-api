@@ -80,15 +80,7 @@ namespace Redmine.Net.Api.Internals
         /// <returns></returns>
         public static XmlTextReader Create(string xml)
         {
-            var stringReader = new StringReader(xml);
-            {
-                return new XmlTextReader(stringReader)
-                {
-                    DtdProcessing = DtdProcessing.Prohibit,
-                    XmlResolver = null,
-                    WhitespaceHandling = WhitespaceHandling.None
-                };
-            }
+            return Create(new StringReader(xml));
         }
 #endif
     }
