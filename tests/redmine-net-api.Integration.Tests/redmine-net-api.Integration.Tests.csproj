@@ -36,6 +36,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\src\redmine-net-api\redmine-net-api.csproj" />
+      <ProjectReference Include="..\..\src\redmine-net-api.Http\redmine-net-api.Http.csproj" />
     </ItemGroup>
 
     <ItemGroup>
