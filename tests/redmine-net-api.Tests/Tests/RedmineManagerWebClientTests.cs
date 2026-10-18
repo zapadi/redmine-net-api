@@ -386,6 +386,45 @@ public sealed class RedmineManagerWebClientTests(XmlPrettyPrintFixture _) : ICla
     }
 
     [Fact]
+    public void InternalWebClient_Should_Send_DefaultHeaders_Not_Set_By_Request()
+    {
+        var request = CreateInternalWebRequest(new RedmineWebClientOptions { DefaultHeaders = new Dictionary<string, string> { { "X-Custom", "default" } } });
+
+        Assert.Equal("default", request.Headers["X-Custom"]);
+    }
+
+    [Fact]
+    public void InternalWebClient_Should_Not_Override_Request_Headers_With_DefaultHeaders()
+    {
+        var request = CreateInternalWebRequest(
+            new RedmineWebClientOptions
+            {
+                DefaultHeaders = new Dictionary<string, string>
+                {
+                    { "X-Custom", "default" },
+                    { "Accept", "text/plain" },
+                    { "User-Agent", "default-agent" },
+                    { "X-Redmine-API-Key", "default-key" },
+                    { "Content-Type", "text/plain" }
+                }
+            },
+            webClient =>
+            {
+                webClient.Headers["X-Custom"] = "request";
+                webClient.Headers[HttpRequestHeader.Accept] = "application/xml";
+                webClient.Headers[HttpRequestHeader.UserAgent] = "request-agent";
+                webClient.Headers["X-Redmine-API-Key"] = "secret";
+                webClient.Headers[HttpRequestHeader.ContentType] = RedmineConstants.CONTENT_TYPE_APPLICATION_XML;
+            });
+
+        Assert.Equal("request", request.Headers["X-Custom"]);
+        Assert.Equal("application/xml", request.Accept);
+        Assert.Equal("request-agent", request.UserAgent);
+        Assert.Equal("secret", request.Headers["X-Redmine-API-Key"]);
+        Assert.Equal(RedmineConstants.CONTENT_TYPE_APPLICATION_XML, request.ContentType);
+    }
+
+    [Fact]
     public void InternalWebClient_Should_Keep_Default_Proxy_When_UseProxy_Is_True()
     {
         var request = CreateInternalWebRequest(new RedmineWebClientOptions { UseProxy = true });

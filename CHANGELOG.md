@@ -43,6 +43,7 @@
 *	Clone now copies all fields and honours resetId (Issue.Clone(false) now keeps Id)
 *	GetHashCode is now consistent with Equals for Issue and Membership
 *	RequestOptions ContentType, Accept, UserAgent and Headers are now applied to the request; these properties were previously ignored, so values set on them are now sent
+*	WebClientOptions.DefaultHeaders no longer override per-request or authentication headers
 
 🧪 Tests
 *	Unit tests now run in CI on net10.0 and fail the build on failure
