@@ -88,12 +88,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <EmbeddedResource Remove="Logging\**" />
-    <Compile Remove="Properties\AssemblyInfo.cs" />
-    <Compile Remove="Extensions\LoggerExtensions.cs" />
-    <Compile Remove="Logging\**" />
     <Compile Remove="InternalVisibleTo.cs" Condition=" '$(Sign)' == 'true' " />
-    <None Remove="Logging\**" />
     <None Include="..\..\redmine-net-api.snk">
       <Link>redmine-net-api.snk</Link>
     </None>
