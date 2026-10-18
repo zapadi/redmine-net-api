@@ -194,9 +194,9 @@ namespace Redmine.Net.Api.Net
         {
             var address = requestMessage.RequestUri;
             var queryString = requestMessage.QueryString;
-            if (queryString is { Count: > 0 } && address != null && (_encodeQueryString || address.IndexOf('?') >= 0))
+            if (queryString is { Count: > 0 } && requestMessage.RequestUri is { } requestUri && (_encodeQueryString || HasQuery(requestUri)))
             {
-                address = AppendQueryString(address, queryString);
+                address = AppendQueryString(requestUri, queryString);
                 queryString = null;
             }
 
@@ -213,7 +213,7 @@ namespace Redmine.Net.Api.Net
         private string AppendQueryString(string address, NameValueCollection queryString)
         {
             var builder = new StringBuilder(address);
-            var delimiter = address.IndexOf('?') >= 0 ? '&' : '?';
+            var delimiter = HasQuery(address) ? '&' : '?';
             for (var i = 0; i < queryString.Count; i++)
             {
                 builder.Append(delimiter).Append(EncodeQueryValue(queryString.GetKey(i))).Append('=').Append(EncodeQueryValue(queryString.Get(i)));
@@ -221,6 +221,15 @@ namespace Redmine.Net.Api.Net
             }
 
             return builder.ToString();
+        }
+
+        private static bool HasQuery(string address)
+        {
+#if NETCOREAPP
+            return address.Contains('?', StringComparison.Ordinal);
+#else
+            return address.IndexOf('?') >= 0;
+#endif
         }
 
         private string? EncodeQueryValue(string? value)
