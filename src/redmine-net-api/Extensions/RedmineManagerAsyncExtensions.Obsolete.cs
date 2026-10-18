@@ -43,7 +43,7 @@ namespace Redmine.Net.Api.Async
         [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use the extension with RequestOptions parameter instead.")]
         public static async Task<User> GetCurrentUserAsync(this RedmineManager redmineManager, NameValueCollection parameters = null, string impersonateUserName = null, CancellationToken cancellationToken = default)
         {
-            var requestOptions = RedmineManagerExtensions.CreateRequestOptions();
+            var requestOptions = RedmineManagerExtensions.CreateRequestOptions(parameters, impersonateUserName);
             return await redmineManager.GetCurrentUserAsync(requestOptions, cancellationToken).ConfigureAwait(false);
         }
 
@@ -220,7 +220,8 @@ namespace Redmine.Net.Api.Async
         [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use the extension with RequestOptions parameter instead.")]
         public static async Task<int> CountAsync<T>(this RedmineManager redmineManager, params string[] include) where T : class, new()
         {
-            return await redmineManager.CountAsync<T>(null, CancellationToken.None).ConfigureAwait(false);
+            var requestOptions = RedmineManagerExtensions.CreateRequestOptions(NameValueCollectionExtensions.AddParamsIfExist(null, include));
+            return await redmineManager.CountAsync<T>(requestOptions, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
