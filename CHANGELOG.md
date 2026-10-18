@@ -51,11 +51,11 @@
 *	Fixed Get/GetAsync losing items when the page size or limit is above the server maximum (100); offsets now advance by the items returned and a limit above 100 returns up to limit items
 *	Fixed hosts with a sub-path (e.g. https://host/redmine) sending requests to the server root, and base paths containing '.' being dropped; a trailing *.xml/*.json segment is still removed
 *	Fixed attachment create/update URL ignoring the base sub-path
-*	URL path segments (ids, project identifiers, wiki page names, repository ids, revisions) are now escaped
+*	URL path segments (ids, project identifiers, wiki page names, repository ids, revisions) are now escaped; pass them unencoded
 *	Fixed RequestOptions.QueryString being dropped when the address already has a query (e.g. UploadFileAsync with a file name)
 *	Fixed PagedResults.TotalPages being one too many (now 0 when there are no items)
 *	Fixed async paging disposing its semaphore while page requests were still running on cancellation or error
-*	Fixed JSON paged results using unknown top-level properties as the item list
+*	Fixed JSON paged results using unknown top-level properties as the item list (the first array property is the item list)
 *	Fixed NullReferenceException for hosts without scheme starting with "https" (e.g. httpsfoo.example)
 *	VerifyServerCert no longer overwrites a user ServerCertificateValidationCallback and RedmineManager no longer mutates the caller's WebClientOptions; obsolete Proxy, Timeout and SecurityProtocolType are set for any IRedmineWebClientOptions
 
