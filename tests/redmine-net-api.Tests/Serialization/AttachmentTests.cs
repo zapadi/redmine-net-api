@@ -1,13 +1,12 @@
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using Padi.DotNet.RedmineAPI.Tests.Infrastructure;
-using Padi.DotNet.RedmineAPI.Tests.Tests;
 using Xunit;
 
 namespace Padi.DotNet.RedmineAPI.Tests.Serialization;
 
 [Collection(Constants.DeserializeCollection)]
-public class AttachmentTests(XmlPrettyPrintFixture _) : IClassFixture<XmlPrettyPrintFixture>
+public class AttachmentTests
 {
     [Fact]
     public void Attachments_Should_Serialize_Json_For_Issue_Attachment_Update()

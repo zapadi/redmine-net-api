@@ -312,7 +312,7 @@ public abstract class RedmineTransportContractTests
 }
 
 [Collection(Constants.DeserializeCollection)]
-public sealed class WebClientTransportContractTests(XmlPrettyPrintFixture _) : RedmineTransportContractTests, IClassFixture<XmlPrettyPrintFixture>
+public sealed class WebClientTransportContractTests : RedmineTransportContractTests
 {
     internal override IRedmineTransport CreateTransport(string baseUrl, TimeSpan? timeout = null, Dictionary<string, string> defaultHeaders = null, string userAgent = null)
     {

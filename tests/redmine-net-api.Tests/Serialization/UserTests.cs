@@ -1,14 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using Padi.DotNet.RedmineAPI.Tests.Infrastructure;
-using Padi.DotNet.RedmineAPI.Tests.Tests;
 using Redmine.Net.Api.Types;
 using Xunit;
 
 namespace Padi.DotNet.RedmineAPI.Tests.Serialization;
 
 [Collection(Constants.DeserializeCollection)]
-public class UserTests(XmlPrettyPrintFixture _) : IClassFixture<XmlPrettyPrintFixture>
+public class UserTests
 {
     [Theory]
     [MemberData(nameof(UserDeserializeTheoryData))]

@@ -15,7 +15,7 @@ using Xunit;
 namespace Padi.DotNet.RedmineAPI.Tests.Tests;
 
 [Collection(Infrastructure.Constants.DeserializeCollection)]
-public sealed class RedmineApiClientTests(XmlPrettyPrintFixture _) : IClassFixture<XmlPrettyPrintFixture>
+public sealed class RedmineApiClientTests
 {
     private const string BaseAddress = "http://localhost:3000/";
 

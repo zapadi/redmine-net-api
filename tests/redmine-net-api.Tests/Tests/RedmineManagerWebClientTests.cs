@@ -17,7 +17,7 @@ using Xunit;
 namespace Padi.DotNet.RedmineAPI.Tests.Tests;
 
 [Collection(Constants.DeserializeCollection)]
-public sealed class RedmineManagerWebClientTests(XmlPrettyPrintFixture _) : IClassFixture<XmlPrettyPrintFixture>
+public sealed class RedmineManagerWebClientTests
 {
     private const string Host = "http://localhost:3000";
     private const string IssuesPage = """<issues type="array" total_count="3" offset="0" limit="1"></issues>""";

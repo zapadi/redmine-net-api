@@ -39,7 +39,7 @@ namespace Redmine.Net.Api.Serialization
         {
             Encoding = Encoding.UTF8,
             OmitXmlDeclaration = true,
-            Indent = PrettyPrintEnabled,
+            Indent = true,
             IndentChars = "",
             NewLineChars = LF,
             NewLineHandling = NewLineHandling.Replace

@@ -2,14 +2,13 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using Padi.DotNet.RedmineAPI.Tests.Infrastructure;
-using Padi.DotNet.RedmineAPI.Tests.Tests;
 using Redmine.Net.Api.Types;
 using Xunit;
 
 namespace Padi.DotNet.RedmineAPI.Tests.Serialization;
 
 [Collection(Constants.DeserializeCollection)]
-public class GroupTests(XmlPrettyPrintFixture _) : IClassFixture<XmlPrettyPrintFixture>
+public class GroupTests
 {
     [Fact]
     public void Should_Serialize_Json_Group_User_Ids_As_Array()

@@ -20,7 +20,7 @@ using Xunit;
 namespace Padi.DotNet.RedmineAPI.Tests.Tests;
 
 [Collection(Constants.DeserializeCollection)]
-public sealed class RedmineApiClientCharacterizationTests(XmlPrettyPrintFixture _) : IClassFixture<XmlPrettyPrintFixture>
+public sealed class RedmineApiClientCharacterizationTests
 {
     private const string ApiKey = "secret";
     private const string ProjectXml = "<project><id>1</id><name>foo</name></project>";
