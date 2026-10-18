@@ -10,6 +10,7 @@
 *	Added RedmineManagerOptionsBuilder.WithQueryStringEncoding() (opt-in) to URL-encode query string keys and values
 *	Added RedmineManagerOptionsBuilder.WithMaxConcurrentRequests(int) to set how many pages GetAsync fetches in parallel (default 3)
 *	Added SearchAsync(q, limit, offset, searchFilter, requestOptions, cancellationToken) overload with RequestOptions (impersonation, headers, extra query string)
+*	Public IRedmineTransport contract and RedmineManagerOptionsBuilder.WithTransport to plug in a custom HTTP transport
 
 ⚠️ Deprecations
 *	Project.CustomFieldValues is obsolete; use ProjectCustomFields

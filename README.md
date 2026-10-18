@@ -186,6 +186,74 @@ var issue = await manager.GetAsync<Issue>("123",
     RequestOptions.Include(RedmineKeys.JOURNALS, RedmineKeys.ATTACHMENTS));
 ```
 
+### Custom transport
+
+Requests are sent with `WebClient` by default. To use another HTTP stack, implement `IRedmineTransport` and pass it to
+`WithTransport`. The request already contains the absolute URI, the merged headers (authentication, impersonation,
+`RequestOptions`) and the body. Return every response, whatever its status code; throw a `RedmineApiException` or an
+`OperationCanceledException` only for transport failures. The transport owns timeouts, proxy and certificates, and must
+be thread-safe. A `TimeoutException` (or a cancellation caused by one, like `HttpClient` timeouts) is reported as a
+transient timeout. `WithTransport` cannot be combined with `WithWebClient` or `WithWebClientOptions` and is not
+available on .NET Framework 2.0.
+
+```csharp
+using System.Collections.Specialized;
+using System.Linq;
+using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
+using Redmine.Net.Api.Exceptions;
+using Redmine.Net.Api.Net;
+
+public sealed class HttpClientTransport(HttpClient httpClient) : IRedmineTransport
+{
+    public RedmineTransportResponse Send(RedmineTransportRequest request) =>
+        SendAsync(request, CancellationToken.None).GetAwaiter().GetResult();
+
+    public async Task<RedmineTransportResponse> SendAsync(RedmineTransportRequest request, CancellationToken cancellationToken)
+    {
+        using var message = new HttpRequestMessage(new HttpMethod(request.Method), request.Uri);
+        if (request.Body != null)
+        {
+            message.Content = new ByteArrayContent(request.Body);
+            message.Content.Headers.TryAddWithoutValidation("Content-Type", request.ContentType);
+        }
+
+        foreach (string name in request.Headers)
+        {
+            message.Headers.TryAddWithoutValidation(name, request.Headers.GetValues(name));
+        }
+
+        HttpResponseMessage response;
+        try
+        {
+            response = await httpClient.SendAsync(message, cancellationToken).ConfigureAwait(false);
+        }
+        catch (HttpRequestException ex)
+        {
+            throw new RedmineApiException(ex.Message, ex, "HTTP", isTransient: true);
+        }
+
+        using (response)
+        {
+            var headers = new NameValueCollection();
+            foreach (var header in response.Headers.Concat(response.Content.Headers))
+            {
+                headers[header.Key] = string.Join(",", header.Value);
+            }
+
+            var body = await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
+            return new RedmineTransportResponse((int)response.StatusCode, headers, body);
+        }
+    }
+}
+
+var manager = new RedmineManager(new RedmineManagerOptionsBuilder()
+    .WithHost("https://redmine.example.com")
+    .WithApiKeyAuthentication("your-api-key")
+    .WithTransport(new HttpClientTransport(new HttpClient())));
+```
+
 ## Supported resources
 
 The generic methods (`Get`, `GetPaginated`, `Count`, `Create`, `Update`, `Delete` and their `Async` variants, including `GetPagedAsync`) cover most resources. Operations that need a dedicated endpoint are available as extension methods on `RedmineManager`; each has an `Async` counterpart, except `UpdateIssueAttachment`.
