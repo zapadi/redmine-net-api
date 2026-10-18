@@ -310,7 +310,9 @@ public sealed class CustomTransportTests
     public async Task RedmineApiException_From_Transport_Should_Be_Enriched(bool async)
     {
         var inner = new IOException("inner");
-        var manager = CreateManager(new FakeTransport(_ => throw new RedmineApiException("boom", inner, "E1", true)));
+        var thrown = new RedmineApiException("boom", inner, "E1", true);
+        thrown.Data["attempt"] = 3;
+        var manager = CreateManager(new FakeTransport(_ => throw thrown));
 
         var exception = await CatchAsync(async,
             () => manager.Delete<Project>("1"),
@@ -319,6 +321,7 @@ public sealed class CustomTransportTests
         Assert.Equal("boom", exception.Message);
         Assert.Same(inner, exception.InnerException);
         Assert.Equal("E1", exception.ErrorCode);
+        Assert.Equal(3, exception.Data["attempt"]);
         Assert.True(exception.IsTransient);
         Assert.Null(exception.HttpStatusCode);
         Assert.Equal("DELETE", exception.Method);

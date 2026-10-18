@@ -16,6 +16,7 @@
 
 #nullable enable
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
@@ -484,11 +485,22 @@ namespace Redmine.Net.Api.Net
 
             return exception switch
             {
-                RedmineApiException apiException => new RedmineApiException(apiException.Message, apiException.InnerException, apiException.ErrorCode, apiException.IsTransient, apiException.CorrelationId, method, endpoint, apiException.HttpStatusCode, apiException.ResponseHeaders),
+                RedmineApiException apiException => Enrich(apiException, method, endpoint),
                 OperationCanceledException when isCanceledByCaller => RedmineApiExceptionHelper.Create(CanceledByUserMessage, exception, null, method, endpoint, null, errorCode: RedmineApiExceptionHelper.UnknownErrorCode),
                 TimeoutException or OperationCanceledException { InnerException: TimeoutException } => RedmineApiExceptionHelper.Create(nameof(WebExceptionStatus.Timeout), exception, null, method, endpoint, null, isTransient: true, errorCode: RedmineApiExceptionHelper.UnknownErrorCode),
                 _ => RedmineApiExceptionHelper.Create(exception.Message, exception, null, method, endpoint, null, errorCode: RedmineApiExceptionHelper.UnknownErrorCode),
             };
+        }
+
+        private static RedmineApiException Enrich(RedmineApiException exception, string method, string endpoint)
+        {
+            var enriched = new RedmineApiException(exception.Message, exception.InnerException, exception.ErrorCode, exception.IsTransient, exception.CorrelationId, method, endpoint, exception.HttpStatusCode, exception.ResponseHeaders);
+            foreach (DictionaryEntry entry in exception.Data)
+            {
+                enriched.Data[entry.Key] = entry.Value;
+            }
+
+            return enriched;
         }
 
         private static bool IsTransient(WebExceptionStatus status)
