@@ -25,7 +25,7 @@ public sealed class SearchAsyncTests
             QueryString = new NameValueCollection { { "x", "1" }, { "limit", "999" } },
         };
 
-        await manager.SearchAsync("redmine", options, limit: 10, offset: 5, searchFilter: new SearchFilterBuilder { IncludeIssues = true }, cancellationToken: TestContext.Current.CancellationToken);
+        await manager.SearchAsync("redmine", 10, 5, new SearchFilterBuilder { IncludeIssues = true }, options, TestContext.Current.CancellationToken);
 
         var request = server.Requests.Single();
         Assert.Equal("/search.xml?x=1&limit=10&q=redmine&offset=5&issues=1", request.RawUrl);
@@ -39,7 +39,7 @@ public sealed class SearchAsyncTests
         using var server = new TestHttpServer(_ => RedminePagedServer.Response(EmptyResults));
         var manager = new RedmineManager(new RedmineManagerOptionsBuilder().WithHost(server.Url));
 
-        await manager.SearchAsync("redmine", (RequestOptions)null, cancellationToken: TestContext.Current.CancellationToken);
+        await manager.SearchAsync("redmine", RedmineConstants.DEFAULT_PAGE_SIZE_VALUE, 0, null, null, TestContext.Current.CancellationToken);
         await manager.SearchAsync("redmine", cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.Equal(["/search.xml?q=redmine&limit=25&offset=0", "/search.xml?q=redmine&limit=25&offset=0"], server.Requests.Select(r => r.RawUrl).ToArray());
