@@ -1,16 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-  
+
   <PropertyGroup Label="Build">
+    <TargetFrameworks>net9.0;net8.0;net7.0;net6.0;net5.0;net481;net48;net472;net471;net47;net462;net461;net46;net452;net451;net45;net40;net20</TargetFrameworks>
     <RootNamespace>Redmine.Net.Api</RootNamespace>
     <AssemblyName>redmine-net-api</AssemblyName>
-    <TargetFrameworks>net9.0;net8.0;net7.0;net6.0;net5.0;net481;net48;net472;net471;net47;net462;net461;net46;net452;net451;net45;net40;net20</TargetFrameworks>
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-    <Deterministic>True</Deterministic>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <DefineConstants>TRACE</DefineConstants>
-    <Configurations>Debug;Release;DebugJson</Configurations>
-    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
     <NoWarn>
       CA1303;
       CA1056;
@@ -25,57 +20,20 @@
       CA1002; <!--Change 'List<T>' to use 'Collection<T>', 'ReadOnlyCollection<T>' or 'KeyedCollection<K,V>' -->
     </NoWarn>
   </PropertyGroup>
-  
-  <PropertyGroup Label="Analyzers">
-    <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
-    <EnableNETAnalyzers>true</EnableNETAnalyzers>
-    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
-    <AnalysisLevel>latest</AnalysisLevel>
-  </PropertyGroup>
-  
-  <PropertyGroup>
-    <DebugType>portable</DebugType>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <PackageOutputPath>$(MSBuildThisFileDirectory)../../artifacts</PackageOutputPath>
-    <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
+
+  <PropertyGroup Label="Package">
+    <PackageIdBase>redmine-api</PackageIdBase>
+    <Version>4.65.0</Version> <!-- x-release-please-version -->
+    <Title>Redmine .NET API Client</Title>
+    <Product>Redmine .NET API Client</Product>
+    <Description>Redmine Api is a .NET rest client for Redmine.</Description>
+    <PackageTags>Redmine; REST; API; Client; .NET; Adrian Popescu;</PackageTags>
   </PropertyGroup>
 
-  <PropertyGroup Label="Package Validation">
-    <EnablePackageValidation>true</EnablePackageValidation>
-    <PackageValidationBaselineVersion>4.65.0</PackageValidationBaselineVersion>
-  </PropertyGroup>
-  
   <ItemGroup Label="Package References">
     <PackageReference Include="Newtonsoft.Json" />
   </ItemGroup>
 
-  <PropertyGroup Label="Package">
-    <Authors>Adrian Popescu</Authors>
-    <Description>Redmine Api is a .NET rest client for Redmine.</Description>
-    <Company>p.adi</Company>
-    <Copyright>Adrian Popescu, 2011 - $([System.DateTime]::Now.Year.ToString()) </Copyright>
-    <NeutralLanguage>en-US</NeutralLanguage>
-    <PackageId Condition="'$(Sign)' == '' OR '$(Sign)' == 'false'">redmine-api</PackageId>
-    <PackageId Condition="'$(Sign)' == 'true'">redmine-api-signed</PackageId>
-    <PackageIcon>logo.png</PackageIcon>
-    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/zapadi/redmine-net-api</PackageProjectUrl>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <PackageTags>Redmine; REST; API; Client; .NET; Adrian Popescu;</PackageTags>
-    <Product>Redmine .NET API Client</Product>
-    <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/zapadi/redmine-net-api</RepositoryUrl>
-    <Title>Redmine .NET API Client</Title>
-
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <!-- Build symbol package (.snupkg) to distribute the PDB containing Source Link -->
-    <IncludeSymbols>true</IncludeSymbols>
-    <DebugSymbols>true</DebugSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <IsPackable>true</IsPackable>
-  </PropertyGroup>
-  
   <ItemGroup Condition=" '$(TargetFramework)' == 'net20' " Label=".NET 2.0 Package References">
     <Reference Include="System.Web" />
   </ItemGroup>
@@ -85,15 +43,12 @@
     <PackageReference Include="Microsoft.Bcl.Async" />
     <PackageReference Include="Microsoft.Net.Http" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <Compile Remove="InternalVisibleTo.cs" Condition=" '$(Sign)' == 'true' " />
     <None Include="..\..\redmine-net-api.snk">
       <Link>redmine-net-api.snk</Link>
     </None>
-    <None Include="..\..\logo.png" Pack="true" PackagePath="\" />
-    <None Include="..\..\LICENSE" Pack="true" PackagePath="" />
-    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>

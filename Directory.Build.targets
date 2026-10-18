@@ -4,8 +4,13 @@
         <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)redmine-net-api.snk</AssemblyOriginatorKeyFile>
     </PropertyGroup>
 
+    <PropertyGroup Label="Package Id" Condition=" '$(PackageIdBase)' != '' ">
+        <PackageId>$(PackageIdBase)</PackageId>
+        <PackageId Condition=" '$(Sign)' == 'true' ">$(PackageIdBase)-signed</PackageId>
+    </PropertyGroup>
+
     <PropertyGroup Label="Release Notes" Condition=" '$(IsPackable)' == 'true' ">
         <PackageReleaseNotes>$(PackageReleaseNotes)
-            See $(PackageProjectUrl)/blob/master/CHANGELOG.md#v$([System.Text.RegularExpressions.Regex]::Replace('$(Version)', '-.*$|\.', '')) for more details.</PackageReleaseNotes>
+            See $(PackageProjectUrl)/blob/master/CHANGELOG.md for more details.</PackageReleaseNotes>
     </PropertyGroup>
 </Project>
