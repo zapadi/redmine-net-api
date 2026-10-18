@@ -71,7 +71,7 @@ public sealed class RedmineTransportRequest
     /// Gets the request headers: authentication, impersonation and the <see cref="RequestOptions"/> headers, already merged.
     /// A transport must not override them with its own defaults.
     /// </summary>
-    /// <remarks>Never <c>null</c>; setting <c>null</c> leaves the headers empty.</remarks>
+    /// <remarks>Never <c>null</c>.</remarks>
     public NameValueCollection Headers
     {
         get => _headers;

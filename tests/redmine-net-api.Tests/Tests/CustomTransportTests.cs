@@ -285,7 +285,9 @@ public sealed class CustomTransportTests
     [InlineData("application/xml", "utf-8", false)]
     [InlineData(null, "utf-8", false)]
     [InlineData("application/xml; charset=unknown-charset", "utf-8", false)]
+#if NET5_0_OR_GREATER
     [InlineData("application/xml; charset=utf-7", "utf-8", false)]
+#endif
     [InlineData("application/xml", "utf-8", true)]
     [InlineData("application/xml; charset=iso-8859-1", "utf-8", true)]
     [InlineData("application/xml; charset=utf-8", "utf-16", true)]
