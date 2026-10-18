@@ -114,7 +114,7 @@ public partial class RedmineManager: IRedmineManagerAsync
 
             var remainingPages = remainingItems / effectivePageSize + (remainingItems % effectivePageSize > 0 ? 1 : 0);
 
-            var semaphore = new SemaphoreSlim(MAX_CONCURRENT_TASKS);
+            var semaphore = new SemaphoreSlim(_redmineManagerOptions.MaxConcurrentRequests > 0 ? _redmineManagerOptions.MaxConcurrentRequests : MAX_CONCURRENT_TASKS);
             var pageFetchTasks = new List<Task<PagedResults<T>>>();
             try
             {

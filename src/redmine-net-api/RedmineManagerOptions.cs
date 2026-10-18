@@ -74,5 +74,7 @@ namespace Redmine.Net.Api
         internal RemoteCertificateValidationCallback ServerCertificateValidationCallback { get; set; }
 
         internal bool EncodeQueryString { get; init; }
+
+        internal int MaxConcurrentRequests { get; init; }
     }
 }

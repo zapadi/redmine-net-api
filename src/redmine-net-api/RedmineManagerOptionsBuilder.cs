@@ -213,6 +213,25 @@ namespace Redmine.Net.Api
         /// </summary>
         public bool VerifyServerCert { get; private set; }
 
+        private int _maxConcurrentRequests = 3;
+
+        /// <summary>
+        /// Sets the maximum number of page requests that GetAsync sends in parallel when it fetches all pages. The default is 3.
+        /// </summary>
+        /// <param name="maxConcurrentRequests">A value greater than or equal to 1.</param>
+        /// <returns>The current builder.</returns>
+        /// <exception cref="RedmineException">The value is less than 1.</exception>
+        public RedmineManagerOptionsBuilder WithMaxConcurrentRequests(int maxConcurrentRequests)
+        {
+            if (maxConcurrentRequests < 1)
+            {
+                throw new RedmineException("The maximum number of concurrent requests must be at least 1.");
+            }
+
+            _maxConcurrentRequests = maxConcurrentRequests;
+            return this;
+        }
+
         private bool _isQueryStringEncodingEnabled;
 
         /// <summary>
@@ -284,6 +303,7 @@ namespace Redmine.Net.Api
                 WebClientOptions = WebClientOptions,
                 ClientFunc = ClientFunc,
                 EncodeQueryString = _isQueryStringEncodingEnabled,
+                MaxConcurrentRequests = _maxConcurrentRequests,
             };
             
             return options;

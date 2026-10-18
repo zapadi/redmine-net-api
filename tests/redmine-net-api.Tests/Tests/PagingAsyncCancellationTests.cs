@@ -20,9 +20,12 @@ public sealed class PagingAsyncCancellationTests
     {
         private int _started;
         private int _completed;
+        private int _inFlight;
+        private int _maxInFlight;
 
         public int Started => Volatile.Read(ref _started);
         public int Completed => Volatile.Read(ref _completed);
+        public int MaxInFlight => Volatile.Read(ref _maxInFlight);
 
         public RedmineTransportResponse Send(RedmineTransportRequest request)
         {
@@ -38,7 +41,14 @@ public sealed class PagingAsyncCancellationTests
             }
 
             onPageStarted(Interlocked.Increment(ref _started));
+            var inFlight = Interlocked.Increment(ref _inFlight);
+            int max;
+            while (inFlight > (max = Volatile.Read(ref _maxInFlight)) && Interlocked.CompareExchange(ref _maxInFlight, inFlight, max) != max)
+            {
+            }
+
             await Task.Delay(300, CancellationToken.None);
+            Interlocked.Decrement(ref _inFlight);
             Interlocked.Increment(ref _completed);
 
             return offset == failingOffset
@@ -58,9 +68,38 @@ public sealed class PagingAsyncCancellationTests
         }
     }
 
-    private static RedmineManager CreateManager(IRedmineTransport transport)
+    private static RedmineManager CreateManager(IRedmineTransport transport, int maxConcurrentRequests = 0)
     {
-        return new RedmineManager(new RedmineManagerOptionsBuilder().WithHost("http://localhost:3000"), transport);
+        var builder = new RedmineManagerOptionsBuilder().WithHost("http://localhost:3000");
+        if (maxConcurrentRequests > 0)
+        {
+            builder.WithMaxConcurrentRequests(maxConcurrentRequests);
+        }
+
+        return new RedmineManager(builder, transport);
+    }
+
+    [Theory]
+    [InlineData(0, 3)]
+    [InlineData(1, 1)]
+    [InlineData(5, 5)]
+    public async Task Page_Requests_Respect_Max_Concurrent_Requests(int configured, int expected)
+    {
+        var transport = new SlowPagesTransport(_ => { });
+        var manager = CreateManager(transport, configured);
+
+        var issues = await manager.GetAsync<Issue>(cancellationToken: TestContext.Current.CancellationToken);
+
+        Assert.Equal(Total, issues.Count);
+        Assert.Equal(expected, transport.MaxInFlight);
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(-1)]
+    public void Max_Concurrent_Requests_Below_One_Throws(int value)
+    {
+        Assert.Throws<RedmineException>(() => new RedmineManagerOptionsBuilder().WithMaxConcurrentRequests(value));
     }
 
     [Fact]
