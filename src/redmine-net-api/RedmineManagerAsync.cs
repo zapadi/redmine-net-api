@@ -114,9 +114,10 @@ public partial class RedmineManager: IRedmineManagerAsync
 
             var remainingPages = remainingItems / effectivePageSize + (remainingItems % effectivePageSize > 0 ? 1 : 0);
 
-            using (var semaphore = new SemaphoreSlim(MAX_CONCURRENT_TASKS))
+            var semaphore = new SemaphoreSlim(MAX_CONCURRENT_TASKS);
+            var pageFetchTasks = new List<Task<PagedResults<T>>>();
+            try
             {
-                var pageFetchTasks = new List<Task<PagedResults<T>>>();
                 for (int page = 1; page <= remainingPages; page++)
                 {
                     await semaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
@@ -142,6 +143,11 @@ public partial class RedmineManager: IRedmineManagerAsync
                     }
                     resultList.AddRange(pageResult.Items);
                 }
+            }
+            finally
+            {
+                await WhenAllCompleted(pageFetchTasks).ConfigureAwait(false);
+                semaphore.Dispose();
             }
 
             return Truncate(resultList, maxItems);
@@ -231,6 +237,22 @@ public partial class RedmineManager: IRedmineManagerAsync
     }
     
     private const int MAX_CONCURRENT_TASKS = 3;
+
+    private static Task<AggregateException[]> WhenAllCompleted<T>(List<Task<T>> tasks)
+    {
+        var completions = new List<Task<AggregateException>>(tasks.Count);
+        foreach (var task in tasks)
+        {
+            completions.Add(task.ContinueWith(static t => t.Exception, CancellationToken.None, TaskContinuationOptions.ExecuteSynchronously, TaskScheduler.Default));
+        }
+
+        return
+            #if(NET45_OR_GREATER || NETCOREAPP)
+            Task.WhenAll(completions);
+            #else
+            TaskExtensions.WhenAll(completions);
+            #endif
+    }
     
     private async Task<PagedResults<T>> GetPagedInternalAsync<T>(SemaphoreSlim semaphore, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
         where T : class, new()

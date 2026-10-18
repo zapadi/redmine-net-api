@@ -49,6 +49,11 @@ namespace Redmine.Net.Api
         /// <param name="optionsBuilder"></param>
         /// <exception cref="ArgumentNullException"></exception>
         public RedmineManager(RedmineManagerOptionsBuilder optionsBuilder)
+            : this(optionsBuilder, null)
+        {
+        }
+
+        internal RedmineManager(RedmineManagerOptionsBuilder optionsBuilder, IRedmineTransport transport)
         {
             ArgumentNullThrowHelper.ThrowIfNull(optionsBuilder, nameof(optionsBuilder));
             
@@ -85,7 +90,7 @@ namespace Redmine.Net.Api
                 : MimeFormat.Json;
             
             RedmineApiUrls = new RedmineApiUrls(Serializer.Format);
-            ApiClient = new RedmineApiClient(new WebClientTransport(_redmineManagerOptions), _redmineManagerOptions.Authentication, _redmineManagerOptions.Serializer);
+            ApiClient = new RedmineApiClient(transport ?? new WebClientTransport(_redmineManagerOptions), _redmineManagerOptions.Authentication, _redmineManagerOptions.Serializer);
         }
 
         /// <inheritdoc />
