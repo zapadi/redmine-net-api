@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Sockets;
 using System.Text;
@@ -266,6 +268,19 @@ public sealed class HttpClientTransportTests : IDisposable
         Assert.Equal("GET", exception.Method);
     }
 
+    [Fact(Timeout = Constants.TestTimeout)]
+    public async Task Caller_Cancellation_While_Reading_Body_Should_Throw_Canceled_By_User()
+    {
+        var manager = Manager("http://localhost:3000/", handler: new StalledBodyHandler());
+        using var cts = CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken);
+        cts.CancelAfter(TimeSpan.FromMilliseconds(300));
+
+        var exception = await Bounded(Assert.ThrowsAsync<RedmineApiException>(() => manager.DownloadFileAsync("attachments/download/1/a.bin", cancellationToken: cts.Token)));
+
+        Assert.Equal("The operation was canceled by the user.", exception.Message);
+        Assert.False(exception.IsTransient);
+    }
+
     [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
@@ -404,6 +419,42 @@ public sealed class HttpClientTransportTests : IDisposable
         {
             return Task.FromException<HttpResponseMessage>(exception);
         }
+    }
+
+    private sealed class StalledBodyHandler : HttpMessageHandler
+    {
+        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StreamContent(new StalledStream()) });
+        }
+    }
+
+    private sealed class StalledStream : Stream
+    {
+        public override bool CanRead => true;
+        public override bool CanSeek => false;
+        public override bool CanWrite => false;
+        public override long Length => throw new NotSupportedException();
+        public override long Position { get => throw new NotSupportedException(); set => throw new NotSupportedException(); }
+
+        public override async Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
+        {
+            try
+            {
+                await Task.Delay(TimeSpan.FromSeconds(20), cancellationToken);
+            }
+            catch (OperationCanceledException)
+            {
+            }
+
+            throw new IOException("The connection was aborted.");
+        }
+
+        public override int Read(byte[] buffer, int offset, int count) => throw new IOException("The connection was aborted.");
+        public override void Flush() { }
+        public override long Seek(long offset, SeekOrigin origin) => throw new NotSupportedException();
+        public override void SetLength(long value) => throw new NotSupportedException();
+        public override void Write(byte[] buffer, int offset, int count) => throw new NotSupportedException();
     }
 
     private sealed class RecordingProgress : IProgress<int>

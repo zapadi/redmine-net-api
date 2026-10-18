@@ -126,6 +126,10 @@ public sealed class HttpClientTransport : IRedmineTransport
                 return CreateResponse(response, body);
             }
         }
+        catch (Exception exception) when (cancellationToken.IsCancellationRequested && exception is not OperationCanceledException)
+        {
+            throw new OperationCanceledException(exception.Message, exception, cancellationToken);
+        }
         catch (Exception exception) when (!cancellationToken.IsCancellationRequested && (exception is OperationCanceledException || timeout.IsCancellationRequested))
         {
             throw CreateTimeoutException(exception);
@@ -134,7 +138,7 @@ public sealed class HttpClientTransport : IRedmineTransport
         {
             throw MapHttpRequestException(exception);
         }
-        catch (IOException exception) when (!cancellationToken.IsCancellationRequested)
+        catch (IOException exception)
         {
             throw CreateTransientException(exception);
         }
