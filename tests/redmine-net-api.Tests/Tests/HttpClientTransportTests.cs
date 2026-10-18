@@ -77,7 +77,7 @@ public sealed class HttpClientTransportTests : IDisposable
     {
         return async
             ? await Bounded(Assert.ThrowsAsync<RedmineApiException>(asyncCall))
-            : Assert.Throws<RedmineApiException>(sync);
+            : await Bounded(Task.Run(() => Assert.Throws<RedmineApiException>(sync)));
     }
 
     [Fact(Timeout = Constants.TestTimeout)]
@@ -248,6 +248,22 @@ public sealed class HttpClientTransportTests : IDisposable
 
         Assert.Equal("The operation was canceled by the user.", exception.Message);
         Assert.False(exception.IsTransient);
+    }
+
+    [Theory(Timeout = Constants.TestTimeout)]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task HttpClient_Timeout_Should_Bound_Stalled_Download_Body(bool async)
+    {
+        var server = Server(_ => new TestHttpResponse { ContentType = "application/octet-stream", Body = [1, 2, 3], ContentLength = 1024 });
+        var manager = Manager(server.Url, TimeSpan.FromSeconds(1));
+
+        var exception = await CatchAsync(async, () => manager.DownloadFile("attachments/download/1/a.bin"), () => manager.DownloadFileAsync("attachments/download/1/a.bin", cancellationToken: TestContext.Current.CancellationToken));
+
+        Assert.Equal("Timeout", exception.Message);
+        Assert.True(exception.IsTransient);
+        Assert.Equal("UNKNOWN", exception.ErrorCode);
+        Assert.Equal("GET", exception.Method);
     }
 
     [Theory(Timeout = Constants.TestTimeout)]

@@ -206,7 +206,7 @@ var manager = new RedmineManager(new RedmineManagerOptionsBuilder()
 
 The `HttpClient` belongs to you: the library never disposes it, so reuse a long-lived instance. Timeouts, proxy,
 certificates, decompression and message handlers are configured on the `HttpClient` and its handler.
-`HttpClient.Timeout` covers a download until its response headers arrive, not the reading of its body. On .NET 5+ the
+`HttpClient.Timeout` covers the whole request, including the reading of a download's body. On .NET 5+ the
 synchronous API uses `HttpClient.Send`, which skips message handlers that override only `SendAsync`.
 `HttpClient.DefaultRequestHeaders` are sent only when the request does not set the same header, so authentication,
 impersonation and `RequestOptions` headers always win. `WithHttpClient` cannot be combined with `WithWebClient` or

@@ -42,7 +42,7 @@ namespace Redmine.Net.Api.Http;
 /// <see cref="HttpClient.DefaultRequestHeaders"/> are sent only when the request does not already have a header with the same name.
 /// </para>
 /// <para>
-/// <see cref="HttpClient.Timeout"/> covers a download until its response headers are received, not the reading of its body.
+/// <see cref="HttpClient.Timeout"/> covers the whole request, including the reading of a download's body.
 /// </para>
 /// <para>
 /// On .NET 5 and later, <see cref="Send"/> uses the synchronous <c>HttpClient.Send</c>: message handlers that override only
@@ -79,13 +79,17 @@ public sealed class HttpClientTransport : IRedmineTransport
         }
 
 #if NET5_0_OR_GREATER
+        using var timeout = CreateTimeoutSource(CancellationToken.None);
         try
         {
             using var message = CreateRequestMessage(request);
             using var response = _httpClient.Send(message, GetCompletionOption(request));
-            return CreateResponse(response, ReadBody(response, request));
+            using (timeout.Token.Register(response.Dispose))
+            {
+                return CreateResponse(response, ReadBody(response, request));
+            }
         }
-        catch (OperationCanceledException exception)
+        catch (Exception exception) when (exception is OperationCanceledException || timeout.IsCancellationRequested)
         {
             throw CreateTimeoutException(exception);
         }
@@ -111,14 +115,18 @@ public sealed class HttpClientTransport : IRedmineTransport
             throw new ArgumentNullException(nameof(request));
         }
 
+        using var timeout = CreateTimeoutSource(cancellationToken);
         try
         {
             using var message = CreateRequestMessage(request);
             using var response = await _httpClient.SendAsync(message, GetCompletionOption(request), cancellationToken).ConfigureAwait(false);
-            var body = await ReadBodyAsync(response, request, cancellationToken).ConfigureAwait(false);
-            return CreateResponse(response, body);
+            using (timeout.Token.Register(response.Dispose))
+            {
+                var body = await ReadBodyAsync(response, request, timeout.Token).ConfigureAwait(false);
+                return CreateResponse(response, body);
+            }
         }
-        catch (OperationCanceledException exception) when (!cancellationToken.IsCancellationRequested)
+        catch (Exception exception) when (!cancellationToken.IsCancellationRequested && (exception is OperationCanceledException || timeout.IsCancellationRequested))
         {
             throw CreateTimeoutException(exception);
         }
@@ -130,6 +138,17 @@ public sealed class HttpClientTransport : IRedmineTransport
         {
             throw CreateTransientException(exception);
         }
+    }
+
+    private CancellationTokenSource CreateTimeoutSource(CancellationToken cancellationToken)
+    {
+        var source = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        if (_httpClient.Timeout != Timeout.InfiniteTimeSpan)
+        {
+            source.CancelAfter(_httpClient.Timeout);
+        }
+
+        return source;
     }
 
     private static HttpCompletionOption GetCompletionOption(RedmineTransportRequest request)
@@ -249,7 +268,7 @@ public sealed class HttpClientTransport : IRedmineTransport
         }
     }
 
-    private static TimeoutException CreateTimeoutException(OperationCanceledException exception)
+    private static TimeoutException CreateTimeoutException(Exception exception)
     {
         return new TimeoutException("The request timed out.", exception);
     }
