@@ -33,6 +33,7 @@
   </Folder>
   <Folder Name="/src/">
     <Project Path="src/redmine-net-api/redmine-net-api.csproj" />
+    <Project Path="src/redmine-net-api.Http/redmine-net-api.Http.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/redmine-net-api.Integration.Tests/redmine-net-api.Integration.Tests.csproj">

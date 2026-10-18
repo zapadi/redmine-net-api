@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup Label="Build">
+    <RootNamespace>Redmine.Net.Api.Http</RootNamespace>
+    <AssemblyName>redmine-net-api.Http</AssemblyName>
+    <TargetFrameworks>net9.0;net8.0;net7.0;net6.0;net5.0;net481;net48;net472;net471;net47;net462;net461;net46;net452;net451;net45</TargetFrameworks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <Deterministic>True</Deterministic>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Configurations>Debug;Release;DebugJson</Configurations>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <NoWarn>
+      CA1510; <!--ArgumentNullException.ThrowIfNull is not available on .NET Framework -->
+      CA1835; <!--Stream.ReadAsync(Memory<byte>) is not available on .NET Framework -->
+      CA1849; <!--MemoryStream.Write is synchronous by design -->
+    </NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Analyzers">
+    <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+    <AnalysisLevel>latest</AnalysisLevel>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <DebugType>portable</DebugType>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <PackageOutputPath>$(MSBuildThisFileDirectory)../../artifacts</PackageOutputPath>
+    <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Package Validation">
+    <EnablePackageValidation>true</EnablePackageValidation>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Package">
+    <Authors>Adrian Popescu</Authors>
+    <Description>HttpClient transport for the Redmine .NET API client.</Description>
+    <Company>p.adi</Company>
+    <Copyright>Adrian Popescu, 2011 - $([System.DateTime]::Now.Year.ToString()) </Copyright>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <PackageId Condition="'$(Sign)' == '' OR '$(Sign)' == 'false'">redmine-api.http</PackageId>
+    <PackageId Condition="'$(Sign)' == 'true'">redmine-api.http-signed</PackageId>
+    <PackageIcon>logo.png</PackageIcon>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/zapadi/redmine-net-api</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageTags>Redmine; REST; API; Client; HttpClient; .NET; Adrian Popescu;</PackageTags>
+    <Product>Redmine .NET API Client HttpClient Transport</Product>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/zapadi/redmine-net-api</RepositoryUrl>
+    <Title>Redmine .NET API Client HttpClient Transport</Title>
+
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <DebugSymbols>true</DebugSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <IsPackable>true</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(TargetFrameworkIdentifier)' == '.NETFramework' ">
+    <Reference Include="System.Net.Http" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\redmine-net-api\redmine-net-api.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\logo.png" Pack="true" PackagePath="\" />
+    <None Include="..\..\LICENSE" Pack="true" PackagePath="" />
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+</Project>
