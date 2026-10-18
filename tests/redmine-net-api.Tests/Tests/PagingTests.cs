@@ -43,7 +43,7 @@ public sealed class PagingTests
         return server.Requests.Select(r => r.RawUrl).OrderBy(u => u, StringComparer.Ordinal).ToArray();
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false, false)]
     [InlineData(false, true)]
     [InlineData(true, false)]
@@ -62,7 +62,7 @@ public sealed class PagingTests
         Assert.Equal([$"/issues.{ext}?limit=500&offset=0", $"/issues.{ext}?limit=500&offset=100", $"/issues.{ext}?limit=500&offset=200"], SortedUrls(server));
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
     public async Task User_Limit_Above_Server_Max_Returns_Limit_Items(bool async)
@@ -79,7 +79,7 @@ public sealed class PagingTests
         Assert.Equal(["/issues.xml?limit=250&offset=10", "/issues.xml?limit=250&offset=110", "/issues.xml?limit=250&offset=210"], SortedUrls(server));
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
     public async Task User_Limit_Above_Total_Returns_All_Items(bool async)
@@ -96,7 +96,7 @@ public sealed class PagingTests
         Assert.Equal(["/issues.xml?limit=250&offset=0", "/issues.xml?limit=250&offset=100"], SortedUrls(server));
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public void Stops_When_Server_Returns_No_Items_Before_Total()
     {
         using var server = new TestHttpServer(r => RedminePagedServer.ParseQuery(r.RawUrl)["offset"] == "50"
@@ -109,7 +109,7 @@ public sealed class PagingTests
         Assert.Equal(50, issues.Count);
         Assert.Equal(["/issues.xml?limit=25&offset=0", "/issues.xml?limit=25&offset=25", "/issues.xml?limit=25&offset=50"], SortedUrls(server));
     }
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
     public async Task Negative_User_Limit_Returns_First_Page(bool async)

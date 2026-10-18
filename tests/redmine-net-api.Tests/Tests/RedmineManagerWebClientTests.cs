@@ -79,7 +79,7 @@ public sealed class RedmineManagerWebClientTests
         return new WebException(statusCode.ToString(), null, WebExceptionStatus.ProtocolError, FakeHttpWebResponse.Create(statusCode, string.Empty, headers));
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public void Get_Should_Set_Exception_Details_On_Not_Found()
     {
         var (manager, _) = CreateManager(_ => throw ProtocolError(HttpStatusCode.NotFound, new WebHeaderCollection { { "X-Request-Id", "abc" } }));
@@ -95,7 +95,7 @@ public sealed class RedmineManagerWebClientTests
         Assert.Null(exception.ErrorCode);
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(HttpStatusCode.InternalServerError)]
     [InlineData(HttpStatusCode.BadRequest)]
     public void Get_Should_Not_Mark_Exception_As_Transient(HttpStatusCode statusCode)
@@ -108,7 +108,7 @@ public sealed class RedmineManagerWebClientTests
         Assert.False(exception.IsTransient);
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(HttpStatusCode.RequestTimeout)]
     [InlineData((HttpStatusCode)429)]
     [InlineData(HttpStatusCode.BadGateway)]
@@ -125,7 +125,7 @@ public sealed class RedmineManagerWebClientTests
         Assert.Equal("120", exception.ResponseHeaders["Retry-After"]);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public void Get_Should_Mark_Connection_Failure_As_Transient()
     {
         var (manager, _) = CreateManager(_ => throw new WebException("refused", WebExceptionStatus.ConnectFailure));
@@ -140,7 +140,7 @@ public sealed class RedmineManagerWebClientTests
         Assert.Equal("UNKNOWN", exception.ErrorCode);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public void Get_Should_Throw_RedmineApiException_On_Protocol_Error_Without_Response()
     {
         var (manager, _) = CreateManager(_ => throw new WebException("protocol", null, WebExceptionStatus.ProtocolError, null));
@@ -152,7 +152,7 @@ public sealed class RedmineManagerWebClientTests
         Assert.Equal("UNKNOWN", exception.ErrorCode);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public async Task GetAsync_Should_Throw_RedmineApiException_On_Protocol_Error_Without_Response()
     {
         var (manager, _) = CreateManager(_ => throw new WebException("protocol", null, WebExceptionStatus.ProtocolError, null));
@@ -164,7 +164,7 @@ public sealed class RedmineManagerWebClientTests
         Assert.Equal("UNKNOWN", exception.ErrorCode);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public void UploadFile_With_Null_Data_Should_Throw_RedmineApiException()
     {
         var (manager, clients) = CreateManager(_ => new FakeWebResponse("<upload><token>t</token></upload>"));
@@ -175,7 +175,7 @@ public sealed class RedmineManagerWebClientTests
         Assert.Empty(Assert.Single(clients).Requests);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public void Create_Should_Apply_RequestOptions_Headers()
     {
         var (manager, clients) = CreateManager(_ => new FakeWebResponse("<project><id>1</id><name>foo</name></project>"));
@@ -196,7 +196,7 @@ public sealed class RedmineManagerWebClientTests
         Assert.Equal("custom", request.Headers["X-Custom"]);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public void Get_Should_Not_Override_Authentication_And_Impersonation_With_RequestOptions_Headers()
     {
         var clients = new List<FakeWebClient>();
@@ -226,7 +226,7 @@ public sealed class RedmineManagerWebClientTests
         Assert.Equal("bob", request.Headers[RedmineConstants.IMPERSONATE_HEADER_KEY]);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public void Create_Without_RequestOptions_Should_Send_Default_Headers()
     {
         var (manager, clients) = CreateManager(_ => new FakeWebResponse("<project><id>1</id><name>foo</name></project>"));
@@ -239,7 +239,7 @@ public sealed class RedmineManagerWebClientTests
         Assert.Null(request.Headers[HttpRequestHeader.UserAgent]);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public void InternalWebClient_Should_Keep_Per_Request_UserAgent()
     {
         var request = CreateInternalWebRequest(
@@ -249,7 +249,7 @@ public sealed class RedmineManagerWebClientTests
         Assert.Equal("request-agent", request.UserAgent);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public void InternalWebClient_Should_Fall_Back_To_Default_UserAgent()
     {
         var request = CreateInternalWebRequest(new RedmineWebClientOptions { UserAgent = null });
@@ -257,7 +257,7 @@ public sealed class RedmineManagerWebClientTests
         Assert.Equal("RedmineDotNetAPIClient", request.UserAgent);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public void InternalWebClient_Should_Use_Options_UserAgent_By_Default()
     {
         var request = CreateInternalWebRequest(new RedmineWebClientOptions { UserAgent = "options-agent" });
@@ -265,7 +265,7 @@ public sealed class RedmineManagerWebClientTests
         Assert.Equal("options-agent", request.UserAgent);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public void Build_Should_Copy_ClientFunc()
     {
         Func<WebClient> clientFunc = () => new WebClient();
@@ -275,7 +275,7 @@ public sealed class RedmineManagerWebClientTests
         Assert.Same(clientFunc, options.ClientFunc);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public void Custom_WebClient_Should_Be_Used_With_BaseAddress()
     {
         var (manager, clients) = CreateManager(_ => new FakeWebResponse("<project><id>1</id><name>foo</name></project>"));
@@ -287,7 +287,7 @@ public sealed class RedmineManagerWebClientTests
         Assert.Equal($"{Host}/projects/1.xml", clients[0].Requests[0].RequestUri.ToString());
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public void Custom_WebClient_Func_Returning_Null_Should_Throw_RedmineException()
     {
         var manager = new RedmineManager(new RedmineManagerOptionsBuilder().WithHost(Host).WithWebClient(() => null));
@@ -295,7 +295,7 @@ public sealed class RedmineManagerWebClientTests
         Assert.Throws<RedmineException>(() => manager.Get<Project>("1"));
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public void Count_Should_Not_Mutate_Caller_RequestOptions()
     {
         var (manager, clients) = CreateManager(_ => new FakeWebResponse(IssuesPage));
@@ -308,7 +308,7 @@ public sealed class RedmineManagerWebClientTests
         Assert.Contains("limit=1", clients[0].Requests[0].RequestUri.Query);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public async Task CountAsync_Should_Send_Limit_And_Not_Mutate_Caller_RequestOptions()
     {
         var (manager, clients) = CreateManager(_ => new FakeWebResponse(IssuesPage));
@@ -321,7 +321,7 @@ public sealed class RedmineManagerWebClientTests
         Assert.Contains("limit=1", clients[0].Requests[0].RequestUri.Query);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public void Get_Should_Not_Mutate_Caller_RequestOptions()
     {
         var (manager, _) = CreateManager(_ => new FakeWebResponse(IssuesPage));
@@ -334,7 +334,7 @@ public sealed class RedmineManagerWebClientTests
         Assert.Null(requestOptions.QueryString[RedmineKeys.OFFSET]);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public void Update_Should_Throw_On_Unprocessable_Entity()
     {
         var (manager, _) = CreateManager(_ => throw UnprocessableEntity());
@@ -349,7 +349,7 @@ public sealed class RedmineManagerWebClientTests
         Assert.False(exception.IsTransient);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public async Task DeleteAsync_Should_Throw_On_Unprocessable_Entity()
     {
         var (manager, _) = CreateManager(_ => throw UnprocessableEntity());
@@ -360,7 +360,7 @@ public sealed class RedmineManagerWebClientTests
         Assert.Equal("Name cannot be blank", exception.Message);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public void Create_Should_Throw_On_Unprocessable_Entity()
     {
         var (manager, _) = CreateManager(_ => throw UnprocessableEntity());
@@ -371,7 +371,7 @@ public sealed class RedmineManagerWebClientTests
         Assert.Equal("Name cannot be blank", exception.Message);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public async Task ArchiveProjectAsync_Should_Put_To_Unescaped_Url()
     {
         var (manager, clients) = CreateManager(_ => new FakeWebResponse(string.Empty));
@@ -383,7 +383,7 @@ public sealed class RedmineManagerWebClientTests
         Assert.Equal($"{Host}/projects/foo/archive.xml", request.RequestUri.ToString());
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public void UnarchiveProject_Should_Put_To_Unescaped_Url()
     {
         var (manager, clients) = CreateManager(_ => new FakeWebResponse(string.Empty));
@@ -408,7 +408,7 @@ public sealed class RedmineManagerWebClientTests
         return (HttpWebRequest)getWebRequest!.Invoke(webClient, [new Uri($"{Host}/projects.xml")]);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public void InternalWebClient_Should_Merge_DefaultHeaders_And_Bypass_Proxy_By_Default()
     {
         var request = CreateInternalWebRequest(
@@ -420,7 +420,7 @@ public sealed class RedmineManagerWebClientTests
         Assert.Null(request.Proxy);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public void InternalWebClient_Should_Send_DefaultHeaders_Not_Set_By_Request()
     {
         var request = CreateInternalWebRequest(new RedmineWebClientOptions { DefaultHeaders = new Dictionary<string, string> { { "X-Custom", "default" } } });
@@ -428,7 +428,7 @@ public sealed class RedmineManagerWebClientTests
         Assert.Equal("default", request.Headers["X-Custom"]);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public void InternalWebClient_Should_Not_Override_Request_Headers_With_DefaultHeaders()
     {
         var request = CreateInternalWebRequest(
@@ -459,7 +459,7 @@ public sealed class RedmineManagerWebClientTests
         Assert.Equal(RedmineConstants.CONTENT_TYPE_APPLICATION_XML, request.ContentType);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public void InternalWebClient_Should_Keep_Default_Proxy_When_UseProxy_Is_True()
     {
         var request = CreateInternalWebRequest(new RedmineWebClientOptions { UseProxy = true });
@@ -467,7 +467,7 @@ public sealed class RedmineManagerWebClientTests
         Assert.Same(WebRequest.DefaultWebProxy, request.Proxy);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public void InternalWebClient_Should_Use_Configured_Proxy()
     {
         var proxy = new WebProxy("http://proxy.local:8080");
@@ -477,7 +477,7 @@ public sealed class RedmineManagerWebClientTests
         Assert.Same(proxy, request.Proxy);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public void Custom_WebClientOptions_Implementation_Should_Create_ApiClient()
     {
         var (manager, _) = CreateManager(_ => new FakeWebResponse("<project><id>1</id><name>foo</name></project>"), new CustomWebClientOptions());
@@ -487,7 +487,7 @@ public sealed class RedmineManagerWebClientTests
         Assert.Equal("foo", project.Name);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public async Task GetAsync_Should_Throw_When_Request_Is_Canceled_Without_Caller_Cancellation()
     {
         var (manager, _) = CreateManager(_ => throw new WebException("canceled", WebExceptionStatus.RequestCanceled));
@@ -495,7 +495,7 @@ public sealed class RedmineManagerWebClientTests
         await Assert.ThrowsAsync<RedmineApiException>(() => manager.GetAsync<Project>("1", cancellationToken: TestContext.Current.CancellationToken));
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData("attachments/download/1/a.txt", Host + "/attachments/download/1/a.txt")]
     [InlineData("http://files.local:8080/attachments/download/1/a.txt", "http://files.local:8080/attachments/download/1/a.txt")]
     public void DownloadFile_Should_Resolve_Address(string address, string expected)
@@ -508,7 +508,7 @@ public sealed class RedmineManagerWebClientTests
         Assert.Equal(expected, clients[0].Requests[0].RequestUri.ToString());
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData("attachments/download/1/a.txt", Host + "/attachments/download/1/a.txt")]
     [InlineData("http://files.local:8080/attachments/download/1/a.txt", "http://files.local:8080/attachments/download/1/a.txt")]
     public void DownloadFile_With_Progress_Should_Resolve_Address(string address, string expected)
@@ -521,7 +521,7 @@ public sealed class RedmineManagerWebClientTests
         Assert.Equal(expected, clients[0].Requests[0].RequestUri.ToString());
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public async Task DownloadFile_With_Progress_Should_Not_Time_Out_When_Timeout_Is_Set()
     {
         var (manager, _) = CreateManager(_ => SlowResponse(), new RedmineWebClientOptions { Timeout = TimeSpan.FromMilliseconds(100) });
@@ -531,7 +531,7 @@ public sealed class RedmineManagerWebClientTests
         Assert.Equal("abc", System.Text.Encoding.UTF8.GetString(data));
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public async Task DownloadFileAsync_Should_Not_Time_Out_When_Timeout_Is_Set()
     {
         var (manager, _) = CreateManager(_ => SlowResponse(), new RedmineWebClientOptions { Timeout = TimeSpan.FromMilliseconds(100) });
@@ -541,7 +541,7 @@ public sealed class RedmineManagerWebClientTests
         Assert.Equal("abc", System.Text.Encoding.UTF8.GetString(data));
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public async Task GetAsync_Should_Throw_Timeout_When_Timeout_Is_Set()
     {
         var manager = CreateHangingManager(TimeSpan.FromMilliseconds(200));
@@ -555,7 +555,7 @@ public sealed class RedmineManagerWebClientTests
         Assert.Equal("UNKNOWN", exception.ErrorCode);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public async Task GetAsync_Should_Throw_Timeout_When_Timeout_Is_Zero()
     {
         var manager = CreateHangingManager(TimeSpan.Zero);
@@ -565,7 +565,7 @@ public sealed class RedmineManagerWebClientTests
         Assert.Equal(nameof(WebExceptionStatus.Timeout), exception.Message);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public async Task GetAsync_Should_Not_Time_Out_When_Timeout_Is_Not_Set()
     {
         var manager = CreateHangingManager(null);
@@ -579,7 +579,7 @@ public sealed class RedmineManagerWebClientTests
         Assert.True(cts.IsCancellationRequested);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public async Task GetAsync_Should_Throw_With_Unknown_ErrorCode_When_Canceled_By_User()
     {
         var manager = CreateHangingManager(TimeSpan.FromSeconds(30));
@@ -593,7 +593,7 @@ public sealed class RedmineManagerWebClientTests
         Assert.False(exception.IsTransient);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public void Creating_Manager_Should_Not_Reset_CheckCertificateRevocationList()
     {
         var original = ServicePointManager.CheckCertificateRevocationList;
@@ -612,7 +612,7 @@ public sealed class RedmineManagerWebClientTests
     }
 
 #pragma warning disable CS0618
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public async Task Obsolete_GetCurrentUserAsync_Should_Pass_Parameters_And_Impersonation()
     {
         var (manager, clients) = CreateManager(_ => new FakeWebResponse("<user><id>1</id></user>"));
@@ -624,7 +624,7 @@ public sealed class RedmineManagerWebClientTests
         Assert.Equal("bob", request.Headers[RedmineConstants.IMPERSONATE_HEADER_KEY]);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public async Task Obsolete_CountAsync_Should_Pass_Include()
     {
         var (manager, clients) = CreateManager(_ => new FakeWebResponse(IssuesPage));
@@ -636,7 +636,7 @@ public sealed class RedmineManagerWebClientTests
     }
 #pragma warning restore CS0618
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public void Get_List_Should_Return_Null_On_Empty_Response()
     {
         var (manager, _) = CreateManager(_ => new FakeWebResponse(string.Empty));
@@ -644,7 +644,7 @@ public sealed class RedmineManagerWebClientTests
         Assert.Null(manager.Get<Issue>());
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public async Task GetAllWikiPagesAsync_Should_Return_Null_On_Empty_Response()
     {
         var (manager, _) = CreateManager(_ => new FakeWebResponse(string.Empty));

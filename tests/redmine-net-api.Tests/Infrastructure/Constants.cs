@@ -6,6 +6,7 @@ public static class Constants
     public const string JsonNewtonsoft = "JsonNewtonsoft";
     public const string JsonSystemText = "JsonSystemText";
     public const string Xml = "Xml";
+    public const int TestTimeout = 30_000;
 
     public static class ConditionalCompilationSymbol
     {

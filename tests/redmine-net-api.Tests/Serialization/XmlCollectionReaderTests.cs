@@ -13,7 +13,7 @@ namespace Padi.DotNet.RedmineAPI.Tests.Serialization;
 [Collection(Constants.DeserializeCollection)]
 public class XmlCollectionReaderTests
 {
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public void Should_Read_Collection_With_Attributeless_Empty_Item()
     {
         const string input = """<journals type="array"><journal/><journal id="2"><notes>n</notes></journal></journals>""";
@@ -25,7 +25,7 @@ public class XmlCollectionReaderTests
         Assert.Equal("n", result[1].Notes);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public void Should_Read_Collection_With_Attribute_Item_Followed_By_Element_Item()
     {
         const string input = """<watchers type="array"><user id="1" name="A"/><user id="2" name="B"></user><user id="3" name="C"/></watchers>""";
@@ -35,7 +35,7 @@ public class XmlCollectionReaderTests
         Assert.Equal([1, 2, 3], result.Select(w => w.Id));
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public void Should_Read_Collection_Of_Attribute_Only_Relations()
     {
         const string input = """<relations type="array"><relation id="1" issue_id="2" issue_to_id="3" relation_type="relates"/><relation id="4" issue_id="2" issue_to_id="5" relation_type="blocks"/></relations>""";
@@ -46,7 +46,7 @@ public class XmlCollectionReaderTests
         Assert.Equal(IssueRelationType.Blocks, result[1].Type);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public void Should_Read_Enumerable()
     {
         const string input = """<watchers type="array"><user id="1" name="A"/><user id="2" name="B"/></watchers>""";
@@ -56,7 +56,7 @@ public class XmlCollectionReaderTests
         Assert.Equal([1, 2], result.Select(w => w.Id));
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public void Should_Read_Enumerable_From_Exhausted_Reader_As_Empty()
     {
         const string input = """<watchers type="array"></watchers>""";

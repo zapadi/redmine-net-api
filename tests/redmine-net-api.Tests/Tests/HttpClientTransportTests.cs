@@ -78,14 +78,14 @@ public sealed class HttpClientTransportTests : IDisposable
             : Assert.Throws<RedmineApiException>(sync);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public void Constructor_With_Null_HttpClient_Should_Throw_ArgumentNullException()
     {
         Assert.Equal("httpClient", Assert.Throws<ArgumentNullException>(() => new HttpClientTransport(null)).ParamName);
         Assert.Equal("httpClient", Assert.Throws<ArgumentNullException>(() => new RedmineManagerOptionsBuilder().WithHttpClient(null)).ParamName);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public void WithHttpClient_Should_Not_Be_Combined_With_WebClientOptions()
     {
         using var client = new HttpClient();
@@ -97,7 +97,7 @@ public sealed class HttpClientTransportTests : IDisposable
         Assert.Throws<RedmineException>(() => new RedmineManager(builder));
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
     public async Task Crud_Should_Be_Sent_Through_HttpClient(bool async)
@@ -139,7 +139,7 @@ public sealed class HttpClientTransportTests : IDisposable
         Assert.Contains("<name>p</name>", Encoding.UTF8.GetString(requests[2].Body), StringComparison.Ordinal);
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
     public async Task Paging_Should_Fetch_All_Pages(bool async)
@@ -162,7 +162,7 @@ public sealed class HttpClientTransportTests : IDisposable
         Assert.Equal(3, server.Requests.Count);
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
     public async Task Download_Should_Return_Bytes_And_Report_Progress(bool async)
@@ -183,7 +183,7 @@ public sealed class HttpClientTransportTests : IDisposable
         Assert.All(progress.Values, value => Assert.InRange(value, 0, 100));
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false, 404, false)]
     [InlineData(true, 404, false)]
     [InlineData(false, 503, true)]
@@ -201,7 +201,7 @@ public sealed class HttpClientTransportTests : IDisposable
         Assert.Equal("abc", exception.ResponseHeaders["X-Request-Id"]);
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
     public async Task Unprocessable_Entity_Should_Throw_With_Validation_Message(bool async)
@@ -218,7 +218,7 @@ public sealed class HttpClientTransportTests : IDisposable
         Assert.False(exception.IsTransient);
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
     public async Task HttpClient_Timeout_Should_Throw_Transient_Timeout(bool async)
@@ -234,7 +234,7 @@ public sealed class HttpClientTransportTests : IDisposable
         Assert.Equal("GET", exception.Method);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public async Task Caller_Cancellation_Should_Throw_Canceled_By_User()
     {
         var server = Server(_ => new TestHttpResponse { Delay = TimeSpan.FromSeconds(5) });
@@ -248,7 +248,7 @@ public sealed class HttpClientTransportTests : IDisposable
         Assert.False(exception.IsTransient);
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
     public async Task Connection_Refused_Should_Throw_Transient_Exception(bool async)
@@ -263,7 +263,7 @@ public sealed class HttpClientTransportTests : IDisposable
         Assert.Equal("UNKNOWN", exception.ErrorCode);
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
     public async Task DefaultRequestHeaders_Should_Not_Override_Request_Headers(bool async)
@@ -299,7 +299,7 @@ public sealed class HttpClientTransportTests : IDisposable
         Assert.Equal("custom-agent", headers["User-Agent"]);
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
     public async Task DefaultRequestHeaders_Should_Be_Sent_When_Request_Does_Not_Set_Them(bool async)

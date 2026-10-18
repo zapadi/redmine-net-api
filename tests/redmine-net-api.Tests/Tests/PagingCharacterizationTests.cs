@@ -61,7 +61,7 @@ public sealed class PagingCharacterizationTests
         return issues.Select(i => i.Id).ToArray();
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false, false)]
     [InlineData(false, true)]
     [InlineData(true, false)]
@@ -82,7 +82,7 @@ public sealed class PagingCharacterizationTests
             Sorted(Urls(server)));
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
     public async Task Get_Issues_Custom_Page_Size_Up_To_Server_Max(bool async)
@@ -98,7 +98,7 @@ public sealed class PagingCharacterizationTests
         Assert.Equal(["/issues.xml?limit=100&offset=0", "/issues.xml?limit=100&offset=100", "/issues.xml?limit=100&offset=200"], Sorted(Urls(server)));
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
     public async Task Get_Issues_Exact_Multiple_Of_Page_Size(bool async)
@@ -114,7 +114,7 @@ public sealed class PagingCharacterizationTests
         Assert.Equal(["/issues.xml?limit=25&offset=0", "/issues.xml?limit=25&offset=25"], Sorted(Urls(server)));
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
     public async Task Get_Issues_With_User_Limit_Returns_One_Page_Of_Limit(bool async)
@@ -133,7 +133,7 @@ public sealed class PagingCharacterizationTests
         Assert.Equal("5", options.QueryString["offset"]);
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
     public async Task Get_Issues_With_User_Offset_Fetches_Remaining_Pages(bool async)
@@ -150,7 +150,7 @@ public sealed class PagingCharacterizationTests
         Assert.Equal(["/issues.xml?offset=30&limit=25", "/issues.xml?offset=55&limit=25"], Sorted(Urls(server)));
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
     public async Task Get_Issues_With_Filters_Keeps_Filters_On_Every_Page(bool async)
@@ -167,7 +167,7 @@ public sealed class PagingCharacterizationTests
         Assert.Equal(["/issues.xml?project_id=p-1&status_id=*&limit=25&offset=0", "/issues.xml?project_id=p-1&status_id=*&limit=25&offset=25"], Sorted(Urls(server)));
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
     public async Task Get_Issues_Empty_Result(bool async)
@@ -183,7 +183,7 @@ public sealed class PagingCharacterizationTests
         Assert.Equal(["/issues.xml?limit=25&offset=0"], Urls(server));
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false, false)]
     [InlineData(false, true)]
     [InlineData(true, false)]
@@ -202,7 +202,7 @@ public sealed class PagingCharacterizationTests
         Assert.Equal([$"/issue_statuses.{ext}?limit=25"], Urls(server));
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
     public async Task Get_Non_Paginated_Type_With_User_Limit_And_Offset_Makes_One_Request(bool async)
@@ -219,7 +219,7 @@ public sealed class PagingCharacterizationTests
         Assert.Equal(["/issue_statuses.xml?limit=3&offset=2"], Urls(server));
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
     public async Task Count_Requests_One_Item(bool async)
@@ -237,7 +237,7 @@ public sealed class PagingCharacterizationTests
         Assert.Null(options.QueryString["limit"]);
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
     public async Task GetPaginated_Sends_Options_As_Is(bool async)

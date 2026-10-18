@@ -29,6 +29,8 @@ internal sealed class TestHttpResponse
 
 internal sealed class TestHttpServer : IDisposable
 {
+    private static readonly TimeSpan MaxHold = TimeSpan.FromSeconds(30);
+
     private readonly HttpListener _listener;
     private readonly Func<RecordedRequest, TestHttpResponse> _handler;
     private readonly ManualResetEvent _stopped = new(false);
@@ -131,7 +133,7 @@ internal sealed class TestHttpServer : IDisposable
             if (response.ContentLength.HasValue)
             {
                 context.Response.OutputStream.Flush();
-                _stopped.WaitOne();
+                _stopped.WaitOne(MaxHold);
                 context.Response.Abort();
                 return;
             }

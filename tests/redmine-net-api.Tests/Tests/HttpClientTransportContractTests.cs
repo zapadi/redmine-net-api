@@ -38,7 +38,7 @@ public sealed class HttpClientTransportContractTests : RedmineTransportContractT
         Assert.IsAssignableFrom<OperationCanceledException>(Assert.IsType<TimeoutException>(exception).InnerException);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public async Task Header_Set_To_Null_Should_Be_Skipped()
     {
         using var server = new TestHttpServer(_ => new TestHttpResponse());
