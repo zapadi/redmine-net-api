@@ -133,7 +133,7 @@ namespace Redmine.Net.Api.Net.WebClient
                 cancellationToken.ThrowIfCancellationRequested();
                 if (timeoutTokenSource?.IsCancellationRequested == true)
                 {
-                    throw new TimeoutException();
+                    throw new WebException(nameof(WebExceptionStatus.Timeout), null, WebExceptionStatus.Timeout, null);
                 }
 
                 if (request.Progress != null)
@@ -190,7 +190,7 @@ namespace Redmine.Net.Api.Net.WebClient
 
                 if (timeoutTokenSource?.IsCancellationRequested == true)
                 {
-                    throw new TimeoutException(ex.Message, ex);
+                    throw new WebException(nameof(WebExceptionStatus.Timeout), ex, WebExceptionStatus.Timeout, null);
                 }
 
                 throw;
@@ -282,7 +282,7 @@ namespace Redmine.Net.Api.Net.WebClient
             {
                 context.CompletedHandler = (sender, e) =>
                 {
-                    context.Data = e.Cancelled ? null : e.Result;
+                    context.Data = e.Error == null && !e.Cancelled ? e.Result : null;
                     context.Error = e.Error;
 
                     context.Client.DownloadDataCompleted -= context.CompletedHandler;
@@ -352,7 +352,10 @@ namespace Redmine.Net.Api.Net.WebClient
 
             foreach (string key in request.Headers)
             {
-                webClient.Headers[key] = request.Headers[key];
+                foreach (var value in request.Headers.GetValues(key)!)
+                {
+                    webClient.Headers[key] = value;
+                }
             }
         }
 
@@ -364,7 +367,7 @@ namespace Redmine.Net.Api.Net.WebClient
             }
 
             webClient.Headers[HttpRequestHeader.ContentType] = request.ContentType;
-            return request.Body;
+            return request.Body!;
         }
 
         private static RedmineTransportResponse CreateResponse(System.Net.WebClient webClient, string? content, byte[]? body)
@@ -393,7 +396,7 @@ namespace Redmine.Net.Api.Net.WebClient
             Exception? bodyError = null;
             using (var responseStream = exception.Response!.GetResponseStream())
             {
-                if (responseStream != null)
+                if (statusCode == HttpConstants.StatusCodes.UnprocessableEntity && responseStream != null)
                 {
                     try
                     {

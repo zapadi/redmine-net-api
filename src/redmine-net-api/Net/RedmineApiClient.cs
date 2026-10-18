@@ -148,13 +148,9 @@ namespace Redmine.Net.Api.Net
             {
                 response = await _transport.SendAsync(request, cancellationToken).ConfigureAwait(false);
             }
-            catch (OperationCanceledException ex) when (ex.InnerException != null)
+            catch (OperationCanceledException ex) when (ex.InnerException is WebException { Status: WebExceptionStatus.RequestCanceled })
             {
                 throw RedmineApiExceptionHelper.Create("The operation was canceled by the user.", ex.InnerException, null, GetMethod(request), GetEndpoint(request), null, errorCode: RedmineApiExceptionHelper.UnknownErrorCode);
-            }
-            catch (TimeoutException ex)
-            {
-                throw HandleWebException(new WebException(nameof(WebExceptionStatus.Timeout), ex.InnerException, WebExceptionStatus.Timeout, null), request);
             }
             catch (WebException webException)
             {
@@ -213,33 +209,33 @@ namespace Redmine.Net.Api.Net
             {
                 foreach (var header in requestMessage.Headers)
                 {
-                    headers[header.Key] = header.Value;
+                    headers.Add(header.Key, header.Value ?? string.Empty);
                 }
             }
 
             if (!requestMessage.Accept.IsNullOrWhiteSpace())
             {
-                headers["Accept"] = requestMessage.Accept;
+                headers.Add("Accept", requestMessage.Accept);
             }
 
             if (!requestMessage.UserAgent.IsNullOrWhiteSpace())
             {
-                headers["User-Agent"] = requestMessage.UserAgent;
+                headers.Add("User-Agent", requestMessage.UserAgent);
             }
 
             switch (_credentials)
             {
                 case RedmineApiKeyAuthentication:
-                    headers[_credentials.AuthenticationType] = _credentials.Token;
+                    headers.Add(_credentials.AuthenticationType, _credentials.Token ?? string.Empty);
                     break;
                 case RedmineBasicAuthentication:
-                    headers["Authorization"] = $"{_credentials.AuthenticationType} {_credentials.Token}";
+                    headers.Add("Authorization", $"{_credentials.AuthenticationType} {_credentials.Token}");
                     break;
             }
 
             if (!requestMessage.ImpersonateUser.IsNullOrWhiteSpace())
             {
-                headers[RedmineConstants.IMPERSONATE_HEADER_KEY] = requestMessage.ImpersonateUser;
+                headers.Add(RedmineConstants.IMPERSONATE_HEADER_KEY, requestMessage.ImpersonateUser);
             }
 
             return headers;
@@ -309,6 +305,7 @@ namespace Redmine.Net.Api.Net
             }
 
             RedmineApiExceptionHelper.MapStatusCodeToException(statusCode, response.Error?.InnerException ?? response.Error, method, endpoint, responseHeaders);
+            throw new InvalidOperationException($"HTTP status code {statusCode} was not mapped to an exception.");
         }
 
         private static RedmineApiException HandleWebException(WebException exception, RedmineTransportRequest request)
@@ -345,7 +342,7 @@ namespace Redmine.Net.Api.Net
         {
             var baseAddress = request.BaseAddress;
             var address = request.Address;
-            return !baseAddress.IsNullOrWhiteSpace() && Uri.TryCreate(new Uri(baseAddress), address, out var uri)
+            return !baseAddress.IsNullOrWhiteSpace() && Uri.TryCreate(new Uri(baseAddress!), address, out var uri)
                 ? uri.ToString()
                 : address;
         }
