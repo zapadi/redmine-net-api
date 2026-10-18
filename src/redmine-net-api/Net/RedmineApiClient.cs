@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
 using System.Net;
+using System.Text;
 using System.Threading;
 using Redmine.Net.Api.Authentication;
 using Redmine.Net.Api.Exceptions;
@@ -189,14 +190,35 @@ namespace Redmine.Net.Api.Net
 
         private RedmineTransportRequest CreateTransportRequest(ApiRequestMessage requestMessage, IProgress<int>? progress)
         {
-            return new RedmineTransportRequest(requestMessage.Method, requestMessage.RequestUri)
+            var address = requestMessage.RequestUri;
+            var queryString = requestMessage.QueryString;
+            if (queryString is { Count: > 0 } && address != null && address.IndexOf('?') >= 0)
             {
-                QueryString = requestMessage.QueryString,
+                address = AppendQueryString(address, queryString);
+                queryString = null;
+            }
+
+            return new RedmineTransportRequest(requestMessage.Method, address)
+            {
+                QueryString = queryString,
                 Headers = CreateHeaders(requestMessage),
                 ContentType = requestMessage.Content != null ? requestMessage.ContentType.ValueOrFallback(requestMessage.Content.ContentType) : null,
                 Body = requestMessage.Content?.Body,
                 Progress = progress,
             };
+        }
+
+        private static string AppendQueryString(string address, NameValueCollection queryString)
+        {
+            var builder = new StringBuilder(address);
+            var delimiter = address.IndexOf('?') >= 0 ? '&' : '?';
+            for (var i = 0; i < queryString.Count; i++)
+            {
+                builder.Append(delimiter).Append(queryString.GetKey(i)).Append('=').Append(queryString.Get(i));
+                delimiter = '&';
+            }
+
+            return builder.ToString();
         }
 
         private NameValueCollection CreateHeaders(ApiRequestMessage requestMessage)
