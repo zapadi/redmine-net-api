@@ -88,7 +88,7 @@ namespace Redmine.Net.Api
                 : MimeFormat.Json;
             
             RedmineApiUrls = new RedmineApiUrls(Serializer.Format);
-            ApiClient = new RedmineApiClient(transport ?? new WebClientTransport(_redmineManagerOptions), _redmineManagerOptions.Authentication, _redmineManagerOptions.Serializer);
+            ApiClient = new RedmineApiClient(transport ?? new WebClientTransport(_redmineManagerOptions), _redmineManagerOptions.Authentication, _redmineManagerOptions.Serializer, _redmineManagerOptions.EncodeQueryString);
         }
 
         /// <inheritdoc />

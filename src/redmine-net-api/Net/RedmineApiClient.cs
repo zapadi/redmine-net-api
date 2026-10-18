@@ -39,12 +39,14 @@ namespace Redmine.Net.Api.Net
         private readonly IRedmineTransport _transport;
         private readonly IRedmineAuthentication _credentials;
         private readonly IRedmineSerializer _serializer;
+        private readonly bool _encodeQueryString;
 
-        public RedmineApiClient(IRedmineTransport transport, IRedmineAuthentication authentication, IRedmineSerializer serializer)
+        public RedmineApiClient(IRedmineTransport transport, IRedmineAuthentication authentication, IRedmineSerializer serializer, bool encodeQueryString = false)
         {
             _transport = transport;
             _credentials = authentication;
             _serializer = serializer;
+            _encodeQueryString = encodeQueryString;
         }
 
         public ApiResponseMessage Get(string address, RequestOptions? requestOptions = null)
@@ -192,7 +194,7 @@ namespace Redmine.Net.Api.Net
         {
             var address = requestMessage.RequestUri;
             var queryString = requestMessage.QueryString;
-            if (queryString is { Count: > 0 } && address != null && address.IndexOf('?') >= 0)
+            if (queryString is { Count: > 0 } && address != null && (_encodeQueryString || address.IndexOf('?') >= 0))
             {
                 address = AppendQueryString(address, queryString);
                 queryString = null;
@@ -208,17 +210,22 @@ namespace Redmine.Net.Api.Net
             };
         }
 
-        private static string AppendQueryString(string address, NameValueCollection queryString)
+        private string AppendQueryString(string address, NameValueCollection queryString)
         {
             var builder = new StringBuilder(address);
             var delimiter = address.IndexOf('?') >= 0 ? '&' : '?';
             for (var i = 0; i < queryString.Count; i++)
             {
-                builder.Append(delimiter).Append(queryString.GetKey(i)).Append('=').Append(queryString.Get(i));
+                builder.Append(delimiter).Append(EncodeQueryValue(queryString.GetKey(i))).Append('=').Append(EncodeQueryValue(queryString.Get(i)));
                 delimiter = '&';
             }
 
             return builder.ToString();
+        }
+
+        private string? EncodeQueryValue(string? value)
+        {
+            return _encodeQueryString && value is { Length: > 0 } ? Uri.EscapeDataString(value) : value;
         }
 
         private NameValueCollection CreateHeaders(ApiRequestMessage requestMessage)

@@ -213,6 +213,21 @@ namespace Redmine.Net.Api
         /// </summary>
         public bool VerifyServerCert { get; private set; }
 
+        private bool _isQueryStringEncodingEnabled;
+
+        /// <summary>
+        /// Encodes the query string keys and values (RequestOptions.QueryString) with <see cref="Uri.EscapeDataString(string)"/>.
+        /// </summary>
+        /// <remarks>
+        /// Disabled by default. Do not enable it if the query string values are already encoded, they would be encoded twice.
+        /// </remarks>
+        /// <returns>The current builder.</returns>
+        public RedmineManagerOptionsBuilder WithQueryStringEncoding()
+        {
+            _isQueryStringEncodingEnabled = true;
+            return this;
+        }
+
         private bool _isSerializationIgnored;
         
         /// <summary>
@@ -267,7 +282,8 @@ namespace Redmine.Net.Api
                 RedmineVersion = Version,
                 Authentication = Authentication ?? new RedmineNoAuthentication(),
                 WebClientOptions = WebClientOptions,
-                ClientFunc = ClientFunc
+                ClientFunc = ClientFunc,
+                EncodeQueryString = _isQueryStringEncodingEnabled,
             };
             
             return options;

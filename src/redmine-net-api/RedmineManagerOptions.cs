@@ -72,5 +72,7 @@ namespace Redmine.Net.Api
         internal bool VerifyServerCert { get; init; }
 
         internal RemoteCertificateValidationCallback ServerCertificateValidationCallback { get; set; }
+
+        internal bool EncodeQueryString { get; init; }
     }
 }
