@@ -66,7 +66,7 @@ jobs:
 
             version=$(dotnet msbuild "$project" -getProperty:Version)
             published=$(.github/scripts/nuget-versions.sh "$package")
-            if grep -qx "$version" <<< "$published"; then
+            if grep -qixF "$version" <<< "$published"; then
               echo "::error::$package $version is already on nuget.org. Bump <Version> in $project."
               exit 1
             fi

@@ -97,7 +97,7 @@ jobs:
         run: |
           baseline=$(.github/scripts/nuget-versions.sh redmine-api | awk '!/-/ { v = $0 } END { print v }')
           signed_baseline=$(.github/scripts/nuget-versions.sh redmine-api-signed | awk '!/-/ { v = $0 } END { print v }')
-          dotnet pack src/redmine-net-api/redmine-net-api.csproj --configuration Release --no-build --output ./artifacts -p:PackageValidationBaselineVersion="$baseline"
+          dotnet pack src/redmine-net-api/redmine-net-api.csproj --configuration Release --output ./artifacts -p:PackageValidationBaselineVersion="$baseline"
           dotnet pack src/redmine-net-api.Http/redmine-net-api.Http.csproj --configuration Release --no-build --output ./artifacts
           dotnet pack src/redmine-net-api/redmine-net-api.csproj --configuration Release --output ./artifacts -p:Sign=true -p:PackageValidationBaselineVersion="$signed_baseline"
           dotnet pack src/redmine-net-api.Http/redmine-net-api.Http.csproj --configuration Release --output ./artifacts -p:Sign=true
