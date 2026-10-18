@@ -84,6 +84,10 @@ public sealed class RedmineTransportRequest
     /// <summary>
     /// Gets the content type of <see cref="Body"/>, or <c>null</c> when the request has no body.
     /// </summary>
+    /// <remarks>
+    /// This value is authoritative for the body: a transport must send it as the body content type
+    /// and must not use a Content-Type entry in <see cref="Headers"/> for the body.
+    /// </remarks>
     public string? ContentType { get; internal init; }
 
     /// <summary>

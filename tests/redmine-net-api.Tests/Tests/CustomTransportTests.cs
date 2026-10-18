@@ -198,14 +198,41 @@ public sealed class CustomTransportTests
     }
 
     [Fact]
+    public void Library_Headers_Should_Override_Request_Option_Headers_With_A_Single_Value()
+    {
+        var transport = new FakeTransport(_ => Xml(ProjectXml));
+        var manager = CreateManager(transport);
+
+        manager.Get<Project>("1", new RequestOptions
+        {
+            ImpersonateUser = "bob",
+            Accept = "application/xml",
+            UserAgent = "agent",
+            Headers = new Dictionary<string, string>
+            {
+                { "x-redmine-api-key", "other" },
+                { "ACCEPT", "text/plain" },
+                { "user-agent", "other-agent" },
+                { RedmineConstants.IMPERSONATE_HEADER_KEY, "alice" },
+            },
+        });
+
+        var headers = Assert.Single(transport.Requests).Headers;
+        Assert.Equal("secret", Assert.Single(headers.GetValues("X-Redmine-API-Key")));
+        Assert.Equal("application/xml", Assert.Single(headers.GetValues("Accept")));
+        Assert.Equal("agent", Assert.Single(headers.GetValues("User-Agent")));
+        Assert.Equal("bob", Assert.Single(headers.GetValues(RedmineConstants.IMPERSONATE_HEADER_KEY)));
+    }
+
+    [Fact]
     public void Basic_Authentication_Should_Set_Authorization_Header()
     {
         var transport = new FakeTransport(_ => Xml(ProjectXml));
         var manager = CreateManager(transport, b => b.WithBasicAuthentication("user", "pass"));
 
-        manager.Get<Project>("1");
+        manager.Get<Project>("1", new RequestOptions { Headers = new Dictionary<string, string> { { "authorization", "Bearer other" } } });
 
-        Assert.Equal("Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes("user:pass")), Assert.Single(transport.Requests).Headers["Authorization"]);
+        Assert.Equal("Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes("user:pass")), Assert.Single(Assert.Single(transport.Requests).Headers.GetValues("Authorization")));
     }
 
     [Theory]

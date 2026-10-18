@@ -301,30 +301,42 @@ namespace Redmine.Net.Api.Net
 
             if (!requestMessage.Accept.IsNullOrWhiteSpace())
             {
-                headers.Add("Accept", requestMessage.Accept);
+                SetHeader(headers, "Accept", requestMessage.Accept);
             }
 
             if (!requestMessage.UserAgent.IsNullOrWhiteSpace())
             {
-                headers.Add("User-Agent", requestMessage.UserAgent);
+                SetHeader(headers, "User-Agent", requestMessage.UserAgent);
             }
 
             switch (_credentials)
             {
                 case RedmineApiKeyAuthentication:
-                    headers.Add(_credentials.AuthenticationType, _credentials.Token ?? string.Empty);
+                    SetHeader(headers, _credentials.AuthenticationType, _credentials.Token ?? string.Empty);
                     break;
                 case RedmineBasicAuthentication:
-                    headers.Add("Authorization", $"{_credentials.AuthenticationType} {_credentials.Token}");
+                    SetHeader(headers, "Authorization", $"{_credentials.AuthenticationType} {_credentials.Token}");
                     break;
             }
 
             if (!requestMessage.ImpersonateUser.IsNullOrWhiteSpace())
             {
-                headers.Add(RedmineConstants.IMPERSONATE_HEADER_KEY, requestMessage.ImpersonateUser);
+                SetHeader(headers, RedmineConstants.IMPERSONATE_HEADER_KEY, requestMessage.ImpersonateUser);
             }
 
             return headers;
+        }
+
+        private void SetHeader(NameValueCollection headers, string name, string? value)
+        {
+            if (_isCustomTransport)
+            {
+                headers.Set(name, value);
+            }
+            else
+            {
+                headers.Add(name, value);
+            }
         }
 
         private ApiResponseMessage HandleRequest(string address, string verb, RequestOptions? requestOptions = null, ApiRequestMessageContent? content = null, bool isDownload = false, IProgress<int>? progress = null)
