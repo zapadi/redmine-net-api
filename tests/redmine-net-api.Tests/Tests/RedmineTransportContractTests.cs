@@ -165,7 +165,7 @@ public abstract class RedmineTransportContractTests
         Assert.Equal("GET", Assert.Single(server.Requests).Method);
         Assert.Equal(data, response.Body);
         Assert.Null(response.Content);
-        Assert.NotEmpty(progress.Values);
+        Assert.True(SpinWait.SpinUntil(() => progress.Values.Length > 0, TimeSpan.FromSeconds(5)));
     }
 
     [Fact]

@@ -329,7 +329,7 @@ public sealed class RedmineApiClientCharacterizationTests(XmlPrettyPrintFixture 
             : manager.DownloadFile("attachments/download/1/a.bin", progress: progress);
 
         Assert.Equal(data, result);
-        Assert.NotEmpty(progress.Values);
+        Assert.True(SpinWait.SpinUntil(() => progress.Values.Length > 0, TimeSpan.FromSeconds(5)));
         Assert.All(progress.Values, value => Assert.InRange(value, 0, 100));
     }
 
