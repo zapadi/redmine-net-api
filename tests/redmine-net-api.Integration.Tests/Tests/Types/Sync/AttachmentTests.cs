@@ -2,6 +2,8 @@ using Padi.RedmineAPI.Integration.Tests.Fixtures;
 using Padi.RedmineAPI.Integration.Tests.Helpers;
 using Padi.RedmineAPI.Integration.Tests.Infrastructure;
 using Redmine.Net.Api;
+using Redmine.Net.Api.Exceptions;
+using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Net;
 using Redmine.Net.Api.Types;
 using Xunit;
@@ -37,5 +39,45 @@ public class AttachmentTests(RedmineTestContainerFixture fixture)
         Assert.NotNull(downloadedAttachment);
         Assert.Equal(attachment.Id,       downloadedAttachment.Id);
         Assert.Equal(attachment.FileName, downloadedAttachment.FileName);
+    }
+
+    [Fact]
+    public void UpdateAttachment_Should_Change_FileName_And_Description()
+    {
+        // Arrange
+        var attachment = CreateIssueAttachment();
+        attachment.FileName = RandomHelper.GenerateText("renamed", 7) + ".bin";
+        attachment.Description = RandomHelper.GenerateText("description", 7);
+
+        // Act
+        fixture.RedmineManager.UpdateAttachment(attachment);
+
+        // Assert
+        var updated = fixture.RedmineManager.Get<Attachment>(attachment.Id.ToString());
+        Assert.Equal(attachment.FileName, updated.FileName);
+        Assert.Equal(attachment.Description, updated.Description);
+    }
+
+    [Fact]
+    public void UpdateIssueAttachment_Is_Rejected_By_Redmine()
+    {
+        // Arrange
+        var attachment = CreateIssueAttachment();
+        attachment.FileName = RandomHelper.GenerateText("renamed", 7) + ".bin";
+
+        // Act & Assert
+#pragma warning disable CS0618
+        Assert.ThrowsAny<RedmineException>(() => fixture.RedmineManager.UpdateIssueAttachment(attachment.Id, attachment));
+#pragma warning restore CS0618
+    }
+
+    private Attachment CreateIssueAttachment()
+    {
+        var (upload, _, _) = FileTestHelper.UploadRandom500KbFile(fixture.RedmineManager);
+        var createdIssue = fixture.RedmineManager.Create(IssueTestHelper.CreateIssue(uploads: [upload]));
+        var issue = fixture.RedmineManager.Get<Issue>(createdIssue.Id.ToString(), RequestOptions.Include(RedmineKeys.ATTACHMENTS));
+        var attachment = issue.Attachments.FirstOrDefault();
+        Assert.NotNull(attachment);
+        return attachment;
     }
 }

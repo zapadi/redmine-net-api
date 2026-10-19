@@ -102,6 +102,25 @@ public class AttachmentTestsAsync(RedmineTestContainerFixture fixture)
         Assert.NotNull(retrievedIssue.Attachments);
         Assert.Equal(2, retrievedIssue.Attachments.Count);
     }
+
+    [Fact]
+    public async Task UpdateAttachmentAsync_Should_Change_FileName_And_Description()
+    {
+        // Arrange
+        var (upload,_,_) = await FileTestHelper.UploadRandom500KbFileAsync(fixture.RedmineManager);
+        var createdIssue = await fixture.RedmineManager.CreateAsync(IssueTestHelper.CreateIssue(uploads: [upload]), cancellationToken: TestContext.Current.CancellationToken);
+        var issue = await fixture.RedmineManager.GetAsync<Issue>(createdIssue.Id.ToInvariantString(), RequestOptions.Include(RedmineKeys.ATTACHMENTS), TestContext.Current.CancellationToken);
+        var attachment = issue.Attachments?.FirstOrDefault();
+        Assert.NotNull(attachment);
+        attachment.FileName = RandomHelper.GenerateText("renamed", 7) + ".bin";
+        attachment.Description = RandomHelper.GenerateText("description", 7);
+
+        // Act
+        await fixture.RedmineManager.UpdateAttachmentAsync(attachment, cancellationToken: TestContext.Current.CancellationToken);
+
+        // Assert
+        var updated = await fixture.RedmineManager.GetAsync<Attachment>(attachment.Id.ToInvariantString(), cancellationToken: TestContext.Current.CancellationToken);
+        Assert.Equal(attachment.FileName, updated.FileName);
+        Assert.Equal(attachment.Description, updated.Description);
+    }
 }
-
-

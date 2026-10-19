@@ -16,6 +16,7 @@
 
 using System.Collections.Generic;
 using System.Globalization;
+using System.Xml;
 using Newtonsoft.Json;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Serialization;
@@ -27,6 +28,20 @@ namespace Redmine.Net.Api.Types
     /// </summary>
     internal sealed class Attachments : Dictionary<int, Attachment>, IJsonSerializable
     {
+        public void WriteXml(XmlWriter writer)
+        {
+            writer.WriteStartElement(RedmineKeys.ATTACHMENTS);
+            foreach (var item in this)
+            {
+                writer.WriteStartElement(RedmineKeys.ATTACHMENT);
+                writer.WriteAttributeString(RedmineKeys.ID, item.Key.ToInvariantString());
+                writer.WriteIfNotDefaultOrNull(RedmineKeys.FILE_NAME, item.Value.FileName);
+                writer.WriteIfNotDefaultOrNull(RedmineKeys.DESCRIPTION, item.Value.Description);
+                writer.WriteEndElement();
+            }
+            writer.WriteEndElement();
+        }
+
         /// <summary>
         /// 
         /// </summary>

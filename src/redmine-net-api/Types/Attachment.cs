@@ -124,8 +124,8 @@ namespace Redmine.Net.Api.Types
         /// <param name="writer"></param>
         public override void WriteXml(XmlWriter writer)
         {
-            writer.WriteElementString(RedmineKeys.DESCRIPTION, Description);
-            writer.WriteElementString(RedmineKeys.FILE_NAME, FileName);
+            writer.WriteIfNotDefaultOrNull(RedmineKeys.DESCRIPTION, Description);
+            writer.WriteIfNotDefaultOrNull(RedmineKeys.FILE_NAME, FileName);
         }
 
         #endregion
@@ -174,8 +174,8 @@ namespace Redmine.Net.Api.Types
         {
             using (new JsonObject(writer, RedmineKeys.ATTACHMENT))
             {
-                writer.WriteProperty(RedmineKeys.FILE_NAME, FileName);
-                writer.WriteProperty(RedmineKeys.DESCRIPTION, Description);
+                writer.WriteIfNotDefaultOrNull(RedmineKeys.FILE_NAME, FileName);
+                writer.WriteIfNotDefaultOrNull(RedmineKeys.DESCRIPTION, Description);
             }
         }
         #endregion

@@ -423,6 +423,7 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="issueId">The issue identifier.</param>
         /// <param name="attachment">The attachment.</param>
         /// <param name="requestOptions"></param>
+        [Obsolete("Redmine does not accept API authentication for this endpoint; use UpdateAttachment.")]
         public static void UpdateIssueAttachment(this RedmineManager redmineManager, int issueId, Attachment attachment, RequestOptions requestOptions = null)
         {
             var attachments = new Attachments
@@ -435,6 +436,34 @@ namespace Redmine.Net.Api.Extensions
             var uri = redmineManager.RedmineApiUrls.AttachmentUpdate(issueId.ToInvariantString());
 
             redmineManager.ApiClient.Patch(uri,  data, requestOptions);
+        }
+
+        /// <summary>
+        ///     Updates the file name and description of the attachment identified by <see cref="Identifiable{T}.Id"/>.
+        /// </summary>
+        /// <param name="redmineManager"></param>
+        /// <param name="attachment">The attachment.</param>
+        /// <param name="requestOptions"></param>
+        public static void UpdateAttachment(this RedmineManager redmineManager, Attachment attachment, RequestOptions requestOptions = null)
+        {
+            var data = SerializeAttachment(redmineManager, attachment);
+
+            redmineManager.ApiClient.Patch(AttachmentUri(redmineManager, attachment), data, requestOptions);
+        }
+
+        private static string SerializeAttachment(RedmineManager redmineManager, Attachment attachment)
+        {
+            if (attachment == null)
+            {
+                throw new RedmineException("Argument attachment is null");
+            }
+
+            return redmineManager.Serializer.Serialize(attachment);
+        }
+
+        private static string AttachmentUri(RedmineManager redmineManager, Attachment attachment)
+        {
+            return redmineManager.RedmineApiUrls.UpdateFragment<Attachment>(attachment.Id.ToInvariantString());
         }
 
         /// <summary>
@@ -830,6 +859,20 @@ namespace Redmine.Net.Api.Extensions
             var url = redmineManager.RedmineApiUrls.ProjectWikiPageUpdate(projectId, pageName);
 
             await redmineManager.ApiClient.PatchAsync(url, payload, requestOptions, cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        ///     Updates the file name and description of the attachment identified by <see cref="Identifiable{T}.Id"/> asynchronous.
+        /// </summary>
+        /// <param name="redmineManager"></param>
+        /// <param name="attachment">The attachment.</param>
+        /// <param name="requestOptions"></param>
+        /// <param name="cancellationToken"></param>
+        public static async Task UpdateAttachmentAsync(this RedmineManager redmineManager, Attachment attachment, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
+        {
+            var data = SerializeAttachment(redmineManager, attachment);
+
+            await redmineManager.ApiClient.PatchAsync(AttachmentUri(redmineManager, attachment), data, requestOptions, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
