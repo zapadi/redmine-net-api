@@ -66,11 +66,13 @@ namespace Redmine.Net.Api.Types
         public string ContentUrl { get; set; }
 
         /// <summary>
+        /// Gets or sets the author.
         /// </summary>
         /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public IdentifiableName Author { get; set; }
 
         /// <summary>
+        /// Gets or sets the created on.
         /// </summary>
         /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public DateTime? CreatedOn { get; set; }

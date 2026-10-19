@@ -140,7 +140,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The custom fields.
         /// </value>
-        /// <remarks>Sent to Redmine when creating or updating, only when set.</remarks>
+        /// <remarks>Sent to Redmine when creating or updating, only when set. Only their Ids are sent. Only sent when creating.</remarks>
         [Obsolete($"{RedmineConstants.OBSOLETE_TEXT} Use {nameof(IssueCustomFields)} instead.")]
         [JsonIgnore]
         public IList<IssueCustomField> CustomFields
@@ -151,7 +151,7 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// 
         /// </summary>
-        /// <remarks>Sent to Redmine when creating or updating, only when set. Only their Ids are sent.</remarks>
+        /// <remarks>Sent to Redmine when creating or updating, only when set. Only their Ids are sent. Only sent when creating.</remarks>
         public List<IssueCustomField> IssueCustomFields { get; set; }
         
         /// <summary>

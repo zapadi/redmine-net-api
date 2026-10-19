@@ -102,7 +102,7 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// Gets or sets the name.
         /// </summary>
-        /// <remarks>Sent to Redmine when creating or updating, only when set.</remarks>
+        /// <remarks>Sent to Redmine when creating or updating, only when set. References such as Issue.Project send only their Id.</remarks>
         public virtual string Name { get; set; }
         #endregion
 

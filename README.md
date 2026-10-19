@@ -293,8 +293,8 @@ var cached = System.Text.Json.JsonSerializer.Deserialize<List<Issue>>(json);
 ```
 
 Do not use `XmlSerializer` (or `DataContractSerializer`) for caching in 4.x: the types implement `IXmlSerializable`,
-so these serializers write the Redmine request format, which skips server-owned fields such as `CreatedOn`,
-`UpdatedOn` or `Author`.
+so these serializers write the Redmine request format, which skips server-owned fields such as `CreatedOn`
+or `Author`.
 
 The setters do not mean every property is sent to Redmine. Each model property's documentation states whether it
 is sent when creating or updating; server-owned properties such as `CreatedOn` or `Author` are read-only even though
