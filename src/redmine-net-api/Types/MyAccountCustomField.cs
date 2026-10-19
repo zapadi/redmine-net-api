@@ -40,7 +40,7 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// 
         /// </summary>
-        public string Value { get; internal set; }
+        public string Value { get; set; }
         
         internal MyAccountCustomField(int id, string name)
         {

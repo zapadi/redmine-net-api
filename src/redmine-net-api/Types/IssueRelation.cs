@@ -39,7 +39,7 @@ namespace Redmine.Net.Api.Types
         /// Gets or sets the issue id.
         /// </summary>
         /// <value>The issue id.</value>
-        public int IssueId { get; internal set; }
+        public int IssueId { get; set; }
 
         /// <summary>
         /// Gets or sets the related issue id.

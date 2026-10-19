@@ -38,47 +38,49 @@ namespace Redmine.Net.Api.Types
         /// Gets or sets the project.
         /// </summary>
         /// <value>The project.</value>
-        public IdentifiableName Project { get; internal set; }
+        public IdentifiableName Project { get; set; }
 
         /// <summary>
         /// Gets or sets the author.
+        /// Set by Redmine; not sent when creating or updating.
         /// </summary>
         /// <value>The author.</value>
-        public IdentifiableName Author { get; internal set; }
+        public IdentifiableName Author { get; set; }
 
         /// <summary>
         /// Gets or sets the title.
         /// </summary>
         /// <value>The title.</value>
-        public string Title { get; internal set; }
+        public string Title { get; set; }
 
         /// <summary>
         /// Gets or sets the summary.
         /// </summary>
         /// <value>The summary.</value>
-        public string Summary { get; internal set; }
+        public string Summary { get; set; }
 
         /// <summary>
         /// Gets or sets the description.
         /// </summary>
         /// <value>The description.</value>
-        public string Description { get; internal set; }
+        public string Description { get; set; }
 
         /// <summary>
         /// Gets or sets the created on.
+        /// Set by Redmine; not sent when creating or updating.
         /// </summary>
         /// <value>The created on.</value>
-        public DateTime? CreatedOn { get; internal set; }
+        public DateTime? CreatedOn { get; set; }
         
         /// <summary>
         /// 
         /// </summary>
-        public List<Attachment> Attachments { get; internal set; }
+        public List<Attachment> Attachments { get; set; }
         
         /// <summary>
         /// 
         /// </summary>
-        public List<NewsComment> Comments { get; internal set; }
+        public List<NewsComment> Comments { get; set; }
         
         /// <summary>
         /// 

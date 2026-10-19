@@ -35,17 +35,17 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// Gets the default (issue) status for this tracker.
         /// </summary>
-        public IdentifiableName DefaultStatus { get; internal set; }
+        public IdentifiableName DefaultStatus { get; set; }
 
         /// <summary>
         /// Gets the description of this tracker.
         /// </summary>
-        public string Description { get; internal set; }
+        public string Description { get; set; }
         
         /// <summary>
         /// Gets the list of enabled tracker's core fields
         /// </summary>
-        public List<TrackerCoreField> EnabledStandardFields { get; internal set; }
+        public List<TrackerCoreField> EnabledStandardFields { get; set; }
 
         #region Implementation of IXmlSerialization
         /// <summary>

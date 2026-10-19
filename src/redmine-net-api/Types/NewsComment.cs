@@ -33,6 +33,7 @@ namespace Redmine.Net.Api.Types
     {
         /// <summary>
         /// 
+        /// Set by Redmine; not sent when creating or updating.
         /// </summary>
         public IdentifiableName Author { get; set; }
         /// <summary>

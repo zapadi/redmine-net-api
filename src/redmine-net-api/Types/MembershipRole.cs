@@ -39,7 +39,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         ///   <c>true</c> if inherited; otherwise, <c>false</c>.
         /// </value>
-        public bool Inherited { get; internal set; }
+        public bool Inherited { get; set; }
         #endregion
 
         #region Implementation of IXmlSerialization

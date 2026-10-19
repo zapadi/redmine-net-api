@@ -38,7 +38,7 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         ///  Gets the uploaded id.
         /// </summary>
-        public string Id { get; private set; }
+        public string Id { get; set; }
         
         /// <summary>
         /// Gets or sets the uploaded token.

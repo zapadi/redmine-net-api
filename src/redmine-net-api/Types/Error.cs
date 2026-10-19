@@ -49,7 +49,7 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// 
         /// </summary>
-        public string Info { get; private set; }
+        public string Info { get; set; }
         #endregion
 
         #region Implementation of IXmlSerialization
