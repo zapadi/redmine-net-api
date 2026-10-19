@@ -173,7 +173,6 @@ namespace Redmine.Net.Api.Types
             }
         }
 
-
         private static List<IdentifiableName> ReadProjects(XmlReader reader)
         {
             List<IdentifiableName> projects = null;

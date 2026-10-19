@@ -143,7 +143,7 @@ namespace Redmine.Net.Api.Types
             return base.Equals(other)
                     && IsDefault == other.IsDefault 
                     && IsActive == other.IsActive
-                   && (CustomFields?.Equals<IssueCustomField>(other.CustomFields) ?? other.CustomFields == null);
+                    && (CustomFields?.Equals<IssueCustomField>(other.CustomFields) ?? other.CustomFields == null);
         }
 
         /// <summary>

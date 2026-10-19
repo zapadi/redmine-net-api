@@ -255,6 +255,11 @@ namespace Redmine.Net.Api.Types
 
         private static IdentifiableName ReadAuthSource(XmlReader reader)
         {
+            if (reader.IsEmptyElement)
+            {
+                return new IdentifiableName(reader);
+            }
+
             var authSource = new IdentifiableName();
 
             using (var subtree = reader.ReadSubtree())

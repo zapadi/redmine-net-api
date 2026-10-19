@@ -27,7 +27,7 @@
 *	UpdateIssueAttachment is obsolete: Redmine does not accept API authentication for PATCH /attachments/issues/:id; use UpdateAttachment
 
 🛠 Fixes
-*	Fixed User create/update never sending admin (IsAdmin)
+*	Fixed User create/update never sending admin (IsAdmin); admin is now always sent, so set IsAdmin when updating a User you did not read from Redmine
 *	Fixed User create/update sending status 0 when Status is not set (Redmine now applies its default)
 *	Fixed Journal.PrivateNotes not being sent and invalid JSON when updating a Journal
 *	Fixed Project custom field values being ignored by Redmine (XML now uses custom_fields; values are also sent on create)

@@ -35,6 +35,16 @@ public class UserAuthSourceTests
     }
 
     [Fact]
+    public void Should_Deserialize_AuthSource_Attribute_Form()
+    {
+        var output = SerializerFactory.Create(SerializerKind.Xml).Deserialize<User>("""<user><id>3</id><auth_source id="2" name="LDAP"/><login>jplang</login></user>""");
+
+        Assert.Equal(2, output.AuthSource.Id);
+        Assert.Equal("LDAP", output.AuthSource.Name);
+        Assert.Equal("jplang", output.Login);
+    }
+
+    [Fact]
     public void Users_With_Different_AuthSource_Should_Not_Be_Equal()
     {
         var left = new User { Id = 1, AuthSource = new IdentifiableName(2, "a") };
