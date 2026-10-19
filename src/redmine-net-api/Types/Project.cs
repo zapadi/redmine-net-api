@@ -257,17 +257,17 @@ namespace Redmine.Net.Api.Types
 
                 foreach (var customField in CustomFieldValues)
                 {
-                    if (customField.PossibleValues != null && customField.PossibleValues.Count > 0)
+                    if (customField?.PossibleValues != null && customField.PossibleValues.Count > 0)
                     {
                         writer.WriteStartElement(RedmineKeys.CUSTOM_FIELD);
                         writer.WriteAttributeString(RedmineKeys.ID, customField.Id.ToInvariantString());
                         if (customField.PossibleValues.Count > 1)
                         {
-                            writer.WriteArray(RedmineKeys.VALUE, RedmineKeys.VALUE, customField.PossibleValues, possibleValue => possibleValue.Value);
+                            writer.WriteArray(RedmineKeys.VALUE, RedmineKeys.VALUE, customField.PossibleValues, possibleValue => possibleValue?.Value);
                         }
                         else
                         {
-                            writer.WriteElementString(RedmineKeys.VALUE, customField.PossibleValues[0].Value);
+                            writer.WriteElementString(RedmineKeys.VALUE, customField.PossibleValues[0]?.Value);
                         }
 
                         writer.WriteEndElement();
@@ -365,7 +365,7 @@ namespace Redmine.Net.Api.Types
 
                     foreach (var customField in CustomFieldValues)
                     {
-                        if (customField.PossibleValues != null && customField.PossibleValues.Count > 0)
+                        if (customField?.PossibleValues != null && customField.PossibleValues.Count > 0)
                         {
                             if (customField.PossibleValues.Count > 1)
                             {
@@ -373,13 +373,13 @@ namespace Redmine.Net.Api.Types
                                 writer.WriteStartArray();
                                 foreach (var customFieldPossibleValue in customField.PossibleValues)
                                 {
-                                    writer.WriteValue(customFieldPossibleValue.Value);
+                                    writer.WriteValue(customFieldPossibleValue?.Value);
                                 }
                                 writer.WriteEndArray();
                             }
                             else
                             {
-                                writer.WriteProperty(customField.Id.ToInvariantString(), customField.PossibleValues[0].Value);
+                                writer.WriteProperty(customField.Id.ToInvariantString(), customField.PossibleValues[0]?.Value);
                             }
                         }
                     }
