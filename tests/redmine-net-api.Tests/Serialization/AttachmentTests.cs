@@ -69,24 +69,24 @@ public class AttachmentTests
     }
 
     [Fact]
-    public void Attachment_Should_Omit_Null_Fields_From_Json()
+    public void Attachment_Should_Send_Null_Fields_In_Json_So_They_Are_Cleared()
     {
         var attachment = new Redmine.Net.Api.Types.Attachment { FileName = "test.txt" };
 
         var output = SerializerFactory.Create(SerializerKind.NewtonsoftJson).Serialize(attachment);
 
-        var expected = JObject.Parse("""{ "attachment": { "filename": "test.txt" } }""");
+        var expected = JObject.Parse("""{ "attachment": { "filename": "test.txt", "description": null } }""");
         Assert.True(JToken.DeepEquals(expected, JObject.Parse(output)), output);
     }
 
     [Fact]
-    public void Attachment_Should_Omit_Null_Fields_From_Xml()
+    public void Attachment_Should_Send_Null_Fields_In_Xml_So_They_Are_Cleared()
     {
         var attachment = new Redmine.Net.Api.Types.Attachment { FileName = "test.txt" };
 
         var output = SerializerFactory.Create(SerializerKind.Xml).Serialize(attachment);
 
-        var expected = XElement.Parse("<attachment><filename>test.txt</filename></attachment>");
+        var expected = XElement.Parse("<attachment><description /><filename>test.txt</filename></attachment>");
         Assert.True(XNode.DeepEquals(expected, XElement.Parse(output)), output);
     }
 

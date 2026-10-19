@@ -31,7 +31,6 @@
 *	Fixed Version status and sharing being sent when unset
 *	Fixed invalid JSON for UpdateIssueAttachment
 *	UpdateIssueAttachment no longer fails to serialize its payload with the XML serializer
-*	Attachment update payloads no longer send a null FileName or Description (which cleared the value)
 *	Fixed ChangeSet revision not being read from XML
 *	Fixed XML dates and decimal values depending on the current culture (now invariant)
 *	Fixed memory leak from XmlSerializer instances created on every array write
