@@ -24,7 +24,7 @@ A .NET client library for the [Redmine REST API](https://www.redmine.org/project
 
 | Platform | Versions |
 |----------|----------|
-| .NET | 5, 6, 7, 8, 9 |
+| .NET | 5, 6, 7, 8, 9, 10 |
 | .NET Framework | 4.5, 4.5.1, 4.5.2, 4.6, 4.6.1, 4.6.2, 4.7, 4.7.1, 4.7.2, 4.8, 4.8.1 |
 | .NET Framework (deprecated) | 2.0, 4.0 |
 
@@ -215,6 +215,61 @@ may throw `NotSupportedException`, surfaced as a `RedmineApiException`. Prefer t
 `HttpClient.DefaultRequestHeaders` are sent only when the request does not set the same header, so authentication,
 impersonation and `RequestOptions` headers always win. `WithHttpClient` cannot be combined with `WithWebClient` or
 `WithWebClientOptions`.
+
+#### IHttpClientFactory and dependency injection
+
+An `HttpClient` created by `IHttpClientFactory` can be passed to `WithHttpClient`; the library does not dispose it, so
+the factory keeps managing its handlers. `RedmineManager` is cheap to build, so create one per scope or per use:
+
+```csharp
+services.AddHttpClient("redmine", client => client.Timeout = TimeSpan.FromSeconds(100));
+
+services.AddScoped(sp => new RedmineManager(new RedmineManagerOptionsBuilder()
+    .WithHost("https://redmine.example.com")
+    .WithApiKeyAuthentication("your-api-key")
+    .WithHttpClient(sp.GetRequiredService<IHttpClientFactory>().CreateClient("redmine"))));
+```
+
+#### Retries and resilience
+
+The library does not retry. Add retries to the `HttpClient`, for example with
+[Microsoft.Extensions.Http.Resilience](https://www.nuget.org/packages/Microsoft.Extensions.Http.Resilience):
+
+```csharp
+services.AddHttpClient("redmine")
+    .AddStandardResilienceHandler(options => options.Retry.DisableForUnsafeHttpMethods());
+```
+
+The standard handler also applies its own timeouts (10 seconds per attempt and 30 seconds in total by default); raise
+`options.AttemptTimeout.Timeout` and `options.TotalRequestTimeout.Timeout` for slow requests. The total timeout must stay
+above the attempt timeout and `options.CircuitBreaker.SamplingDuration` at least twice the attempt timeout.
+
+To retry at the `RedmineManager` level instead, use `RedmineApiException.IsTransient` (timeouts, connection failures
+and HTTP 408, 429, 502, 503 and 504) and the `Retry-After` value in `ResponseHeaders`, for example with
+[Polly](https://www.nuget.org/packages/Polly):
+
+```csharp
+var retry = new ResiliencePipelineBuilder()
+    .AddRetry(new RetryStrategyOptions
+    {
+        ShouldHandle = new PredicateBuilder().Handle<RedmineApiException>(ex => ex.IsTransient),
+        MaxRetryAttempts = 3,
+        BackoffType = DelayBackoffType.Exponential,
+        UseJitter = true,
+        DelayGenerator = args => new ValueTask<TimeSpan?>(
+            args.Outcome.Exception is RedmineApiException { ResponseHeaders: { } headers }
+            && headers.TryGetValue("Retry-After", out var value)
+            && int.TryParse(value, out var seconds)
+                ? TimeSpan.FromSeconds(seconds)
+                : null)
+    })
+    .Build();
+
+var issue = await retry.ExecuteAsync(async token => await manager.GetAsync<Issue>("1", cancellationToken: token));
+```
+
+Retrying a request that creates something (`Create`, `UploadFile`, ...) can create it twice when the first attempt
+reached the server but its response was lost. Retry only reads, updates and deletes, or check before retrying a create.
 
 ### Custom transport
 
