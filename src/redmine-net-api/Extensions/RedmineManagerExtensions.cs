@@ -262,6 +262,7 @@ namespace Redmine.Net.Api.Extensions
         ///     Redmine accepts the first name, last name, email and custom field values.
         ///     A custom field sends its Values as an array when Multiple is true or it has more than one value, otherwise its Value.
         /// </summary>
+        /// <remarks>Get the account with GetMyAccount, change it, then update it: first name, last name and mail are always sent, so a new MyAccount with empty values is rejected (422).</remarks>
         /// <param name="redmineManager"></param>
         /// <param name="account">The account to update.</param>
         /// <param name="requestOptions"></param>
@@ -345,6 +346,7 @@ namespace Redmine.Net.Api.Extensions
         /// <summary>
         ///     Adds existing users to a group (POST /groups/:id/users).
         /// </summary>
+        /// <remarks>Redmine returns 422 when none of the ids is a valid user.</remarks>
         /// <param name="redmineManager"></param>
         /// <param name="groupId">The group id.</param>
         /// <param name="userIds">The ids of the users to add.</param>
@@ -360,6 +362,10 @@ namespace Redmine.Net.Api.Extensions
         /// <summary>
         ///     Removes users from a group (DELETE /groups/:id/users). Requires Redmine 7.0 or later.
         /// </summary>
+        /// <remarks>
+        ///     Redmine returns 404 (<see cref="NotFoundException"/>) when none of the ids is in the group, as it does for a missing group or a Redmine older than 7.0.
+        ///     The ids are sent in the query string, so split very large lists (hundreds of ids) into batches.
+        /// </remarks>
         /// <param name="redmineManager"></param>
         /// <param name="groupId">The group id.</param>
         /// <param name="userIds">The ids of the users to remove.</param>
@@ -373,6 +379,7 @@ namespace Redmine.Net.Api.Extensions
         /// <summary>
         ///     Adds users as watchers of an issue (POST /issues/:id/watchers).
         /// </summary>
+        /// <remarks>Redmine silently skips users who cannot be watchers.</remarks>
         /// <param name="redmineManager"></param>
         /// <param name="issueId">The issue id.</param>
         /// <param name="userIds">The ids of the users to add as watchers.</param>
@@ -409,6 +416,7 @@ namespace Redmine.Net.Api.Extensions
         /// <summary>
         ///     Clears the notes of a journal (PUT /journals/:id with empty notes).
         /// </summary>
+        /// <remarks>Older Redmine versions delete a journal that has no details when its notes are emptied.</remarks>
         /// <param name="redmineManager"></param>
         /// <param name="journalId">The journal id.</param>
         /// <param name="requestOptions"></param>
@@ -931,6 +939,7 @@ namespace Redmine.Net.Api.Extensions
         ///     Redmine accepts the first name, last name, email and custom field values.
         ///     A custom field sends its Values as an array when Multiple is true or it has more than one value, otherwise its Value.
         /// </summary>
+        /// <remarks>Get the account with GetMyAccount, change it, then update it: first name, last name and mail are always sent, so a new MyAccount with empty values is rejected (422).</remarks>
         /// <param name="redmineManager"></param>
         /// <param name="account">The account to update.</param>
         /// <param name="requestOptions"></param>
@@ -1138,6 +1147,7 @@ namespace Redmine.Net.Api.Extensions
         /// <summary>
         ///     Adds existing users to a group (POST /groups/:id/users) asynchronous.
         /// </summary>
+        /// <remarks>Redmine returns 422 when none of the ids is a valid user.</remarks>
         /// <param name="redmineManager"></param>
         /// <param name="groupId">The group id.</param>
         /// <param name="userIds">The ids of the users to add.</param>
@@ -1154,6 +1164,10 @@ namespace Redmine.Net.Api.Extensions
         /// <summary>
         ///     Removes users from a group (DELETE /groups/:id/users) asynchronous. Requires Redmine 7.0 or later.
         /// </summary>
+        /// <remarks>
+        ///     Redmine returns 404 (<see cref="NotFoundException"/>) when none of the ids is in the group, as it does for a missing group or a Redmine older than 7.0.
+        ///     The ids are sent in the query string, so split very large lists (hundreds of ids) into batches.
+        /// </remarks>
         /// <param name="redmineManager"></param>
         /// <param name="groupId">The group id.</param>
         /// <param name="userIds">The ids of the users to remove.</param>
@@ -1168,6 +1182,7 @@ namespace Redmine.Net.Api.Extensions
         /// <summary>
         ///     Adds users as watchers of an issue (POST /issues/:id/watchers) asynchronous.
         /// </summary>
+        /// <remarks>Redmine silently skips users who cannot be watchers.</remarks>
         /// <param name="redmineManager"></param>
         /// <param name="issueId">The issue id.</param>
         /// <param name="userIds">The ids of the users to add as watchers.</param>
@@ -1201,6 +1216,7 @@ namespace Redmine.Net.Api.Extensions
         /// <summary>
         ///     Clears the notes of a journal (PUT /journals/:id with empty notes) asynchronous.
         /// </summary>
+        /// <remarks>Older Redmine versions delete a journal that has no details when its notes are emptied.</remarks>
         /// <param name="redmineManager"></param>
         /// <param name="journalId">The journal id.</param>
         /// <param name="requestOptions"></param>

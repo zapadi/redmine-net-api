@@ -51,8 +51,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The notes.
         /// </value>
-        /// <remarks> Setting Notes to string.empty or null will destroy the journal
-        /// </remarks>
+        /// <remarks>Older Redmine versions delete a journal that has no details when its notes are emptied.</remarks>
         public string Notes { get; set; }
 
         /// <summary>
