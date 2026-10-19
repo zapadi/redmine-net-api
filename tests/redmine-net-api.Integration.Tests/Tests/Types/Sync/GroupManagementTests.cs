@@ -25,9 +25,12 @@ public class GroupTests(RedmineTestContainerFixture fixture)
     [Fact]
     public void GetAllGroups_Should_Succeed()
     {
+        var createdGroup = CreateTestGroup();
+
         var groups = fixture.RedmineManager.Get<Group>();
 
         Assert.NotNull(groups);
+        Assert.Contains(groups, g => g.Id == createdGroup.Id);
     }
 
     [Fact]
