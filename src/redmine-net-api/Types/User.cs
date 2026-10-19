@@ -125,7 +125,6 @@ namespace Redmine.Net.Api.Types
         public DateTime? PasswordChangedOn { get; set; }
         
         /// <summary>
-        /// 
         /// Set by Redmine; not sent when creating or updating.
         /// </summary>
         public DateTime? UpdatedOn { get; set; }
