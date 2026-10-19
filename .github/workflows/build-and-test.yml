@@ -2,6 +2,11 @@ name: Build and Test
 
 on:
   workflow_call:
+    inputs:
+      ref:
+        description: 'Commit to build and test (defaults to the triggering commit)'
+        required: false
+        type: string
   workflow_dispatch:
   push:
     branches: [ master, '*.x' ]
@@ -33,7 +38,7 @@ permissions:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.workflow == 'Build and Test' }}
 
 env:
   DOTNET_NOLOGO: true
@@ -52,6 +57,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
+          ref: ${{ inputs.ref || github.sha }}
           persist-credentials: false
 
       - uses: actions/setup-dotnet@v6

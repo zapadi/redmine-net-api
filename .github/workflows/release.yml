@@ -16,6 +16,7 @@ jobs:
   release-please:
     name: Release Please
     runs-on: ubuntu-latest
+    if: github.ref_name == 'master' || endsWith(github.ref_name, '.x')
     timeout-minutes: 10
     permissions:
       contents: write
@@ -23,6 +24,7 @@ jobs:
       pull-requests: write
     outputs:
       packages: ${{ steps.packages.outputs.packages }}
+      sha: ${{ steps.release.outputs['src/redmine-net-api--sha'] || steps.release.outputs['src/redmine-net-api.Http--sha'] }}
     steps:
       - id: release
         uses: googleapis/release-please-action@v5
@@ -54,4 +56,5 @@ jobs:
     uses: ./.github/workflows/publish.yml
     with:
       packages: ${{ needs.release-please.outputs.packages }}
+      ref: ${{ needs.release-please.outputs.sha }}
     secrets: inherit
