@@ -1,7 +1,9 @@
 using Padi.RedmineAPI.Integration.Tests.Fixtures;
 using Padi.RedmineAPI.Integration.Tests.Helpers;
 using Padi.RedmineAPI.Integration.Tests.Infrastructure;
+using Redmine.Net.Api;
 using Redmine.Net.Api.Extensions;
+using Redmine.Net.Api.Net;
 using Redmine.Net.Api.Types;
 using Xunit;
 
@@ -58,5 +60,62 @@ public class ApiCoverageTestsAsync(RedmineTestContainerFixture fixture)
         var user = await fixture.RedmineManager.GetAsync<User>(created.Id.ToInvariantString(), cancellationToken: ct);
 
         Assert.Equal(UserStatus.StatusActive, user.Status);
+    }
+
+    private async Task<(Issue Issue, Journal Journal)> CreateIssueWithJournalAsync(CancellationToken ct)
+    {
+        var issue = await fixture.RedmineManager.CreateAsync(IssueTestHelper.CreateIssue(), cancellationToken: ct);
+        issue.Notes = RandomHelper.GenerateText(20);
+        await fixture.RedmineManager.UpdateAsync(issue.Id.ToInvariantString(), issue, cancellationToken: ct);
+        var journal = await GetJournalAsync(issue.Id, null, ct);
+        return (issue, journal);
+    }
+
+    private async Task<Journal> GetJournalAsync(int issueId, int? journalId, CancellationToken ct)
+    {
+        var issue = await fixture.RedmineManager.GetAsync<Issue>(issueId.ToInvariantString(), RequestOptions.Include(RedmineKeys.JOURNALS), ct);
+        return journalId.HasValue ? Assert.Single(issue.Journals, j => j.Id == journalId.Value) : Assert.Single(issue.Journals);
+    }
+
+    [Fact]
+    public async Task UpdateJournal_Should_Change_Notes_And_PrivateNotes()
+    {
+        var ct = TestContext.Current.CancellationToken;
+        var (issue, journal) = await CreateIssueWithJournalAsync(ct);
+
+        await fixture.RedmineManager.UpdateJournalAsync(journal.Id, "edited notes", true, cancellationToken: ct);
+        var updated = await GetJournalAsync(issue.Id, journal.Id, ct);
+        Assert.Equal("edited notes", updated.Notes);
+        Assert.True(updated.PrivateNotes);
+
+        fixture.RedmineManager.UpdateJournal(journal.Id, null, false);
+        updated = await GetJournalAsync(issue.Id, journal.Id, ct);
+        Assert.Equal("edited notes", updated.Notes);
+        Assert.False(updated.PrivateNotes);
+    }
+
+    [Fact]
+    public async Task Update_Journal_Entity_Should_Change_Notes_And_PrivateNotes()
+    {
+        var ct = TestContext.Current.CancellationToken;
+        var (issue, journal) = await CreateIssueWithJournalAsync(ct);
+
+        await fixture.RedmineManager.UpdateAsync(journal.Id.ToInvariantString(), new Journal { Notes = "entity notes", PrivateNotes = true }, cancellationToken: ct);
+        var updated = await GetJournalAsync(issue.Id, journal.Id, ct);
+
+        Assert.Equal("entity notes", updated.Notes);
+        Assert.True(updated.PrivateNotes);
+    }
+
+    [Fact]
+    public async Task DeleteJournalNotes_Should_Clear_Notes()
+    {
+        var ct = TestContext.Current.CancellationToken;
+        var (issue, journal) = await CreateIssueWithJournalAsync(ct);
+
+        await fixture.RedmineManager.DeleteJournalNotesAsync(journal.Id, cancellationToken: ct);
+
+        var refreshed = await fixture.RedmineManager.GetAsync<Issue>(issue.Id.ToInvariantString(), RequestOptions.Include(RedmineKeys.JOURNALS), ct);
+        Assert.True(refreshed.Journals == null || refreshed.Journals.All(j => string.IsNullOrEmpty(j.Notes)));
     }
 }

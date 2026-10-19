@@ -318,6 +318,48 @@ namespace Redmine.Net.Api.Extensions
         }
 
         /// <summary>
+        ///     Updates the notes and/or the private flag of a journal (PUT /journals/:id).
+        /// </summary>
+        /// <param name="redmineManager"></param>
+        /// <param name="journalId">The journal id.</param>
+        /// <param name="notes">The new notes; <c>null</c> leaves the notes unchanged.</param>
+        /// <param name="privateNotes">Whether the notes are private; <c>null</c> leaves the flag unchanged.</param>
+        /// <param name="requestOptions"></param>
+        /// <exception cref="RedmineException">Both <paramref name="notes"/> and <paramref name="privateNotes"/> are <c>null</c>.</exception>
+        public static void UpdateJournal(this RedmineManager redmineManager, int journalId, string notes, bool? privateNotes = null, RequestOptions requestOptions = null)
+        {
+            var payload = SerializeJournal(redmineManager, notes, privateNotes);
+
+            redmineManager.ApiClient.Update(JournalUri(redmineManager, journalId), payload, requestOptions);
+        }
+
+        /// <summary>
+        ///     Clears the notes of a journal (PUT /journals/:id with empty notes).
+        /// </summary>
+        /// <param name="redmineManager"></param>
+        /// <param name="journalId">The journal id.</param>
+        /// <param name="requestOptions"></param>
+        public static void DeleteJournalNotes(this RedmineManager redmineManager, int journalId, RequestOptions requestOptions = null)
+        {
+            UpdateJournal(redmineManager, journalId, string.Empty, null, requestOptions);
+        }
+
+        private static string SerializeJournal(RedmineManager redmineManager, string notes, bool? privateNotes)
+        {
+            if (notes == null && privateNotes == null)
+            {
+                throw new RedmineException("Either notes or privateNotes must be set.");
+            }
+
+            return SerializationHelper.SerializeJournal(notes, privateNotes, redmineManager.Serializer);
+        }
+
+        private static string JournalUri(RedmineManager redmineManager, int journalId)
+        {
+            return redmineManager.RedmineApiUrls.UpdateFragment<Journal>(journalId.ToInvariantString());
+        }
+
+        /// <summary>
         ///     Creates or updates a wiki page.
         /// </summary>
         /// <param name="redmineManager"></param>
@@ -1002,6 +1044,35 @@ namespace Redmine.Net.Api.Extensions
             var uri = redmineManager.RedmineApiUrls.IssueWatcherRemove(issueId.ToInvariantString(), userId.ToInvariantString());
            
             await redmineManager.ApiClient.DeleteAsync(uri,  requestOptions, cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        ///     Updates the notes and/or the private flag of a journal (PUT /journals/:id) asynchronous.
+        /// </summary>
+        /// <param name="redmineManager"></param>
+        /// <param name="journalId">The journal id.</param>
+        /// <param name="notes">The new notes; <c>null</c> leaves the notes unchanged.</param>
+        /// <param name="privateNotes">Whether the notes are private; <c>null</c> leaves the flag unchanged.</param>
+        /// <param name="requestOptions"></param>
+        /// <param name="cancellationToken"></param>
+        /// <exception cref="RedmineException">Both <paramref name="notes"/> and <paramref name="privateNotes"/> are <c>null</c>.</exception>
+        public static async Task UpdateJournalAsync(this RedmineManager redmineManager, int journalId, string notes, bool? privateNotes = null, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
+        {
+            var payload = SerializeJournal(redmineManager, notes, privateNotes);
+
+            await redmineManager.ApiClient.UpdateAsync(JournalUri(redmineManager, journalId), payload, requestOptions, cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        ///     Clears the notes of a journal (PUT /journals/:id with empty notes) asynchronous.
+        /// </summary>
+        /// <param name="redmineManager"></param>
+        /// <param name="journalId">The journal id.</param>
+        /// <param name="requestOptions"></param>
+        /// <param name="cancellationToken"></param>
+        public static Task DeleteJournalNotesAsync(this RedmineManager redmineManager, int journalId, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
+        {
+            return UpdateJournalAsync(redmineManager, journalId, string.Empty, null, requestOptions, cancellationToken);
         }
         #endif
         

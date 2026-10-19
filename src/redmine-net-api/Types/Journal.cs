@@ -23,6 +23,7 @@ using System.Xml.Serialization;
 using Newtonsoft.Json;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Internals;
+using Redmine.Net.Api.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
@@ -73,7 +74,8 @@ namespace Redmine.Net.Api.Types
         public DateTime? UpdatedOn { get; set; }
 
         /// <summary>
-        /// 
+        /// Gets or sets a value indicating whether the notes are private.
+        /// Sent as <c>private_notes</c> only when <c>true</c>; use <c>UpdateJournal</c> to make notes public again.
         /// </summary>
         public bool PrivateNotes { get; set; }
 
@@ -127,6 +129,11 @@ namespace Redmine.Net.Api.Types
         public override void WriteXml(XmlWriter writer)
         { 
             writer.WriteElementString(RedmineKeys.NOTES, Notes);
+
+            if (PrivateNotes)
+            {
+                writer.WriteBoolean(RedmineKeys.PRIVATE_NOTES, true);
+            }
         }
 
         #endregion
@@ -168,7 +175,15 @@ namespace Redmine.Net.Api.Types
         /// <inheritdoc />
         public override void WriteJson(JsonWriter writer)
         {
-            writer.WriteProperty(RedmineKeys.NOTES, Notes);
+            using (new JsonObject(writer, RedmineKeys.JOURNAL))
+            {
+                writer.WriteProperty(RedmineKeys.NOTES, Notes);
+
+                if (PrivateNotes)
+                {
+                    writer.WriteBoolean(RedmineKeys.PRIVATE_NOTES, true);
+                }
+            }
         }
 
         #endregion
