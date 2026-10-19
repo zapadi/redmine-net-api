@@ -21,7 +21,7 @@ namespace Redmine.Net.Api
     /// <summary>
     /// 
     /// </summary>
-    [Obsolete(RedmineConstants.OBSOLETE_TEXT + "Use SerializationType instead")]
+    [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use SerializationType instead.")]
     public enum MimeFormat
     {
         /// <summary>
