@@ -28,7 +28,7 @@
 *	IssueStatus.IsDefault is obsolete: Redmine no longer returns is_default for issue statuses (always false); use Tracker.DefaultStatus
 *	NotFoundException, UnauthorizedException, ForbiddenException, ConflictException, NotAcceptableException, InternalServerErrorException, RedmineTimeoutException and NameResolutionFailureException are obsolete: RedmineManager never throws them; catch RedmineApiException and check HttpStatusCode, IsTransient or InnerException
 *	CollectionExtensions.Clone/Equals/Dump, StringExtensions.IsNullOrWhiteSpace/Truncate, NameValueCollectionExtensions.GetParameterValue/GetValue/ToQueryString and XmlTextReaderBuilder are obsolete and will be internal in 5.0; use the BCL equivalents named in the warning
-*	Existing obsolete warnings now name their replacement
+*	Existing obsolete warnings now name their replacement where one exists in 4.x
 
 🛠 Fixes
 *	User create/update now sends admin when IsAdmin is true, so administrator rights can be granted (it is never sent as false, so updates never remove them)

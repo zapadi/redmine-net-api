@@ -546,7 +546,7 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="issueId">The issue identifier.</param>
         /// <param name="attachment">The attachment.</param>
         /// <param name="requestOptions"></param>
-        [Obsolete("Redmine does not accept API authentication for this endpoint; use UpdateAttachment.")]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Redmine does not accept API authentication for this endpoint. Use UpdateAttachment instead.")]
         public static void UpdateIssueAttachment(this RedmineManager redmineManager, int issueId, Attachment attachment, RequestOptions requestOptions = null)
         {
             if (attachment == null)
