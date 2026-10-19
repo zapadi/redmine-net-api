@@ -7,6 +7,10 @@ on:
         description: 'Space-separated package ids to publish (redmine-api, redmine-api.http)'
         required: true
         type: string
+      ref:
+        description: 'Commit to build and publish (defaults to the triggering commit)'
+        required: false
+        type: string
   workflow_dispatch:
     inputs:
       packages:
@@ -28,6 +32,8 @@ jobs:
   test:
     name: Build and Test
     uses: ./.github/workflows/build-and-test.yml
+    with:
+      ref: ${{ inputs.ref || github.sha }}
 
   pack:
     name: Pack
@@ -41,6 +47,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
+          ref: ${{ inputs.ref || github.sha }}
           persist-credentials: false
 
       - uses: actions/setup-dotnet@v6
@@ -56,6 +63,11 @@ jobs:
               redmine-api.http) project=src/redmine-net-api.Http/redmine-net-api.Http.csproj ;;
               *) echo "::error::Unknown package '$package'."; exit 1 ;;
             esac
+
+            if ! jq -e --arg path "$(dirname "$project")" '.packages | has($path)' release-please-config.json > /dev/null; then
+              echo "::error::$package is not released from this branch ($(dirname "$project") is not in release-please-config.json)."
+              exit 1
+            fi
 
             version=$(dotnet msbuild "$project" -getProperty:Version)
             published=$(.github/scripts/nuget-versions.sh "$package")
