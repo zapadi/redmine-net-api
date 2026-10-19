@@ -10,11 +10,6 @@
     "src/redmine-net-api": {
       "component": "redmine-api",
       "extra-files": [ "redmine-net-api.csproj" ]
-    },
-    "src/redmine-net-api.Http": {
-      "component": "redmine-api.http",
-      "initial-version": "0.1.0",
-      "extra-files": [ "redmine-net-api.Http.csproj" ]
     }
   }
 }

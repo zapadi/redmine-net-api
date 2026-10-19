@@ -1,4 +1,3 @@
 {
-  "src/redmine-net-api": "4.65.0",
-  "src/redmine-net-api.Http": "0.0.0"
+  "src/redmine-net-api": "4.65.0"
 }
