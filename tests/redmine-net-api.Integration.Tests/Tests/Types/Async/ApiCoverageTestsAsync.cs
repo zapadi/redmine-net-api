@@ -38,7 +38,7 @@ public class ApiCoverageTestsAsync(RedmineTestContainerFixture fixture)
     }
 
     [Fact]
-    public async Task UpdateUser_Should_Revoke_Admin()
+    public async Task UpdateUser_Without_IsAdmin_Should_Keep_Admin()
     {
         var ct = TestContext.Current.CancellationToken;
         var created = await fixture.RedmineManager.CreateAsync(NewUser(isAdmin: true), cancellationToken: ct);
@@ -48,7 +48,7 @@ public class ApiCoverageTestsAsync(RedmineTestContainerFixture fixture)
         await fixture.RedmineManager.UpdateAsync(user.Id.ToInvariantString(), user, cancellationToken: ct);
         var updated = await fixture.RedmineManager.GetAsync<User>(user.Id.ToInvariantString(), cancellationToken: ct);
 
-        Assert.False(updated.IsAdmin);
+        Assert.True(updated.IsAdmin);
     }
 
     [Fact]

@@ -72,7 +72,8 @@ namespace Redmine.Net.Api.Types
 
         /// <summary>
         /// Gets or sets a value indicating whether the user is an administrator.
-        /// Sent as <c>admin</c> when creating or updating; Redmine applies it only for administrators.
+        /// Sent as <c>admin</c> only when <c>true</c>, so creating or updating a user can grant administrator rights
+        /// but never removes them; Redmine applies it only for administrators.
         /// </summary>
         public bool IsAdmin { get; set; }
 
@@ -240,7 +241,11 @@ namespace Redmine.Net.Api.Types
             }
             
             writer.WriteBoolean(RedmineKeys.MUST_CHANGE_PASSWORD, MustChangePassword);
-            writer.WriteBoolean(RedmineKeys.ADMIN, IsAdmin);
+
+            if (IsAdmin)
+            {
+                writer.WriteBoolean(RedmineKeys.ADMIN, true);
+            }
 
             if (Status != UserStatus.StatusAnonymous)
             {
@@ -364,7 +369,11 @@ namespace Redmine.Net.Api.Types
                 }
             
                 writer.WriteBoolean(RedmineKeys.MUST_CHANGE_PASSWORD, MustChangePassword);
-                writer.WriteBoolean(RedmineKeys.ADMIN, IsAdmin);
+
+                if (IsAdmin)
+                {
+                    writer.WriteBoolean(RedmineKeys.ADMIN, true);
+                }
 
                 if (Status != UserStatus.StatusAnonymous)
                 {

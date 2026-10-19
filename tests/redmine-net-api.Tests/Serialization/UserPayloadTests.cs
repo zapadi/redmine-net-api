@@ -12,25 +12,25 @@ public class UserPayloadTests
     [Theory]
     [InlineData(true)]
     [InlineData(false)]
-    public void User_Xml_Should_Send_Admin(bool isAdmin)
+    public void User_Xml_Should_Send_Admin_Only_When_True(bool isAdmin)
     {
         var user = new User { Login = "u", IsAdmin = isAdmin, Status = UserStatus.StatusActive };
 
         var output = XElement.Parse(SerializerFactory.Create(SerializerKind.Xml).Serialize(user));
 
-        Assert.Equal(isAdmin ? "true" : "false", output.Element("admin")?.Value);
+        Assert.Equal(isAdmin ? "true" : null, output.Element("admin")?.Value);
     }
 
     [Theory]
     [InlineData(true)]
     [InlineData(false)]
-    public void User_Json_Should_Send_Admin(bool isAdmin)
+    public void User_Json_Should_Send_Admin_Only_When_True(bool isAdmin)
     {
         var user = new User { Login = "u", IsAdmin = isAdmin, Status = UserStatus.StatusActive };
 
         var output = JObject.Parse(SerializerFactory.Create(SerializerKind.NewtonsoftJson).Serialize(user));
 
-        Assert.Equal(isAdmin ? "true" : "false", (string)output["user"]?["admin"]);
+        Assert.Equal(isAdmin ? "true" : null, (string)output["user"]?["admin"]);
     }
 
     [Fact]
