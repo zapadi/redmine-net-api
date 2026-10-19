@@ -21,6 +21,8 @@ public class SerializedFieldsDocsTests
     private const string SentOnlyJson = "Sent to Redmine only with the JSON serializer.";
     private const string SentOnlyXml = "Sent to Redmine only with the XML serializer.";
     private const string ReadOnly = "Read-only: set by Redmine and not sent when creating or updating.";
+    private const string OnlyWhenCreating = "Only sent when creating.";
+    private const string OnlyWhenUpdating = "Only sent when updating.";
 
     private static readonly string[] Sentences = [Sent, SentWhenSet, SentOnlyJson, SentOnlyXml, ReadOnly];
 
@@ -36,9 +38,9 @@ public class SerializedFieldsDocsTests
             {
                 var expected = Classify(type, property);
                 remarks.TryGetValue(MemberId(property), out var actual);
-                if (actual == null || !actual.Contains(expected))
+                if (actual == null || expected.Any(e => !actual.Contains(e)))
                 {
-                    failures.Add($"{type.Name}.{property.Name}: expected '{expected}', actual remarks '{actual ?? "<none>"}'");
+                    failures.Add($"{type.Name}.{property.Name}: expected '{string.Join(" ", expected)}', actual remarks '{actual ?? "<none>"}'");
                 }
             }
         }
@@ -79,27 +81,37 @@ public class SerializedFieldsDocsTests
             .OrderBy(p => p.Name);
     }
 
-    private static string Classify(Type type, PropertyInfo property)
+    private static string[] Classify(Type type, PropertyInfo property)
     {
-        var xml = Compare(SerializerKind.Xml, type, property);
-        var json = Compare(SerializerKind.NewtonsoftJson, type, property);
+        var xmlCreate = Compare(SerializerKind.Xml, type, property, false);
+        var xmlUpdate = Compare(SerializerKind.Xml, type, property, true);
+        var jsonCreate = Compare(SerializerKind.NewtonsoftJson, type, property, false);
+        var jsonUpdate = Compare(SerializerKind.NewtonsoftJson, type, property, true);
+
+        var xml = xmlCreate > xmlUpdate ? xmlCreate : xmlUpdate;
+        var json = jsonCreate > jsonUpdate ? jsonCreate : jsonUpdate;
 
         if (xml == Change.None && json == Change.None)
         {
-            return ReadOnly;
+            return [ReadOnly];
         }
 
-        if (xml == Change.None)
+        var rule = xml == Change.None ? SentOnlyJson
+            : json == Change.None ? SentOnlyXml
+            : xml == Change.Added || json == Change.Added ? SentWhenSet
+            : Sent;
+
+        if (xmlUpdate == Change.None && jsonUpdate == Change.None)
         {
-            return SentOnlyJson;
+            return [rule, OnlyWhenCreating];
         }
 
-        if (json == Change.None)
+        if (xmlCreate == Change.None && jsonCreate == Change.None)
         {
-            return SentOnlyXml;
+            return [rule, OnlyWhenUpdating];
         }
 
-        return xml == Change.Added || json == Change.Added ? SentWhenSet : Sent;
+        return [rule];
     }
 
     private enum Change
@@ -107,13 +119,6 @@ public class SerializedFieldsDocsTests
         None,
         Value,
         Added
-    }
-
-    private static Change Compare(SerializerKind kind, Type type, PropertyInfo property)
-    {
-        var create = Compare(kind, type, property, false);
-        var update = Compare(kind, type, property, true);
-        return create > update ? create : update;
     }
 
     private static Change Compare(SerializerKind kind, Type type, PropertyInfo property, bool updating)
@@ -129,18 +134,8 @@ public class SerializedFieldsDocsTests
 
         property.SetValue(changed, CreateDifferentValue(property, property.GetValue(baseline)));
 
-        string before;
-        string after;
-        try
-        {
-            before = Serialize(kind, type, baseline);
-            after = Serialize(kind, type, changed);
-        }
-        catch (Exception)
-        {
-            return Change.None;
-        }
-
+        var before = Serialize(kind, type, baseline);
+        var after = Serialize(kind, type, changed);
         if (before == after)
         {
             return Change.None;
