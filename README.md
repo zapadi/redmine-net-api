@@ -339,7 +339,7 @@ Run the unit tests:
 dotnet test --project tests/redmine-net-api.Tests/redmine-net-api.Tests.csproj -f net10.0
 ```
 
-The integration tests (`tests/redmine-net-api.Integration.Tests`) start Redmine and PostgreSQL containers with [Testcontainers](https://dotnet.testcontainers.org/), so they need Docker. They target .NET Framework 4.8.1 and therefore run on Windows or with Mono.
+The integration tests (`tests/redmine-net-api.Integration.Tests`) start Redmine and PostgreSQL containers with [Testcontainers](https://dotnet.testcontainers.org/), so they need Docker. They target .NET 10 and .NET Framework 4.8.1; the .NET 10 build runs anywhere Docker is available and is what CI runs on Linux.
 
 ## Contributing
 
