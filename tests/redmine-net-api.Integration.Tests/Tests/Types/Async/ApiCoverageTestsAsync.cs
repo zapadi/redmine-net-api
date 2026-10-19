@@ -141,4 +141,33 @@ public class ApiCoverageTestsAsync(RedmineTestContainerFixture fixture)
 
         Assert.Equal(originalLastName, (await fixture.RedmineManager.GetMyAccountAsync(cancellationToken: ct)).LastName);
     }
+
+    [Fact]
+    public async Task AddUsersToGroup_Should_Add_All_Users()
+    {
+        var ct = TestContext.Current.CancellationToken;
+        var group = await fixture.RedmineManager.CreateAsync(new Group($"Bulk {Guid.NewGuid()}"), cancellationToken: ct);
+        var first = await fixture.RedmineManager.CreateAsync(NewUser(), cancellationToken: ct);
+        var second = await fixture.RedmineManager.CreateAsync(NewUser(), cancellationToken: ct);
+
+        await fixture.RedmineManager.AddUsersToGroupAsync(group.Id, [first.Id, second.Id], cancellationToken: ct);
+        var updated = await fixture.RedmineManager.GetAsync<Group>(group.Id.ToInvariantString(), RequestOptions.Include(RedmineKeys.USERS), ct);
+
+        Assert.Contains(updated.Users, u => u.Id == first.Id);
+        Assert.Contains(updated.Users, u => u.Id == second.Id);
+    }
+
+    [Fact]
+    public async Task AddWatchersToIssue_Should_Add_All_Watchers()
+    {
+        var ct = TestContext.Current.CancellationToken;
+        var issue = await fixture.RedmineManager.CreateAsync(IssueTestHelper.CreateIssue(), cancellationToken: ct);
+        var watcher = await fixture.RedmineManager.CreateAsync(NewUser(isAdmin: true), cancellationToken: ct);
+
+        fixture.RedmineManager.AddWatchersToIssue(issue.Id, [1, watcher.Id]);
+        var updated = await fixture.RedmineManager.GetAsync<Issue>(issue.Id.ToInvariantString(), RequestOptions.Include(RedmineKeys.WATCHERS), ct);
+
+        Assert.Contains(updated.Watchers, w => w.Id == 1);
+        Assert.Contains(updated.Watchers, w => w.Id == watcher.Id);
+    }
 }

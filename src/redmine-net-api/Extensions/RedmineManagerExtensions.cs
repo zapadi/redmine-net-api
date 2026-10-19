@@ -342,6 +342,54 @@ namespace Redmine.Net.Api.Extensions
         }
 
         /// <summary>
+        ///     Adds existing users to a group (POST /groups/:id/users).
+        /// </summary>
+        /// <param name="redmineManager"></param>
+        /// <param name="groupId">The group id.</param>
+        /// <param name="userIds">The ids of the users to add.</param>
+        /// <param name="requestOptions"></param>
+        /// <exception cref="RedmineException"><paramref name="userIds"/> is null or empty.</exception>
+        public static void AddUsersToGroup(this RedmineManager redmineManager, int groupId, IEnumerable<int> userIds, RequestOptions requestOptions = null)
+        {
+            var payload = SerializationHelper.SerializeUserIds(userIds, null, redmineManager.Serializer);
+
+            redmineManager.ApiClient.Create(redmineManager.RedmineApiUrls.GroupUserAdd(groupId.ToInvariantString()), payload, requestOptions);
+        }
+
+        /// <summary>
+        ///     Removes users from a group (DELETE /groups/:id/users). Requires Redmine 7.0 or later.
+        /// </summary>
+        /// <param name="redmineManager"></param>
+        /// <param name="groupId">The group id.</param>
+        /// <param name="userIds">The ids of the users to remove.</param>
+        /// <param name="requestOptions"></param>
+        /// <exception cref="RedmineException"><paramref name="userIds"/> is null or empty.</exception>
+        public static void RemoveUsersFromGroup(this RedmineManager redmineManager, int groupId, IEnumerable<int> userIds, RequestOptions requestOptions = null)
+        {
+            redmineManager.ApiClient.Delete(GroupUsersRemoveUri(redmineManager, groupId, userIds), requestOptions);
+        }
+
+        /// <summary>
+        ///     Adds users as watchers of an issue (POST /issues/:id/watchers).
+        /// </summary>
+        /// <param name="redmineManager"></param>
+        /// <param name="issueId">The issue id.</param>
+        /// <param name="userIds">The ids of the users to add as watchers.</param>
+        /// <param name="requestOptions"></param>
+        /// <exception cref="RedmineException"><paramref name="userIds"/> is null or empty.</exception>
+        public static void AddWatchersToIssue(this RedmineManager redmineManager, int issueId, IEnumerable<int> userIds, RequestOptions requestOptions = null)
+        {
+            var payload = SerializationHelper.SerializeUserIds(userIds, RedmineKeys.WATCHER, redmineManager.Serializer);
+
+            redmineManager.ApiClient.Create(redmineManager.RedmineApiUrls.IssueWatcherAdd(issueId.ToInvariantString()), payload, requestOptions);
+        }
+
+        private static string GroupUsersRemoveUri(RedmineManager redmineManager, int groupId, IEnumerable<int> userIds)
+        {
+            return redmineManager.RedmineApiUrls.GroupUsersRemove(groupId.ToInvariantString(), SerializationHelper.EnsureUserIds(userIds));
+        }
+
+        /// <summary>
         ///     Updates the notes and/or the private flag of a journal (PUT /journals/:id).
         /// </summary>
         /// <param name="redmineManager"></param>
@@ -1083,6 +1131,52 @@ namespace Redmine.Net.Api.Extensions
             var uri = redmineManager.RedmineApiUrls.IssueWatcherRemove(issueId.ToInvariantString(), userId.ToInvariantString());
            
             await redmineManager.ApiClient.DeleteAsync(uri,  requestOptions, cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        ///     Adds existing users to a group (POST /groups/:id/users) asynchronous.
+        /// </summary>
+        /// <param name="redmineManager"></param>
+        /// <param name="groupId">The group id.</param>
+        /// <param name="userIds">The ids of the users to add.</param>
+        /// <param name="requestOptions"></param>
+        /// <param name="cancellationToken"></param>
+        /// <exception cref="RedmineException"><paramref name="userIds"/> is null or empty.</exception>
+        public static async Task AddUsersToGroupAsync(this RedmineManager redmineManager, int groupId, IEnumerable<int> userIds, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
+        {
+            var payload = SerializationHelper.SerializeUserIds(userIds, null, redmineManager.Serializer);
+
+            await redmineManager.ApiClient.CreateAsync(redmineManager.RedmineApiUrls.GroupUserAdd(groupId.ToInvariantString()), payload, requestOptions, cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        ///     Removes users from a group (DELETE /groups/:id/users) asynchronous. Requires Redmine 7.0 or later.
+        /// </summary>
+        /// <param name="redmineManager"></param>
+        /// <param name="groupId">The group id.</param>
+        /// <param name="userIds">The ids of the users to remove.</param>
+        /// <param name="requestOptions"></param>
+        /// <param name="cancellationToken"></param>
+        /// <exception cref="RedmineException"><paramref name="userIds"/> is null or empty.</exception>
+        public static async Task RemoveUsersFromGroupAsync(this RedmineManager redmineManager, int groupId, IEnumerable<int> userIds, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
+        {
+            await redmineManager.ApiClient.DeleteAsync(GroupUsersRemoveUri(redmineManager, groupId, userIds), requestOptions, cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        ///     Adds users as watchers of an issue (POST /issues/:id/watchers) asynchronous.
+        /// </summary>
+        /// <param name="redmineManager"></param>
+        /// <param name="issueId">The issue id.</param>
+        /// <param name="userIds">The ids of the users to add as watchers.</param>
+        /// <param name="requestOptions"></param>
+        /// <param name="cancellationToken"></param>
+        /// <exception cref="RedmineException"><paramref name="userIds"/> is null or empty.</exception>
+        public static async Task AddWatchersToIssueAsync(this RedmineManager redmineManager, int issueId, IEnumerable<int> userIds, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
+        {
+            var payload = SerializationHelper.SerializeUserIds(userIds, RedmineKeys.WATCHER, redmineManager.Serializer);
+
+            await redmineManager.ApiClient.CreateAsync(redmineManager.RedmineApiUrls.IssueWatcherAdd(issueId.ToInvariantString()), payload, requestOptions, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>

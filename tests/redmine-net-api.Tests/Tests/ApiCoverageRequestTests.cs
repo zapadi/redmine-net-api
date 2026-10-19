@@ -28,6 +28,8 @@ public sealed class ApiCoverageRequestTests
 
         public RedmineTransportRequest Single => Assert.Single(_requests.ToArray());
 
+        public RedmineTransportRequest[] All => _requests.ToArray();
+
         public RedmineTransportResponse Send(RedmineTransportRequest request)
         {
             _requests.Enqueue(request);
@@ -206,5 +208,105 @@ public sealed class ApiCoverageRequestTests
 
         Assert.Throws<RedmineException>(() => manager.UpdateMyAccount(null));
         await Assert.ThrowsAsync<RedmineException>(() => manager.UpdateMyAccountAsync(null, cancellationToken: TestContext.Current.CancellationToken));
+    }
+
+    [Theory(Timeout = Constants.TestTimeout)]
+    [InlineData(SerializationType.Xml, false)]
+    [InlineData(SerializationType.Xml, true)]
+    [InlineData(SerializationType.Json, false)]
+    [InlineData(SerializationType.Json, true)]
+    public async Task AddUsersToGroup_Should_Post_User_Ids(SerializationType type, bool async)
+    {
+        var transport = new RecordingTransport();
+        var manager = CreateManager(transport, type);
+
+        if (async)
+        {
+            await manager.AddUsersToGroupAsync(5, [1, 2], cancellationToken: TestContext.Current.CancellationToken);
+        }
+        else
+        {
+            manager.AddUsersToGroup(5, [1, 2]);
+        }
+
+        var request = transport.Single;
+        Assert.Equal("POST", request.Method);
+        Assert.Equal($"{BaseAddress}groups/5/users.{Ext(type)}", request.Uri.ToString());
+        AssertBody(type,
+            """<user_ids type="array"><user_id>1</user_id><user_id>2</user_id></user_ids>""",
+            """{"user_ids":[1,2]}""",
+            request);
+    }
+
+    [Theory(Timeout = Constants.TestTimeout)]
+    [InlineData(SerializationType.Xml, false)]
+    [InlineData(SerializationType.Xml, true)]
+    [InlineData(SerializationType.Json, false)]
+    [InlineData(SerializationType.Json, true)]
+    public async Task RemoveUsersFromGroup_Should_Delete_With_User_Ids(SerializationType type, bool async)
+    {
+        var transport = new RecordingTransport();
+        var manager = CreateManager(transport, type);
+
+        if (async)
+        {
+            await manager.RemoveUsersFromGroupAsync(5, [1, 2], cancellationToken: TestContext.Current.CancellationToken);
+        }
+        else
+        {
+            manager.RemoveUsersFromGroup(5, [1, 2]);
+        }
+
+        var request = transport.Single;
+        Assert.Equal("DELETE", request.Method);
+        Assert.Equal($"/groups/5/users.{Ext(type)}?user_ids[]=1&user_ids[]=2", request.Uri.GetComponents(UriComponents.PathAndQuery, UriFormat.Unescaped));
+        Assert.Null(request.Body);
+    }
+
+    [Theory(Timeout = Constants.TestTimeout)]
+    [InlineData(SerializationType.Xml, false)]
+    [InlineData(SerializationType.Xml, true)]
+    [InlineData(SerializationType.Json, false)]
+    [InlineData(SerializationType.Json, true)]
+    public async Task AddWatchersToIssue_Should_Post_Watcher_User_Ids(SerializationType type, bool async)
+    {
+        var transport = new RecordingTransport();
+        var manager = CreateManager(transport, type);
+
+        if (async)
+        {
+            await manager.AddWatchersToIssueAsync(9, [3, 4], cancellationToken: TestContext.Current.CancellationToken);
+        }
+        else
+        {
+            manager.AddWatchersToIssue(9, [3, 4]);
+        }
+
+        var request = transport.Single;
+        Assert.Equal("POST", request.Method);
+        Assert.Equal($"{BaseAddress}issues/9/watchers.{Ext(type)}", request.Uri.ToString());
+        AssertBody(type,
+            """<watcher><user_ids type="array"><user_id>3</user_id><user_id>4</user_id></user_ids></watcher>""",
+            """{"watcher":{"user_ids":[3,4]}}""",
+            request);
+    }
+
+    [Theory(Timeout = Constants.TestTimeout)]
+    [InlineData(true)]
+    [InlineData(false)]
+    public async Task Bulk_Helpers_Without_User_Ids_Should_Throw_RedmineException(bool isNull)
+    {
+        var userIds = isNull ? null : Array.Empty<int>();
+        var transport = new RecordingTransport();
+        var manager = CreateManager(transport, SerializationType.Json);
+        var ct = TestContext.Current.CancellationToken;
+
+        Assert.Throws<RedmineException>(() => manager.AddUsersToGroup(5, userIds));
+        Assert.Throws<RedmineException>(() => manager.RemoveUsersFromGroup(5, userIds));
+        Assert.Throws<RedmineException>(() => manager.AddWatchersToIssue(9, userIds));
+        await Assert.ThrowsAsync<RedmineException>(() => manager.AddUsersToGroupAsync(5, userIds, cancellationToken: ct));
+        await Assert.ThrowsAsync<RedmineException>(() => manager.RemoveUsersFromGroupAsync(5, userIds, cancellationToken: ct));
+        await Assert.ThrowsAsync<RedmineException>(() => manager.AddWatchersToIssueAsync(9, userIds, cancellationToken: ct));
+        Assert.Empty(transport.All);
     }
 }
