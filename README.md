@@ -225,7 +225,7 @@ throw only for transport failures. The XML documentation of `IRedmineTransport` 
 ## Caching
 
 The model types (`Issue`, `Project`, `User`, ...) have public getters and setters, so they can be cached with
-System.Text.Json, Newtonsoft.Json or MessagePack (contractless resolver) and read back with every property intact:
+System.Text.Json or Newtonsoft.Json and read back with every property intact:
 
 ```csharp
 var json = System.Text.Json.JsonSerializer.Serialize(issues);

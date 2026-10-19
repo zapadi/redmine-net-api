@@ -13,7 +13,7 @@
 *	Added RedmineManagerOptionsBuilder.WithMaxConcurrentRequests(int) to set how many pages GetAsync fetches in parallel (default 3)
 *	Added SearchAsync(q, limit, offset, searchFilter, requestOptions, cancellationToken) overload with RequestOptions (impersonation, headers, extra query string)
 *	Public IRedmineTransport contract and RedmineManagerOptionsBuilder.WithTransport to plug in a custom HTTP transport
-*	Model types have public setters so they can be cached with System.Text.Json, Newtonsoft.Json or MessagePack
+*	Model types have public setters so they can be cached with System.Text.Json or Newtonsoft.Json
 
 ⚠️ Deprecations
 *	Project.CustomFieldValues is obsolete; use ProjectCustomFields
