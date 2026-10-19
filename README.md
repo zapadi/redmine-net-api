@@ -241,8 +241,12 @@ services.AddHttpClient("redmine")
 ```
 
 The standard handler also applies its own timeouts (10 seconds per attempt and 30 seconds in total by default); raise
-`options.AttemptTimeout.Timeout` and `options.TotalRequestTimeout.Timeout` for slow requests. The total timeout must stay
-above the attempt timeout and `options.CircuitBreaker.SamplingDuration` at least twice the attempt timeout.
+`options.AttemptTimeout.Timeout` and `options.TotalRequestTimeout.Timeout` for slow requests. The total timeout must not
+be below the attempt timeout and `options.CircuitBreaker.SamplingDuration` must be at least twice the attempt timeout.
+Keep `HttpClient.Timeout` above `TotalRequestTimeout` so the handler's timeouts apply first. When a handler timeout
+expires (or its circuit is open), the call fails with a `RedmineApiException` whose `IsTransient` is `false` and whose
+inner exception is Polly's `TimeoutRejectedException` (or `BrokenCircuitException`), because the handler has already
+retried.
 
 To retry at the `RedmineManager` level instead, use `RedmineApiException.IsTransient` (timeouts, connection failures
 and HTTP 408, 429, 502, 503 and 504) and the `Retry-After` value in `ResponseHeaders`, for example with
@@ -269,7 +273,8 @@ var issue = await retry.ExecuteAsync(async token => await manager.GetAsync<Issue
 ```
 
 Retrying a request that creates something (`Create`, `UploadFile`, ...) can create it twice when the first attempt
-reached the server but its response was lost. Retry only reads, updates and deletes, or check before retrying a create.
+reached the server but its response was lost. When retrying at the `RedmineManager` level, retry only reads, updates
+and deletes, or check before retrying a create.
 
 ### Custom transport
 
