@@ -143,7 +143,7 @@ public class CacheRoundTripTests
             .Where(p => p.GetGetMethod() != null && p.GetIndexParameters().Length == 0);
     }
 
-    private sealed class InstanceBuilder
+    internal sealed class InstanceBuilder
     {
         private int _next;
 
@@ -161,7 +161,7 @@ public class CacheRoundTripTests
             return instance;
         }
 
-        private object CreateValue(Type type, int depth)
+        public object CreateValue(Type type, int depth)
         {
             var n = ++_next;
             var valueType = Nullable.GetUnderlyingType(type) ?? type;
