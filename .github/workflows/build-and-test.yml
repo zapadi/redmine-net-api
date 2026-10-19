@@ -4,7 +4,7 @@ on:
   workflow_call:
   workflow_dispatch:
   push:
-    branches: [ master ]
+    branches: [ master, '*.x' ]
     paths:
       - '**.cs'
       - '**.csproj'
@@ -16,7 +16,7 @@ on:
       - '.github/workflows/build-and-test.yml'
       - '.github/scripts/**'
   pull_request:
-    branches: [ master ]
+    branches: [ master, '*.x' ]
     paths:
       - '**.cs'
       - '**.csproj'
@@ -95,12 +95,25 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         shell: bash
         run: |
-          baseline=$(.github/scripts/nuget-versions.sh redmine-api | awk '!/-/ { v = $0 } END { print v }')
-          signed_baseline=$(.github/scripts/nuget-versions.sh redmine-api-signed | awk '!/-/ { v = $0 } END { print v }')
-          dotnet pack src/redmine-net-api/redmine-net-api.csproj --configuration Release --output ./artifacts -p:PackageValidationBaselineVersion="$baseline"
-          dotnet pack src/redmine-net-api.Http/redmine-net-api.Http.csproj --configuration Release --no-build --output ./artifacts
-          dotnet pack src/redmine-net-api/redmine-net-api.csproj --configuration Release --output ./artifacts -p:Sign=true -p:PackageValidationBaselineVersion="$signed_baseline"
-          dotnet pack src/redmine-net-api.Http/redmine-net-api.Http.csproj --configuration Release --output ./artifacts -p:Sign=true
+          for package in redmine-api redmine-api.http; do
+            case "$package" in
+              redmine-api) project=src/redmine-net-api/redmine-net-api.csproj ;;
+              redmine-api.http) project=src/redmine-net-api.Http/redmine-net-api.Http.csproj ;;
+            esac
+
+            version=$(dotnet msbuild "$project" -getProperty:Version)
+            for sign in false true; do
+              id=$package
+              if [[ "$sign" == true ]]; then id=$package-signed; fi
+              baseline=$(.github/scripts/nuget-baseline.sh "$id" "$version")
+              echo "Packing $id $version (package validation baseline: ${baseline:-none})"
+              dotnet pack "$project" \
+                --configuration Release \
+                --output ./artifacts \
+                -p:Sign="$sign" \
+                ${baseline:+-p:PackageValidationBaselineVersion="$baseline"}
+            done
+          done
 
       - name: Upload test results
         if: always()

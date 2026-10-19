@@ -39,13 +39,6 @@ jobs:
       attestations: write
       artifact-metadata: write
     steps:
-      - name: Check branch
-        run: |
-          if [[ "$GITHUB_REF" != refs/heads/master ]]; then
-            echo "::error::Packages are published from master only ($GITHUB_REF)."
-            exit 1
-          fi
-
       - uses: actions/checkout@v7
         with:
           persist-credentials: false
@@ -74,7 +67,7 @@ jobs:
             for sign in false true; do
               id=$package
               if [[ "$sign" == true ]]; then id=$package-signed; fi
-              baseline=$(.github/scripts/nuget-versions.sh "$id" | awk '!/-/ { v = $0 } END { print v }')
+              baseline=$(.github/scripts/nuget-baseline.sh "$id" "$version")
               echo "Packing $id $version (package validation baseline: ${baseline:-none})"
               dotnet pack "$project" \
                 --configuration Release \

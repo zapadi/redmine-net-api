@@ -2,14 +2,14 @@ name: Release
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, '*.x' ]
   workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: release-please
+  group: release-please-${{ github.ref_name }}
   cancel-in-progress: false
 
 jobs:
@@ -29,6 +29,7 @@ jobs:
         with:
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
+          target-branch: ${{ github.ref_name }}
 
       - id: packages
         name: Released packages
