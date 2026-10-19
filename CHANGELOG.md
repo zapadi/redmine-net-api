@@ -90,6 +90,8 @@
 
 ### redmine-api.http
 
+Unreleased; released from `master` only (not part of the 4.x releases).
+
 🚀 Features
 *	New redmine-api.http package: HttpClient transport (WithHttpClient) for .NET Framework 4.5+ and .NET 5+
 
