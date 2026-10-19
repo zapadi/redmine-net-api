@@ -121,7 +121,11 @@ public sealed class HttpClientTransport : IRedmineTransport
         {
             using var message = CreateRequestMessage(request);
             using var response = await _httpClient.SendAsync(message, GetCompletionOption(request), cancellationToken).ConfigureAwait(false);
+#if NET5_0_OR_GREATER
+            await using (timeout.Token.Register(response.Dispose))
+#else
             using (timeout.Token.Register(response.Dispose))
+#endif
             {
                 var body = await ReadBodyAsync(response, request, timeout.Token).ConfigureAwait(false);
                 return CreateResponse(response, body);
@@ -223,7 +227,7 @@ public sealed class HttpClientTransport : IRedmineTransport
         }
 
 #if NET5_0_OR_GREATER
-        using var stream = await content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
+        await using var stream = await content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
 #else
         using var stream = await content.ReadAsStreamAsync().ConfigureAwait(false);
 #endif
