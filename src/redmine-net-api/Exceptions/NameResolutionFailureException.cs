@@ -24,6 +24,7 @@ namespace Redmine.Net.Api.Exceptions
     /// </summary>
     /// <seealso cref="Redmine.Net.Api.Exceptions.RedmineException" />
     [Serializable]
+    [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Not thrown by RedmineManager. Catch RedmineApiException; the connection error is its InnerException.")]
     public sealed class NameResolutionFailureException : RedmineException
     {
         /// <summary>

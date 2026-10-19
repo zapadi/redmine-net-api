@@ -45,7 +45,7 @@ namespace Redmine.Net.Api.Exceptions
     /// {
     ///     await manager.DeleteAsync&lt;Issue&gt;("12345");
     /// }
-    /// catch (ForbiddenException ex)
+    /// catch (RedmineApiException ex) when (ex.HttpStatusCode == 403)
     /// {
     ///     Console.WriteLine("Access denied. You don't have permission to delete this issue.");
     ///     // Check user's role and permissions in Redmine
@@ -55,6 +55,7 @@ namespace Redmine.Net.Api.Exceptions
     /// </example>
     /// <seealso cref="Redmine.Net.Api.Exceptions.RedmineException" />
     [Serializable]
+    [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Not thrown by RedmineManager. Catch RedmineApiException and check HttpStatusCode == 403.")]
     public sealed class ForbiddenException : RedmineException
     {
         /// <summary>

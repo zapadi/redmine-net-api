@@ -44,7 +44,7 @@ namespace Redmine.Net.Api.Exceptions
     /// {
     ///     var issue = await manager.GetAsync&lt;Issue&gt;("99999");
     /// }
-    /// catch (NotFoundException ex)
+    /// catch (RedmineApiException ex) when (ex.HttpStatusCode == 404)
     /// {
     ///     Console.WriteLine($"Issue not found: {ex.Message}");
     ///     // Verify the ID is correct
@@ -55,6 +55,7 @@ namespace Redmine.Net.Api.Exceptions
     /// </example>
     /// <seealso cref="Redmine.Net.Api.Exceptions.RedmineException" />
     [Serializable]
+    [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Not thrown by RedmineManager. Catch RedmineApiException and check HttpStatusCode == 404.")]
     public sealed class NotFoundException : RedmineException
     {
         /// <summary>
