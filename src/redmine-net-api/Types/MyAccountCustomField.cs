@@ -67,7 +67,7 @@ namespace Redmine.Net.Api.Types
             base.ReadXml(reader);
             while (!reader.EOF)
             {
-                if (reader.NodeType == XmlNodeType.Element && reader.Name == RedmineKeys.VALUE && !reader.GetAttribute(RedmineKeys.TYPE).IsNullOrWhiteSpace())
+                if (reader.NodeType == XmlNodeType.Element && reader.Name == RedmineKeys.VALUE && string.Equals(reader.GetAttribute(RedmineKeys.TYPE), "array", StringComparison.Ordinal))
                 {
                     SetValues(ReadXmlValues(reader));
                     continue;
@@ -196,6 +196,20 @@ namespace Redmine.Net.Api.Types
         }
 
         private void ReadJsonValue(JsonReader reader)
+        {
+            var dateParseHandling = reader.DateParseHandling;
+            reader.DateParseHandling = DateParseHandling.None;
+            try
+            {
+                ReadJsonValueCore(reader);
+            }
+            finally
+            {
+                reader.DateParseHandling = dateParseHandling;
+            }
+        }
+
+        private void ReadJsonValueCore(JsonReader reader)
         {
             reader.Read();
             switch (reader.TokenType)

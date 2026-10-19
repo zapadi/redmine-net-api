@@ -100,6 +100,51 @@ public class MyAccountCustomFieldTests
         Assert.True(JToken.DeepEquals(JObject.Parse("""{"id":6,"value":[]}"""), JObject.Parse(output)));
     }
 
+    [Fact]
+    public void Json_Should_Keep_Date_Time_Like_Values_As_Sent()
+    {
+        const string json = """
+                            {
+                              "user": {
+                                "id": 3,
+                                "custom_fields": [
+                                  { "id": 4, "name": "Since", "value": "2024-01-02T10:11:12Z" },
+                                  { "id": 5, "name": "Dates", "multiple": true, "value": ["2024-01-02T10:11:12Z"] }
+                                ],
+                                "mail": "dlopper@somenet.foo"
+                              }
+                            }
+                            """;
+
+        var output = SerializerFactory.Create(SerializerKind.NewtonsoftJson).Deserialize<MyAccount>(json);
+
+        Assert.Equal("2024-01-02T10:11:12Z", output.CustomFields[0].Value);
+        Assert.Equal(["2024-01-02T10:11:12Z"], output.CustomFields[1].Values);
+        Assert.Equal("dlopper@somenet.foo", output.Email);
+    }
+
+    [Fact]
+    public void Xml_Should_Read_Value_With_Non_Array_Type_As_Single_Value()
+    {
+        const string xml = """
+                           <user>
+                             <id>3</id>
+                             <custom_fields type="array">
+                               <custom_field id="4" name="Phone number">
+                                 <value type="string">555-1234</value>
+                               </custom_field>
+                             </custom_fields>
+                             <mail>dlopper@somenet.foo</mail>
+                           </user>
+                           """;
+
+        var output = SerializerFactory.Create(SerializerKind.Xml).Deserialize<MyAccount>(xml);
+
+        Assert.Equal("555-1234", output.CustomFields[0].Value);
+        Assert.Null(output.CustomFields[0].Values);
+        Assert.Equal("dlopper@somenet.foo", output.Email);
+    }
+
     public static IEnumerable<TheoryDataRow<string, SerializerKind>> MyAccountCustomFieldsTheoryData
     {
         get
