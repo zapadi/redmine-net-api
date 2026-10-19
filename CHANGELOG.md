@@ -15,6 +15,11 @@
 *	Public IRedmineTransport contract and RedmineManagerOptionsBuilder.WithTransport to plug in a custom HTTP transport
 *	Model types have public setters so they can be cached with System.Text.Json or Newtonsoft.Json
 *	Added UpdateAttachment and UpdateAttachmentAsync (PATCH /attachments/:id) to change an attachment's file name and description
+*	Added UpdateJournal and DeleteJournalNotes (+ async) to edit or clear journal notes and set private notes
+*	Added UpdateMyAccount and UpdateMyAccountAsync (PUT /my/account); MyAccount now also sends its custom field values
+*	Added AddUsersToGroup, RemoveUsersFromGroup (Redmine 7.0+) and AddWatchersToIssue (+ async) to add or remove several users at once
+*	Added User.AuthSource (read from auth_source with include=auth_source)
+*	Added IssueStatus.Description, CustomField.Editable, IsForAll, Projects and DefaultValueMode, WikiPage.Project, Group.Builtin and CustomFields on TimeEntryActivity, IssuePriority and DocumentCategory
 
 ⚠️ Deprecations
 *	Project.CustomFieldValues is obsolete; use ProjectCustomFields
@@ -22,6 +27,9 @@
 *	UpdateIssueAttachment is obsolete: Redmine does not accept API authentication for PATCH /attachments/issues/:id; use UpdateAttachment
 
 🛠 Fixes
+*	Fixed User create/update never sending admin (IsAdmin)
+*	Fixed User create/update sending status 0 when Status is not set (Redmine now applies its default)
+*	Fixed Journal.PrivateNotes not being sent and invalid JSON when updating a Journal
 *	Fixed Project custom field values being ignored by Redmine (XML now uses custom_fields; values are also sent on create)
 *	Fixed invalid JSON for multi-value Project custom field values
 *	Fixed Project XML create not associating issue custom fields (now sent as issue_custom_field_ids)
