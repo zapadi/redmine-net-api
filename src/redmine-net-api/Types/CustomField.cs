@@ -94,6 +94,26 @@ namespace Redmine.Net.Api.Types
         public bool Visible { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the custom field is editable.
+        /// </summary>
+        public bool Editable { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the custom field is used for all projects (Redmine 7.0+).
+        /// </summary>
+        public bool IsForAll { get; set; }
+
+        /// <summary>
+        /// Gets or sets the projects of an issue custom field (Redmine 7.0+).
+        /// </summary>
+        public IList<IdentifiableName> Projects { get; set; }
+
+        /// <summary>
+        /// Gets or sets the default value mode of a date custom field, e.g. <c>fixed_date</c> or <c>current_date</c> (Redmine 7.0+).
+        /// </summary>
+        public string DefaultValueMode { get; set; }
+
+        /// <summary>
         /// 
         /// </summary>
         public IList<CustomFieldPossibleValue> PossibleValues { get; set; }
@@ -131,6 +151,10 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.CUSTOMIZED_TYPE: CustomizedType = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.DESCRIPTION: Description = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.DEFAULT_VALUE: DefaultValue = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.DEFAULT_VALUE_MODE: DefaultValueMode = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.EDITABLE: Editable = reader.ReadElementContentAsBoolean(); break;
+                    case RedmineKeys.IS_FOR_ALL: IsForAll = reader.ReadElementContentAsBoolean(); break;
+                    case RedmineKeys.PROJECTS: Projects = ReadProjects(reader); break;
                     case RedmineKeys.FIELD_FORMAT: FieldFormat = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.IS_FILTER: IsFilter = reader.ReadElementContentAsBoolean(); break;
                     case RedmineKeys.IS_REQUIRED: IsRequired = reader.ReadElementContentAsBoolean(); break;
@@ -149,6 +173,37 @@ namespace Redmine.Net.Api.Types
             }
         }
 
+
+        private static List<IdentifiableName> ReadProjects(XmlReader reader)
+        {
+            List<IdentifiableName> projects = null;
+
+            if (reader.IsEmptyElement)
+            {
+                reader.Read();
+                return projects;
+            }
+
+            using (var subtree = reader.ReadSubtree())
+            {
+                subtree.Read();
+                subtree.Read();
+                while (!subtree.EOF)
+                {
+                    if (subtree.NodeType == XmlNodeType.Element && subtree.Name == RedmineKeys.PROJECT)
+                    {
+                        projects ??= new List<IdentifiableName>();
+                        projects.Add(new IdentifiableName(subtree));
+                        continue;
+                    }
+
+                    subtree.Read();
+                }
+            }
+
+            reader.Read();
+            return projects;
+        }
         #endregion
 
         #region Implementation of IJsonSerialization
@@ -175,6 +230,10 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
                     case RedmineKeys.CUSTOMIZED_TYPE: CustomizedType = reader.ReadAsString(); break;
                     case RedmineKeys.DEFAULT_VALUE: DefaultValue = reader.ReadAsString(); break;
+                    case RedmineKeys.DEFAULT_VALUE_MODE: DefaultValueMode = reader.ReadAsString(); break;
+                    case RedmineKeys.EDITABLE: Editable = reader.ReadAsBool(); break;
+                    case RedmineKeys.IS_FOR_ALL: IsForAll = reader.ReadAsBool(); break;
+                    case RedmineKeys.PROJECTS: Projects = reader.ReadAsCollection<IdentifiableName>(); break;
                     case RedmineKeys.DESCRIPTION: Description = reader.ReadAsString(); break;
                     case RedmineKeys.FIELD_FORMAT: FieldFormat = reader.ReadAsString(); break;
                     case RedmineKeys.IS_FILTER: IsFilter = reader.ReadAsBool(); break;
@@ -219,6 +278,10 @@ namespace Redmine.Net.Api.Types
                     && Searchable == other.Searchable
                     && Multiple == other.Multiple
                     && Visible == other.Visible
+                    && Editable == other.Editable
+                    && IsForAll == other.IsForAll
+                    && string.Equals(DefaultValueMode, other.DefaultValueMode, StringComparison.Ordinal)
+                    && (Projects?.Equals<IdentifiableName>(other.Projects) ?? other.Projects == null)
                     && (PossibleValues?.Equals<CustomFieldPossibleValue>(other.PossibleValues) ?? other.PossibleValues == null)
                     && (Trackers?.Equals<TrackerCustomField>(other.Trackers) ?? other.Trackers == null)
                     && (Roles?.Equals<CustomFieldRole>(other.Roles) ?? other.Roles == null);
@@ -259,6 +322,10 @@ namespace Redmine.Net.Api.Types
                 hashCode = HashCodeHelper.GetHashCode(Multiple, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(DefaultValue, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Visible, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Editable, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(IsForAll, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(DefaultValueMode, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Projects, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(PossibleValues, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Trackers, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Roles, hashCode);

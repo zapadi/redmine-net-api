@@ -92,6 +92,10 @@ namespace Redmine.Net.Api
         /// The <c>auth_source</c> key.
         /// </summary>
         public const string AUTH_SOURCE = "auth_source";
+        /// <summary>
+        /// The <c>builtin</c> key.
+        /// </summary>
+        public const string BUILTIN = "builtin";
         
         /// <summary>
         /// 
@@ -212,6 +216,10 @@ namespace Redmine.Net.Api
         /// </summary>
         public const string DEFAULT_VALUE = "default_value";
         /// <summary>
+        /// The <c>default_value_mode</c> key.
+        /// </summary>
+        public const string DEFAULT_VALUE_MODE = "default_value_mode";
+        /// <summary>
         /// 
         /// </summary>
         public const string DEFAULT_VERSION = "default_version";
@@ -259,6 +267,10 @@ namespace Redmine.Net.Api
         /// 
         /// </summary>
         public const string DUE_DATE = "due_date";
+        /// <summary>
+        /// The <c>editable</c> key.
+        /// </summary>
+        public const string EDITABLE = "editable";
         /// <summary>
         /// 
         /// </summary>
@@ -458,6 +470,10 @@ namespace Redmine.Net.Api
         /// 
         /// </summary>
         public const string IS_FILTER = "is_filter";
+        /// <summary>
+        /// The <c>is_for_all</c> key.
+        /// </summary>
+        public const string IS_FOR_ALL = "is_for_all";
         /// <summary>
         /// 
         /// </summary>

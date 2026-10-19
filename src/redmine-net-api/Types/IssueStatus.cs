@@ -93,6 +93,12 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <value><c>true</c> if IssueStatus is closed; otherwise, <c>false</c>.</value>
         public bool IsClosed { get; set; }
+
+        /// <summary>
+        /// Gets or sets the description of the status.
+        /// Set by Redmine; not sent when creating or updating.
+        /// </summary>
+        public string Description { get; set; }
         #endregion
 
         #region Implementation of IXmlSerialization
@@ -124,6 +130,7 @@ namespace Redmine.Net.Api.Types
                 switch (reader.Name)
                 {
                     case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
+                    case RedmineKeys.DESCRIPTION: Description = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.IS_CLOSED: IsClosed = reader.ReadElementContentAsBoolean(); break;
                     case RedmineKeys.IS_DEFAULT: IsDefault = reader.ReadElementContentAsBoolean(); break;
                     case RedmineKeys.NAME: Name = reader.ReadElementContentAsString(); break;
@@ -155,6 +162,7 @@ namespace Redmine.Net.Api.Types
                 switch (reader.Value)
                 {
                     case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
+                    case RedmineKeys.DESCRIPTION: Description = reader.ReadAsString(); break;
                     case RedmineKeys.IS_CLOSED: IsClosed = reader.ReadAsBool(); break;
                     case RedmineKeys.IS_DEFAULT: IsDefault = reader.ReadAsBool(); break;
                     case RedmineKeys.NAME: Name = reader.ReadAsString(); break;
@@ -175,7 +183,8 @@ namespace Redmine.Net.Api.Types
             if (other == null) return false;
             return base.Equals(other)
                    && IsClosed == other.IsClosed 
-                   && IsDefault == other.IsDefault;
+                   && IsDefault == other.IsDefault
+                   && string.Equals(Description, other.Description, StringComparison.Ordinal);
         }
 
         /// <summary>
@@ -190,7 +199,8 @@ namespace Redmine.Net.Api.Types
                 Id = Id,
                 Name = Name,
                 IsClosed = IsClosed,
-                IsDefault = IsDefault
+                IsDefault = IsDefault,
+                Description = Description
             };
         }
 
@@ -218,6 +228,7 @@ namespace Redmine.Net.Api.Types
                 var hashCode = base.GetHashCode();
                 hashCode = HashCodeHelper.GetHashCode(IsClosed, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(IsDefault, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Description, hashCode);
                 return hashCode;
             }
         }
