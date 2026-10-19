@@ -224,7 +224,7 @@ public class SerializedFieldsDocsTests
         {
             foreach (var token in ParseJson(payload).Descendants().OfType<JProperty>())
             {
-                keys.Add(string.Join("/", token.AncestorsAndSelf().OfType<JProperty>().Reverse().Select(p => p.Name)));
+                keys.Add(string.Join("/", token.AncestorsAndSelf().OfType<JProperty>().Reverse().Select(p => p.Name)) + (token.Value is JArray ? "[]" : ""));
             }
         }
 
