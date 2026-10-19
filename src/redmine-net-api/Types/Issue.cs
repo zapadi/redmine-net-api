@@ -47,67 +47,77 @@ namespace Redmine.Net.Api.Types
         /// Gets or sets the project.
         /// </summary>
         /// <value>The project.</value>
+        /// <remarks>Sent to Redmine when creating or updating, only when set. Only its Id is sent.</remarks>
         public IdentifiableName Project { get; set; }
 
         /// <summary>
         /// Gets or sets the tracker.
         /// </summary>
         /// <value>The tracker.</value>
+        /// <remarks>Sent to Redmine when creating or updating, only when set. Only its Id is sent.</remarks>
         public IdentifiableName Tracker { get; set; }
 
         /// <summary>
         /// Gets or sets the status.Possible values: open, closed, * to get open and closed issues, status id
         /// </summary>
         /// <value>The status.</value>
+        /// <remarks>Sent to Redmine when creating or updating, only when set. Only its Id is sent.</remarks>
         public IssueStatus Status { get; set; }
 
         /// <summary>
         /// Gets or sets the priority.
         /// </summary>
         /// <value>The priority.</value>
+        /// <remarks>Sent to Redmine when creating or updating, only when set. Only its Id is sent.</remarks>
         public IdentifiableName Priority { get; set; }
 
         /// <summary>
         /// Gets or sets the author.
-        /// Set by Redmine; not sent when creating or updating.
         /// </summary>
         /// <value>The author.</value>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public IdentifiableName Author { get; set; }
 
         /// <summary>
         /// Gets or sets the category.
         /// </summary>
         /// <value>The category.</value>
+        /// <remarks>Sent to Redmine when creating or updating, only when set. Only its Id is sent.</remarks>
         public IdentifiableName Category { get; set; }
 
         /// <summary>
         /// Gets or sets the subject.
         /// </summary>
         /// <value>The subject.</value>
+        /// <remarks>Sent to Redmine when creating or updating.</remarks>
         public string Subject { get; set; }
 
         /// <summary>
         /// Gets or sets the description.
         /// </summary>
         /// <value>The description.</value>
+        /// <remarks>Sent to Redmine when creating or updating.</remarks>
         public string Description { get; set; }
 
         /// <summary>
         /// Gets or sets the start date.
         /// </summary>
         /// <value>The start date.</value>
+        /// <remarks>Sent to Redmine when creating or updating.</remarks>
         public DateTime? StartDate { get; set; }
 
         /// <summary>
         /// Gets or sets the due date.
         /// </summary>
         /// <value>The due date.</value>
+        /// <remarks>Sent to Redmine when creating or updating.</remarks>
         public DateTime? DueDate { get; set; }
 
         /// <summary>
         /// Gets or sets the done ratio.
         /// </summary>
         /// <value>The done ratio.</value>
+        /// <remarks>Sent to Redmine when creating or updating, only when set.</remarks>
         public float? DoneRatio { get; set; }
 
         /// <summary>
@@ -116,49 +126,55 @@ namespace Redmine.Net.Api.Types
         /// <value>
         ///   <c>true</c> if [private notes]; otherwise, <c>false</c>.
         /// </value>
+        /// <remarks>Sent to Redmine when creating or updating. Only sent when updating.</remarks>
         public bool PrivateNotes { get; set; }
 
         /// <summary>
         /// Gets or sets the estimated hours.
         /// </summary>
         /// <value>The estimated hours.</value>
+        /// <remarks>Sent to Redmine when creating or updating.</remarks>
         public float? EstimatedHours { get; set; }
 
         /// <summary>
         /// Gets or sets the hours spent on the issue.
         /// </summary>
         /// <value>The hours spent on the issue.</value>
+        /// <remarks>Sent to Redmine only with the JSON serializer.</remarks>
         public float? SpentHours { get; set; }
 
         /// <summary>
         /// Gets or sets the custom fields.
         /// </summary>
         /// <value>The custom fields.</value>
+        /// <remarks>Sent to Redmine when creating or updating, only when set.</remarks>
         public IList<IssueCustomField> CustomFields { get; set; }
 
         /// <summary>
         /// Gets or sets the created on.
-        /// Set by Redmine; not sent when creating or updating.
         /// </summary>
         /// <value>The created on.</value>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public DateTime? CreatedOn { get; set; }
 
         /// <summary>
         /// Gets or sets the updated on.
         /// </summary>
         /// <value>The updated on.</value>
+        /// <remarks>Sent to Redmine when creating or updating.</remarks>
         public DateTime? UpdatedOn { get; set; }
 
         /// <summary>
         /// Gets or sets the closed on.
-        /// Set by Redmine; not sent when creating or updating.
         /// </summary>
         /// <value>The closed on.</value>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public DateTime? ClosedOn { get; set; }
 
         /// <summary>
         /// Gets or sets the notes.
         /// </summary>
+        /// <remarks>Sent to Redmine when creating or updating.</remarks>
         public string Notes { get; set; }
 
         /// <summary>
@@ -167,6 +183,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The assigned to.
         /// </value>
+        /// <remarks>Sent to Redmine when creating or updating, only when set. Only its Id is sent.</remarks>
         public IdentifiableName AssignedTo { get; set; }
 
         /// <summary>
@@ -175,6 +192,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The parent issue id.
         /// </value>
+        /// <remarks>Sent to Redmine when creating or updating, only when set. Only its Id is sent.</remarks>
         public IdentifiableName ParentIssue { get; set; }
 
         /// <summary>
@@ -183,6 +201,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The fixed version.
         /// </value>
+        /// <remarks>Sent to Redmine when creating or updating, only when set. Only its Id is sent.</remarks>
         public IdentifiableName FixedVersion { get; set; }
 
         /// <summary>
@@ -191,18 +210,25 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// <c>true</c> if this issue is private; otherwise, <c>false</c>.
         /// </value>
+        /// <remarks>Sent to Redmine when creating or updating.</remarks>
         public bool IsPrivate { get; set; }
 
         /// <summary>
         /// Returns the sum of spent hours of the task and all the sub tasks.
         /// </summary>
-        /// <remarks>Availability starting with redmine version 3.3</remarks>
+        /// <remarks>
+        /// <para>Availability starting with redmine version 3.3</para>
+        /// <para>Read-only: set by Redmine and not sent when creating or updating.</para>
+        /// </remarks>
         public float? TotalSpentHours { get; set; }
 
         /// <summary>
         /// Returns the sum of estimated hours of task and all the sub tasks.
         /// </summary>
-        /// <remarks>Availability starting with redmine version 3.3</remarks>
+        /// <remarks>
+        /// <para>Availability starting with redmine version 3.3</para>
+        /// <para>Read-only: set by Redmine and not sent when creating or updating.</para>
+        /// </remarks>
         public float? TotalEstimatedHours { get; set; }
 
         /// <summary>
@@ -211,6 +237,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The journals.
         /// </value>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public IList<Journal> Journals { get; set; }
 
         /// <summary>
@@ -219,6 +246,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The change sets.
         /// </value>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public IList<ChangeSet> ChangeSets { get; set; }
 
         /// <summary>
@@ -227,6 +255,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The attachments.
         /// </value>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public IList<Attachment> Attachments { get; set; }
 
         /// <summary>
@@ -235,6 +264,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The issue relations.
         /// </value>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public IList<IssueRelation> Relations { get; set; }
 
         /// <summary>
@@ -244,6 +274,7 @@ namespace Redmine.Net.Api.Types
         /// The issue children.
         /// NOTE: Only Id, tracker and subject are filled.
         /// </value>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public IList<IssueChild> Children { get; set; }
 
         /// <summary>
@@ -252,16 +283,19 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The attachment.
         /// </value>
+        /// <remarks>Sent to Redmine when creating or updating, only when set.</remarks>
         public IList<Upload> Uploads { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Sent to Redmine when creating or updating, only when set. Only their Ids are sent.</remarks>
         public IList<Watcher> Watchers { get; set; }
         
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public List<IssueAllowedStatus> AllowedStatuses { get; set; }
         #endregion
 

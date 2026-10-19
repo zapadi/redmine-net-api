@@ -39,21 +39,25 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public string Revision { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public IdentifiableName User { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public string Comments { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public DateTime? CommittedOn { get; set; }
         #endregion
 

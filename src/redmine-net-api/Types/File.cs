@@ -38,56 +38,65 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Sent to Redmine when creating or updating.</remarks>
         public string Filename { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public int FileSize { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public string ContentType { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Sent to Redmine when creating or updating.</remarks>
         public string Description { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public string ContentUrl { get; set; }
 
         /// <summary>
-        /// Set by Redmine; not sent when creating or updating.
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public IdentifiableName Author { get; set; }
 
         /// <summary>
-        /// Set by Redmine; not sent when creating or updating.
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public DateTime? CreatedOn { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Sent to Redmine when creating or updating, only when set. Only its Id is sent.</remarks>
         public IdentifiableName Version { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public string Digest { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public int Downloads { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Sent to Redmine when creating or updating.</remarks>
         public string Token { get; set; }
         #endregion
 

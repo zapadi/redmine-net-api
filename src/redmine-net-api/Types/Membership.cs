@@ -35,22 +35,26 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// Gets the group.
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public IdentifiableName Group { get; set; }
         /// <summary>
         /// Gets or sets the project.
         /// </summary>
         /// <value>The project.</value>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public IdentifiableName Project { get; set; }
         
         /// <summary>
         /// Gets the user.
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public IdentifiableName User { get; set; }
 
         /// <summary>
         /// Gets or sets the type.
         /// </summary>
         /// <value>The type.</value>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public IList<MembershipRole> Roles { get; set; }
         #endregion
 

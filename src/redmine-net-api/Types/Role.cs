@@ -39,26 +39,31 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The issue relations.
         /// </value>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public IList<Permission> Permissions { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public string IssuesVisibility { get; set; }
         
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public string TimeEntriesVisibility { get; set; }
         
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public string UsersVisibility { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public bool? IsAssignable { get; set; }
         #endregion
 

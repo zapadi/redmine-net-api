@@ -39,17 +39,20 @@ namespace Redmine.Net.Api.Types
         /// Gets or sets the tracker.
         /// </summary>
         /// <value>The tracker.</value>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public IdentifiableName Tracker { get; set; }
 
         /// <summary>
         /// Gets or sets the subject.
         /// </summary>
         /// <value>The subject.</value>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public string Subject { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public List<Issue> Children { get; set; }
         #endregion
 

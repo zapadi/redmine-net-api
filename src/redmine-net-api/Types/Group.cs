@@ -51,24 +51,27 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// Represents the group's users.
         /// </summary>
+        /// <remarks>Sent to Redmine when creating or updating, only when set. Only their Ids are sent.</remarks>
         public IList<GroupUser> Users { get;  set; }
 
         /// <summary>
         /// Gets or sets the builtin type of the group (<c>anonymous</c> or <c>non_member</c>); <c>null</c> for regular groups.
-        /// Set by Redmine; not sent when creating or updating.
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public string Builtin { get; set; }
 
         /// <summary>
         /// Gets or sets the custom fields.
         /// </summary>
         /// <value>The custom fields.</value>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public IList<IssueCustomField> CustomFields { get; set; }
 
         /// <summary>
         /// Gets or sets the custom fields.
         /// </summary>
         /// <value>The custom fields.</value>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public IList<Membership> Memberships { get; set; }
         #endregion
 

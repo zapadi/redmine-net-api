@@ -30,6 +30,7 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public string Name { get; set; }
         
         /// <summary>

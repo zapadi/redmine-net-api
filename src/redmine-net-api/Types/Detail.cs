@@ -56,6 +56,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The property.
         /// </value>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public string Property { get; set; }
 
         /// <summary>
@@ -64,6 +65,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The name.
         /// </value>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public string Name { get; set; }
 
         /// <summary>
@@ -72,6 +74,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The old value.
         /// </value>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public string OldValue { get; set; }
 
         /// <summary>
@@ -80,6 +83,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The new value.
         /// </value>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public string NewValue { get; set; }
         #endregion
 

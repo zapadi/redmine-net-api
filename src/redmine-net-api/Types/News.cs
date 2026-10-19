@@ -38,53 +38,60 @@ namespace Redmine.Net.Api.Types
         /// Gets or sets the project.
         /// </summary>
         /// <value>The project.</value>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public IdentifiableName Project { get; set; }
 
         /// <summary>
         /// Gets or sets the author.
-        /// Set by Redmine; not sent when creating or updating.
         /// </summary>
         /// <value>The author.</value>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public IdentifiableName Author { get; set; }
 
         /// <summary>
         /// Gets or sets the title.
         /// </summary>
         /// <value>The title.</value>
+        /// <remarks>Sent to Redmine when creating or updating.</remarks>
         public string Title { get; set; }
 
         /// <summary>
         /// Gets or sets the summary.
         /// </summary>
         /// <value>The summary.</value>
+        /// <remarks>Sent to Redmine when creating or updating.</remarks>
         public string Summary { get; set; }
 
         /// <summary>
         /// Gets or sets the description.
         /// </summary>
         /// <value>The description.</value>
+        /// <remarks>Sent to Redmine when creating or updating.</remarks>
         public string Description { get; set; }
 
         /// <summary>
         /// Gets or sets the created on.
-        /// Set by Redmine; not sent when creating or updating.
         /// </summary>
         /// <value>The created on.</value>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public DateTime? CreatedOn { get; set; }
         
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public List<Attachment> Attachments { get; set; }
         
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public List<NewsComment> Comments { get; set; }
         
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Sent to Redmine when creating or updating, only when set.</remarks>
         public List<Upload> Uploads { get; set; }
         
         #endregion

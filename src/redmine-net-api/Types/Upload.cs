@@ -38,12 +38,14 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         ///  Gets the uploaded id.
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public string Id { get; set; }
         
         /// <summary>
         /// Gets or sets the uploaded token.
         /// </summary>
         /// <value>The name of the file.</value>
+        /// <remarks>Sent to Redmine when creating or updating.</remarks>
         public string Token { get; set; }
 
         /// <summary>
@@ -51,18 +53,21 @@ namespace Redmine.Net.Api.Types
         /// Maximum allowed file size (1024000).
         /// </summary>
         /// <value>The name of the file.</value>
+        /// <remarks>Sent to Redmine when creating or updating.</remarks>
         public string FileName { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the file.
         /// </summary>
         /// <value>The name of the file.</value>
+        /// <remarks>Sent to Redmine when creating or updating.</remarks>
         public string ContentType { get; set; }
 
         /// <summary>
         /// Gets or sets the file description. (Undocumented feature)
         /// </summary>
         /// <value>The file descroütopm.</value>
+        /// <remarks>Sent to Redmine when creating or updating.</remarks>
         public string Description { get; set; }
         #endregion
 

@@ -86,18 +86,20 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// 	<c>true</c> if IssueStatus is default; otherwise, <c>false</c>.
         /// </value>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public bool IsDefault { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether IssueStatus is closed.
         /// </summary>
         /// <value><c>true</c> if IssueStatus is closed; otherwise, <c>false</c>.</value>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public bool IsClosed { get; set; }
 
         /// <summary>
         /// Gets or sets the description of the status.
-        /// Set by Redmine; not sent when creating or updating.
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public string Description { get; set; }
         #endregion
 

@@ -37,52 +37,57 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// Gets the title.
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public string Title { get; set; }
         
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public string ParentTitle { get; set; }
         
         /// <summary>
         /// Gets or sets the text.
         /// </summary>
+        /// <remarks>Sent to Redmine when creating or updating.</remarks>
         public string Text { get; set; }
 
         /// <summary>
         /// Gets or sets the comments
         /// </summary>
+        /// <remarks>Sent to Redmine when creating or updating.</remarks>
         public string Comments { get; set; }
 
         /// <summary>
         /// Gets or sets the version
         /// </summary>
+        /// <remarks>Sent to Redmine when creating or updating, only when set.</remarks>
         public int Version { get; set; }
 
         /// <summary>
         /// Gets the author.
-        /// Set by Redmine; not sent when creating or updating.
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public IdentifiableName Author { get; set; }
 
         /// <summary>
         /// Gets or sets the project of the wiki page (Redmine 7.0+).
-        /// Set by Redmine; not sent when creating or updating.
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public IdentifiableName Project { get; set; }
 
         /// <summary>
         /// Gets the created on.
-        /// Set by Redmine; not sent when creating or updating.
         /// </summary>
         /// <value>The created on.</value>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public DateTime? CreatedOn { get; set; }
 
         /// <summary>
         /// Gets or sets the updated on.
-        /// Set by Redmine; not sent when creating or updating.
         /// </summary>
         /// <value>The updated on.</value>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public DateTime? UpdatedOn { get; set; }
 
         /// <summary>
@@ -91,6 +96,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The attachments.
         /// </value>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public IList<Attachment> Attachments { get; set; }
 
         /// <summary>
@@ -99,7 +105,10 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The uploads.
         /// </value>
-        /// <remarks>Availability starting with redmine version 3.3</remarks>
+        /// <remarks>
+        /// <para>Availability starting with redmine version 3.3</para>
+        /// <para>Sent to Redmine when creating or updating, only when set.</para>
+        /// </remarks>
         public IList<Upload> Uploads { get; set; }
         #endregion
 

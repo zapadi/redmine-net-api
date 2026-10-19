@@ -296,6 +296,10 @@ Do not use `XmlSerializer` (or `DataContractSerializer`) for caching in 4.x: the
 so these serializers write the Redmine request format, which skips server-owned fields such as `CreatedOn`,
 `UpdatedOn` or `Author`.
 
+The setters do not mean every property is sent to Redmine. Each model property's documentation states whether it
+is sent when creating or updating; server-owned properties such as `CreatedOn` or `Author` are read-only even though
+they have setters.
+
 ## Supported resources
 
 The generic methods (`Get`, `GetPaginated`, `Count`, `Create`, `Update`, `Delete` and their `Async` variants, including `GetPagedAsync`) cover most resources. Operations that need a dedicated endpoint are available as extension methods on `RedmineManager`; each has an `Async` counterpart, except `UpdateIssueAttachment`.

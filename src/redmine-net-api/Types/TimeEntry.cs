@@ -43,30 +43,35 @@ namespace Redmine.Net.Api.Types
         /// Gets or sets the issue id to log time on.
         /// </summary>
         /// <value>The issue id.</value>
+        /// <remarks>Sent to Redmine when creating or updating, only when set. Only its Id is sent.</remarks>
         public IdentifiableName Issue { get; set; }
 
         /// <summary>
         /// Gets or sets the project id to log time on.
         /// </summary>
         /// <value>The project id.</value>
+        /// <remarks>Sent to Redmine when creating or updating, only when set. Only its Id is sent.</remarks>
         public IdentifiableName Project { get; set; }
 
         /// <summary>
         /// Gets or sets the date the time was spent (default to the current date).
         /// </summary>
         /// <value>The spent on.</value>
+        /// <remarks>Sent to Redmine when creating or updating.</remarks>
         public DateTime? SpentOn { get; set; }
 
         /// <summary>
         /// Gets or sets the number of spent hours.
         /// </summary>
         /// <value>The hours.</value>
+        /// <remarks>Sent to Redmine when creating or updating.</remarks>
         public decimal Hours { get; set; }
 
         /// <summary>
         /// Gets or sets the activity id of the time activity. This parameter is required unless a default activity is defined in Redmine.
         /// </summary>
         /// <value>The activity id.</value>
+        /// <remarks>Sent to Redmine when creating or updating, only when set. Only its Id is sent.</remarks>
         public IdentifiableName Activity { get; set; }
 
         /// <summary>
@@ -75,12 +80,14 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The user.
         /// </value>
+        /// <remarks>Sent to Redmine when creating or updating, only when set. Only its Id is sent.</remarks>
         public IdentifiableName User { get; set; }
 
         /// <summary>
         /// Gets or sets the short description for the entry (255 characters max).
         /// </summary>
         /// <value>The comments.</value>
+        /// <remarks>Sent to Redmine when creating or updating.</remarks>
         public string Comments
         {
             get => comments;
@@ -89,22 +96,23 @@ namespace Redmine.Net.Api.Types
 
         /// <summary>
         /// Gets the created on.
-        /// Set by Redmine; not sent when creating or updating.
         /// </summary>
         /// <value>The created on.</value>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public DateTime? CreatedOn { get; set; }
 
         /// <summary>
         /// Gets the updated on.
-        /// Set by Redmine; not sent when creating or updating.
         /// </summary>
         /// <value>The updated on.</value>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public DateTime? UpdatedOn { get; set; }
 
         /// <summary>
         /// Gets or sets the custom fields.
         /// </summary>
         /// <value>The custom fields.</value>
+        /// <remarks>Sent to Redmine when creating or updating, only when set.</remarks>
         public IList<IssueCustomField> CustomFields { get; set; }
         #endregion
 

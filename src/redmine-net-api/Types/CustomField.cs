@@ -36,96 +36,115 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public string CustomizedType { get; set; }
         
         /// <summary>
         /// Added in Redmine 5.1.0 version
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public string Description { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public string FieldFormat { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public string Regexp { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public int? MinLength { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public int? MaxLength { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public bool IsRequired { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public bool IsFilter { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public bool Searchable { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public bool Multiple { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public string DefaultValue { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public bool Visible { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the custom field is editable.
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public bool Editable { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the custom field is used for all projects (Redmine 7.0+).
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public bool IsForAll { get; set; }
 
         /// <summary>
         /// Gets or sets the projects of an issue custom field (Redmine 7.0+).
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public IList<IdentifiableName> Projects { get; set; }
 
         /// <summary>
         /// Gets or sets the default value mode of a date custom field, e.g. <c>fixed_date</c> or <c>current_date</c> (Redmine 7.0+).
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public string DefaultValueMode { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public IList<CustomFieldPossibleValue> PossibleValues { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public IList<TrackerCustomField> Trackers { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public IList<CustomFieldRole> Roles { get; set; }
         #endregion
 

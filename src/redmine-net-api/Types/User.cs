@@ -38,36 +38,42 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// Gets or sets the user avatar url.
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public string AvatarUrl { get; set; }
         
         /// <summary>
         /// Gets or sets the user login.
         /// </summary>
         /// <value>The login.</value>
+        /// <remarks>Sent to Redmine when creating or updating.</remarks>
         public string Login { get;  set; }
 
         /// <summary>
         /// Gets or sets the user password.
         /// </summary>
         /// <value>The password.</value>
+        /// <remarks>Sent to Redmine when creating or updating, only when set.</remarks>
         public string Password { get; set; }
 
         /// <summary>
         /// Gets or sets the first name.
         /// </summary>
         /// <value>The first name.</value>
+        /// <remarks>Sent to Redmine when creating or updating.</remarks>
         public string FirstName { get; set; }
 
         /// <summary>
         /// Gets or sets the last name.
         /// </summary>
         /// <value>The last name.</value>
+        /// <remarks>Sent to Redmine when creating or updating.</remarks>
         public string LastName { get; set; }
 
         /// <summary>
         /// Gets or sets the email.
         /// </summary>
         /// <value>The email.</value>
+        /// <remarks>Sent to Redmine when creating or updating.</remarks>
         public string Email { get; set; }
 
         /// <summary>
@@ -75,11 +81,13 @@ namespace Redmine.Net.Api.Types
         /// Sent as <c>admin</c> only when <c>true</c>, so creating or updating a user can grant administrator rights
         /// but never removes them; Redmine applies it only for administrators.
         /// </summary>
+        /// <remarks>Sent to Redmine when creating or updating, only when set.</remarks>
         public bool IsAdmin { get; set; }
 
         /// <summary>
         /// twofa_scheme
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public string TwoFactorAuthenticationScheme { get; set; }
         
         /// <summary>
@@ -88,61 +96,66 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The authentication mode id.
         /// </value>
+        /// <remarks>Sent to Redmine when creating or updating, only when set.</remarks>
         public int? AuthenticationModeId { get; set; }
 
         /// <summary>
         /// Gets or sets the authentication source (LDAP) of the user, returned by Redmine as <c>auth_source</c>
         /// when requested with <c>include=auth_source</c> (admins only).
-        /// Set by Redmine; not sent when creating or updating, use <see cref="AuthenticationModeId"/> instead.
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating. Use <see cref="AuthenticationModeId"/> to set it.</remarks>
         public IdentifiableName AuthSource { get; set; }
 
         /// <summary>
         /// Gets the created on.
-        /// Set by Redmine; not sent when creating or updating.
         /// </summary>
         /// <value>The created on.</value>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public DateTime? CreatedOn { get; set; }
 
         /// <summary>
         /// Gets the last login on.
-        /// Set by Redmine; not sent when creating or updating.
         /// </summary>
         /// <value>The last login on.</value>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public DateTime? LastLoginOn { get; set; }
 
         /// <summary>
         /// Gets the API key of the user, visible for admins and for yourself (added in 2.3.0)
-        /// Set by Redmine; not sent when creating or updating.
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public string ApiKey { get; set; }
 
         /// <summary>
         /// Gets the status of the user, visible for admins only (added in 2.4.0).
         /// Not sent when it is <see cref="UserStatus.StatusAnonymous"/>, so Redmine applies its default.
         /// </summary>
+        /// <remarks>Sent to Redmine when creating or updating, only when set.</remarks>
         public UserStatus Status { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Sent to Redmine when creating or updating.</remarks>
         public bool MustChangePassword { get; set; }
 
 
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public DateTime? PasswordChangedOn { get; set; }
         
         /// <summary>
-        /// Set by Redmine; not sent when creating or updating.
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public DateTime? UpdatedOn { get; set; }
 
         /// <summary>
         /// Gets or sets the custom fields.
         /// </summary>
         /// <value>The custom fields.</value>
+        /// <remarks>Sent to Redmine when creating or updating, only when set.</remarks>
         public List<IssueCustomField> CustomFields { get; set; }
 
         /// <summary>
@@ -151,6 +164,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The memberships.
         /// </value>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public List<Membership> Memberships { get; set; }
 
         /// <summary>
@@ -159,6 +173,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The groups.
         /// </value>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public List<UserGroup> Groups { get; set; }
 
         /// <summary>
@@ -167,6 +182,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// only_my_events, only_assigned, [...]
         /// </value>
+        /// <remarks>Sent to Redmine when creating or updating, only when set.</remarks>
         public string MailNotification { get; set; }
         #endregion
 

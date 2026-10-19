@@ -40,6 +40,7 @@ namespace Redmine.Net.Api.Types
         /// Gets the id.
         /// </summary>
         /// <value>The id.</value>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating. A reference to another item, such as Issue.Project, is sent by its Id.</remarks>
         public int Id { get; set; }
         #endregion
 

@@ -37,71 +37,81 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// Gets or sets the name.
         /// </summary>
+        /// <remarks>Sent to Redmine when creating or updating.</remarks>
         public string Name { get; set; }
 
         /// <summary>
         /// Gets the project.
         /// </summary>
         /// <value>The project.</value>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public IdentifiableName Project { get; set; }
 
         /// <summary>
         /// Gets or sets the description.
         /// </summary>
         /// <value>The description.</value>
+        /// <remarks>Sent to Redmine when creating or updating.</remarks>
         public string Description { get; set; }
 
         /// <summary>
         /// Gets or sets the status.
         /// </summary>
         /// <value>The status.</value>
+        /// <remarks>Sent to Redmine when creating or updating, only when set.</remarks>
         public VersionStatus Status { get; set; }
 
         /// <summary>
         /// Gets or sets the due date.
         /// </summary>
         /// <value>The due date.</value>
+        /// <remarks>Sent to Redmine when creating or updating.</remarks>
         public DateTime? DueDate { get; set; }
 
         /// <summary>
         /// Gets or sets the sharing.
         /// </summary>
         /// <value>The sharing.</value>
+        /// <remarks>Sent to Redmine when creating or updating, only when set.</remarks>
         public VersionSharing Sharing { get; set; }
         
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Sent to Redmine when creating or updating.</remarks>
         public string WikiPageTitle { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public float? EstimatedHours { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public float? SpentHours { get; set; }
 
         /// <summary>
         /// Gets the created on.
-        /// Set by Redmine; not sent when creating or updating.
         /// </summary>
         /// <value>The created on.</value>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public DateTime? CreatedOn { get; set; }
 
         /// <summary>
         /// Gets the updated on.
-        /// Set by Redmine; not sent when creating or updating.
         /// </summary>
         /// <value>The updated on.</value>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public DateTime? UpdatedOn { get; set; }
 
         /// <summary>
         /// Gets the custom fields.
         /// </summary>
         /// <value>The custom fields.</value>
+        /// <remarks>Sent to Redmine when creating or updating, only when set.</remarks>
         public IList<IssueCustomField> CustomFields { get; set; }
         #endregion
 

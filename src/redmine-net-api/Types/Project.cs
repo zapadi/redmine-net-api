@@ -38,7 +38,10 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// Gets or sets the identifier.
         /// </summary>
-        /// <remarks>Required for create</remarks>
+        /// <remarks>
+        /// <para>Required for create</para>
+        /// <para>Sent to Redmine when creating or updating.</para>
+        /// </remarks>
         /// <value>The identifier.</value>
         public string Identifier { get; set; }
 
@@ -46,32 +49,35 @@ namespace Redmine.Net.Api.Types
         /// Gets or sets the description.
         /// </summary>
         /// <value>The description.</value>
+        /// <remarks>Sent to Redmine when creating or updating, only when set.</remarks>
         public string Description { get; set; }
 
         /// <summary>
         /// Gets or sets the parent.
         /// </summary>
         /// <value>The parent.</value>
+        /// <remarks>Sent to Redmine when creating or updating, only when set. Only its Id is sent.</remarks>
         public IdentifiableName Parent { get; set; }
 
         /// <summary>
         /// Gets or sets the home page.
         /// </summary>
         /// <value>The home page.</value>
+        /// <remarks>Sent to Redmine when creating or updating, only when set.</remarks>
         public string HomePage { get; set; }
 
         /// <summary>
         /// Gets the created on.
-        /// Set by Redmine; not sent when creating or updating.
         /// </summary>
         /// <value>The created on.</value>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public DateTime? CreatedOn { get; set; }
 
         /// <summary>
         /// Gets the updated on.
-        /// Set by Redmine; not sent when creating or updating.
         /// </summary>
         /// <value>The updated on.</value>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public DateTime? UpdatedOn { get; set; }
 
         /// <summary>
@@ -80,6 +86,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The status.
         /// </value>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public ProjectStatus Status { get; set; }
 
         /// <summary>
@@ -88,7 +95,10 @@ namespace Redmine.Net.Api.Types
         /// <value>
         ///   <c>true</c> if this project is public; otherwise, <c>false</c>.
         /// </value>
-        /// <remarks>Available in Redmine starting with 2.6.0 version.</remarks>
+        /// <remarks>
+        /// <para>Available in Redmine starting with 2.6.0 version.</para>
+        /// <para>Sent to Redmine when creating or updating.</para>
+        /// </remarks>
         public bool IsPublic { get; set; }
 
         /// <summary>
@@ -97,6 +107,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         ///   <c>true</c> if [inherit members]; otherwise, <c>false</c>.
         /// </value>
+        /// <remarks>Sent to Redmine when creating or updating.</remarks>
         public bool InheritMembers { get; set; }
 
         /// <summary>
@@ -105,7 +116,10 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The trackers.
         /// </value>
-        /// <remarks>Available in Redmine starting with 2.6.0 version.</remarks>
+        /// <remarks>
+        /// <para>Available in Redmine starting with 2.6.0 version.</para>
+        /// <para>Sent to Redmine when creating or updating, only when set. Only their Ids are sent.</para>
+        /// </remarks>
         public IList<ProjectTracker> Trackers { get; set; }
 
         /// <summary>
@@ -114,7 +128,10 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The enabled modules.
         /// </value>
-        /// <remarks>Available in Redmine starting with 2.6.0 version.</remarks>
+        /// <remarks>
+        /// <para>Available in Redmine starting with 2.6.0 version.</para>
+        /// <para>Sent to Redmine when creating or updating, only when set. Only their names are sent.</para>
+        /// </remarks>
         public IList<ProjectEnabledModule> EnabledModules { get; set; }
 
         /// <summary>
@@ -123,6 +140,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The custom fields.
         /// </value>
+        /// <remarks>Sent to Redmine when creating or updating, only when set.</remarks>
         [Obsolete($"{RedmineConstants.OBSOLETE_TEXT} Use {nameof(IssueCustomFields)} instead.")]
         [JsonIgnore]
         public IList<IssueCustomField> CustomFields
@@ -133,12 +151,14 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Sent to Redmine when creating or updating, only when set. Only their Ids are sent.</remarks>
         public List<IssueCustomField> IssueCustomFields { get; set; }
         
         /// <summary>
         /// Obsolete. When read from Redmine, holds only the Id and Name of each project custom field (no values).
         /// Use <see cref="ProjectCustomFields"/> instead.
         /// </summary>
+        /// <remarks>Sent to Redmine when creating or updating, only when set.</remarks>
         [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use ProjectCustomFields instead.")]
         public List<CustomField> CustomFieldValues { get; set; }
 
@@ -148,6 +168,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The project custom fields.
         /// </value>
+        /// <remarks>Sent to Redmine when creating or updating, only when set.</remarks>
         public List<IssueCustomField> ProjectCustomFields { get; set; }
 
         /// <summary>
@@ -156,23 +177,31 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The issue categories.
         /// </value>
-        /// <remarks>Available in Redmine starting with the 2.6.0 version.</remarks>
+        /// <remarks>
+        /// <para>Available in Redmine starting with the 2.6.0 version.</para>
+        /// <para>Read-only: set by Redmine and not sent when creating or updating.</para>
+        /// </remarks>
         public IList<ProjectIssueCategory> IssueCategories { get; set; }
 
         /// <summary>
         /// Gets the time entry activities.
         /// </summary>
-        /// <remarks>Available in Redmine starting with the 3.4.0 version.</remarks>
+        /// <remarks>
+        /// <para>Available in Redmine starting with the 3.4.0 version.</para>
+        /// <para>Read-only: set by Redmine and not sent when creating or updating.</para>
+        /// </remarks>
         public IList<ProjectTimeEntryActivity> TimeEntryActivities { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Sent to Redmine when creating or updating, only when set. Only its Id is sent.</remarks>
         public IdentifiableName DefaultVersion { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Sent to Redmine when creating or updating, only when set. Only its Id is sent.</remarks>
         public IdentifiableName DefaultAssignee { get; set; }
         #endregion
 

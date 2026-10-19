@@ -39,24 +39,28 @@ namespace Redmine.Net.Api.Types
         /// Gets or sets the issue id.
         /// </summary>
         /// <value>The issue id.</value>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public int IssueId { get; set; }
 
         /// <summary>
         /// Gets or sets the related issue id.
         /// </summary>
         /// <value>The issue to id.</value>
+        /// <remarks>Sent to Redmine when creating or updating.</remarks>
         public int IssueToId { get; set; }
 
         /// <summary>
         /// Gets or sets the type of relation.
         /// </summary>
         /// <value>The type.</value>
+        /// <remarks>Sent to Redmine when creating or updating.</remarks>
         public IssueRelationType Type { get; set; }
 
         /// <summary>
         /// Gets or sets the delay for a "precedes" or "follows" relation.
         /// </summary>
         /// <value>The delay.</value>
+        /// <remarks>Sent to Redmine when creating or updating. Only sent when Type is Precedes or Follows.</remarks>
         public int? Delay { get; set; }
         #endregion
 

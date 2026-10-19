@@ -38,6 +38,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The project.
         /// </value>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public IdentifiableName Project { get; set; }
 
         /// <summary>
@@ -46,6 +47,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The asign to.
         /// </value>
+        /// <remarks>Sent to Redmine when creating or updating, only when set. Only its Id is sent.</remarks>
         public IdentifiableName AssignTo { get; set; }
 
         /// <summary>
@@ -54,6 +56,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The name.
         /// </value>
+        /// <remarks>Sent to Redmine when creating or updating.</remarks>
         public string Name { get; set; }
         #endregion
 
