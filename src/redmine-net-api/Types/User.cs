@@ -71,7 +71,8 @@ namespace Redmine.Net.Api.Types
         public string Email { get; set; }
 
         /// <summary>
-        /// 
+        /// Gets or sets a value indicating whether the user is an administrator.
+        /// Sent as <c>admin</c> when creating or updating; Redmine applies it only for administrators.
         /// </summary>
         public bool IsAdmin { get; set; }
 
@@ -109,7 +110,8 @@ namespace Redmine.Net.Api.Types
         public string ApiKey { get; set; }
 
         /// <summary>
-        /// Gets the status of the user, visible for admins only (added in 2.4.0)
+        /// Gets the status of the user, visible for admins only (added in 2.4.0).
+        /// Not sent when it is <see cref="UserStatus.StatusAnonymous"/>, so Redmine applies its default.
         /// </summary>
         public UserStatus Status { get; set; }
 
@@ -230,7 +232,12 @@ namespace Redmine.Net.Api.Types
             }
             
             writer.WriteBoolean(RedmineKeys.MUST_CHANGE_PASSWORD, MustChangePassword);
-            writer.WriteElementString(RedmineKeys.STATUS, ((int)Status).ToInvariantString());
+            writer.WriteBoolean(RedmineKeys.ADMIN, IsAdmin);
+
+            if (Status != UserStatus.StatusAnonymous)
+            {
+                writer.WriteElementString(RedmineKeys.STATUS, ((int)Status).ToInvariantString());
+            }
             
             if(CustomFields != null)
             { 
@@ -314,7 +321,12 @@ namespace Redmine.Net.Api.Types
                 }
             
                 writer.WriteBoolean(RedmineKeys.MUST_CHANGE_PASSWORD, MustChangePassword);
-                writer.WriteProperty(RedmineKeys.STATUS, ((int)Status).ToInvariantString());
+                writer.WriteBoolean(RedmineKeys.ADMIN, IsAdmin);
+
+                if (Status != UserStatus.StatusAnonymous)
+                {
+                    writer.WriteProperty(RedmineKeys.STATUS, ((int)Status).ToInvariantString());
+                }
             
                 if(CustomFields != null)
                 { 
