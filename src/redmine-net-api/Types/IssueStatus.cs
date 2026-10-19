@@ -87,6 +87,7 @@ namespace Redmine.Net.Api.Types
         /// 	<c>true</c> if IssueStatus is default; otherwise, <c>false</c>.
         /// </value>
         /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Redmine no longer returns is_default for issue statuses, so it is always false. Use Tracker.DefaultStatus instead.")]
         public bool IsDefault { get; set; }
 
         /// <summary>
