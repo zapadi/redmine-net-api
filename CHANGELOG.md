@@ -14,10 +14,12 @@
 *	Added SearchAsync(q, limit, offset, searchFilter, requestOptions, cancellationToken) overload with RequestOptions (impersonation, headers, extra query string)
 *	Public IRedmineTransport contract and RedmineManagerOptionsBuilder.WithTransport to plug in a custom HTTP transport
 *	Model types have public setters so they can be cached with System.Text.Json or Newtonsoft.Json
+*	Added UpdateAttachment and UpdateAttachmentAsync (PATCH /attachments/:id) to change an attachment's file name and description
 
 ⚠️ Deprecations
 *	Project.CustomFieldValues is obsolete; use ProjectCustomFields
 *	Deprecated .NET Framework 2.0 and 4.0 targets: RedmineManager, IRedmineManager and RedmineManagerOptionsBuilder are marked [Obsolete] on those targets and will be removed in the next version (builds with TreatWarningsAsErrors will fail)
+*	UpdateIssueAttachment is obsolete: Redmine does not accept API authentication for PATCH /attachments/issues/:id; use UpdateAttachment
 
 🛠 Fixes
 *	Fixed Project custom field values being ignored by Redmine (XML now uses custom_fields; values are also sent on create)
@@ -28,6 +30,8 @@
 *	Fixed JSON watcher_user_ids (Issue) and user_ids (Group) not being sent as arrays
 *	Fixed Version status and sharing being sent when unset
 *	Fixed invalid JSON for UpdateIssueAttachment
+*	UpdateIssueAttachment no longer fails to serialize its payload with the XML serializer
+*	Attachment update payloads no longer send a null FileName or Description (which cleared the value)
 *	Fixed ChangeSet revision not being read from XML
 *	Fixed XML dates and decimal values depending on the current culture (now invariant)
 *	Fixed memory leak from XmlSerializer instances created on every array write
@@ -89,6 +93,7 @@
 *	Each package has its own version and is released independently with release-please (Conventional Commits); shared package settings moved to src/Directory.Build.props
 *	Package validation compares against the latest stable version on nuget.org (passed by CI, no longer hardcoded)
 *	Package release notes link to CHANGELOG.md
+*	Integration tests run on Linux CI against a real Redmine (HttpClient and WebClient transports, XML and JSON)
 
 ### redmine-api.http
 
