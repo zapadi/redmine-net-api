@@ -50,7 +50,37 @@ public class MyAccountTests
         Assert.Equal(5, output.CustomFields[1].Id);
     }
     
-    public static IEnumerable<TheoryDataRow<string, SerializerKind>> MyAccountDeserializeTheoryData
+[Theory]
+    [MemberData(nameof(MyAccountWithMultiValueCustomFieldTheoryData))]
+    public void Should_Deserialize_MyAccount_With_Multi_Value_CustomField(string input, SerializerKind kind)
+    {
+        var output = SerializerFactory.Create(kind).Deserialize<Redmine.Net.Api.Types.MyAccount>(input);
+
+        Assert.Equal(2, output.CustomFields.Count);
+        Assert.Equal("a", output.CustomFields[0].Value);
+        Assert.Equal("555", output.CustomFields[1].Value);
+        Assert.Equal("dlopper@somenet.foo", output.Email);
+    }
+
+    public static IEnumerable<TheoryDataRow<string, SerializerKind>> MyAccountWithMultiValueCustomFieldTheoryData
+    {
+        get
+        {
+            const string json = """
+                                {"user":{"id":3,"custom_fields":[{"id":5,"name":"Skills","multiple":true,"value":["a","b"]},{"id":4,"name":"Phone","value":"555"}],"mail":"dlopper@somenet.foo"}}
+                                """;
+
+            const string xml = """
+                               <?xml version="1.0" encoding="UTF-8"?>
+                               <user><id>3</id><custom_fields type="array"><custom_field id="5" name="Skills" multiple="true"><value type="array"><value>a</value><value>b</value></value></custom_field><custom_field id="4" name="Phone"><value>555</value></custom_field></custom_fields><mail>dlopper@somenet.foo</mail></user>
+                               """;
+
+            yield return new TheoryDataRow<string, SerializerKind>(json, SerializerKind.NewtonsoftJson).WithTestDisplayName(Constants.JsonNewtonsoft);
+            yield return new TheoryDataRow<string, SerializerKind>(xml, SerializerKind.Xml).WithTestDisplayName(Constants.Xml);
+        }
+    }
+
+        public static IEnumerable<TheoryDataRow<string, SerializerKind>> MyAccountDeserializeTheoryData
     {
         get
         {

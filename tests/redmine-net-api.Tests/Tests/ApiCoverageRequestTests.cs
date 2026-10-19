@@ -180,7 +180,11 @@ public sealed class ApiCoverageRequestTests
             Email = "ada@example.com",
             IsAdmin = true,
             ApiKey = "key",
-            CustomFields = [new MyAccountCustomField { Id = 4, Name = "Phone", Value = "123" }]
+            CustomFields =
+            [
+                new MyAccountCustomField { Id = 4, Name = "Phone", Value = "123" },
+                new MyAccountCustomField { Id = 5, Name = "Skills", Multiple = true, Value = "a", Values = ["a", "b"] }
+            ]
         };
 
         if (async)
@@ -196,8 +200,8 @@ public sealed class ApiCoverageRequestTests
         Assert.Equal("PUT", request.Method);
         Assert.Equal($"{BaseAddress}my/account.{Ext(type)}", request.Uri.ToString());
         AssertBody(type,
-            """<user><firstname>Ada</firstname><lastname>Lovelace</lastname><mail>ada@example.com</mail><custom_fields type="array"><custom_field id="4"><value>123</value></custom_field></custom_fields></user>""",
-            """{"user":{"firstname":"Ada","lastname":"Lovelace","mail":"ada@example.com","custom_fields":[{"id":4,"value":"123"}]}}""",
+            """<user><firstname>Ada</firstname><lastname>Lovelace</lastname><mail>ada@example.com</mail><custom_fields type="array"><custom_field id="4"><value>123</value></custom_field><custom_field id="5"><value type="array"><value>a</value><value>b</value></value></custom_field></custom_fields></user>""",
+            """{"user":{"firstname":"Ada","lastname":"Lovelace","mail":"ada@example.com","custom_fields":[{"id":4,"value":"123"},{"id":5,"value":["a","b"]}]}}""",
             request);
     }
 

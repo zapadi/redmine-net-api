@@ -28,6 +28,7 @@
 
 🛠 Fixes
 *	User create/update now sends admin when IsAdmin is true, so administrator rights can be granted (it is never sent as false, so updates never remove them)
+*	Fixed reading multi-value MyAccount custom fields; MyAccountCustomField.Values holds all values and UpdateMyAccount sends them
 *	Fixed User create/update sending status 0 when Status is not set (Redmine now applies its default)
 *	Fixed Journal.PrivateNotes not being sent and invalid JSON when updating a Journal
 *	Fixed Project custom field values being ignored by Redmine (XML now uses custom_fields; values are also sent on create)

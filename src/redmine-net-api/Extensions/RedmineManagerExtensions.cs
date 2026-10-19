@@ -260,7 +260,7 @@ namespace Redmine.Net.Api.Extensions
         /// <summary>
         ///     Updates the account of the user whose credentials are used to access the API (PUT /my/account).
         ///     Redmine accepts the first name, last name, email and custom field values.
-        ///     Custom fields are sent with a single value each.
+        ///     A custom field sends its Values as an array when Multiple is true or it has more than one value, otherwise its Value.
         /// </summary>
         /// <param name="redmineManager"></param>
         /// <param name="account">The account to update.</param>
@@ -929,7 +929,7 @@ namespace Redmine.Net.Api.Extensions
         /// <summary>
         ///     Updates the account of the user whose credentials are used to access the API (PUT /my/account) asynchronous.
         ///     Redmine accepts the first name, last name, email and custom field values.
-        ///     Custom fields are sent with a single value each.
+        ///     A custom field sends its Values as an array when Multiple is true or it has more than one value, otherwise its Value.
         /// </summary>
         /// <param name="redmineManager"></param>
         /// <param name="account">The account to update.</param>
