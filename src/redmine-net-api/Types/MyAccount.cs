@@ -132,6 +132,11 @@ namespace Redmine.Net.Api.Types
             writer.WriteElementString(RedmineKeys.FIRST_NAME, FirstName);
             writer.WriteElementString(RedmineKeys.LAST_NAME, LastName);
             writer.WriteElementString(RedmineKeys.MAIL, Email);
+
+            if (CustomFields != null)
+            {
+                writer.WriteArray(RedmineKeys.CUSTOM_FIELDS, CustomFields);
+            }
         }
 
         #endregion
@@ -178,6 +183,11 @@ namespace Redmine.Net.Api.Types
                 writer.WriteProperty(RedmineKeys.FIRST_NAME, FirstName);
                 writer.WriteProperty(RedmineKeys.LAST_NAME, LastName);
                 writer.WriteProperty(RedmineKeys.MAIL, Email);
+
+                if (CustomFields != null)
+                {
+                    writer.WriteArray(RedmineKeys.CUSTOM_FIELDS, CustomFields);
+                }
             }
         }
 

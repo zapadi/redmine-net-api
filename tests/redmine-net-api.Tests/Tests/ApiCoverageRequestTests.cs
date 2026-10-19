@@ -12,6 +12,7 @@ using Redmine.Net.Api.Exceptions;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Net;
 using Redmine.Net.Api.Serialization;
+using Redmine.Net.Api.Types;
 using Xunit;
 
 namespace Padi.DotNet.RedmineAPI.Tests.Tests;
@@ -157,5 +158,53 @@ public sealed class ApiCoverageRequestTests
 
         Assert.Throws<RedmineException>(() => manager.UpdateJournal(7, null));
         await Assert.ThrowsAsync<RedmineException>(() => manager.UpdateJournalAsync(7, null, cancellationToken: TestContext.Current.CancellationToken));
+    }
+
+    [Theory(Timeout = Constants.TestTimeout)]
+    [InlineData(SerializationType.Xml, false)]
+    [InlineData(SerializationType.Xml, true)]
+    [InlineData(SerializationType.Json, false)]
+    [InlineData(SerializationType.Json, true)]
+    public async Task UpdateMyAccount_Should_Put_Account(SerializationType type, bool async)
+    {
+        var transport = new RecordingTransport();
+        var manager = CreateManager(transport, type);
+        var account = new MyAccount
+        {
+            Id = 1,
+            Login = "admin",
+            FirstName = "Ada",
+            LastName = "Lovelace",
+            Email = "ada@example.com",
+            IsAdmin = true,
+            ApiKey = "key",
+            CustomFields = [new MyAccountCustomField { Id = 4, Name = "Phone", Value = "123" }]
+        };
+
+        if (async)
+        {
+            await manager.UpdateMyAccountAsync(account, cancellationToken: TestContext.Current.CancellationToken);
+        }
+        else
+        {
+            manager.UpdateMyAccount(account);
+        }
+
+        var request = transport.Single;
+        Assert.Equal("PUT", request.Method);
+        Assert.Equal($"{BaseAddress}my/account.{Ext(type)}", request.Uri.ToString());
+        AssertBody(type,
+            """<user><firstname>Ada</firstname><lastname>Lovelace</lastname><mail>ada@example.com</mail><custom_fields type="array"><custom_field id="4"><value>123</value></custom_field></custom_fields></user>""",
+            """{"user":{"firstname":"Ada","lastname":"Lovelace","mail":"ada@example.com","custom_fields":[{"id":4,"value":"123"}]}}""",
+            request);
+    }
+
+    [Fact(Timeout = Constants.TestTimeout)]
+    public async Task UpdateMyAccount_Null_Should_Throw_RedmineException()
+    {
+        var manager = CreateManager(new RecordingTransport(), SerializationType.Json);
+
+        Assert.Throws<RedmineException>(() => manager.UpdateMyAccount(null));
+        await Assert.ThrowsAsync<RedmineException>(() => manager.UpdateMyAccountAsync(null, cancellationToken: TestContext.Current.CancellationToken));
     }
 }

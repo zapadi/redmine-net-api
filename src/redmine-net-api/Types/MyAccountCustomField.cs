@@ -76,6 +76,8 @@ namespace Redmine.Net.Api.Types
         /// <inheritdoc />
         public override void WriteXml(XmlWriter writer)
         {
+            writer.WriteAttributeString(RedmineKeys.ID, Id.ToInvariantString());
+            writer.WriteElementString(RedmineKeys.VALUE, Value);
         }
 
 
@@ -105,6 +107,10 @@ namespace Redmine.Net.Api.Types
         /// <inheritdoc />
         public override void WriteJson(JsonWriter writer)
         {
+            writer.WriteStartObject();
+            writer.WriteProperty(RedmineKeys.ID, Id);
+            writer.WriteProperty(RedmineKeys.VALUE, Value);
+            writer.WriteEndObject();
         }
 
         /// <summary>

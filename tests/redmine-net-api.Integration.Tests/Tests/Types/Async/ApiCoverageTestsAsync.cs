@@ -118,4 +118,27 @@ public class ApiCoverageTestsAsync(RedmineTestContainerFixture fixture)
         var refreshed = await fixture.RedmineManager.GetAsync<Issue>(issue.Id.ToInvariantString(), RequestOptions.Include(RedmineKeys.JOURNALS), ct);
         Assert.True(refreshed.Journals == null || refreshed.Journals.All(j => string.IsNullOrEmpty(j.Notes)));
     }
+
+    [Fact]
+    public async Task UpdateMyAccount_Should_Change_Account()
+    {
+        var ct = TestContext.Current.CancellationToken;
+        var account = await fixture.RedmineManager.GetMyAccountAsync(cancellationToken: ct);
+        var originalLastName = account.LastName;
+        var lastName = RandomHelper.GenerateText(10);
+
+        try
+        {
+            account.LastName = lastName;
+            await fixture.RedmineManager.UpdateMyAccountAsync(account, cancellationToken: ct);
+            Assert.Equal(lastName, (await fixture.RedmineManager.GetMyAccountAsync(cancellationToken: ct)).LastName);
+        }
+        finally
+        {
+            account.LastName = originalLastName;
+            fixture.RedmineManager.UpdateMyAccount(account);
+        }
+
+        Assert.Equal(originalLastName, (await fixture.RedmineManager.GetMyAccountAsync(cancellationToken: ct)).LastName);
+    }
 }

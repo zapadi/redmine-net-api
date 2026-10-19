@@ -258,6 +258,30 @@ namespace Redmine.Net.Api.Extensions
         }
 
         /// <summary>
+        ///     Updates the account of the user whose credentials are used to access the API (PUT /my/account).
+        ///     Redmine accepts the first name, last name, email and custom field values.
+        /// </summary>
+        /// <param name="redmineManager"></param>
+        /// <param name="account">The account to update.</param>
+        /// <param name="requestOptions"></param>
+        public static void UpdateMyAccount(this RedmineManager redmineManager, MyAccount account, RequestOptions requestOptions = null)
+        {
+            var payload = SerializeMyAccount(redmineManager, account);
+
+            redmineManager.ApiClient.Update(redmineManager.RedmineApiUrls.MyAccount(), payload, requestOptions);
+        }
+
+        private static string SerializeMyAccount(RedmineManager redmineManager, MyAccount account)
+        {
+            if (account == null)
+            {
+                throw new RedmineException("Argument account is null");
+            }
+
+            return redmineManager.Serializer.Serialize(account);
+        }
+
+        /// <summary>
         ///     Adds the watcher to issue.
         /// </summary>
         /// <param name="redmineManager"></param>
@@ -851,6 +875,21 @@ namespace Redmine.Net.Api.Extensions
             var response = await redmineManager.ApiClient.GetAsync(uri, requestOptions, cancellationToken).ConfigureAwait(false);
 
             return response.DeserializeTo<MyAccount>(redmineManager.Serializer);
+        }
+
+        /// <summary>
+        ///     Updates the account of the user whose credentials are used to access the API (PUT /my/account) asynchronous.
+        ///     Redmine accepts the first name, last name, email and custom field values.
+        /// </summary>
+        /// <param name="redmineManager"></param>
+        /// <param name="account">The account to update.</param>
+        /// <param name="requestOptions"></param>
+        /// <param name="cancellationToken"></param>
+        public static async Task UpdateMyAccountAsync(this RedmineManager redmineManager, MyAccount account, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
+        {
+            var payload = SerializeMyAccount(redmineManager, account);
+
+            await redmineManager.ApiClient.UpdateAsync(redmineManager.RedmineApiUrls.MyAccount(), payload, requestOptions, cancellationToken).ConfigureAwait(false);
         }
         
         /// <summary>
