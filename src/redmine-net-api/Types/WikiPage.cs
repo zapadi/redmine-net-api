@@ -61,7 +61,7 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// Gets or sets the version
         /// </summary>
-        /// <remarks>Sent to Redmine when creating or updating, only when set.</remarks>
+        /// <remarks>Sent to Redmine when creating or updating, only when set. With the XML serializer it is always sent; when not set it is sent as an empty element.</remarks>
         public int Version { get; set; }
 
         /// <summary>

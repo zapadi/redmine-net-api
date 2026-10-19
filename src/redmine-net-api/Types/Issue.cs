@@ -126,7 +126,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         ///   <c>true</c> if [private notes]; otherwise, <c>false</c>.
         /// </value>
-        /// <remarks>Sent to Redmine when creating or updating. Only sent when updating.</remarks>
+        /// <remarks>Sent to Redmine only when updating.</remarks>
         public bool PrivateNotes { get; set; }
 
         /// <summary>
@@ -192,7 +192,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The parent issue id.
         /// </value>
-        /// <remarks>Sent to Redmine when creating or updating, only when set. Only its Id is sent.</remarks>
+        /// <remarks>Sent to Redmine when creating or updating, only when set. Only its Id is sent. With the JSON serializer it is always sent; when not set it is sent as null, which removes the parent issue.</remarks>
         public IdentifiableName ParentIssue { get; set; }
 
         /// <summary>

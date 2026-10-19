@@ -52,7 +52,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The user.
         /// </value>
-        /// <remarks>Sent to Redmine when creating or updating, only when set. Only its Id is sent. Only sent when creating.</remarks>
+        /// <remarks>Sent to Redmine only when creating, only when set. Only its Id is sent.</remarks>
         public IdentifiableName User { get; set; }
 
         /// <summary>

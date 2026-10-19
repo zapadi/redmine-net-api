@@ -21,10 +21,21 @@ public class SerializedFieldsDocsTests
     private const string SentOnlyJson = "Sent to Redmine only with the JSON serializer.";
     private const string SentOnlyXml = "Sent to Redmine only with the XML serializer.";
     private const string ReadOnly = "Read-only: set by Redmine and not sent when creating or updating.";
-    private const string OnlyWhenCreating = "Only sent when creating.";
-    private const string OnlyWhenUpdating = "Only sent when updating.";
+    private const string SentWhenCreating = "Sent to Redmine only when creating.";
+    private const string SentWhenCreatingWhenSet = "Sent to Redmine only when creating, only when set.";
+    private const string SentWhenUpdating = "Sent to Redmine only when updating.";
+    private const string SentWhenUpdatingWhenSet = "Sent to Redmine only when updating, only when set.";
+    private const string AlwaysSentWithJson = "With the JSON serializer it is always sent";
+    private const string AlwaysSentWithXml = "With the XML serializer it is always sent";
+    private const string IdentifiableId = "P:Redmine.Net.Api.Types.Identifiable`1.Id";
 
-    private static readonly string[] Sentences = [Sent, SentWhenSet, SentOnlyJson, SentOnlyXml, ReadOnly];
+    private static readonly string[] Sentences =
+    [
+        Sent, SentWhenSet, SentOnlyJson, SentOnlyXml, ReadOnly,
+        SentWhenCreating, SentWhenCreatingWhenSet, SentWhenUpdating, SentWhenUpdatingWhenSet
+    ];
+
+    private static readonly string[] Checked = [.. Sentences, AlwaysSentWithJson, AlwaysSentWithXml];
 
     [Fact]
     public void Every_Property_Remarks_Match_What_The_Writers_Send()
@@ -38,7 +49,8 @@ public class SerializedFieldsDocsTests
             {
                 var expected = Classify(type, property);
                 remarks.TryGetValue(MemberId(property), out var actual);
-                if (actual == null || expected.Any(e => !actual.Contains(e)))
+                if (actual == null || expected.Any(e => !actual.Contains(e))
+                    || Checked.Any(c => actual.Contains(c) && !expected.Contains(c)))
                 {
                     failures.Add($"{type.Name}.{property.Name}: expected '{string.Join(" ", expected)}', actual remarks '{actual ?? "<none>"}'");
                 }
@@ -57,7 +69,8 @@ public class SerializedFieldsDocsTests
         foreach (var property in ModelTypes().SelectMany(SettableProperties).Select(MemberId).Distinct())
         {
             remarks.TryGetValue(property, out var actual);
-            if (Sentences.Count(s => actual?.Contains(s) == true) != 1)
+            var expectedCount = property == IdentifiableId ? 0 : 1;
+            if (Sentences.Count(s => actual?.Contains(s) == true) != expectedCount)
             {
                 failures.Add($"{property}: actual remarks '{actual ?? "<none>"}'");
             }
@@ -96,22 +109,28 @@ public class SerializedFieldsDocsTests
             return [ReadOnly];
         }
 
-        var rule = xml == Change.None ? SentOnlyJson
-            : json == Change.None ? SentOnlyXml
-            : xml == Change.Added || json == Change.Added ? SentWhenSet
+        if (xml == Change.None)
+        {
+            return [SentOnlyJson];
+        }
+
+        if (json == Change.None)
+        {
+            return [SentOnlyXml];
+        }
+
+        var whenSet = xml == Change.Added || json == Change.Added;
+        var creatingOnly = xmlUpdate == Change.None && jsonUpdate == Change.None;
+        var updatingOnly = xmlCreate == Change.None && jsonCreate == Change.None;
+
+        var rule = creatingOnly ? (whenSet ? SentWhenCreatingWhenSet : SentWhenCreating)
+            : updatingOnly ? (whenSet ? SentWhenUpdatingWhenSet : SentWhenUpdating)
+            : whenSet ? SentWhenSet
             : Sent;
 
-        if (xmlUpdate == Change.None && jsonUpdate == Change.None)
-        {
-            return [rule, OnlyWhenCreating];
-        }
-
-        if (xmlCreate == Change.None && jsonCreate == Change.None)
-        {
-            return [rule, OnlyWhenUpdating];
-        }
-
-        return [rule];
+        return xml == Change.Added && json == Change.Value ? [rule, AlwaysSentWithJson]
+            : json == Change.Added && xml == Change.Value ? [rule, AlwaysSentWithXml]
+            : [rule];
     }
 
     private enum Change

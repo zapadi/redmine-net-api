@@ -81,7 +81,7 @@ namespace Redmine.Net.Api.Types
         /// Sent as <c>admin</c> only when <c>true</c>, so creating or updating a user can grant administrator rights
         /// but never removes them; Redmine applies it only for administrators.
         /// </summary>
-        /// <remarks>Sent to Redmine when creating or updating, only when set.</remarks>
+        /// <remarks>Sent to Redmine when creating or updating, only when set. Only true is sent, so setting it to false never removes administrator rights.</remarks>
         public bool IsAdmin { get; set; }
 
         /// <summary>
