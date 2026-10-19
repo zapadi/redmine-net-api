@@ -90,6 +90,13 @@ namespace Redmine.Net.Api.Types
         public int? AuthenticationModeId { get; set; }
 
         /// <summary>
+        /// Gets or sets the authentication source (LDAP) of the user, returned by Redmine as <c>auth_source</c>
+        /// when requested with <c>include=auth_source</c> (admins only).
+        /// Set by Redmine; not sent when creating or updating, use <see cref="AuthenticationModeId"/> instead.
+        /// </summary>
+        public IdentifiableName AuthSource { get; set; }
+
+        /// <summary>
         /// Gets the created on.
         /// Set by Redmine; not sent when creating or updating.
         /// </summary>
@@ -184,6 +191,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.ADMIN: IsAdmin = reader.ReadElementContentAsBoolean(); break;
                     case RedmineKeys.API_KEY: ApiKey = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.AUTH_SOURCE_ID: AuthenticationModeId = reader.ReadElementContentAsNullableInt(); break;
+                    case RedmineKeys.AUTH_SOURCE: AuthSource = ReadAuthSource(reader); break;
                     case RedmineKeys.AVATAR_URL: AvatarUrl = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
                     case RedmineKeys.CUSTOM_FIELDS: CustomFields = reader.ReadElementContentAsCollection<IssueCustomField>(); break;
@@ -244,6 +252,35 @@ namespace Redmine.Net.Api.Types
                 writer.WriteArray(RedmineKeys.CUSTOM_FIELDS, CustomFields);
             }
         }
+
+        private static IdentifiableName ReadAuthSource(XmlReader reader)
+        {
+            var authSource = new IdentifiableName();
+
+            using (var subtree = reader.ReadSubtree())
+            {
+                subtree.Read();
+                subtree.Read();
+                while (!subtree.EOF)
+                {
+                    if (subtree.NodeType != XmlNodeType.Element)
+                    {
+                        subtree.Read();
+                        continue;
+                    }
+
+                    switch (subtree.Name)
+                    {
+                        case RedmineKeys.ID: authSource.Id = subtree.ReadElementContentAsInt(); break;
+                        case RedmineKeys.NAME: authSource.Name = subtree.ReadElementContentAsString(); break;
+                        default: subtree.Skip(); break;
+                    }
+                }
+            }
+
+            reader.Read();
+            return authSource;
+        }
         #endregion
 
         #region Implementation of IJsonSerialization
@@ -271,6 +308,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.ADMIN: IsAdmin = reader.ReadAsBool(); break;
                     case RedmineKeys.API_KEY: ApiKey = reader.ReadAsString(); break;
                     case RedmineKeys.AUTH_SOURCE_ID: AuthenticationModeId = reader.ReadAsInt32(); break;
+                    case RedmineKeys.AUTH_SOURCE: AuthSource = new IdentifiableName(reader); break;
                     case RedmineKeys.AVATAR_URL: AvatarUrl = reader.ReadAsString(); break;
                     case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadAsDateTime(); break;
                     case RedmineKeys.CUSTOM_FIELDS: CustomFields = reader.ReadAsCollection<IssueCustomField>(); break;
@@ -355,6 +393,7 @@ namespace Redmine.Net.Api.Types
                 && string.Equals(ApiKey,other.ApiKey, StringComparison.Ordinal)
                 && string.Equals(TwoFactorAuthenticationScheme,other.TwoFactorAuthenticationScheme, StringComparison.Ordinal)
                 && AuthenticationModeId == other.AuthenticationModeId
+                && AuthSource == other.AuthSource
                 && CreatedOn == other.CreatedOn
                 && LastLoginOn == other.LastLoginOn
                 && Status == other.Status
@@ -399,6 +438,7 @@ namespace Redmine.Net.Api.Types
                 hashCode = HashCodeHelper.GetHashCode(ApiKey, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(TwoFactorAuthenticationScheme, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(AuthenticationModeId, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(AuthSource, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(CreatedOn, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(LastLoginOn, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Status, hashCode);

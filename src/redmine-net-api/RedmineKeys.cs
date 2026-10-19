@@ -88,6 +88,10 @@ namespace Redmine.Net.Api
         /// 
         /// </summary>
         public const string AUTH_SOURCE_ID = "auth_source_id";
+        /// <summary>
+        /// The <c>auth_source</c> key.
+        /// </summary>
+        public const string AUTH_SOURCE = "auth_source";
         
         /// <summary>
         /// 
