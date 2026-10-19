@@ -33,6 +33,7 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="listToClone">The list to clone.</param>
         /// <param name="resetId"></param>
         /// <returns></returns>
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Will be internal in 5.0. Use listToClone.Select(item => item.Clone(resetId)).ToList() instead.")]
         public static IList<T> Clone<T>(this IList<T> listToClone, bool resetId) where T : ICloneable<T>
         {
             if (listToClone == null)
@@ -58,6 +59,7 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="list">The list.</param>
         /// <param name="listToCompare">The list to compare.</param>
         /// <returns></returns>
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Will be internal in 5.0. Use Enumerable.SequenceEqual instead.")]
         public static bool Equals<T>(this IList<T> list, IList<T> listToCompare) where T : class
         {
             if (list == null || listToCompare == null)
@@ -83,6 +85,7 @@ namespace Redmine.Net.Api.Extensions
         /// 
         /// </summary>
         /// <param name="collection"></param>
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Will be internal in 5.0. Use string.Join instead.")]
         public static string Dump<TIn>(this IEnumerable<TIn> collection) where TIn : class
         {
             if (collection == null)

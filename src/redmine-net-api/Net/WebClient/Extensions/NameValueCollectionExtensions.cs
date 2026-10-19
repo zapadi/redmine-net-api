@@ -14,6 +14,7 @@
    limitations under the License.
 */
 
+using System;
 using System.Collections.Specialized;
 using System.Globalization;
 using System.Text;
@@ -31,6 +32,7 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="parameters">The parameters.</param>
         /// <param name="parameterName">Name of the parameter.</param>
         /// <returns></returns>
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Will be internal in 5.0. Use NameValueCollection.Get instead.")]
         public static string GetParameterValue(this NameValueCollection parameters, string parameterName)
         {
             return GetValue(parameters, parameterName);
@@ -42,6 +44,7 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="parameters">The parameters.</param>
         /// <param name="key">Name of the parameter.</param>
         /// <returns></returns>
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Will be internal in 5.0. Use NameValueCollection.Get instead.")]
         public static string GetValue(this NameValueCollection parameters, string key)
         {
             if (parameters == null)
@@ -59,6 +62,7 @@ namespace Redmine.Net.Api.Extensions
         /// </summary>
         /// <param name="requestParameters"></param>
         /// <returns></returns>
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Will be internal in 5.0. Use string.Join instead.")]
         public static string ToQueryString(this NameValueCollection requestParameters)
         {
             if (requestParameters == null || requestParameters.Count == 0)
