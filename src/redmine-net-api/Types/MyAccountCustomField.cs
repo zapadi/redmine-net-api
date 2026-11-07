@@ -15,7 +15,9 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Xml;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
@@ -38,9 +40,19 @@ namespace Redmine.Net.Api.Types
         public MyAccountCustomField() { }
         
         /// <summary>
-        /// 
+        /// Gets or sets the value. For a multi-value field it holds the first value.
         /// </summary>
         public string Value { get; set; }
+
+        /// <summary>
+        /// Gets or sets all the values of a multi-value field. It is null for a single-value field.
+        /// </summary>
+        public IList<string> Values { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the field accepts multiple values.
+        /// </summary>
+        public bool Multiple { get; set; }
         
         internal MyAccountCustomField(int id, string name)
         {
@@ -51,9 +63,16 @@ namespace Redmine.Net.Api.Types
         /// <inheritdoc />
         public override void ReadXml(XmlReader reader)
         {
+            Multiple = reader.ReadAttributeAsBoolean(RedmineKeys.MULTIPLE);
             base.ReadXml(reader);
             while (!reader.EOF)
             {
+                if (reader.NodeType == XmlNodeType.Element && reader.Name == RedmineKeys.VALUE && string.Equals(reader.GetAttribute(RedmineKeys.TYPE), "array", StringComparison.Ordinal))
+                {
+                    SetValues(ReadXmlValues(reader));
+                    continue;
+                }
+
                 if (reader.IsEmptyElement)
                 {
                     reader.Read();
@@ -76,6 +95,16 @@ namespace Redmine.Net.Api.Types
         /// <inheritdoc />
         public override void WriteXml(XmlWriter writer)
         {
+            writer.WriteAttributeString(RedmineKeys.ID, Id.ToInvariantString());
+
+            if (WritesValues)
+            {
+                writer.WriteArray(RedmineKeys.VALUE, RedmineKeys.VALUE, Values, value => value);
+            }
+            else
+            {
+                writer.WriteElementString(RedmineKeys.VALUE, Value);
+            }
         }
 
 
@@ -95,7 +124,8 @@ namespace Redmine.Net.Api.Types
                     {
                         case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
                         case RedmineKeys.NAME: Name = reader.ReadAsString(); break;
-                        case RedmineKeys.VALUE: Value = reader.ReadAsString(); break;
+                        case RedmineKeys.MULTIPLE: Multiple = reader.ReadAsBool(); break;
+                        case RedmineKeys.VALUE: ReadJsonValue(reader); break;
                         default: reader.Skip(); break;
                     }
                 }
@@ -105,6 +135,109 @@ namespace Redmine.Net.Api.Types
         /// <inheritdoc />
         public override void WriteJson(JsonWriter writer)
         {
+            writer.WriteStartObject();
+            writer.WriteProperty(RedmineKeys.ID, Id);
+
+            if (WritesValues)
+            {
+                writer.WritePropertyName(RedmineKeys.VALUE);
+                writer.WriteStartArray();
+                foreach (var value in Values)
+                {
+                    writer.WriteValue(value);
+                }
+                writer.WriteEndArray();
+            }
+            else
+            {
+                writer.WriteProperty(RedmineKeys.VALUE, Value);
+            }
+
+            writer.WriteEndObject();
+        }
+
+        private bool WritesValues => Values != null && (Multiple || Values.Count > 1);
+
+        private void SetValues(List<string> values)
+        {
+            Values = values;
+            Value = values.Count > 0 ? values[0] : null;
+        }
+
+        private static List<string> ReadXmlValues(XmlReader reader)
+        {
+            var values = new List<string>();
+
+            if (reader.IsEmptyElement)
+            {
+                reader.Read();
+                return values;
+            }
+
+            reader.Read();
+            while (!reader.EOF && reader.NodeType != XmlNodeType.EndElement)
+            {
+                if (reader.NodeType == XmlNodeType.Element && reader.Name == RedmineKeys.VALUE)
+                {
+                    values.Add(reader.ReadElementContentAsString());
+                }
+                else
+                {
+                    reader.Skip();
+                }
+            }
+
+            if (!reader.EOF)
+            {
+                reader.Read();
+            }
+
+            return values;
+        }
+
+        private void ReadJsonValue(JsonReader reader)
+        {
+            var dateParseHandling = reader.DateParseHandling;
+            reader.DateParseHandling = DateParseHandling.None;
+            try
+            {
+                ReadJsonValueCore(reader);
+            }
+            finally
+            {
+                reader.DateParseHandling = dateParseHandling;
+            }
+        }
+
+        private void ReadJsonValueCore(JsonReader reader)
+        {
+            reader.Read();
+            switch (reader.TokenType)
+            {
+                case JsonToken.Null:
+                    break;
+                case JsonToken.StartArray:
+                    var values = new List<string>();
+                    while (reader.Read() && reader.TokenType != JsonToken.EndArray)
+                    {
+                        if (reader.TokenType == JsonToken.StartObject || reader.TokenType == JsonToken.StartArray)
+                        {
+                            reader.Skip();
+                        }
+                        else if (reader.Value != null)
+                        {
+                            values.Add(Convert.ToString(reader.Value, CultureInfo.InvariantCulture));
+                        }
+                    }
+                    SetValues(values);
+                    break;
+                case JsonToken.StartObject:
+                    reader.Skip();
+                    break;
+                default:
+                    Value = Convert.ToString(reader.Value, CultureInfo.InvariantCulture);
+                    break;
+            }
         }
 
         /// <summary>
@@ -128,7 +261,9 @@ namespace Redmine.Net.Api.Types
         {
             if (other == null) return false;
             return base.Equals(other)
-                   && string.Equals(Value, other.Value, StringComparison.Ordinal);
+                   && string.Equals(Value, other.Value, StringComparison.Ordinal)
+                   && Multiple == other.Multiple
+                   && ValuesEqual(Values, other.Values);
         }
 
         /// <inheritdoc />
@@ -138,10 +273,35 @@ namespace Redmine.Net.Api.Types
             {
                 var hashCode = base.GetHashCode();
                 hashCode = HashCodeHelper.GetHashCode(Value, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Values, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Multiple, hashCode);
                 return hashCode;
             }
         }
         
+        private static bool ValuesEqual(IList<string> left, IList<string> right)
+        {
+            if (left == null || right == null)
+            {
+                return left == null && right == null;
+            }
+
+            if (left.Count != right.Count)
+            {
+                return false;
+            }
+
+            for (var i = 0; i < left.Count; i++)
+            {
+                if (!string.Equals(left[i], right[i], StringComparison.Ordinal))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         /// <summary>
         /// 
         /// </summary>

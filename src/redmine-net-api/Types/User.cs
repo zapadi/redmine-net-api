@@ -71,7 +71,9 @@ namespace Redmine.Net.Api.Types
         public string Email { get; set; }
 
         /// <summary>
-        /// 
+        /// Gets or sets a value indicating whether the user is an administrator.
+        /// Sent as <c>admin</c> only when <c>true</c>, so creating or updating a user can grant administrator rights
+        /// but never removes them; Redmine applies it only for administrators.
         /// </summary>
         public bool IsAdmin { get; set; }
 
@@ -87,6 +89,13 @@ namespace Redmine.Net.Api.Types
         /// The authentication mode id.
         /// </value>
         public int? AuthenticationModeId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the authentication source (LDAP) of the user, returned by Redmine as <c>auth_source</c>
+        /// when requested with <c>include=auth_source</c> (admins only).
+        /// Set by Redmine; not sent when creating or updating, use <see cref="AuthenticationModeId"/> instead.
+        /// </summary>
+        public IdentifiableName AuthSource { get; set; }
 
         /// <summary>
         /// Gets the created on.
@@ -109,7 +118,8 @@ namespace Redmine.Net.Api.Types
         public string ApiKey { get; set; }
 
         /// <summary>
-        /// Gets the status of the user, visible for admins only (added in 2.4.0)
+        /// Gets the status of the user, visible for admins only (added in 2.4.0).
+        /// Not sent when it is <see cref="UserStatus.StatusAnonymous"/>, so Redmine applies its default.
         /// </summary>
         public UserStatus Status { get; set; }
 
@@ -182,6 +192,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.ADMIN: IsAdmin = reader.ReadElementContentAsBoolean(); break;
                     case RedmineKeys.API_KEY: ApiKey = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.AUTH_SOURCE_ID: AuthenticationModeId = reader.ReadElementContentAsNullableInt(); break;
+                    case RedmineKeys.AUTH_SOURCE: AuthSource = ReadAuthSource(reader); break;
                     case RedmineKeys.AVATAR_URL: AvatarUrl = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
                     case RedmineKeys.CUSTOM_FIELDS: CustomFields = reader.ReadElementContentAsCollection<IssueCustomField>(); break;
@@ -230,12 +241,55 @@ namespace Redmine.Net.Api.Types
             }
             
             writer.WriteBoolean(RedmineKeys.MUST_CHANGE_PASSWORD, MustChangePassword);
-            writer.WriteElementString(RedmineKeys.STATUS, ((int)Status).ToInvariantString());
+
+            if (IsAdmin)
+            {
+                writer.WriteBoolean(RedmineKeys.ADMIN, true);
+            }
+
+            if (Status != UserStatus.StatusAnonymous)
+            {
+                writer.WriteElementString(RedmineKeys.STATUS, ((int)Status).ToInvariantString());
+            }
             
             if(CustomFields != null)
             { 
                 writer.WriteArray(RedmineKeys.CUSTOM_FIELDS, CustomFields);
             }
+        }
+
+        private static IdentifiableName ReadAuthSource(XmlReader reader)
+        {
+            if (reader.IsEmptyElement)
+            {
+                return new IdentifiableName(reader);
+            }
+
+            var authSource = new IdentifiableName();
+
+            using (var subtree = reader.ReadSubtree())
+            {
+                subtree.Read();
+                subtree.Read();
+                while (!subtree.EOF)
+                {
+                    if (subtree.NodeType != XmlNodeType.Element)
+                    {
+                        subtree.Read();
+                        continue;
+                    }
+
+                    switch (subtree.Name)
+                    {
+                        case RedmineKeys.ID: authSource.Id = subtree.ReadElementContentAsInt(); break;
+                        case RedmineKeys.NAME: authSource.Name = subtree.ReadElementContentAsString(); break;
+                        default: subtree.Skip(); break;
+                    }
+                }
+            }
+
+            reader.Read();
+            return authSource;
         }
         #endregion
 
@@ -264,6 +318,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.ADMIN: IsAdmin = reader.ReadAsBool(); break;
                     case RedmineKeys.API_KEY: ApiKey = reader.ReadAsString(); break;
                     case RedmineKeys.AUTH_SOURCE_ID: AuthenticationModeId = reader.ReadAsInt32(); break;
+                    case RedmineKeys.AUTH_SOURCE: AuthSource = new IdentifiableName(reader); break;
                     case RedmineKeys.AVATAR_URL: AvatarUrl = reader.ReadAsString(); break;
                     case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadAsDateTime(); break;
                     case RedmineKeys.CUSTOM_FIELDS: CustomFields = reader.ReadAsCollection<IssueCustomField>(); break;
@@ -314,7 +369,16 @@ namespace Redmine.Net.Api.Types
                 }
             
                 writer.WriteBoolean(RedmineKeys.MUST_CHANGE_PASSWORD, MustChangePassword);
-                writer.WriteProperty(RedmineKeys.STATUS, ((int)Status).ToInvariantString());
+
+                if (IsAdmin)
+                {
+                    writer.WriteBoolean(RedmineKeys.ADMIN, true);
+                }
+
+                if (Status != UserStatus.StatusAnonymous)
+                {
+                    writer.WriteProperty(RedmineKeys.STATUS, ((int)Status).ToInvariantString());
+                }
             
                 if(CustomFields != null)
                 { 
@@ -343,6 +407,7 @@ namespace Redmine.Net.Api.Types
                 && string.Equals(ApiKey,other.ApiKey, StringComparison.Ordinal)
                 && string.Equals(TwoFactorAuthenticationScheme,other.TwoFactorAuthenticationScheme, StringComparison.Ordinal)
                 && AuthenticationModeId == other.AuthenticationModeId
+                && AuthSource == other.AuthSource
                 && CreatedOn == other.CreatedOn
                 && LastLoginOn == other.LastLoginOn
                 && Status == other.Status
@@ -387,6 +452,7 @@ namespace Redmine.Net.Api.Types
                 hashCode = HashCodeHelper.GetHashCode(ApiKey, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(TwoFactorAuthenticationScheme, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(AuthenticationModeId, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(AuthSource, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(CreatedOn, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(LastLoginOn, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Status, hashCode);

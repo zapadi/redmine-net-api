@@ -54,6 +54,12 @@ namespace Redmine.Net.Api.Types
         public IList<GroupUser> Users { get;  set; }
 
         /// <summary>
+        /// Gets or sets the builtin type of the group (<c>anonymous</c> or <c>non_member</c>); <c>null</c> for regular groups.
+        /// Set by Redmine; not sent when creating or updating.
+        /// </summary>
+        public string Builtin { get; set; }
+
+        /// <summary>
         /// Gets or sets the custom fields.
         /// </summary>
         /// <value>The custom fields.</value>
@@ -86,6 +92,7 @@ namespace Redmine.Net.Api.Types
                 switch (reader.Name)
                 {
                     case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
+                    case RedmineKeys.BUILTIN: Builtin = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.CUSTOM_FIELDS: CustomFields = reader.ReadElementContentAsCollection<IssueCustomField>(); break;
                     case RedmineKeys.MEMBERSHIPS: Memberships = reader.ReadElementContentAsCollection<Membership>(); break;
                     case RedmineKeys.NAME: Name = reader.ReadElementContentAsString(); break;
@@ -129,6 +136,7 @@ namespace Redmine.Net.Api.Types
                 switch (reader.Value)
                 {
                     case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
+                    case RedmineKeys.BUILTIN: Builtin = reader.ReadAsString(); break;
                     case RedmineKeys.CUSTOM_FIELDS: CustomFields = reader.ReadAsCollection<IssueCustomField>(); break;
                     case RedmineKeys.MEMBERSHIPS: Memberships = reader.ReadAsCollection<Membership>(); break;
                     case RedmineKeys.NAME: Name = reader.ReadAsString(); break;
@@ -168,6 +176,7 @@ namespace Redmine.Net.Api.Types
         {
             if (other == null) return false;
             return base.Equals(other)
+                   && string.Equals(Builtin, other.Builtin, StringComparison.Ordinal)
                    && (Users?.Equals<GroupUser>(other.Users) ?? other.Users == null)
                    && (CustomFields?.Equals<IssueCustomField>(other.CustomFields) ?? other.CustomFields == null)
                    && (Memberships?.Equals<Membership>(other.Memberships) ?? other.Memberships == null);
@@ -195,6 +204,7 @@ namespace Redmine.Net.Api.Types
             unchecked
             {
                 var hashCode = base.GetHashCode();
+                hashCode = HashCodeHelper.GetHashCode(Builtin, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Users, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(CustomFields, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Memberships, hashCode);

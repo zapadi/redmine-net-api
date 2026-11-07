@@ -258,6 +258,32 @@ namespace Redmine.Net.Api.Extensions
         }
 
         /// <summary>
+        ///     Updates the account of the user whose credentials are used to access the API (PUT /my/account).
+        ///     Redmine accepts the first name, last name, email and custom field values.
+        ///     A custom field sends its Values as an array when Multiple is true or it has more than one value, otherwise its Value.
+        /// </summary>
+        /// <remarks>Get the account with GetMyAccount, change it, then update it: first name, last name and mail are always sent, so a new MyAccount with empty values is rejected (422).</remarks>
+        /// <param name="redmineManager"></param>
+        /// <param name="account">The account to update.</param>
+        /// <param name="requestOptions"></param>
+        public static void UpdateMyAccount(this RedmineManager redmineManager, MyAccount account, RequestOptions requestOptions = null)
+        {
+            var payload = SerializeMyAccount(redmineManager, account);
+
+            redmineManager.ApiClient.Update(redmineManager.RedmineApiUrls.MyAccount(), payload, requestOptions);
+        }
+
+        private static string SerializeMyAccount(RedmineManager redmineManager, MyAccount account)
+        {
+            if (account == null)
+            {
+                throw new RedmineException("Argument account is null");
+            }
+
+            return redmineManager.Serializer.Serialize(account);
+        }
+
+        /// <summary>
         ///     Adds the watcher to issue.
         /// </summary>
         /// <param name="redmineManager"></param>
@@ -315,6 +341,103 @@ namespace Redmine.Net.Api.Extensions
             var uri = redmineManager.RedmineApiUrls.GroupUserRemove(groupId.ToInvariantString(), userId.ToInvariantString());
            
             redmineManager.ApiClient.Delete(uri, requestOptions);
+        }
+
+        /// <summary>
+        ///     Adds existing users to a group (POST /groups/:id/users).
+        /// </summary>
+        /// <remarks>Redmine returns 422 when none of the ids is a valid user.</remarks>
+        /// <param name="redmineManager"></param>
+        /// <param name="groupId">The group id.</param>
+        /// <param name="userIds">The ids of the users to add.</param>
+        /// <param name="requestOptions"></param>
+        /// <exception cref="RedmineException"><paramref name="userIds"/> is null or empty.</exception>
+        public static void AddUsersToGroup(this RedmineManager redmineManager, int groupId, IEnumerable<int> userIds, RequestOptions requestOptions = null)
+        {
+            var payload = SerializationHelper.SerializeUserIds(userIds, null, redmineManager.Serializer);
+
+            redmineManager.ApiClient.Create(redmineManager.RedmineApiUrls.GroupUserAdd(groupId.ToInvariantString()), payload, requestOptions);
+        }
+
+        /// <summary>
+        ///     Removes users from a group (DELETE /groups/:id/users). Requires Redmine 7.0 or later.
+        /// </summary>
+        /// <remarks>
+        ///     Redmine returns 404 (<see cref="NotFoundException"/>) when none of the ids is in the group, as it does for a missing group or a Redmine older than 7.0.
+        ///     The ids are sent in the query string, so split very large lists (hundreds of ids) into batches.
+        /// </remarks>
+        /// <param name="redmineManager"></param>
+        /// <param name="groupId">The group id.</param>
+        /// <param name="userIds">The ids of the users to remove.</param>
+        /// <param name="requestOptions"></param>
+        /// <exception cref="RedmineException"><paramref name="userIds"/> is null or empty.</exception>
+        public static void RemoveUsersFromGroup(this RedmineManager redmineManager, int groupId, IEnumerable<int> userIds, RequestOptions requestOptions = null)
+        {
+            redmineManager.ApiClient.Delete(GroupUsersRemoveUri(redmineManager, groupId, userIds), requestOptions);
+        }
+
+        /// <summary>
+        ///     Adds users as watchers of an issue (POST /issues/:id/watchers).
+        /// </summary>
+        /// <remarks>Redmine silently skips users who cannot be watchers.</remarks>
+        /// <param name="redmineManager"></param>
+        /// <param name="issueId">The issue id.</param>
+        /// <param name="userIds">The ids of the users to add as watchers.</param>
+        /// <param name="requestOptions"></param>
+        /// <exception cref="RedmineException"><paramref name="userIds"/> is null or empty.</exception>
+        public static void AddWatchersToIssue(this RedmineManager redmineManager, int issueId, IEnumerable<int> userIds, RequestOptions requestOptions = null)
+        {
+            var payload = SerializationHelper.SerializeUserIds(userIds, RedmineKeys.WATCHER, redmineManager.Serializer);
+
+            redmineManager.ApiClient.Create(redmineManager.RedmineApiUrls.IssueWatcherAdd(issueId.ToInvariantString()), payload, requestOptions);
+        }
+
+        private static string GroupUsersRemoveUri(RedmineManager redmineManager, int groupId, IEnumerable<int> userIds)
+        {
+            return redmineManager.RedmineApiUrls.GroupUsersRemove(groupId.ToInvariantString(), SerializationHelper.EnsureUserIds(userIds));
+        }
+
+        /// <summary>
+        ///     Updates the notes and/or the private flag of a journal (PUT /journals/:id).
+        /// </summary>
+        /// <param name="redmineManager"></param>
+        /// <param name="journalId">The journal id.</param>
+        /// <param name="notes">The new notes; <c>null</c> leaves the notes unchanged.</param>
+        /// <param name="privateNotes">Whether the notes are private; <c>null</c> leaves the flag unchanged.</param>
+        /// <param name="requestOptions"></param>
+        /// <exception cref="RedmineException">Both <paramref name="notes"/> and <paramref name="privateNotes"/> are <c>null</c>.</exception>
+        public static void UpdateJournal(this RedmineManager redmineManager, int journalId, string notes, bool? privateNotes = null, RequestOptions requestOptions = null)
+        {
+            var payload = SerializeJournal(redmineManager, notes, privateNotes);
+
+            redmineManager.ApiClient.Update(JournalUri(redmineManager, journalId), payload, requestOptions);
+        }
+
+        /// <summary>
+        ///     Clears the notes of a journal (PUT /journals/:id with empty notes).
+        /// </summary>
+        /// <remarks>Older Redmine versions delete a journal that has no details when its notes are emptied.</remarks>
+        /// <param name="redmineManager"></param>
+        /// <param name="journalId">The journal id.</param>
+        /// <param name="requestOptions"></param>
+        public static void DeleteJournalNotes(this RedmineManager redmineManager, int journalId, RequestOptions requestOptions = null)
+        {
+            UpdateJournal(redmineManager, journalId, string.Empty, null, requestOptions);
+        }
+
+        private static string SerializeJournal(RedmineManager redmineManager, string notes, bool? privateNotes)
+        {
+            if (notes == null && privateNotes == null)
+            {
+                throw new RedmineException("Either notes or privateNotes must be set.");
+            }
+
+            return SerializationHelper.SerializeJournal(notes, privateNotes, redmineManager.Serializer);
+        }
+
+        private static string JournalUri(RedmineManager redmineManager, int journalId)
+        {
+            return redmineManager.RedmineApiUrls.UpdateFragment<Journal>(journalId.ToInvariantString());
         }
 
         /// <summary>
@@ -810,6 +933,23 @@ namespace Redmine.Net.Api.Extensions
 
             return response.DeserializeTo<MyAccount>(redmineManager.Serializer);
         }
+
+        /// <summary>
+        ///     Updates the account of the user whose credentials are used to access the API (PUT /my/account) asynchronous.
+        ///     Redmine accepts the first name, last name, email and custom field values.
+        ///     A custom field sends its Values as an array when Multiple is true or it has more than one value, otherwise its Value.
+        /// </summary>
+        /// <remarks>Get the account with GetMyAccount, change it, then update it: first name, last name and mail are always sent, so a new MyAccount with empty values is rejected (422).</remarks>
+        /// <param name="redmineManager"></param>
+        /// <param name="account">The account to update.</param>
+        /// <param name="requestOptions"></param>
+        /// <param name="cancellationToken"></param>
+        public static async Task UpdateMyAccountAsync(this RedmineManager redmineManager, MyAccount account, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
+        {
+            var payload = SerializeMyAccount(redmineManager, account);
+
+            await redmineManager.ApiClient.UpdateAsync(redmineManager.RedmineApiUrls.MyAccount(), payload, requestOptions, cancellationToken).ConfigureAwait(false);
+        }
         
         /// <summary>
         ///     Creates or updates wiki page asynchronous.
@@ -1002,6 +1142,88 @@ namespace Redmine.Net.Api.Extensions
             var uri = redmineManager.RedmineApiUrls.IssueWatcherRemove(issueId.ToInvariantString(), userId.ToInvariantString());
            
             await redmineManager.ApiClient.DeleteAsync(uri,  requestOptions, cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        ///     Adds existing users to a group (POST /groups/:id/users) asynchronous.
+        /// </summary>
+        /// <remarks>Redmine returns 422 when none of the ids is a valid user.</remarks>
+        /// <param name="redmineManager"></param>
+        /// <param name="groupId">The group id.</param>
+        /// <param name="userIds">The ids of the users to add.</param>
+        /// <param name="requestOptions"></param>
+        /// <param name="cancellationToken"></param>
+        /// <exception cref="RedmineException"><paramref name="userIds"/> is null or empty.</exception>
+        public static async Task AddUsersToGroupAsync(this RedmineManager redmineManager, int groupId, IEnumerable<int> userIds, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
+        {
+            var payload = SerializationHelper.SerializeUserIds(userIds, null, redmineManager.Serializer);
+
+            await redmineManager.ApiClient.CreateAsync(redmineManager.RedmineApiUrls.GroupUserAdd(groupId.ToInvariantString()), payload, requestOptions, cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        ///     Removes users from a group (DELETE /groups/:id/users) asynchronous. Requires Redmine 7.0 or later.
+        /// </summary>
+        /// <remarks>
+        ///     Redmine returns 404 (<see cref="NotFoundException"/>) when none of the ids is in the group, as it does for a missing group or a Redmine older than 7.0.
+        ///     The ids are sent in the query string, so split very large lists (hundreds of ids) into batches.
+        /// </remarks>
+        /// <param name="redmineManager"></param>
+        /// <param name="groupId">The group id.</param>
+        /// <param name="userIds">The ids of the users to remove.</param>
+        /// <param name="requestOptions"></param>
+        /// <param name="cancellationToken"></param>
+        /// <exception cref="RedmineException"><paramref name="userIds"/> is null or empty.</exception>
+        public static async Task RemoveUsersFromGroupAsync(this RedmineManager redmineManager, int groupId, IEnumerable<int> userIds, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
+        {
+            await redmineManager.ApiClient.DeleteAsync(GroupUsersRemoveUri(redmineManager, groupId, userIds), requestOptions, cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        ///     Adds users as watchers of an issue (POST /issues/:id/watchers) asynchronous.
+        /// </summary>
+        /// <remarks>Redmine silently skips users who cannot be watchers.</remarks>
+        /// <param name="redmineManager"></param>
+        /// <param name="issueId">The issue id.</param>
+        /// <param name="userIds">The ids of the users to add as watchers.</param>
+        /// <param name="requestOptions"></param>
+        /// <param name="cancellationToken"></param>
+        /// <exception cref="RedmineException"><paramref name="userIds"/> is null or empty.</exception>
+        public static async Task AddWatchersToIssueAsync(this RedmineManager redmineManager, int issueId, IEnumerable<int> userIds, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
+        {
+            var payload = SerializationHelper.SerializeUserIds(userIds, RedmineKeys.WATCHER, redmineManager.Serializer);
+
+            await redmineManager.ApiClient.CreateAsync(redmineManager.RedmineApiUrls.IssueWatcherAdd(issueId.ToInvariantString()), payload, requestOptions, cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        ///     Updates the notes and/or the private flag of a journal (PUT /journals/:id) asynchronous.
+        /// </summary>
+        /// <param name="redmineManager"></param>
+        /// <param name="journalId">The journal id.</param>
+        /// <param name="notes">The new notes; <c>null</c> leaves the notes unchanged.</param>
+        /// <param name="privateNotes">Whether the notes are private; <c>null</c> leaves the flag unchanged.</param>
+        /// <param name="requestOptions"></param>
+        /// <param name="cancellationToken"></param>
+        /// <exception cref="RedmineException">Both <paramref name="notes"/> and <paramref name="privateNotes"/> are <c>null</c>.</exception>
+        public static async Task UpdateJournalAsync(this RedmineManager redmineManager, int journalId, string notes, bool? privateNotes = null, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
+        {
+            var payload = SerializeJournal(redmineManager, notes, privateNotes);
+
+            await redmineManager.ApiClient.UpdateAsync(JournalUri(redmineManager, journalId), payload, requestOptions, cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        ///     Clears the notes of a journal (PUT /journals/:id with empty notes) asynchronous.
+        /// </summary>
+        /// <remarks>Older Redmine versions delete a journal that has no details when its notes are emptied.</remarks>
+        /// <param name="redmineManager"></param>
+        /// <param name="journalId">The journal id.</param>
+        /// <param name="requestOptions"></param>
+        /// <param name="cancellationToken"></param>
+        public static Task DeleteJournalNotesAsync(this RedmineManager redmineManager, int journalId, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
+        {
+            return UpdateJournalAsync(redmineManager, journalId, string.Empty, null, requestOptions, cancellationToken);
         }
         #endif
         

@@ -14,6 +14,8 @@
    limitations under the License.
 */
 
+using System.Collections.Generic;
+using System.Text;
 using Redmine.Net.Api.Exceptions;
 using Redmine.Net.Api.Extensions;
 
@@ -169,6 +171,20 @@ internal static class RedmineApiUrlsExtensions
         }
 
         return $"{RedmineKeys.GROUPS}/{RedmineApiUrls.Escape(groupIdentifier)}/{RedmineKeys.USERS}/{RedmineApiUrls.Escape(userId)}.{redmineApiUrls.Format}";
+    }
+
+    public static string GroupUsersRemove(this RedmineApiUrls redmineApiUrls, string groupIdentifier, IEnumerable<int> userIds)
+    {
+        var uri = new StringBuilder(GroupUserAdd(redmineApiUrls, groupIdentifier));
+        var separator = '?';
+
+        foreach (var userId in userIds)
+        {
+            uri.Append(separator).Append(RedmineKeys.USER_IDS).Append("[]=").Append(userId.ToInvariantString());
+            separator = '&';
+        }
+
+        return uri.ToString();
     }
 
     public static string AttachmentUpdate(this RedmineApiUrls redmineApiUrls, string issueIdentifier)

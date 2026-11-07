@@ -66,6 +66,12 @@ namespace Redmine.Net.Api.Types
         public IdentifiableName Author { get; set; }
 
         /// <summary>
+        /// Gets or sets the project of the wiki page (Redmine 7.0+).
+        /// Set by Redmine; not sent when creating or updating.
+        /// </summary>
+        public IdentifiableName Project { get; set; }
+
+        /// <summary>
         /// Gets the created on.
         /// Set by Redmine; not sent when creating or updating.
         /// </summary>
@@ -119,6 +125,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
                     case RedmineKeys.ATTACHMENTS: Attachments = reader.ReadElementContentAsCollection<Attachment>(); break;
                     case RedmineKeys.AUTHOR: Author = new IdentifiableName(reader); break;
+                    case RedmineKeys.PROJECT: Project = new IdentifiableName(reader); break;
                     case RedmineKeys.COMMENTS: Comments = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
                     case RedmineKeys.TEXT: Text = reader.ReadElementContentAsString(); break;
@@ -178,6 +185,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
                     case RedmineKeys.ATTACHMENTS: Attachments = reader.ReadAsCollection<Attachment>(); break;
                     case RedmineKeys.AUTHOR: Author = new IdentifiableName(reader); break;
+                    case RedmineKeys.PROJECT: Project = new IdentifiableName(reader); break;
                     case RedmineKeys.COMMENTS: Comments = reader.ReadAsString(); break;
                     case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadAsDateTime(); break;
                     case RedmineKeys.TEXT: Text = reader.ReadAsString(); break;
@@ -246,6 +254,7 @@ namespace Redmine.Net.Api.Types
                 && string.Equals(ParentTitle, other.ParentTitle, StringComparison.Ordinal)
                 && Version == other.Version
                 && Author == other.Author
+                && Project == other.Project
                 && CreatedOn == other.CreatedOn
                 && UpdatedOn == other.UpdatedOn
                 && (Attachments?.Equals<Attachment>(other.Attachments) ?? other.Attachments == null);
@@ -278,6 +287,7 @@ namespace Redmine.Net.Api.Types
                 hashCode = HashCodeHelper.GetHashCode(Comments, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Version, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Author, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Project, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(CreatedOn, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(UpdatedOn, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Attachments, hashCode);

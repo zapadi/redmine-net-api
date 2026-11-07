@@ -15,6 +15,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Xml;
 using System.Xml.Serialization;
@@ -51,6 +52,12 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         public bool IsActive { get; set; }
+
+        /// <summary>
+        /// Gets or sets the custom field values.
+        /// Set by Redmine; not sent when creating or updating.
+        /// </summary>
+        public IList<IssueCustomField> CustomFields { get; set; }
         #endregion
 
         #region Implementation of IXmlSerializable
@@ -73,6 +80,7 @@ namespace Redmine.Net.Api.Types
                 switch (reader.Name)
                 {
                     case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
+                    case RedmineKeys.CUSTOM_FIELDS: CustomFields = reader.ReadElementContentAsCollection<IssueCustomField>(); break;
                     case RedmineKeys.IS_DEFAULT: IsDefault = reader.ReadElementContentAsBoolean(); break;
                     case RedmineKeys.NAME: Name = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.ACTIVE: IsActive = reader.ReadElementContentAsBoolean(); break;
@@ -111,6 +119,7 @@ namespace Redmine.Net.Api.Types
                 switch (reader.Value)
                 {
                     case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
+                    case RedmineKeys.CUSTOM_FIELDS: CustomFields = reader.ReadAsCollection<IssueCustomField>(); break;
                     case RedmineKeys.IS_DEFAULT: IsDefault = reader.ReadAsBool(); break;
                     case RedmineKeys.NAME: Name = reader.ReadAsString(); break;
                     case RedmineKeys.ACTIVE: IsActive = reader.ReadAsBool(); break;
@@ -133,7 +142,8 @@ namespace Redmine.Net.Api.Types
 
             return base.Equals(other) 
                    && IsDefault == other.IsDefault 
-                   && IsActive == other.IsActive;
+                   && IsActive == other.IsActive
+                   && (CustomFields?.Equals<IssueCustomField>(other.CustomFields) ?? other.CustomFields == null);
         }
 
         /// <summary>
@@ -160,6 +170,7 @@ namespace Redmine.Net.Api.Types
                 var hashCode = base.GetHashCode();
                 hashCode = HashCodeHelper.GetHashCode(IsDefault, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(IsActive, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(CustomFields, hashCode);
                 return hashCode;
             }
         }
