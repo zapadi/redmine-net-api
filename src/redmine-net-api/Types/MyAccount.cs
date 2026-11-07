@@ -40,25 +40,25 @@ namespace Redmine.Net.Api.Types
         /// Gets the user login.
         /// </summary>
         /// <value>The login.</value>
-        public string Login { get; internal set; }
+        public string Login { get; set; }
 
         /// <summary>
         /// Gets the first name.
         /// </summary>
         /// <value>The first name.</value>
-        public string FirstName { get; internal set; }
+        public string FirstName { get; set; }
 
         /// <summary>
         /// Gets the last name.
         /// </summary>
         /// <value>The last name.</value>
-        public string LastName { get; internal set; }
+        public string LastName { get; set; }
 
         /// <summary>
         /// Gets the email.
         /// </summary>
         /// <value>The email.</value>
-        public string Email { get; internal set; }
+        public string Email { get; set; }
 
         /// <summary>
         /// Returns true if user is admin.
@@ -66,24 +66,27 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The authentication mode id.
         /// </value>
-        public bool IsAdmin { get; internal set; }
+        public bool IsAdmin { get; set; }
 
         /// <summary>
         /// Gets the created on.
+        /// Set by Redmine; not sent when creating or updating.
         /// </summary>
         /// <value>The created on.</value>
-        public DateTime? CreatedOn { get; internal set; }
+        public DateTime? CreatedOn { get; set; }
 
         /// <summary>
         /// Gets the last login on.
+        /// Set by Redmine; not sent when creating or updating.
         /// </summary>
         /// <value>The last login on.</value>
-        public DateTime? LastLoginOn { get; internal set; }
+        public DateTime? LastLoginOn { get; set; }
 
         /// <summary>
         /// Gets the API key
+        /// Set by Redmine; not sent when creating or updating.
         /// </summary>
-        public string ApiKey { get; internal set; }
+        public string ApiKey { get; set; }
         
         /// <summary>
         /// Gets or sets the custom fields

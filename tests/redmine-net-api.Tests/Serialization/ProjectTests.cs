@@ -12,6 +12,30 @@ namespace Padi.DotNet.RedmineAPI.Tests.Serialization;
 public class ProjectTests
 {
     [Theory]
+    [InlineData(SerializerKind.Xml)]
+    [InlineData(SerializerKind.NewtonsoftJson)]
+    public void Should_Serialize_Project_With_Null_Custom_Field_Values(SerializerKind kind)
+    {
+        var project = new Redmine.Net.Api.Types.Project
+        {
+            Name = "name",
+            Identifier = "identifier",
+#pragma warning disable CS0618
+            CustomFieldValues =
+            [
+                null,
+                new CustomField { Id = 1, PossibleValues = [null] },
+                new CustomField { Id = 2, PossibleValues = [null, new CustomFieldPossibleValue("value")] }
+            ]
+#pragma warning restore CS0618
+        };
+
+        var output = SerializerFactory.Create(kind).Serialize(project);
+
+        Assert.Contains("value", output);
+    }
+
+    [Theory]
     [MemberData(nameof(ProjectDeserializeTheoryData))]
     public void Should_Deserialize_Project(string input, SerializerKind kind)
     {

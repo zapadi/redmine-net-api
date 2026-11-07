@@ -43,7 +43,7 @@ namespace Redmine.Net.Api.Types
         /// Gets the project.
         /// </summary>
         /// <value>The project.</value>
-        public IdentifiableName Project { get; internal set; }
+        public IdentifiableName Project { get; set; }
 
         /// <summary>
         /// Gets or sets the description.
@@ -86,21 +86,23 @@ namespace Redmine.Net.Api.Types
 
         /// <summary>
         /// Gets the created on.
+        /// Set by Redmine; not sent when creating or updating.
         /// </summary>
         /// <value>The created on.</value>
-        public DateTime? CreatedOn { get; internal set; }
+        public DateTime? CreatedOn { get; set; }
 
         /// <summary>
         /// Gets the updated on.
+        /// Set by Redmine; not sent when creating or updating.
         /// </summary>
         /// <value>The updated on.</value>
-        public DateTime? UpdatedOn { get; internal set; }
+        public DateTime? UpdatedOn { get; set; }
 
         /// <summary>
         /// Gets the custom fields.
         /// </summary>
         /// <value>The custom fields.</value>
-        public IList<IssueCustomField> CustomFields { get; internal set; }
+        public IList<IssueCustomField> CustomFields { get; set; }
         #endregion
 
         #region Implementation of IXmlSerializable

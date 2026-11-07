@@ -89,15 +89,17 @@ namespace Redmine.Net.Api.Types
 
         /// <summary>
         /// Gets the created on.
+        /// Set by Redmine; not sent when creating or updating.
         /// </summary>
         /// <value>The created on.</value>
-        public DateTime? CreatedOn { get; internal set; }
+        public DateTime? CreatedOn { get; set; }
 
         /// <summary>
         /// Gets the updated on.
+        /// Set by Redmine; not sent when creating or updating.
         /// </summary>
         /// <value>The updated on.</value>
-        public DateTime? UpdatedOn { get; internal set; }
+        public DateTime? UpdatedOn { get; set; }
 
         /// <summary>
         /// Gets or sets the custom fields.

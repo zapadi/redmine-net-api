@@ -62,15 +62,17 @@ namespace Redmine.Net.Api.Types
 
         /// <summary>
         /// Gets the created on.
+        /// Set by Redmine; not sent when creating or updating.
         /// </summary>
         /// <value>The created on.</value>
-        public DateTime? CreatedOn { get; internal set; }
+        public DateTime? CreatedOn { get; set; }
 
         /// <summary>
         /// Gets the updated on.
+        /// Set by Redmine; not sent when creating or updating.
         /// </summary>
         /// <value>The updated on.</value>
-        public DateTime? UpdatedOn { get; internal set; }
+        public DateTime? UpdatedOn { get; set; }
 
         /// <summary>
         /// Gets the status.
@@ -78,7 +80,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The status.
         /// </value>
-        public ProjectStatus Status { get; internal set; }
+        public ProjectStatus Status { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this project is public.
@@ -122,6 +124,7 @@ namespace Redmine.Net.Api.Types
         /// The custom fields.
         /// </value>
         [Obsolete($"{RedmineConstants.OBSOLETE_TEXT} Use {nameof(IssueCustomFields)} instead.")]
+        [JsonIgnore]
         public IList<IssueCustomField> CustomFields
         {
             get => IssueCustomFields;
@@ -154,13 +157,13 @@ namespace Redmine.Net.Api.Types
         /// The issue categories.
         /// </value>
         /// <remarks>Available in Redmine starting with the 2.6.0 version.</remarks>
-        public IList<ProjectIssueCategory> IssueCategories { get; internal set; }
+        public IList<ProjectIssueCategory> IssueCategories { get; set; }
 
         /// <summary>
         /// Gets the time entry activities.
         /// </summary>
         /// <remarks>Available in Redmine starting with the 3.4.0 version.</remarks>
-        public IList<ProjectTimeEntryActivity> TimeEntryActivities { get; internal set; }
+        public IList<ProjectTimeEntryActivity> TimeEntryActivities { get; set; }
 
         /// <summary>
         /// 
@@ -254,17 +257,17 @@ namespace Redmine.Net.Api.Types
 
                 foreach (var customField in CustomFieldValues)
                 {
-                    if (customField.PossibleValues != null && customField.PossibleValues.Count > 0)
+                    if (customField?.PossibleValues != null && customField.PossibleValues.Count > 0)
                     {
                         writer.WriteStartElement(RedmineKeys.CUSTOM_FIELD);
                         writer.WriteAttributeString(RedmineKeys.ID, customField.Id.ToInvariantString());
                         if (customField.PossibleValues.Count > 1)
                         {
-                            writer.WriteArray(RedmineKeys.VALUE, RedmineKeys.VALUE, customField.PossibleValues, possibleValue => possibleValue.Value);
+                            writer.WriteArray(RedmineKeys.VALUE, RedmineKeys.VALUE, customField.PossibleValues, possibleValue => possibleValue?.Value);
                         }
                         else
                         {
-                            writer.WriteElementString(RedmineKeys.VALUE, customField.PossibleValues[0].Value);
+                            writer.WriteElementString(RedmineKeys.VALUE, customField.PossibleValues[0]?.Value);
                         }
 
                         writer.WriteEndElement();
@@ -362,7 +365,7 @@ namespace Redmine.Net.Api.Types
 
                     foreach (var customField in CustomFieldValues)
                     {
-                        if (customField.PossibleValues != null && customField.PossibleValues.Count > 0)
+                        if (customField?.PossibleValues != null && customField.PossibleValues.Count > 0)
                         {
                             if (customField.PossibleValues.Count > 1)
                             {
@@ -370,13 +373,13 @@ namespace Redmine.Net.Api.Types
                                 writer.WriteStartArray();
                                 foreach (var customFieldPossibleValue in customField.PossibleValues)
                                 {
-                                    writer.WriteValue(customFieldPossibleValue.Value);
+                                    writer.WriteValue(customFieldPossibleValue?.Value);
                                 }
                                 writer.WriteEndArray();
                             }
                             else
                             {
-                                writer.WriteProperty(customField.Id.ToInvariantString(), customField.PossibleValues[0].Value);
+                                writer.WriteProperty(customField.Id.ToInvariantString(), customField.PossibleValues[0]?.Value);
                             }
                         }
                     }

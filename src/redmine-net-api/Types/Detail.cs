@@ -56,7 +56,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The property.
         /// </value>
-        public string Property { get; internal set; }
+        public string Property { get; set; }
 
         /// <summary>
         /// Gets the name.
@@ -64,7 +64,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The name.
         /// </value>
-        public string Name { get; internal set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets the old value.
@@ -72,7 +72,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The old value.
         /// </value>
-        public string OldValue { get; internal set; }
+        public string OldValue { get; set; }
 
         /// <summary>
         /// Gets the new value.
@@ -80,7 +80,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The new value.
         /// </value>
-        public string NewValue { get; internal set; }
+        public string NewValue { get; set; }
         #endregion
 
         #region Implementation of IXmlSerialization

@@ -45,12 +45,12 @@ namespace Redmine.Net.Api.Types
             /// <summary>
             /// 
             /// </summary>
-            public string Value { get; internal set; }
+            public string Value { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
-        public string Label { get; internal set; }
+        public string Label { get; set; }
         #endregion
 
         #region Implementation of IXmlSerializable

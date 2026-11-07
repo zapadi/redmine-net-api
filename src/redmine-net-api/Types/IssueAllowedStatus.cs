@@ -33,7 +33,7 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// 
         /// </summary>
-        public bool? IsClosed { get; internal set; }
+        public bool? IsClosed { get; set; }
 
         /// <inheritdoc />
         public override void ReadXml(XmlReader reader)

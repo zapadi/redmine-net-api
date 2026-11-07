@@ -222,6 +222,20 @@ Any other HTTP stack can be plugged in by implementing `IRedmineTransport` and p
 already contains the absolute URI, the merged headers and the body; return every response, whatever its status code, and
 throw only for transport failures. The XML documentation of `IRedmineTransport` describes the full contract.
 
+## Caching
+
+The model types (`Issue`, `Project`, `User`, ...) have public getters and setters, so they can be cached with
+System.Text.Json or Newtonsoft.Json and read back with every property intact:
+
+```csharp
+var json = System.Text.Json.JsonSerializer.Serialize(issues);
+var cached = System.Text.Json.JsonSerializer.Deserialize<List<Issue>>(json);
+```
+
+Do not use `XmlSerializer` (or `DataContractSerializer`) for caching in 4.x: the types implement `IXmlSerializable`,
+so these serializers write the Redmine request format, which skips server-owned fields such as `CreatedOn`,
+`UpdatedOn` or `Author`.
+
 ## Supported resources
 
 The generic methods (`Get`, `GetPaginated`, `Count`, `Create`, `Update`, `Delete` and their `Async` variants, including `GetPagedAsync`) cover most resources. Operations that need a dedicated endpoint are available as extension methods on `RedmineManager`; each has an `Async` counterpart, except `UpdateIssueAttachment`.

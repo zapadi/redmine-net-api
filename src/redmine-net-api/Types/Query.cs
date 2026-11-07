@@ -36,13 +36,13 @@ namespace Redmine.Net.Api.Types
         /// Gets a value indicating whether this instance is public.
         /// </summary>
         /// <value><c>true</c> if this instance is public; otherwise, <c>false</c>.</value>
-        public bool IsPublic { get; internal set; }
+        public bool IsPublic { get; set; }
 
         /// <summary>
         /// Gets  the project id.
         /// </summary>
         /// <value>The project id.</value>
-        public int? ProjectId { get; internal set; }
+        public int? ProjectId { get; set; }
         #endregion
 
         #region Implementation of IXmlSerialization

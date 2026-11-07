@@ -69,6 +69,7 @@ namespace Redmine.Net.Api.Types
 
         /// <summary>
         /// Gets or sets the author.
+        /// Set by Redmine; not sent when creating or updating.
         /// </summary>
         /// <value>The author.</value>
         public IdentifiableName Author { get; set; }
@@ -137,6 +138,7 @@ namespace Redmine.Net.Api.Types
 
         /// <summary>
         /// Gets or sets the created on.
+        /// Set by Redmine; not sent when creating or updating.
         /// </summary>
         /// <value>The created on.</value>
         public DateTime? CreatedOn { get; set; }
@@ -145,13 +147,14 @@ namespace Redmine.Net.Api.Types
         /// Gets or sets the updated on.
         /// </summary>
         /// <value>The updated on.</value>
-        public DateTime? UpdatedOn { get; internal set; }
+        public DateTime? UpdatedOn { get; set; }
 
         /// <summary>
         /// Gets or sets the closed on.
+        /// Set by Redmine; not sent when creating or updating.
         /// </summary>
         /// <value>The closed on.</value>
-        public DateTime? ClosedOn { get; internal set; }
+        public DateTime? ClosedOn { get; set; }
 
         /// <summary>
         /// Gets or sets the notes.

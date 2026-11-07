@@ -32,7 +32,7 @@ namespace Redmine.Net.Api.Types
     public sealed class NewsComment: Identifiable<NewsComment>
     {
         /// <summary>
-        /// 
+        /// Set by Redmine; not sent when creating or updating.
         /// </summary>
         public IdentifiableName Author { get; set; }
         /// <summary>

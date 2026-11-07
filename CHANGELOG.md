@@ -13,6 +13,7 @@
 *	Added RedmineManagerOptionsBuilder.WithMaxConcurrentRequests(int) to set how many pages GetAsync fetches in parallel (default 3)
 *	Added SearchAsync(q, limit, offset, searchFilter, requestOptions, cancellationToken) overload with RequestOptions (impersonation, headers, extra query string)
 *	Public IRedmineTransport contract and RedmineManagerOptionsBuilder.WithTransport to plug in a custom HTTP transport
+*	Model types have public setters so they can be cached with System.Text.Json or Newtonsoft.Json
 
 ⚠️ Deprecations
 *	Project.CustomFieldValues is obsolete; use ProjectCustomFields
@@ -62,6 +63,7 @@
 *	Simplified host parsing (validated by System.Uri): fixed NullReferenceException for hosts starting with "https" without scheme, hosts with a port keep their port and path (e.g. "example.com:3000/redmine", "http://[::1]:8080") and invalid ports are rejected
 *	Invalid hosts such as "https:/example.com", "https//example.com" or "ex@mple.com" are now rejected; single-label hosts (e.g. "redmine", "localhost") and IPv6 literals (e.g. "::1", "http://[::1]:8080") are accepted
 *	VerifyServerCert no longer overwrites a user ServerCertificateValidationCallback and RedmineManager no longer mutates the caller's WebClientOptions; obsolete Proxy, Timeout and SecurityProtocolType are set for any IRedmineWebClientOptions
+*	Fixed issue custom fields being duplicated when a Project is round-tripped with Newtonsoft.Json (the obsolete Project.CustomFields alias is no longer serialized)
 
 🧪 Tests
 *	Unit tests now run in CI on net10.0 and fail the build on failure

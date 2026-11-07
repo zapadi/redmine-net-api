@@ -35,23 +35,23 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// Gets the group.
         /// </summary>
-        public IdentifiableName Group { get; internal set; }
+        public IdentifiableName Group { get; set; }
         /// <summary>
         /// Gets or sets the project.
         /// </summary>
         /// <value>The project.</value>
-        public IdentifiableName Project { get; internal set; }
+        public IdentifiableName Project { get; set; }
         
         /// <summary>
         /// Gets the user.
         /// </summary>
-        public IdentifiableName User { get; internal set; }
+        public IdentifiableName User { get; set; }
 
         /// <summary>
         /// Gets or sets the type.
         /// </summary>
         /// <value>The type.</value>
-        public IList<MembershipRole> Roles { get; internal set; }
+        public IList<MembershipRole> Roles { get; set; }
         #endregion
 
         #region Implementation of IXmlSerialization

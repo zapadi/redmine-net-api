@@ -39,7 +39,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The issue relations.
         /// </value>
-        public IList<Permission> Permissions { get; internal set; }
+        public IList<Permission> Permissions { get; set; }
 
         /// <summary>
         /// 
