@@ -44,6 +44,7 @@
 *	GetHashCode is now consistent with Equals for Issue and Membership
 *	RequestOptions ContentType, Accept, UserAgent and Headers are now applied to the request; these properties were previously ignored, so values set on them are now sent
 *	WebClientOptions.DefaultHeaders no longer override per-request or authentication headers
+*	Sync DownloadFile with progress no longer crashes the process on HTTP or connection errors
 
 🧪 Tests
 *	Unit tests now run in CI on net10.0 and fail the build on failure
@@ -58,6 +59,7 @@
 *	Modernized GitHub workflows (least-privilege permissions, concurrency, timeouts, latest actions)
 *	Publishing to NuGet uses Trusted Publishing (OIDC) instead of an API key
 *	Added package validation against the last published version (4.65.0); CI packs both packages on every build so breaking API changes fail the build
+*	Split the HTTP transport from the Redmine API client internally (no behavior change)
 *	CI also runs unit tests on net481 (Windows)
 *	Removed deprecated PackageIconUrl and the unused PackageLicense property; local `dotnet pack` now writes to the repository's artifacts folder
 *	Dependabot updates Newtonsoft.Json in its own group

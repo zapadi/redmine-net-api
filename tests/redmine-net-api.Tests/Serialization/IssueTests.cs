@@ -2,13 +2,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using Padi.DotNet.RedmineAPI.Tests.Infrastructure;
-using Padi.DotNet.RedmineAPI.Tests.Tests;
 using Xunit;
 
 namespace Padi.DotNet.RedmineAPI.Tests.Serialization;
 
 [Collection(Constants.DeserializeCollection)]
-public class IssueTests(XmlPrettyPrintFixture _) : IClassFixture<XmlPrettyPrintFixture>
+public class IssueTests
 {
     [Fact]
     public void Should_Serialize_Xml_Issue_Custom_Field_Without_Values_With_Id()

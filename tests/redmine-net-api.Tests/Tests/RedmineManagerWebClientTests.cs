@@ -17,7 +17,7 @@ using Xunit;
 namespace Padi.DotNet.RedmineAPI.Tests.Tests;
 
 [Collection(Constants.DeserializeCollection)]
-public sealed class RedmineManagerWebClientTests(XmlPrettyPrintFixture _) : IClassFixture<XmlPrettyPrintFixture>
+public sealed class RedmineManagerWebClientTests
 {
     private const string Host = "http://localhost:3000";
     private const string IssuesPage = """<issues type="array" total_count="3" offset="0" limit="1"></issues>""";
@@ -138,6 +138,41 @@ public sealed class RedmineManagerWebClientTests(XmlPrettyPrintFixture _) : ICla
         Assert.Null(exception.ResponseHeaders);
         Assert.Equal("GET", exception.Method);
         Assert.Equal("UNKNOWN", exception.ErrorCode);
+    }
+
+    [Fact]
+    public void Get_Should_Throw_RedmineApiException_On_Protocol_Error_Without_Response()
+    {
+        var (manager, _) = CreateManager(_ => throw new WebException("protocol", null, WebExceptionStatus.ProtocolError, null));
+
+        var exception = Assert.Throws<RedmineApiException>(() => manager.Get<Project>("1"));
+
+        Assert.Equal("protocol", exception.Message);
+        Assert.Null(exception.HttpStatusCode);
+        Assert.Equal("UNKNOWN", exception.ErrorCode);
+    }
+
+    [Fact]
+    public async Task GetAsync_Should_Throw_RedmineApiException_On_Protocol_Error_Without_Response()
+    {
+        var (manager, _) = CreateManager(_ => throw new WebException("protocol", null, WebExceptionStatus.ProtocolError, null));
+
+        var exception = await Assert.ThrowsAsync<RedmineApiException>(() => manager.GetAsync<Project>("1", cancellationToken: TestContext.Current.CancellationToken));
+
+        Assert.Equal("protocol", exception.Message);
+        Assert.Null(exception.HttpStatusCode);
+        Assert.Equal("UNKNOWN", exception.ErrorCode);
+    }
+
+    [Fact]
+    public void UploadFile_With_Null_Data_Should_Throw_RedmineApiException()
+    {
+        var (manager, clients) = CreateManager(_ => new FakeWebResponse("<upload><token>t</token></upload>"));
+
+        var exception = Assert.Throws<RedmineApiException>(() => manager.UploadFile(null));
+
+        Assert.Equal("POST", exception.Method);
+        Assert.Empty(Assert.Single(clients).Requests);
     }
 
     [Fact]
