@@ -74,6 +74,7 @@ namespace Redmine.Net.Api.Serialization
                     var offset = 0;
                     var limit = 0;
                     List<T> list = null;
+                    var isListRead = false;
 
                     while (reader.Read())
                     {
@@ -91,7 +92,16 @@ namespace Redmine.Net.Api.Serialization
                                 limit = reader.ReadAsInt32().GetValueOrDefault();
                                 break;
                             default:
-                                list = reader.ReadAsCollection<T>();
+                                reader.Read();
+                                if (!isListRead && reader.TokenType == JsonToken.StartArray)
+                                {
+                                    list = reader.ReadAsCollection<T>();
+                                    isListRead = true;
+                                }
+                                else
+                                {
+                                    reader.Skip();
+                                }
                                 break;
                         }
                     }

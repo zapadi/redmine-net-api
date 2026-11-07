@@ -32,6 +32,8 @@ namespace Redmine.Net.Api;
 
 public partial class RedmineManager: IRedmineManagerAsync
 {
+    private const int MAX_CONCURRENT_TASKS = 3;
+    
     /// <inheritdoc />
     public async Task<int> CountAsync<T>(RequestOptions requestOptions, CancellationToken cancellationToken = default) 
         where T : class, new()
@@ -82,7 +84,7 @@ public partial class RedmineManager: IRedmineManagerAsync
             int.TryParse(baseRequestOptions.QueryString[RedmineKeys.OFFSET], out offset);
         }
 
-        if (pageSize == default)
+        if (pageSize == 0)
         {
             pageSize = _redmineManagerOptions.PageSize > 0
                 ? _redmineManagerOptions.PageSize
@@ -102,23 +104,26 @@ public partial class RedmineManager: IRedmineManagerAsync
                 return null;
             }
             
-            var totalCount = isLimitSet ? pageSize : firstPage.TotalItems;
             resultList =  new List<T>(firstPage.Items);
 
-            var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
-            var remainingPages = totalPages - 1 - (offset / pageSize);
-            if (remainingPages <= 0)
+            var maxItems = isLimitSet ? pageSize : int.MaxValue;
+            var effectivePageSize = resultList.Count;
+            var remainingItems = Math.Min(firstPage.TotalItems - offset, maxItems) - effectivePageSize;
+            if (effectivePageSize == 0 || remainingItems <= 0)
             {
-                return resultList;
+                return Truncate(resultList, maxItems);
             }
 
-            using (var semaphore = new SemaphoreSlim(MAX_CONCURRENT_TASKS))
+            var remainingPages = remainingItems / effectivePageSize + (remainingItems % effectivePageSize > 0 ? 1 : 0);
+
+            var semaphore = new SemaphoreSlim(_redmineManagerOptions.MaxConcurrentRequests > 0 ? _redmineManagerOptions.MaxConcurrentRequests : MAX_CONCURRENT_TASKS);
+            var pageFetchTasks = new List<Task<PagedResults<T>>>();
+            try
             {
-                var pageFetchTasks = new List<Task<PagedResults<T>>>();
                 for (int page = 1; page <= remainingPages; page++)
                 {
                     await semaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
-                    var pageOffset = (page * pageSize) + offset;
+                    var pageOffset = (page * effectivePageSize) + offset;
                     var pageRequestOptions = baseRequestOptions.Clone();
                     pageRequestOptions.QueryString.Set(RedmineKeys.OFFSET, pageOffset.ToInvariantString());
                     pageFetchTasks.Add(GetPagedInternalAsync<T>(semaphore, pageRequestOptions, cancellationToken));
@@ -141,18 +146,23 @@ public partial class RedmineManager: IRedmineManagerAsync
                     resultList.AddRange(pageResult.Items);
                 }
             }
-        }
-        else
-        {
-            var result = await GetPagedAsync<T>(baseRequestOptions, cancellationToken: cancellationToken)
-                .ConfigureAwait(false);
-            if (result?.Items != null)
+            finally
             {
-                return new List<T>(result.Items);
+                await WhenAllCompleted(pageFetchTasks).ConfigureAwait(false);
+                semaphore.Dispose();
             }
+
+            return Truncate(resultList, maxItems);
         }
 
-        return resultList;
+        var result = await GetPagedAsync<T>(baseRequestOptions, cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+        if (result?.Items != null)
+        {
+            return [.. result.Items];
+        }
+
+        return null;
     }
 
     /// <inheritdoc />
@@ -196,7 +206,7 @@ public partial class RedmineManager: IRedmineManagerAsync
         
         payload = payload.ReplaceEndings();
         
-        var response = await ApiClient.UpdateAsync(url, payload, requestOptions, cancellationToken: cancellationToken).ConfigureAwait(false);
+        _ = await ApiClient.UpdateAsync(url, payload, requestOptions, cancellationToken: cancellationToken).ConfigureAwait(false);
         
     }
 
@@ -226,7 +236,21 @@ public partial class RedmineManager: IRedmineManagerAsync
         return response.RawContent;
     }
     
-    private const int MAX_CONCURRENT_TASKS = 3;
+    private static Task<AggregateException[]> WhenAllCompleted<T>(List<Task<T>> tasks)
+    {
+        var completions = new List<Task<AggregateException>>(tasks.Count);
+        foreach (var task in tasks)
+        {
+            completions.Add(task.ContinueWith(static t => t.Exception, CancellationToken.None, TaskContinuationOptions.ExecuteSynchronously, TaskScheduler.Default));
+        }
+
+        return
+            #if(NET45_OR_GREATER || NETCOREAPP)
+            Task.WhenAll(completions);
+            #else
+            TaskExtensions.WhenAll(completions);
+            #endif
+    }
     
     private async Task<PagedResults<T>> GetPagedInternalAsync<T>(SemaphoreSlim semaphore, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
         where T : class, new()

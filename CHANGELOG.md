@@ -7,6 +7,10 @@
 *	A project read from Redmine now re-sends its custom field values (ProjectCustomFields) on update
 *	WithWebClient is now honored; the function must return a new WebClient on every call (the library disposes it after each request and WebClientOptions are not applied to it)
 *	RedmineApiException now includes Method, Endpoint, ResponseHeaders and IsTransient (timeouts, connection failures, HTTP 408, 429, 502, 503 and 504); IsTransient was previously always false
+*	Added RedmineManagerOptionsBuilder.WithQueryStringEncoding() (opt-in) to URL-encode query string keys and values
+*	Added RedmineManagerOptionsBuilder.WithMaxConcurrentRequests(int) to set how many pages GetAsync fetches in parallel (default 3)
+*	Added SearchAsync(q, limit, offset, searchFilter, requestOptions, cancellationToken) overload with RequestOptions (impersonation, headers, extra query string)
+*	Public IRedmineTransport contract and RedmineManagerOptionsBuilder.WithTransport to plug in a custom HTTP transport
 
 ⚠️ Deprecations
 *	Project.CustomFieldValues is obsolete; use ProjectCustomFields
@@ -45,6 +49,17 @@
 *	RequestOptions ContentType, Accept, UserAgent and Headers are now applied to the request; these properties were previously ignored, so values set on them are now sent
 *	WebClientOptions.DefaultHeaders no longer override per-request or authentication headers
 *	Sync DownloadFile with progress no longer crashes the process on HTTP or connection errors
+*	Fixed Get/GetAsync losing items when the page size or limit is above the server maximum (100); offsets now advance by the items returned and a limit above 100 returns up to limit items
+*	Fixed hosts with a sub-path (e.g. https://host/redmine) sending requests to the server root, and base paths containing '.' being dropped; a trailing *.xml/*.json segment is still removed
+*	Fixed attachment create/update URL ignoring the base sub-path
+*	URL path segments (ids, project identifiers, wiki page names, repository ids, revisions) are now escaped, including '/' inside a segment (e.g. wiki page "Page/3" is no longer treated as a path separator); values that are already percent-encoded are sent unchanged
+*	Fixed RequestOptions.QueryString being dropped when the address already has a query (e.g. UploadFileAsync with a file name); keys already in the address query are not added again
+*	Fixed PagedResults.TotalPages being one too many when the total count is a multiple of the page size; responses without a total count still report 1 page
+*	Fixed async paging disposing its semaphore while page requests were still running on cancellation or error
+*	Fixed JSON paged results using unknown top-level properties as the item list (the first array property is the item list)
+*	Simplified host parsing (validated by System.Uri): fixed NullReferenceException for hosts starting with "https" without scheme, hosts with a port keep their port and path (e.g. "example.com:3000/redmine", "http://[::1]:8080") and invalid ports are rejected
+*	Invalid hosts such as "https:/example.com", "https//example.com" or "ex@mple.com" are now rejected; single-label hosts (e.g. "redmine", "localhost") and IPv6 literals (e.g. "::1", "http://[::1]:8080") are accepted
+*	VerifyServerCert no longer overwrites a user ServerCertificateValidationCallback and RedmineManager no longer mutates the caller's WebClientOptions; obsolete Proxy, Timeout and SecurityProtocolType are set for any IRedmineWebClientOptions
 
 🧪 Tests
 *	Unit tests now run in CI on net10.0 and fail the build on failure

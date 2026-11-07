@@ -15,6 +15,7 @@
 */
 using System;
 using System.Net;
+using System.Net.Security;
 using Redmine.Net.Api.Exceptions;
 using Redmine.Net.Api.Extensions;
 
@@ -23,12 +24,14 @@ namespace Redmine.Net.Api.Net.WebClient;
 internal sealed class InternalWebClient : System.Net.WebClient
 {
     private readonly IRedmineWebClientOptions _webClientOptions;
+    private readonly RemoteCertificateValidationCallback _serverCertificateValidationCallback;
 
     #pragma warning disable SYSLIB0014
     public InternalWebClient(RedmineManagerOptions redmineManagerOptions)
     {
         _webClientOptions = redmineManagerOptions.WebClientOptions;
-        BaseAddress = redmineManagerOptions.BaseAddress.ToString();
+        _serverCertificateValidationCallback = redmineManagerOptions.ServerCertificateValidationCallback;
+        BaseAddress = redmineManagerOptions.BaseAddress?.ToString();
     }
     #pragma warning restore SYSLIB0014
 
@@ -96,7 +99,7 @@ internal sealed class InternalWebClient : System.Net.WebClient
             #endif
 
             #if (NET45_OR_GREATER || NETCOREAPP)
-                httpWebRequest.ServerCertificateValidationCallback = _webClientOptions.ServerCertificateValidationCallback;
+                httpWebRequest.ServerCertificateValidationCallback = _webClientOptions.ServerCertificateValidationCallback ?? _serverCertificateValidationCallback;
             #endif
 
             if (_webClientOptions.ProtocolVersion != null)

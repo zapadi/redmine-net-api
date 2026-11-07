@@ -27,31 +27,44 @@ namespace Redmine.Net.Api.Net
     {
         public string Format { get; init; }
 
-        private static readonly Dictionary<Type, string> TypeUrlFragments = new Dictionary<Type, string>()
+        private enum UrlOwner
         {
-            {typeof(Attachment), RedmineKeys.ATTACHMENTS},
-            {typeof(CustomField), RedmineKeys.CUSTOM_FIELDS},
-            {typeof(DocumentCategory), RedmineKeys.ENUMERATION_DOCUMENT_CATEGORIES},
-            {typeof(Group), RedmineKeys.GROUPS},
-            {typeof(Issue), RedmineKeys.ISSUES},
-            {typeof(IssueCategory), RedmineKeys.ISSUE_CATEGORIES},
-            {typeof(IssueCustomField), RedmineKeys.CUSTOM_FIELDS},
-            {typeof(IssuePriority), RedmineKeys.ENUMERATION_ISSUE_PRIORITIES},
-            {typeof(IssueRelation), RedmineKeys.RELATIONS},
-            {typeof(IssueStatus), RedmineKeys.ISSUE_STATUSES},
-            {typeof(Journal), RedmineKeys.JOURNALS},
-            {typeof(News), RedmineKeys.NEWS},
-            {typeof(Project), RedmineKeys.PROJECTS},
-            {typeof(ProjectMembership), RedmineKeys.MEMBERSHIPS},
-            {typeof(Query), RedmineKeys.QUERIES},
-            {typeof(Role), RedmineKeys.ROLES},
-            {typeof(Search), RedmineKeys.SEARCH},
-            {typeof(TimeEntry), RedmineKeys.TIME_ENTRIES},
-            {typeof(TimeEntryActivity), RedmineKeys.ENUMERATION_TIME_ENTRY_ACTIVITIES},
-            {typeof(Tracker), RedmineKeys.TRACKERS},
-            {typeof(User), RedmineKeys.USERS},
-            {typeof(Version), RedmineKeys.VERSIONS},
-            {typeof(Watcher), RedmineKeys.WATCHERS},
+            None,
+            Project,
+            Issue,
+        }
+
+        private sealed class TypeUrl(string fragment, UrlOwner owner)
+        {
+            public string Fragment { get; } = fragment;
+            public UrlOwner Owner { get; } = owner;
+        }
+
+        private static readonly Dictionary<Type, TypeUrl> TypeUrls = new Dictionary<Type, TypeUrl>()
+        {
+            {typeof(Attachment), new TypeUrl(RedmineKeys.ATTACHMENTS, UrlOwner.None)},
+            {typeof(CustomField), new TypeUrl(RedmineKeys.CUSTOM_FIELDS, UrlOwner.None)},
+            {typeof(DocumentCategory), new TypeUrl(RedmineKeys.ENUMERATION_DOCUMENT_CATEGORIES, UrlOwner.None)},
+            {typeof(Group), new TypeUrl(RedmineKeys.GROUPS, UrlOwner.None)},
+            {typeof(Issue), new TypeUrl(RedmineKeys.ISSUES, UrlOwner.None)},
+            {typeof(IssueCategory), new TypeUrl(RedmineKeys.ISSUE_CATEGORIES, UrlOwner.Project)},
+            {typeof(IssueCustomField), new TypeUrl(RedmineKeys.CUSTOM_FIELDS, UrlOwner.None)},
+            {typeof(IssuePriority), new TypeUrl(RedmineKeys.ENUMERATION_ISSUE_PRIORITIES, UrlOwner.None)},
+            {typeof(IssueRelation), new TypeUrl(RedmineKeys.RELATIONS, UrlOwner.Issue)},
+            {typeof(IssueStatus), new TypeUrl(RedmineKeys.ISSUE_STATUSES, UrlOwner.None)},
+            {typeof(Journal), new TypeUrl(RedmineKeys.JOURNALS, UrlOwner.None)},
+            {typeof(News), new TypeUrl(RedmineKeys.NEWS, UrlOwner.None)},
+            {typeof(Project), new TypeUrl(RedmineKeys.PROJECTS, UrlOwner.None)},
+            {typeof(ProjectMembership), new TypeUrl(RedmineKeys.MEMBERSHIPS, UrlOwner.Project)},
+            {typeof(Query), new TypeUrl(RedmineKeys.QUERIES, UrlOwner.None)},
+            {typeof(Role), new TypeUrl(RedmineKeys.ROLES, UrlOwner.None)},
+            {typeof(Search), new TypeUrl(RedmineKeys.SEARCH, UrlOwner.None)},
+            {typeof(TimeEntry), new TypeUrl(RedmineKeys.TIME_ENTRIES, UrlOwner.None)},
+            {typeof(TimeEntryActivity), new TypeUrl(RedmineKeys.ENUMERATION_TIME_ENTRY_ACTIVITIES, UrlOwner.None)},
+            {typeof(Tracker), new TypeUrl(RedmineKeys.TRACKERS, UrlOwner.None)},
+            {typeof(User), new TypeUrl(RedmineKeys.USERS, UrlOwner.None)},
+            {typeof(Version), new TypeUrl(RedmineKeys.VERSIONS, UrlOwner.Project)},
+            {typeof(Watcher), new TypeUrl(RedmineKeys.WATCHERS, UrlOwner.None)},
         };
 
         public RedmineApiUrls(string format)
@@ -66,7 +79,7 @@ namespace Redmine.Net.Api.Net
                 throw new RedmineException("The owner id(project id) is mandatory!");
             }
 
-            return $"{RedmineKeys.PROJECTS}/{projectId}/{RedmineKeys.FILES}.{Format}";
+            return $"{RedmineKeys.PROJECTS}/{Escape(projectId)}/{RedmineKeys.FILES}.{Format}";
         }
 
         public string IssueAttachmentFragment(string issueId)
@@ -76,7 +89,7 @@ namespace Redmine.Net.Api.Net
                 throw new RedmineException("The issue id is mandatory!");
             }
 
-            return $"/{RedmineKeys.ATTACHMENTS}/{RedmineKeys.ISSUES}/{issueId}.{Format}";
+            return $"{RedmineKeys.ATTACHMENTS}/{RedmineKeys.ISSUES}/{Escape(issueId)}.{Format}";
         }
         
         public string ProjectParentFragment(string projectId, string mapTypeFragment)
@@ -86,7 +99,7 @@ namespace Redmine.Net.Api.Net
                 throw new RedmineException("The owner project id is mandatory!");
             }
 
-            return $"{RedmineKeys.PROJECTS}/{projectId}/{mapTypeFragment}.{Format}";
+            return $"{RedmineKeys.PROJECTS}/{Escape(projectId)}/{mapTypeFragment}.{Format}";
         }
 
         public string IssueParentFragment(string issueId, string mapTypeFragment)
@@ -96,7 +109,7 @@ namespace Redmine.Net.Api.Net
                 throw new RedmineException("The owner issue id is mandatory!");
             }
 
-            return $"{RedmineKeys.ISSUES}/{issueId}/{mapTypeFragment}.{Format}";
+            return $"{RedmineKeys.ISSUES}/{Escape(issueId)}/{mapTypeFragment}.{Format}";
         }
         
         public static string TypeFragment(Dictionary<Type, string> mapTypeUrlFragments, Type type)
@@ -107,6 +120,33 @@ namespace Redmine.Net.Api.Net
             }
 
             return fragment;
+        }
+
+        private static TypeUrl GetTypeUrl(Type type)
+        {
+            if (!TypeUrls.TryGetValue(type, out var typeUrl))
+            {
+                throw new RedmineException($"There is no uri fragment defined for type {type.Name}");
+            }
+
+            return typeUrl;
+        }
+
+        private string OwnedListFragment(Type type, string ownerId)
+        {
+            if (type == typeof(File))
+            {
+                return ProjectFilesFragment(ownerId);
+            }
+
+            var typeUrl = GetTypeUrl(type);
+
+            return typeUrl.Owner switch
+            {
+                UrlOwner.Project => ProjectParentFragment(ownerId, typeUrl.Fragment),
+                UrlOwner.Issue => IssueParentFragment(ownerId, typeUrl.Fragment),
+                _ => $"{typeUrl.Fragment}.{Format}"
+            };
         }
 
         public string CreateEntityFragment<T>(string ownerId = null)
@@ -134,21 +174,6 @@ namespace Redmine.Net.Api.Net
         }
         internal string CreateEntityFragment(Type type, string ownerId = null)
         {
-            if (type == typeof(Version) || type == typeof(IssueCategory) || type == typeof(ProjectMembership))
-            {
-                return ProjectParentFragment(ownerId, TypeUrlFragments[type]);
-            }
-
-            if (type == typeof(IssueRelation))
-            {
-                return IssueParentFragment(ownerId, TypeUrlFragments[type]);
-            }
-
-            if (type == typeof(File))
-            {
-                return ProjectFilesFragment(ownerId);
-            }
-
             if (type == typeof(Upload))
             {
                 return UploadFragment(ownerId);
@@ -159,7 +184,7 @@ namespace Redmine.Net.Api.Net
                 return IssueAttachmentFragment(ownerId);
             }
 
-            return $"{TypeFragment(TypeUrlFragments, type)}.{Format}";
+            return OwnedListFragment(type, ownerId);
         }
 
         public string GetFragment<T>(string id) where T : class, new()
@@ -170,7 +195,7 @@ namespace Redmine.Net.Api.Net
         }
         internal string GetFragment(Type type, string id)
         {
-            return $"{TypeFragment(TypeUrlFragments, type)}/{id}.{Format}";
+            return $"{GetTypeUrl(type).Fragment}/{Escape(id)}.{Format}";
         }
 
         public string PatchFragment<T>(string ownerId)
@@ -197,7 +222,7 @@ namespace Redmine.Net.Api.Net
         }
         internal string DeleteFragment(Type type, string id)
         {
-            return $"{TypeFragment(TypeUrlFragments, type)}/{id}.{Format}";
+            return $"{GetTypeUrl(type).Fragment}/{Escape(id)}.{Format}";
         }
 
         public string UpdateFragment<T>(string id)
@@ -208,7 +233,7 @@ namespace Redmine.Net.Api.Net
         }
         internal string UpdateFragment(Type type, string id)
         {
-            return $"{TypeFragment(TypeUrlFragments, type)}/{id}.{Format}";
+            return $"{GetTypeUrl(type).Fragment}/{Escape(id)}.{Format}";
         }
 
         public string GetListFragment<T>(string ownerId = null) where T : class, new()
@@ -239,22 +264,17 @@ namespace Redmine.Net.Api.Net
 
         internal string GetListFragment(Type type, string ownerId = null)
         {
-            if (type == typeof(Version) || type == typeof(IssueCategory) || type == typeof(ProjectMembership))
+            return OwnedListFragment(type, ownerId);
+        }
+
+        internal static string Escape(string value)
+        {
+            if (string.IsNullOrEmpty(value))
             {
-                return ProjectParentFragment(ownerId, TypeUrlFragments[type]);
+                return string.Empty;
             }
 
-            if (type == typeof(IssueRelation))
-            {
-                return IssueParentFragment(ownerId, TypeUrlFragments[type]);
-            }
-
-            if (type == typeof(File))
-            {
-                return ProjectFilesFragment(ownerId);
-            }
-
-            return $"{TypeFragment(TypeUrlFragments, type)}.{Format}";
+            return Uri.UnescapeDataString(value) != value ? value : Uri.EscapeDataString(value);
         }
 
         public string UploadFragment(string fileName = null)

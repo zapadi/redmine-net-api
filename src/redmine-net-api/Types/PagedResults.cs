@@ -44,7 +44,7 @@ namespace Redmine.Net.Api.Serialization
                     TotalItems = list.Count;
                     PageSize  = pageSize > 0 ? pageSize : RedmineConstants.DEFAULT_PAGE_SIZE_VALUE;
                     CurrentPage = offset / PageSize + 1;
-                    TotalPages = total / PageSize + 1;
+                    TotalPages = total > 0 ? GetTotalPages(total, PageSize) : 1;
                 }
                 
                 return;
@@ -52,7 +52,12 @@ namespace Redmine.Net.Api.Serialization
 
             CurrentPage = offset / pageSize + 1;
 
-            TotalPages = total / pageSize + 1;
+            TotalPages = GetTotalPages(total, pageSize);
+        }
+
+        private static int GetTotalPages(int total, int pageSize)
+        {
+            return total <= 0 ? 0 : (int)((total + (long)pageSize - 1) / pageSize);
         }
 
         /// <summary>

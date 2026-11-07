@@ -53,21 +53,19 @@ namespace Redmine.Net.Api
             ArgumentNullThrowHelper.ThrowIfNull(optionsBuilder, nameof(optionsBuilder));
             
             _redmineManagerOptions = optionsBuilder.Build();
+            var webClientOptions = _redmineManagerOptions.WebClientOptions;
     #if NET45_OR_GREATER
-            if (_redmineManagerOptions.VerifyServerCert)
+            if (_redmineManagerOptions.VerifyServerCert && webClientOptions?.ServerCertificateValidationCallback == null)
             {
-                _redmineManagerOptions.WebClientOptions.ServerCertificateValidationCallback = RemoteCertValidate;
+                _redmineManagerOptions.ServerCertificateValidationCallback = RemoteCertValidate;
             }
     #endif
 
-            if (_redmineManagerOptions.WebClientOptions is RedmineWebClientOptions)
+            if (webClientOptions != null)
             {
-                Proxy = _redmineManagerOptions.WebClientOptions.Proxy;
-                Timeout = _redmineManagerOptions.WebClientOptions.Timeout;
-                SecurityProtocolType = _redmineManagerOptions.WebClientOptions.SecurityProtocolType.GetValueOrDefault();
-    #pragma warning disable SYSLIB0014
-                _redmineManagerOptions.WebClientOptions.SecurityProtocolType ??= ServicePointManager.SecurityProtocol;
-    #pragma warning restore SYSLIB0014
+                Proxy = webClientOptions.Proxy;
+                Timeout = webClientOptions.Timeout;
+                SecurityProtocolType = webClientOptions.SecurityProtocolType.GetValueOrDefault();
             }
             
             if (_redmineManagerOptions.Authentication is RedmineApiKeyAuthentication)
@@ -85,7 +83,8 @@ namespace Redmine.Net.Api
                 : MimeFormat.Json;
             
             RedmineApiUrls = new RedmineApiUrls(Serializer.Format);
-            ApiClient = new RedmineApiClient(new WebClientTransport(_redmineManagerOptions), _redmineManagerOptions.Authentication, _redmineManagerOptions.Serializer);
+            var transport = _redmineManagerOptions.Transport;
+            ApiClient = new RedmineApiClient(transport ?? new WebClientTransport(_redmineManagerOptions), _redmineManagerOptions.Authentication, _redmineManagerOptions.Serializer, _redmineManagerOptions.EncodeQueryString, _redmineManagerOptions.BaseAddress, transport != null);
         }
 
         /// <inheritdoc />
@@ -210,7 +209,7 @@ namespace Redmine.Net.Api
             
             if (requestOptions.QueryString == null)
             {
-                requestOptions.QueryString = new NameValueCollection();
+                requestOptions.QueryString = [];
             }
             else
             {
@@ -218,7 +217,7 @@ namespace Redmine.Net.Api
                 int.TryParse(requestOptions.QueryString[RedmineKeys.OFFSET], out offset);
             }
             
-            if (pageSize == default)
+            if (pageSize == 0)
             {
                 pageSize = _redmineManagerOptions.PageSize > 0 ? _redmineManagerOptions.PageSize : RedmineConstants.DEFAULT_PAGE_SIZE_VALUE;
                 requestOptions.QueryString.Set(RedmineKeys.LIMIT, pageSize.ToInvariantString());
@@ -227,6 +226,7 @@ namespace Redmine.Net.Api
             var hasOffset = TypesWithOffset.ContainsKey(typeof(T));
             if (hasOffset)
             {
+                var maxItems = isLimitSet ? pageSize : int.MaxValue;
                 int totalCount;
                 do
                 {
@@ -234,36 +234,60 @@ namespace Redmine.Net.Api
 
                     var tempResult = GetPaginatedInternal<T>(uri, requestOptions);
 
-                    totalCount = isLimitSet ? pageSize : tempResult?.TotalItems ?? 0;
-
-                    if (tempResult?.Items != null)
+                    var itemsCount = AddItems(ref resultList, tempResult);
+                    if (itemsCount == 0)
                     {
-                        if (resultList == null)
-                        {
-                            resultList = new List<T>(tempResult.Items);
-                        }
-                        else
-                        {
-                            resultList.AddRange(tempResult.Items);
-                        }
+                        break;
                     }
 
-                    offset += pageSize;
+                    totalCount = tempResult?.TotalItems ?? 0;
+                    offset += itemsCount;
                 }
-                while (offset < totalCount);
+                while (offset < totalCount && resultList?.Count < maxItems);
+
+                return Truncate(resultList, maxItems);
+            }
+
+            var result = GetPaginatedInternal<T>(uri, requestOptions);
+            if (result?.Items != null)
+            {
+                return [.. result.Items];
+            }
+
+            return null;
+        }
+         
+        private static int AddItems<T>(ref List<T> resultList, PagedResults<T> page)
+            where T : class
+        {
+            if (page?.Items == null)
+            {
+                return 0;
+            }
+
+            var previousCount = resultList?.Count ?? 0;
+            if (resultList == null)
+            {
+                resultList = new List<T>(page.Items);
             }
             else
             {
-                var result = GetPaginatedInternal<T>(uri, requestOptions);
-                if (result?.Items != null)
-                {
-                    return new List<T>(result.Items);
-                }
+                resultList.AddRange(page.Items);
             }
-            
+
+            return resultList.Count - previousCount;
+        }
+
+        private static List<T> Truncate<T>(List<T> resultList, int maxItems)
+        {
+            if (resultList != null && maxItems >= 0 && resultList.Count > maxItems)
+            {
+                resultList.RemoveRange(maxItems, resultList.Count - maxItems);
+            }
+
             return resultList;
         }
-         
+
         /// <summary>
         /// 
         /// </summary>

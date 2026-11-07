@@ -128,6 +128,9 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="projectIdentifier"></param>
         /// <param name="requestOptions"></param>
         /// <returns></returns>
+        /// <remarks>
+        /// Returns a single page. To get all the items use Get&lt;T&gt; or GetAsync&lt;T&gt; with the <c>project_id</c> query string parameter.
+        /// </remarks>
         public static PagedResults<News> GetProjectNews(this RedmineManager redmineManager, string projectIdentifier, RequestOptions requestOptions = null)
         {
             var uri = redmineManager.RedmineApiUrls.ProjectNews(projectIdentifier);
@@ -175,6 +178,9 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="requestOptions"></param>
         /// <returns></returns>
         /// <exception cref="RedmineException"></exception>
+        /// <remarks>
+        /// Returns a single page. To get all the items use Get&lt;T&gt; or GetAsync&lt;T&gt; with the <c>project_id</c> query string parameter.
+        /// </remarks>
         public static PagedResults<ProjectMembership> GetProjectMemberships(this RedmineManager redmineManager, string projectIdentifier, RequestOptions requestOptions = null)
         {
             var uri = redmineManager.RedmineApiUrls.ProjectMemberships(projectIdentifier);
@@ -192,6 +198,9 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="requestOptions"></param>
         /// <returns></returns>
         /// <exception cref="RedmineException"></exception>
+        /// <remarks>
+        /// Returns a single page. To get all the items use Get&lt;T&gt; or GetAsync&lt;T&gt; with the <c>project_id</c> query string parameter.
+        /// </remarks>
         public static PagedResults<File> GetProjectFiles(this RedmineManager redmineManager, string projectIdentifier, RequestOptions requestOptions = null)
         {
             var uri = redmineManager.RedmineApiUrls.ProjectFilesFragment(projectIdentifier);
@@ -208,6 +217,9 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="projectIdentifier"> The id or the identifier of the project</param>
         /// <param name="requestOptions"></param>
         /// <returns>Returns the issue categories available for the specified project</returns>
+        /// <remarks>
+        /// Returns a single page. To get all the items use Get&lt;T&gt; or GetAsync&lt;T&gt; with the <c>project_id</c> query string parameter.
+        /// </remarks>
         public static PagedResults<ProjectIssueCategory> GetProjectIssueCategories(this RedmineManager redmineManager, string projectIdentifier, RequestOptions requestOptions = null)
         {
             var uri = redmineManager.RedmineApiUrls.ProjectIssueCategories(projectIdentifier);
@@ -566,6 +578,9 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="requestOptions"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        /// <remarks>
+        /// Returns a single page. To get all the items use Get&lt;T&gt; or GetAsync&lt;T&gt; with the <c>project_id</c> query string parameter.
+        /// </remarks>
         public static async Task<PagedResults<News>> GetProjectNewsAsync(this RedmineManager redmineManager, string projectIdentifier, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
         {
             var uri = redmineManager.RedmineApiUrls.ProjectNews(projectIdentifier);
@@ -615,6 +630,9 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         /// <exception cref="RedmineException"></exception>
+        /// <remarks>
+        /// Returns a single page. To get all the items use Get&lt;T&gt; or GetAsync&lt;T&gt; with the <c>project_id</c> query string parameter.
+        /// </remarks>
         public static async Task<PagedResults<ProjectMembership>> GetProjectMembershipsAsync(this RedmineManager redmineManager, string projectIdentifier, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
         {
             var uri = redmineManager.RedmineApiUrls.ProjectMemberships(projectIdentifier);
@@ -633,6 +651,9 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         /// <exception cref="RedmineException"></exception>
+        /// <remarks>
+        /// Returns a single page. To get all the items use Get&lt;T&gt; or GetAsync&lt;T&gt; with the <c>project_id</c> query string parameter.
+        /// </remarks>
         public static async Task<PagedResults<File>> GetProjectFilesAsync(this RedmineManager redmineManager, string projectIdentifier, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
         {
             var uri = redmineManager.RedmineApiUrls.ProjectFilesFragment(projectIdentifier);
@@ -650,6 +671,9 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="requestOptions"></param>
         /// <param name="cancellationToken"></param>
         /// <returns>Returns the issue categories available for the specified project</returns>
+        /// <remarks>
+        /// Returns a single page. To get all the items use Get&lt;T&gt; or GetAsync&lt;T&gt; with the <c>project_id</c> query string parameter.
+        /// </remarks>
         public static async Task<PagedResults<ProjectIssueCategory>> GetProjectIssueCategoriesAsync(this RedmineManager redmineManager, string projectIdentifier, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
         {
             var uri = redmineManager.RedmineApiUrls.ProjectIssueCategories(projectIdentifier);
@@ -682,6 +706,41 @@ namespace Redmine.Net.Api.Extensions
             {
                 QueryString = parameters
             }, cancellationToken).ConfigureAwait(false);
+
+            return response;
+        }
+
+        /// <summary>
+        /// Searches asynchronously using the specified request options (query string, impersonation, headers).
+        /// </summary>
+        /// <param name="redmineManager"></param>
+        /// <param name="q">query strings. enable to specify multiple values separated by a space " ".</param>
+        /// <param name="limit">number of results in response.</param>
+        /// <param name="offset">skip this number of results in response</param>
+        /// <param name="searchFilter">Optional filters; can be null.</param>
+        /// <param name="requestOptions">The request options; can be null. q, limit, offset and the search filters replace the same keys of its query string.</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>
+        /// Returns the search results by the specified condition parameters.
+        /// </returns>
+        public static async Task<PagedResults<Search>> SearchAsync(this RedmineManager redmineManager,
+            string q,
+            int limit,
+            int offset,
+            SearchFilterBuilder searchFilter,
+            RequestOptions requestOptions,
+            CancellationToken cancellationToken = default)
+        {
+            var parameters = CreateSearchParameters(q, limit, offset, searchFilter);
+
+            var options = requestOptions != null ? requestOptions.Clone() : new RequestOptions();
+            options.QueryString ??= new NameValueCollection();
+            foreach (string key in parameters)
+            {
+                options.QueryString.Set(key, parameters[key]);
+            }
+
+            var response = await redmineManager.GetPagedAsync<Search>(options, cancellationToken).ConfigureAwait(false);
 
             return response;
         }

@@ -38,12 +38,12 @@ public sealed class RedmineApiClientTests
 
     private static RedmineTransportResponse Ok(string content = null, byte[] body = null, int statusCode = 200, NameValueCollection headers = null)
     {
-        return new RedmineTransportResponse { IsSuccessStatusCode = true, StatusCode = statusCode, Content = content, Body = body, Headers = headers };
+        return new RedmineTransportResponse(statusCode, headers, body) { IsSuccessStatusCode = true, Content = content };
     }
 
     private static RedmineTransportResponse Error(int statusCode, byte[] body = null, NameValueCollection headers = null, Exception error = null, Exception bodyError = null)
     {
-        return new RedmineTransportResponse { StatusCode = statusCode, Body = body, Headers = headers, Error = error, BodyError = bodyError };
+        return new RedmineTransportResponse(statusCode, headers, body) { IsSuccessStatusCode = false, Error = error, BodyError = bodyError };
     }
 
     private static (RedmineApiClient Client, FakeTransport Transport) CreateClient(Func<RedmineTransportRequest, RedmineTransportResponse> responder, IRedmineAuthentication authentication = null, SerializationType serializationType = SerializationType.Xml)
@@ -85,16 +85,16 @@ public sealed class RedmineApiClientTests
         await client.UploadFileAsync("g.xml", data, cancellationToken: ct);
         await client.DownloadAsync("h.bin", progress: progress, cancellationToken: ct);
 
-        var expected = new (string Method, string Address, string ContentType, byte[] Body)[]
+        var expected = new (string Method, string Address, string ContentType, byte[] Body, bool IsDownload)[]
         {
-            ("GET", "a.xml", null, null),
-            ("GET", "b.xml", null, null),
-            ("POST", "c.xml", "application/xml", Encoding.UTF8.GetBytes("<c/>")),
-            ("PUT", "d.xml", "application/xml", Encoding.UTF8.GetBytes("<d/>")),
-            ("PATCH", "e.xml", "application/xml", Encoding.UTF8.GetBytes("<e/>")),
-            ("DELETE", "f.xml", null, null),
-            ("POST", "g.xml", "application/octet-stream", data),
-            ("DOWNLOAD", "h.bin", null, null),
+            ("GET", "a.xml", null, null, false),
+            ("GET", "b.xml", null, null, false),
+            ("POST", "c.xml", "application/xml", Encoding.UTF8.GetBytes("<c/>"), false),
+            ("PUT", "d.xml", "application/xml", Encoding.UTF8.GetBytes("<d/>"), false),
+            ("PATCH", "e.xml", "application/xml", Encoding.UTF8.GetBytes("<e/>"), false),
+            ("DELETE", "f.xml", null, null, false),
+            ("POST", "g.xml", "application/octet-stream", data, false),
+            ("GET", "h.bin", null, null, true),
         };
         Assert.Equal(16, transport.Requests.Count);
         for (var i = 0; i < transport.Requests.Count; i++)
@@ -106,7 +106,8 @@ public sealed class RedmineApiClientTests
             Assert.Equal(item.ContentType, request.ContentType);
             Assert.Equal(item.Body, request.Body);
             Assert.Null(request.QueryString);
-            Assert.Equal(item.Method == "DOWNLOAD" ? progress : null, request.Progress);
+            Assert.Equal(item.IsDownload, request.IsDownload);
+            Assert.Equal(item.IsDownload ? progress : null, request.Progress);
         }
     }
 

@@ -20,13 +20,48 @@ using System.Collections.Specialized;
 
 namespace Redmine.Net.Api.Net;
 
-internal sealed class RedmineTransportResponse
+/// <summary>
+/// An HTTP response returned by an <see cref="IRedmineTransport"/>.
+/// </summary>
+public sealed class RedmineTransportResponse
 {
-    public int StatusCode { get; init; }
-    public bool IsSuccessStatusCode { get; init; }
-    public NameValueCollection? Headers { get; init; }
-    public byte[]? Body { get; init; }
-    public string? Content { get; init; }
-    public Exception? Error { get; init; }
-    public Exception? BodyError { get; init; }
+    /// <summary>
+    /// Creates a response.
+    /// </summary>
+    /// <param name="statusCode">The HTTP status code.</param>
+    /// <param name="headers">The response headers; <c>null</c> for none.</param>
+    /// <param name="body">The response body; <c>null</c> for none. Text is decoded with the encoding of its UTF-8 or UTF-16 byte order mark, else the charset of the Content-Type header, else UTF-8.</param>
+    public RedmineTransportResponse(int statusCode, NameValueCollection? headers, byte[]? body)
+    {
+        StatusCode = statusCode;
+        Headers = headers;
+        Body = body;
+        IsSuccessStatusCode = statusCode is >= 200 and <= 299;
+    }
+
+    /// <summary>
+    /// Gets the HTTP status code.
+    /// </summary>
+    public int StatusCode { get; }
+
+    /// <summary>
+    /// Gets the response headers, or <c>null</c>.
+    /// </summary>
+    public NameValueCollection? Headers { get; }
+
+    /// <summary>
+    /// Gets the response body, or <c>null</c>.
+    /// </summary>
+    public byte[]? Body { get; }
+
+    /// <summary>
+    /// Gets a value indicating whether <see cref="StatusCode"/> is in the 2xx range.
+    /// </summary>
+    public bool IsSuccessStatusCode { get; internal init; }
+
+    internal string? Content { get; init; }
+
+    internal Exception? Error { get; init; }
+
+    internal Exception? BodyError { get; init; }
 }

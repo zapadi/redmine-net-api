@@ -33,32 +33,32 @@ internal static class RedmineApiUrlsExtensions
 
     public static string ProjectClose(this RedmineApiUrls redmineApiUrls, string projectIdentifier)
     {
-        return $"{RedmineKeys.PROJECTS}/{projectIdentifier}/{RedmineKeys.CLOSE}.{redmineApiUrls.Format}";
+        return $"{RedmineKeys.PROJECTS}/{RedmineApiUrls.Escape(projectIdentifier)}/{RedmineKeys.CLOSE}.{redmineApiUrls.Format}";
     }
     
     public static string ProjectReopen(this RedmineApiUrls redmineApiUrls, string projectIdentifier)
     {
-        return $"{RedmineKeys.PROJECTS}/{projectIdentifier}/{RedmineKeys.REOPEN}.{redmineApiUrls.Format}";
+        return $"{RedmineKeys.PROJECTS}/{RedmineApiUrls.Escape(projectIdentifier)}/{RedmineKeys.REOPEN}.{redmineApiUrls.Format}";
     }
     
     public static string ProjectArchive(this RedmineApiUrls redmineApiUrls, string projectIdentifier)
     {
-        return $"{RedmineKeys.PROJECTS}/{projectIdentifier}/{RedmineKeys.ARCHIVE}.{redmineApiUrls.Format}";
+        return $"{RedmineKeys.PROJECTS}/{RedmineApiUrls.Escape(projectIdentifier)}/{RedmineKeys.ARCHIVE}.{redmineApiUrls.Format}";
     }
     
     public static string ProjectUnarchive(this RedmineApiUrls redmineApiUrls, string projectIdentifier)
     {
-        return $"{RedmineKeys.PROJECTS}/{projectIdentifier}/{RedmineKeys.UNARCHIVE}.{redmineApiUrls.Format}";
+        return $"{RedmineKeys.PROJECTS}/{RedmineApiUrls.Escape(projectIdentifier)}/{RedmineKeys.UNARCHIVE}.{redmineApiUrls.Format}";
     }
     
     public static string ProjectRepositoryAddRelatedIssue(this RedmineApiUrls redmineApiUrls, string projectIdentifier, string repositoryIdentifier, string revision)
     {
-        return $"{RedmineKeys.PROJECTS}/{projectIdentifier}/{RedmineKeys.REPOSITORY}/{repositoryIdentifier}/{RedmineKeys.REVISIONS}/{revision}/{RedmineKeys.ISSUES}.{redmineApiUrls.Format}";
+        return $"{RedmineKeys.PROJECTS}/{RedmineApiUrls.Escape(projectIdentifier)}/{RedmineKeys.REPOSITORY}/{RedmineApiUrls.Escape(repositoryIdentifier)}/{RedmineKeys.REVISIONS}/{RedmineApiUrls.Escape(revision)}/{RedmineKeys.ISSUES}.{redmineApiUrls.Format}";
     }
     
     public static string ProjectRepositoryRemoveRelatedIssue(this RedmineApiUrls redmineApiUrls, string projectIdentifier, string repositoryIdentifier, string revision, string issueIdentifier)
     {
-        return $"{RedmineKeys.PROJECTS}/{projectIdentifier}/{RedmineKeys.REPOSITORY}/{repositoryIdentifier}/{RedmineKeys.REVISIONS}/{revision}/{RedmineKeys.ISSUES}/{issueIdentifier}.{redmineApiUrls.Format}";
+        return $"{RedmineKeys.PROJECTS}/{RedmineApiUrls.Escape(projectIdentifier)}/{RedmineKeys.REPOSITORY}/{RedmineApiUrls.Escape(repositoryIdentifier)}/{RedmineKeys.REVISIONS}/{RedmineApiUrls.Escape(revision)}/{RedmineKeys.ISSUES}/{RedmineApiUrls.Escape(issueIdentifier)}.{redmineApiUrls.Format}";
     }
     
     public static string ProjectNews(this RedmineApiUrls redmineApiUrls, string projectIdentifier)
@@ -68,7 +68,7 @@ internal static class RedmineApiUrlsExtensions
             throw new RedmineException($"Argument '{nameof(projectIdentifier)}' is null or whitespace");
         }
 
-        return $"{RedmineKeys.PROJECTS}/{projectIdentifier}/{RedmineKeys.NEWS}.{redmineApiUrls.Format}";
+        return $"{RedmineKeys.PROJECTS}/{RedmineApiUrls.Escape(projectIdentifier)}/{RedmineKeys.NEWS}.{redmineApiUrls.Format}";
     }
 
     public static string ProjectMemberships(this RedmineApiUrls redmineApiUrls, string projectIdentifier)
@@ -78,42 +78,42 @@ internal static class RedmineApiUrlsExtensions
             throw new RedmineException($"Argument '{nameof(projectIdentifier)}' is null or whitespace");
         }
 
-        return $"{RedmineKeys.PROJECTS}/{projectIdentifier}/{RedmineKeys.MEMBERSHIPS}.{redmineApiUrls.Format}";
+        return $"{RedmineKeys.PROJECTS}/{RedmineApiUrls.Escape(projectIdentifier)}/{RedmineKeys.MEMBERSHIPS}.{redmineApiUrls.Format}";
     }
     
     public static string ProjectIssueCategories(this RedmineApiUrls redmineApiUrls, string projectIdentifier)
     {
-        return $"{RedmineKeys.PROJECTS}/{projectIdentifier}/{RedmineKeys.ISSUE_CATEGORIES}.{redmineApiUrls.Format}";
+        return $"{RedmineKeys.PROJECTS}/{RedmineApiUrls.Escape(projectIdentifier)}/{RedmineKeys.ISSUE_CATEGORIES}.{redmineApiUrls.Format}";
     }
 
     public static string ProjectWikiIndex(this RedmineApiUrls redmineApiUrls, string projectId)
     {
-        return $"{RedmineKeys.PROJECTS}/{projectId}/{RedmineKeys.WIKI}/{RedmineKeys.INDEX}.{redmineApiUrls.Format}";
+        return $"{RedmineKeys.PROJECTS}/{RedmineApiUrls.Escape(projectId)}/{RedmineKeys.WIKI}/{RedmineKeys.INDEX}.{redmineApiUrls.Format}";
     }
 
     public static string ProjectWikiPage(this RedmineApiUrls redmineApiUrls, string projectId, string wikiPageName)
     {
-        return $"{RedmineKeys.PROJECTS}/{projectId}/{RedmineKeys.WIKI}/{wikiPageName}.{redmineApiUrls.Format}";
+        return $"{RedmineKeys.PROJECTS}/{RedmineApiUrls.Escape(projectId)}/{RedmineKeys.WIKI}/{RedmineApiUrls.Escape(wikiPageName)}.{redmineApiUrls.Format}";
     }
 
     public static string ProjectWikiPageVersion(this RedmineApiUrls redmineApiUrls, string projectId, string wikiPageName, string version)
     {
-        return $"{RedmineKeys.PROJECTS}/{projectId}/{RedmineKeys.WIKI}/{wikiPageName}/{version}.{redmineApiUrls.Format}";
+        return $"{RedmineKeys.PROJECTS}/{RedmineApiUrls.Escape(projectId)}/{RedmineKeys.WIKI}/{RedmineApiUrls.Escape(wikiPageName)}/{RedmineApiUrls.Escape(version)}.{redmineApiUrls.Format}";
     }
 
     public static string ProjectWikiPageCreate(this RedmineApiUrls redmineApiUrls, string projectId, string wikiPageName)
     {
-        return $"{RedmineKeys.PROJECTS}/{projectId}/{RedmineKeys.WIKI}/{wikiPageName}.{redmineApiUrls.Format}";
+        return $"{RedmineKeys.PROJECTS}/{RedmineApiUrls.Escape(projectId)}/{RedmineKeys.WIKI}/{RedmineApiUrls.Escape(wikiPageName)}.{redmineApiUrls.Format}";
     }
 
     public static string ProjectWikiPageUpdate(this RedmineApiUrls redmineApiUrls, string projectId, string wikiPageName)
     {
-        return $"{RedmineKeys.PROJECTS}/{projectId}/{RedmineKeys.WIKI}/{wikiPageName}.{redmineApiUrls.Format}";
+        return $"{RedmineKeys.PROJECTS}/{RedmineApiUrls.Escape(projectId)}/{RedmineKeys.WIKI}/{RedmineApiUrls.Escape(wikiPageName)}.{redmineApiUrls.Format}";
     }
 
     public static string ProjectWikiPageDelete(this RedmineApiUrls redmineApiUrls, string projectId, string wikiPageName)
     {
-        return $"{RedmineKeys.PROJECTS}/{projectId}/{RedmineKeys.WIKI}/{wikiPageName}.{redmineApiUrls.Format}";
+        return $"{RedmineKeys.PROJECTS}/{RedmineApiUrls.Escape(projectId)}/{RedmineKeys.WIKI}/{RedmineApiUrls.Escape(wikiPageName)}.{redmineApiUrls.Format}";
     }
 
     public static string ProjectWikis(this RedmineApiUrls redmineApiUrls, string projectId)
@@ -128,7 +128,7 @@ internal static class RedmineApiUrlsExtensions
             throw new RedmineException($"Argument '{nameof(issueIdentifier)}' is null or whitespace");
         }
 
-        return $"{RedmineKeys.ISSUES}/{issueIdentifier}/{RedmineKeys.WATCHERS}.{redmineApiUrls.Format}";
+        return $"{RedmineKeys.ISSUES}/{RedmineApiUrls.Escape(issueIdentifier)}/{RedmineKeys.WATCHERS}.{redmineApiUrls.Format}";
     }
 
     public static string IssueWatcherRemove(this RedmineApiUrls redmineApiUrls, string issueIdentifier, string userId)
@@ -143,7 +143,7 @@ internal static class RedmineApiUrlsExtensions
             throw new RedmineException($"Argument '{nameof(userId)}' is null or whitespace");
         }
 
-        return $"{RedmineKeys.ISSUES}/{issueIdentifier}/{RedmineKeys.WATCHERS}/{userId}.{redmineApiUrls.Format}";
+        return $"{RedmineKeys.ISSUES}/{RedmineApiUrls.Escape(issueIdentifier)}/{RedmineKeys.WATCHERS}/{RedmineApiUrls.Escape(userId)}.{redmineApiUrls.Format}";
     }
 
     public static string GroupUserAdd(this RedmineApiUrls redmineApiUrls, string groupIdentifier)
@@ -153,7 +153,7 @@ internal static class RedmineApiUrlsExtensions
             throw new RedmineException($"Argument '{nameof(groupIdentifier)}' is null or whitespace");
         }
 
-        return $"{RedmineKeys.GROUPS}/{groupIdentifier}/{RedmineKeys.USERS}.{redmineApiUrls.Format}";
+        return $"{RedmineKeys.GROUPS}/{RedmineApiUrls.Escape(groupIdentifier)}/{RedmineKeys.USERS}.{redmineApiUrls.Format}";
     }
 
     public static string GroupUserRemove(this RedmineApiUrls redmineApiUrls, string groupIdentifier, string userId)
@@ -168,7 +168,7 @@ internal static class RedmineApiUrlsExtensions
             throw new RedmineException($"Argument '{nameof(userId)}' is null or whitespace");
         }
 
-        return $"{RedmineKeys.GROUPS}/{groupIdentifier}/{RedmineKeys.USERS}/{userId}.{redmineApiUrls.Format}";
+        return $"{RedmineKeys.GROUPS}/{RedmineApiUrls.Escape(groupIdentifier)}/{RedmineKeys.USERS}/{RedmineApiUrls.Escape(userId)}.{redmineApiUrls.Format}";
     }
 
     public static string AttachmentUpdate(this RedmineApiUrls redmineApiUrls, string issueIdentifier)
@@ -178,7 +178,7 @@ internal static class RedmineApiUrlsExtensions
             throw new RedmineException($"Argument '{nameof(issueIdentifier)}' is null or whitespace");
         }
 
-        return $"{RedmineKeys.ATTACHMENTS}/{RedmineKeys.ISSUES}/{issueIdentifier}.{redmineApiUrls.Format}";
+        return $"{RedmineKeys.ATTACHMENTS}/{RedmineKeys.ISSUES}/{RedmineApiUrls.Escape(issueIdentifier)}.{redmineApiUrls.Format}";
     }
 
     public static string Uploads(this RedmineApiUrls redmineApiUrls)

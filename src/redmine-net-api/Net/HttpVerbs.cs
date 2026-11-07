@@ -44,8 +44,6 @@ namespace Redmine.Net.Api
         public const string DELETE = "DELETE";
         
               
-        internal const string DOWNLOAD = "DOWNLOAD";
-        
         internal const string UPLOAD = "UPLOAD";
     }
 }

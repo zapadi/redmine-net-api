@@ -79,7 +79,7 @@ internal static class ApiResponseMessageExtensions
         }
         else
         {
-            if (responseMessage.RawContent is not null)
+            if (responseMessage.Content is null && responseMessage.RawContent is not null)
             {
                 return Encoding.UTF8.GetString(responseMessage.RawContent);
             }

@@ -51,8 +51,10 @@ public sealed class RequestOptions
     /// </summary>
     /// <remarks>
     /// Entries override WebClientOptions <see cref="IRedmineApiClientOptions.DefaultHeaders"/> with the same name.
-    /// Authentication, impersonation and, for requests with a body, Content-Type are set by the library and override entries in this dictionary
-    /// (use <see cref="ContentType"/> to change the content type).
+    /// Authentication, impersonation, <see cref="Accept"/> and <see cref="UserAgent"/> are set by the library and replace entries
+    /// with the same name (case-insensitive), so each of these headers is sent with a single value.
+    /// The content type of a request body is always taken from <see cref="ContentType"/> (or the library default);
+    /// a Content-Type entry in this dictionary is not used for the body.
     /// </remarks>
     public Dictionary<string, string> Headers { get; set; }
 

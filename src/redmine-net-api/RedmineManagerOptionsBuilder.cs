@@ -19,6 +19,7 @@ using System.Net;
 using Redmine.Net.Api.Authentication;
 using Redmine.Net.Api.Exceptions;
 using Redmine.Net.Api.Extensions;
+using Redmine.Net.Api.Internals;
 using Redmine.Net.Api.Net;
 using Redmine.Net.Api.Net.WebClient;
 using Redmine.Net.Api.Serialization;
@@ -39,10 +40,15 @@ namespace Redmine.Net.Api
             HttpClient,
         }
         private ClientType _clientType = ClientType.WebClient;
+        private bool _isWebClientConfigured;
+        private IRedmineTransport _transport;
         
         /// <summary>
-        /// 
+        /// Sets the page size used when fetching lists. Values less than or equal to 0 use the default page size (25).
         /// </summary>
+        /// <remarks>
+        /// Redmine caps the page size (100 by default); Get and GetAsync still return all the items.
+        /// </remarks>
         /// <param name="pageSize"></param>
         /// <returns></returns>
         public RedmineManagerOptionsBuilder WithPageSize(int pageSize)
@@ -139,6 +145,7 @@ namespace Redmine.Net.Api
         public RedmineManagerOptionsBuilder WithWebClient(Func<WebClient> clientFunc)
         {
             _clientType = ClientType.WebClient;
+            _isWebClientConfigured = true;
             this.ClientFunc = clientFunc;
             return this;
         }
@@ -153,7 +160,7 @@ namespace Redmine.Net.Api
         /// </summary>
         /// <param name="clientOptions"></param>
         /// <returns></returns>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use WithWebClientOptions(IRedmineWebClientOptions clientOptions) instead.")]
+        [Obsolete($"{RedmineConstants.OBSOLETE_TEXT} Use WithWebClientOptions(IRedmineWebClientOptions clientOptions) instead.")]
         public RedmineManagerOptionsBuilder WithWebClientOptions(IRedmineApiClientOptions clientOptions)
         {
             return WithWebClientOptions((IRedmineWebClientOptions)clientOptions);
@@ -167,6 +174,7 @@ namespace Redmine.Net.Api
         public RedmineManagerOptionsBuilder WithWebClientOptions(IRedmineWebClientOptions clientOptions)
         {
             _clientType = ClientType.WebClient;
+            _isWebClientConfigured = true;
             this.WebClientOptions = clientOptions;
             return this;
         }
@@ -174,7 +182,7 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use WebClientOptions instead.")]
+        [Obsolete($"{RedmineConstants.OBSOLETE_TEXT} Use WebClientOptions instead.")]
         public IRedmineApiClientOptions ClientOptions
         {
             get => WebClientOptions;
@@ -213,6 +221,61 @@ namespace Redmine.Net.Api
         /// </summary>
         public bool VerifyServerCert { get; private set; }
 
+        private int _maxConcurrentRequests = 3;
+
+        /// <summary>
+        /// Sets the maximum number of page requests that GetAsync sends in parallel when it fetches all pages. The default is 3.
+        /// </summary>
+        /// <param name="maxConcurrentRequests">A value greater than or equal to 1.</param>
+        /// <returns>The current builder.</returns>
+        /// <exception cref="RedmineException">The value is less than 1.</exception>
+        public RedmineManagerOptionsBuilder WithMaxConcurrentRequests(int maxConcurrentRequests)
+        {
+            if (maxConcurrentRequests < 1)
+            {
+                throw new RedmineException("The maximum number of concurrent requests must be at least 1.");
+            }
+
+            _maxConcurrentRequests = maxConcurrentRequests;
+            return this;
+        }
+
+        /// <summary>
+        /// Sends every request through a custom transport instead of the built-in WebClient.
+        /// </summary>
+        /// <remarks>
+        /// The transport owns timeouts, proxy and certificate validation: WebClientOptions, VerifyServerCert and the
+        /// ServicePointManager settings are not applied. It cannot be combined with WithWebClient or WithWebClientOptions.
+        /// </remarks>
+        /// <param name="transport">The transport; it must be thread-safe.</param>
+        /// <returns>The current builder.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="transport"/> is <c>null</c>.</exception>
+#if NET20
+        internal RedmineManagerOptionsBuilder WithTransport(IRedmineTransport transport)
+#else
+        public RedmineManagerOptionsBuilder WithTransport(IRedmineTransport transport)
+#endif
+        {
+            ArgumentNullThrowHelper.ThrowIfNull(transport, nameof(transport));
+            _transport = transport;
+            return this;
+        }
+
+        private bool _isQueryStringEncodingEnabled;
+
+        /// <summary>
+        /// Encodes the query string keys and values (RequestOptions.QueryString) with <see cref="Uri.EscapeDataString(string)"/>.
+        /// </summary>
+        /// <remarks>
+        /// Disabled by default. Do not enable it if the query string values are already encoded, they would be encoded twice.
+        /// </remarks>
+        /// <returns>The current builder.</returns>
+        public RedmineManagerOptionsBuilder WithQueryStringEncoding()
+        {
+            _isQueryStringEncodingEnabled = true;
+            return this;
+        }
+
         private bool _isSerializationIgnored;
         
         /// <summary>
@@ -232,6 +295,11 @@ namespace Redmine.Net.Api
         /// <returns></returns>
         internal RedmineManagerOptions Build()
         {
+            if (_transport != null && _isWebClientConfigured)
+            {
+                throw new RedmineException("WithTransport cannot be combined with WithWebClient or WithWebClientOptions.");
+            }
+
             const string defaultUserAgent = "Redmine.Net.Api.Net";
             var defaultDecompressionFormat = 
             #if NETFRAMEWORK
@@ -267,172 +335,68 @@ namespace Redmine.Net.Api
                 RedmineVersion = Version,
                 Authentication = Authentication ?? new RedmineNoAuthentication(),
                 WebClientOptions = WebClientOptions,
-                ClientFunc = ClientFunc
+                ClientFunc = ClientFunc,
+                EncodeQueryString = _isQueryStringEncodingEnabled,
+                MaxConcurrentRequests = _maxConcurrentRequests,
+                Transport = _transport,
             };
             
             return options;
         }
         
-        private static readonly char[] DotCharArray = ['.'];
-        
-        internal static void EnsureDomainNameIsValid(string domainName)
-        {
-            if (domainName.IsNullOrWhiteSpace())
-            {
-                throw new RedmineException("Domain name cannot be null or empty.");
-            }
-    
-            if (domainName.Length > 255)
-            {
-                throw new RedmineException("Domain name cannot be longer than 255 characters.");
-            }
-
-            var labels = domainName.Split(DotCharArray);
-            if (labels.Length == 1)
-            {
-                throw new RedmineException("Domain name is not valid.");
-            }
-            foreach (var label in labels)
-            {
-                if (label.IsNullOrWhiteSpace() || label.Length > 63)
-                {
-                    throw new RedmineException("Domain name must be between 1 and 63 characters.");
-                }
-                
-                if (!char.IsLetterOrDigit(label[0]) || !char.IsLetterOrDigit(label[label.Length - 1]))
-                {
-                    throw new RedmineException("Domain name starts or ends with a hyphen.");
-                }
-                
-                for (var i = 0; i < label.Length; i++)
-                {
-                    var c = label[i];
-
-                    if (!char.IsLetterOrDigit(c) && c != '-')
-                    {
-                        throw new RedmineException("Domain name contains an invalid character.");
-                    }
-
-                    if (c != '-')
-                    {
-                        continue;
-                    }
-                    
-                    if (i + 1 < label.Length && (c ^ label[i+1]) == 0)
-                    {
-                        throw new RedmineException("Domain name contains consecutive hyphens.");
-                    }
-                }
-            }
-        }
-        
         internal static Uri CreateRedmineUri(string host, string scheme = null)
         {
-            if (host.IsNullOrWhiteSpace() || host.Equals("string.Empty", StringComparison.OrdinalIgnoreCase))
+            if (host.IsNullOrWhiteSpace())
             {
                 throw new RedmineException("The host is null or empty.");
             }
 
-            if (!Uri.TryCreate(host, UriKind.Absolute, out var uri))
+            host = host.Trim().TrimEnd('\\');
+            var schemeSeparator = host.IndexOf("://", StringComparison.Ordinal);
+            var isSchemeAdded = schemeSeparator <= 0 || !Uri.CheckSchemeName(host.Substring(0, schemeSeparator));
+            if (isSchemeAdded)
             {
-                host = host.TrimEnd('/', '\\');
-                EnsureDomainNameIsValid(host);
-                
-                if (!host.StartsWith(Uri.UriSchemeHttp, StringComparison.OrdinalIgnoreCase) || !host.StartsWith(Uri.UriSchemeHttps, StringComparison.OrdinalIgnoreCase))
+                if (host.Length > 0 && host[0] != '[' && Uri.CheckHostName(host) == UriHostNameType.IPv6)
                 {
-                    host = $"{scheme ?? Uri.UriSchemeHttps}://{host}";
-
-                    if (!Uri.TryCreate(host, UriKind.Absolute, out uri))
-                    {
-                        throw new RedmineException("The host is not valid.");
-                    }
+                    host = $"[{host}]";
                 }
-            }
-            
-            if (!uri.IsWellFormedOriginalString())
-            {
-                throw new RedmineException("The host is not well-formed.");
+
+                host = $"{scheme ?? Uri.UriSchemeHttps}://{host}";
             }
 
-            scheme ??= Uri.UriSchemeHttps;
-            var hasScheme = false;
-            if (!uri.Scheme.IsNullOrWhiteSpace())
+            if (!Uri.TryCreate(host, UriKind.Absolute, out var uri)
+                || uri.Host.IsNullOrWhiteSpace()
+                || IsSchemaHttpOrHttps(uri.Host.ToLowerInvariant())
+                || (isSchemeAdded && !uri.UserInfo.IsNullOrWhiteSpace()))
             {
-                if (uri.Host.IsNullOrWhiteSpace() && uri.IsAbsoluteUri && !uri.IsFile)
-                {
-                    if (uri.Scheme.Equals("localhost", StringComparison.OrdinalIgnoreCase))
-                    {
-                        int port = 0;
-                        var portAsString = uri.AbsolutePath.RemoveTrailingSlash();
-                        if (!portAsString.IsNullOrWhiteSpace())
-                        {
-                            int.TryParse(portAsString, out port);
-                        }
-                             
-                        var ub = new UriBuilder(scheme, "localhost", port);
-                        return ub.Uri;
-                    }
-                }
-                else
-                {
-                    if (!IsSchemaHttpOrHttps(uri.Scheme))
-                    {
-                        throw new RedmineException("Invalid host scheme. Only HTTP and HTTPS are supported.");
-                    }
-
-                    hasScheme = true;
-                }
-            }
-            else
-            {
-                if (!IsSchemaHttpOrHttps(scheme))
-                {
-                    throw new RedmineException("Invalid host scheme. Only HTTP and HTTPS are supported.");
-                }
+                throw new RedmineException("The host is not valid.");
             }
 
-            var uriBuilder = new UriBuilder();
-            
-            if (uri.HostNameType == UriHostNameType.IPv6)
+            if (!IsSchemaHttpOrHttps(uri.Scheme))
             {
-                uriBuilder.Scheme = (hasScheme ? uri.Scheme : scheme ?? Uri.UriSchemeHttps);
-                uriBuilder.Host = uri.Host;
-            }
-            else
-            {
-                if (uri.Authority.IsNullOrWhiteSpace())
-                {
-                    if (uri.Port == -1)
-                    {
-                        if (int.TryParse(uri.LocalPath, out var port))
-                        {
-                            uriBuilder.Port = port;
-                        }
-                    }
-
-                    uriBuilder.Scheme = scheme ?? Uri.UriSchemeHttps;
-                    uriBuilder.Host = uri.Scheme;
-                }
-                else
-                {
-                    uriBuilder.Scheme = uri.Scheme;
-                    uriBuilder.Port = int.TryParse(uri.LocalPath, out var port) ? port : uri.Port;
-                    uriBuilder.Host = uri.Host;
-                    if (!uri.LocalPath.IsNullOrWhiteSpace() && !uri.LocalPath.Contains("."))
-                    {
-                        uriBuilder.Path = uri.LocalPath;
-                    }
-                }
+                throw new RedmineException("Invalid host scheme. Only HTTP and HTTPS are supported.");
             }
 
             try
             {
-                return uriBuilder.Uri;
+                return new UriBuilder(uri.Scheme, uri.Host, uri.Port, GetBasePath(uri.AbsolutePath)).Uri;
             }
-            catch (Exception ex)
+            catch (UriFormatException ex)
             {
-                throw new RedmineException(ex.Message);
+                throw new RedmineException(ex.Message, ex);
             }
+        }
+
+        private static string GetBasePath(string path)
+        {
+            var lastSegmentStart = path.LastIndexOf('/') + 1;
+            var lastSegment = path.Substring(lastSegmentStart);
+            if (lastSegment.EndsWith(".xml", StringComparison.OrdinalIgnoreCase) || lastSegment.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
+            {
+                path = path.Substring(0, lastSegmentStart);
+            }
+
+            return path.Length > 0 && path[path.Length - 1] == '/' ? path : $"{path}/";
         }
 
         private static bool IsSchemaHttpOrHttps(string scheme)
