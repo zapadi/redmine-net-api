@@ -261,6 +261,26 @@ namespace Redmine.Net.Api
             return this;
         }
 
+        private int _timeEntryCommentsMaxLength = RedmineConstants.DEFAULT_TIME_ENTRY_COMMENTS_MAX_LENGTH;
+
+        /// <summary>
+        /// Sets the maximum length of the time entry comments sent when creating or updating; longer comments are truncated.
+        /// The default is 255. Redmine accepts up to 1024.
+        /// </summary>
+        /// <param name="maxLength">A value greater than 0.</param>
+        /// <returns>The current builder.</returns>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="maxLength"/> is less than 1.</exception>
+        public RedmineManagerOptionsBuilder WithTimeEntryCommentsMaxLength(int maxLength)
+        {
+            if (maxLength < 1)
+            {
+                throw new ArgumentOutOfRangeException(nameof(maxLength), maxLength, "The time entry comments maximum length must be greater than 0.");
+            }
+
+            _timeEntryCommentsMaxLength = maxLength;
+            return this;
+        }
+
         private bool _isQueryStringEncodingEnabled;
 
         /// <summary>
@@ -338,6 +358,7 @@ namespace Redmine.Net.Api
                 ClientFunc = ClientFunc,
                 EncodeQueryString = _isQueryStringEncodingEnabled,
                 MaxConcurrentRequests = _maxConcurrentRequests,
+                TimeEntryCommentsMaxLength = _timeEntryCommentsMaxLength,
                 Transport = _transport,
             };
             

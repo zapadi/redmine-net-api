@@ -37,8 +37,6 @@ namespace Redmine.Net.Api.Types
         , ICloneable<TimeEntry>
     {
         #region Properties
-        private string comments;
-
         /// <summary>
         /// Gets or sets the issue id to log time on.
         /// </summary>
@@ -84,15 +82,12 @@ namespace Redmine.Net.Api.Types
         public IdentifiableName User { get; set; }
 
         /// <summary>
-        /// Gets or sets the short description for the entry (255 characters max).
+        /// Gets or sets the short description for the entry.
         /// </summary>
         /// <value>The comments.</value>
-        /// <remarks>Sent to Redmine when creating or updating.</remarks>
-        public string Comments
-        {
-            get => comments;
-            set => comments = value.Truncate(255);
-        }
+        /// <remarks>Sent to Redmine when creating or updating. RedmineManager truncates it before sending to
+        /// <see cref="RedmineManagerOptions.TimeEntryCommentsMaxLength"/> characters (255 by default); Redmine accepts up to 1024.</remarks>
+        public string Comments { get; set; }
 
         /// <summary>
         /// Gets the created on.

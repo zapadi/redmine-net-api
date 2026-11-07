@@ -33,6 +33,8 @@ namespace Redmine.Net.Api
         /// 
         /// </summary>
         public const int DEFAULT_PAGE_SIZE_VALUE = 25;
+
+        internal const int DEFAULT_TIME_ENTRY_COMMENTS_MAX_LENGTH = 255;
         
         /// <summary>
         /// 

@@ -144,6 +144,7 @@ namespace Redmine.Net.Api
         {
             var url = RedmineApiUrls.CreateEntityFragment<T>(ownerId);
 
+            TruncateTimeEntryComments(entity);
             var payload = Serializer.Serialize(entity);
             
             var response = ApiClient.Create(url, payload, requestOptions);
@@ -157,11 +158,23 @@ namespace Redmine.Net.Api
         {
             var url = RedmineApiUrls.UpdateFragment<T>(id);
 
+            TruncateTimeEntryComments(entity);
             var payload = Serializer.Serialize(entity);
             
             payload = payload.ReplaceEndings();
             
             ApiClient.Update(url, payload, requestOptions);
+        }
+
+        private void TruncateTimeEntryComments<T>(T entity)
+        {
+            if (entity is TimeEntry timeEntry)
+            {
+                var maxLength = _redmineManagerOptions.TimeEntryCommentsMaxLength > 0
+                    ? _redmineManagerOptions.TimeEntryCommentsMaxLength
+                    : RedmineConstants.DEFAULT_TIME_ENTRY_COMMENTS_MAX_LENGTH;
+                timeEntry.Comments = timeEntry.Comments.Truncate(maxLength);
+            }
         }
 
         /// <inheritdoc />
