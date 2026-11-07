@@ -144,7 +144,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.SEARCHABLE: Searchable = reader.ReadElementContentAsBoolean(); break;
                     case RedmineKeys.TRACKERS: Trackers = reader.ReadElementContentAsCollection<TrackerCustomField>(); break;
                     case RedmineKeys.VISIBLE: Visible = reader.ReadElementContentAsBoolean(); break;
-                    default: reader.Read(); break;
+                    default: reader.Skip(); break;
                 }
             }
         }
@@ -189,7 +189,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.SEARCHABLE: Searchable = reader.ReadAsBool(); break;
                     case RedmineKeys.TRACKERS: Trackers = reader.ReadAsCollection<TrackerCustomField>(); break;
                     case RedmineKeys.VISIBLE: Visible = reader.ReadAsBool(); break;
-                    default: reader.Read(); break;
+                    default: reader.Skip(); break;
                 }
             }
         }

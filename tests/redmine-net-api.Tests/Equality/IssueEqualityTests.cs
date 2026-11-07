@@ -81,6 +81,19 @@ public sealed class IssueEqualityTests
         Assert.False(issue1.Equals(issue2));
     }
     
+    [Fact]
+    public void GetHashCode_EqualIssuesDifferingOnlyInFieldsNotCompared_ReturnsSameValue()
+    {
+        var issue1 = CreateSampleIssue();
+        var issue2 = CreateSampleIssue();
+        issue2.ParentIssue = new IdentifiableName { Id = 99, Name = "Parent" };
+        issue2.IsPrivate = !issue1.IsPrivate;
+        issue2.Uploads = [new Upload { Token = "token" }];
+
+        Assert.True(issue1.Equals(issue2));
+        Assert.Equal(issue1.GetHashCode(), issue2.GetHashCode());
+    }
+
     private static Issue CreateSampleIssue()
     {
         return new Issue

@@ -67,7 +67,7 @@ namespace Redmine.Net.Api.Types
                         break;
 
                     default:
-                        reader.Read();
+                        reader.Skip();
                         break;
                 }
             }
@@ -96,7 +96,7 @@ namespace Redmine.Net.Api.Types
                         case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
                         case RedmineKeys.NAME: Name = reader.ReadAsString(); break;
                         case RedmineKeys.VALUE: Value = reader.ReadAsString(); break;
-                        default: reader.Read(); break;
+                        default: reader.Skip(); break;
                     }
                 }
             }

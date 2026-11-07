@@ -111,7 +111,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.FILE_NAME: FileName = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.FILE_SIZE: FileSize = reader.ReadElementContentAsInt(); break;
                     case RedmineKeys.THUMBNAIL_URL: ThumbnailUrl = reader.ReadElementContentAsString(); break;
-                    default: reader.Read(); break;
+                    default: reader.Skip(); break;
                 }
             }
         }
@@ -158,7 +158,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.FILE_NAME: FileName = reader.ReadAsString(); break;
                     case RedmineKeys.FILE_SIZE: FileSize = reader.ReadAsInt(); break;
                     case RedmineKeys.THUMBNAIL_URL: ThumbnailUrl = reader.ReadAsString(); break;
-                    default: reader.Read(); break;
+                    default: reader.Skip(); break;
                 }
             }
         }

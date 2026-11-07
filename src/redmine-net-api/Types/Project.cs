@@ -210,7 +210,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.UPDATED_ON: UpdatedOn = reader.ReadElementContentAsNullableDateTime(); break;
                     case RedmineKeys.DEFAULT_ASSIGNEE: DefaultAssignee = new IdentifiableName(reader); break;
                     case RedmineKeys.DEFAULT_VERSION: DefaultVersion = new IdentifiableName(reader); break;
-                    default: reader.Read(); break;
+                    default: reader.Skip(); break;
                 }
             }
 
@@ -315,7 +315,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.UPDATED_ON: UpdatedOn = reader.ReadAsDateTime(); break;
                     case RedmineKeys.DEFAULT_ASSIGNEE: DefaultAssignee = new IdentifiableName(reader); break;
                     case RedmineKeys.DEFAULT_VERSION: DefaultVersion = new IdentifiableName(reader); break;
-                    default: reader.Read(); break;
+                    default: reader.Skip(); break;
                 }
             }
 

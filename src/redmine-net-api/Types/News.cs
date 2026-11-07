@@ -116,7 +116,7 @@ namespace Redmine.Net.Api.Types
                         break;
                     case RedmineKeys.COMMENTS: Comments = reader.ReadElementContentAsCollection<NewsComment>();
                         break;
-                    default: reader.Read(); break;
+                    default: reader.Skip(); break;
                 }
             }
         }
@@ -168,7 +168,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.TITLE: Title = reader.ReadAsString(); break;
                     case RedmineKeys.ATTACHMENTS: Attachments = reader.ReadAsCollection<Attachment>(); break;
                     case RedmineKeys.COMMENTS: Comments = reader.ReadAsCollection<NewsComment>(); break;
-                    default: reader.Read(); break;
+                    default: reader.Skip(); break;
                 }
             }
         }

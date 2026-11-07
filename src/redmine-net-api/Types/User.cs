@@ -195,7 +195,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.STATUS: Status = (UserStatus)reader.ReadElementContentAsInt(); break;
                     case RedmineKeys.TWO_FA_SCHEME: TwoFactorAuthenticationScheme = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.UPDATED_ON: UpdatedOn = reader.ReadElementContentAsNullableDateTime(); break;
-                    default: reader.Read(); break;
+                    default: reader.Skip(); break;
                 }
             }
         }
@@ -277,7 +277,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.STATUS: Status = (UserStatus)reader.ReadAsInt(); break;
                     case RedmineKeys.TWO_FA_SCHEME: TwoFactorAuthenticationScheme = reader.ReadAsString(); break;
                     case RedmineKeys.UPDATED_ON: UpdatedOn = reader.ReadAsDateTime(); break;
-                    default: reader.Read(); break;
+                    default: reader.Skip(); break;
                 }
             }
         }

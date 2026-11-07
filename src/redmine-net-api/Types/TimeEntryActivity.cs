@@ -76,7 +76,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.IS_DEFAULT: IsDefault = reader.ReadElementContentAsBoolean(); break;
                     case RedmineKeys.NAME: Name = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.ACTIVE: IsActive = reader.ReadElementContentAsBoolean(); break;
-                    default: reader.Read(); break;
+                    default: reader.Skip(); break;
                 }
             }
         }
@@ -114,7 +114,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.IS_DEFAULT: IsDefault = reader.ReadAsBool(); break;
                     case RedmineKeys.NAME: Name = reader.ReadAsString(); break;
                     case RedmineKeys.ACTIVE: IsActive = reader.ReadAsBool(); break;
-                    default: reader.Read(); break;
+                    default: reader.Skip(); break;
                 }
             }
         }

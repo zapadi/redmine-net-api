@@ -42,7 +42,12 @@ internal static class ApiResponseMessageExtensions
     {
         var responseAsString = GetResponseContentAsString(responseMessage, redmineSerializer);
         var data = responseAsString.IsNullOrWhiteSpace() ? null : redmineSerializer.DeserializeToPagedResults<T>(responseAsString);
-        return data.Items as List<T>;
+        if (data?.Items == null)
+        {
+            return null;
+        }
+
+        return data.Items as List<T> ?? new List<T>(data.Items);
     }
 
     /// <summary>

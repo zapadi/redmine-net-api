@@ -70,7 +70,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.DEFAULT_STATUS: DefaultStatus = new IdentifiableName(reader); break;
                     case RedmineKeys.DESCRIPTION: Description = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.ENABLED_STANDARD_FIELDS: EnabledStandardFields = reader.ReadElementContentAsCollection<TrackerCoreField>(); break;
-                    default: reader.Read(); break;
+                    default: reader.Skip(); break;
                 }
             }
         }
@@ -103,7 +103,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.DEFAULT_STATUS: DefaultStatus = new IdentifiableName(reader); break;
                     case RedmineKeys.DESCRIPTION: Description = reader.ReadAsString(); break;
                     case RedmineKeys.ENABLED_STANDARD_FIELDS: EnabledStandardFields = reader.ReadAsCollection<TrackerCoreField>(); break;
-                    default: reader.Read(); break;
+                    default: reader.Skip(); break;
                 }
             }
         }

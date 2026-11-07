@@ -87,7 +87,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.TIME_ENTRIES_VISIBILITY: TimeEntriesVisibility = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.USERS_VISIBILITY: UsersVisibility = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.PERMISSIONS: Permissions = reader.ReadElementContentAsCollection<Permission>(); break;
-                    default: reader.Read(); break;
+                    default: reader.Skip(); break;
                 }
             }
         }
@@ -122,7 +122,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.TIME_ENTRIES_VISIBILITY: TimeEntriesVisibility = reader.ReadAsString(); break;
                     case RedmineKeys.USERS_VISIBILITY: UsersVisibility = reader.ReadAsString(); break;
                     case RedmineKeys.PERMISSIONS: Permissions = reader.ReadAsCollection<Permission>(); break;
-                    default: reader.Read(); break;
+                    default: reader.Skip(); break;
                 }
             }
         }

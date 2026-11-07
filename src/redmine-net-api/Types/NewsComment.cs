@@ -58,7 +58,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
                     case RedmineKeys.AUTHOR: Author = new IdentifiableName(reader); break;
                     case RedmineKeys.CONTENT: Content = reader.ReadElementContentAsString(); break;
-                    default: reader.Read(); break;
+                    default: reader.Skip(); break;
                 }
             }
         }
@@ -90,7 +90,7 @@ namespace Redmine.Net.Api.Types
                         break;
                     case RedmineKeys.AUTHOR: Author = new IdentifiableName(reader); break;
                     case RedmineKeys.CONTENT: Content = reader.ReadAsString(); break;
-                    default: reader.Read(); break;
+                    default: reader.Skip(); break;
                 }
             }
         }

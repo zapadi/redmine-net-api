@@ -138,7 +138,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.SPENT_ON: SpentOn = reader.ReadElementContentAsNullableDateTime(); break;
                     case RedmineKeys.UPDATED_ON: UpdatedOn = reader.ReadElementContentAsNullableDateTime(); break;
                     case RedmineKeys.USER: User = new IdentifiableName(reader); break;
-                    default: reader.Read(); break;
+                    default: reader.Skip(); break;
                 }
             }
         }
@@ -195,7 +195,7 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.SPENT_ON: SpentOn = reader.ReadAsDateTime(); break;
                     case RedmineKeys.UPDATED_ON: UpdatedOn = reader.ReadAsDateTime(); break;
                     case RedmineKeys.USER: User = new IdentifiableName(reader); break;
-                    default: reader.Read(); break;
+                    default: reader.Skip(); break;
                 }
             }
         }
@@ -310,15 +310,23 @@ namespace Redmine.Net.Api.Types
         {
             var timeEntry = new TimeEntry
             {
-                Activity = Activity,
+                Activity = Activity?.Clone(false),
                 Comments = Comments,
                 Hours = Hours,
-                Issue = Issue,
-                Project = Project,
+                Issue = Issue?.Clone(false),
+                Project = Project?.Clone(false),
                 SpentOn = SpentOn,
-                User = User,
-                CustomFields = CustomFields
+                User = User?.Clone(false),
+                CreatedOn = CreatedOn,
+                UpdatedOn = UpdatedOn,
+                CustomFields = CustomFields?.Clone(false)
             };
+
+            if (!resetId)
+            {
+                timeEntry.Id = Id;
+            }
+
             return timeEntry;
         }
         #endregion
