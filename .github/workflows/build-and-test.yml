@@ -12,6 +12,7 @@ on:
       - '**.props'
       - '**.targets'
       - 'global.json'
+      - '**/CompatibilitySuppressions.xml'
       - '.github/workflows/build-and-test.yml'
   pull_request:
     branches: [ master ]
@@ -22,6 +23,7 @@ on:
       - '**.props'
       - '**.targets'
       - 'global.json'
+      - '**/CompatibilitySuppressions.xml'
       - '.github/workflows/build-and-test.yml'
 
 permissions:
@@ -68,6 +70,24 @@ jobs:
           --output detailed
           --report-trx
           --results-directory TestResults
+
+      - name: Test (.NET Framework)
+        if: matrix.os == 'windows-latest'
+        run: >-
+          dotnet test
+          --project tests/redmine-net-api.Tests/redmine-net-api.Tests.csproj
+          --configuration Release
+          --framework net481
+          --no-restore
+          --output detailed
+          --report-trx
+          --results-directory TestResults
+
+      - name: Validate package
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          dotnet pack src/redmine-net-api/redmine-net-api.csproj --configuration Release --no-build --output ./artifacts
+          dotnet pack src/redmine-net-api/redmine-net-api.csproj --configuration Release --output ./artifacts -p:Sign=true
 
       - name: Upload test results
         if: always()

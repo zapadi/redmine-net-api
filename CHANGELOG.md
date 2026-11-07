@@ -28,6 +28,10 @@
 *	CodeQL uses build-mode none (no build or SDK needed)
 *	Modernized GitHub workflows (least-privilege permissions, concurrency, timeouts, latest actions)
 *	Publishing to NuGet uses Trusted Publishing (OIDC) instead of an API key
+*	Added package validation against the last published version (4.65.0); CI packs both packages on every build so breaking API changes fail the build
+*	CI also runs unit tests on net481 (Windows)
+*	Removed deprecated PackageIconUrl and the unused PackageLicense property; local `dotnet pack` now writes to the repository's artifacts folder
+*	Dependabot updates Newtonsoft.Json in its own group
 *	Added build provenance attestations for NuGet packages
 *	Added Dependabot for GitHub Actions and NuGet
 *	Removed AppVeyor

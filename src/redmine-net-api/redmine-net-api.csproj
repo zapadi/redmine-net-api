@@ -35,10 +35,15 @@
   </PropertyGroup>
   
   <PropertyGroup>
-    <DebugType Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">full</DebugType>
-    <DebugType Condition="'$(DebugType)' == ''">portable</DebugType> <!-- Default to portable if not set -->    
+    <DebugType>portable</DebugType>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <PackageOutputPath>$(SolutionDir)/artifacts</PackageOutputPath>
+    <PackageOutputPath>$(MSBuildThisFileDirectory)../../artifacts</PackageOutputPath>
+    <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Package Validation">
+    <EnablePackageValidation>true</EnablePackageValidation>
+    <PackageValidationBaselineVersion>4.65.0</PackageValidationBaselineVersion>
   </PropertyGroup>
   
   <ItemGroup Label="Package References">
@@ -53,9 +58,7 @@
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageId Condition="'$(Sign)' == '' OR '$(Sign)' == 'false'">redmine-api</PackageId>
     <PackageId Condition="'$(Sign)' == 'true'">redmine-api-signed</PackageId>
-    <PackageIconUrl>https://raw.githubusercontent.com/zapadi/redmine-net-api/master/logo.png</PackageIconUrl>
     <PackageIcon>logo.png</PackageIcon>
-    <PackageLicense>LICENSE</PackageLicense>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/zapadi/redmine-net-api</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
