@@ -58,8 +58,8 @@ public class VersionTests
         Assert.Equal(new DateTime(2008, 12, 30), output.DueDate);
         Assert.Equal(0.0f, output.EstimatedHours);
         Assert.Equal(0.0f, output.SpentHours);
-        Assert.Equal(new DateTime(2008, 3, 9, 12, 52, 12, DateTimeKind.Local).AddHours(1), output.CreatedOn);
-        Assert.Equal(new DateTime(2009, 11, 15, 12, 22, 12, DateTimeKind.Local).AddHours(1), output.UpdatedOn);
+        AssertDateTime.Equal("2008-03-09T12:52:12+01:00", output.CreatedOn);
+        AssertDateTime.Equal("2009-11-15T12:22:12+01:00", output.UpdatedOn);
 
     }
 
