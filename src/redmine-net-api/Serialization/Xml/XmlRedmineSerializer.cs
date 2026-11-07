@@ -22,6 +22,7 @@ using System.Xml.Serialization;
 using Redmine.Net.Api.Exceptions;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Internals;
+using Redmine.Net.Api.Types;
 
 namespace Redmine.Net.Api.Serialization
 {
@@ -167,6 +168,13 @@ namespace Redmine.Net.Api.Serialization
             {
                 using (var xmlWriter = XmlWriter.Create(stringWriter, xmlWriterSettings))
                 {
+                    if (entity is Attachments attachments)
+                    {
+                        attachments.WriteXml(xmlWriter);
+                        xmlWriter.Flush();
+                        return stringWriter.ToString();
+                    }
+
                     var serializer = XmlSerializerCache.Instance.GetSerializer(typeof(T));
 
                     serializer.Serialize(xmlWriter, entity);

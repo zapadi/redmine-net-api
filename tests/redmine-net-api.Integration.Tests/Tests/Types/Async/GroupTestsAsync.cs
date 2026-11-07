@@ -25,11 +25,15 @@ public class GroupTestsAsync(RedmineTestContainerFixture fixture)
     [Fact]
     public async Task GetAllGroups_Should_Succeed()
     {
+        // Arrange
+        var createdGroup = await CreateTestGroupAsync();
+
         // Act
         var groups = await fixture.RedmineManager.GetAsync<Group>(cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
         Assert.NotNull(groups);
+        Assert.Contains(groups, g => g.Id == createdGroup.Id);
     }
 
     [Fact]

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Xml.Linq;
 using Newtonsoft.Json.Linq;
 using Padi.DotNet.RedmineAPI.Tests.Infrastructure;
 using Xunit;
@@ -28,6 +29,65 @@ public class AttachmentTests
                                      }
                                      """);
         Assert.True(JToken.DeepEquals(expected, JObject.Parse(output)), output);
+    }
+
+    [Fact]
+    public void Attachments_Should_Serialize_Xml_For_Issue_Attachment_Update()
+    {
+        var attachments = new Redmine.Net.Api.Types.Attachments
+        {
+            { 6243, new Redmine.Net.Api.Types.Attachment { FileName = "test.txt", Description = "updated" } },
+            { 6244, new Redmine.Net.Api.Types.Attachment { FileName = "other.txt" } }
+        };
+
+        var output = SerializerFactory.Create(SerializerKind.Xml).Serialize(attachments);
+
+        var expected = XElement.Parse("""<attachments><attachment id="6243"><filename>test.txt</filename><description>updated</description></attachment><attachment id="6244"><filename>other.txt</filename></attachment></attachments>""");
+        Assert.True(XNode.DeepEquals(expected, XElement.Parse(output)), output);
+    }
+
+    [Fact]
+    public void Attachment_Should_Serialize_Json_For_Update()
+    {
+        var attachment = new Redmine.Net.Api.Types.Attachment { FileName = "test.txt", Description = "updated" };
+
+        var output = SerializerFactory.Create(SerializerKind.NewtonsoftJson).Serialize(attachment);
+
+        var expected = JObject.Parse("""{ "attachment": { "filename": "test.txt", "description": "updated" } }""");
+        Assert.True(JToken.DeepEquals(expected, JObject.Parse(output)), output);
+    }
+
+    [Fact]
+    public void Attachment_Should_Serialize_Xml_For_Update()
+    {
+        var attachment = new Redmine.Net.Api.Types.Attachment { FileName = "test.txt", Description = "updated" };
+
+        var output = SerializerFactory.Create(SerializerKind.Xml).Serialize(attachment);
+
+        var expected = XElement.Parse("<attachment><description>updated</description><filename>test.txt</filename></attachment>");
+        Assert.True(XNode.DeepEquals(expected, XElement.Parse(output)), output);
+    }
+
+    [Fact]
+    public void Attachment_Should_Send_Null_Fields_In_Json_So_They_Are_Cleared()
+    {
+        var attachment = new Redmine.Net.Api.Types.Attachment { FileName = "test.txt" };
+
+        var output = SerializerFactory.Create(SerializerKind.NewtonsoftJson).Serialize(attachment);
+
+        var expected = JObject.Parse("""{ "attachment": { "filename": "test.txt", "description": null } }""");
+        Assert.True(JToken.DeepEquals(expected, JObject.Parse(output)), output);
+    }
+
+    [Fact]
+    public void Attachment_Should_Send_Null_Fields_In_Xml_So_They_Are_Cleared()
+    {
+        var attachment = new Redmine.Net.Api.Types.Attachment { FileName = "test.txt" };
+
+        var output = SerializerFactory.Create(SerializerKind.Xml).Serialize(attachment);
+
+        var expected = XElement.Parse("<attachment><description /><filename>test.txt</filename></attachment>");
+        Assert.True(XNode.DeepEquals(expected, XElement.Parse(output)), output);
     }
 
     [Theory]

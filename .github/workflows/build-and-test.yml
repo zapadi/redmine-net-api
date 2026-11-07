@@ -18,6 +18,7 @@ on:
       - '**.targets'
       - 'global.json'
       - '**/CompatibilitySuppressions.xml'
+      - 'tests/redmine-net-api.Integration.Tests/**'
       - '.github/workflows/build-and-test.yml'
       - '.github/scripts/**'
   pull_request:
@@ -30,6 +31,7 @@ on:
       - '**.targets'
       - 'global.json'
       - '**/CompatibilitySuppressions.xml'
+      - 'tests/redmine-net-api.Integration.Tests/**'
       - '.github/workflows/build-and-test.yml'
       - '.github/scripts/**'
 
@@ -126,4 +128,57 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: test-results-${{ matrix.os }}
+          path: TestResults
+
+  integration:
+    name: Integration ${{ matrix.client }} ${{ matrix.serializer }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        client: [ Http, Web ]
+        serializer: [ Xml, Json ]
+    env:
+      TestContainer__Redmine__Client: ${{ matrix.client }}
+      TestContainer__Redmine__Serializer: ${{ matrix.serializer }}
+      TestContainer__Redmine__Authentication__ApiKey: 61d6fa45ca2c570372b08b8c54b921e5fc39335a
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.ref || github.sha }}
+          persist-credentials: false
+
+      - uses: actions/setup-dotnet@v6
+
+      - name: Restore
+        run: dotnet restore tests/redmine-net-api.Integration.Tests/redmine-net-api.Integration.Tests.csproj
+
+      - name: Build
+        run: >-
+          dotnet build tests/redmine-net-api.Integration.Tests/redmine-net-api.Integration.Tests.csproj
+          --configuration Release
+          --framework net10.0
+          --no-restore
+
+      - name: Test
+        run: >-
+          dotnet test
+          --project tests/redmine-net-api.Integration.Tests/redmine-net-api.Integration.Tests.csproj
+          --configuration Release
+          --framework net10.0
+          --no-build
+          --output detailed
+          --report-trx
+          --hangdump
+          --hangdump-timeout 10m
+          --hangdump-type Mini
+          --results-directory TestResults
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: integration-results-${{ matrix.client }}-${{ matrix.serializer }}
           path: TestResults

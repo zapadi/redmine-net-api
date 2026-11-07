@@ -25,6 +25,8 @@ namespace Padi.RedmineAPI.Integration.Tests.Infrastructure
             {
                 config.AddJsonFile("appsettings.local.json", optional: true);
             }
+
+            config.AddEnvironmentVariables();
             return config.Build();
         }
 

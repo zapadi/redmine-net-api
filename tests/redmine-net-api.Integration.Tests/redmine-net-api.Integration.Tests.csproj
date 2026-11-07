@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     
     <PropertyGroup Label="Build">
-        <TargetFramework>net481</TargetFramework>
+        <TargetFrameworks>net481;net10.0</TargetFrameworks>
         <AssemblyName>Padi.RedmineAPI.Integration.Tests</AssemblyName>
         <RootNamespace>$(AssemblyName)</RootNamespace>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -23,6 +23,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Microsoft.Testing.Extensions.HangDump" />
         <PackageReference Include="Microsoft.Testing.Extensions.TrxReport" />
         <PackageReference Include="Npgsql" />
         <PackageReference Include="Testcontainers.PostgreSql" />
@@ -30,6 +31,7 @@
         <PackageReference Include="Microsoft.Extensions.Configuration" />
         <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" />
         <PackageReference Include="Microsoft.Extensions.Configuration.Binder" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" />
         <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" />
         <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" />
     </ItemGroup>
