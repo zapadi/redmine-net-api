@@ -39,6 +39,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         ///   <c>true</c> if inherited; otherwise, <c>false</c>.
         /// </value>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public bool Inherited { get; set; }
         #endregion
 

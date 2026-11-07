@@ -45,11 +45,13 @@ namespace Redmine.Net.Api.Types
             /// <summary>
             /// 
             /// </summary>
+            /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
             public string Value { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public string Label { get; set; }
         #endregion
 

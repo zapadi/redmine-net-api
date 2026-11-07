@@ -39,49 +39,55 @@ namespace Redmine.Net.Api.Types
         /// Gets or sets the name of the file.
         /// </summary>
         /// <value>The name of the file.</value>
+        /// <remarks>Sent to Redmine when creating or updating.</remarks>
         public string FileName { get; set; }
 
         /// <summary>
         /// Gets the size of the file.
         /// </summary>
         /// <value>The size of the file.</value>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public int FileSize { get; set; }
 
         /// <summary>
         /// Gets the type of the content.
         /// </summary>
         /// <value>The type of the content.</value>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public string ContentType { get; set; }
 
         /// <summary>
         /// Gets or sets the description.
         /// </summary>
         /// <value>The description.</value>
+        /// <remarks>Sent to Redmine when creating or updating.</remarks>
         public string Description { get; set; }
 
         /// <summary>
         /// Gets the content URL.
         /// </summary>
         /// <value>The content URL.</value>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public string ContentUrl { get; set; }
 
         /// <summary>
         /// Gets the author.
-        /// Set by Redmine; not sent when creating or updating.
         /// </summary>
         /// <value>The author.</value>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public IdentifiableName Author { get; set; }
 
         /// <summary>
         /// Gets the created on.
-        /// Set by Redmine; not sent when creating or updating.
         /// </summary>
         /// <value>The created on.</value>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public DateTime? CreatedOn { get; set; }
 
         /// <summary>
         /// Gets the thumbnail url.
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public string ThumbnailUrl { get; set; }
         #endregion
 

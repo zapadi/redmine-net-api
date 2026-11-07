@@ -36,12 +36,14 @@ namespace Redmine.Net.Api.Types
         /// Gets a value indicating whether this instance is public.
         /// </summary>
         /// <value><c>true</c> if this instance is public; otherwise, <c>false</c>.</value>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public bool IsPublic { get; set; }
 
         /// <summary>
         /// Gets  the project id.
         /// </summary>
         /// <value>The project id.</value>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public int? ProjectId { get; set; }
         #endregion
 

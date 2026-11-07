@@ -46,17 +46,19 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public bool IsDefault { get; set; }
         
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public bool IsActive { get; set; }
 
         /// <summary>
         /// Gets or sets the custom field values.
-        /// Set by Redmine; not sent when creating or updating.
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public IList<IssueCustomField> CustomFields { get; set; }
         #endregion
 

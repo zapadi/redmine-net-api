@@ -35,16 +35,19 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// Gets the default (issue) status for this tracker.
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public IdentifiableName DefaultStatus { get; set; }
 
         /// <summary>
         /// Gets the description of this tracker.
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public string Description { get; set; }
         
         /// <summary>
         /// Gets the list of enabled tracker's core fields
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public List<TrackerCoreField> EnabledStandardFields { get; set; }
 
         #region Implementation of IXmlSerialization

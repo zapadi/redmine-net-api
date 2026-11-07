@@ -40,6 +40,7 @@ namespace Redmine.Net.Api.Types
         /// Gets the id.
         /// </summary>
         /// <value>The id.</value>
+        /// <remarks>Assigned by Redmine and not sent in the body when creating or updating this resource; updates and deletes put it in the URL. When the object is a reference such as Issue.Project, a watcher or a custom field, its Id is the value sent.</remarks>
         public int Id { get; set; }
         #endregion
 

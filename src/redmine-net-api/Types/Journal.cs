@@ -43,6 +43,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The user.
         /// </value>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public IdentifiableName User { get; set; }
 
         /// <summary>
@@ -51,31 +52,35 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The notes.
         /// </value>
-        /// <remarks>Older Redmine versions delete a journal that has no details when its notes are emptied.</remarks>
+        /// <remarks>
+        /// <para>Older Redmine versions delete a journal that has no details when its notes are emptied.</para>
+        /// <para>Sent to Redmine when creating or updating.</para>
+        /// </remarks>
         public string Notes { get; set; }
 
         /// <summary>
         /// Gets the created on.
-        /// Set by Redmine; not sent when creating or updating.
         /// </summary>
         /// <value>
         /// The created on.
         /// </value>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public DateTime? CreatedOn { get; set; }
         
         /// <summary>
         /// Gets the updated on.
-        /// Set by Redmine; not sent when creating or updating.
         /// </summary>
         /// <value>
         /// The updated on.
         /// </value>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public DateTime? UpdatedOn { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the notes are private.
         /// Sent as <c>private_notes</c> only when <c>true</c>; use <c>UpdateJournal</c> to make notes public again.
         /// </summary>
+        /// <remarks>Sent to Redmine when creating or updating, only when set.</remarks>
         public bool PrivateNotes { get; set; }
 
         /// <summary>
@@ -84,11 +89,13 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The details.
         /// </value>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public IList<Detail> Details { get; set; }
         
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public IdentifiableName UpdatedBy { get; set; }
         #endregion
 

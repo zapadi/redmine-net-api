@@ -41,11 +41,13 @@ namespace Redmine.Net.Api.Types
         /// Gets or sets the value.
         /// </summary>
         /// <value>The value.</value>
+        /// <remarks>Sent to Redmine when creating or updating, only when set.</remarks>
         public IList<CustomFieldValue> Values { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public bool Multiple { get; set; }
         #endregion
 

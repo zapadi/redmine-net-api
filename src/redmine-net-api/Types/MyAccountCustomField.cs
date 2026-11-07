@@ -42,16 +42,19 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// Gets or sets the value. For a multi-value field it holds the first value.
         /// </summary>
+        /// <remarks>Sent to Redmine when creating or updating. Not sent when Values is sent.</remarks>
         public string Value { get; set; }
 
         /// <summary>
         /// Gets or sets all the values of a multi-value field. It is null for a single-value field.
         /// </summary>
+        /// <remarks>Sent to Redmine when creating or updating, only when set. It is sent only when it has more than one value or Multiple is true. With the JSON serializer it is always sent in the same value property as Value, which is sent instead when Values is not.</remarks>
         public IList<string> Values { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the field accepts multiple values.
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating. When true, Values is sent as an array even when it has a single value.</remarks>
         public bool Multiple { get; set; }
         
         internal MyAccountCustomField(int id, string name)

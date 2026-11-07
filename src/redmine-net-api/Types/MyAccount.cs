@@ -40,24 +40,28 @@ namespace Redmine.Net.Api.Types
         /// Gets the user login.
         /// </summary>
         /// <value>The login.</value>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public string Login { get; set; }
 
         /// <summary>
         /// Gets the first name.
         /// </summary>
         /// <value>The first name.</value>
+        /// <remarks>Sent to Redmine when creating or updating.</remarks>
         public string FirstName { get; set; }
 
         /// <summary>
         /// Gets the last name.
         /// </summary>
         /// <value>The last name.</value>
+        /// <remarks>Sent to Redmine when creating or updating.</remarks>
         public string LastName { get; set; }
 
         /// <summary>
         /// Gets the email.
         /// </summary>
         /// <value>The email.</value>
+        /// <remarks>Sent to Redmine when creating or updating.</remarks>
         public string Email { get; set; }
 
         /// <summary>
@@ -66,31 +70,33 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The authentication mode id.
         /// </value>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public bool IsAdmin { get; set; }
 
         /// <summary>
         /// Gets the created on.
-        /// Set by Redmine; not sent when creating or updating.
         /// </summary>
         /// <value>The created on.</value>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public DateTime? CreatedOn { get; set; }
 
         /// <summary>
         /// Gets the last login on.
-        /// Set by Redmine; not sent when creating or updating.
         /// </summary>
         /// <value>The last login on.</value>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public DateTime? LastLoginOn { get; set; }
 
         /// <summary>
         /// Gets the API key
-        /// Set by Redmine; not sent when creating or updating.
         /// </summary>
+        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
         public string ApiKey { get; set; }
         
         /// <summary>
         /// Gets or sets the custom fields
         /// </summary>
+        /// <remarks>Sent to Redmine when creating or updating, only when set.</remarks>
         public List<MyAccountCustomField> CustomFields { get;  set; }
         
         #endregion
