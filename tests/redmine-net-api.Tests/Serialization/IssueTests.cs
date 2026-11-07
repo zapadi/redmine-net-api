@@ -77,6 +77,17 @@ public class IssueTests
     }
 
     [Theory]
+    [MemberData(nameof(IssueEstimatedHoursSerializeTheoryData))]
+    public void Should_Serialize_Issue_Estimated_Hours(float? estimatedHours, string expected, SerializerKind kind)
+    {
+        var issue = new Redmine.Net.Api.Types.Issue { Subject = "subject", EstimatedHours = estimatedHours };
+
+        var output = SerializerFactory.Create(kind).Serialize(issue);
+
+        Assert.Equal(expected, output);
+    }
+
+    [Theory]
     [MemberData(nameof(IssueWithSelfClosingCustomFieldDeserializeTheoryData))]
     public void Should_Deserialize_Issue_With_Custom_Field_Without_Value_Among_Valued_Ones(string input, SerializerKind kind)
     {
@@ -1054,6 +1065,107 @@ public class IssueTests
             yield return new TheoryDataRow<string, SerializerKind>(xml, SerializerKind.Xml).WithTestDisplayName(Constants.Xml);
         }
     }
+
+    public static IEnumerable<TheoryDataRow<float?, string, SerializerKind>> IssueEstimatedHoursSerializeTheoryData
+    {
+        get
+        {
+            const string jsonNull = """
+                                {
+                                  "issue": {
+                                    "subject": "subject",
+                                    "description": null,
+                                    "notes": null,
+                                    "is_private": "false",
+                                    "estimated_hours": "",
+                                    "parent_issue_id": null,
+                                    "start_date": "",
+                                    "due_date": "",
+                                    "updated_on": ""
+                                  }
+                                }
+                                """;
+
+            const string xmlNull = """
+                               <issue>
+                               <subject>subject</subject>
+                               <notes />
+                               <description />
+                               <is_private>false</is_private>
+                               <estimated_hours />
+                               <start_date />
+                               <due_date />
+                               <updated_on />
+                               </issue>
+                               """;
+
+            const string jsonZero = """
+                                {
+                                  "issue": {
+                                    "subject": "subject",
+                                    "description": null,
+                                    "notes": null,
+                                    "is_private": "false",
+                                    "estimated_hours": "0",
+                                    "parent_issue_id": null,
+                                    "start_date": "",
+                                    "due_date": "",
+                                    "updated_on": ""
+                                  }
+                                }
+                                """;
+
+            const string xmlZero = """
+                               <issue>
+                               <subject>subject</subject>
+                               <notes />
+                               <description />
+                               <is_private>false</is_private>
+                               <estimated_hours>0</estimated_hours>
+                               <start_date />
+                               <due_date />
+                               <updated_on />
+                               </issue>
+                               """;
+
+            const string jsonDecimal = """
+                                {
+                                  "issue": {
+                                    "subject": "subject",
+                                    "description": null,
+                                    "notes": null,
+                                    "is_private": "false",
+                                    "estimated_hours": "1.5",
+                                    "parent_issue_id": null,
+                                    "start_date": "",
+                                    "due_date": "",
+                                    "updated_on": ""
+                                  }
+                                }
+                                """;
+
+            const string xmlDecimal = """
+                               <issue>
+                               <subject>subject</subject>
+                               <notes />
+                               <description />
+                               <is_private>false</is_private>
+                               <estimated_hours>1.5</estimated_hours>
+                               <start_date />
+                               <due_date />
+                               <updated_on />
+                               </issue>
+                               """;
+
+            yield return new TheoryDataRow<float?, string, SerializerKind>(null, jsonNull, SerializerKind.NewtonsoftJson).WithTestDisplayName($"{Constants.JsonNewtonsoft}_Null");
+            yield return new TheoryDataRow<float?, string, SerializerKind>(null, xmlNull, SerializerKind.Xml).WithTestDisplayName($"{Constants.Xml}_Null");
+            yield return new TheoryDataRow<float?, string, SerializerKind>(0f, jsonZero, SerializerKind.NewtonsoftJson).WithTestDisplayName($"{Constants.JsonNewtonsoft}_Zero");
+            yield return new TheoryDataRow<float?, string, SerializerKind>(0f, xmlZero, SerializerKind.Xml).WithTestDisplayName($"{Constants.Xml}_Zero");
+            yield return new TheoryDataRow<float?, string, SerializerKind>(1.5f, jsonDecimal, SerializerKind.NewtonsoftJson).WithTestDisplayName($"{Constants.JsonNewtonsoft}_Decimal");
+            yield return new TheoryDataRow<float?, string, SerializerKind>(1.5f, xmlDecimal, SerializerKind.Xml).WithTestDisplayName($"{Constants.Xml}_Decimal");
+        }
+    }
+
     public static IEnumerable<TheoryDataRow<string, SerializerKind>> IssueWithSelfClosingCustomFieldDeserializeTheoryData
     {
         get
