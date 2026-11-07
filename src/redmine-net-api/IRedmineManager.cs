@@ -66,8 +66,7 @@ public partial interface IRedmineManager
     /// <typeparam name="T">The type of Redmine resource (e.g., <see cref="Issue"/>, <see cref="Project"/>).</typeparam>
     /// <param name="requestOptions">Optional request options for filtering or custom headers.</param>
     /// <returns>The total number of resources matching the specified criteria.</returns>
-    /// <exception cref="UnauthorizedException">Thrown when authentication fails.</exception>
-    /// <exception cref="ForbiddenException">Thrown when the user lacks permission.</exception>
+    /// <exception cref="RedmineApiException">Thrown when the server returns an error status code (for example 401, 403 or 404; see <see cref="RedmineApiException.HttpStatusCode"/>), or when the request fails or times out.</exception>
     /// <exception cref="RedmineException">Thrown when a general error occurs.</exception>
     int Count<T>(RequestOptions requestOptions = null) 
         where T : class, new();
@@ -79,9 +78,7 @@ public partial interface IRedmineManager
     /// <param name="id">The unique identifier of the resource.</param>
     /// <param name="requestOptions">Optional request options for including associated data.</param>
     /// <returns>The requested resource.</returns>
-    /// <exception cref="NotFoundException">Thrown when the resource doesn't exist.</exception>
-    /// <exception cref="UnauthorizedException">Thrown when authentication fails.</exception>
-    /// <exception cref="ForbiddenException">Thrown when the user lacks permission.</exception>
+    /// <exception cref="RedmineApiException">Thrown when the server returns an error status code (for example 401, 403 or 404; see <see cref="RedmineApiException.HttpStatusCode"/>), or when the request fails or times out.</exception>
     /// <exception cref="RedmineException">Thrown when a general error occurs.</exception>
     T Get<T>(string id, RequestOptions requestOptions = null) 
         where T : class, new();
@@ -92,8 +89,7 @@ public partial interface IRedmineManager
     /// <typeparam name="T">The type of Redmine resource to retrieve.</typeparam>
     /// <param name="requestOptions">Optional request options for filtering or sorting.</param>
     /// <returns>A list of all resources matching the specified criteria.</returns>
-    /// <exception cref="UnauthorizedException">Thrown when authentication fails.</exception>
-    /// <exception cref="ForbiddenException">Thrown when the user lacks permission.</exception>
+    /// <exception cref="RedmineApiException">Thrown when the server returns an error status code (for example 401, 403 or 404; see <see cref="RedmineApiException.HttpStatusCode"/>), or when the request fails or times out.</exception>
     /// <exception cref="RedmineException">Thrown when a general error occurs.</exception>
     /// <remarks>
     /// This method automatically handles pagination. For large result sets, consider using <see cref="GetPaginated{T}"/>.
@@ -107,8 +103,7 @@ public partial interface IRedmineManager
     /// <typeparam name="T">The type of Redmine resource to retrieve.</typeparam>
     /// <param name="requestOptions">Optional request options for filtering or page parameters.</param>
     /// <returns>A <see cref="PagedResults{T}"/> object containing the current page and metadata.</returns>
-    /// <exception cref="UnauthorizedException">Thrown when authentication fails.</exception>
-    /// <exception cref="ForbiddenException">Thrown when the user lacks permission.</exception>
+    /// <exception cref="RedmineApiException">Thrown when the server returns an error status code (for example 401, 403 or 404; see <see cref="RedmineApiException.HttpStatusCode"/>), or when the request fails or times out.</exception>
     /// <exception cref="RedmineException">Thrown when a general error occurs.</exception>
     PagedResults<T> GetPaginated<T>(RequestOptions requestOptions = null) 
         where T : class, new();
@@ -121,9 +116,7 @@ public partial interface IRedmineManager
     /// <param name="ownerId">Optional owner/parent identifier.</param>
     /// <param name="requestOptions">Optional request options.</param>
     /// <returns>The created resource with server-assigned properties.</returns>
-    /// <exception cref="UnauthorizedException">Thrown when authentication fails.</exception>
-    /// <exception cref="ForbiddenException">Thrown when the user lacks permission.</exception>
-    /// <exception cref="RedmineApiException">Thrown when validation fails (HTTP 422).</exception>
+    /// <exception cref="RedmineApiException">Thrown when the server returns an error status code (for example 401, 403, or 422 when validation fails; see <see cref="RedmineApiException.HttpStatusCode"/>), or when the request fails or times out.</exception>
     /// <exception cref="RedmineException">Thrown when a general error occurs.</exception>
     T Create<T>(T entity, string ownerId = null,RequestOptions requestOptions = null) 
         where T : class, new();
@@ -136,10 +129,7 @@ public partial interface IRedmineManager
     /// <param name="entity">The resource object with updated values.</param>
     /// <param name="projectId">Optional project identifier (required for some resources).</param>
     /// <param name="requestOptions">Optional request options.</param>
-    /// <exception cref="NotFoundException">Thrown when the resource doesn't exist.</exception>
-    /// <exception cref="UnauthorizedException">Thrown when authentication fails.</exception>
-    /// <exception cref="ForbiddenException">Thrown when the user lacks permission.</exception>
-    /// <exception cref="RedmineApiException">Thrown when validation fails or a conflict occurs.</exception>
+    /// <exception cref="RedmineApiException">Thrown when the server returns an error status code (for example 401, 403, 404, 409, or 422 when validation fails; see <see cref="RedmineApiException.HttpStatusCode"/>), or when the request fails or times out.</exception>
     /// <exception cref="RedmineException">Thrown when a general error occurs.</exception>
     void Update<T>(string id, T entity, string projectId = null, RequestOptions requestOptions = null) 
         where T : class, new();
@@ -150,9 +140,7 @@ public partial interface IRedmineManager
     /// <typeparam name="T">The type of Redmine resource to delete.</typeparam>
     /// <param name="id">The unique identifier of the resource to delete.</param>
     /// <param name="requestOptions">Optional request options.</param>
-    /// <exception cref="NotFoundException">Thrown when the resource doesn't exist.</exception>
-    /// <exception cref="UnauthorizedException">Thrown when authentication fails.</exception>
-    /// <exception cref="ForbiddenException">Thrown when the user lacks permission.</exception>
+    /// <exception cref="RedmineApiException">Thrown when the server returns an error status code (for example 401, 403 or 404; see <see cref="RedmineApiException.HttpStatusCode"/>), or when the request fails or times out.</exception>
     /// <exception cref="RedmineException">Thrown when a general error occurs.</exception>
     /// <remarks>
     /// <strong>Warning:</strong> This operation is typically irreversible.

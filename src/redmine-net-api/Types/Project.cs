@@ -418,7 +418,6 @@ namespace Redmine.Net.Api.Types
                    && string.Equals(Identifier, other.Identifier, StringComparison.Ordinal)
                    && string.Equals(Description, other.Description, StringComparison.Ordinal)
                    && string.Equals(HomePage, other.HomePage, StringComparison.Ordinal)
-                   && string.Equals(Identifier, other.Identifier, StringComparison.Ordinal)
                    && CreatedOn == other.CreatedOn
                    && UpdatedOn == other.UpdatedOn
                    && Status == other.Status

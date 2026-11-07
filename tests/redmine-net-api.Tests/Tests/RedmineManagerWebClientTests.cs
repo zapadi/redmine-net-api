@@ -74,6 +74,162 @@ public sealed class RedmineManagerWebClientTests(XmlPrettyPrintFixture _) : ICla
         return new WebException("422", null, WebExceptionStatus.ProtocolError, FakeHttpWebResponse.Create((HttpStatusCode)422, Errors));
     }
 
+    private static WebException ProtocolError(HttpStatusCode statusCode, WebHeaderCollection headers = null)
+    {
+        return new WebException(statusCode.ToString(), null, WebExceptionStatus.ProtocolError, FakeHttpWebResponse.Create(statusCode, string.Empty, headers));
+    }
+
+    [Fact]
+    public void Get_Should_Set_Exception_Details_On_Not_Found()
+    {
+        var (manager, _) = CreateManager(_ => throw ProtocolError(HttpStatusCode.NotFound, new WebHeaderCollection { { "X-Request-Id", "abc" } }));
+
+        var exception = Assert.Throws<RedmineApiException>(() => manager.Get<Project>("1"));
+
+        Assert.Equal(404, exception.HttpStatusCode);
+        Assert.Equal("GET", exception.Method);
+        Assert.Equal($"{Host}/projects/1.xml", exception.Endpoint);
+        Assert.Equal("abc", exception.CorrelationId);
+        Assert.Equal("abc", exception.ResponseHeaders["x-request-id"]);
+        Assert.False(exception.IsTransient);
+        Assert.Null(exception.ErrorCode);
+    }
+
+    [Theory]
+    [InlineData(HttpStatusCode.InternalServerError)]
+    [InlineData(HttpStatusCode.BadRequest)]
+    public void Get_Should_Not_Mark_Exception_As_Transient(HttpStatusCode statusCode)
+    {
+        var (manager, _) = CreateManager(_ => throw ProtocolError(statusCode));
+
+        var exception = Assert.Throws<RedmineApiException>(() => manager.Get<Project>("1"));
+
+        Assert.Equal((int)statusCode, exception.HttpStatusCode);
+        Assert.False(exception.IsTransient);
+    }
+
+    [Theory]
+    [InlineData(HttpStatusCode.RequestTimeout)]
+    [InlineData((HttpStatusCode)429)]
+    [InlineData(HttpStatusCode.BadGateway)]
+    [InlineData(HttpStatusCode.ServiceUnavailable)]
+    [InlineData(HttpStatusCode.GatewayTimeout)]
+    public async Task GetAsync_Should_Mark_Exception_As_Transient(HttpStatusCode statusCode)
+    {
+        var (manager, _) = CreateManager(_ => throw ProtocolError(statusCode, new WebHeaderCollection { { "Retry-After", "120" } }));
+
+        var exception = await Assert.ThrowsAsync<RedmineApiException>(() => manager.GetAsync<Project>("1", cancellationToken: TestContext.Current.CancellationToken));
+
+        Assert.Equal((int)statusCode, exception.HttpStatusCode);
+        Assert.True(exception.IsTransient);
+        Assert.Equal("120", exception.ResponseHeaders["Retry-After"]);
+    }
+
+    [Fact]
+    public void Get_Should_Mark_Connection_Failure_As_Transient()
+    {
+        var (manager, _) = CreateManager(_ => throw new WebException("refused", WebExceptionStatus.ConnectFailure));
+
+        var exception = Assert.Throws<RedmineApiException>(() => manager.Get<Project>("1"));
+
+        Assert.Equal("refused", exception.Message);
+        Assert.True(exception.IsTransient);
+        Assert.Null(exception.HttpStatusCode);
+        Assert.Null(exception.ResponseHeaders);
+        Assert.Equal("GET", exception.Method);
+        Assert.Equal("UNKNOWN", exception.ErrorCode);
+    }
+
+    [Fact]
+    public void Create_Should_Apply_RequestOptions_Headers()
+    {
+        var (manager, clients) = CreateManager(_ => new FakeWebResponse("<project><id>1</id><name>foo</name></project>"));
+        var requestOptions = new RequestOptions
+        {
+            Accept = "application/xml",
+            UserAgent = "custom-agent",
+            ContentType = "application/custom+xml",
+            Headers = new Dictionary<string, string> { { "X-Custom", "custom" } }
+        };
+
+        manager.Create(new Project { Name = "foo" }, requestOptions: requestOptions);
+
+        var request = clients[0].Requests[0];
+        Assert.Equal("application/xml", request.Headers[HttpRequestHeader.Accept]);
+        Assert.Equal("custom-agent", request.Headers[HttpRequestHeader.UserAgent]);
+        Assert.Equal("application/custom+xml", request.Headers[HttpRequestHeader.ContentType]);
+        Assert.Equal("custom", request.Headers["X-Custom"]);
+    }
+
+    [Fact]
+    public void Get_Should_Not_Override_Authentication_And_Impersonation_With_RequestOptions_Headers()
+    {
+        var clients = new List<FakeWebClient>();
+        var manager = new RedmineManager(new RedmineManagerOptionsBuilder()
+            .WithHost(Host)
+            .WithApiKeyAuthentication("secret")
+            .WithWebClient(() =>
+            {
+                var client = new FakeWebClient(_ => new FakeWebResponse("<project><id>1</id></project>"));
+                clients.Add(client);
+                return client;
+            }));
+        var requestOptions = new RequestOptions
+        {
+            ImpersonateUser = "bob",
+            Headers = new Dictionary<string, string>
+            {
+                { "X-Redmine-API-Key", "other" },
+                { RedmineConstants.IMPERSONATE_HEADER_KEY, "alice" }
+            }
+        };
+
+        manager.Get<Project>("1", requestOptions);
+
+        var request = clients[0].Requests[0];
+        Assert.Equal("secret", request.Headers["X-Redmine-API-Key"]);
+        Assert.Equal("bob", request.Headers[RedmineConstants.IMPERSONATE_HEADER_KEY]);
+    }
+
+    [Fact]
+    public void Create_Without_RequestOptions_Should_Send_Default_Headers()
+    {
+        var (manager, clients) = CreateManager(_ => new FakeWebResponse("<project><id>1</id><name>foo</name></project>"));
+
+        manager.Create(new Project { Name = "foo" });
+
+        var request = clients[0].Requests[0];
+        Assert.Equal(RedmineConstants.CONTENT_TYPE_APPLICATION_XML, request.Headers[HttpRequestHeader.ContentType]);
+        Assert.Null(request.Headers[HttpRequestHeader.Accept]);
+        Assert.Null(request.Headers[HttpRequestHeader.UserAgent]);
+    }
+
+    [Fact]
+    public void InternalWebClient_Should_Keep_Per_Request_UserAgent()
+    {
+        var request = CreateInternalWebRequest(
+            new RedmineWebClientOptions { UserAgent = "options-agent" },
+            webClient => webClient.Headers[HttpRequestHeader.UserAgent] = "request-agent");
+
+        Assert.Equal("request-agent", request.UserAgent);
+    }
+
+    [Fact]
+    public void InternalWebClient_Should_Fall_Back_To_Default_UserAgent()
+    {
+        var request = CreateInternalWebRequest(new RedmineWebClientOptions { UserAgent = null });
+
+        Assert.Equal("RedmineDotNetAPIClient", request.UserAgent);
+    }
+
+    [Fact]
+    public void InternalWebClient_Should_Use_Options_UserAgent_By_Default()
+    {
+        var request = CreateInternalWebRequest(new RedmineWebClientOptions { UserAgent = "options-agent" });
+
+        Assert.Equal("options-agent", request.UserAgent);
+    }
+
     [Fact]
     public void Build_Should_Copy_ClientFunc()
     {
@@ -152,6 +308,10 @@ public sealed class RedmineManagerWebClientTests(XmlPrettyPrintFixture _) : ICla
 
         Assert.Equal(422, exception.HttpStatusCode);
         Assert.Equal("Name cannot be blank", exception.Message);
+        Assert.Equal("PUT", exception.Method);
+        Assert.Equal($"{Host}/projects/1.xml", exception.Endpoint);
+        Assert.NotNull(exception.ResponseHeaders);
+        Assert.False(exception.IsTransient);
     }
 
     [Fact]
@@ -223,6 +383,45 @@ public sealed class RedmineManagerWebClientTests(XmlPrettyPrintFixture _) : ICla
         Assert.Equal("secret", request.Headers["X-Redmine-API-Key"]);
         Assert.Equal("custom", request.Headers["X-Custom"]);
         Assert.Null(request.Proxy);
+    }
+
+    [Fact]
+    public void InternalWebClient_Should_Send_DefaultHeaders_Not_Set_By_Request()
+    {
+        var request = CreateInternalWebRequest(new RedmineWebClientOptions { DefaultHeaders = new Dictionary<string, string> { { "X-Custom", "default" } } });
+
+        Assert.Equal("default", request.Headers["X-Custom"]);
+    }
+
+    [Fact]
+    public void InternalWebClient_Should_Not_Override_Request_Headers_With_DefaultHeaders()
+    {
+        var request = CreateInternalWebRequest(
+            new RedmineWebClientOptions
+            {
+                DefaultHeaders = new Dictionary<string, string>
+                {
+                    { "X-Custom", "default" },
+                    { "Accept", "text/plain" },
+                    { "User-Agent", "default-agent" },
+                    { "X-Redmine-API-Key", "default-key" },
+                    { "Content-Type", "text/plain" }
+                }
+            },
+            webClient =>
+            {
+                webClient.Headers["X-Custom"] = "request";
+                webClient.Headers[HttpRequestHeader.Accept] = "application/xml";
+                webClient.Headers[HttpRequestHeader.UserAgent] = "request-agent";
+                webClient.Headers["X-Redmine-API-Key"] = "secret";
+                webClient.Headers[HttpRequestHeader.ContentType] = RedmineConstants.CONTENT_TYPE_APPLICATION_XML;
+            });
+
+        Assert.Equal("request", request.Headers["X-Custom"]);
+        Assert.Equal("application/xml", request.Accept);
+        Assert.Equal("request-agent", request.UserAgent);
+        Assert.Equal("secret", request.Headers["X-Redmine-API-Key"]);
+        Assert.Equal(RedmineConstants.CONTENT_TYPE_APPLICATION_XML, request.ContentType);
     }
 
     [Fact]
@@ -315,6 +514,10 @@ public sealed class RedmineManagerWebClientTests(XmlPrettyPrintFixture _) : ICla
         var exception = await Assert.ThrowsAsync<RedmineApiException>(() => Bounded(manager.GetAsync<Project>("1", cancellationToken: TestContext.Current.CancellationToken)));
 
         Assert.Equal(nameof(WebExceptionStatus.Timeout), exception.Message);
+        Assert.True(exception.IsTransient);
+        Assert.Equal("GET", exception.Method);
+        Assert.Equal($"{Host}/projects/1.xml", exception.Endpoint);
+        Assert.Equal("UNKNOWN", exception.ErrorCode);
     }
 
     [Fact]
@@ -337,7 +540,22 @@ public sealed class RedmineManagerWebClientTests(XmlPrettyPrintFixture _) : ICla
         var exception = await Assert.ThrowsAsync<RedmineApiException>(() => Bounded(manager.GetAsync<Project>("1", cancellationToken: cts.Token)));
 
         Assert.NotEqual(nameof(WebExceptionStatus.Timeout), exception.Message);
+        Assert.False(exception.IsTransient);
         Assert.True(cts.IsCancellationRequested);
+    }
+
+    [Fact]
+    public async Task GetAsync_Should_Throw_With_Unknown_ErrorCode_When_Canceled_By_User()
+    {
+        var manager = CreateHangingManager(TimeSpan.FromSeconds(30));
+        using var cts = System.Threading.CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken);
+        cts.CancelAfter(TimeSpan.FromMilliseconds(200));
+
+        var exception = await Assert.ThrowsAsync<RedmineApiException>(() => Bounded(manager.GetAsync<Project>("1", cancellationToken: cts.Token)));
+
+        Assert.Equal("The operation was canceled by the user.", exception.Message);
+        Assert.Equal("UNKNOWN", exception.ErrorCode);
+        Assert.False(exception.IsTransient);
     }
 
     [Fact]

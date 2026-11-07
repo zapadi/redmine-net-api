@@ -87,20 +87,23 @@ internal class FakeHttpWebResponse : HttpWebResponse
 {
     private HttpStatusCode _statusCode;
     private byte[] _content;
+    private WebHeaderCollection _headers;
 
     protected FakeHttpWebResponse(SerializationInfo info, StreamingContext context) : base(info, context)
     {
     }
 
-    public static FakeHttpWebResponse Create(HttpStatusCode statusCode, string content)
+    public static FakeHttpWebResponse Create(HttpStatusCode statusCode, string content, WebHeaderCollection headers = null)
     {
         var response = (FakeHttpWebResponse)FormatterServices.GetUninitializedObject(typeof(FakeHttpWebResponse));
         response._statusCode = statusCode;
         response._content = Encoding.UTF8.GetBytes(content ?? string.Empty);
+        response._headers = headers ?? new WebHeaderCollection();
         return response;
     }
 
     public override HttpStatusCode StatusCode => _statusCode;
+    public override WebHeaderCollection Headers => _headers;
     public override Stream GetResponseStream() => new MemoryStream(_content);
 }
 

@@ -14,6 +14,7 @@
    limitations under the License.
 */
 
+using System.Collections.Generic;
 using System.Collections.Specialized;
 
 namespace Redmine.Net.Api.Net;
@@ -27,4 +28,7 @@ internal sealed class ApiRequestMessage
     public string ImpersonateUser { get; set; }
         
     public string ContentType { get; set; }
+    public string Accept { get; set; }
+    public string UserAgent { get; set; }
+    public Dictionary<string, string> Headers { get; set; }
 }

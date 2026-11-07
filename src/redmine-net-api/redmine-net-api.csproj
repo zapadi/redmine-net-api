@@ -12,7 +12,6 @@
     <Configurations>Debug;Release;DebugJson</Configurations>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
     <NoWarn>
-      NU5105;
       CA1303;
       CA1056;
       CA1062;
@@ -88,12 +87,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <EmbeddedResource Remove="Logging\**" />
-    <Compile Remove="Properties\AssemblyInfo.cs" />
-    <Compile Remove="Extensions\LoggerExtensions.cs" />
-    <Compile Remove="Logging\**" />
     <Compile Remove="InternalVisibleTo.cs" Condition=" '$(Sign)' == 'true' " />
-    <None Remove="Logging\**" />
     <None Include="..\..\redmine-net-api.snk">
       <Link>redmine-net-api.snk</Link>
     </None>

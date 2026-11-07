@@ -29,8 +29,8 @@ namespace Redmine.Net.Api.Exceptions
     /// such as configuration errors, validation failures, or unexpected conditions.
     /// </para>
     /// <para>
-    /// More specific exceptions like <see cref="RedmineApiException"/>, <see cref="UnauthorizedException"/>,
-    /// and <see cref="NotFoundException"/> derive from this class for specific error scenarios.
+    /// HTTP and transport errors are reported as <see cref="RedmineApiException"/>, which derives from this class
+    /// and exposes the HTTP status code through <see cref="RedmineApiException.HttpStatusCode"/>.
     /// </para>
     /// </remarks>
     /// <example>
@@ -40,12 +40,12 @@ namespace Redmine.Net.Api.Exceptions
     ///     var manager = new RedmineManager(options);
     ///     var issue = await manager.GetAsync&lt;Issue&gt;("12345");
     /// }
-    /// catch (UnauthorizedException ex)
+    /// catch (RedmineApiException ex) when (ex.HttpStatusCode == 401)
     /// {
     ///     // Handle authentication errors
     ///     Console.WriteLine("Authentication failed: " + ex.Message);
     /// }
-    /// catch (NotFoundException ex)
+    /// catch (RedmineApiException ex) when (ex.HttpStatusCode == 404)
     /// {
     ///     // Handle not found errors
     ///     Console.WriteLine("Resource not found: " + ex.Message);

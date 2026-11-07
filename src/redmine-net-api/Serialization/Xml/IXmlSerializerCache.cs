@@ -21,6 +21,8 @@ namespace Redmine.Net.Api.Serialization
 {
     internal interface IXmlSerializerCache
     {
+        XmlSerializer GetSerializer(Type type);
+
         XmlSerializer GetSerializer(Type type, string defaultNamespace);
 
         XmlSerializer GetSerializer(Type type, XmlRootAttribute root);

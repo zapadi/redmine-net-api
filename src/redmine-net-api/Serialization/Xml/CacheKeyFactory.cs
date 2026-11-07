@@ -16,6 +16,7 @@
 
 using System;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Xml.Serialization;
 
@@ -44,13 +45,19 @@ namespace Redmine.Net.Api.Serialization
         public static string Create(Type type, XmlAttributeOverrides overrides, Type[] types, XmlRootAttribute root, string defaultNamespace)
         {
             var keyBuilder = new StringBuilder();
-            keyBuilder.Append(type.FullName);
-            keyBuilder.Append( "??" );
-            keyBuilder.Append(overrides?.GetHashCode().ToString(CultureInfo.InvariantCulture));
-            keyBuilder.Append( "??" );
+            keyBuilder.Append(type.AssemblyQualifiedName);
+            keyBuilder.Append("??");
+            keyBuilder.Append(overrides == null ? null : RuntimeHelpers.GetHashCode(overrides).ToString(CultureInfo.InvariantCulture));
+            keyBuilder.Append("??");
             keyBuilder.Append(GetTypeArraySignature(types));
             keyBuilder.Append("??");
-            keyBuilder.Append(root?.GetHashCode().ToString(CultureInfo.InvariantCulture));
+            keyBuilder.Append(root?.ElementName);
+            keyBuilder.Append("??");
+            keyBuilder.Append(root?.Namespace);
+            keyBuilder.Append("??");
+            keyBuilder.Append(root?.DataType);
+            keyBuilder.Append("??");
+            keyBuilder.Append(root?.IsNullable.ToString(CultureInfo.InvariantCulture));
             keyBuilder.Append("??");
             keyBuilder.Append(defaultNamespace);
 

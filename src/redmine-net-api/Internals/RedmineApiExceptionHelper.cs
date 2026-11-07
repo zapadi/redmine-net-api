@@ -15,24 +15,54 @@ namespace Redmine.Net.Api.Internals;
 /// </summary>
 internal static class RedmineApiExceptionHelper
 {
+    private const string RequestIdHeader = "X-Request-Id";
+    internal const string UnknownErrorCode = "UNKNOWN";
+
     /// <summary>
     /// Maps an HTTP status code to an appropriate Redmine exception.
     /// </summary>
     /// <param name="statusCode">The HTTP status code.</param>
     /// <param name="inner">The inner exception, if any.</param>
-    /// <exception cref="RedmineException">A specific Redmine exception based on the status code.</exception>
-    internal static void MapStatusCodeToException(int statusCode, Exception inner)
+    /// <param name="method">The HTTP method of the request.</param>
+    /// <param name="endpoint">The request URL.</param>
+    /// <param name="responseHeaders">The response headers.</param>
+    /// <exception cref="RedmineApiException">Always thrown, with the status code in <see cref="RedmineApiException.HttpStatusCode"/>.</exception>
+    internal static void MapStatusCodeToException(int statusCode, Exception inner, string method = null, string endpoint = null, IDictionary<string, string> responseHeaders = null)
     {
-        throw statusCode switch
+        var message = statusCode switch
         {
-            HttpConstants.StatusCodes.NotFound => new RedmineApiException(HttpConstants.ErrorMessages.NotFound, inner, httpStatusCode: statusCode),
-            HttpConstants.StatusCodes.Unauthorized => new RedmineApiException(HttpConstants.ErrorMessages.Unauthorized, inner, httpStatusCode: statusCode),
-            HttpConstants.StatusCodes.Forbidden => new RedmineApiException(HttpConstants.ErrorMessages.Forbidden, inner, httpStatusCode: statusCode),
-            HttpConstants.StatusCodes.Conflict => new RedmineApiException(HttpConstants.ErrorMessages.Conflict, inner, httpStatusCode: statusCode),
-            HttpConstants.StatusCodes.NotAcceptable => new RedmineApiException(HttpConstants.ErrorMessages.NotAcceptable, inner, httpStatusCode: statusCode),
-            HttpConstants.StatusCodes.InternalServerError => new RedmineApiException(HttpConstants.ErrorMessages.InternalServerError, inner, httpStatusCode: statusCode),
-            _ => new RedmineApiException($"{(HttpStatusCode)statusCode}", inner, httpStatusCode: statusCode)
+            HttpConstants.StatusCodes.NotFound => HttpConstants.ErrorMessages.NotFound,
+            HttpConstants.StatusCodes.Unauthorized => HttpConstants.ErrorMessages.Unauthorized,
+            HttpConstants.StatusCodes.Forbidden => HttpConstants.ErrorMessages.Forbidden,
+            HttpConstants.StatusCodes.Conflict => HttpConstants.ErrorMessages.Conflict,
+            HttpConstants.StatusCodes.NotAcceptable => HttpConstants.ErrorMessages.NotAcceptable,
+            HttpConstants.StatusCodes.InternalServerError => HttpConstants.ErrorMessages.InternalServerError,
+            _ => $"{(HttpStatusCode)statusCode}"
         };
+
+        throw Create(message, inner, statusCode, method, endpoint, responseHeaders);
+    }
+
+    internal static RedmineApiException Create(string message, Exception inner, int? statusCode, string method, string endpoint, IDictionary<string, string> responseHeaders, bool isTransient = false, string errorCode = null)
+    {
+        string correlationId = null;
+        responseHeaders?.TryGetValue(RequestIdHeader, out correlationId);
+
+        return new RedmineApiException(
+            message,
+            inner,
+            errorCode,
+            isTransient || (statusCode.HasValue && IsTransientStatusCode(statusCode.Value)),
+            correlationId,
+            method,
+            endpoint,
+            statusCode,
+            responseHeaders);
+    }
+
+    private static bool IsTransientStatusCode(int statusCode)
+    {
+        return statusCode is 408 or 429 or 502 or 503 or 504;
     }
 
     /// <summary>
@@ -55,19 +85,22 @@ internal static class RedmineApiExceptionHelper
     /// <param name="responseContent"></param>
     /// <param name="inner"></param>
     /// <param name="serializer"></param>
+    /// <param name="method"></param>
+    /// <param name="endpoint"></param>
+    /// <param name="responseHeaders"></param>
     /// <returns></returns>
-    public static RedmineApiException CreateUnprocessableEntityException(string responseContent, Exception inner, IRedmineSerializer serializer)
+    public static RedmineApiException CreateUnprocessableEntityException(string responseContent, Exception inner, IRedmineSerializer serializer, string method = null, string endpoint = null, IDictionary<string, string> responseHeaders = null)
     {
         var errors = GetRedmineErrors(responseContent, serializer);
 
-        return Create(errors, inner);
+        return Create(errors, inner, method, endpoint, responseHeaders);
     }
 
-    private static RedmineApiException Create(List<Error> errors, Exception inner)
+    private static RedmineApiException Create(List<Error> errors, Exception inner, string method = null, string endpoint = null, IDictionary<string, string> responseHeaders = null)
     {
         if (errors is null)
         {
-            return new RedmineApiException( HttpConstants.ErrorMessages.UnprocessableEntity, inner, httpStatusCode: HttpConstants.StatusCodes.UnprocessableEntity);
+            return Create(HttpConstants.ErrorMessages.UnprocessableEntity, inner, HttpConstants.StatusCodes.UnprocessableEntity, method, endpoint, responseHeaders);
         }
 
         var sb = new StringBuilder();
@@ -82,7 +115,7 @@ internal static class RedmineApiExceptionHelper
             sb.Length -= 1;
         }
 
-        return new RedmineApiException($"{sb}", inner, httpStatusCode: HttpConstants.StatusCodes.UnprocessableEntity);
+        return Create($"{sb}", inner, HttpConstants.StatusCodes.UnprocessableEntity, method, endpoint, responseHeaders);
     }
 
     /// <summary>

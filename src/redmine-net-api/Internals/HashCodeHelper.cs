@@ -14,7 +14,6 @@
    limitations under the License.
 */
 
-using System;
 using System.Collections.Generic;
 
 namespace Redmine.Net.Api.Internals
@@ -60,27 +59,7 @@ namespace Redmine.Net.Api.Internals
         
         public static int GetHashCode<T>(List<T> list, int hash) where T : class
         {
-            unchecked
-            {
-                var hashCode = hash;
-                if (list == null)
-                {
-                    return hashCode;
-                }
-                
-                hashCode = (hashCode * 17) + list.Count;
-                
-                foreach (var t in list)
-                {
-                    hashCode *= 17;
-                    if (t != null)
-                    {
-                        hashCode += t.GetHashCode();
-                    }
-                }
-
-                return hashCode;
-            }
+            return GetHashCode((IList<T>)list, hash);
         }
 
         /// <summary>
@@ -98,15 +77,7 @@ namespace Redmine.Net.Api.Internals
             {
                 var hashCode = hash;
 
-                var type = typeof(T);
-
-                var isNullable = Nullable.GetUnderlyingType(type) != null;
-                if (isNullable)
-                {
-                    type = type.UnderlyingSystemType;
-                }
-
-                if (type.IsValueType)
+                if (typeof(T).IsValueType)
                 {
                     hashCode = (hashCode * 397) ^ entity.GetHashCode();
                 }

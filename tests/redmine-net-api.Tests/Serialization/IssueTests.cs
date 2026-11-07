@@ -42,6 +42,17 @@ public class IssueTests(XmlPrettyPrintFixture _) : IClassFixture<XmlPrettyPrintF
     }
 
     [Fact]
+    public void Should_Serialize_Json_Issue_Without_Parent_As_Null_Parent_Issue_Id()
+    {
+        var issue = new Redmine.Net.Api.Types.Issue { Subject = "subject" };
+
+        var output = SerializerFactory.Create(SerializerKind.NewtonsoftJson).Serialize(issue);
+
+        var parentIssueId = JObject.Parse(output)["issue"]!["parent_issue_id"];
+        Assert.Equal(JTokenType.Null, parentIssueId!.Type);
+    }
+
+    [Fact]
     public void Should_Omit_Json_Issue_Watcher_User_Ids_When_Empty()
     {
         var issue = new Redmine.Net.Api.Types.Issue { Subject = "subject", Watchers = [] };

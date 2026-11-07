@@ -14,7 +14,7 @@ namespace Redmine.Net.Api.Exceptions
     /// </para>
     /// <para>
     /// Use the <see cref="IsTransient"/> property to determine if the operation can be safely retried.
-    /// Transient errors include network timeouts, temporary server errors (5xx), and rate limiting.
+    /// Transient errors include network timeouts, connection failures, rate limiting (429) and the HTTP status codes 408, 502, 503 and 504.
     /// </para>
     /// </remarks>
     /// <example>
@@ -113,8 +113,23 @@ namespace Redmine.Net.Api.Exceptions
             string? endpoint = null,
             int? httpStatusCode = null,
             IDictionary<string,string>? responseHeaders = null)
+            : this(message, inner, null, isTransient, correlationId, method, endpoint, httpStatusCode, responseHeaders)
+        {
+        }
+
+        internal RedmineApiException(
+            string message,
+            Exception? inner,
+            string? errorCode,
+            bool isTransient,
+            string? correlationId,
+            string? method,
+            string? endpoint,
+            int? httpStatusCode,
+            IDictionary<string,string>? responseHeaders)
             : base(message, inner)
         {
+            ErrorCode = errorCode;
             IsTransient = isTransient;
             CorrelationId = correlationId;
             HttpStatusCode = httpStatusCode;
@@ -173,7 +188,7 @@ namespace Redmine.Net.Api.Exceptions
         /// Gets the API endpoint that was called.
         /// </summary>
         /// <value>
-        /// The relative endpoint path (e.g., "/issues/12345.json"), or <c>null</c> if not available.
+        /// The request URL (e.g., "https://redmine.example.com/issues/12345.json"), or <c>null</c> if not available.
         /// </value>
         public string? Endpoint { get; }
     

@@ -47,8 +47,13 @@ public sealed class RequestOptions
     public string UserAgent { get; set; }
     
     /// <summary>
-    /// 
+    /// Additional headers sent with the request.
     /// </summary>
+    /// <remarks>
+    /// Entries override WebClientOptions <see cref="IRedmineApiClientOptions.DefaultHeaders"/> with the same name.
+    /// Authentication, impersonation and, for requests with a body, Content-Type are set by the library and override entries in this dictionary
+    /// (use <see cref="ContentType"/> to change the content type).
+    /// </remarks>
     public Dictionary<string, string> Headers { get; set; }
 
     /// <summary>

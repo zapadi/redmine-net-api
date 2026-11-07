@@ -21,6 +21,7 @@ using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
 using Redmine.Net.Api.Internals;
+using Redmine.Net.Api.Serialization;
 
 namespace Redmine.Net.Api.Extensions
 {
@@ -186,7 +187,7 @@ namespace Redmine.Net.Api.Extensions
         public static List<T> ReadElementContentAsCollection<T>(this XmlReader reader) where T : class
         {
             List<T> result = null;
-            var serializer = new XmlSerializer(typeof(T));
+            var serializer = XmlSerializerCache.Instance.GetSerializer(typeof(T));
             var outerXml = reader.ReadOuterXml();
 
             if (string.IsNullOrEmpty(outerXml))
@@ -249,7 +250,7 @@ namespace Redmine.Net.Api.Extensions
         /// <returns></returns>
         public static IEnumerable<T> ReadElementContentAsEnumerable<T>(this XmlReader reader) where T : class
         {
-            var serializer = new XmlSerializer(typeof(T));
+            var serializer = XmlSerializerCache.Instance.GetSerializer(typeof(T));
             var outerXml = reader.ReadOuterXml();
 
             if (string.IsNullOrEmpty(outerXml))

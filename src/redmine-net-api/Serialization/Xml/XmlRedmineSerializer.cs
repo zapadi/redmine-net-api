@@ -167,7 +167,7 @@ namespace Redmine.Net.Api.Serialization
             {
                 using (var xmlWriter = XmlWriter.Create(stringWriter, xmlWriterSettings))
                 {
-                    var serializer = new XmlSerializer(typeof(T));
+                    var serializer = XmlSerializerCache.Instance.GetSerializer(typeof(T));
 
                     serializer.Serialize(xmlWriter, entity);
 
@@ -200,7 +200,7 @@ namespace Redmine.Net.Api.Serialization
             {
                 using (var xmlReader = XmlTextReaderBuilder.Create(textReader))
                 {
-                    var serializer = new XmlSerializer(typeof(TOut));
+                    var serializer = XmlSerializerCache.Instance.GetSerializer(typeof(TOut));
 
                     var entity = serializer.Deserialize(xmlReader);
 

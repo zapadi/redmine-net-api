@@ -97,7 +97,8 @@ namespace Redmine.Net.Api
         /// <param name="requestOptions">Optional request options.</param>
         /// <param name="cancellationToken">Optional cancellation token.</param>
         /// <returns>The created entity.</returns>
-        /// <exception cref="System.Exception">Thrown when an error occurs during the creation process.</exception>
+        /// <exception cref="Redmine.Net.Api.Exceptions.RedmineApiException">Thrown when the server returns an error status code (for example 422 when validation fails; see <see cref="Redmine.Net.Api.Exceptions.RedmineApiException.HttpStatusCode"/>), or when the request fails, times out or is canceled.</exception>
+        /// <exception cref="OperationCanceledException">Thrown when <paramref name="cancellationToken"/> is canceled before the request is sent.</exception>
         Task<T> CreateAsync<T>(T entity, string ownerId, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
             where T : class, new();
 

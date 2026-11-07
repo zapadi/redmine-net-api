@@ -40,10 +40,21 @@ internal sealed class InternalWebClient : System.Net.WebClient
 
             if (webRequest is not HttpWebRequest httpWebRequest)
             {
-                return base.GetWebRequest(address);
+                return webRequest;
             }
 
-            httpWebRequest.UserAgent = _webClientOptions.UserAgent.ValueOrFallback("RedmineDotNetAPIClient");
+            if (_webClientOptions.DefaultHeaders != null)
+            {
+                foreach (var defaultHeader in _webClientOptions.DefaultHeaders)
+                {
+                    if (httpWebRequest.Headers[defaultHeader.Key].IsNullOrWhiteSpace())
+                    {
+                        httpWebRequest.Headers[defaultHeader.Key] = defaultHeader.Value;
+                    }
+                }
+            }
+
+            httpWebRequest.UserAgent = httpWebRequest.UserAgent.ValueOrFallback(_webClientOptions.UserAgent.ValueOrFallback("RedmineDotNetAPIClient"));
 
             httpWebRequest.AutomaticDecompression = _webClientOptions.DecompressionFormat ?? DecompressionMethods.GZip | DecompressionMethods.Deflate | DecompressionMethods.None;
 
@@ -60,16 +71,6 @@ internal sealed class InternalWebClient : System.Net.WebClient
             AssignIfHasValue(_webClientOptions.UseCookies, value => httpWebRequest.CookieContainer = _webClientOptions.CookieContainer);
 
             AssignIfHasValue(_webClientOptions.UnsafeAuthenticatedConnectionSharing, value => httpWebRequest.UnsafeAuthenticatedConnectionSharing = value);
-
-            AssignIfHasValue(_webClientOptions.MaxResponseContentBufferSize, value => { });
-
-            if (_webClientOptions.DefaultHeaders != null)
-            {
-                foreach (var defaultHeader in _webClientOptions.DefaultHeaders)
-                {
-                    httpWebRequest.Headers[defaultHeader.Key] = defaultHeader.Value;
-                }
-            }
 
             httpWebRequest.CachePolicy = _webClientOptions.RequestCachePolicy;
 
