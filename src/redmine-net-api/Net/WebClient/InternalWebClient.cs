@@ -65,18 +65,27 @@ internal sealed class InternalWebClient : System.Net.WebClient
 
             if (_webClientOptions.DefaultHeaders != null)
             {
-                httpWebRequest.Headers = new WebHeaderCollection();
                 foreach (var defaultHeader in _webClientOptions.DefaultHeaders)
                 {
-                    httpWebRequest.Headers.Add(defaultHeader.Key, defaultHeader.Value);
+                    httpWebRequest.Headers[defaultHeader.Key] = defaultHeader.Value;
                 }
             }
 
             httpWebRequest.CachePolicy = _webClientOptions.RequestCachePolicy;
 
-            httpWebRequest.Proxy = _webClientOptions.Proxy;
+            if (_webClientOptions.Proxy != null)
+            {
+                httpWebRequest.Proxy = _webClientOptions.Proxy;
+            }
+            else if (_webClientOptions.UseProxy != true)
+            {
+                httpWebRequest.Proxy = null;
+            }
 
-            httpWebRequest.Credentials = _webClientOptions.Credentials;
+            if (_webClientOptions.Credentials != null)
+            {
+                httpWebRequest.Credentials = _webClientOptions.Credentials;
+            }
 
             #if NET40_OR_GREATER || NETCOREAPP
                 if (_webClientOptions.ClientCertificates != null)

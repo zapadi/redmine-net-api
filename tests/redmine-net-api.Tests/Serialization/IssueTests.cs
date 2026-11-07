@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json.Linq;
 using Padi.DotNet.RedmineAPI.Tests.Infrastructure;
 using Padi.DotNet.RedmineAPI.Tests.Tests;
 using Xunit;
@@ -22,6 +23,81 @@ public class IssueTests(XmlPrettyPrintFixture _) : IClassFixture<XmlPrettyPrintF
 
         Assert.Contains("<custom_field id=\"4\" />", output);
         Assert.DoesNotContain("<custom_field />", output);
+    }
+
+    [Fact]
+    public void Should_Serialize_Json_Issue_Watcher_User_Ids_As_Array()
+    {
+        var issue = new Redmine.Net.Api.Types.Issue
+        {
+            Subject = "subject",
+            Watchers = [new Redmine.Net.Api.Types.Watcher { Id = 1 }, new Redmine.Net.Api.Types.Watcher { Id = 2 }]
+        };
+
+        var output = SerializerFactory.Create(SerializerKind.NewtonsoftJson).Serialize(issue);
+
+        var watcherUserIds = JObject.Parse(output)["issue"]!["watcher_user_ids"];
+        Assert.Equal(JTokenType.Array, watcherUserIds!.Type);
+        Assert.Equal([1, 2], watcherUserIds.Values<int>());
+    }
+
+    [Fact]
+    public void Should_Omit_Json_Issue_Watcher_User_Ids_When_Empty()
+    {
+        var issue = new Redmine.Net.Api.Types.Issue { Subject = "subject", Watchers = [] };
+
+        var output = SerializerFactory.Create(SerializerKind.NewtonsoftJson).Serialize(issue);
+
+        Assert.Null(JObject.Parse(output)["issue"]!["watcher_user_ids"]);
+    }
+
+    [Fact]
+    public void Should_Serialize_Xml_Issue_Watcher_User_Ids_As_Repeated_Elements()
+    {
+        var issue = new Redmine.Net.Api.Types.Issue
+        {
+            Subject = "subject",
+            Watchers = [new Redmine.Net.Api.Types.Watcher { Id = 1 }, new Redmine.Net.Api.Types.Watcher { Id = 2 }]
+        };
+
+        var output = SerializerFactory.Create(SerializerKind.Xml).Serialize(issue);
+
+        Assert.Contains("<watcher_user_ids>1</watcher_user_ids>", output);
+        Assert.Contains("<watcher_user_ids>2</watcher_user_ids>", output);
+    }
+
+    [Fact]
+    public void Should_Deserialize_Xml_Issue_ChangeSets_With_Revision()
+    {
+        const string input = """
+                             <?xml version="1.0" encoding="UTF-8"?>
+                             <issue>
+                                 <id>1</id>
+                                 <subject>subject</subject>
+                                 <changesets type="array">
+                                     <changeset revision="abc123">
+                                         <user id="1" name="Redmine Admin"/>
+                                         <comments>first commit</comments>
+                                         <committed_on>2024-06-15T10:00:00Z</committed_on>
+                                     </changeset>
+                                     <changeset revision="def456">
+                                         <user id="2" name="John Smith"/>
+                                         <comments>second commit</comments>
+                                         <committed_on>2024-06-16T10:00:00Z</committed_on>
+                                     </changeset>
+                                 </changesets>
+                             </issue>
+                             """;
+
+        var output = SerializerFactory.Create(SerializerKind.Xml).Deserialize<Redmine.Net.Api.Types.Issue>(input);
+
+        Assert.NotNull(output.ChangeSets);
+        Assert.Equal(2, output.ChangeSets.Count);
+        Assert.Equal("abc123", output.ChangeSets[0].Revision);
+        Assert.Equal("first commit", output.ChangeSets[0].Comments);
+        Assert.Equal(1, output.ChangeSets[0].User.Id);
+        Assert.Equal("def456", output.ChangeSets[1].Revision);
+        Assert.Equal("second commit", output.ChangeSets[1].Comments);
     }
 
     [Theory]

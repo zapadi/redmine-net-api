@@ -38,9 +38,9 @@ public partial class RedmineManager: IRedmineManagerAsync
     {
         var totalCount = 0;
 
-        requestOptions ??= new RequestOptions();
+        requestOptions = requestOptions != null ? requestOptions.Clone() : new RequestOptions();
 
-        requestOptions.QueryString.AddPagingParameters(pageSize: 1, offset: 0);
+        requestOptions.QueryString = requestOptions.QueryString.AddPagingParameters(pageSize: 1, offset: 0);
 
         var tempResult = await GetPagedAsync<T>(requestOptions, cancellationToken).ConfigureAwait(false);
         if (tempResult != null)

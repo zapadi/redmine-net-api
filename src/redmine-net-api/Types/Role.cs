@@ -143,7 +143,7 @@ namespace Redmine.Net.Api.Types
                    && IssuesVisibility == other.IssuesVisibility 
                    && TimeEntriesVisibility == other.TimeEntriesVisibility
                    && UsersVisibility == other.UsersVisibility 
-                   && Permissions != null ? Permissions.Equals<Permission>(other.Permissions) : other.Permissions == null;
+                   && (Permissions?.Equals<Permission>(other.Permissions) ?? other.Permissions == null);
 
         }
 

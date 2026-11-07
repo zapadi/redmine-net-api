@@ -64,6 +64,10 @@ namespace Redmine.Net.Api.Extensions
             {
                 writer.WriteProperty(elementName, boolValue.ToLowerString());
             }
+            else if (value is IFormattable formattable)
+            {
+                writer.WriteProperty(elementName, formattable.ToString(null, CultureInfo.InvariantCulture));
+            }
             else
             {
                 writer.WriteProperty(elementName, value.ToString());

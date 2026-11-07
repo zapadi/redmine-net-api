@@ -124,7 +124,7 @@ namespace Redmine.Net.Api.Types
             return base.Equals(other)
                 && DefaultStatus == other.DefaultStatus
                 && string.Equals(Description, other.Description, StringComparison.Ordinal)
-                && EnabledStandardFields != null ? EnabledStandardFields.Equals<TrackerCoreField>(other.EnabledStandardFields) : other.EnabledStandardFields != null;
+                && (EnabledStandardFields?.Equals<TrackerCoreField>(other.EnabledStandardFields) ?? other.EnabledStandardFields == null);
         }
 
         /// <summary>

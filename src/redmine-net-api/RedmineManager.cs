@@ -88,18 +88,14 @@ namespace Redmine.Net.Api
     #if NET45_OR_GREATER || NETCOREAPP
             if (_redmineManagerOptions.WebClientOptions is RedmineWebClientOptions)
             {
-                ApiClient = _redmineManagerOptions.ClientFunc != null 
-                    ? new InternalRedmineApiWebClient(_redmineManagerOptions.ClientFunc, _redmineManagerOptions.Authentication, _redmineManagerOptions.Serializer)
-                    : new InternalRedmineApiWebClient(_redmineManagerOptions);
+                ApiClient = new InternalRedmineApiWebClient(_redmineManagerOptions);
             }
             else
             {
               
             }
     #else
-            ApiClient = _redmineManagerOptions.ClientFunc != null 
-            ? new InternalRedmineApiWebClient(_redmineManagerOptions.ClientFunc, _redmineManagerOptions.Authentication, _redmineManagerOptions.Serializer)
-            : new InternalRedmineApiWebClient(_redmineManagerOptions);
+            ApiClient = new InternalRedmineApiWebClient(_redmineManagerOptions);
     #endif
         }
 
@@ -111,10 +107,7 @@ namespace Redmine.Net.Api
             const int PAGE_SIZE = 1;
             const int OFFSET = 0;
 
-            if (requestOptions == null)
-            {
-                requestOptions = new RequestOptions();
-            }
+            requestOptions = requestOptions != null ? requestOptions.Clone() : new RequestOptions();
             
             requestOptions.QueryString = requestOptions.QueryString.AddPagingParameters(PAGE_SIZE, OFFSET);
             
@@ -224,7 +217,7 @@ namespace Redmine.Net.Api
             var isLimitSet = false;
             List<T> resultList = null;
 
-            requestOptions ??= new RequestOptions();
+            requestOptions = requestOptions != null ? requestOptions.Clone() : new RequestOptions();
             
             if (requestOptions.QueryString == null)
             {

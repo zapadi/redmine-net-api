@@ -128,10 +128,14 @@ namespace Redmine.Net.Api
         public IRedmineAuthentication Authentication { get; private set; }
 
         /// <summary>
-        /// 
+        /// Uses a custom <see cref="WebClient"/> for every request.
         /// </summary>
-        /// <param name="clientFunc"></param>
-        /// <returns></returns>
+        /// <param name="clientFunc">
+        /// A function that must return a new <see cref="WebClient"/> instance on every call.
+        /// The library disposes the returned client after each request, and the configured
+        /// WebClientOptions are not applied to it.
+        /// </param>
+        /// <returns>The current builder.</returns>
         public RedmineManagerOptionsBuilder WithWebClient(Func<WebClient> clientFunc)
         {
             _clientType = ClientType.WebClient;
@@ -262,7 +266,8 @@ namespace Redmine.Net.Api
                 Serializer = (_isSerializationIgnored) ? null : RedmineSerializerFactory.CreateSerializer(SerializationType),
                 RedmineVersion = Version,
                 Authentication = Authentication ?? new RedmineNoAuthentication(),
-                WebClientOptions = WebClientOptions 
+                WebClientOptions = WebClientOptions,
+                ClientFunc = ClientFunc
             };
             
             return options;

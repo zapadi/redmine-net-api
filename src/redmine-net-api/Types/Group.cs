@@ -147,7 +147,10 @@ namespace Redmine.Net.Api.Types
             using (new JsonObject(writer, RedmineKeys.GROUP))
             {
                 writer.WriteProperty(RedmineKeys.NAME, Name);
-                writer.WriteRepeatableElement(RedmineKeys.USER_IDS, (IEnumerable<IValue>)Users);
+                if (Users != null && Users.Count > 0)
+                {
+                    writer.WriteArrayIds(RedmineKeys.USER_IDS, (IEnumerable<IdentifiableName>)Users);
+                }
             }
         }
         #endregion
@@ -165,9 +168,9 @@ namespace Redmine.Net.Api.Types
         {
             if (other == null) return false;
             return base.Equals(other)
-                   && Users != null ? Users.Equals<GroupUser>(other.Users) : other.Users == null
-                   && CustomFields != null ? CustomFields.Equals<IssueCustomField>(other.CustomFields) : other.CustomFields == null
-                   && Memberships != null ? Memberships.Equals<Membership>(other.Memberships) : other.Memberships == null;
+                   && (Users?.Equals<GroupUser>(other.Users) ?? other.Users == null)
+                   && (CustomFields?.Equals<IssueCustomField>(other.CustomFields) ?? other.CustomFields == null)
+                   && (Memberships?.Equals<Membership>(other.Memberships) ?? other.Memberships == null);
         }
 
         /// <summary>

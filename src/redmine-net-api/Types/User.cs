@@ -347,9 +347,9 @@ namespace Redmine.Net.Api.Types
                 && IsAdmin == other.IsAdmin
                 && PasswordChangedOn == other.PasswordChangedOn
                 && UpdatedOn == other.UpdatedOn
-                && CustomFields != null ? CustomFields.Equals<IssueCustomField>(other.CustomFields) : other.CustomFields == null
-                && Memberships != null ? Memberships.Equals<Membership>(other.Memberships) : other.Memberships == null
-                && Groups != null ? Groups.Equals<UserGroup>(other.Groups) : other.Groups == null;
+                && (CustomFields?.Equals<IssueCustomField>(other.CustomFields) ?? other.CustomFields == null)
+                && (Memberships?.Equals<Membership>(other.Memberships) ?? other.Memberships == null)
+                && (Groups?.Equals<UserGroup>(other.Groups) ?? other.Groups == null);
         }
         
         /// <summary>
