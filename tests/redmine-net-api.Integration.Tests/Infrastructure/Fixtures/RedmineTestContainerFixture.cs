@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Net;
+using System.Net.Http;
 using DotNet.Testcontainers.Builders;
 using DotNet.Testcontainers.Configurations;
 using DotNet.Testcontainers.Containers;
@@ -10,6 +11,7 @@ using Padi.RedmineAPI.Integration.Tests.Helpers;
 using Padi.RedmineAPI.Integration.Tests.Infrastructure;
 using Padi.RedmineAPI.Integration.Tests.Infrastructure.Options;
 using Redmine.Net.Api;
+using Redmine.Net.Api.Http;
 using Testcontainers.PostgreSql;
 using Xunit;
 
@@ -24,6 +26,7 @@ public class RedmineTestContainerFixture : IAsyncLifetime
      private INetwork? Network { get; set; }
      private PostgreSqlContainer? PostgresContainer { get; set; }
      private IContainer? RedmineContainer { get; set; }
+     private HttpClient? HttpClient { get; set; }
      
      private readonly PostgresOptions _postgresOptions;
      private readonly RedmineOptions _redmineOptions;
@@ -45,6 +48,8 @@ public class RedmineTestContainerFixture : IAsyncLifetime
      
     public async ValueTask DisposeAsync()
     {
+       HttpClient?.Dispose();
+
        if (_testContainerOptions.Mode == TestContainerMode.UseExisting)
        {
            return;
@@ -156,7 +161,12 @@ public class RedmineTestContainerFixture : IAsyncLifetime
             RedmineHost = _redmineOptions.Url ?? throw new ArgumentNullException(nameof(RedmineOptions.Url));
         }
         
-        RedmineManager = CreateRedmineManager(_redmineOptions, RedmineHost);
+        if (_redmineOptions.Client == ClientType.Http)
+        {
+            HttpClient = new HttpClient();
+        }
+
+        RedmineManager = CreateRedmineManager(_redmineOptions, RedmineHost, HttpClient);
         return;
 
         async Task LoadDefaultDataAsync()
@@ -193,7 +203,7 @@ public class RedmineTestContainerFixture : IAsyncLifetime
         }
     }
     
-    private static RedmineManager CreateRedmineManager(RedmineOptions redmineOptions, string redmineHost)
+    private static RedmineManager CreateRedmineManager(RedmineOptions redmineOptions, string redmineHost, HttpClient? httpClient)
      {
          Ensure.NotNull(redmineOptions, nameof(redmineOptions));
 
@@ -218,11 +228,13 @@ public class RedmineTestContainerFixture : IAsyncLifetime
                  break;
          }
          
+         rmgBuilder.WithHost(redmineHost);
          switch (redmineOptions.Client)
          {
              case ClientType.Http:
+                 rmgBuilder.WithHttpClient(httpClient ?? throw new ArgumentNullException(nameof(httpClient)));
+                 break;
              case ClientType.Web:
-                 rmgBuilder.WithHost(redmineHost);
                  break;
              default:
                  throw new ArgumentOutOfRangeException(nameof(redmineOptions.Client));

@@ -30,7 +30,7 @@ public sealed class NullSafetyTests
         }
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public void Error_Response_Headers_With_Null_Key_Or_Value_Are_Handled()
     {
         var headers = new NameValueCollection { { null, "orphan" }, { "X-Empty", null }, { "X-Request-Id", "abc" } };
@@ -45,7 +45,7 @@ public sealed class NullSafetyTests
         Assert.Equal(2, exception.ResponseHeaders.Count);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public void Custom_Web_Client_Without_Base_Address_Option_Does_Not_Throw()
     {
         using var server = new TestHttpServer(_ => RedminePagedServer.Response("<project><id>1</id></project>"));

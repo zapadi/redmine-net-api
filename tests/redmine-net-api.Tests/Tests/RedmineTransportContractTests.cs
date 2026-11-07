@@ -89,7 +89,7 @@ public abstract class RedmineTransportContractTests
             : transport.Send(request);
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
     public async Task Get_Should_Send_Method_Uri_Query_And_Headers(bool async)
@@ -111,7 +111,7 @@ public abstract class RedmineTransportContractTests
         AssertBaseAddress(server.Url, request);
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false, "POST")]
     [InlineData(true, "POST")]
     [InlineData(false, "PUT")]
@@ -132,7 +132,20 @@ public abstract class RedmineTransportContractTests
         Assert.Equal(new byte[] { 1, 2 }, response.Body);
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task Content_Headers_Should_Be_Sent_With_Body(bool async)
+    {
+        using var server = new TestHttpServer(_ => new TestHttpResponse());
+        var transport = CreateTransport(server.Url, userAgent: "agent");
+
+        await SendAsync(transport, Request(HttpVerbs.POST, server.Url + "projects.xml", Headers("Content-Language", "ro"), "application/xml", [1]), async);
+
+        AssertHeaders(new Dictionary<string, string> { { "User-Agent", "agent" }, { "Content-Type", "application/xml" }, { "Content-Language", "ro" } }, Assert.Single(server.Requests));
+    }
+
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
     public async Task Delete_Without_Body_Should_Send_Empty_Body(bool async)
@@ -148,7 +161,7 @@ public abstract class RedmineTransportContractTests
         AssertHeaders(new Dictionary<string, string> { { "User-Agent", "agent" } }, sent);
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false, 404)]
     [InlineData(true, 404)]
     [InlineData(false, 500)]
@@ -173,7 +186,7 @@ public abstract class RedmineTransportContractTests
         AssertBaseAddress(server.Url, request);
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
     public async Task Download_Should_Return_Bytes_And_Report_Progress(bool async)
@@ -192,7 +205,7 @@ public abstract class RedmineTransportContractTests
         Assert.True(SpinWait.SpinUntil(() => progress.Values.Length > 0, TimeSpan.FromSeconds(5)));
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public async Task SendAsync_Should_Throw_Timeout_When_Timeout_Elapses()
     {
         using var server = new TestHttpServer(_ => new TestHttpResponse { Delay = TimeSpan.FromSeconds(5) });
@@ -203,7 +216,7 @@ public abstract class RedmineTransportContractTests
         AssertTimeout(exception);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public async Task SendAsync_Should_Throw_OperationCanceledException_With_Inner_When_Canceled_In_Flight()
     {
         using var server = new TestHttpServer(_ => new TestHttpResponse { Delay = TimeSpan.FromSeconds(5) });
@@ -216,7 +229,7 @@ public abstract class RedmineTransportContractTests
         AssertCanceled(exception, cts.Token);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public async Task SendAsync_Should_Throw_OperationCanceledException_Without_Inner_When_Canceled_Before_Start()
     {
         using var server = new TestHttpServer(_ => new TestHttpResponse());
@@ -230,7 +243,7 @@ public abstract class RedmineTransportContractTests
         Assert.Empty(server.Requests);
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
     public async Task Transport_Defaults_Should_Be_Sent_Only_When_Request_Does_Not_Set_Them(bool async)
@@ -264,7 +277,7 @@ public abstract class RedmineTransportContractTests
         }, Assert.Single(server.Requests));
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
     public async Task Multiple_Header_Values_Should_Be_Applied_In_Order(bool async)
@@ -278,7 +291,7 @@ public abstract class RedmineTransportContractTests
         Assert.Equal("last", Assert.Single(server.Requests).Headers["X-Custom"]);
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
     public async Task Header_Without_Values_Should_Be_Skipped(bool async)
@@ -358,7 +371,7 @@ public sealed class WebClientTransportContractTests : RedmineTransportContractTe
         Assert.Equal(baseUrl, request.BaseAddress);
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
     public async Task Relative_Address_And_Query_String_Should_Be_Resolved_Against_Base_Address(bool async)
@@ -376,7 +389,7 @@ public sealed class WebClientTransportContractTests : RedmineTransportContractTe
         Assert.Equal(server.Url, request.BaseAddress);
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
     public async Task Null_Body_With_Content_Type_Should_Throw_RedmineApiException(bool async)

@@ -2,9 +2,14 @@ name: Build and Test
 
 on:
   workflow_call:
+    inputs:
+      ref:
+        description: 'Commit to build and test (defaults to the triggering commit)'
+        required: false
+        type: string
   workflow_dispatch:
   push:
-    branches: [ master ]
+    branches: [ master, '*.x' ]
     paths:
       - '**.cs'
       - '**.csproj'
@@ -14,8 +19,9 @@ on:
       - 'global.json'
       - '**/CompatibilitySuppressions.xml'
       - '.github/workflows/build-and-test.yml'
+      - '.github/scripts/**'
   pull_request:
-    branches: [ master ]
+    branches: [ master, '*.x' ]
     paths:
       - '**.cs'
       - '**.csproj'
@@ -25,13 +31,14 @@ on:
       - 'global.json'
       - '**/CompatibilitySuppressions.xml'
       - '.github/workflows/build-and-test.yml'
+      - '.github/scripts/**'
 
 permissions:
   contents: read
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.workflow == 'Build and Test' }}
 
 env:
   DOTNET_NOLOGO: true
@@ -50,6 +57,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
+          ref: ${{ inputs.ref || github.sha }}
           persist-credentials: false
 
       - uses: actions/setup-dotnet@v6
@@ -69,6 +77,9 @@ jobs:
           --no-restore
           --output detailed
           --report-trx
+          --hangdump
+          --hangdump-timeout 5m
+          --hangdump-type Mini
           --results-directory TestResults
 
       - name: Test (.NET Framework)
@@ -81,13 +92,34 @@ jobs:
           --no-restore
           --output detailed
           --report-trx
+          --hangdump
+          --hangdump-timeout 5m
+          --hangdump-type Mini
           --results-directory TestResults
 
       - name: Validate package
         if: matrix.os == 'ubuntu-latest'
+        shell: bash
         run: |
-          dotnet pack src/redmine-net-api/redmine-net-api.csproj --configuration Release --no-build --output ./artifacts
-          dotnet pack src/redmine-net-api/redmine-net-api.csproj --configuration Release --output ./artifacts -p:Sign=true
+          for package in redmine-api redmine-api.http; do
+            case "$package" in
+              redmine-api) project=src/redmine-net-api/redmine-net-api.csproj ;;
+              redmine-api.http) project=src/redmine-net-api.Http/redmine-net-api.Http.csproj ;;
+            esac
+
+            version=$(dotnet msbuild "$project" -getProperty:Version)
+            for sign in false true; do
+              id=$package
+              if [[ "$sign" == true ]]; then id=$package-signed; fi
+              baseline=$(.github/scripts/nuget-baseline.sh "$id" "$version")
+              echo "Packing $id $version (package validation baseline: ${baseline:-none})"
+              dotnet pack "$project" \
+                --configuration Release \
+                --output ./artifacts \
+                -p:Sign="$sign" \
+                ${baseline:+-p:PackageValidationBaselineVersion="$baseline"}
+            done
+          done
 
       - name: Upload test results
         if: always()

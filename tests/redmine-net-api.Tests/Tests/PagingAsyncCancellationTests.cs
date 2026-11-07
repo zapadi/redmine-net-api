@@ -77,7 +77,7 @@ public sealed class PagingAsyncCancellationTests
         return new RedmineManager(builder);
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(0, 3)]
     [InlineData(1, 1)]
     [InlineData(5, 5)]
@@ -92,7 +92,7 @@ public sealed class PagingAsyncCancellationTests
         Assert.InRange(transport.MaxInFlight, Math.Min(2, expected), expected);
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(0)]
     [InlineData(-1)]
     public void Max_Concurrent_Requests_Below_One_Throws(int value)
@@ -100,7 +100,7 @@ public sealed class PagingAsyncCancellationTests
         Assert.Throws<RedmineException>(() => new RedmineManagerOptionsBuilder().WithMaxConcurrentRequests(value));
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public async Task Cancellation_Waits_For_Started_Page_Requests()
     {
         using var cts = new CancellationTokenSource();
@@ -119,7 +119,7 @@ public sealed class PagingAsyncCancellationTests
         Assert.Equal(transport.Started, transport.Completed);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public async Task Page_Failure_Surfaces_After_Started_Pages_Complete()
     {
         var transport = new SlowPagesTransport(_ => { }, failingOffset: 50);

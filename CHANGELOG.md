@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+### redmine-api
+
 🚀 Features
 *	Added Project.ProjectCustomFields to set and read project custom field values
 *	A project read from Redmine now re-sends its custom field values (ProjectCustomFields) on update
@@ -82,6 +84,16 @@
 *	Added build provenance attestations for NuGet packages
 *	Added Dependabot for GitHub Actions and NuGet
 *	Removed AppVeyor
+*	Each package has its own version and is released independently with release-please (Conventional Commits); shared package settings moved to src/Directory.Build.props
+*	Package validation compares against the latest stable version on nuget.org (passed by CI, no longer hardcoded)
+*	Package release notes link to CHANGELOG.md
+
+### redmine-api.http
+
+Unreleased; released from `master` only (not part of the 4.x releases).
+
+🚀 Features
+*	New redmine-api.http package: HttpClient transport (WithHttpClient) for .NET Framework 4.5+ and .NET 5+
 
 ## [v4.50.0]
 

@@ -71,7 +71,7 @@ public sealed class RedmineApiClientCharacterizationTests
         Assert.Equal(errorCode, exception.ErrorCode);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public void Get_Should_Decode_Utf8_Charset()
     {
         using var server = new TestHttpServer(_ => Response(NonAscii));
@@ -87,7 +87,7 @@ public sealed class RedmineApiClientCharacterizationTests
         Assert.Null(response.Exception);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public async Task GetAsync_Should_Decode_Utf8_Charset()
     {
         using var server = new TestHttpServer(_ => Response(NonAscii));
@@ -100,7 +100,7 @@ public sealed class RedmineApiClientCharacterizationTests
         Assert.Equal(200, response.StatusCode);
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
     public async Task Get_Without_Charset_Should_Decode_With_WebClient_Default_Encoding(bool async)
@@ -117,7 +117,7 @@ public sealed class RedmineApiClientCharacterizationTests
         Assert.Equal(webClient.Encoding.GetString(bytes), response.Content);
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
     public async Task Get_With_Latin1_Charset_Should_Decode_As_Today(bool async)
@@ -134,7 +134,7 @@ public sealed class RedmineApiClientCharacterizationTests
         Assert.Equal(webClient.Encoding.GetString(bytes), response.Content);
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
     public async Task Get_Should_Strip_Utf8_Bom(bool async)
@@ -150,7 +150,7 @@ public sealed class RedmineApiClientCharacterizationTests
         Assert.Equal(NonAscii, response.Content);
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
     public async Task Get_Should_Send_Request_And_Return_Response_Headers(bool async)
@@ -172,7 +172,7 @@ public sealed class RedmineApiClientCharacterizationTests
         Assert.Equal(ProjectXml, response.Content);
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
     public async Task Create_Should_Send_Body_And_Return_Raw_Content(bool async)
@@ -202,7 +202,7 @@ public sealed class RedmineApiClientCharacterizationTests
         Assert.True(response.IsSuccessful);
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false, "PUT")]
     [InlineData(true, "PUT")]
     [InlineData(false, "PATCH")]
@@ -241,7 +241,7 @@ public sealed class RedmineApiClientCharacterizationTests
         Assert.Equal(204, response.StatusCode);
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
     public async Task Delete_Should_Send_Empty_Body_Without_Content_Type(bool async)
@@ -266,7 +266,7 @@ public sealed class RedmineApiClientCharacterizationTests
         Assert.Equal(200, response.StatusCode);
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
     public async Task Upload_Should_Send_Octet_Stream(bool async)
@@ -292,7 +292,7 @@ public sealed class RedmineApiClientCharacterizationTests
         Assert.Equal("<upload><token>t</token></upload>", Encoding.UTF8.GetString(response.RawContent));
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
     public async Task Download_Should_Return_Bytes(bool async)
@@ -315,7 +315,7 @@ public sealed class RedmineApiClientCharacterizationTests
         Assert.Equal(200, response.StatusCode);
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
     public async Task Download_Should_Report_Progress(bool async)
@@ -334,7 +334,7 @@ public sealed class RedmineApiClientCharacterizationTests
         Assert.All(progress.Values, value => Assert.InRange(value, 0, 100));
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
     public void DownloadFile_With_Progress_Should_Restore_SynchronizationContext_Without_Posting(bool withContext)
@@ -360,7 +360,7 @@ public sealed class RedmineApiClientCharacterizationTests
             {
                 error = ex;
             }
-        });
+        }) { IsBackground = true };
         thread.Start();
         Assert.True(thread.Join(TimeSpan.FromSeconds(10)));
 
@@ -371,7 +371,7 @@ public sealed class RedmineApiClientCharacterizationTests
         Assert.Equal(0, context?.Posts ?? 0);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public void DownloadFile_Should_Resolve_Absolute_Address()
     {
         using var server = new TestHttpServer(_ => new TestHttpResponse { Body = [1] });
@@ -383,7 +383,7 @@ public sealed class RedmineApiClientCharacterizationTests
         Assert.Equal("/attachments/download/1/a.bin", Assert.Single(server.Requests).RawUrl);
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
     public async Task Create_Should_Apply_Header_Precedence(bool async)
@@ -418,7 +418,7 @@ public sealed class RedmineApiClientCharacterizationTests
         }, request);
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
     public async Task Get_Should_Apply_Header_Precedence(bool async)
@@ -453,7 +453,7 @@ public sealed class RedmineApiClientCharacterizationTests
         }, request);
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
     public async Task Delete_Should_Apply_Header_Precedence(bool async)
@@ -488,7 +488,7 @@ public sealed class RedmineApiClientCharacterizationTests
         }, request);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public void Get_Should_Send_Options_UserAgent_And_DefaultHeaders_When_Request_Does_Not_Set_Them()
     {
         using var server = new TestHttpServer(_ => Response(ProjectXml));
@@ -513,7 +513,7 @@ public sealed class RedmineApiClientCharacterizationTests
         }, Assert.Single(server.Requests));
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
     public async Task Basic_Authentication_Should_Send_Authorization_Header(bool async)
@@ -538,7 +538,7 @@ public sealed class RedmineApiClientCharacterizationTests
         }, Assert.Single(server.Requests));
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public void No_Authentication_Should_Keep_RequestOptions_Authentication_Headers()
     {
         using var server = new TestHttpServer(_ => Response(ProjectXml));
@@ -588,7 +588,7 @@ public sealed class RedmineApiClientCharacterizationTests
         };
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
     public async Task Not_Found_Should_Throw_With_Details(bool async)
@@ -608,7 +608,7 @@ public sealed class RedmineApiClientCharacterizationTests
         Assert.Equal(WebExceptionStatus.ProtocolError, inner.Status);
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false, 401, "Authentication is required or has failed.", false)]
     [InlineData(true, 403, "You don't have permission to access this resource.", false)]
     [InlineData(false, 406, "The requested format is not supported.", false)]
@@ -631,7 +631,7 @@ public sealed class RedmineApiClientCharacterizationTests
         Assert.IsType<WebException>(exception.InnerException);
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
     public async Task Download_Error_Should_Report_Get_Method(bool async)
@@ -646,7 +646,7 @@ public sealed class RedmineApiClientCharacterizationTests
         AssertException(exception, "The requested resource was not found.", 404, "GET", $"{server.Url}attachments/download/1/a.txt", false, null);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public void DownloadFile_With_Progress_Error_Should_Throw_Like_Without_Progress()
     {
         using var server = new TestHttpServer(_ => Response("error", 404, "text/plain"));
@@ -674,7 +674,7 @@ public sealed class RedmineApiClientCharacterizationTests
         Assert.Equal("GET", exception.Method);
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
     public async Task Not_Found_With_Stalled_Body_Should_Throw_Without_Reading_Body(bool async)
@@ -690,7 +690,7 @@ public sealed class RedmineApiClientCharacterizationTests
         AssertException(await call, "The requested resource was not found.", 404, "GET", $"{server.Url}projects/1.xml", false, null);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public async Task DownloadAsync_With_Progress_Error_Should_Throw()
     {
         using var server = new TestHttpServer(_ => Response("error", 404, "text/plain"));
@@ -702,7 +702,7 @@ public sealed class RedmineApiClientCharacterizationTests
         Assert.IsType<WebException>(exception.InnerException);
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
     public async Task Unprocessable_Entity_Should_Throw_Validation_Errors(bool async)
@@ -721,7 +721,7 @@ public sealed class RedmineApiClientCharacterizationTests
         Assert.Null(exception.InnerException);
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
     public async Task Unprocessable_Entity_With_Empty_Body_Should_Throw_Default_Message(bool async)
@@ -738,7 +738,7 @@ public sealed class RedmineApiClientCharacterizationTests
         Assert.NotNull(exception.ResponseHeaders);
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
     public async Task Unprocessable_Entity_With_Invalid_Body_Should_Throw_Without_Request_Details(bool async)
@@ -759,7 +759,7 @@ public sealed class RedmineApiClientCharacterizationTests
         Assert.Equal(exception.InnerException.Message, exception.Message);
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
     public async Task Connection_Failure_Should_Be_Transient(bool async)
@@ -789,7 +789,7 @@ public sealed class RedmineApiClientCharacterizationTests
 #endif
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
     public async Task Timeout_Should_Throw_Transient_Timeout(bool async)
@@ -806,7 +806,7 @@ public sealed class RedmineApiClientCharacterizationTests
         Assert.NotNull(exception.InnerException);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public async Task GetAsync_With_Canceled_Token_Should_Throw_OperationCanceledException_Before_Sending()
     {
         using var server = new TestHttpServer(_ => Response(ProjectXml));
@@ -820,7 +820,7 @@ public sealed class RedmineApiClientCharacterizationTests
         Assert.Empty(server.Requests);
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(null)]
     [InlineData(30000)]
     public async Task GetAsync_Canceled_In_Flight_Should_Throw_Canceled_By_User(int? timeoutMilliseconds)
@@ -838,7 +838,7 @@ public sealed class RedmineApiClientCharacterizationTests
         Assert.Equal(WebExceptionStatus.RequestCanceled, inner.Status);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public async Task DownloadAsync_With_Timeout_Should_Time_Out_On_Request_Timeout()
     {
         using var server = new TestHttpServer(_ => new TestHttpResponse { Body = [1, 2], Delay = TimeSpan.FromSeconds(2) });
@@ -851,7 +851,7 @@ public sealed class RedmineApiClientCharacterizationTests
         Assert.Equal(WebExceptionStatus.Timeout, Assert.IsType<WebException>(apiException.InnerException).Status);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public void Custom_WebClient_Should_Report_Ok_Status_And_Use_Its_BaseAddress()
     {
         using var server = new TestHttpServer(_ => Response(ProjectXml, 201));
@@ -866,7 +866,7 @@ public sealed class RedmineApiClientCharacterizationTests
         Assert.Equal("/projects.xml", Assert.Single(server.Requests).RawUrl);
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
     public async Task Custom_WebClient_Error_Should_Use_Its_BaseAddress_For_Endpoint(bool async)
@@ -883,7 +883,7 @@ public sealed class RedmineApiClientCharacterizationTests
         AssertException(exception, "The requested resource was not found.", 404, "GET", $"{server.Url}redmine/projects/1.xml", false, null);
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
     public async Task Custom_WebClient_Encoding_Should_Decode_Get_Response(bool async)
@@ -901,7 +901,7 @@ public sealed class RedmineApiClientCharacterizationTests
         Assert.Equal("<name>café</name>", response.Content);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public void Custom_WebClient_Should_Keep_Its_Headers_And_QueryString()
     {
         using var server = new TestHttpServer(_ => Response(ProjectXml));
@@ -924,7 +924,7 @@ public sealed class RedmineApiClientCharacterizationTests
         AssertHeaders(new Dictionary<string, string> { { "X-Client", "client" }, { "X-Redmine-API-Key", ApiKey } }, request);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public async Task Custom_WebClient_Func_Returning_Null_Should_Throw_RedmineException_Even_When_Canceled()
     {
         var manager = new RedmineManager(new RedmineManagerOptionsBuilder().WithHost("http://localhost:3000").WithWebClient(() => null));
@@ -936,7 +936,7 @@ public sealed class RedmineApiClientCharacterizationTests
         Assert.Equal("The web client function configured with WithWebClient returned null.", exception.Message);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public async Task Custom_WebClient_Func_Throwing_TimeoutException_Should_Propagate()
     {
         var timeout = new TimeoutException("t", new WebException("canceled", WebExceptionStatus.RequestCanceled));
@@ -947,7 +947,7 @@ public sealed class RedmineApiClientCharacterizationTests
         Assert.Same(timeout, exception);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public async Task Custom_WebClient_Func_Throwing_OperationCanceledException_With_Inner_Should_Propagate()
     {
         var canceled = new OperationCanceledException("c", new InvalidOperationException("inner"));
@@ -958,7 +958,7 @@ public sealed class RedmineApiClientCharacterizationTests
         Assert.Same(canceled, exception);
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
     public async Task Invalid_RequestOptions_Header_Overridden_Later_Should_Still_Throw(bool async)
@@ -977,7 +977,7 @@ public sealed class RedmineApiClientCharacterizationTests
         Assert.Empty(server.Requests);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public async Task Invalid_RequestOptions_Header_With_Canceled_Token_Should_Throw_OperationCanceledException()
     {
         using var server = new TestHttpServer(_ => Response(ProjectXml));
@@ -991,7 +991,7 @@ public sealed class RedmineApiClientCharacterizationTests
         Assert.Empty(server.Requests);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public void Custom_WebClient_Func_Throwing_WebException_Should_Use_Address_As_Endpoint()
     {
         var manager = new RedmineManager(new RedmineManagerOptionsBuilder().WithHost("http://localhost:3000").WithWebClient(() => throw new WebException("boom", WebExceptionStatus.SendFailure)));

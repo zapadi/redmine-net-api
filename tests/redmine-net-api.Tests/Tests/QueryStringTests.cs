@@ -24,7 +24,7 @@ public sealed class QueryStringTests
         return new RequestOptions { QueryString = query };
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public async Task UploadFileAsync_Keeps_File_Name_And_Query_String()
     {
         using var server = new TestHttpServer(_ => RedminePagedServer.Response(UploadXml));
@@ -35,7 +35,7 @@ public sealed class QueryStringTests
         Assert.Equal("/uploads.xml?filename=a%20b.txt&x=1&y=2", server.Requests.Single().RawUrl);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public void Upload_Keeps_Address_Query_And_Query_String()
     {
         using var server = new TestHttpServer(_ => RedminePagedServer.Response(UploadXml));
@@ -46,7 +46,7 @@ public sealed class QueryStringTests
         Assert.Equal("/uploads.xml?filename=a.txt&x=1", server.Requests.Single().RawUrl);
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false, "/uploads.xml?filename=a.txt&x=1")]
     [InlineData(true, "/uploads.xml?filename=a.txt&x=1")]
     public void Address_Query_Keys_Are_Not_Duplicated(bool encode, string expected)
@@ -65,7 +65,7 @@ public sealed class QueryStringTests
         Assert.Equal(expected, server.Requests.Single().RawUrl);
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
     public async Task Address_Without_Query_Is_Unchanged(bool withQueryString)
@@ -79,7 +79,7 @@ public sealed class QueryStringTests
         Assert.Equal(withQueryString ? "/uploads.xml?x=1&status_id=1,2" : "/uploads.xml", server.Requests.Single().RawUrl);
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false, "/search.xml?q=C&C&limit=25&offset=0")]
     [InlineData(true, "/search.xml?q=C%26C&limit=25&offset=0")]
     public void Search_Query_Is_Encoded_Only_When_Enabled(bool encode, string expected)
@@ -98,7 +98,7 @@ public sealed class QueryStringTests
         Assert.Equal(expected, server.Requests.Single().RawUrl);
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false, "/issues.xml?subject=~C++&status_id=1,2&limit=1&offset=0")]
     [InlineData(true, "/issues.xml?subject=~C%2B%2B&status_id=1%2C2&limit=1&offset=0")]
     public async Task Query_String_Keys_And_Values_Are_Encoded_Only_When_Enabled(bool encode, string expected)
@@ -117,7 +117,7 @@ public sealed class QueryStringTests
         Assert.Equal(expected, server.Requests.Single().RawUrl);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public void Encoding_Keeps_Address_Query()
     {
         using var server = new TestHttpServer(_ => RedminePagedServer.Response(UploadXml));

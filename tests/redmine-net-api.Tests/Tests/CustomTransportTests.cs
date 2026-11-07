@@ -89,7 +89,7 @@ public sealed class CustomTransportTests
             : Assert.Throws<RedmineApiException>(sync);
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
     public async Task Verbs_Should_Be_Sent_Through_Custom_Transport(bool async)
@@ -152,7 +152,7 @@ public sealed class CustomTransportTests
         Assert.All(requests.Take(5), r => Assert.Null(r.Progress));
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
     public async Task Paging_Should_Fetch_All_Pages(bool async)
@@ -176,7 +176,7 @@ public sealed class CustomTransportTests
         Assert.All(transport.Requests, r => Assert.Contains("limit=25", r.Uri.Query, StringComparison.Ordinal));
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public void Headers_Should_Contain_Authentication_Impersonation_And_Request_Options()
     {
         var transport = new FakeTransport(_ => Xml(ProjectXml));
@@ -200,7 +200,7 @@ public sealed class CustomTransportTests
         Assert.Equal("value", request.Headers["X-Custom"]);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public void Library_Headers_Should_Override_Request_Option_Headers_With_A_Single_Value()
     {
         var transport = new FakeTransport(_ => Xml(ProjectXml));
@@ -227,7 +227,7 @@ public sealed class CustomTransportTests
         Assert.Equal("bob", Assert.Single(headers.GetValues(RedmineConstants.IMPERSONATE_HEADER_KEY)));
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public void Basic_Authentication_Should_Set_Authorization_Header()
     {
         var transport = new FakeTransport(_ => Xml(ProjectXml));
@@ -238,7 +238,7 @@ public sealed class CustomTransportTests
         Assert.Equal("Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes("user:pass")), Assert.Single(Assert.Single(transport.Requests).Headers.GetValues("Authorization")));
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false, 404, "The requested resource was not found.", false)]
     [InlineData(true, 404, "The requested resource was not found.", false)]
     [InlineData(false, 503, "ServiceUnavailable", true)]
@@ -260,7 +260,7 @@ public sealed class CustomTransportTests
         Assert.Equal("abc", exception.CorrelationId);
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false, "utf-8")]
     [InlineData(true, "iso-8859-1")]
     public async Task Unprocessable_Entity_Should_Parse_Errors_With_Charset(bool async, string charset)
@@ -279,7 +279,7 @@ public sealed class CustomTransportTests
         Assert.Equal(BaseAddress + "projects/1.xml", exception.Endpoint);
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData("application/xml; charset=utf-8", "utf-8", false)]
     [InlineData("application/xml; charset=\"ISO-8859-1\"", "iso-8859-1", false)]
     [InlineData("application/xml", "utf-8", false)]
@@ -308,7 +308,7 @@ public sealed class CustomTransportTests
         Assert.Equal("café", project.Name);
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
     public async Task RedmineApiException_From_Transport_Should_Be_Enriched(bool async)
@@ -332,7 +332,7 @@ public sealed class CustomTransportTests
         Assert.Equal(BaseAddress + "projects/1.xml", exception.Endpoint);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public void RedmineApiException_From_Transport_Should_Keep_Status_Code()
     {
         var manager = CreateManager(new FakeTransport(_ => throw new RedmineApiException("limited", httpStatusCode: 429, isTransient: true)));
@@ -345,7 +345,7 @@ public sealed class CustomTransportTests
         Assert.Equal(BaseAddress + "projects/1.xml", exception.Endpoint);
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
     public async Task Other_Exceptions_From_Transport_Should_Be_Wrapped(bool async)
@@ -365,7 +365,7 @@ public sealed class CustomTransportTests
         Assert.Equal(BaseAddress + "projects/1.xml", exception.Endpoint);
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
     public async Task Timeout_From_Transport_Should_Map_Like_Built_In_Timeout(bool async)
@@ -383,7 +383,7 @@ public sealed class CustomTransportTests
         Assert.Equal("UNKNOWN", exception.ErrorCode);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public async Task Canceled_With_Inner_Timeout_Without_Caller_Cancellation_Should_Map_To_Timeout()
     {
         var canceled = new TaskCanceledException("canceled", new TimeoutException());
@@ -396,7 +396,7 @@ public sealed class CustomTransportTests
         Assert.True(exception.IsTransient);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public void WebException_From_Transport_Should_Map_Like_Built_In()
     {
         var manager = CreateManager(new FakeTransport(_ => throw new WebException("refused", WebExceptionStatus.ConnectFailure)));
@@ -408,7 +408,7 @@ public sealed class CustomTransportTests
         Assert.Equal(BaseAddress + "projects/1.xml", exception.Endpoint);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public void Null_Response_Should_Throw_RedmineApiException()
     {
         var manager = CreateManager(new FakeTransport(_ => null));
@@ -419,7 +419,7 @@ public sealed class CustomTransportTests
         Assert.Equal("GET", exception.Method);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public async Task Caller_Cancellation_In_Flight_Should_Map_Like_Built_In()
     {
         var transport = new HangingTransport();
@@ -439,7 +439,7 @@ public sealed class CustomTransportTests
         Assert.Equal(BaseAddress + "projects/1.xml", exception.Endpoint);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public async Task Caller_Cancellation_Before_Start_Should_Throw_OperationCanceledException()
     {
         var transport = new HangingTransport();
@@ -452,7 +452,7 @@ public sealed class CustomTransportTests
         Assert.Equal(0, transport.Calls);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public void WithTransport_Combined_With_WithWebClient_Should_Throw_At_Build()
     {
         var builder = new RedmineManagerOptionsBuilder()
@@ -463,7 +463,7 @@ public sealed class CustomTransportTests
         Assert.Throws<RedmineException>(() => new RedmineManager(builder));
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public void WithWebClientOptions_Combined_With_WithTransport_Should_Throw_At_Build()
     {
         var builder = new RedmineManagerOptionsBuilder()
@@ -474,13 +474,13 @@ public sealed class CustomTransportTests
         Assert.Throws<RedmineException>(() => new RedmineManager(builder));
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public void WithTransport_Null_Should_Throw_ArgumentNullException()
     {
         Assert.Throws<ArgumentNullException>(() => new RedmineManagerOptionsBuilder().WithTransport(null));
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public void Request_Constructor_Should_Validate_Arguments()
     {
         var uri = new Uri(BaseAddress + "projects.xml");
@@ -508,7 +508,7 @@ public sealed class CustomTransportTests
         Assert.Same(progress, initialized.Progress);
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(199, false)]
     [InlineData(200, true)]
     [InlineData(299, true)]

@@ -186,103 +186,41 @@ var issue = await manager.GetAsync<Issue>("123",
     RequestOptions.Include(RedmineKeys.JOURNALS, RedmineKeys.ATTACHMENTS));
 ```
 
-### Custom transport
+### HttpClient transport
 
-Requests are sent with `WebClient` by default. To use another HTTP stack, implement `IRedmineTransport` and pass it to
-`WithTransport`. The request already contains the absolute URI, the merged headers (authentication, impersonation,
-`RequestOptions`) and the body; use `ContentType` for the body content type. Return every response, whatever its status
-code; throw a `RedmineApiException` or an `OperationCanceledException` only for transport failures. Mark only
-connection-level failures as transient (for example an `HttpRequestException` caused by a `SocketException`); TLS or
-certificate failures are not transient. The transport owns timeouts, proxy and certificates, may ignore `Progress`, and
-must be thread-safe. A `TimeoutException` (or a cancellation caused by one, like `HttpClient` timeouts on .NET 5+) is
-reported as a transient timeout; where `HttpClient` timeouts surface without an inner `TimeoutException`, throw a
-`TimeoutException` yourself. If the caller's token is already canceled, `RedmineManager` throws an
-`OperationCanceledException` without calling the transport; if it is canceled while the request is in flight, it throws a
-`RedmineApiException` with the message "The operation was canceled by the user.". `WithTransport` cannot be combined
-with `WithWebClient` or `WithWebClientOptions` and is not available on .NET Framework 2.0.
+Requests are sent with `WebClient` by default. To send them with `HttpClient` (.NET Framework 4.5+ and .NET 5+),
+install the `redmine-api.http` package (`redmine-api.http-signed` for strong-named assemblies):
+
+```bash
+dotnet add package redmine-api.http
+```
 
 ```csharp
-using System.Collections.Specialized;
-using System.IO;
-using System.Linq;
-using System.Net.Http;
-using System.Net.Sockets;
-using System.Threading;
-using System.Threading.Tasks;
-using Redmine.Net.Api.Exceptions;
-using Redmine.Net.Api.Net;
+using Redmine.Net.Api.Http;
 
-public sealed class HttpClientTransport(HttpClient httpClient) : IRedmineTransport
-{
-    public RedmineTransportResponse Send(RedmineTransportRequest request)
-    {
-#if NET5_0_OR_GREATER
-        using var message = CreateMessage(request);
-        try
-        {
-            using var response = httpClient.Send(message);
-            using var body = new MemoryStream();
-            response.Content.ReadAsStream().CopyTo(body);
-            return CreateResponse(response, body.ToArray());
-        }
-        catch (HttpRequestException ex) when (ex.InnerException is SocketException)
-        {
-            throw new RedmineApiException(ex.Message, ex, "HTTP", isTransient: true);
-        }
-#else
-        return SendAsync(request, CancellationToken.None).GetAwaiter().GetResult();
-#endif
-    }
-
-    public async Task<RedmineTransportResponse> SendAsync(RedmineTransportRequest request, CancellationToken cancellationToken)
-    {
-        using var message = CreateMessage(request);
-        try
-        {
-            using var response = await httpClient.SendAsync(message, cancellationToken).ConfigureAwait(false);
-            var body = await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
-            return CreateResponse(response, body);
-        }
-        catch (HttpRequestException ex) when (ex.InnerException is SocketException)
-        {
-            throw new RedmineApiException(ex.Message, ex, "HTTP", isTransient: true);
-        }
-    }
-
-    private static HttpRequestMessage CreateMessage(RedmineTransportRequest request)
-    {
-        var message = new HttpRequestMessage(new HttpMethod(request.Method), request.Uri);
-        if (request.Body != null)
-        {
-            message.Content = new ByteArrayContent(request.Body);
-            message.Content.Headers.TryAddWithoutValidation("Content-Type", request.ContentType);
-        }
-
-        foreach (string name in request.Headers)
-        {
-            message.Headers.TryAddWithoutValidation(name, request.Headers.GetValues(name));
-        }
-
-        return message;
-    }
-
-    private static RedmineTransportResponse CreateResponse(HttpResponseMessage response, byte[] body)
-    {
-        var headers = new NameValueCollection();
-        foreach (var header in response.Headers.Concat(response.Content.Headers))
-        {
-            headers[header.Key] = string.Join(",", header.Value);
-        }
-
-        return new RedmineTransportResponse((int)response.StatusCode, headers, body);
-    }
-}
+var httpClient = new HttpClient { Timeout = TimeSpan.FromSeconds(100) };
 
 var manager = new RedmineManager(new RedmineManagerOptionsBuilder()
     .WithHost("https://redmine.example.com")
     .WithApiKeyAuthentication("your-api-key")
-    .WithTransport(new HttpClientTransport(new HttpClient())));
+    .WithHttpClient(httpClient));
 ```
+
+The `HttpClient` belongs to you: the library never disposes it, so reuse a long-lived instance. Timeouts, proxy,
+certificates, decompression and message handlers are configured on the `HttpClient` and its handler.
+`HttpClient.Timeout` covers the whole request, including the reading of a download's body. On .NET 5+ the
+synchronous API uses `HttpClient.Send`, which skips message handlers that override only `SendAsync` and needs a handler
+that supports synchronous sends: `SocketsHttpHandler` (the default) does, while custom handlers or HTTP/2-only setups
+may throw `NotSupportedException`, surfaced as a `RedmineApiException`. Prefer the async API in those cases.
+`HttpClient.DefaultRequestHeaders` are sent only when the request does not set the same header, so authentication,
+impersonation and `RequestOptions` headers always win. `WithHttpClient` cannot be combined with `WithWebClient` or
+`WithWebClientOptions`.
+
+### Custom transport
+
+Any other HTTP stack can be plugged in by implementing `IRedmineTransport` and passing it to `WithTransport`. The request
+already contains the absolute URI, the merged headers and the body; return every response, whatever its status code, and
+throw only for transport failures. The XML documentation of `IRedmineTransport` describes the full contract.
 
 ## Supported resources
 

@@ -1,0 +1,48 @@
+<Project>
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
+
+  <PropertyGroup Label="Build">
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <Deterministic>True</Deterministic>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Configurations>Debug;Release;DebugJson</Configurations>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <DebugType>portable</DebugType>
+    <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Analyzers">
+    <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+    <AnalysisLevel>latest</AnalysisLevel>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Package">
+    <IsPackable>true</IsPackable>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <PackageOutputPath>$(MSBuildThisFileDirectory)../artifacts</PackageOutputPath>
+    <EnablePackageValidation>true</EnablePackageValidation>
+    <Authors>Adrian Popescu</Authors>
+    <Company>p.adi</Company>
+    <Copyright>Adrian Popescu, 2011 - $([System.DateTime]::Now.Year.ToString()) </Copyright>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <PackageIcon>logo.png</PackageIcon>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/zapadi/redmine-net-api</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/zapadi/redmine-net-api</RepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <DebugSymbols>true</DebugSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+
+  <ItemGroup Label="Package">
+    <None Include="$(MSBuildThisFileDirectory)../logo.png" Pack="true" PackagePath="\" />
+    <None Include="$(MSBuildThisFileDirectory)../LICENSE" Pack="true" PackagePath="" />
+    <None Include="$(MSBuildThisFileDirectory)../README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+</Project>

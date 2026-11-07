@@ -11,7 +11,7 @@ public sealed class BaseAddressRequestTests
 {
     private const string ProjectXml = "<project><id>1</id><name>foo</name></project>";
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData("", "/projects/1.xml")]
     [InlineData("redmine", "/redmine/projects/1.xml")]
     [InlineData("redmine/", "/redmine/projects/1.xml")]
@@ -29,7 +29,7 @@ public sealed class BaseAddressRequestTests
         Assert.Equal(expected, server.Requests.Single().RawUrl);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public void Attachment_Patch_Is_Sent_Under_The_Configured_Base_Path()
     {
         using var server = new TestHttpServer(_ => RedminePagedServer.Response(string.Empty));

@@ -13,7 +13,7 @@ public sealed class UrlEscapingTests
 {
     private static readonly RedmineApiUrls Xml = new(RedmineConstants.XML);
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData("My Page", "My%20Page")]
     [InlineData("a/b", "a%2Fb")]
     [InlineData("what?", "what%3F")]
@@ -42,14 +42,14 @@ public sealed class UrlEscapingTests
         Assert.Equal($"attachments/issues/{escaped}.xml", Xml.PatchFragment<Attachment>(value));
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public void Null_Id_Produces_Empty_Segment()
     {
         Assert.Equal("projects/.xml", Xml.GetFragment<Project>(null));
         Assert.Equal("projects/p/wiki/.xml", Xml.ProjectWikiPage("p", null));
     }
 
-    [Theory]
+    [Theory(Timeout = Constants.TestTimeout)]
     [InlineData("Page_1", "/projects/p-1/wiki/Page_1.xml")]
     [InlineData("My Page", "/projects/p-1/wiki/My%20Page.xml")]
     [InlineData("Café", "/projects/p-1/wiki/Caf%C3%A9.xml")]

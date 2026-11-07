@@ -25,10 +25,13 @@ internal sealed class TestHttpResponse
     public Dictionary<string, string> Headers { get; init; } = new();
     public TimeSpan Delay { get; init; }
     public long? ContentLength { get; init; }
+    public bool AbortAfterBody { get; init; }
 }
 
 internal sealed class TestHttpServer : IDisposable
 {
+    private static readonly TimeSpan MaxHold = TimeSpan.FromSeconds(60);
+
     private readonly HttpListener _listener;
     private readonly Func<RecordedRequest, TestHttpResponse> _handler;
     private readonly ManualResetEvent _stopped = new(false);
@@ -131,7 +134,11 @@ internal sealed class TestHttpServer : IDisposable
             if (response.ContentLength.HasValue)
             {
                 context.Response.OutputStream.Flush();
-                _stopped.WaitOne();
+                if (!response.AbortAfterBody)
+                {
+                    _stopped.WaitOne(MaxHold);
+                }
+
                 context.Response.Abort();
                 return;
             }

@@ -15,7 +15,7 @@ public sealed class SearchAsyncOverloadTests
 {
     private const string EmptyResults = "<results type=\"array\" total_count=\"0\" offset=\"0\" limit=\"25\"></results>";
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public async Task Old_Call_Shapes_Compile_And_Send_Request_Without_Impersonation()
     {
         using var server = new TestHttpServer(_ => RedminePagedServer.Response(EmptyResults));
@@ -33,7 +33,7 @@ public sealed class SearchAsyncOverloadTests
         Assert.All(server.Requests, r => Assert.Null(r.Headers[RedmineConstants.IMPERSONATE_HEADER_KEY]));
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public async Task Call_With_Request_Options_Binds_To_New_Overload()
     {
         using var server = new TestHttpServer(_ => RedminePagedServer.Response(EmptyResults));

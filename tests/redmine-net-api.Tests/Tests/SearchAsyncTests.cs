@@ -14,7 +14,7 @@ public sealed class SearchAsyncTests
 {
     private const string EmptyResults = "<results type=\"array\" total_count=\"0\" offset=\"0\" limit=\"25\"></results>";
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public async Task SearchAsync_With_Request_Options_Merges_Query_And_Keeps_Impersonation()
     {
         using var server = new TestHttpServer(_ => RedminePagedServer.Response(EmptyResults));
@@ -33,7 +33,7 @@ public sealed class SearchAsyncTests
         Assert.Equal("999", options.QueryString["limit"]);
     }
 
-    [Fact]
+    [Fact(Timeout = Constants.TestTimeout)]
     public async Task SearchAsync_With_Null_Request_Options_Matches_Default_Overload()
     {
         using var server = new TestHttpServer(_ => RedminePagedServer.Response(EmptyResults));
