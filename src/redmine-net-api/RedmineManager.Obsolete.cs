@@ -36,7 +36,7 @@ namespace Redmine.Net.Api
     {
         /// <summary>
         /// </summary>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use RedmineConstants.DEFAULT_PAGE_SIZE_VALUE")]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use RedmineConstants.DEFAULT_PAGE_SIZE_VALUE instead.")]
         public const int DEFAULT_PAGE_SIZE_VALUE = 25;
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace Redmine.Net.Api
         /// Note: it is recommended to leave this parameter at its default value as this setting also affects the calling application process.</param>
         /// <param name="scheme">http or https. Default is https.</param>
         /// <param name="timeout">The webclient timeout. Default is 100 seconds.</param>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use RedmineManager(RedmineManagerOptionsBuilder")]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use RedmineManager(RedmineManagerOptionsBuilder) instead.")]
         public RedmineManager(string host, MimeFormat mimeFormat = MimeFormat.Xml, bool verifyServerCert = true,
             IWebProxy proxy = null, SecurityProtocolType securityProtocolType = default, string scheme = "https", TimeSpan? timeout = null)
         :this(new RedmineManagerOptionsBuilder()
@@ -82,7 +82,7 @@ namespace Redmine.Net.Api
         /// Note: it is recommended to leave this parameter at its default value as this setting also affects the calling application process.</param>
         /// <param name="scheme"></param>
         /// <param name="timeout">The webclient timeout. Default is 100 seconds.</param>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use RedmineManager(RedmineManagerOptionsBuilder")]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use RedmineManager(RedmineManagerOptionsBuilder) instead.")]
         public RedmineManager(string host, string apiKey, MimeFormat mimeFormat = MimeFormat.Xml,
                               bool verifyServerCert = true, IWebProxy proxy = null,
                               SecurityProtocolType securityProtocolType = default, string scheme = "https", TimeSpan? timeout = null)
@@ -111,7 +111,7 @@ namespace Redmine.Net.Api
         /// <param name="securityProtocolType">Use this parameter to specify a SecurityProtocolType. Note: it is recommended to leave this parameter at its default value as this setting also affects the calling application process.</param>
         /// <param name="scheme"></param>
         /// <param name="timeout">The webclient timeout. Default is 100 seconds.</param>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use RedmineManager(RedmineManagerOptionsBuilder")]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use RedmineManager(RedmineManagerOptionsBuilder) instead.")]
         public RedmineManager(string host, string login, string password, MimeFormat mimeFormat = MimeFormat.Xml,
                               bool verifyServerCert = true, IWebProxy proxy = null,
                               SecurityProtocolType securityProtocolType = default, string scheme = "https", TimeSpan? timeout = null)
@@ -141,19 +141,19 @@ namespace Redmine.Net.Api
         /// <summary>
         /// 
         /// </summary>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use RedmineManagerOptionsBuilder.WithSerializationType instead.")]
         public string Format { get; }
 
         /// <summary>
         /// 
         /// </summary>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use RedmineWebClientOptions.Scheme via RedmineManagerOptionsBuilder.WithWebClientOptions instead.")]
         public string Scheme { get; }
         
         /// <summary>
         /// 
         /// </summary>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use RedmineWebClientOptions.Timeout via RedmineManagerOptionsBuilder.WithWebClientOptions instead.")]
         public TimeSpan? Timeout { get; }
 
         /// <summary>
@@ -162,7 +162,7 @@ namespace Redmine.Net.Api
         /// <value>
         ///     The host.
         /// </value>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use RedmineManagerOptionsBuilder.WithHost instead.")]
         public string Host { get; }
         
         /// <summary>
@@ -171,7 +171,7 @@ namespace Redmine.Net.Api
         /// <value>
         ///     The API key.
         /// </value>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use RedmineManagerOptionsBuilder.WithApiKeyAuthentication instead.")]
         public string ApiKey { get; }
 
         /// <summary>
@@ -180,7 +180,7 @@ namespace Redmine.Net.Api
         /// <value>
         ///     The MIME format.
         /// </value>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use RedmineManagerOptionsBuilder.WithSerializationType instead.")]
         public MimeFormat MimeFormat { get; }
 
         /// <summary>
@@ -189,7 +189,7 @@ namespace Redmine.Net.Api
         /// <value>
         ///     The proxy.
         /// </value>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use RedmineWebClientOptions.Proxy via RedmineManagerOptionsBuilder.WithWebClientOptions instead.")]
         public IWebProxy Proxy { get; }
 
         /// <summary>
@@ -198,22 +198,22 @@ namespace Redmine.Net.Api
         /// <value>
         ///     The type of the security protocol.
         /// </value>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use RedmineWebClientOptions.SecurityProtocolType via RedmineManagerOptionsBuilder.WithWebClientOptions instead.")]
         public SecurityProtocolType SecurityProtocolType { get; }
         
         
         /// <inheritdoc />
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use RedmineManagerOptionsBuilder.WithPageSize, or the limit parameter in RequestOptions.QueryString, instead.")]
         public int PageSize { get; set; }
         
         /// <inheritdoc />
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use RequestOptions.ImpersonateUser instead.")]
         public string ImpersonateUser { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT )]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
         public static readonly Dictionary<Type, bool> TypesWithOffset = new Dictionary<Type, bool>{
             {typeof(Issue), true},
             {typeof(Project), true},
@@ -234,7 +234,7 @@ namespace Redmine.Net.Api
         ///     An error occurred during deserialization. The original exception is available
         ///     using the System.Exception.InnerException property.
         /// </exception>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT + "Use GetCurrentUser extension instead")]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use the RedmineManagerExtensions.GetCurrentUser extension with a non-null RequestOptions argument instead.")]
         public User GetCurrentUser(NameValueCollection parameters = null)
         {
             return this.GetCurrentUser(RedmineManagerExtensions.CreateRequestOptions(parameters));
@@ -244,7 +244,7 @@ namespace Redmine.Net.Api
         /// 
         /// </summary>
         /// <returns>Returns the my account details.</returns>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT + "Use GetMyAccount extension instead")]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use the RedmineManagerExtensions.GetMyAccount extension with a RequestOptions argument instead.")]
         public MyAccount GetMyAccount()
         {
             return RedmineManagerExtensions.GetMyAccount(this);
@@ -255,7 +255,7 @@ namespace Redmine.Net.Api
         /// </summary>
         /// <param name="issueId">The issue identifier.</param>
         /// <param name="userId">The user identifier.</param>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT + "Use AddWatcherToIssue extension instead")]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use the RedmineManagerExtensions.AddWatcherToIssue extension with a RequestOptions argument instead.")]
         public void AddWatcherToIssue(int issueId, int userId)
         {
             RedmineManagerExtensions.AddWatcherToIssue(this, issueId, userId);
@@ -266,7 +266,7 @@ namespace Redmine.Net.Api
         /// </summary>
         /// <param name="issueId">The issue identifier.</param>
         /// <param name="userId">The user identifier.</param>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT + "Use RemoveWatcherFromIssue extension instead")]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use the RedmineManagerExtensions.RemoveWatcherFromIssue extension with a RequestOptions argument instead.")]
         public void RemoveWatcherFromIssue(int issueId, int userId)
         {
             RedmineManagerExtensions.RemoveWatcherFromIssue(this, issueId, userId);
@@ -277,7 +277,7 @@ namespace Redmine.Net.Api
         /// </summary>
         /// <param name="groupId">The group id.</param>
         /// <param name="userId">The user id.</param>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT + "Use AddUserToGroup extension instead")]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use the RedmineManagerExtensions.AddUserToGroup extension with a RequestOptions argument instead.")]
         public void AddUserToGroup(int groupId, int userId)
         {
             RedmineManagerExtensions.AddUserToGroup(this, groupId, userId);
@@ -288,7 +288,7 @@ namespace Redmine.Net.Api
         /// </summary>
         /// <param name="groupId">The group id.</param>
         /// <param name="userId">The user id.</param>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT + "Use RemoveUserFromGroup extension instead")]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use the RedmineManagerExtensions.RemoveUserFromGroup extension with a RequestOptions argument instead.")]
         public void RemoveUserFromGroup(int groupId, int userId)
         {
             RedmineManagerExtensions.RemoveUserFromGroup(this, groupId, userId);
@@ -301,7 +301,7 @@ namespace Redmine.Net.Api
         /// <param name="pageName">The wiki page name.</param>
         /// <param name="wikiPage">The wiki page to create or update.</param>
         /// <returns></returns>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT + "Use UpdateWikiPage extension instead")]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use the RedmineManagerExtensions.UpdateWikiPage extension with a RequestOptions argument instead.")]
         public void UpdateWikiPage(string projectId, string pageName, WikiPage wikiPage)
         {
             RedmineManagerExtensions.UpdateWikiPage(this, projectId, pageName, wikiPage);
@@ -314,7 +314,7 @@ namespace Redmine.Net.Api
         /// <param name="pageName"></param>
         /// <param name="wikiPage"></param>
         /// <returns></returns>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT + "Use CreateWikiPage extension instead")]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use the RedmineManagerExtensions.CreateWikiPage extension with a RequestOptions argument instead.")]
         public WikiPage CreateWikiPage(string projectId, string pageName, WikiPage wikiPage)
         {
             return RedmineManagerExtensions.CreateWikiPage(this, projectId, pageName, wikiPage);
@@ -328,7 +328,7 @@ namespace Redmine.Net.Api
         /// <param name="pageName">Name of the page.</param>
         /// <param name="version">The version.</param>
         /// <returns></returns>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT + "Use GetWikiPage extension instead")]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use the RedmineManagerExtensions.GetWikiPage extension instead.")]
         public WikiPage GetWikiPage(string projectId, NameValueCollection parameters, string pageName, uint version = 0)
         {
             return this.GetWikiPage(projectId, pageName, RedmineManagerExtensions.CreateRequestOptions(parameters), version);
@@ -339,7 +339,7 @@ namespace Redmine.Net.Api
         /// </summary>
         /// <param name="projectId">The project id or identifier.</param>
         /// <returns></returns>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT + "Use GetAllWikiPages extension instead")]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use the RedmineManagerExtensions.GetAllWikiPages extension with a RequestOptions argument instead.")]
         public List<WikiPage> GetAllWikiPages(string projectId)
         {
             return RedmineManagerExtensions.GetAllWikiPages(this, projectId);
@@ -351,7 +351,7 @@ namespace Redmine.Net.Api
         /// </summary>
         /// <param name="projectId">The project id or identifier.</param>
         /// <param name="pageName">The wiki page name.</param>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT + "Use DeleteWikiPage extension instead")] 
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use the RedmineManagerExtensions.DeleteWikiPage extension with a RequestOptions argument instead.")]
         public void DeleteWikiPage(string projectId, string pageName)
         {
             RedmineManagerExtensions.DeleteWikiPage(this, projectId, pageName);
@@ -362,7 +362,7 @@ namespace Redmine.Net.Api
         /// </summary>
         /// <param name="issueId">The issue identifier.</param>
         /// <param name="attachment">The attachment.</param>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT + "Use UpdateAttachment extension instead")] 
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use the RedmineManagerExtensions.UpdateAttachment(Attachment) extension instead.")]
         public void UpdateAttachment(int issueId, Attachment attachment)
         {
             this.UpdateIssueAttachment(issueId, attachment);
@@ -379,7 +379,7 @@ namespace Redmine.Net.Api
         /// Returns the search results by the specified condition parameters.
         /// </returns>
         /// <exception cref="ArgumentNullException"></exception>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT + "Use Search extension instead")] 
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use the RedmineManagerExtensions.Search extension with an impersonateUserName argument instead.")]
         public PagedResults<Search> Search(string q, int limit = DEFAULT_PAGE_SIZE_VALUE, int offset = 0, SearchFilterBuilder searchFilter = null)
         {
             return RedmineManagerExtensions.Search(this, q, limit, offset, searchFilter);
@@ -391,7 +391,7 @@ namespace Redmine.Net.Api
         /// <param name="include"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use Count<T>(RequestOptions) instead.")]
         public int Count<T>(params string[] include) where T : class, new()
         {
             var parameters = NameValueCollectionExtensions.AddParamsIfExist(null, include);
@@ -405,7 +405,7 @@ namespace Redmine.Net.Api
         /// <param name="parameters"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use Count<T>(RequestOptions) instead.")]
         public int Count<T>(NameValueCollection parameters) where T : class, new()
         {
             return Count<T>(parameters != null ? new RequestOptions { QueryString = parameters } : null);
@@ -427,7 +427,7 @@ namespace Redmine.Net.Api
         ///         Issue issue = redmineManager.GetObject&lt;Issue&gt;(issueId, parameters);
         ///   </example>
         /// </code>
-        [Obsolete($"{RedmineConstants.OBSOLETE_TEXT} Use Get<T> instead")]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use Get<T>(string, RequestOptions) instead.")]
         public T GetObject<T>(string id, NameValueCollection parameters) where T : class, new()
         {
             return Get<T>(id, parameters != null ? new RequestOptions { QueryString = parameters } : null);
@@ -446,7 +446,7 @@ namespace Redmine.Net.Api
         ///     Groups: users, memberships
         /// </remarks>
         /// <returns>Returns the complete list of objects.</returns>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use Get<T>(RequestOptions) instead.")]
         public List<T> GetObjects<T>(params string[] include) where T : class, new()
         {
             var parameters = NameValueCollectionExtensions.AddParamsIfExist(null, include);
@@ -469,7 +469,7 @@ namespace Redmine.Net.Api
         ///     Groups: users, memberships
         /// </remarks>
         /// <returns>Returns the complete list of objects.</returns>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use Get<T>(RequestOptions) instead.")]
         public List<T> GetObjects<T>(int limit, int offset, params string[] include) where T : class, new()
         {
             var parameters = NameValueCollectionExtensions
@@ -487,7 +487,7 @@ namespace Redmine.Net.Api
         /// <returns>
         ///     Returns a complete list of objects.
         /// </returns>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use Get<T>(RequestOptions) instead.")]
         public List<T> GetObjects<T>(NameValueCollection parameters = null) where T : class, new()
         {
             return Get<T>(parameters != null ? new RequestOptions { QueryString = parameters } : null);
@@ -499,7 +499,7 @@ namespace Redmine.Net.Api
         /// <typeparam name="T"></typeparam>
         /// <param name="parameters">The parameters.</param>
         /// <returns></returns>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use GetPaginated<T>(RequestOptions) instead.")]
         public PagedResults<T> GetPaginatedObjects<T>(NameValueCollection parameters) where T : class, new()
         {
             return GetPaginated<T>(parameters != null ? new RequestOptions { QueryString = parameters } : null);
@@ -516,7 +516,7 @@ namespace Redmine.Net.Api
         ///     When trying to create an object with invalid or missing attribute parameters, you will get a 422 Unprocessable
         ///     Entity response. That means that the object could not be created.
         /// </remarks>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use Create<T>(T, string, RequestOptions) instead.")]
         public T CreateObject<T>(T entity) where T : class, new()
         {
             return Create<T>(entity);
@@ -543,7 +543,7 @@ namespace Redmine.Net.Api
         ///         redmineManager.CreateObject(project);
         ///     </example>
         /// </code>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use Create<T>(T, string, RequestOptions) instead.")]
         public T CreateObject<T>(T entity, string ownerId) where T : class, new()
         {
             return Create<T>(entity, ownerId);
@@ -563,7 +563,7 @@ namespace Redmine.Net.Api
         /// </remarks>
         /// <code>
         /// </code>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use Update<T>(string, T, string, RequestOptions) instead.")]
         public void UpdateObject<T>(string id, T entity, string projectId = null) where T : class, new()
         {
             Update(id, entity, projectId);
@@ -577,7 +577,7 @@ namespace Redmine.Net.Api
         /// <param name="parameters">The parameters</param>
         /// <exception cref="RedmineException"></exception>
         /// <code></code>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT)]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use Delete<T>(string, RequestOptions) instead.")]
         public void DeleteObject<T>(string id, NameValueCollection parameters = null) where T : class, new()
         {
             Delete<T>(id, parameters != null ? new RequestOptions { QueryString = parameters } : null);
@@ -590,7 +590,7 @@ namespace Redmine.Net.Api
         /// <param name="uploadFile">if set to <c>true</c> [upload file].</param>
         /// <returns></returns>
         /// <code></code>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT + "If a custom webClient is needed, use Func<WebClient> from RedmineManagerSettings instead")]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use RedmineManagerOptionsBuilder.WithWebClient instead.")]
         public virtual RedmineWebClient CreateWebClient(NameValueCollection parameters, bool uploadFile = false)
         {
             throw new NotImplementedException();
@@ -605,7 +605,7 @@ namespace Redmine.Net.Api
         /// <param name="sslPolicyErrors">The error.</param>
         /// <returns></returns>
         /// <code></code>
-        [Obsolete(RedmineConstants.OBSOLETE_TEXT + "Use RedmineManagerOptions.ClientOptions.ServerCertificateValidationCallback instead")]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Use RedmineWebClientOptions.ServerCertificateValidationCallback via RedmineManagerOptionsBuilder.WithWebClientOptions instead.")]
         public virtual bool RemoteCertValidate(object sender, X509Certificate cert, X509Chain chain, SslPolicyErrors sslPolicyErrors)
         {
             const SslPolicyErrors IGNORED_ERRORS = SslPolicyErrors.RemoteCertificateChainErrors | SslPolicyErrors.RemoteCertificateNameMismatch;

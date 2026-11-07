@@ -302,11 +302,11 @@ they have setters.
 
 ## Supported resources
 
-The generic methods (`Get`, `GetPaginated`, `Count`, `Create`, `Update`, `Delete` and their `Async` variants, including `GetPagedAsync`) cover most resources. Operations that need a dedicated endpoint are available as extension methods on `RedmineManager`; each has an `Async` counterpart, except `UpdateIssueAttachment`.
+The generic methods (`Get`, `GetPaginated`, `Count`, `Create`, `Update`, `Delete` and their `Async` variants, including `GetPagedAsync`) cover most resources. Operations that need a dedicated endpoint are available as extension methods on `RedmineManager`; each has an `Async` counterpart.
 
 | Resource | List / Get | Create | Update | Delete | Notes / extra operations |
 |----------|:----------:|:------:|:------:|:------:|--------------------------|
-| [Attachments](https://www.redmine.org/projects/redmine/wiki/Rest_Attachments) | ✓ | | ✓ | ✓ | Get by id only. Attach files to an issue through `Issue.Uploads`. `UpdateIssueAttachment`, `DownloadFile` |
+| [Attachments](https://www.redmine.org/projects/redmine/wiki/Rest_Attachments) | ✓ | | ✓ | ✓ | Get by id only. Attach files to an issue through `Issue.Uploads`. `UpdateAttachment`, `DownloadFile` |
 | [Custom fields](https://www.redmine.org/projects/redmine/wiki/Rest_CustomFields) | ✓ | | | | List only |
 | [Enumerations](https://www.redmine.org/projects/redmine/wiki/Rest_Enumerations) | ✓ | | | | `IssuePriority`, `TimeEntryActivity`, `DocumentCategory`; list only |
 | [Files](https://www.redmine.org/projects/redmine/wiki/Rest_Files) | ✓ | ✓ | | | List only, project scoped: `GetProjectFiles`, `Create(file, projectId)` |

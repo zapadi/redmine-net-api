@@ -192,7 +192,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The parent issue id.
         /// </value>
-        /// <remarks>Sent to Redmine when creating or updating, only when set. Only its Id is sent. With the JSON serializer it is always sent; when not set it is sent as null, which removes the parent issue.</remarks>
+        /// <remarks>Sent to Redmine when creating or updating, only when set. Only its Id is sent. With the JSON serializer it is always sent; when not set it is sent as null, which clears the parent when updating.</remarks>
         public IdentifiableName ParentIssue { get; set; }
 
         /// <summary>

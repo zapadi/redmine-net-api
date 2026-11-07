@@ -45,7 +45,7 @@ namespace Redmine.Net.Api.Exceptions
     ///     var manager = new RedmineManager(options);
     ///     var issues = await manager.GetAsync&lt;Issue&gt;();
     /// }
-    /// catch (UnauthorizedException ex)
+    /// catch (RedmineApiException ex) when (ex.HttpStatusCode == 401)
     /// {
     ///     Console.WriteLine("Authentication failed. Please check your API key or credentials.");
     ///     // Verify API key is valid and not expired
@@ -55,6 +55,7 @@ namespace Redmine.Net.Api.Exceptions
     /// </example>
     /// <seealso cref="Redmine.Net.Api.Exceptions.RedmineException" />
     [Serializable]
+    [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Not thrown by RedmineManager. Catch RedmineApiException and check HttpStatusCode == 401.")]
     public sealed class UnauthorizedException : RedmineException
     {
         /// <summary>

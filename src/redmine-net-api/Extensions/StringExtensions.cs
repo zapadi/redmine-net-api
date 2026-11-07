@@ -32,6 +32,7 @@ namespace Redmine.Net.Api.Extensions
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Will be internal in 5.0. Use string.IsNullOrWhiteSpace instead.")]
         public static bool IsNullOrWhiteSpace(this string value)
         {
             if (value == null)
@@ -56,6 +57,7 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="text"></param>
         /// <param name="maximumLength"></param>
         /// <returns></returns>
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Will be internal in 5.0. Use Substring with a length check instead.")]
         public static string Truncate(this string text, int maximumLength)
         {
             if (text.IsNullOrWhiteSpace() || maximumLength < 1 || text.Length <= maximumLength)

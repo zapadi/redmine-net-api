@@ -14,6 +14,7 @@
    limitations under the License.
 */
 
+using System;
 using System.IO;
 using System.Xml;
 
@@ -22,6 +23,7 @@ namespace Redmine.Net.Api.Internals
     /// <summary>
     /// 
     /// </summary>
+    [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Will be internal in 5.0. Use XmlReader.Create with XmlReaderSettings instead.")]
     public static class XmlTextReaderBuilder
     {
 #if NET20

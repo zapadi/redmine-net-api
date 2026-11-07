@@ -48,7 +48,7 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// Gets or sets all the values of a multi-value field. It is null for a single-value field.
         /// </summary>
-        /// <remarks>Sent to Redmine when creating or updating, only when set. It is sent only when it has more than one value or Multiple is true. With the JSON serializer it is always sent in the same value property as Value, which is sent instead when Values is not.</remarks>
+        /// <remarks>Sent to Redmine when creating or updating, only when set. It is sent only when it has more than one value or Multiple is true.</remarks>
         public IList<string> Values { get; set; }
 
         /// <summary>

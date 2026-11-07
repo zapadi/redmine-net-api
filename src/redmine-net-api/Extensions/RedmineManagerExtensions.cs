@@ -363,7 +363,7 @@ namespace Redmine.Net.Api.Extensions
         ///     Removes users from a group (DELETE /groups/:id/users). Requires Redmine 7.0 or later.
         /// </summary>
         /// <remarks>
-        ///     Redmine returns 404 (<see cref="NotFoundException"/>) when none of the ids is in the group, as it does for a missing group or a Redmine older than 7.0.
+        ///     Redmine returns 404 (a <see cref="RedmineApiException"/> with HttpStatusCode 404) when none of the ids is in the group, as it does for a missing group or a Redmine older than 7.0.
         ///     The ids are sent in the query string, so split very large lists (hundreds of ids) into batches.
         /// </remarks>
         /// <param name="redmineManager"></param>
@@ -546,7 +546,7 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="issueId">The issue identifier.</param>
         /// <param name="attachment">The attachment.</param>
         /// <param name="requestOptions"></param>
-        [Obsolete("Redmine does not accept API authentication for this endpoint; use UpdateAttachment.")]
+        [Obsolete(RedmineConstants.OBSOLETE_TEXT + " Redmine does not accept API authentication for this endpoint. Use UpdateAttachment instead.")]
         public static void UpdateIssueAttachment(this RedmineManager redmineManager, int issueId, Attachment attachment, RequestOptions requestOptions = null)
         {
             if (attachment == null)
@@ -1165,7 +1165,7 @@ namespace Redmine.Net.Api.Extensions
         ///     Removes users from a group (DELETE /groups/:id/users) asynchronous. Requires Redmine 7.0 or later.
         /// </summary>
         /// <remarks>
-        ///     Redmine returns 404 (<see cref="NotFoundException"/>) when none of the ids is in the group, as it does for a missing group or a Redmine older than 7.0.
+        ///     Redmine returns 404 (a <see cref="RedmineApiException"/> with HttpStatusCode 404) when none of the ids is in the group, as it does for a missing group or a Redmine older than 7.0.
         ///     The ids are sent in the query string, so split very large lists (hundreds of ids) into batches.
         /// </remarks>
         /// <param name="redmineManager"></param>
