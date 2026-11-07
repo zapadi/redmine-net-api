@@ -76,6 +76,19 @@ public class IssueTests
         Assert.Contains("<watcher_user_ids>2</watcher_user_ids>", output);
     }
 
+    [Theory]
+    [MemberData(nameof(IssueWithSelfClosingCustomFieldDeserializeTheoryData))]
+    public void Should_Deserialize_Issue_With_Custom_Field_Without_Value_Among_Valued_Ones(string input, SerializerKind kind)
+    {
+        var output = SerializerFactory.Create(kind).Deserialize<Redmine.Net.Api.Types.Issue>(input);
+
+        Assert.Equal("subject", output.Subject);
+        Assert.Equal([1, 2, 3], output.CustomFields.Select(cf => cf.Id));
+        Assert.Equal(["a"], output.CustomFields[0].Values.Select(v => v.Info));
+        Assert.Null(output.CustomFields[1].Values);
+        Assert.Equal(["c"], output.CustomFields[2].Values.Select(v => v.Info));
+    }
+
     [Fact]
     public void Should_Deserialize_Xml_Issue_ChangeSets_With_Revision()
     {
@@ -1041,5 +1054,39 @@ public class IssueTests
             yield return new TheoryDataRow<string, SerializerKind>(xml, SerializerKind.Xml).WithTestDisplayName(Constants.Xml);
         }
     }
-}
+    public static IEnumerable<TheoryDataRow<string, SerializerKind>> IssueWithSelfClosingCustomFieldDeserializeTheoryData
+    {
+        get
+        {
+            const string json = """
+                                {
+                                  "issue": {
+                                    "id": 1,
+                                    "subject": "subject",
+                                    "custom_fields": [
+                                      { "id": 1, "name": "A", "value": "a" },
+                                      { "id": 2, "name": "B" },
+                                      { "id": 3, "name": "C", "value": "c" }
+                                    ]
+                                  }
+                                }
+                                """;
 
+            const string xml = """
+                               <?xml version="1.0" encoding="UTF-8"?>
+                               <issue>
+                                   <id>1</id>
+                                   <subject>subject</subject>
+                                   <custom_fields type="array">
+                                       <custom_field id="1" name="A"><value>a</value></custom_field>
+                                       <custom_field id="2" name="B"/>
+                                       <custom_field id="3" name="C"><value>c</value></custom_field>
+                                   </custom_fields>
+                               </issue>
+                               """;
+
+            yield return new TheoryDataRow<string, SerializerKind>(json, SerializerKind.NewtonsoftJson).WithTestDisplayName(Constants.JsonNewtonsoft);
+            yield return new TheoryDataRow<string, SerializerKind>(xml, SerializerKind.Xml).WithTestDisplayName(Constants.Xml);
+        }
+    }
+}

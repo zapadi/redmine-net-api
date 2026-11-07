@@ -63,6 +63,12 @@ namespace Redmine.Net.Api.Types
             Name = reader.GetAttribute(RedmineKeys.NAME);
             Multiple = reader.ReadAttributeAsBoolean(RedmineKeys.MULTIPLE);
 
+            if (reader.IsEmptyElement)
+            {
+                reader.Read();
+                return;
+            }
+
             reader.Read();
 
             if (reader.NodeType == XmlNodeType.EndElement)
