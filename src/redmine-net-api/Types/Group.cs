@@ -64,7 +64,7 @@ namespace Redmine.Net.Api.Types
         /// Gets or sets the custom fields.
         /// </summary>
         /// <value>The custom fields.</value>
-        /// <remarks>Read-only: set by Redmine and not sent when creating or updating.</remarks>
+        /// <remarks>Sent to Redmine when creating or updating, only when set.</remarks>
         public IList<IssueCustomField> CustomFields { get; set; }
 
         /// <summary>
@@ -113,6 +113,11 @@ namespace Redmine.Net.Api.Types
         {
             writer.WriteElementString(RedmineKeys.NAME, Name);
             writer.WriteArrayIds(RedmineKeys.USER_IDS, Users, typeof(int), GetGroupUserId);
+
+            if (CustomFields != null && CustomFields.Count > 0)
+            {
+                writer.WriteArray(RedmineKeys.CUSTOM_FIELDS, CustomFields);
+            }
         }
 
         #endregion
@@ -161,6 +166,11 @@ namespace Redmine.Net.Api.Types
                 if (Users != null && Users.Count > 0)
                 {
                     writer.WriteArrayIds(RedmineKeys.USER_IDS, (IEnumerable<IdentifiableName>)Users);
+                }
+
+                if (CustomFields != null && CustomFields.Count > 0)
+                {
+                    writer.WriteArray(RedmineKeys.CUSTOM_FIELDS, CustomFields);
                 }
             }
         }
