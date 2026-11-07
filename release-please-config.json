@@ -4,7 +4,7 @@
   "release-type": "simple",
   "include-component-in-tag": true,
   "bump-minor-pre-major": true,
-  "separate-pull-requests": false,
+  "separate-pull-requests": true,
   "skip-changelog": true,
   "packages": {
     "src/redmine-net-api": {
