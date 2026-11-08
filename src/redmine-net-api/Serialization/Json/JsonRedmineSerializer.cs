@@ -186,7 +186,7 @@ namespace Redmine.Net.Api.Serialization
 
             var stringBuilder = new StringBuilder();
 
-            using (var sw = new StringWriter(stringBuilder))
+            using (var sw = new StringWriter(stringBuilder){ NewLine = "\n"})
             {
                 using (var writer = new RedmineJsonTextWriter(sw, timeEntryCommentsMaxLength))
                 {
