@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Net;
 using System.Text;
 using Redmine.Net.Api.Exceptions;
@@ -68,20 +67,6 @@ internal static class RedmineApiExceptionHelper
     }
 
     /// <summary>
-    /// Creates an exception for a 422 Unprocessable Entity response.
-    /// </summary>
-    /// <param name="responseStream">The response stream containing error details.</param>
-    /// <param name="inner">The inner exception, if any.</param>
-    /// <param name="serializer">The serializer to use for deserializing error messages.</param>
-    /// <returns>A RedmineException with details about the validation errors.</returns>
-    private static RedmineApiException CreateUnprocessableEntityException(Stream responseStream, Exception inner, IRedmineSerializer serializer)
-    {
-        var errors = GetRedmineErrors(responseStream, serializer);
-
-        return Create(errors, inner);
-    }
-
-    /// <summary>
     /// 
     /// </summary>
     /// <param name="responseContent"></param>
@@ -130,34 +115,6 @@ internal static class RedmineApiExceptionHelper
         }
 
         return Create($"{sb}", inner, HttpConstants.StatusCodes.UnprocessableEntity, method, endpoint, responseHeaders, errors: messages);
-    }
-
-    /// <summary>
-    /// Gets the Redmine errors from a response stream.
-    /// </summary>
-    /// <param name="responseStream">The response stream containing error details.</param>
-    /// <param name="serializer">The serializer to use for deserializing error messages.</param>
-    /// <returns>A list of error objects or null if unable to parse errors.</returns>
-    private static List<Error> GetRedmineErrors(Stream responseStream, IRedmineSerializer serializer)
-    {
-        if (responseStream == null)
-        {
-            return null;
-        }
-
-        using (responseStream)
-        {
-            try
-            {
-                using var reader = new StreamReader(responseStream);
-                var content = reader.ReadToEnd();
-                return GetRedmineErrors(content, serializer);
-            }
-            catch (Exception ex)
-            {
-                throw new RedmineApiException(ex.Message, ex, httpStatusCode: HttpConstants.StatusCodes.UnprocessableEntity);
-            }
-        }
     }
 
     /// <summary>

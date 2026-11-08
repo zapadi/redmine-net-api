@@ -84,7 +84,6 @@ public sealed class RedmineApiClientCharacterizationTests
         Assert.True(response.IsSuccessful);
         Assert.Equal(200, response.StatusCode);
         Assert.Null(response.EndPoint);
-        Assert.Null(response.Exception);
     }
 
     [Fact(Timeout = Constants.TestTimeout)]

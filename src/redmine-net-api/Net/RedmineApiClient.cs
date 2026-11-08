@@ -471,7 +471,6 @@ namespace Redmine.Net.Api.Net
             }
 
             RedmineApiExceptionHelper.MapStatusCodeToException(statusCode, response.Error?.InnerException ?? response.Error, method, endpoint, responseHeaders);
-            throw RedmineApiExceptionHelper.Create($"{(HttpStatusCode)statusCode}", response.Error?.InnerException ?? response.Error, statusCode, method, endpoint, responseHeaders);
         }
 
         private static RedmineApiException HandleWebException(WebException exception, RedmineTransportRequest request)
