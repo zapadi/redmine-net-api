@@ -511,7 +511,7 @@ namespace Redmine.Net.Api.Net
 
         private static RedmineApiException Enrich(RedmineApiException exception, string method, string endpoint)
         {
-            var enriched = new RedmineApiException(exception.Message, exception.InnerException, exception.ErrorCode, exception.IsTransient, exception.CorrelationId, method, endpoint, exception.HttpStatusCode, exception.ResponseHeaders);
+            var enriched = new RedmineApiException(exception.Message, exception.InnerException, exception.ErrorCode, exception.IsTransient, exception.CorrelationId, method, endpoint, exception.HttpStatusCode, exception.ResponseHeaders, exception.ValidationErrors);
             foreach (DictionaryEntry entry in exception.Data)
             {
                 enriched.Data[entry.Key] = entry.Value;

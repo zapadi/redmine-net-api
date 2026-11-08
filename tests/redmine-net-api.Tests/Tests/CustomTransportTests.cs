@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Padi.DotNet.RedmineAPI.Tests.Infrastructure;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Exceptions;
+using Redmine.Net.Api.Internals;
 using Redmine.Net.Api.Net;
 using Redmine.Net.Api.Serialization;
 using Redmine.Net.Api.Types;
@@ -293,6 +294,25 @@ public sealed class CustomTransportTests
             () => manager.Update("1", project),
             () => manager.UpdateAsync("1", project, cancellationToken: TestContext.Current.CancellationToken));
 
+        Assert.Equal(["Name cannot be blank", "Identifier is too long"], exception.Errors);
+    }
+
+    [Theory(Timeout = Constants.TestTimeout)]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task Unprocessable_Entity_Thrown_By_Transport_Should_Keep_Errors_When_Enriched(bool async)
+    {
+        var thrown = RedmineApiExceptionHelper.CreateUnprocessableEntityException(
+            "<errors type=\"array\"><error>Name cannot be blank</error><error>Identifier is too long</error></errors>", null, new XmlRedmineSerializer());
+        var manager = CreateManager(new FakeTransport(_ => throw thrown));
+        var project = new Project { Name = "p", Identifier = "p" };
+
+        var exception = await CatchAsync(async,
+            () => manager.Update("1", project),
+            () => manager.UpdateAsync("1", project, cancellationToken: TestContext.Current.CancellationToken));
+
+        Assert.NotSame(thrown, exception);
+        Assert.Equal("PUT", exception.Method);
         Assert.Equal(["Name cannot be blank", "Identifier is too long"], exception.Errors);
     }
 

@@ -46,6 +46,8 @@ namespace Redmine.Net.Api.Exceptions
 
         private readonly ReadOnlyCollection<string> _errors = NoErrors;
 
+        internal IList<string> ValidationErrors => _errors;
+
         /// <summary>
         /// 
         /// </summary>
