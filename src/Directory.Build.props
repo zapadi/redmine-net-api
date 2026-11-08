@@ -31,6 +31,7 @@
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/zapadi/redmine-net-api</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageReadmeSource>$(MSBuildThisFileDirectory)../README.md</PackageReadmeSource>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/zapadi/redmine-net-api</RepositoryUrl>
@@ -43,6 +44,6 @@
   <ItemGroup Label="Package">
     <None Include="$(MSBuildThisFileDirectory)../logo.png" Pack="true" PackagePath="\" />
     <None Include="$(MSBuildThisFileDirectory)../LICENSE" Pack="true" PackagePath="" />
-    <None Include="$(MSBuildThisFileDirectory)../README.md" Pack="true" PackagePath="\" />
+    <None Include="$(PackageReadmeSource)" Pack="true" PackagePath="\" />
   </ItemGroup>
 </Project>

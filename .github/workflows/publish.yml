@@ -45,6 +45,15 @@ jobs:
       attestations: write
       artifact-metadata: write
     steps:
+      - name: Check branch
+        env:
+          BRANCH: ${{ github.ref_name }}
+        run: |
+          if [[ ! "$BRANCH" =~ ^[0-9]+\.x$ ]]; then
+            echo "::error::Packages are published only from N.x branches (e.g. 4.x), not from '$BRANCH'."
+            exit 1
+          fi
+
       - uses: actions/checkout@v7
         with:
           ref: ${{ inputs.ref || github.sha }}
@@ -95,7 +104,7 @@ jobs:
 
       - uses: actions/upload-artifact@v7
         with:
-          name: packages
+          name: packages-${{ inputs.packages }}
           path: ./artifacts
 
   publish:
@@ -112,7 +121,7 @@ jobs:
     steps:
       - uses: actions/download-artifact@v8
         with:
-          name: packages
+          name: packages-${{ inputs.packages }}
           path: ./artifacts
 
       - id: login

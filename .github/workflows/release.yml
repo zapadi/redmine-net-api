@@ -2,7 +2,7 @@ name: Release
 
 on:
   push:
-    branches: [ master, '*.x' ]
+    branches: [ '[0-9]+.x' ]
   workflow_dispatch:
 
 permissions:
@@ -16,16 +16,26 @@ jobs:
   release-please:
     name: Release Please
     runs-on: ubuntu-latest
-    if: github.ref_name == 'master' || endsWith(github.ref_name, '.x')
     timeout-minutes: 10
     permissions:
       contents: write
       issues: write
       pull-requests: write
     outputs:
-      packages: ${{ steps.packages.outputs.packages }}
-      sha: ${{ steps.release.outputs['src/redmine-net-api--sha'] || steps.release.outputs['src/redmine-net-api.Http--sha'] }}
+      core-released: ${{ steps.release.outputs['src/redmine-net-api--release_created'] }}
+      core-sha: ${{ steps.release.outputs['src/redmine-net-api--sha'] }}
+      http-released: ${{ steps.release.outputs['src/redmine-net-api.Http--release_created'] }}
+      http-sha: ${{ steps.release.outputs['src/redmine-net-api.Http--sha'] }}
     steps:
+      - name: Check branch
+        env:
+          BRANCH: ${{ github.ref_name }}
+        run: |
+          if [[ ! "$BRANCH" =~ ^[0-9]+\.x$ ]]; then
+            echo "::error::Packages are released only from N.x branches (e.g. 4.x), not from '$BRANCH'."
+            exit 1
+          fi
+
       - id: release
         uses: googleapis/release-please-action@v5
         with:
@@ -33,21 +43,10 @@ jobs:
           manifest-file: .release-please-manifest.json
           target-branch: ${{ github.ref_name }}
 
-      - id: packages
-        name: Released packages
-        env:
-          CORE_RELEASED: ${{ steps.release.outputs['src/redmine-net-api--release_created'] }}
-          HTTP_RELEASED: ${{ steps.release.outputs['src/redmine-net-api.Http--release_created'] }}
-        run: |
-          packages=()
-          if [[ "$CORE_RELEASED" == true ]]; then packages+=(redmine-api); fi
-          if [[ "$HTTP_RELEASED" == true ]]; then packages+=(redmine-api.http); fi
-          echo "packages=${packages[*]}" >> "$GITHUB_OUTPUT"
-
-  publish:
-    name: Publish
+  publish-core:
+    name: Publish redmine-api
     needs: release-please
-    if: needs.release-please.outputs.packages != ''
+    if: needs.release-please.outputs.core-released == 'true'
     permissions:
       contents: read
       id-token: write
@@ -55,6 +54,21 @@ jobs:
       artifact-metadata: write
     uses: ./.github/workflows/publish.yml
     with:
-      packages: ${{ needs.release-please.outputs.packages }}
-      ref: ${{ needs.release-please.outputs.sha }}
+      packages: redmine-api
+      ref: ${{ needs.release-please.outputs.core-sha }}
+    secrets: inherit
+
+  publish-http:
+    name: Publish redmine-api.http
+    needs: release-please
+    if: needs.release-please.outputs.http-released == 'true'
+    permissions:
+      contents: read
+      id-token: write
+      attestations: write
+      artifact-metadata: write
+    uses: ./.github/workflows/publish.yml
+    with:
+      packages: redmine-api.http
+      ref: ${{ needs.release-please.outputs.http-sha }}
     secrets: inherit

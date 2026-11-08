@@ -206,75 +206,10 @@ var manager = new RedmineManager(new RedmineManagerOptionsBuilder()
     .WithHttpClient(httpClient));
 ```
 
-The `HttpClient` belongs to you: the library never disposes it, so reuse a long-lived instance. Timeouts, proxy,
-certificates, decompression and message handlers are configured on the `HttpClient` and its handler.
-`HttpClient.Timeout` covers the whole request, including the reading of a download's body. On .NET 5+ the
-synchronous API uses `HttpClient.Send`, which skips message handlers that override only `SendAsync` and needs a handler
-that supports synchronous sends: `SocketsHttpHandler` (the default) does, while custom handlers or HTTP/2-only setups
-may throw `NotSupportedException`, surfaced as a `RedmineApiException`. Prefer the async API in those cases.
-`HttpClient.DefaultRequestHeaders` are sent only when the request does not set the same header, so authentication,
-impersonation and `RequestOptions` headers always win. `WithHttpClient` cannot be combined with `WithWebClient` or
-`WithWebClientOptions`.
-
-#### IHttpClientFactory and dependency injection
-
-An `HttpClient` created by `IHttpClientFactory` can be passed to `WithHttpClient`; the library does not dispose it, so
-the factory keeps managing its handlers. `RedmineManager` is cheap to build, so create one per scope or per use:
-
-```csharp
-services.AddHttpClient("redmine", client => client.Timeout = TimeSpan.FromSeconds(100));
-
-services.AddScoped(sp => new RedmineManager(new RedmineManagerOptionsBuilder()
-    .WithHost("https://redmine.example.com")
-    .WithApiKeyAuthentication("your-api-key")
-    .WithHttpClient(sp.GetRequiredService<IHttpClientFactory>().CreateClient("redmine"))));
-```
-
-#### Retries and resilience
-
-The library does not retry. Add retries to the `HttpClient`, for example with
-[Microsoft.Extensions.Http.Resilience](https://www.nuget.org/packages/Microsoft.Extensions.Http.Resilience):
-
-```csharp
-services.AddHttpClient("redmine")
-    .AddStandardResilienceHandler(options => options.Retry.DisableForUnsafeHttpMethods());
-```
-
-The standard handler also applies its own timeouts (10 seconds per attempt and 30 seconds in total by default); raise
-`options.AttemptTimeout.Timeout` and `options.TotalRequestTimeout.Timeout` for slow requests. The total timeout must not
-be below the attempt timeout and `options.CircuitBreaker.SamplingDuration` must be at least twice the attempt timeout.
-Keep `HttpClient.Timeout` above `TotalRequestTimeout` so the handler's timeouts apply first. When a handler timeout
-expires (or its circuit is open), the call fails with a `RedmineApiException` whose `IsTransient` is `false` and whose
-inner exception is Polly's `TimeoutRejectedException` (or `BrokenCircuitException`), because the handler has already
-retried.
-
-To retry at the `RedmineManager` level instead, use `RedmineApiException.IsTransient` (timeouts, connection failures
-and HTTP 408, 429, 502, 503 and 504) and the `Retry-After` value in `ResponseHeaders`, for example with
-[Polly](https://www.nuget.org/packages/Polly):
-
-```csharp
-var retry = new ResiliencePipelineBuilder()
-    .AddRetry(new RetryStrategyOptions
-    {
-        ShouldHandle = new PredicateBuilder().Handle<RedmineApiException>(ex => ex.IsTransient),
-        MaxRetryAttempts = 3,
-        BackoffType = DelayBackoffType.Exponential,
-        UseJitter = true,
-        DelayGenerator = args => new ValueTask<TimeSpan?>(
-            args.Outcome.Exception is RedmineApiException { ResponseHeaders: { } headers }
-            && headers.TryGetValue("Retry-After", out var value)
-            && int.TryParse(value, out var seconds)
-                ? TimeSpan.FromSeconds(seconds)
-                : null)
-    })
-    .Build();
-
-var issue = await retry.ExecuteAsync(async token => await manager.GetAsync<Issue>("1", cancellationToken: token));
-```
-
-Retrying a request that creates something (`Create`, `UploadFile`, ...) can create it twice when the first attempt
-reached the server but its response was lost. When retrying at the `RedmineManager` level, retry only reads, updates
-and deletes, or check before retrying a create.
+Only one transport is used: installing the package changes nothing until `WithHttpClient` is called, and
+`WithHttpClient` cannot be combined with `WithWebClient` or `WithWebClientOptions`. See the
+[redmine-api.http README](https://github.com/zapadi/redmine-net-api/blob/4.x/src/redmine-net-api.Http/README.md)
+for `HttpClient` lifetime, `IHttpClientFactory`, timeouts, retries, the synchronous API, headers and errors.
 
 ### Custom transport
 
