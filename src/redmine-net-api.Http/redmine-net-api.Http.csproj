@@ -13,7 +13,7 @@
 
   <PropertyGroup Label="Package">
     <PackageIdBase>redmine-api.http</PackageIdBase>
-    <Version>0.0.0</Version> <!-- x-release-please-version -->
+    <Version>0.1.0</Version> <!-- x-release-please-version -->
     <Title>Redmine .NET API Client HttpClient Transport</Title>
     <Product>Redmine .NET API Client HttpClient Transport</Product>
     <Description>HttpClient transport for the Redmine .NET API client.</Description>
