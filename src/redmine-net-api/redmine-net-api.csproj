@@ -23,7 +23,7 @@
 
   <PropertyGroup Label="Package">
     <PackageIdBase>redmine-api</PackageIdBase>
-    <Version>4.66.0</Version> <!-- x-release-please-version -->
+    <Version>4.67.0</Version> <!-- x-release-please-version -->
     <Title>Redmine .NET API Client</Title>
     <Product>Redmine .NET API Client</Product>
     <Description>Redmine Api is a .NET rest client for Redmine.</Description>
