@@ -222,6 +222,19 @@ namespace Redmine.Net.Api.Exceptions
 #endif
         
         #if !(NET8_0_OR_GREATER)
+        private RedmineApiException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+            ErrorCode = info.GetString(nameof(ErrorCode));
+            IsTransient = info.GetBoolean(nameof(IsTransient));
+            CorrelationId = info.GetString(nameof(CorrelationId));
+            Method = info.GetString(nameof(Method));
+            Endpoint = info.GetString(nameof(Endpoint));
+            HttpStatusCode = (int?)info.GetValue(nameof(HttpStatusCode), typeof(int?));
+            ResponseHeaders = (Dictionary<string, string>)info.GetValue(nameof(ResponseHeaders), typeof(Dictionary<string, string>));
+            _errors = new ReadOnlyCollection<string>((string[])info.GetValue("Errors", typeof(string[])));
+        }
+
         /// <inheritdoc />
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
@@ -229,6 +242,14 @@ namespace Redmine.Net.Api.Exceptions
 
             info.AddValue(nameof(this.ErrorCode), this.ErrorCode);
             info.AddValue(nameof(this.IsTransient), this.IsTransient);
+            info.AddValue(nameof(this.CorrelationId), this.CorrelationId);
+            info.AddValue(nameof(this.Method), this.Method);
+            info.AddValue(nameof(this.Endpoint), this.Endpoint);
+            info.AddValue(nameof(this.HttpStatusCode), this.HttpStatusCode, typeof(int?));
+            info.AddValue(nameof(this.ResponseHeaders), this.ResponseHeaders == null ? null : new Dictionary<string, string>(this.ResponseHeaders), typeof(Dictionary<string, string>));
+            var errors = new string[_errors.Count];
+            _errors.CopyTo(errors, 0);
+            info.AddValue("Errors", errors, typeof(string[]));
         }
         #endif
     }
