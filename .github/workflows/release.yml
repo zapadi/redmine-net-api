@@ -2,7 +2,7 @@ name: Release
 
 on:
   push:
-    branches: [ master, '*.x' ]
+    branches: [ '[0-9]+.x' ]
   workflow_dispatch:
 
 permissions:
@@ -16,7 +16,6 @@ jobs:
   release-please:
     name: Release Please
     runs-on: ubuntu-latest
-    if: github.ref_name == 'master' || endsWith(github.ref_name, '.x')
     timeout-minutes: 10
     permissions:
       contents: write
@@ -26,6 +25,15 @@ jobs:
       packages: ${{ steps.packages.outputs.packages }}
       sha: ${{ steps.release.outputs['src/redmine-net-api--sha'] || steps.release.outputs['src/redmine-net-api.Http--sha'] }}
     steps:
+      - name: Check branch
+        env:
+          BRANCH: ${{ github.ref_name }}
+        run: |
+          if [[ ! "$BRANCH" =~ ^[0-9]+\.x$ ]]; then
+            echo "::error::Packages are released only from N.x branches (e.g. 4.x), not from '$BRANCH'."
+            exit 1
+          fi
+
       - id: release
         uses: googleapis/release-please-action@v5
         with:
