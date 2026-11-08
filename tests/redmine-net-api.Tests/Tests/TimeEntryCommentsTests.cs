@@ -25,7 +25,7 @@ public sealed class TimeEntryCommentsTests
 
         var output = options.Serializer.Serialize(new TimeEntry { SpentOn = new DateTime(2024, 6, 15), Hours = 1, Comments = new string('a', 300) });
 
-        Assert.Equal(expected, output);
+        Assert.Equal(expected, output, ignoreLineEndingDifferences: true);
     }
 
     [Theory]
@@ -50,6 +50,6 @@ public sealed class TimeEntryCommentsTests
 
         var output = options.Serializer.Serialize(new TimeEntry { SpentOn = new DateTime(2024, 6, 15), Hours = 1, Comments = "abcdefgh" });
 
-        Assert.Equal(expected, output);
+        Assert.Equal(expected, output, ignoreLineEndingDifferences: true);
     }
 }

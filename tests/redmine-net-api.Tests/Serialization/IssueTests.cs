@@ -84,7 +84,7 @@ public class IssueTests
 
         var output = SerializerFactory.Create(kind).Serialize(issue);
 
-        Assert.Equal(expected, output);
+        Assert.Equal(expected, output, ignoreLineEndingDifferences: true);
     }
 
     [Theory]

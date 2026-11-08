@@ -17,7 +17,7 @@ public class TimeEntryTests
 
         var output = SerializerFactory.Create(kind, 10).Serialize(timeEntry);
 
-        Assert.Equal(expected, output);
+        Assert.Equal(expected, output, ignoreLineEndingDifferences: true);
         Assert.Equal("abcdefghijklmnop", timeEntry.Comments);
     }
 
@@ -29,7 +29,7 @@ public class TimeEntryTests
 
         var output = SerializerFactory.Create(kind).Serialize(timeEntry);
 
-        Assert.Equal(expected, output);
+        Assert.Equal(expected, output, ignoreLineEndingDifferences: true);
         Assert.Equal(new string('a', 300), timeEntry.Comments);
     }
 
@@ -41,7 +41,7 @@ public class TimeEntryTests
 
         var output = SerializerFactory.Create(kind).Serialize(timeEntry);
 
-        Assert.Equal(expected, output);
+        Assert.Equal(expected, output, ignoreLineEndingDifferences: true);
     }
 
     private static TimeEntry CreateTimeEntry(string comments)

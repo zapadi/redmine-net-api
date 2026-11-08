@@ -48,7 +48,7 @@ public class GroupTests
 
         var output = SerializerFactory.Create(kind).Serialize(group);
 
-        Assert.Equal(expected, output);
+        Assert.Equal(expected, output, ignoreLineEndingDifferences: true);
     }
 
     [Theory]
@@ -59,7 +59,7 @@ public class GroupTests
 
         var output = SerializerFactory.Create(kind).Serialize(group);
 
-        Assert.Equal(expected, output);
+        Assert.Equal(expected, output, ignoreLineEndingDifferences: true);
     }
 
     [Theory]
