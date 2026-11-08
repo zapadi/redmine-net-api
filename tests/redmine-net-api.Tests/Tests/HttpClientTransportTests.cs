@@ -311,9 +311,10 @@ public sealed class HttpClientTransportTests : IDisposable
     [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
-    public async Task Connection_Refused_Should_Throw_Transient_Exception(bool async)
+    public async Task Connection_Reset_Should_Throw_Transient_Exception(bool async)
     {
-        var manager = Manager($"http://localhost:{TestHttpServer.GetFreePort()}/");
+        using var server = new ResettingServer();
+        var manager = Manager(server.Url);
 
         var exception = await CatchAsync(async, () => manager.Get<Project>("1"), () => manager.GetAsync<Project>("1", cancellationToken: TestContext.Current.CancellationToken));
 

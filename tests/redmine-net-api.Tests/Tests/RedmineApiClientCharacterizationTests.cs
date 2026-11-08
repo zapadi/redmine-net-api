@@ -757,11 +757,10 @@ public sealed class RedmineApiClientCharacterizationTests
     [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
-    public async Task Connection_Failure_Should_Be_Transient(bool async)
+    public async Task Connection_Reset_Should_Throw_Api_Exception(bool async)
     {
-        using var reserved = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-        reserved.Bind(new IPEndPoint(IPAddress.Loopback, 0));
-        var url = $"http://127.0.0.1:{((IPEndPoint)reserved.LocalEndPoint).Port}/";
+        using var server = new ResettingServer();
+        var url = server.Url;
         var manager = CreateManager(url);
 
         var exception = await CatchAsync(async,
