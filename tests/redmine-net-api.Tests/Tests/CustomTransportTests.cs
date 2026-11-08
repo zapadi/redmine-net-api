@@ -13,6 +13,7 @@ using Padi.DotNet.RedmineAPI.Tests.Infrastructure;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Exceptions;
 using Redmine.Net.Api.Net;
+using Redmine.Net.Api.Serialization;
 using Redmine.Net.Api.Types;
 using Xunit;
 
@@ -277,6 +278,48 @@ public sealed class CustomTransportTests
         Assert.Equal(422, exception.HttpStatusCode);
         Assert.Equal("PUT", exception.Method);
         Assert.Equal(BaseAddress + "projects/1.xml", exception.Endpoint);
+    }
+
+    [Theory(Timeout = Constants.TestTimeout)]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task Unprocessable_Entity_With_Long_Unparsable_Body_Should_Cap_The_Message_At_1024_Characters(bool async)
+    {
+        var body = Encoding.UTF8.GetBytes("  " + new string('x', 2000) + "\n");
+        var manager = CreateManager(new FakeTransport(_ => new RedmineTransportResponse(422, null, body)));
+        var project = new Project { Name = "p", Identifier = "p" };
+
+        var exception = await CatchAsync(async,
+            () => manager.Update("1", project),
+            () => manager.UpdateAsync("1", project, cancellationToken: TestContext.Current.CancellationToken));
+
+        Assert.Equal(new string('x', 1024), exception.Message);
+        Assert.Equal(422, exception.HttpStatusCode);
+    }
+
+    [Theory(Timeout = Constants.TestTimeout)]
+    [InlineData(false, SerializationType.Xml)]
+    [InlineData(true, SerializationType.Xml)]
+    [InlineData(false, SerializationType.Json)]
+    [InlineData(true, SerializationType.Json)]
+    public async Task Unprocessable_Entity_With_Unparsable_Body_Should_Use_The_Trimmed_Body_As_Message(bool async, SerializationType serializationType)
+    {
+        var body = Encoding.UTF8.GetBytes("  Validation failed: name is invalid\n");
+        var manager = CreateManager(new FakeTransport(_ => new RedmineTransportResponse(422, new NameValueCollection { { "X-Request-Id", "abc" } }, body)), builder => builder.WithSerializationType(serializationType));
+        var project = new Project { Name = "p", Identifier = "p" };
+        var extension = serializationType == SerializationType.Xml ? "xml" : "json";
+
+        var exception = await CatchAsync(async,
+            () => manager.Update("1", project),
+            () => manager.UpdateAsync("1", project, cancellationToken: TestContext.Current.CancellationToken));
+
+        Assert.Equal("Validation failed: name is invalid", exception.Message);
+        Assert.Equal(422, exception.HttpStatusCode);
+        Assert.Equal("PUT", exception.Method);
+        Assert.Equal($"{BaseAddress}projects/1.{extension}", exception.Endpoint);
+        Assert.Equal("abc", exception.CorrelationId);
+        Assert.IsType<RedmineException>(exception.InnerException);
+        Assert.IsNotType<RedmineException>(exception.InnerException?.InnerException);
     }
 
     [Theory(Timeout = Constants.TestTimeout)]

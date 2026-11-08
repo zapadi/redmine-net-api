@@ -741,7 +741,7 @@ public sealed class RedmineApiClientCharacterizationTests
     [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
-    public async Task Unprocessable_Entity_With_Invalid_Body_Should_Throw_Without_Request_Details(bool async)
+    public async Task Unprocessable_Entity_With_Invalid_Body_Should_Throw_With_Body_As_Message_And_Request_Details(bool async)
     {
         using var server = new TestHttpServer(_ => Response("not xml", 422));
         var manager = CreateManager(server.Url);
@@ -750,13 +750,9 @@ public sealed class RedmineApiClientCharacterizationTests
             () => manager.ApiClient.Create("projects.xml", ProjectXml),
             () => manager.ApiClient.CreateAsync("projects.xml", ProjectXml, cancellationToken: TestContext.Current.CancellationToken));
 
-        Assert.Equal(422, exception.HttpStatusCode);
-        Assert.Null(exception.Method);
-        Assert.Null(exception.Endpoint);
-        Assert.Null(exception.ResponseHeaders);
-        Assert.Null(exception.ErrorCode);
-        Assert.NotNull(exception.InnerException);
-        Assert.Equal(exception.InnerException.Message, exception.Message);
+        AssertException(exception, "not xml", 422, "POST", $"{server.Url}projects.xml", false, null);
+        Assert.NotNull(exception.ResponseHeaders);
+        Assert.IsType<RedmineException>(exception.InnerException);
     }
 
     [Theory(Timeout = Constants.TestTimeout)]

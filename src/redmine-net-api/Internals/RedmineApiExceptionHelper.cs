@@ -17,6 +17,7 @@ internal static class RedmineApiExceptionHelper
 {
     private const string RequestIdHeader = "X-Request-Id";
     internal const string UnknownErrorCode = "UNKNOWN";
+    private const int MaxUnparsedBodyMessageLength = 1024;
 
     /// <summary>
     /// Maps an HTTP status code to an appropriate Redmine exception.
@@ -91,7 +92,17 @@ internal static class RedmineApiExceptionHelper
     /// <returns></returns>
     public static RedmineApiException CreateUnprocessableEntityException(string responseContent, Exception inner, IRedmineSerializer serializer, string method = null, string endpoint = null, IDictionary<string, string> responseHeaders = null)
     {
-        var errors = GetRedmineErrors(responseContent, serializer);
+        List<Error> errors;
+        try
+        {
+            errors = GetRedmineErrors(responseContent, serializer);
+        }
+        catch (RedmineException ex)
+        {
+            var body = responseContent.Trim();
+            var message = body.Length > MaxUnparsedBodyMessageLength ? body.Substring(0, MaxUnparsedBodyMessageLength) : body;
+            return Create(message, ex, HttpConstants.StatusCodes.UnprocessableEntity, method, endpoint, responseHeaders);
+        }
 
         return Create(errors, inner, method, endpoint, responseHeaders);
     }
@@ -159,14 +170,7 @@ internal static class RedmineApiExceptionHelper
             return null;
         }
 
-        try
-        {
-            var paged = serializer.DeserializeToPagedResults<Error>(content);
-            return (List<Error>)paged.Items;
-        }
-        catch (Exception ex)
-        {
-            throw new RedmineApiException(ex.Message, ex, httpStatusCode: HttpConstants.StatusCodes.UnprocessableEntity);
-        }
+        var paged = serializer.DeserializeToPagedResults<Error>(content);
+        return (List<Error>)paged.Items;
     }
 }
