@@ -18,6 +18,7 @@
     <Product>Redmine .NET API Client HttpClient Transport</Product>
     <Description>HttpClient transport for the Redmine .NET API client.</Description>
     <PackageTags>Redmine; REST; API; Client; HttpClient; .NET; Adrian Popescu;</PackageTags>
+    <PackageReadmeSource>$(MSBuildProjectDirectory)/README.md</PackageReadmeSource>
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TargetFrameworkIdentifier)' == '.NETFramework' ">
