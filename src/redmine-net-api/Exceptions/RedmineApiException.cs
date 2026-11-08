@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 
 namespace Redmine.Net.Api.Exceptions
@@ -41,6 +42,10 @@ namespace Redmine.Net.Api.Exceptions
     [Serializable]
     public sealed class RedmineApiException : RedmineException
     {
+        private static readonly ReadOnlyCollection<string> NoErrors = new ReadOnlyCollection<string>(new List<string>());
+
+        private readonly ReadOnlyCollection<string> _errors = NoErrors;
+
         /// <summary>
         /// 
         /// </summary>
@@ -126,9 +131,15 @@ namespace Redmine.Net.Api.Exceptions
             string? method,
             string? endpoint,
             int? httpStatusCode,
-            IDictionary<string,string>? responseHeaders)
+            IDictionary<string,string>? responseHeaders,
+            IList<string>? errors = null)
             : base(message, inner)
         {
+            if (errors != null)
+            {
+                _errors = new ReadOnlyCollection<string>(errors);
+            }
+
             ErrorCode = errorCode;
             IsTransient = isTransient;
             CorrelationId = correlationId;
@@ -202,6 +213,13 @@ namespace Redmine.Net.Api.Exceptions
         /// Response headers may include rate limiting information, server version, and other metadata.
         /// </remarks>
         public IDictionary<string,string>? ResponseHeaders { get; }
+
+#if !(NET20 || NET40)
+        /// <summary>
+        /// Gets the validation errors returned by Redmine for a 422 Unprocessable Entity response; empty otherwise.
+        /// </summary>
+        public IReadOnlyList<string> Errors => _errors;
+#endif
         
         #if !(NET8_0_OR_GREATER)
         /// <inheritdoc />

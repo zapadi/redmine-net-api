@@ -44,7 +44,7 @@ internal static class RedmineApiExceptionHelper
         throw Create(message, inner, statusCode, method, endpoint, responseHeaders);
     }
 
-    internal static RedmineApiException Create(string message, Exception inner, int? statusCode, string method, string endpoint, IDictionary<string, string> responseHeaders, bool isTransient = false, string errorCode = null)
+    internal static RedmineApiException Create(string message, Exception inner, int? statusCode, string method, string endpoint, IDictionary<string, string> responseHeaders, bool isTransient = false, string errorCode = null, IList<string> errors = null)
     {
         string correlationId = null;
         responseHeaders?.TryGetValue(RequestIdHeader, out correlationId);
@@ -58,7 +58,8 @@ internal static class RedmineApiExceptionHelper
             method,
             endpoint,
             statusCode,
-            responseHeaders);
+            responseHeaders,
+            errors);
     }
 
     private static bool IsTransientStatusCode(int statusCode)
@@ -115,10 +116,12 @@ internal static class RedmineApiExceptionHelper
         }
 
         var sb = new StringBuilder();
+        var messages = new List<string>(errors.Count);
         foreach (var error in errors)
         {
             sb.Append(error.Info);
             sb.Append(Environment.NewLine);
+            messages.Add(error.Info);
         }
 
         if (sb.Length > 0)
@@ -126,7 +129,7 @@ internal static class RedmineApiExceptionHelper
             sb.Length -= 1;
         }
 
-        return Create($"{sb}", inner, HttpConstants.StatusCodes.UnprocessableEntity, method, endpoint, responseHeaders);
+        return Create($"{sb}", inner, HttpConstants.StatusCodes.UnprocessableEntity, method, endpoint, responseHeaders, errors: messages);
     }
 
     /// <summary>
