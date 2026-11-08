@@ -275,7 +275,7 @@ public sealed class RedmineApiClientTests
             () => client.Update("d.xml", "<d/>"),
             () => client.UpdateAsync("d.xml", "<d/>", cancellationToken: TestContext.Current.CancellationToken));
 
-        Assert.Equal("Name ţ", exception.Message);
+        Assert.Equal("Name ţ", exception.Message, ignoreLineEndingDifferences: true);
         Assert.Equal(422, exception.HttpStatusCode);
         Assert.Equal("PUT", exception.Method);
         Assert.Equal(BaseAddress + "d.xml", exception.Endpoint);

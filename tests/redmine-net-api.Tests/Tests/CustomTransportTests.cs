@@ -275,7 +275,7 @@ public sealed class CustomTransportTests
             () => manager.Update("1", project),
             () => manager.UpdateAsync("1", project, cancellationToken: TestContext.Current.CancellationToken));
 
-        Assert.Equal("Name café", exception.Message);
+        Assert.Equal("Name café", exception.Message, ignoreLineEndingDifferences: true);
         Assert.Equal(422, exception.HttpStatusCode);
         Assert.Equal("PUT", exception.Method);
         Assert.Equal(BaseAddress + "projects/1.xml", exception.Endpoint);

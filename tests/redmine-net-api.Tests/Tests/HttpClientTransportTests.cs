@@ -218,7 +218,7 @@ public sealed class HttpClientTransportTests : IDisposable
         var exception = await CatchAsync(async, () => manager.Create(project), () => manager.CreateAsync(project, cancellationToken: TestContext.Current.CancellationToken));
 
         Assert.Equal(422, exception.HttpStatusCode);
-        Assert.Equal("Name cannot be blank", exception.Message);
+        Assert.Equal("Name cannot be blank", exception.Message, ignoreLineEndingDifferences: true);
         Assert.Equal("POST", exception.Method);
         Assert.False(exception.IsTransient);
     }

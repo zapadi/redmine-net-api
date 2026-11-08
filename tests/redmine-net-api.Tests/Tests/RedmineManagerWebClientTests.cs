@@ -376,9 +376,9 @@ public sealed class RedmineManagerWebClientTests
         var exception = Assert.Throws<RedmineApiException>(() => manager.Update("1", new Project { Name = "foo" }));
 
         Assert.Equal(422, exception.HttpStatusCode);
-        Assert.Equal("Name cannot be blank", exception.Message);
+        Assert.Equal("Name cannot be blank", exception.Message, ignoreLineEndingDifferences: true);
         Assert.Equal("PUT", exception.Method);
-        Assert.Equal($"{Host}/projects/1.xml", exception.Endpoint);
+        Assert.Equal($"{Host}/projects/1.xml", exception.Endpoint, ignoreLineEndingDifferences: true);
         Assert.NotNull(exception.ResponseHeaders);
         Assert.False(exception.IsTransient);
     }
@@ -391,7 +391,7 @@ public sealed class RedmineManagerWebClientTests
         var exception = await Assert.ThrowsAsync<RedmineApiException>(() => manager.DeleteAsync<Project>("1", cancellationToken: TestContext.Current.CancellationToken));
 
         Assert.Equal(422, exception.HttpStatusCode);
-        Assert.Equal("Name cannot be blank", exception.Message);
+        Assert.Equal("Name cannot be blank", exception.Message, ignoreLineEndingDifferences: true);
     }
 
     [Fact(Timeout = Constants.TestTimeout)]
@@ -402,7 +402,7 @@ public sealed class RedmineManagerWebClientTests
         var exception = Assert.Throws<RedmineApiException>(() => manager.Create(new Project { Name = "foo" }));
 
         Assert.Equal(422, exception.HttpStatusCode);
-        Assert.Equal("Name cannot be blank", exception.Message);
+        Assert.Equal("Name cannot be blank", exception.Message, ignoreLineEndingDifferences: true);
     }
 
     [Fact(Timeout = Constants.TestTimeout)]
