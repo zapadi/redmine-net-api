@@ -1,6 +1,13 @@
 # Changelog
 
-## [Unreleased]
+## [redmine-api.http v0.1.0]
+
+First release of the redmine-api.http package.
+
+🚀 Features
+*	New redmine-api.http package: HttpClient transport (WithHttpClient) for .NET Framework 4.5+ and .NET 5+ (including net10.0)
+
+## [v4.66.0]
 
 ### redmine-api
 
@@ -106,16 +113,6 @@
 *	Package validation compares against the latest stable version on nuget.org (passed by CI, no longer hardcoded)
 *	Package release notes link to CHANGELOG.md
 *	Integration tests run on Linux CI against a real Redmine (HttpClient and WebClient transports, XML and JSON)
-*	Added a net10.0 target
-
-### redmine-api.http
-
-Unreleased; released from `master` only (not part of the 4.x releases).
-
-🚀 Features
-*	New redmine-api.http package: HttpClient transport (WithHttpClient) for .NET Framework 4.5+ and .NET 5+
-
-📦 Chore
 *	Added a net10.0 target
 
 ## [v4.50.0]
