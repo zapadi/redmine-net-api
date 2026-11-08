@@ -175,6 +175,10 @@ namespace Redmine.Net.Api.Net
             {
                 throw HandleCustomTransportException(exception, request, cancellationToken.IsCancellationRequested);
             }
+            catch (Exception exception) when (exception is not RedmineException and not OperationCanceledException and not ArgumentException)
+            {
+                throw RedmineApiExceptionHelper.Create(exception.Message, exception, null, GetMethod(request), GetEndpoint(request), null, errorCode: RedmineApiExceptionHelper.UnknownErrorCode);
+            }
 
             return CreateResponseMessage(response, request);
         }
@@ -359,6 +363,10 @@ namespace Redmine.Net.Api.Net
             catch (Exception exception) when (_isCustomTransport)
             {
                 throw HandleCustomTransportException(exception, request, false);
+            }
+            catch (Exception exception) when (exception is not RedmineException and not OperationCanceledException and not ArgumentException)
+            {
+                throw RedmineApiExceptionHelper.Create(exception.Message, exception, null, GetMethod(request), GetEndpoint(request), null, errorCode: RedmineApiExceptionHelper.UnknownErrorCode);
             }
 
             return CreateResponseMessage(response, request);

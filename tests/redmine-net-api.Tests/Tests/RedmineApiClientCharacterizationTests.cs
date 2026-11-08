@@ -932,14 +932,15 @@ public sealed class RedmineApiClientCharacterizationTests
     }
 
     [Fact(Timeout = Constants.TestTimeout)]
-    public async Task Custom_WebClient_Func_Throwing_TimeoutException_Should_Propagate()
+    public async Task Custom_WebClient_Func_Throwing_TimeoutException_Should_Be_Wrapped_In_RedmineApiException()
     {
         var timeout = new TimeoutException("t", new WebException("canceled", WebExceptionStatus.RequestCanceled));
         var manager = new RedmineManager(new RedmineManagerOptionsBuilder().WithHost("http://localhost:3000").WithWebClient(() => throw timeout));
 
-        var exception = await Assert.ThrowsAsync<TimeoutException>(() => manager.ApiClient.GetAsync("projects/1.xml", cancellationToken: TestContext.Current.CancellationToken));
+        var exception = await Assert.ThrowsAsync<RedmineApiException>(() => manager.ApiClient.GetAsync("projects/1.xml", cancellationToken: TestContext.Current.CancellationToken));
 
-        Assert.Same(timeout, exception);
+        Assert.Same(timeout, exception.InnerException);
+        Assert.Equal("t", exception.Message);
     }
 
     [Fact(Timeout = Constants.TestTimeout)]

@@ -141,6 +141,40 @@ public sealed class RedmineManagerWebClientTests
     }
 
     [Fact(Timeout = Constants.TestTimeout)]
+    public void Get_Should_Wrap_Unexpected_Transport_Exception_In_RedmineApiException()
+    {
+        var failure = new NotSupportedException("unexpected");
+        var manager = new RedmineManager(new RedmineManagerOptionsBuilder().WithHost(Host).WithWebClient(() => throw failure));
+
+        var exception = Assert.Throws<RedmineApiException>(() => manager.Get<Project>("1"));
+
+        Assert.Equal("unexpected", exception.Message);
+        Assert.Same(failure, exception.InnerException);
+        Assert.Equal("GET", exception.Method);
+        Assert.Equal("projects/1.xml", exception.Endpoint);
+        Assert.Equal("UNKNOWN", exception.ErrorCode);
+        Assert.Null(exception.HttpStatusCode);
+        Assert.False(exception.IsTransient);
+    }
+
+    [Fact(Timeout = Constants.TestTimeout)]
+    public async Task GetAsync_Should_Wrap_Unexpected_Transport_Exception_In_RedmineApiException()
+    {
+        var failure = new NotSupportedException("unexpected");
+        var manager = new RedmineManager(new RedmineManagerOptionsBuilder().WithHost(Host).WithWebClient(() => throw failure));
+
+        var exception = await Assert.ThrowsAsync<RedmineApiException>(() => manager.GetAsync<Project>("1", cancellationToken: TestContext.Current.CancellationToken));
+
+        Assert.Equal("unexpected", exception.Message);
+        Assert.Same(failure, exception.InnerException);
+        Assert.Equal("GET", exception.Method);
+        Assert.Equal("projects/1.xml", exception.Endpoint);
+        Assert.Equal("UNKNOWN", exception.ErrorCode);
+        Assert.Null(exception.HttpStatusCode);
+        Assert.False(exception.IsTransient);
+    }
+
+    [Fact(Timeout = Constants.TestTimeout)]
     public void Get_Should_Throw_RedmineApiException_On_Protocol_Error_Without_Response()
     {
         var (manager, _) = CreateManager(_ => throw new WebException("protocol", null, WebExceptionStatus.ProtocolError, null));
