@@ -57,7 +57,7 @@ namespace Redmine.Net.Api.Extensions
         {
             if (val <= 0)
             {
-                throw new RedmineException(nameof(val), "Value must be greater than zero");
+                throw new RedmineException("The identifier must be greater than zero.");
             }
 
             return new IdentifiableName(val, null);
@@ -73,7 +73,7 @@ namespace Redmine.Net.Api.Extensions
         {
             if (val <= 0)
             {
-                throw new RedmineException(nameof(val), "Value must be greater than zero");
+                throw new RedmineException("The identifier must be greater than zero.");
             }
 
             return new IssueStatus(val, null);
