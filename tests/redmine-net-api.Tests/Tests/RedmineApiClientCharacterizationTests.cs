@@ -84,7 +84,6 @@ public sealed class RedmineApiClientCharacterizationTests
         Assert.True(response.IsSuccessful);
         Assert.Equal(200, response.StatusCode);
         Assert.Null(response.EndPoint);
-        Assert.Null(response.Exception);
     }
 
     [Fact(Timeout = Constants.TestTimeout)]
@@ -741,7 +740,7 @@ public sealed class RedmineApiClientCharacterizationTests
     [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
-    public async Task Unprocessable_Entity_With_Invalid_Body_Should_Throw_Without_Request_Details(bool async)
+    public async Task Unprocessable_Entity_With_Invalid_Body_Should_Throw_With_Body_As_Message_And_Request_Details(bool async)
     {
         using var server = new TestHttpServer(_ => Response("not xml", 422));
         var manager = CreateManager(server.Url);
@@ -750,13 +749,9 @@ public sealed class RedmineApiClientCharacterizationTests
             () => manager.ApiClient.Create("projects.xml", ProjectXml),
             () => manager.ApiClient.CreateAsync("projects.xml", ProjectXml, cancellationToken: TestContext.Current.CancellationToken));
 
-        Assert.Equal(422, exception.HttpStatusCode);
-        Assert.Null(exception.Method);
-        Assert.Null(exception.Endpoint);
-        Assert.Null(exception.ResponseHeaders);
-        Assert.Null(exception.ErrorCode);
-        Assert.NotNull(exception.InnerException);
-        Assert.Equal(exception.InnerException.Message, exception.Message);
+        AssertException(exception, "not xml", 422, "POST", $"{server.Url}projects.xml", false, null);
+        Assert.NotNull(exception.ResponseHeaders);
+        Assert.IsType<RedmineException>(exception.InnerException);
     }
 
     [Theory(Timeout = Constants.TestTimeout)]
@@ -937,14 +932,15 @@ public sealed class RedmineApiClientCharacterizationTests
     }
 
     [Fact(Timeout = Constants.TestTimeout)]
-    public async Task Custom_WebClient_Func_Throwing_TimeoutException_Should_Propagate()
+    public async Task Custom_WebClient_Func_Throwing_TimeoutException_Should_Be_Wrapped_In_RedmineApiException()
     {
         var timeout = new TimeoutException("t", new WebException("canceled", WebExceptionStatus.RequestCanceled));
         var manager = new RedmineManager(new RedmineManagerOptionsBuilder().WithHost("http://localhost:3000").WithWebClient(() => throw timeout));
 
-        var exception = await Assert.ThrowsAsync<TimeoutException>(() => manager.ApiClient.GetAsync("projects/1.xml", cancellationToken: TestContext.Current.CancellationToken));
+        var exception = await Assert.ThrowsAsync<RedmineApiException>(() => manager.ApiClient.GetAsync("projects/1.xml", cancellationToken: TestContext.Current.CancellationToken));
 
-        Assert.Same(timeout, exception);
+        Assert.Same(timeout, exception.InnerException);
+        Assert.Equal("t", exception.Message);
     }
 
     [Fact(Timeout = Constants.TestTimeout)]

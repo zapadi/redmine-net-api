@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 
 namespace Redmine.Net.Api.Exceptions
@@ -41,6 +42,12 @@ namespace Redmine.Net.Api.Exceptions
     [Serializable]
     public sealed class RedmineApiException : RedmineException
     {
+        private static readonly ReadOnlyCollection<string> NoErrors = new ReadOnlyCollection<string>(new List<string>());
+
+        private readonly ReadOnlyCollection<string> _errors = NoErrors;
+
+        internal IList<string> ValidationErrors => _errors;
+
         /// <summary>
         /// 
         /// </summary>
@@ -126,9 +133,15 @@ namespace Redmine.Net.Api.Exceptions
             string? method,
             string? endpoint,
             int? httpStatusCode,
-            IDictionary<string,string>? responseHeaders)
+            IDictionary<string,string>? responseHeaders,
+            IList<string>? errors = null)
             : base(message, inner)
         {
+            if (errors != null)
+            {
+                _errors = new ReadOnlyCollection<string>(errors);
+            }
+
             ErrorCode = errorCode;
             IsTransient = isTransient;
             CorrelationId = correlationId;
@@ -202,8 +215,28 @@ namespace Redmine.Net.Api.Exceptions
         /// Response headers may include rate limiting information, server version, and other metadata.
         /// </remarks>
         public IDictionary<string,string>? ResponseHeaders { get; }
+
+#if !(NET20 || NET40)
+        /// <summary>
+        /// Gets the validation errors returned by Redmine for a 422 Unprocessable Entity response; empty otherwise.
+        /// </summary>
+        public IReadOnlyList<string> Errors => _errors;
+#endif
         
         #if !(NET8_0_OR_GREATER)
+        private RedmineApiException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+            ErrorCode = info.GetString(nameof(ErrorCode));
+            IsTransient = info.GetBoolean(nameof(IsTransient));
+            CorrelationId = info.GetString(nameof(CorrelationId));
+            Method = info.GetString(nameof(Method));
+            Endpoint = info.GetString(nameof(Endpoint));
+            HttpStatusCode = (int?)info.GetValue(nameof(HttpStatusCode), typeof(int?));
+            ResponseHeaders = (Dictionary<string, string>)info.GetValue(nameof(ResponseHeaders), typeof(Dictionary<string, string>));
+            _errors = new ReadOnlyCollection<string>((string[])info.GetValue("Errors", typeof(string[])));
+        }
+
         /// <inheritdoc />
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
@@ -211,6 +244,14 @@ namespace Redmine.Net.Api.Exceptions
 
             info.AddValue(nameof(this.ErrorCode), this.ErrorCode);
             info.AddValue(nameof(this.IsTransient), this.IsTransient);
+            info.AddValue(nameof(this.CorrelationId), this.CorrelationId);
+            info.AddValue(nameof(this.Method), this.Method);
+            info.AddValue(nameof(this.Endpoint), this.Endpoint);
+            info.AddValue(nameof(this.HttpStatusCode), this.HttpStatusCode, typeof(int?));
+            info.AddValue(nameof(this.ResponseHeaders), this.ResponseHeaders == null ? null : new Dictionary<string, string>(this.ResponseHeaders), typeof(Dictionary<string, string>));
+            var errors = new string[_errors.Count];
+            _errors.CopyTo(errors, 0);
+            info.AddValue("Errors", errors, typeof(string[]));
         }
         #endif
     }

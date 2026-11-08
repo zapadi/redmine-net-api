@@ -76,6 +76,30 @@ public class IssueTests
         Assert.Contains("<watcher_user_ids>2</watcher_user_ids>", output);
     }
 
+    [Theory]
+    [MemberData(nameof(IssueEstimatedHoursSerializeTheoryData))]
+    public void Should_Serialize_Issue_Estimated_Hours(float? estimatedHours, string expected, SerializerKind kind)
+    {
+        var issue = new Redmine.Net.Api.Types.Issue { Subject = "subject", EstimatedHours = estimatedHours };
+
+        var output = SerializerFactory.Create(kind).Serialize(issue);
+
+        Assert.Equal(expected, output);
+    }
+
+    [Theory]
+    [MemberData(nameof(IssueWithSelfClosingCustomFieldDeserializeTheoryData))]
+    public void Should_Deserialize_Issue_With_Custom_Field_Without_Value_Among_Valued_Ones(string input, SerializerKind kind)
+    {
+        var output = SerializerFactory.Create(kind).Deserialize<Redmine.Net.Api.Types.Issue>(input);
+
+        Assert.Equal("subject", output.Subject);
+        Assert.Equal([1, 2, 3], output.CustomFields.Select(cf => cf.Id));
+        Assert.Equal(["a"], output.CustomFields[0].Values.Select(v => v.Info));
+        Assert.Null(output.CustomFields[1].Values);
+        Assert.Equal(["c"], output.CustomFields[2].Values.Select(v => v.Info));
+    }
+
     [Fact]
     public void Should_Deserialize_Xml_Issue_ChangeSets_With_Revision()
     {
@@ -1041,5 +1065,140 @@ public class IssueTests
             yield return new TheoryDataRow<string, SerializerKind>(xml, SerializerKind.Xml).WithTestDisplayName(Constants.Xml);
         }
     }
-}
 
+    public static IEnumerable<TheoryDataRow<float?, string, SerializerKind>> IssueEstimatedHoursSerializeTheoryData
+    {
+        get
+        {
+            const string jsonNull = """
+                                {
+                                  "issue": {
+                                    "subject": "subject",
+                                    "description": null,
+                                    "notes": null,
+                                    "is_private": "false",
+                                    "estimated_hours": "",
+                                    "parent_issue_id": null,
+                                    "start_date": "",
+                                    "due_date": "",
+                                    "updated_on": ""
+                                  }
+                                }
+                                """;
+
+            const string xmlNull = """
+                               <issue>
+                               <subject>subject</subject>
+                               <notes />
+                               <description />
+                               <is_private>false</is_private>
+                               <estimated_hours />
+                               <start_date />
+                               <due_date />
+                               <updated_on />
+                               </issue>
+                               """;
+
+            const string jsonZero = """
+                                {
+                                  "issue": {
+                                    "subject": "subject",
+                                    "description": null,
+                                    "notes": null,
+                                    "is_private": "false",
+                                    "estimated_hours": "0",
+                                    "parent_issue_id": null,
+                                    "start_date": "",
+                                    "due_date": "",
+                                    "updated_on": ""
+                                  }
+                                }
+                                """;
+
+            const string xmlZero = """
+                               <issue>
+                               <subject>subject</subject>
+                               <notes />
+                               <description />
+                               <is_private>false</is_private>
+                               <estimated_hours>0</estimated_hours>
+                               <start_date />
+                               <due_date />
+                               <updated_on />
+                               </issue>
+                               """;
+
+            const string jsonDecimal = """
+                                {
+                                  "issue": {
+                                    "subject": "subject",
+                                    "description": null,
+                                    "notes": null,
+                                    "is_private": "false",
+                                    "estimated_hours": "1.5",
+                                    "parent_issue_id": null,
+                                    "start_date": "",
+                                    "due_date": "",
+                                    "updated_on": ""
+                                  }
+                                }
+                                """;
+
+            const string xmlDecimal = """
+                               <issue>
+                               <subject>subject</subject>
+                               <notes />
+                               <description />
+                               <is_private>false</is_private>
+                               <estimated_hours>1.5</estimated_hours>
+                               <start_date />
+                               <due_date />
+                               <updated_on />
+                               </issue>
+                               """;
+
+            yield return new TheoryDataRow<float?, string, SerializerKind>(null, jsonNull, SerializerKind.NewtonsoftJson).WithTestDisplayName($"{Constants.JsonNewtonsoft}_Null");
+            yield return new TheoryDataRow<float?, string, SerializerKind>(null, xmlNull, SerializerKind.Xml).WithTestDisplayName($"{Constants.Xml}_Null");
+            yield return new TheoryDataRow<float?, string, SerializerKind>(0f, jsonZero, SerializerKind.NewtonsoftJson).WithTestDisplayName($"{Constants.JsonNewtonsoft}_Zero");
+            yield return new TheoryDataRow<float?, string, SerializerKind>(0f, xmlZero, SerializerKind.Xml).WithTestDisplayName($"{Constants.Xml}_Zero");
+            yield return new TheoryDataRow<float?, string, SerializerKind>(1.5f, jsonDecimal, SerializerKind.NewtonsoftJson).WithTestDisplayName($"{Constants.JsonNewtonsoft}_Decimal");
+            yield return new TheoryDataRow<float?, string, SerializerKind>(1.5f, xmlDecimal, SerializerKind.Xml).WithTestDisplayName($"{Constants.Xml}_Decimal");
+        }
+    }
+
+    public static IEnumerable<TheoryDataRow<string, SerializerKind>> IssueWithSelfClosingCustomFieldDeserializeTheoryData
+    {
+        get
+        {
+            const string json = """
+                                {
+                                  "issue": {
+                                    "id": 1,
+                                    "subject": "subject",
+                                    "custom_fields": [
+                                      { "id": 1, "name": "A", "value": "a" },
+                                      { "id": 2, "name": "B" },
+                                      { "id": 3, "name": "C", "value": "c" }
+                                    ]
+                                  }
+                                }
+                                """;
+
+            const string xml = """
+                               <?xml version="1.0" encoding="UTF-8"?>
+                               <issue>
+                                   <id>1</id>
+                                   <subject>subject</subject>
+                                   <custom_fields type="array">
+                                       <custom_field id="1" name="A"><value>a</value></custom_field>
+                                       <custom_field id="2" name="B"/>
+                                       <custom_field id="3" name="C"><value>c</value></custom_field>
+                                   </custom_fields>
+                               </issue>
+                               """;
+
+            yield return new TheoryDataRow<string, SerializerKind>(json, SerializerKind.NewtonsoftJson).WithTestDisplayName(Constants.JsonNewtonsoft);
+            yield return new TheoryDataRow<string, SerializerKind>(xml, SerializerKind.Xml).WithTestDisplayName(Constants.Xml);
+        }
+    }
+}

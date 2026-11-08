@@ -56,7 +56,6 @@ internal static class ApiResponseMessageExtensions
     /// <param name="responseMessage"></param>
     /// <param name="redmineSerializer"></param>
     /// <returns></returns>
-    /// <exception cref="Exception"></exception>
     /// <exception cref="RedmineException"></exception>
     private static string GetResponseContentAsString(ApiResponseMessage responseMessage, IRedmineSerializer redmineSerializer)
     {
@@ -67,11 +66,6 @@ internal static class ApiResponseMessageExtensions
 
         if (!responseMessage.IsSuccessful)
         {
-            if (responseMessage.Exception is not null)
-            {
-                throw responseMessage.Exception;
-            }
-
             if (responseMessage.StatusCode == HttpConstants.StatusCodes.UnprocessableEntity)
             {
                 throw RedmineApiExceptionHelper.CreateUnprocessableEntityException(responseMessage.Content, null, redmineSerializer);

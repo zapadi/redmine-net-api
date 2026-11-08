@@ -94,8 +94,8 @@ namespace Redmine.Net.Api.Authentication
         /// </example>
         public RedmineBasicAuthentication(string username, string password)
         {
-            if (username == null) throw new RedmineException(nameof(username));
-            if (password == null) throw new RedmineException(nameof(password));
+            if (username == null) throw new RedmineException("The username for basic authentication cannot be null.");
+            if (password == null) throw new RedmineException("The password for basic authentication cannot be null.");
             
             Token = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{username}:{password}"));
         }

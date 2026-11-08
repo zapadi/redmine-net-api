@@ -14,7 +14,6 @@
    limitations under the License.
 */
 
-using System;
 using System.Collections.Specialized;
 using System.Net;
 
@@ -53,9 +52,4 @@ internal sealed class ApiResponseMessage
     /// 
     /// </summary>
     public bool IsSuccessful  { get; init; }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public Exception Exception { get; set; }
 }

@@ -251,6 +251,114 @@ public class ProjectTests
                      """, output);
     }
 
+    [Theory]
+    [MemberData(nameof(ProjectWithIssueCustomFieldsWithoutValuesDeserializeTheoryData))]
+    public void Should_Deserialize_Project_Issue_Custom_Fields_Without_Values(string input, SerializerKind kind)
+    {
+        var output = SerializerFactory.Create(kind).Deserialize<Project>(input);
+
+        Assert.Equal([1, 2, 3, 4], output.IssueCustomFields.Select(cf => cf.Id));
+        Assert.Equal(["A", "B", "C", "D"], output.IssueCustomFields.Select(cf => cf.Name));
+    }
+
+    [Theory]
+    [MemberData(nameof(ProjectWithValuedAndEmptyCustomFieldsDeserializeTheoryData))]
+    public void Should_Deserialize_Project_Custom_Fields_Mixing_Valued_And_Without_Values(string input, SerializerKind kind)
+    {
+        var output = SerializerFactory.Create(kind).Deserialize<Project>(input);
+
+        var fields = output.ProjectCustomFields;
+        Assert.Equal([1, 2, 3, 4, 5], fields.Select(cf => cf.Id));
+        Assert.Null(fields[0].Values);
+        Assert.Equal(["b"], fields[1].Values.Select(v => v.Info));
+        Assert.Null(fields[2].Values);
+        Assert.Equal(["d1", "d2"], fields[3].Values.Select(v => v.Info));
+        Assert.Null(fields[4].Values);
+    }
+
+    public static IEnumerable<TheoryDataRow<string, SerializerKind>> ProjectWithIssueCustomFieldsWithoutValuesDeserializeTheoryData
+    {
+        get
+        {
+            const string json = """
+                                {
+                                  "project": {
+                                    "id": 1,
+                                    "name": "Redmine",
+                                    "issue_custom_fields": [
+                                      { "id": 1, "name": "A" },
+                                      { "id": 2, "name": "B" },
+                                      { "id": 3, "name": "C" },
+                                      { "id": 4, "name": "D" }
+                                    ]
+                                  }
+                                }
+                                """;
+
+            const string xml = """
+                               <?xml version="1.0" encoding="UTF-8"?>
+                               <project>
+                                   <id>1</id>
+                                   <name>Redmine</name>
+                                   <issue_custom_fields type="array">
+                                       <custom_field id="1" name="A"/>
+                                       <custom_field id="2" name="B"/>
+                                       <custom_field id="3" name="C"/>
+                                       <custom_field id="4" name="D"/>
+                                   </issue_custom_fields>
+                               </project>
+                               """;
+
+            yield return new TheoryDataRow<string, SerializerKind>(json, SerializerKind.NewtonsoftJson).WithTestDisplayName(Constants.JsonNewtonsoft);
+            yield return new TheoryDataRow<string, SerializerKind>(xml, SerializerKind.Xml).WithTestDisplayName(Constants.Xml);
+        }
+    }
+
+    public static IEnumerable<TheoryDataRow<string, SerializerKind>> ProjectWithValuedAndEmptyCustomFieldsDeserializeTheoryData
+    {
+        get
+        {
+            const string json = """
+                                {
+                                  "project": {
+                                    "id": 1,
+                                    "name": "Redmine",
+                                    "custom_fields": [
+                                      { "id": 1, "name": "A" },
+                                      { "id": 2, "name": "B", "value": "b" },
+                                      { "id": 3, "name": "C" },
+                                      { "id": 4, "name": "D", "multiple": true, "value": ["d1", "d2"] },
+                                      { "id": 5, "name": "E" }
+                                    ]
+                                  }
+                                }
+                                """;
+
+            const string xml = """
+                               <?xml version="1.0" encoding="UTF-8"?>
+                               <project>
+                                   <id>1</id>
+                                   <name>Redmine</name>
+                                   <custom_fields type="array">
+                                       <custom_field id="1" name="A"/>
+                                       <custom_field id="2" name="B"><value>b</value></custom_field>
+                                       <custom_field id="3" name="C"/>
+                                       <custom_field id="4" name="D" multiple="true">
+                                           <value type="array">
+                                               <value>d1</value>
+                                               <value>d2</value>
+                                           </value>
+                                       </custom_field>
+                                       <custom_field id="5" name="E"/>
+                                   </custom_fields>
+                               </project>
+                               """;
+
+            yield return new TheoryDataRow<string, SerializerKind>(json, SerializerKind.NewtonsoftJson).WithTestDisplayName(Constants.JsonNewtonsoft);
+            yield return new TheoryDataRow<string, SerializerKind>(xml, SerializerKind.Xml).WithTestDisplayName(Constants.Xml);
+        }
+    }
+
     public static IEnumerable<TheoryDataRow<string, SerializerKind>> ProjectDeserializeTheoryData
     {
         get

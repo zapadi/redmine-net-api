@@ -37,6 +37,32 @@ public class GroupTests
     }
 
     [Theory]
+    [MemberData(nameof(GroupWithCustomFieldsSerializeTheoryData))]
+    public void Should_Serialize_Group_With_Custom_Fields(string expected, SerializerKind kind)
+    {
+        var group = new Group
+        {
+            Name = "Developers",
+            CustomFields = [IssueCustomField.CreateSingle(3, "Team", "core")]
+        };
+
+        var output = SerializerFactory.Create(kind).Serialize(group);
+
+        Assert.Equal(expected, output);
+    }
+
+    [Theory]
+    [MemberData(nameof(GroupWithEmptyCustomFieldsSerializeTheoryData))]
+    public void Should_Serialize_Group_Without_Custom_Fields_When_Empty(string expected, SerializerKind kind)
+    {
+        var group = new Group { Name = "Developers", CustomFields = [] };
+
+        var output = SerializerFactory.Create(kind).Serialize(group);
+
+        Assert.Equal(expected, output);
+    }
+
+    [Theory]
     [MemberData(nameof(GroupDeserializeTheoryData))]
     public void Should_Deserialize_Group(string input, SerializerKind kind)
     {
@@ -147,6 +173,66 @@ public class GroupTests
 
             yield return new TheoryDataRow<string, SerializerKind>(json, SerializerKind.NewtonsoftJson).WithTestDisplayName(Constants.JsonNewtonsoft);
             // yield return new TheoryDataRow<string, SerializerKind>(json, SerializerKind.SystemTextJson).WithTestDisplayName(Constants.JsonSystemText);
+            yield return new TheoryDataRow<string, SerializerKind>(xml, SerializerKind.Xml).WithTestDisplayName(Constants.Xml);
+        }
+    }
+
+    public static IEnumerable<TheoryDataRow<string, SerializerKind>> GroupWithCustomFieldsSerializeTheoryData
+    {
+        get
+        {
+            const string json = """
+                                {
+                                  "group": {
+                                    "name": "Developers",
+                                    "custom_fields": [
+                                      {
+                                        "id": 3,
+                                        "name": "Team",
+                                        "multiple": "false",
+                                        "value": "core"
+                                      }
+                                    ]
+                                  }
+                                }
+                                """;
+
+            const string xml = """
+                               <group>
+                               <name>Developers</name>
+                               <custom_fields type="array">
+                               <custom_field id="3">
+                               <multiple>false</multiple>
+                               <value>core</value>
+                               </custom_field>
+                               </custom_fields>
+                               </group>
+                               """;
+
+            yield return new TheoryDataRow<string, SerializerKind>(json, SerializerKind.NewtonsoftJson).WithTestDisplayName(Constants.JsonNewtonsoft);
+            yield return new TheoryDataRow<string, SerializerKind>(xml, SerializerKind.Xml).WithTestDisplayName(Constants.Xml);
+        }
+    }
+
+    public static IEnumerable<TheoryDataRow<string, SerializerKind>> GroupWithEmptyCustomFieldsSerializeTheoryData
+    {
+        get
+        {
+            const string json = """
+                                {
+                                  "group": {
+                                    "name": "Developers"
+                                  }
+                                }
+                                """;
+
+            const string xml = """
+                               <group>
+                               <name>Developers</name>
+                               </group>
+                               """;
+
+            yield return new TheoryDataRow<string, SerializerKind>(json, SerializerKind.NewtonsoftJson).WithTestDisplayName(Constants.JsonNewtonsoft);
             yield return new TheoryDataRow<string, SerializerKind>(xml, SerializerKind.Xml).WithTestDisplayName(Constants.Xml);
         }
     }

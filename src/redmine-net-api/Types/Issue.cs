@@ -382,7 +382,7 @@ namespace Redmine.Net.Api.Types
             writer.WriteIdIfNotNull(RedmineKeys.PARENT_ISSUE_ID, ParentIssue);
             writer.WriteIdIfNotNull(RedmineKeys.FIXED_VERSION_ID, FixedVersion);
 
-            writer.WriteValueOrEmpty(RedmineKeys.ESTIMATED_HOURS, EstimatedHours);
+            writer.WriteElementString(RedmineKeys.ESTIMATED_HOURS, EstimatedHours?.ToInvariantString() ?? string.Empty);
             writer.WriteIfNotDefaultOrNull(RedmineKeys.DONE_RATIO, DoneRatio);
 
             writer.WriteDateOrEmpty(RedmineKeys.START_DATE, StartDate);
@@ -480,7 +480,7 @@ namespace Redmine.Net.Api.Types
                 writer.WriteIdIfNotNull(RedmineKeys.TRACKER_ID, Tracker);
                 writer.WriteIdIfNotNull(RedmineKeys.ASSIGNED_TO_ID, AssignedTo);
                 writer.WriteIdIfNotNull(RedmineKeys.FIXED_VERSION_ID, FixedVersion);
-                writer.WriteValueOrEmpty(RedmineKeys.ESTIMATED_HOURS, EstimatedHours);
+                writer.WriteProperty(RedmineKeys.ESTIMATED_HOURS, EstimatedHours?.ToInvariantString() ?? string.Empty);
 
                 writer.WriteIdOrEmpty(RedmineKeys.PARENT_ISSUE_ID, ParentIssue);
                 writer.WriteDateOrEmpty(RedmineKeys.START_DATE, StartDate);

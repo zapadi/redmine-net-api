@@ -175,6 +175,10 @@ namespace Redmine.Net.Api.Net
             {
                 throw HandleCustomTransportException(exception, request, cancellationToken.IsCancellationRequested);
             }
+            catch (Exception exception) when (exception is not RedmineException and not OperationCanceledException and not ArgumentException)
+            {
+                throw RedmineApiExceptionHelper.Create(exception.Message, exception, null, GetMethod(request), GetEndpoint(request), null, errorCode: RedmineApiExceptionHelper.UnknownErrorCode);
+            }
 
             return CreateResponseMessage(response, request);
         }
@@ -360,6 +364,10 @@ namespace Redmine.Net.Api.Net
             {
                 throw HandleCustomTransportException(exception, request, false);
             }
+            catch (Exception exception) when (exception is not RedmineException and not OperationCanceledException and not ArgumentException)
+            {
+                throw RedmineApiExceptionHelper.Create(exception.Message, exception, null, GetMethod(request), GetEndpoint(request), null, errorCode: RedmineApiExceptionHelper.UnknownErrorCode);
+            }
 
             return CreateResponseMessage(response, request);
         }
@@ -471,7 +479,6 @@ namespace Redmine.Net.Api.Net
             }
 
             RedmineApiExceptionHelper.MapStatusCodeToException(statusCode, response.Error?.InnerException ?? response.Error, method, endpoint, responseHeaders);
-            throw RedmineApiExceptionHelper.Create($"{(HttpStatusCode)statusCode}", response.Error?.InnerException ?? response.Error, statusCode, method, endpoint, responseHeaders);
         }
 
         private static RedmineApiException HandleWebException(WebException exception, RedmineTransportRequest request)
@@ -504,7 +511,7 @@ namespace Redmine.Net.Api.Net
 
         private static RedmineApiException Enrich(RedmineApiException exception, string method, string endpoint)
         {
-            var enriched = new RedmineApiException(exception.Message, exception.InnerException, exception.ErrorCode, exception.IsTransient, exception.CorrelationId, method, endpoint, exception.HttpStatusCode, exception.ResponseHeaders);
+            var enriched = new RedmineApiException(exception.Message, exception.InnerException, exception.ErrorCode, exception.IsTransient, exception.CorrelationId, method, endpoint, exception.HttpStatusCode, exception.ResponseHeaders, exception.ValidationErrors);
             foreach (DictionaryEntry entry in exception.Data)
             {
                 enriched.Data[entry.Key] = entry.Value;

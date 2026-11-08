@@ -24,8 +24,12 @@ using Redmine.Net.Api.Extensions;
 
 namespace Redmine.Net.Api.Serialization
 {
-    internal sealed class JsonRedmineSerializer : IRedmineSerializer
+    internal sealed class JsonRedmineSerializer(int timeEntryCommentsMaxLength) : IRedmineSerializer
     {
+        public JsonRedmineSerializer() : this(RedmineConstants.DEFAULT_TIME_ENTRY_COMMENTS_MAX_LENGTH)
+        {
+        }
+
         public T Deserialize<T>(string jsonResponse) where T : new()
         {
             if (jsonResponse.IsNullOrWhiteSpace())
@@ -40,22 +44,29 @@ namespace Redmine.Net.Api.Serialization
                 throw new RedmineException($"Entity of type '{typeof(T)}' should implement IJsonSerializable.");
             }
 
-            using (var stringReader = new StringReader(jsonResponse))
+            try
             {
-                using (var jsonReader = new JsonTextReader(stringReader))
+                using (var stringReader = new StringReader(jsonResponse))
                 {
-                    var obj = Activator.CreateInstance<T>();
-
-                    if (jsonReader.Read())
+                    using (var jsonReader = new JsonTextReader(stringReader))
                     {
+                        var obj = Activator.CreateInstance<T>();
+
                         if (jsonReader.Read())
                         {
-                            ((IJsonSerializable)obj).ReadJson(jsonReader);
+                            if (jsonReader.Read())
+                            {
+                                ((IJsonSerializable)obj).ReadJson(jsonReader);
+                            }
                         }
-                    }
 
-                    return obj;
+                        return obj;
+                    }
                 }
+            }
+            catch (Exception ex) when (ex is not RedmineException)
+            {
+                throw new RedmineException(ex.GetBaseException().Message, ex);
             }
         }
 
@@ -66,48 +77,55 @@ namespace Redmine.Net.Api.Serialization
                 throw new ArgumentNullException(nameof(jsonResponse), $"Could not deserialize null or empty input for type '{typeof(T).Name}'.");
             }
 
-            using (var sr = new StringReader(jsonResponse))
+            try
             {
-                using (var reader = new JsonTextReader(sr))
+                using (var sr = new StringReader(jsonResponse))
                 {
-                    var total = 0;
-                    var offset = 0;
-                    var limit = 0;
-                    List<T> list = null;
-                    var isListRead = false;
-
-                    while (reader.Read())
+                    using (var reader = new JsonTextReader(sr))
                     {
-                        if (reader.TokenType != JsonToken.PropertyName) continue;
+                        var total = 0;
+                        var offset = 0;
+                        var limit = 0;
+                        List<T> list = null;
+                        var isListRead = false;
 
-                        switch (reader.Value)
+                        while (reader.Read())
                         {
-                            case RedmineKeys.TOTAL_COUNT:
-                                total = reader.ReadAsInt32().GetValueOrDefault();
-                                break;
-                            case RedmineKeys.OFFSET:
-                                offset = reader.ReadAsInt32().GetValueOrDefault();
-                                break;
-                            case RedmineKeys.LIMIT:
-                                limit = reader.ReadAsInt32().GetValueOrDefault();
-                                break;
-                            default:
-                                reader.Read();
-                                if (!isListRead && reader.TokenType == JsonToken.StartArray)
-                                {
-                                    list = reader.ReadAsCollection<T>();
-                                    isListRead = true;
-                                }
-                                else
-                                {
-                                    reader.Skip();
-                                }
-                                break;
-                        }
-                    }
+                            if (reader.TokenType != JsonToken.PropertyName) continue;
 
-                    return new PagedResults<T>(list, total, offset, limit);
+                            switch (reader.Value)
+                            {
+                                case RedmineKeys.TOTAL_COUNT:
+                                    total = reader.ReadAsInt32().GetValueOrDefault();
+                                    break;
+                                case RedmineKeys.OFFSET:
+                                    offset = reader.ReadAsInt32().GetValueOrDefault();
+                                    break;
+                                case RedmineKeys.LIMIT:
+                                    limit = reader.ReadAsInt32().GetValueOrDefault();
+                                    break;
+                                default:
+                                    reader.Read();
+                                    if (!isListRead && reader.TokenType == JsonToken.StartArray)
+                                    {
+                                        list = reader.ReadAsCollection<T>();
+                                        isListRead = true;
+                                    }
+                                    else
+                                    {
+                                        reader.Skip();
+                                    }
+                                    break;
+                            }
+                        }
+
+                        return new PagedResults<T>(list, total, offset, limit);
+                    }
                 }
+            }
+            catch (Exception ex) when (ex is not RedmineException)
+            {
+                throw new RedmineException(ex.GetBaseException().Message, ex);
             }
         }
 
@@ -119,28 +137,35 @@ namespace Redmine.Net.Api.Serialization
                 throw new ArgumentNullException(nameof(jsonResponse), $"Could not deserialize null or empty input for type '{typeof(T).Name}'.");
             }
 
-            using (var sr = new StringReader(jsonResponse))
+            try
             {
-                using (var reader = new JsonTextReader(sr))
+                using (var sr = new StringReader(jsonResponse))
                 {
-                    var total = 0;
-
-                    while (reader.Read())
+                    using (var reader = new JsonTextReader(sr))
                     {
-                        if (reader.TokenType != JsonToken.PropertyName)
+                        var total = 0;
+
+                        while (reader.Read())
                         {
-                            continue;
+                            if (reader.TokenType != JsonToken.PropertyName)
+                            {
+                                continue;
+                            }
+
+                            if (reader.Value is RedmineKeys.TOTAL_COUNT)
+                            {
+                                total = reader.ReadAsInt32().GetValueOrDefault();
+                                return total;
+                            }
                         }
 
-                        if (reader.Value is RedmineKeys.TOTAL_COUNT)
-                        {
-                            total = reader.ReadAsInt32().GetValueOrDefault();
-                            return total;
-                        }
+                        return total;
                     }
-
-                    return total;
                 }
+            }
+            catch (Exception ex) when (ex is not RedmineException)
+            {
+                throw new RedmineException(ex.GetBaseException().Message, ex);
             }
         }
         #pragma warning restore CA1822
@@ -163,7 +188,7 @@ namespace Redmine.Net.Api.Serialization
 
             using (var sw = new StringWriter(stringBuilder))
             {
-                using (var writer = new JsonTextWriter(sw))
+                using (var writer = new RedmineJsonTextWriter(sw, timeEntryCommentsMaxLength))
                 {
                     writer.Formatting = Formatting.Indented;
                     writer.DateFormatHandling = DateFormatHandling.IsoDateFormat;

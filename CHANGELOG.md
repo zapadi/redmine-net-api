@@ -1,5 +1,24 @@
 # Changelog
 
+## [v4.67.0]
+
+### redmine-api
+
+🚀 Features
+*	Group create/update now sends its custom field values (CustomFields)
+*	Added RedmineManagerOptionsBuilder.WithTimeEntryCommentsMaxLength(int): TimeEntry comments are truncated to this length when sent (default 255; Redmine accepts up to 1024)
+*	Added RedmineApiException.Errors with the validation errors of a 422 response (empty otherwise)
+
+🛠 Fixes
+*	Fixed XML reading of self-closing custom fields (<custom_field id="1" name="A"/>) skipping or failing on the next custom field
+*	Issue estimated hours set to 0 are now sent as 0 instead of clearing the value
+*	TimeEntry.Comments is no longer truncated to 255 characters when set or read from Redmine
+*	The JSON serializer now wraps parse failures in RedmineException like the XML serializer; the XML serializer no longer wraps a RedmineException in another one
+*	A 422 response whose body cannot be parsed now uses the trimmed body (up to 1024 characters) as the message and keeps Method, Endpoint and ResponseHeaders
+*	RedmineApiException serialization now keeps HttpStatusCode, Method, Endpoint, CorrelationId, ResponseHeaders and Errors
+*	Unexpected exceptions from the built-in transport are now wrapped in RedmineApiException
+*	Descriptive messages for ToIdentifier/ToIssueStatusIdentifier with a non-positive value and for null basic authentication credentials
+
 ## [redmine-api.http v0.1.0]
 
 First release of the redmine-api.http package.
