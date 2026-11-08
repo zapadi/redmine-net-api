@@ -56,7 +56,7 @@ namespace Redmine.Net.Api.Serialization
             {
                 return XmlDeserializeEntity<T>(response);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex is not RedmineException)
             {
                 throw new RedmineException(ex.GetBaseException().Message, ex);
             }
@@ -68,7 +68,7 @@ namespace Redmine.Net.Api.Serialization
             {
                 return XmlDeserializeList<T>(response, false);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex is not RedmineException)
             {
                 throw new RedmineException(ex.GetBaseException().Message, ex);
             }
@@ -82,7 +82,7 @@ namespace Redmine.Net.Api.Serialization
                 var pagedResults = XmlDeserializeList<T>(xmlResponse, true);
                 return pagedResults.TotalItems;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex is not RedmineException)
             {
                 throw new RedmineException(ex.GetBaseException().Message, ex);
             }
@@ -97,7 +97,7 @@ namespace Redmine.Net.Api.Serialization
             {
                 return ToXML(entity);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex is not RedmineException)
             {
                 throw new RedmineException(ex.GetBaseException().Message, ex);
             }
