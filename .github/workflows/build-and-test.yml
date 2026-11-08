@@ -128,6 +128,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: test-results-${{ matrix.os }}
+          overwrite: true
           path: TestResults
 
   integration:
@@ -181,4 +182,5 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: integration-results-${{ matrix.client }}-${{ matrix.serializer }}
+          overwrite: true
           path: TestResults
