@@ -68,12 +68,6 @@ namespace Redmine.Net.Api
         /// Gets or sets the version of the Redmine server to which this client will connect.
         /// </summary>
         public Version RedmineVersion { get; init; }
-
-        /// <summary>
-        /// Gets the maximum length of <see cref="Types.TimeEntry.Comments"/> sent when creating or updating a time entry.
-        /// Longer comments are truncated. The default is 255.
-        /// </summary>
-        public int TimeEntryCommentsMaxLength { get; init; }
         
         internal bool VerifyServerCert { get; init; }
 

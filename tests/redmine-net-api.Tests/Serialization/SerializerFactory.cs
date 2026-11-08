@@ -14,4 +14,14 @@ internal static class SerializerFactory
             _ => throw new ArgumentOutOfRangeException(nameof(kind), kind, null)
         };
     }
+
+    public static IRedmineSerializer Create(SerializerKind kind, int timeEntryCommentsMaxLength)
+    {
+        return kind switch
+        {
+            SerializerKind.Xml => new XmlRedmineSerializer(timeEntryCommentsMaxLength),
+            SerializerKind.NewtonsoftJson => new JsonRedmineSerializer(timeEntryCommentsMaxLength),
+            _ => throw new ArgumentOutOfRangeException(nameof(kind), kind, null)
+        };
+    }
 }

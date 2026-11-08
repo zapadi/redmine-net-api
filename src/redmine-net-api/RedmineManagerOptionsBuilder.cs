@@ -351,14 +351,13 @@ namespace Redmine.Net.Api
                 BaseAddress = baseAddress,
                 PageSize = PageSize > 0 ? PageSize : RedmineConstants.DEFAULT_PAGE_SIZE_VALUE,
                 VerifyServerCert = VerifyServerCert,
-                Serializer = (_isSerializationIgnored) ? null : RedmineSerializerFactory.CreateSerializer(SerializationType),
+                Serializer = (_isSerializationIgnored) ? null : RedmineSerializerFactory.CreateSerializer(SerializationType, _timeEntryCommentsMaxLength),
                 RedmineVersion = Version,
                 Authentication = Authentication ?? new RedmineNoAuthentication(),
                 WebClientOptions = WebClientOptions,
                 ClientFunc = ClientFunc,
                 EncodeQueryString = _isQueryStringEncodingEnabled,
                 MaxConcurrentRequests = _maxConcurrentRequests,
-                TimeEntryCommentsMaxLength = _timeEntryCommentsMaxLength,
                 Transport = _transport,
             };
             

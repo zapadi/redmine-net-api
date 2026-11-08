@@ -24,8 +24,12 @@ using Redmine.Net.Api.Extensions;
 
 namespace Redmine.Net.Api.Serialization
 {
-    internal sealed class JsonRedmineSerializer : IRedmineSerializer
+    internal sealed class JsonRedmineSerializer(int timeEntryCommentsMaxLength) : IRedmineSerializer
     {
+        public JsonRedmineSerializer() : this(RedmineConstants.DEFAULT_TIME_ENTRY_COMMENTS_MAX_LENGTH)
+        {
+        }
+
         public T Deserialize<T>(string jsonResponse) where T : new()
         {
             if (jsonResponse.IsNullOrWhiteSpace())
@@ -184,7 +188,7 @@ namespace Redmine.Net.Api.Serialization
 
             using (var sw = new StringWriter(stringBuilder))
             {
-                using (var writer = new JsonTextWriter(sw))
+                using (var writer = new RedmineJsonTextWriter(sw, timeEntryCommentsMaxLength))
                 {
                     writer.Formatting = Formatting.Indented;
                     writer.DateFormatHandling = DateFormatHandling.IsoDateFormat;

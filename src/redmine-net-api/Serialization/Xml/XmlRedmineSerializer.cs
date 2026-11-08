@@ -26,7 +26,7 @@ using Redmine.Net.Api.Types;
 
 namespace Redmine.Net.Api.Serialization
 {
-    internal sealed class XmlRedmineSerializer(XmlWriterSettings xmlWriterSettings) : IRedmineSerializer
+    internal sealed class XmlRedmineSerializer(XmlWriterSettings xmlWriterSettings, int timeEntryCommentsMaxLength) : IRedmineSerializer
     {
         private const string LF = "\n";
 
@@ -46,7 +46,11 @@ namespace Redmine.Net.Api.Serialization
             NewLineHandling = NewLineHandling.Replace
         };
 
-        public XmlRedmineSerializer() : this(PrettyPrintEnabled ? PrettyXmlWriterSettings : DefaultXmlWriterSettings)
+        public XmlRedmineSerializer() : this(RedmineConstants.DEFAULT_TIME_ENTRY_COMMENTS_MAX_LENGTH)
+        {
+        }
+
+        public XmlRedmineSerializer(int timeEntryCommentsMaxLength) : this(PrettyPrintEnabled ? PrettyXmlWriterSettings : DefaultXmlWriterSettings, timeEntryCommentsMaxLength)
         {
         }
 
@@ -166,7 +170,7 @@ namespace Redmine.Net.Api.Serialization
 
             using (var stringWriter = new StringWriter())
             {
-                using (var xmlWriter = XmlWriter.Create(stringWriter, xmlWriterSettings))
+                using (var xmlWriter = new RedmineXmlWriter(stringWriter, xmlWriterSettings, timeEntryCommentsMaxLength))
                 {
                     if (entity is Attachments attachments)
                     {

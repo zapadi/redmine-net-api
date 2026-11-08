@@ -23,12 +23,12 @@ namespace Redmine.Net.Api.Serialization;
 /// </summary>
 internal static class RedmineSerializerFactory
 {
-    public static IRedmineSerializer CreateSerializer(SerializationType type)
+    public static IRedmineSerializer CreateSerializer(SerializationType type, int timeEntryCommentsMaxLength = RedmineConstants.DEFAULT_TIME_ENTRY_COMMENTS_MAX_LENGTH)
     {
         return type switch
         {
-            SerializationType.Xml => new XmlRedmineSerializer(),
-            SerializationType.Json => new JsonRedmineSerializer(),
+            SerializationType.Xml => new XmlRedmineSerializer(timeEntryCommentsMaxLength),
+            SerializationType.Json => new JsonRedmineSerializer(timeEntryCommentsMaxLength),
             _ => throw new NotImplementedException($"No serializer has been implemented for the serialization type: {type}")
         };
     }

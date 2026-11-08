@@ -189,7 +189,6 @@ public partial class RedmineManager: IRedmineManagerAsync
     {
         var url = RedmineApiUrls.CreateEntityFragment<T>(ownerId);
 
-        TruncateTimeEntryComments(entity);
         var payload = Serializer.Serialize(entity);
 
         var response = await ApiClient.CreateAsync(url, payload, requestOptions, cancellationToken).ConfigureAwait(false);
@@ -203,7 +202,6 @@ public partial class RedmineManager: IRedmineManagerAsync
     {
         var url = RedmineApiUrls.UpdateFragment<T>(id);
 
-        TruncateTimeEntryComments(entity);
         var payload = Serializer.Serialize(entity);
         
         payload = payload.ReplaceEndings();

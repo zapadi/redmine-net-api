@@ -85,8 +85,8 @@ namespace Redmine.Net.Api.Types
         /// Gets or sets the short description for the entry.
         /// </summary>
         /// <value>The comments.</value>
-        /// <remarks>Sent to Redmine when creating or updating. RedmineManager truncates it before sending to
-        /// <see cref="RedmineManagerOptions.TimeEntryCommentsMaxLength"/> characters (255 by default); Redmine accepts up to 1024.</remarks>
+        /// <remarks>Sent to Redmine when creating or updating. The sent value is truncated to
+        /// the length set with <see cref="RedmineManagerOptionsBuilder.WithTimeEntryCommentsMaxLength(int)"/> (255 by default); Redmine accepts up to 1024.</remarks>
         public string Comments { get; set; }
 
         /// <summary>
@@ -160,7 +160,7 @@ namespace Redmine.Net.Api.Types
             writer.WriteDateOrEmpty(RedmineKeys.SPENT_ON, SpentOn.GetValueOrDefault(DateTime.Now));
             writer.WriteValueOrEmpty<decimal>(RedmineKeys.HOURS, Hours);
             writer.WriteIdIfNotNull(RedmineKeys.ACTIVITY_ID, Activity);
-            writer.WriteElementString(RedmineKeys.COMMENTS, Comments);
+            writer.WriteElementString(RedmineKeys.COMMENTS, Comments.Truncate(GetCommentsMaxLength(writer)));
             writer.WriteArray(RedmineKeys.CUSTOM_FIELDS, CustomFields);
         }
         #endregion
@@ -219,11 +219,25 @@ namespace Redmine.Net.Api.Types
                 writer.WriteIdIfNotNull(RedmineKeys.USER_ID, User);
                 writer.WriteDateOrEmpty(RedmineKeys.SPENT_ON, SpentOn.GetValueOrDefault(DateTime.Now));
                 writer.WriteProperty(RedmineKeys.HOURS, Hours);
-                writer.WriteProperty(RedmineKeys.COMMENTS, Comments);
+                writer.WriteProperty(RedmineKeys.COMMENTS, Comments.Truncate(GetCommentsMaxLength(writer)));
                 writer.WriteArray(RedmineKeys.CUSTOM_FIELDS, CustomFields);
             }
         }
         #endregion
+
+        private static int GetCommentsMaxLength(XmlWriter writer)
+        {
+            return writer is RedmineXmlWriter { TimeEntryCommentsMaxLength: > 0 } redmineWriter
+                ? redmineWriter.TimeEntryCommentsMaxLength
+                : RedmineConstants.DEFAULT_TIME_ENTRY_COMMENTS_MAX_LENGTH;
+        }
+
+        private static int GetCommentsMaxLength(JsonWriter writer)
+        {
+            return writer is RedmineJsonTextWriter { TimeEntryCommentsMaxLength: > 0 } redmineWriter
+                ? redmineWriter.TimeEntryCommentsMaxLength
+                : RedmineConstants.DEFAULT_TIME_ENTRY_COMMENTS_MAX_LENGTH;
+        }
 
         #region Implementation of IEquatable<TimeEntry>
         /// <summary>
