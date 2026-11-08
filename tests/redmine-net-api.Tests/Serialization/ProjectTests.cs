@@ -139,7 +139,7 @@ public class ProjectTests
 
         var output = serializer.Serialize(project);
 
-        Assert.Equal(expected, output);
+        Assert.Equal(expected, output, ignoreLineEndingDifferences: true);
     }
 
     [Theory]
@@ -157,7 +157,7 @@ public class ProjectTests
 
         var output = serializer.Serialize(project);
 
-        Assert.Equal(expected, output);
+        Assert.Equal(expected, output, ignoreLineEndingDifferences: true);
     }
 
     [Theory]
@@ -206,7 +206,7 @@ public class ProjectTests
 
         var output = serializer.Serialize(project);
 
-        Assert.Equal(expected, output);
+        Assert.Equal(expected, output, ignoreLineEndingDifferences: true);
     }
 
     [Theory]
