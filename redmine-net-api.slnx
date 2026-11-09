@@ -20,12 +20,12 @@
     <File Path=".github/workflows/build-and-test.yml" />
     <File Path=".github/workflows/codeql-analysis.yml" />
     <File Path=".github/workflows/release.yml" />
+    <File Path=".github/scripts/nuget-baseline.sh" />
     <File Path=".github/scripts/nuget-versions.sh" />
+    <File Path=".github/scripts/release-notes.sh" />
   </Folder>
   <Folder Name="/SolutionFolder/Others/">
     <File Path="global.json" />
-    <File Path="release-please-config.json" />
-    <File Path=".release-please-manifest.json" />
     <File Path="logo.png" />
     <File Path="redmine-net-api.snk" />
   </Folder>
