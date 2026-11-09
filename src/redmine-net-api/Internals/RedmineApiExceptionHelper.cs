@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Text;
 using Redmine.Net.Api.Exceptions;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Serialization;
@@ -100,21 +99,13 @@ internal static class RedmineApiExceptionHelper
             return Create(HttpConstants.ErrorMessages.UnprocessableEntity, inner, HttpConstants.StatusCodes.UnprocessableEntity, method, endpoint, responseHeaders);
         }
 
-        var sb = new StringBuilder();
         var messages = new List<string>(errors.Count);
         foreach (var error in errors)
         {
-            sb.Append(error.Info);
-            sb.Append(Environment.NewLine);
             messages.Add(error.Info);
         }
 
-        if (sb.Length > 0)
-        {
-            sb.Length -= 1;
-        }
-
-        return Create($"{sb}", inner, HttpConstants.StatusCodes.UnprocessableEntity, method, endpoint, responseHeaders, errors: messages);
+        return Create(string.Join(Environment.NewLine, messages.ToArray()), inner, HttpConstants.StatusCodes.UnprocessableEntity, method, endpoint, responseHeaders, errors: messages);
     }
 
     /// <summary>
