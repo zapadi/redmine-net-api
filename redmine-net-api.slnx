@@ -19,7 +19,6 @@
     <File Path=".github/dependabot.yml" />
     <File Path=".github/workflows/build-and-test.yml" />
     <File Path=".github/workflows/codeql-analysis.yml" />
-    <File Path=".github/workflows/publish.yml" />
     <File Path=".github/workflows/release.yml" />
     <File Path=".github/scripts/nuget-versions.sh" />
   </Folder>
