@@ -313,7 +313,7 @@ public sealed class HttpClientTransportTests : IDisposable
     [InlineData(true)]
     public async Task Connection_Reset_Should_Throw_Transient_Exception(bool async)
     {
-        using var server = new ResettingServer();
+        await using var server = ResettingServer.Start();
         var manager = Manager(server.Url);
 
         var exception = await CatchAsync(async, () => manager.Get<Project>("1"), () => manager.GetAsync<Project>("1", cancellationToken: TestContext.Current.CancellationToken));

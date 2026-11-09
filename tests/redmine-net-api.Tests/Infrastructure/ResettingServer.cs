@@ -1,67 +1,107 @@
 using System;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Padi.DotNet.RedmineAPI.Tests.Infrastructure;
 
-internal sealed class ResettingServer : IDisposable
+internal sealed class ResettingServer : IAsyncDisposable
 {
-    private readonly TcpListener _listener = new(IPAddress.Loopback, 0);
+    private const string HeadersEnd = "\r\n\r\n";
+    private static readonly TimeSpan ReadTimeout = TimeSpan.FromSeconds(5);
 
-    public ResettingServer()
+    private readonly TcpListener _listener;
+    private readonly CancellationTokenSource _cts = new();
+    private readonly Task _acceptLoop;
+    private int _disposed;
+
+    private ResettingServer(TcpListener listener)
     {
-        _listener.Start();
-        Url = $"http://127.0.0.1:{((IPEndPoint)_listener.LocalEndpoint).Port}/";
-        _ = Task.Run(Accept);
+        _listener = listener;
+        Url = $"http://127.0.0.1:{((IPEndPoint)listener.LocalEndpoint).Port}/";
+        _acceptLoop = AcceptLoopAsync(_cts.Token);
     }
 
     public string Url { get; }
 
-    private void Accept()
+    public static ResettingServer Start()
     {
-        while (true)
-        {
-            Socket socket;
-            try
-            {
-                socket = _listener.AcceptSocket();
-            }
-            catch (Exception exception) when (exception is SocketException or ObjectDisposedException or InvalidOperationException)
-            {
-                return;
-            }
+        var listener = new TcpListener(IPAddress.Loopback, 0);
+        listener.Start();
+        return new ResettingServer(listener);
+    }
 
-            try
+    private async Task AcceptLoopAsync(CancellationToken cancellationToken)
+    {
+        while (!cancellationToken.IsCancellationRequested)
+        {
+#if NET
+            var socket = await _listener.AcceptSocketAsync(cancellationToken).ConfigureAwait(false);
+#else
+            var socket = await _listener.AcceptSocketAsync().ConfigureAwait(false);
+#endif
+            using (socket)
             {
                 socket.LingerState = new LingerOption(true, 0);
-                socket.ReceiveTimeout = 5000;
-                ReadRequestHeaders(socket);
-            }
-            catch (Exception exception) when (exception is SocketException or ObjectDisposedException)
-            {
-            }
-            finally
-            {
-                socket.Close();
+                await ReadHeadersAsync(socket, cancellationToken).ConfigureAwait(false);
             }
         }
     }
 
-    private static void ReadRequestHeaders(Socket socket)
+    private static async Task ReadHeadersAsync(Socket socket, CancellationToken cancellationToken)
     {
-        var received = new StringBuilder();
+        using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        timeout.CancelAfter(ReadTimeout);
+        using var registration = timeout.Token.Register(static state => ((Socket)state).Dispose(), socket);
+
         var buffer = new byte[4096];
-        int count;
-        while (received.ToString().IndexOf("\r\n\r\n", StringComparison.Ordinal) < 0 && (count = socket.Receive(buffer)) > 0)
+        var matched = 0;
+        try
         {
-            received.Append(Encoding.ASCII.GetString(buffer, 0, count));
+            int count;
+            while ((count = await socket.ReceiveAsync(new ArraySegment<byte>(buffer), SocketFlags.None).ConfigureAwait(false)) > 0)
+            {
+                for (var i = 0; i < count; i++)
+                {
+                    matched = buffer[i] == HeadersEnd[matched] ? matched + 1 : buffer[i] == '\r' ? 1 : 0;
+                    if (matched == HeadersEnd.Length)
+                    {
+                        return;
+                    }
+                }
+            }
+        }
+        catch (Exception exception) when (timeout.IsCancellationRequested
+            || exception is SocketException { SocketErrorCode: SocketError.ConnectionReset or SocketError.ConnectionAborted })
+        {
         }
     }
 
-    public void Dispose()
+    public async ValueTask DisposeAsync()
     {
+        if (Interlocked.Exchange(ref _disposed, 1) != 0)
+        {
+            return;
+        }
+
+        _cts.Cancel();
         _listener.Stop();
+        try
+        {
+            await _acceptLoop.ConfigureAwait(false);
+        }
+        catch (Exception exception) when (IsShutdown(exception))
+        {
+        }
+        finally
+        {
+            _cts.Dispose();
+        }
     }
+
+    private static bool IsShutdown(Exception exception) =>
+        exception is OperationCanceledException
+            or InvalidOperationException
+            or SocketException { SocketErrorCode: SocketError.OperationAborted or SocketError.Interrupted };
 }
