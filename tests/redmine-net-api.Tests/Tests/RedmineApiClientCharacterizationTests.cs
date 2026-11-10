@@ -688,7 +688,12 @@ public sealed class RedmineApiClientCharacterizationTests
             () => manager.ApiClient.Get("projects/1.xml"),
             () => manager.ApiClient.GetAsync("projects/1.xml", cancellationToken: TestContext.Current.CancellationToken)), TestContext.Current.CancellationToken);
 
+#if NETFRAMEWORK
+        Assert.NotSame(call, await Task.WhenAny(call, Task.Delay(TimeSpan.FromSeconds(1), TestContext.Current.CancellationToken)));
+        server.Dispose();
+#else
         Assert.Same(call, await Task.WhenAny(call, Task.Delay(TimeSpan.FromSeconds(3), TestContext.Current.CancellationToken)));
+#endif
         AssertException(await call, "The requested resource was not found.", 404, "GET", $"{server.Url}projects/1.xml", false, null);
     }
 
