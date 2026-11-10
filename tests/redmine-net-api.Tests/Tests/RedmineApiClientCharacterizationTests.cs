@@ -714,8 +714,7 @@ public sealed class RedmineApiClientCharacterizationTests
             () => manager.ApiClient.Update("projects/1.xml", ProjectXml),
             () => manager.ApiClient.UpdateAsync("projects/1.xml", ProjectXml, cancellationToken: TestContext.Current.CancellationToken));
 
-        var expected = "Name cannot be blank" + Environment.NewLine + "Identifier is too long ţ" + Environment.NewLine;
-        AssertException(exception, expected.Substring(0, expected.Length - 1), 422, "PUT", $"{server.Url}projects/1.xml", false, null);
+        AssertException(exception, "Name cannot be blank" + Environment.NewLine + "Identifier is too long ţ", 422, "PUT", $"{server.Url}projects/1.xml", false, null);
         Assert.Equal("r1", exception.CorrelationId);
         Assert.Null(exception.InnerException);
     }

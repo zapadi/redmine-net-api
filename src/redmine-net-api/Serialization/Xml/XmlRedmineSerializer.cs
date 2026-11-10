@@ -30,12 +30,13 @@ namespace Redmine.Net.Api.Serialization
     {
         private const string LF = "\n";
 
-        private static readonly XmlWriterSettings DefaultXmlWriterSettings = new()
+        internal static readonly XmlWriterSettings DefaultXmlWriterSettings = new()
         {
             Encoding = Encoding.UTF8,
             OmitXmlDeclaration = true,
+            NewLineChars = LF
         };
-        
+
         private static readonly XmlWriterSettings PrettyXmlWriterSettings = new()
         {
             Encoding = Encoding.UTF8,

@@ -10,7 +10,9 @@
 *	Added RedmineApiException.Errors with the validation errors of a 422 response (empty otherwise)
 
 🛠 Fixes
-*   The JSON serliazer now writes LF line endings on every OS like the XML serializer
+*   The JSON serializer now writes LF line endings on every OS like the XML serializer
+*	The XML serializer and journal payloads keep LF line endings inside text values on every OS (Windows sent CRLF)
+*	A 422 response message no longer ends with a carriage return on Windows
 *	Fixed XML reading of self-closing custom fields (<custom_field id="1" name="A"/>) skipping or failing on the next custom field
 *	Issue estimated hours set to 0 are now sent as 0 instead of clearing the value
 *	TimeEntry.Comments is no longer truncated to 255 characters when set or read from Redmine

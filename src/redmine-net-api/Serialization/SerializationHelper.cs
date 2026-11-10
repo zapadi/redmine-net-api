@@ -141,7 +141,7 @@ namespace Redmine.Net.Api.Serialization
             var sb = new StringBuilder();
             using (var stringWriter = new StringWriter(sb, CultureInfo.InvariantCulture))
             {
-                using (var writer = XmlWriter.Create(stringWriter, new XmlWriterSettings { OmitXmlDeclaration = true }))
+                using (var writer = XmlWriter.Create(stringWriter, XmlRedmineSerializer.DefaultXmlWriterSettings))
                 {
                     write(writer);
                 }
