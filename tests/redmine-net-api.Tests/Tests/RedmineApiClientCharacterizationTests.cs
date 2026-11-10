@@ -102,7 +102,7 @@ public sealed class RedmineApiClientCharacterizationTests
     [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
-    public async Task Get_Without_Charset_Should_Decode_With_WebClient_Default_Encoding(bool async)
+    public async Task Get_Without_Charset_Should_Decode_As_Utf8(bool async)
     {
         var bytes = Encoding.UTF8.GetBytes(NonAscii);
         using var server = new TestHttpServer(_ => new TestHttpResponse { ContentType = "application/xml", Body = bytes });
@@ -112,8 +112,7 @@ public sealed class RedmineApiClientCharacterizationTests
             ? await manager.ApiClient.GetAsync("projects/1.xml", cancellationToken: TestContext.Current.CancellationToken)
             : manager.ApiClient.Get("projects/1.xml");
 
-        using var webClient = new WebClient();
-        Assert.Equal(webClient.Encoding.GetString(bytes), response.Content);
+        Assert.Equal(NonAscii, response.Content);
     }
 
     [Theory(Timeout = Constants.TestTimeout)]

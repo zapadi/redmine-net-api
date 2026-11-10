@@ -21,7 +21,7 @@
 *	RedmineApiException serialization now keeps HttpStatusCode, Method, Endpoint, CorrelationId, ResponseHeaders and Errors
 *	Unexpected exceptions from the built-in transport are now wrapped in RedmineApiException
 *	Descriptive messages for ToIdentifier/ToIssueStatusIdentifier with a non-positive value and for null basic authentication credentials
-*	The built-in transport now decodes responses with the charset of the response Content-Type; on .NET Framework UTF-8 responses were decoded with the system ANSI code page
+*	The built-in transport now decodes responses with the charset of the response Content-Type, or UTF-8 when there is none; on .NET Framework they were decoded with the system ANSI code page
 *	WebClientOptions.DefaultHeaders containing Accept, User-Agent, Content-Type, Connection, Expect, Referer or Host no longer make every request fail on .NET Framework
 *	A 429 response now has the message TooManyRequests on .NET Framework too (it was 429)
 *	DownloadFileAsync now honors WebClientOptions.Timeout on .NET Framework until the response arrives (it never timed out)

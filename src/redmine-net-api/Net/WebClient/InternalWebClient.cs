@@ -16,6 +16,7 @@
 using System;
 using System.Net;
 using System.Net.Security;
+using System.Text;
 using Redmine.Net.Api.Exceptions;
 using Redmine.Net.Api.Extensions;
 
@@ -32,6 +33,7 @@ internal sealed class InternalWebClient : System.Net.WebClient
         _webClientOptions = redmineManagerOptions.WebClientOptions;
         _serverCertificateValidationCallback = redmineManagerOptions.ServerCertificateValidationCallback;
         BaseAddress = redmineManagerOptions.BaseAddress?.ToString();
+        Encoding = Encoding.UTF8;
     }
     #pragma warning restore SYSLIB0014
 
