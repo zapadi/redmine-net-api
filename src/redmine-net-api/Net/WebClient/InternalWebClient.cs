@@ -117,6 +117,10 @@ internal sealed class InternalWebClient : System.Net.WebClient
     
     public HttpStatusCode? StatusCode { get; private set; }
 
+#if !(NET20)
+    public Action ResponseReceived { get; set; }
+#endif
+
     protected override WebResponse GetWebResponse(WebRequest request)
     {
         var response = base.GetWebResponse(request);
@@ -130,6 +134,9 @@ internal sealed class InternalWebClient : System.Net.WebClient
     protected override WebResponse GetWebResponse(WebRequest request, IAsyncResult result)
     {
         var response = base.GetWebResponse(request, result);
+#if !(NET20)
+        ResponseReceived?.Invoke();
+#endif
 
         if (response is HttpWebResponse httpResponse)
         {

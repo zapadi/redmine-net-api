@@ -120,14 +120,13 @@ namespace Redmine.Net.Api.Net.WebClient
         {
             System.Net.WebClient? webClient = null;
             CancellationTokenRegistration cancellationTokenRegistration = default;
-            using var timeoutTokenSource = _timeout.HasValue && !request.IsDownload
-                ? CancellationTokenSource.CreateLinkedTokenSource(cancellationToken)
-                : null;
+            CancellationTokenSource? timeoutTokenSource = null;
 
             try
             {
                 webClient = _webClientFunc();
                 request.BaseAddress = webClient.BaseAddress;
+                timeoutTokenSource = CreateTimeoutTokenSource(webClient, request, cancellationToken);
                 timeoutTokenSource?.CancelAfter(_timeout.GetValueOrDefault());
 
                 cancellationToken.ThrowIfCancellationRequested();
@@ -186,8 +185,34 @@ namespace Redmine.Net.Api.Net.WebClient
                 cancellationTokenRegistration.Dispose();
 #endif
 
+                timeoutTokenSource?.Dispose();
                 webClient?.Dispose();
             }
+        }
+
+        private CancellationTokenSource? CreateTimeoutTokenSource(System.Net.WebClient webClient, RedmineTransportRequest request, CancellationToken cancellationToken)
+        {
+            if (!_timeout.HasValue)
+            {
+                return null;
+            }
+
+            if (!request.IsDownload)
+            {
+                return CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+            }
+
+#if NETFRAMEWORK
+            // HttpWebRequest.Timeout does not apply to asynchronous requests on .NET Framework, so the download is timed out until its response arrives.
+            if (webClient is InternalWebClient internalWebClient)
+            {
+                var timeoutTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+                internalWebClient.ResponseReceived = () => timeoutTokenSource.CancelAfter(Timeout.Infinite);
+                return timeoutTokenSource;
+            }
+#endif
+
+            return null;
         }
 #endif
 

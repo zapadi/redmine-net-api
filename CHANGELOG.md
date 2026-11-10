@@ -24,6 +24,7 @@
 *	The built-in transport now decodes responses with the charset of the response Content-Type; on .NET Framework UTF-8 responses were decoded with the system ANSI code page
 *	WebClientOptions.DefaultHeaders containing Accept, User-Agent, Content-Type, Connection, Expect, Referer or Host no longer make every request fail on .NET Framework
 *	A 429 response now has the message TooManyRequests on .NET Framework too (it was 429)
+*	DownloadFileAsync now honors WebClientOptions.Timeout on .NET Framework until the response arrives (it never timed out)
 
 ## [redmine-api.http v0.1.0]
 

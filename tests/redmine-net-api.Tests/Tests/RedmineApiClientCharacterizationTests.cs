@@ -844,7 +844,11 @@ public sealed class RedmineApiClientCharacterizationTests
 
         var apiException = Assert.IsType<RedmineApiException>(exception);
         AssertException(apiException, "Timeout", null, "GET", $"{server.Url}attachments/download/1/a.bin", true, "UNKNOWN");
+#if NETFRAMEWORK
+        Assert.Equal(WebExceptionStatus.RequestCanceled, Assert.IsType<WebException>(apiException.InnerException).Status);
+#else
         Assert.Equal(WebExceptionStatus.Timeout, Assert.IsType<WebException>(apiException.InnerException).Status);
+#endif
     }
 
     [Fact(Timeout = Constants.TestTimeout)]
