@@ -140,7 +140,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The custom fields.
         /// </value>
-        /// <remarks>Sent to Redmine only when creating, only when set. Only their Ids are sent.</remarks>
+        /// <remarks>Sent to Redmine when creating or updating, only when set. Only their Ids are sent.</remarks>
         [Obsolete($"{RedmineConstants.OBSOLETE_TEXT} Use {nameof(IssueCustomFields)} instead.")]
         [JsonIgnore]
         public IList<IssueCustomField> CustomFields
@@ -151,7 +151,7 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// 
         /// </summary>
-        /// <remarks>Sent to Redmine only when creating, only when set. Only their Ids are sent.</remarks>
+        /// <remarks>Sent to Redmine when creating or updating, only when set. Only their Ids are sent.</remarks>
         public List<IssueCustomField> IssueCustomFields { get; set; }
         
         /// <summary>
@@ -270,10 +270,7 @@ namespace Redmine.Net.Api.Types
             writer.WriteRepeatableElement(RedmineKeys.TRACKER_IDS, RedmineKeys.TRACKER_ID, (IEnumerable<IValue>)Trackers);
             writer.WriteRepeatableElement(RedmineKeys.ENABLED_MODULE_NAMES, RedmineKeys.ENABLED_MODULE_NAME,(IEnumerable<IValue>)EnabledModules);
 
-            if (Id == 0)
-            {
-                writer.WriteRepeatableElement(RedmineKeys.ISSUE_CUSTOM_FIELD_IDS, RedmineKeys.ISSUE_CUSTOM_FIELD_ID, (IEnumerable<IValue>)IssueCustomFields);
-            }
+            writer.WriteRepeatableElement(RedmineKeys.ISSUE_CUSTOM_FIELD_IDS, RedmineKeys.ISSUE_CUSTOM_FIELD_ID, (IEnumerable<IValue>)IssueCustomFields);
 
             if (ProjectCustomFields != null && ProjectCustomFields.Count > 0)
             {
@@ -378,10 +375,7 @@ namespace Redmine.Net.Api.Types
                 writer.WriteArrayIds(RedmineKeys.TRACKER_IDS, (IEnumerable<IdentifiableName>)Trackers);
                 writer.WriteArrayNames(RedmineKeys.ENABLED_MODULE_NAMES, (IEnumerable<IdentifiableName>)EnabledModules);
                
-                if (Id == 0)
-                {
-                    writer.WriteArrayIds(RedmineKeys.ISSUE_CUSTOM_FIELD_IDS, (IEnumerable<IdentifiableName>)IssueCustomFields);
-                }
+                writer.WriteArrayIds(RedmineKeys.ISSUE_CUSTOM_FIELD_IDS, (IEnumerable<IdentifiableName>)IssueCustomFields);
 
                 if (ProjectCustomFields != null && ProjectCustomFields.Count > 0)
                 {
