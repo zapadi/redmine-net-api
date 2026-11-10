@@ -9,23 +9,23 @@ permissions:
   contents: read
 
 concurrency:
-  group: release-please-${{ github.ref_name }}
+  group: release-${{ github.ref_name }}
   cancel-in-progress: false
 
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+
 jobs:
-  release-please:
-    name: Release Please
+  plan:
+    name: Find unpublished versions
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
-      contents: write
-      issues: write
-      pull-requests: write
+      contents: read
     outputs:
-      core-released: ${{ steps.release.outputs['src/redmine-net-api--release_created'] }}
-      core-sha: ${{ steps.release.outputs['src/redmine-net-api--sha'] }}
-      http-released: ${{ steps.release.outputs['src/redmine-net-api.Http--release_created'] }}
-      http-sha: ${{ steps.release.outputs['src/redmine-net-api.Http--sha'] }}
+      ids: ${{ steps.plan.outputs.ids }}
+      releases: ${{ steps.plan.outputs.releases }}
     steps:
       - name: Check branch
         env:
@@ -36,39 +36,195 @@ jobs:
             exit 1
           fi
 
-      - id: release
-        uses: googleapis/release-please-action@v5
+      - uses: actions/checkout@v7
         with:
-          config-file: release-please-config.json
-          manifest-file: .release-please-manifest.json
-          target-branch: ${{ github.ref_name }}
+          persist-credentials: false
 
-  publish-core:
-    name: Publish redmine-api
-    needs: release-please
-    if: needs.release-please.outputs.core-released == 'true'
+      - uses: actions/setup-dotnet@v6
+
+      - id: plan
+        name: Compare csproj versions with nuget.org and GitHub releases
+        shell: bash
+        env:
+          BRANCH: ${{ github.ref_name }}
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          ids=()
+          releases=()
+          for package in redmine-api redmine-api.http; do
+            case "$package" in
+              redmine-api) project=src/redmine-net-api/redmine-net-api.csproj ;;
+              redmine-api.http) project=src/redmine-net-api.Http/redmine-net-api.Http.csproj ;;
+            esac
+
+            version=$(dotnet msbuild "$project" -getProperty:Version)
+            if [[ ! "$version" =~ ^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-[0-9A-Za-z.-]+)?$ ]]; then
+              echo "::error::$package version '$version' in $project is not MAJOR.MINOR.PATCH[-prerelease]."
+              exit 1
+            fi
+            if [[ "$package" == redmine-api && "${version%%.*}" != "${BRANCH%.x}" ]]; then
+              echo "::error::$package $version does not belong to branch $BRANCH: its major version must be ${BRANCH%.x}."
+              exit 1
+            fi
+
+            needed=false
+            for id in "$package" "$package-signed"; do
+              published=$(.github/scripts/nuget-versions.sh "$id")
+              if ! grep -qixF "$version" <<< "$published"; then
+                echo "$id $version will be published."
+                ids+=("$id")
+                needed=true
+              fi
+            done
+
+            if ! gh release view "$package-v$version" > /dev/null 2>&1; then
+              echo "$package $version will get a GitHub release."
+              releases+=("$package@$version")
+              needed=true
+            fi
+
+            if [[ "$needed" == true ]]; then
+              .github/scripts/release-notes.sh "$package" "$version" > /dev/null
+            fi
+          done
+
+          echo "ids=${ids[*]}" >> "$GITHUB_OUTPUT"
+          echo "releases=${releases[*]}" >> "$GITHUB_OUTPUT"
+
+  test:
+    name: Build and Test
+    needs: plan
+    if: needs.plan.outputs.ids != ''
+    uses: ./.github/workflows/build-and-test.yml
+    with:
+      ref: ${{ github.sha }}
+
+  pack:
+    name: Pack
+    needs: [ plan, test ]
+    if: needs.plan.outputs.ids != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
     permissions:
       contents: read
       id-token: write
       attestations: write
       artifact-metadata: write
-    uses: ./.github/workflows/publish.yml
-    with:
-      packages: redmine-api
-      ref: ${{ needs.release-please.outputs.core-sha }}
-    secrets: inherit
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
-  publish-http:
-    name: Publish redmine-api.http
-    needs: release-please
-    if: needs.release-please.outputs.http-released == 'true'
+      - uses: actions/setup-dotnet@v6
+
+      - name: Pack
+        shell: bash
+        env:
+          IDS: ${{ needs.plan.outputs.ids }}
+        run: |
+          for id in $IDS; do
+            package=${id%-signed}
+            case "$package" in
+              redmine-api) project=src/redmine-net-api/redmine-net-api.csproj ;;
+              redmine-api.http) project=src/redmine-net-api.Http/redmine-net-api.Http.csproj ;;
+            esac
+            sign=false
+            if [[ "$id" != "$package" ]]; then sign=true; fi
+
+            version=$(dotnet msbuild "$project" -getProperty:Version)
+            baseline=$(.github/scripts/nuget-baseline.sh "$id" "$version")
+            echo "Packing $id $version (package validation baseline: ${baseline:-none})"
+            dotnet pack "$project" \
+              --configuration Release \
+              --output ./artifacts \
+              -p:Sign="$sign" \
+              ${baseline:+-p:PackageValidationBaselineVersion="$baseline"}
+          done
+
+      - uses: actions/attest@v4
+        with:
+          subject-path: ./artifacts/*.nupkg
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: packages
+          path: ./artifacts
+          overwrite: true
+
+  push:
+    name: Push to NuGet
+    needs: [ plan, pack ]
+    if: needs.plan.outputs.ids != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: nuget
     permissions:
-      contents: read
       id-token: write
-      attestations: write
-      artifact-metadata: write
-    uses: ./.github/workflows/publish.yml
-    with:
-      packages: redmine-api.http
-      ref: ${{ needs.release-please.outputs.http-sha }}
-    secrets: inherit
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: packages
+          path: ./artifacts
+
+      - id: login
+        uses: NuGet/login@v1
+        with:
+          user: ${{ secrets.NUGET_USER }}
+
+      - name: Push
+        env:
+          NUGET_API_KEY: ${{ steps.login.outputs.NUGET_API_KEY }}
+        run: |
+          shopt -s nullglob
+          for package in redmine-api redmine-api.http; do
+            for nupkg in ./artifacts/"$package".[0-9]*.nupkg ./artifacts/"$package"-signed.[0-9]*.nupkg; do
+              dotnet nuget push "$nupkg" \
+                --api-key "$NUGET_API_KEY" \
+                --source https://api.nuget.org/v3/index.json \
+                --skip-duplicate
+            done
+          done
+
+  release:
+    name: Tag and release
+    needs: [ plan, push ]
+    if: >-
+      !cancelled() && needs.plan.result == 'success' && needs.plan.outputs.releases != ''
+      && (needs.plan.outputs.ids == '' || needs.push.result == 'success')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Create tags and GitHub releases
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASES: ${{ needs.plan.outputs.releases }}
+        run: |
+          tags=$(git ls-remote --tags origin 'refs/tags/redmine-api-v*')
+          latest_stable=$(sed -nE 's|.*refs/tags/redmine-api-v([0-9]+\.[0-9]+\.[0-9]+)(\^\{\})?$|\1|p' <<< "$tags" | sort -uV | tail -n 1)
+          for release in $RELEASES; do
+            package=${release%@*}
+            version=${release#*@}
+            tag=$package-v$version
+            if gh release view "$tag" > /dev/null 2>&1; then
+              echo "Release $tag already exists."
+              continue
+            fi
+
+            options=()
+            if [[ "$version" == *-* ]]; then options+=(--prerelease); fi
+            newest=$(printf '%s\n' "$latest_stable" "$version" | sort -V | tail -n 1)
+            if [[ "$package" != redmine-api || "$version" == *-* || "$newest" != "$version" ]]; then
+              options+=(--latest=false)
+            fi
+            .github/scripts/release-notes.sh "$package" "$version" > notes.md
+            gh release create "$tag" --target "$GITHUB_SHA" --title "$package $version" --notes-file notes.md "${options[@]}"
+          done
