@@ -759,7 +759,7 @@ public sealed class RedmineApiClientCharacterizationTests
     [InlineData(true)]
     public async Task Connection_Reset_Should_Throw_Api_Exception(bool async)
     {
-        using var server = new ResettingServer();
+        await using var server = ResettingServer.Start();
         var url = server.Url;
         var manager = CreateManager(url);
 
