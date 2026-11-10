@@ -318,7 +318,7 @@ public sealed class HttpClientTransportTests : IDisposable
 
         var exception = await CatchAsync(async, () => manager.Get<Project>("1"), () => manager.GetAsync<Project>("1", cancellationToken: TestContext.Current.CancellationToken));
 
-        Assert.True(exception.IsTransient);
+        Assert.True(exception.IsTransient, exception.ToString());
         Assert.Null(exception.HttpStatusCode);
         Assert.Equal("GET", exception.Method);
         Assert.Equal("UNKNOWN", exception.ErrorCode);
