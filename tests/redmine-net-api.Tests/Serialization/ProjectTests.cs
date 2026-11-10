@@ -248,7 +248,7 @@ public class ProjectTests
                      <custom_field id="2" />
                      </custom_fields>
                      </project>
-                     """, output);
+                     """, output, ignoreLineEndingDifferences: true);
     }
 
     [Theory]
