@@ -39,22 +39,22 @@ internal sealed class InternalWebClient : System.Net.WebClient
     {
         try
         {
+            if (_webClientOptions.DefaultHeaders != null)
+            {
+                foreach (var defaultHeader in _webClientOptions.DefaultHeaders)
+                {
+                    if (Headers[defaultHeader.Key].IsNullOrWhiteSpace())
+                    {
+                        Headers[defaultHeader.Key] = defaultHeader.Value;
+                    }
+                }
+            }
+
             var webRequest = base.GetWebRequest(address);
 
             if (webRequest is not HttpWebRequest httpWebRequest)
             {
                 return webRequest;
-            }
-
-            if (_webClientOptions.DefaultHeaders != null)
-            {
-                foreach (var defaultHeader in _webClientOptions.DefaultHeaders)
-                {
-                    if (httpWebRequest.Headers[defaultHeader.Key].IsNullOrWhiteSpace())
-                    {
-                        httpWebRequest.Headers[defaultHeader.Key] = defaultHeader.Value;
-                    }
-                }
             }
 
             httpWebRequest.UserAgent = httpWebRequest.UserAgent.ValueOrFallback(_webClientOptions.UserAgent.ValueOrFallback("RedmineDotNetAPIClient"));
