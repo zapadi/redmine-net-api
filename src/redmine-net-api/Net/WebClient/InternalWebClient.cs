@@ -16,6 +16,7 @@
 using System;
 using System.Net;
 using System.Net.Security;
+using System.Text;
 using Redmine.Net.Api.Exceptions;
 using Redmine.Net.Api.Extensions;
 
@@ -32,6 +33,7 @@ internal sealed class InternalWebClient : System.Net.WebClient
         _webClientOptions = redmineManagerOptions.WebClientOptions;
         _serverCertificateValidationCallback = redmineManagerOptions.ServerCertificateValidationCallback;
         BaseAddress = redmineManagerOptions.BaseAddress?.ToString();
+        Encoding = Encoding.UTF8;
     }
     #pragma warning restore SYSLIB0014
 
@@ -39,22 +41,22 @@ internal sealed class InternalWebClient : System.Net.WebClient
     {
         try
         {
+            if (_webClientOptions.DefaultHeaders != null)
+            {
+                foreach (var defaultHeader in _webClientOptions.DefaultHeaders)
+                {
+                    if (Headers[defaultHeader.Key].IsNullOrWhiteSpace())
+                    {
+                        Headers[defaultHeader.Key] = defaultHeader.Value;
+                    }
+                }
+            }
+
             var webRequest = base.GetWebRequest(address);
 
             if (webRequest is not HttpWebRequest httpWebRequest)
             {
                 return webRequest;
-            }
-
-            if (_webClientOptions.DefaultHeaders != null)
-            {
-                foreach (var defaultHeader in _webClientOptions.DefaultHeaders)
-                {
-                    if (httpWebRequest.Headers[defaultHeader.Key].IsNullOrWhiteSpace())
-                    {
-                        httpWebRequest.Headers[defaultHeader.Key] = defaultHeader.Value;
-                    }
-                }
             }
 
             httpWebRequest.UserAgent = httpWebRequest.UserAgent.ValueOrFallback(_webClientOptions.UserAgent.ValueOrFallback("RedmineDotNetAPIClient"));
@@ -117,6 +119,10 @@ internal sealed class InternalWebClient : System.Net.WebClient
     
     public HttpStatusCode? StatusCode { get; private set; }
 
+#if !(NET20)
+    public Action ResponseReceived { get; set; }
+#endif
+
     protected override WebResponse GetWebResponse(WebRequest request)
     {
         var response = base.GetWebResponse(request);
@@ -130,6 +136,9 @@ internal sealed class InternalWebClient : System.Net.WebClient
     protected override WebResponse GetWebResponse(WebRequest request, IAsyncResult result)
     {
         var response = base.GetWebResponse(request, result);
+#if !(NET20)
+        ResponseReceived?.Invoke();
+#endif
 
         if (response is HttpWebResponse httpResponse)
         {

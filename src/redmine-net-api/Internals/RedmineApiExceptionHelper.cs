@@ -36,6 +36,7 @@ internal static class RedmineApiExceptionHelper
             HttpConstants.StatusCodes.Conflict => HttpConstants.ErrorMessages.Conflict,
             HttpConstants.StatusCodes.NotAcceptable => HttpConstants.ErrorMessages.NotAcceptable,
             HttpConstants.StatusCodes.InternalServerError => HttpConstants.ErrorMessages.InternalServerError,
+            HttpConstants.StatusCodes.TooManyRequests => nameof(HttpConstants.StatusCodes.TooManyRequests),
             _ => $"{(HttpStatusCode)statusCode}"
         };
 

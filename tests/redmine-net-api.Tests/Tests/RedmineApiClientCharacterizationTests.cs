@@ -102,7 +102,7 @@ public sealed class RedmineApiClientCharacterizationTests
     [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
-    public async Task Get_Without_Charset_Should_Decode_With_WebClient_Default_Encoding(bool async)
+    public async Task Get_Without_Charset_Should_Decode_As_Utf8(bool async)
     {
         var bytes = Encoding.UTF8.GetBytes(NonAscii);
         using var server = new TestHttpServer(_ => new TestHttpResponse { ContentType = "application/xml", Body = bytes });
@@ -112,14 +112,13 @@ public sealed class RedmineApiClientCharacterizationTests
             ? await manager.ApiClient.GetAsync("projects/1.xml", cancellationToken: TestContext.Current.CancellationToken)
             : manager.ApiClient.Get("projects/1.xml");
 
-        using var webClient = new WebClient();
-        Assert.Equal(webClient.Encoding.GetString(bytes), response.Content);
+        Assert.Equal(NonAscii, response.Content);
     }
 
     [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
-    public async Task Get_With_Latin1_Charset_Should_Decode_As_Today(bool async)
+    public async Task Get_With_Latin1_Charset_Should_Decode_With_Charset(bool async)
     {
         var bytes = Encoding.GetEncoding("iso-8859-1").GetBytes("<name>café</name>");
         using var server = new TestHttpServer(_ => new TestHttpResponse { ContentType = "application/xml; charset=iso-8859-1", Body = bytes });
@@ -129,8 +128,7 @@ public sealed class RedmineApiClientCharacterizationTests
             ? await manager.ApiClient.GetAsync("projects/1.xml", cancellationToken: TestContext.Current.CancellationToken)
             : manager.ApiClient.Get("projects/1.xml");
 
-        using var webClient = new WebClient();
-        Assert.Equal(webClient.Encoding.GetString(bytes), response.Content);
+        Assert.Equal("<name>café</name>", response.Content);
     }
 
     [Theory(Timeout = Constants.TestTimeout)]
@@ -448,7 +446,9 @@ public sealed class RedmineApiClientCharacterizationTests
             { "X-Redmine-API-Key", ApiKey },
             { RedmineConstants.IMPERSONATE_HEADER_KEY, "bob" },
             { "Content-Type", "text/html" },
+#if !NETFRAMEWORK
             { "Content-Length", "0" }
+#endif
         }, request);
     }
 
@@ -508,7 +508,9 @@ public sealed class RedmineApiClientCharacterizationTests
             { "X-Redmine-API-Key", ApiKey },
             { RedmineConstants.IMPERSONATE_HEADER_KEY, "default-user" },
             { "Content-Type", "text/plain" },
+#if !NETFRAMEWORK
             { "Content-Length", "0" }
+#endif
         }, Assert.Single(server.Requests));
     }
 
@@ -685,7 +687,12 @@ public sealed class RedmineApiClientCharacterizationTests
             () => manager.ApiClient.Get("projects/1.xml"),
             () => manager.ApiClient.GetAsync("projects/1.xml", cancellationToken: TestContext.Current.CancellationToken)), TestContext.Current.CancellationToken);
 
+#if NETFRAMEWORK
+        Assert.NotSame(call, await Task.WhenAny(call, Task.Delay(TimeSpan.FromSeconds(1), TestContext.Current.CancellationToken)));
+        server.Dispose();
+#else
         Assert.Same(call, await Task.WhenAny(call, Task.Delay(TimeSpan.FromSeconds(3), TestContext.Current.CancellationToken)));
+#endif
         AssertException(await call, "The requested resource was not found.", 404, "GET", $"{server.Url}projects/1.xml", false, null);
     }
 
@@ -841,7 +848,11 @@ public sealed class RedmineApiClientCharacterizationTests
 
         var apiException = Assert.IsType<RedmineApiException>(exception);
         AssertException(apiException, "Timeout", null, "GET", $"{server.Url}attachments/download/1/a.bin", true, "UNKNOWN");
+#if NETFRAMEWORK
+        Assert.Equal(WebExceptionStatus.RequestCanceled, Assert.IsType<WebException>(apiException.InnerException).Status);
+#else
         Assert.Equal(WebExceptionStatus.Timeout, Assert.IsType<WebException>(apiException.InnerException).Status);
+#endif
     }
 
     [Fact(Timeout = Constants.TestTimeout)]

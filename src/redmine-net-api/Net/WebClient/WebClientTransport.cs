@@ -120,14 +120,13 @@ namespace Redmine.Net.Api.Net.WebClient
         {
             System.Net.WebClient? webClient = null;
             CancellationTokenRegistration cancellationTokenRegistration = default;
-            using var timeoutTokenSource = _timeout.HasValue && !request.IsDownload
-                ? CancellationTokenSource.CreateLinkedTokenSource(cancellationToken)
-                : null;
+            CancellationTokenSource? timeoutTokenSource = null;
 
             try
             {
                 webClient = _webClientFunc();
                 request.BaseAddress = webClient.BaseAddress;
+                timeoutTokenSource = CreateTimeoutTokenSource(webClient, request, cancellationToken);
                 timeoutTokenSource?.CancelAfter(_timeout.GetValueOrDefault());
 
                 cancellationToken.ThrowIfCancellationRequested();
@@ -144,23 +143,9 @@ namespace Redmine.Net.Api.Net.WebClient
 
                 SetWebClientHeaders(webClient, request);
 
-                Task<string>? responseTask = null;
-                Task<byte[]>? responseAsBytesTask = null;
-                if (request.Method == HttpVerbs.GET)
-                {
-                    if (request.IsDownload)
-                    {
-                        responseAsBytesTask = webClient.DownloadDataTaskAsync(request.Address);
-                    }
-                    else
-                    {
-                        responseTask = webClient.DownloadStringTaskAsync(request.Address);
-                    }
-                }
-                else
-                {
-                    responseAsBytesTask = webClient.UploadDataTaskAsync(request.Address, request.Method, GetPayload(webClient, request));
-                }
+                var responseTask = request.Method == HttpVerbs.GET
+                    ? webClient.DownloadDataTaskAsync(request.Address)
+                    : webClient.UploadDataTaskAsync(request.Address, request.Method, GetPayload(webClient, request));
 
                 cancellationTokenRegistration =
                     (timeoutTokenSource?.Token ?? cancellationToken).Register(
@@ -168,18 +153,11 @@ namespace Redmine.Net.Api.Net.WebClient
                         webClient
                     );
 
-                string? response = null;
-                byte[]? responseAsBytes = null;
-                if (responseTask != null)
-                {
-                    response = await responseTask.ConfigureAwait(false);
-                }
-                else if (responseAsBytesTask != null)
-                {
-                    responseAsBytes = await responseAsBytesTask.ConfigureAwait(false);
-                }
+                var response = await responseTask.ConfigureAwait(false);
 
-                return CreateResponse(webClient, response, responseAsBytes);
+                return request.Method == HttpVerbs.GET && !request.IsDownload
+                    ? CreateResponse(webClient, Decode(webClient, response), null)
+                    : CreateResponse(webClient, null, response);
             }
             catch (WebException ex) when (ex.Status == WebExceptionStatus.RequestCanceled)
             {
@@ -207,8 +185,34 @@ namespace Redmine.Net.Api.Net.WebClient
                 cancellationTokenRegistration.Dispose();
 #endif
 
+                timeoutTokenSource?.Dispose();
                 webClient?.Dispose();
             }
+        }
+
+        private CancellationTokenSource? CreateTimeoutTokenSource(System.Net.WebClient webClient, RedmineTransportRequest request, CancellationToken cancellationToken)
+        {
+            if (!_timeout.HasValue)
+            {
+                return null;
+            }
+
+            if (!request.IsDownload)
+            {
+                return CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+            }
+
+#if NETFRAMEWORK
+            // HttpWebRequest.Timeout does not apply to asynchronous requests on .NET Framework, so the download is timed out until its response arrives.
+            if (webClient is InternalWebClient internalWebClient)
+            {
+                var timeoutTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+                internalWebClient.ResponseReceived = () => timeoutTokenSource.CancelAfter(Timeout.Infinite);
+                return timeoutTokenSource;
+            }
+#endif
+
+            return null;
         }
 #endif
 
@@ -233,7 +237,7 @@ namespace Redmine.Net.Api.Net.WebClient
                     }
                     else
                     {
-                        response = webClient.DownloadString(request.Address);
+                        response = Decode(webClient, webClient.DownloadData(request.Address));
                     }
                 }
                 else
@@ -379,6 +383,11 @@ namespace Redmine.Net.Api.Net.WebClient
 
             webClient.Headers[HttpRequestHeader.ContentType] = request.ContentType;
             return request.Body;
+        }
+
+        private static string? Decode(System.Net.WebClient webClient, byte[] body)
+        {
+            return RedmineApiClient.DecodeBody(body, webClient.ResponseHeaders, webClient.Encoding);
         }
 
         private static RedmineTransportResponse CreateResponse(System.Net.WebClient webClient, string? content, byte[]? body)
