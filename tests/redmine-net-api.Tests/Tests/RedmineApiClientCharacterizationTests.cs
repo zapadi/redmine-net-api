@@ -447,7 +447,9 @@ public sealed class RedmineApiClientCharacterizationTests
             { "X-Redmine-API-Key", ApiKey },
             { RedmineConstants.IMPERSONATE_HEADER_KEY, "bob" },
             { "Content-Type", "text/html" },
+#if !NETFRAMEWORK
             { "Content-Length", "0" }
+#endif
         }, request);
     }
 
@@ -507,7 +509,9 @@ public sealed class RedmineApiClientCharacterizationTests
             { "X-Redmine-API-Key", ApiKey },
             { RedmineConstants.IMPERSONATE_HEADER_KEY, "default-user" },
             { "Content-Type", "text/plain" },
+#if !NETFRAMEWORK
             { "Content-Length", "0" }
+#endif
         }, Assert.Single(server.Requests));
     }
 
