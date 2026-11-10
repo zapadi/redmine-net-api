@@ -68,6 +68,7 @@ jobs:
         run: dotnet restore redmine-net-api.slnx
 
       - name: Build
+        id: build
         run: dotnet build redmine-net-api.slnx --configuration Release --no-restore
 
       - name: Test
@@ -79,13 +80,14 @@ jobs:
           --no-restore
           --output detailed
           --report-trx
+          --report-trx-filename unit-net10.0.trx
           --hangdump
           --hangdump-timeout 5m
           --hangdump-type Mini
           --results-directory TestResults
 
       - name: Test (.NET Framework)
-        if: matrix.os == 'windows-latest'
+        if: ${{ !cancelled() && steps.build.outcome == 'success' && matrix.os == 'windows-latest' }}
         run: >-
           dotnet test
           --project tests/redmine-net-api.Tests/redmine-net-api.Tests.csproj
@@ -94,6 +96,7 @@ jobs:
           --no-restore
           --output detailed
           --report-trx
+          --report-trx-filename unit-net481.trx
           --hangdump
           --hangdump-timeout 5m
           --hangdump-type Mini
@@ -122,6 +125,17 @@ jobs:
                 ${baseline:+-p:PackageValidationBaselineVersion="$baseline"}
             done
           done
+
+      - name: Test report
+        if: ${{ !cancelled() }}
+        uses: dorny/test-reporter@v3
+        with:
+          name: Unit tests (${{ matrix.os }})
+          path: TestResults/*.trx
+          reporter: dotnet-trx
+          list-tests: failed
+          fail-on-error: false
+          fail-on-empty: false
 
       - name: Upload test results
         if: always()
@@ -172,10 +186,22 @@ jobs:
           --no-build
           --output detailed
           --report-trx
+          --report-trx-filename integration.trx
           --hangdump
           --hangdump-timeout 10m
           --hangdump-type Mini
           --results-directory TestResults
+
+      - name: Test report
+        if: ${{ !cancelled() }}
+        uses: dorny/test-reporter@v3
+        with:
+          name: Integration tests (${{ matrix.client }} ${{ matrix.serializer }})
+          path: TestResults/*.trx
+          reporter: dotnet-trx
+          list-tests: failed
+          fail-on-error: false
+          fail-on-empty: false
 
       - name: Upload test results
         if: always()
