@@ -1,38 +1,5 @@
 # Changelog
 
-## [v4.67.0]
-
-### redmine-api
-
-🚀 Features
-*	Group create/update now sends its custom field values (CustomFields)
-*	Added RedmineManagerOptionsBuilder.WithTimeEntryCommentsMaxLength(int): TimeEntry comments are truncated to this length when sent (default 255; Redmine accepts up to 1024)
-*	Added RedmineApiException.Errors with the validation errors of a 422 response (empty otherwise)
-
-🛠 Fixes
-*   The JSON serializer now writes LF line endings on every OS like the XML serializer
-*	The XML serializer and journal payloads keep LF line endings inside text values on every OS (Windows sent CRLF)
-*	A 422 response message no longer ends with a carriage return on Windows
-*	Fixed XML reading of self-closing custom fields (<custom_field id="1" name="A"/>) skipping or failing on the next custom field
-*	Issue estimated hours set to 0 are now sent as 0 instead of clearing the value
-*	TimeEntry.Comments is no longer truncated to 255 characters when set or read from Redmine
-*	The JSON serializer now wraps parse failures in RedmineException like the XML serializer; the XML serializer no longer wraps a RedmineException in another one
-*	A 422 response whose body cannot be parsed now uses the trimmed body (up to 1024 characters) as the message and keeps Method, Endpoint and ResponseHeaders
-*	RedmineApiException serialization now keeps HttpStatusCode, Method, Endpoint, CorrelationId, ResponseHeaders and Errors
-*	Unexpected exceptions from the built-in transport are now wrapped in RedmineApiException
-*	Descriptive messages for ToIdentifier/ToIssueStatusIdentifier with a non-positive value and for null basic authentication credentials
-*	The built-in transport now decodes responses with the charset of the response Content-Type, or UTF-8 when there is none; on .NET Framework they were decoded with the system ANSI code page
-*	WebClientOptions.DefaultHeaders containing Accept, User-Agent, Content-Type, Connection, Expect, Referer or Host no longer make every request fail on .NET Framework
-*	A 429 response now has the message TooManyRequests on .NET Framework too (it was 429)
-*	DownloadFileAsync now honors WebClientOptions.Timeout on .NET Framework until the response arrives (it never timed out)
-
-## [redmine-api.http v0.1.0]
-
-First release of the redmine-api.http package.
-
-🚀 Features
-*	New redmine-api.http package: HttpClient transport (WithHttpClient) for .NET Framework 4.5+ and .NET 5+ (including net10.0)
-
 ## [v4.66.0]
 
 ### redmine-api
@@ -53,6 +20,9 @@ First release of the redmine-api.http package.
 *	Added AddUsersToGroup, RemoveUsersFromGroup (Redmine 7.0+) and AddWatchersToIssue (+ async) to add or remove several users at once
 *	Added User.AuthSource (read from auth_source with include=auth_source)
 *	Added IssueStatus.Description, CustomField.Editable, IsForAll, Projects and DefaultValueMode, WikiPage.Project, Group.Builtin and CustomFields on TimeEntryActivity, IssuePriority and DocumentCategory
+*	Group create/update now sends its custom field values (CustomFields)
+*	Added RedmineManagerOptionsBuilder.WithTimeEntryCommentsMaxLength(int): TimeEntry comments are truncated to this length when sent (default 255; Redmine accepts up to 1024)
+*	Added RedmineApiException.Errors with the validation errors of a 422 response (empty otherwise)
 
 ⚠️ Deprecations
 *	Project.CustomFieldValues is obsolete; use ProjectCustomFields
@@ -113,6 +83,21 @@ First release of the redmine-api.http package.
 *	Invalid hosts such as "https:/example.com", "https//example.com" or "ex@mple.com" are now rejected; single-label hosts (e.g. "redmine", "localhost") and IPv6 literals (e.g. "::1", "http://[::1]:8080") are accepted
 *	VerifyServerCert no longer overwrites a user ServerCertificateValidationCallback and RedmineManager no longer mutates the caller's WebClientOptions; obsolete Proxy, Timeout and SecurityProtocolType are set for any IRedmineWebClientOptions
 *	Fixed issue custom fields being duplicated when a Project is round-tripped with Newtonsoft.Json (the obsolete Project.CustomFields alias is no longer serialized)
+*	The JSON serializer now writes LF line endings on every OS like the XML serializer
+*	The XML serializer and journal payloads keep LF line endings inside text values on every OS (Windows sent CRLF)
+*	A 422 response message no longer ends with a carriage return on Windows
+*	Fixed XML reading of self-closing custom fields (<custom_field id="1" name="A"/>) skipping or failing on the next custom field
+*	Issue estimated hours set to 0 are now sent as 0 instead of clearing the value
+*	TimeEntry.Comments is no longer truncated to 255 characters when set or read from Redmine
+*	The JSON serializer now wraps parse failures in RedmineException like the XML serializer; the XML serializer no longer wraps a RedmineException in another one
+*	A 422 response whose body cannot be parsed now uses the trimmed body (up to 1024 characters) as the message and keeps Method, Endpoint and ResponseHeaders
+*	RedmineApiException serialization now keeps HttpStatusCode, Method, Endpoint, CorrelationId, ResponseHeaders and Errors
+*	Unexpected exceptions from the built-in transport are now wrapped in RedmineApiException
+*	Descriptive messages for ToIdentifier/ToIssueStatusIdentifier with a non-positive value and for null basic authentication credentials
+*	The built-in transport now decodes responses with the charset of the response Content-Type, or UTF-8 when there is none; on .NET Framework they were decoded with the system ANSI code page
+*	WebClientOptions.DefaultHeaders containing Accept, User-Agent, Content-Type, Connection, Expect, Referer or Host no longer make every request fail on .NET Framework
+*	A 429 response now has the message TooManyRequests on .NET Framework too (it was 429)
+*	DownloadFileAsync now honors WebClientOptions.Timeout on .NET Framework until the response arrives (it never timed out)
 
 🧪 Tests
 *	Unit tests now run in CI on net10.0 and fail the build on failure
@@ -140,6 +125,13 @@ First release of the redmine-api.http package.
 *	Package release notes link to CHANGELOG.md
 *	Integration tests run on Linux CI against a real Redmine (HttpClient and WebClient transports, XML and JSON)
 *	Added a net10.0 target
+
+## [redmine-api.http v0.1.0]
+
+First release of the redmine-api.http package.
+
+🚀 Features
+*	New redmine-api.http package: HttpClient transport (WithHttpClient) for .NET Framework 4.5+ and .NET 5+ (including net10.0)
 
 ## [v4.50.0]
 
