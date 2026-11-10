@@ -144,23 +144,9 @@ namespace Redmine.Net.Api.Net.WebClient
 
                 SetWebClientHeaders(webClient, request);
 
-                Task<string>? responseTask = null;
-                Task<byte[]>? responseAsBytesTask = null;
-                if (request.Method == HttpVerbs.GET)
-                {
-                    if (request.IsDownload)
-                    {
-                        responseAsBytesTask = webClient.DownloadDataTaskAsync(request.Address);
-                    }
-                    else
-                    {
-                        responseTask = webClient.DownloadStringTaskAsync(request.Address);
-                    }
-                }
-                else
-                {
-                    responseAsBytesTask = webClient.UploadDataTaskAsync(request.Address, request.Method, GetPayload(webClient, request));
-                }
+                var responseTask = request.Method == HttpVerbs.GET
+                    ? webClient.DownloadDataTaskAsync(request.Address)
+                    : webClient.UploadDataTaskAsync(request.Address, request.Method, GetPayload(webClient, request));
 
                 cancellationTokenRegistration =
                     (timeoutTokenSource?.Token ?? cancellationToken).Register(
@@ -168,18 +154,11 @@ namespace Redmine.Net.Api.Net.WebClient
                         webClient
                     );
 
-                string? response = null;
-                byte[]? responseAsBytes = null;
-                if (responseTask != null)
-                {
-                    response = await responseTask.ConfigureAwait(false);
-                }
-                else if (responseAsBytesTask != null)
-                {
-                    responseAsBytes = await responseAsBytesTask.ConfigureAwait(false);
-                }
+                var response = await responseTask.ConfigureAwait(false);
 
-                return CreateResponse(webClient, response, responseAsBytes);
+                return request.Method == HttpVerbs.GET && !request.IsDownload
+                    ? CreateResponse(webClient, Decode(webClient, response), null)
+                    : CreateResponse(webClient, null, response);
             }
             catch (WebException ex) when (ex.Status == WebExceptionStatus.RequestCanceled)
             {
@@ -233,7 +212,7 @@ namespace Redmine.Net.Api.Net.WebClient
                     }
                     else
                     {
-                        response = webClient.DownloadString(request.Address);
+                        response = Decode(webClient, webClient.DownloadData(request.Address));
                     }
                 }
                 else
@@ -379,6 +358,11 @@ namespace Redmine.Net.Api.Net.WebClient
 
             webClient.Headers[HttpRequestHeader.ContentType] = request.ContentType;
             return request.Body;
+        }
+
+        private static string? Decode(System.Net.WebClient webClient, byte[] body)
+        {
+            return RedmineApiClient.DecodeBody(body, webClient.ResponseHeaders, webClient.Encoding);
         }
 
         private static RedmineTransportResponse CreateResponse(System.Net.WebClient webClient, string? content, byte[]? body)

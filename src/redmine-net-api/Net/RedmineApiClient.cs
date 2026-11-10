@@ -388,13 +388,13 @@ namespace Redmine.Net.Api.Net
             {
                 IsSuccessful = true,
                 Headers = response.Headers,
-                Content = response.Content ?? (_isCustomTransport && !request.IsDownload ? DecodeBody(response.Body, response.Headers) : null),
+                Content = response.Content ?? (_isCustomTransport && !request.IsDownload ? DecodeBody(response.Body, response.Headers, Encoding.UTF8) : null),
                 RawContent = response.Body,
                 StatusCode = response.StatusCode,
             };
         }
 
-        private static string? DecodeBody(byte[]? body, NameValueCollection? headers)
+        internal static string? DecodeBody(byte[]? body, NameValueCollection? headers, Encoding fallback)
         {
             if (body == null)
             {
@@ -416,14 +416,14 @@ namespace Redmine.Net.Api.Net
                 return Encoding.BigEndianUnicode.GetString(body, 2, body.Length - 2);
             }
 
-            return GetEncoding(headers?["Content-Type"]).GetString(body);
+            return GetEncoding(headers?["Content-Type"], fallback).GetString(body);
         }
 
-        private static Encoding GetEncoding(string? contentType)
+        private static Encoding GetEncoding(string? contentType, Encoding fallback)
         {
             if (contentType == null)
             {
-                return Encoding.UTF8;
+                return fallback;
             }
 
             foreach (var parameter in contentType.Split(';'))
@@ -440,11 +440,11 @@ namespace Redmine.Net.Api.Net
                 }
                 catch (Exception ex) when (ex is ArgumentException or NotSupportedException)
                 {
-                    return Encoding.UTF8;
+                    return fallback;
                 }
             }
 
-            return Encoding.UTF8;
+            return fallback;
         }
 
         private static string GetContentType(IRedmineSerializer serializer)
@@ -470,7 +470,7 @@ namespace Redmine.Net.Api.Net
                 {
                     if (isCustomTransport)
                     {
-                        throw RedmineApiExceptionHelper.CreateUnprocessableEntityException(DecodeBody(response.Body, response.Headers), null, serializer, method, endpoint, responseHeaders);
+                        throw RedmineApiExceptionHelper.CreateUnprocessableEntityException(DecodeBody(response.Body, response.Headers, Encoding.UTF8), null, serializer, method, endpoint, responseHeaders);
                     }
 
                     using var reader = new StreamReader(new MemoryStream(response.Body));

@@ -21,6 +21,7 @@
 *	RedmineApiException serialization now keeps HttpStatusCode, Method, Endpoint, CorrelationId, ResponseHeaders and Errors
 *	Unexpected exceptions from the built-in transport are now wrapped in RedmineApiException
 *	Descriptive messages for ToIdentifier/ToIssueStatusIdentifier with a non-positive value and for null basic authentication credentials
+*	The built-in transport now decodes responses with the charset of the response Content-Type; on .NET Framework UTF-8 responses were decoded with the system ANSI code page
 
 ## [redmine-api.http v0.1.0]
 

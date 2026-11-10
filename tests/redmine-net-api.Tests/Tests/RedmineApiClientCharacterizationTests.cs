@@ -119,7 +119,7 @@ public sealed class RedmineApiClientCharacterizationTests
     [Theory(Timeout = Constants.TestTimeout)]
     [InlineData(false)]
     [InlineData(true)]
-    public async Task Get_With_Latin1_Charset_Should_Decode_As_Today(bool async)
+    public async Task Get_With_Latin1_Charset_Should_Decode_With_Charset(bool async)
     {
         var bytes = Encoding.GetEncoding("iso-8859-1").GetBytes("<name>café</name>");
         using var server = new TestHttpServer(_ => new TestHttpResponse { ContentType = "application/xml; charset=iso-8859-1", Body = bytes });
@@ -129,8 +129,7 @@ public sealed class RedmineApiClientCharacterizationTests
             ? await manager.ApiClient.GetAsync("projects/1.xml", cancellationToken: TestContext.Current.CancellationToken)
             : manager.ApiClient.Get("projects/1.xml");
 
-        using var webClient = new WebClient();
-        Assert.Equal(webClient.Encoding.GetString(bytes), response.Content);
+        Assert.Equal("<name>café</name>", response.Content);
     }
 
     [Theory(Timeout = Constants.TestTimeout)]
