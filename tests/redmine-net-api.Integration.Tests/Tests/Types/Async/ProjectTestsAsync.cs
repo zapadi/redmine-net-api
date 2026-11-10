@@ -144,6 +144,8 @@ public class ProjectTestsAsync(RedmineTestContainerFixture fixture)
             IssueCustomField.CreateSingle(3, RandomHelper.GenerateText(5), "OTHER_VALUE"),
             IssueCustomField.CreateMultiple(4, RandomHelper.GenerateText(5), ["b", "c"])
         ];
+        // Issue custom field 1 is seeded for selected projects only; 2 is for all projects.
+        createdProject.IssueCustomFields = [IdentifiableName.Create<IssueCustomField>(1)];
         
         await fixture.RedmineManager.UpdateAsync(createdProject.Identifier, createdProject, cancellationToken: TestContext.Current.CancellationToken);
 
@@ -169,9 +171,7 @@ public class ProjectTestsAsync(RedmineTestContainerFixture fixture)
 
         Assert.NotEmpty(project.TimeEntryActivities);
         
-        Assert.NotEmpty(project.IssueCustomFields);
-        Assert.Single(project.IssueCustomFields);
-        Assert.All(project.IssueCustomFields, icf => Assert.True(icf.Id > 0));
+        Assert.Equal([1, 2], project.IssueCustomFields.Select(icf => icf.Id).OrderBy(id => id));
 
         Assert.Equal(["OTHER_VALUE"], GetProjectCustomFieldValues(project, 3));
         Assert.Equal(["b", "c"], GetProjectCustomFieldValues(project, 4));
