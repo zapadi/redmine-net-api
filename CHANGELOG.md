@@ -1,5 +1,12 @@
 # Changelog
 
+## [v4.67.0]
+
+### redmine-api
+
+🛠 Fixes
+*	Project update now sends IssueCustomFields as issue_custom_field_ids, so the issue custom fields enabled for an existing project can be changed (an empty list disables them all; null leaves them unchanged)
+
 ## [v4.66.0]
 
 ### redmine-api

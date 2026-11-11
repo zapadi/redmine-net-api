@@ -143,6 +143,40 @@ public class ProjectTests
     }
 
     [Theory]
+    [MemberData(nameof(ProjectEmptyIssueCustomFieldsSerializeTheoryData))]
+    public void Should_Serialize_Empty_Issue_Custom_Field_Ids_On_Update_When_IssueCustomFields_Is_Empty(string expected, SerializerKind kind)
+    {
+        var project = new Project
+        {
+            Id = 1,
+            Name = "Redmine",
+            Identifier = "redmine",
+            IssueCustomFields = []
+        };
+
+        var output = SerializerFactory.Create(kind).Serialize(project);
+
+        Assert.Equal(expected, output, ignoreLineEndingDifferences: true);
+    }
+
+    [Theory]
+    [MemberData(nameof(ProjectNullIssueCustomFieldsSerializeTheoryData))]
+    public void Should_Not_Serialize_Issue_Custom_Field_Ids_On_Update_When_IssueCustomFields_Is_Null(string expected, SerializerKind kind)
+    {
+        var project = new Project
+        {
+            Id = 1,
+            Name = "Redmine",
+            Identifier = "redmine",
+            IssueCustomFields = null
+        };
+
+        var output = SerializerFactory.Create(kind).Serialize(project);
+
+        Assert.Equal(expected, output, ignoreLineEndingDifferences: true);
+    }
+
+    [Theory]
     [MemberData(nameof(ProjectCustomFieldsSerializeTheoryData))]
     public void Should_Serialize_Project_With_ProjectCustomFields(string expected, SerializerKind kind)
     {
@@ -663,6 +697,66 @@ public class ProjectTests
         }
     }
 
+    public static IEnumerable<TheoryDataRow<string, SerializerKind>> ProjectEmptyIssueCustomFieldsSerializeTheoryData
+    {
+        get
+        {
+            const string json = """
+                                {
+                                  "project": {
+                                    "name": "Redmine",
+                                    "identifier": "redmine",
+                                    "inherit_members": "false",
+                                    "is_public": "false",
+                                    "issue_custom_field_ids": []
+                                  }
+                                }
+                                """;
+
+            const string xml = """
+                               <project>
+                               <name>Redmine</name>
+                               <identifier>redmine</identifier>
+                               <inherit_members>false</inherit_members>
+                               <is_public>false</is_public>
+                               <issue_custom_field_ids type="array" />
+                               </project>
+                               """;
+
+            yield return new TheoryDataRow<string, SerializerKind>(json, SerializerKind.NewtonsoftJson).WithTestDisplayName(Constants.JsonNewtonsoft);
+            yield return new TheoryDataRow<string, SerializerKind>(xml, SerializerKind.Xml).WithTestDisplayName(Constants.Xml);
+        }
+    }
+
+    public static IEnumerable<TheoryDataRow<string, SerializerKind>> ProjectNullIssueCustomFieldsSerializeTheoryData
+    {
+        get
+        {
+            const string json = """
+                                {
+                                  "project": {
+                                    "name": "Redmine",
+                                    "identifier": "redmine",
+                                    "inherit_members": "false",
+                                    "is_public": "false"
+                                  }
+                                }
+                                """;
+
+            const string xml = """
+                               <project>
+                               <name>Redmine</name>
+                               <identifier>redmine</identifier>
+                               <inherit_members>false</inherit_members>
+                               <is_public>false</is_public>
+                               </project>
+                               """;
+
+            yield return new TheoryDataRow<string, SerializerKind>(json, SerializerKind.NewtonsoftJson).WithTestDisplayName(Constants.JsonNewtonsoft);
+            yield return new TheoryDataRow<string, SerializerKind>(xml, SerializerKind.Xml).WithTestDisplayName(Constants.Xml);
+        }
+    }
+
     public static IEnumerable<TheoryDataRow<string, SerializerKind>> ProjectSerializeTheoryData
     {
         get
@@ -687,6 +781,10 @@ public class ProjectTests
                                       "module1",
                                       "module2",
                                       "module3"
+                                    ],
+                                    "issue_custom_field_ids": [
+                                      500,
+                                      501
                                     ],
                                     "custom_field_values": {
                                       "789": "val789",
@@ -719,6 +817,10 @@ public class ProjectTests
                                <enabled_module_name>module2</enabled_module_name>
                                <enabled_module_name>module3</enabled_module_name>
                                </enabled_module_names>
+                               <issue_custom_field_ids type="array">
+                               <issue_custom_field_id>500</issue_custom_field_id>
+                               <issue_custom_field_id>501</issue_custom_field_id>
+                               </issue_custom_field_ids>
                                <custom_fields type="array">
                                <custom_field id="789">
                                <value>val789</value>
